@@ -1,4 +1,7 @@
 <?php 
+
+// THEME HOME de www.virtualpol.com
+
 if ($link) { mysql_close($link); }
 if (!$txt) { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://' . HOST . '/'); exit; }
 

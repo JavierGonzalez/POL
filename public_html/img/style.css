@@ -1,0 +1,90 @@
+body {min-width:810px;padding: 0 10px;text-align: center;color: #333;font-family: "Arial", "Helvetica", sans-serif;font-size:17px;}
+div#container {width: 700px;margin: 0 auto;text-align: left;margin: 10px auto;}
+body.fullwidth div#container { width: 100%; }
+div#header {color: inherit;background-color: #fff;}
+div#header-in { padding: 2px 20px 2px 20px; }
+div#content-wrap {padding: 6px 0;}
+div.lcol div.content { margin: 0 0 0 170px; }
+div.content {color: inherit;min-height:470px;background-color: #fff;}
+div.content-in { padding: 15px 10px 10px 20px; color:#5D5D5D; }
+div.content-in h1 { font-size:19px; color:green; margin:0; padding:0; line-height:12px; }
+div.content-in h2 { font-size:17px; color:green; margin:0; padding:0; line-height:12px; }
+div.content-in h3 { font-size:15px; color:green; margin:0; padding:0; line-height:12px; }
+div.content-in img { margin-bottom:-3px; }
+div.content-in a img { padding:0 2px 0 0; }
+div.content-in a:hover img { padding:0 0 0 2px; }
+div.content-in p { text-align: justify; }
+div.lcol div.column { float: left; }
+div.column {opacity:0.9;width: 160px;color: inherit;background-color: #fff;}
+div.column-in { padding: 10px 0 12px 20px; font-size:17px; }
+div#footer {color: inherit;background-color: #fff;}
+div#footer-in {padding: 10px 20px 10px 20px;}
+div.content, div.column, div#header, div#footer {border-radius: 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px;}
+
+a { color:#06f;text-decoration:none;}
+a:hover {text-decoration:underline;}
+.infog { color:green; }
+.pol_form li { color:gray; margin-bottom:15px; }
+.pol_form li b { color:green; font-size:16px; }
+input, area, div.content-in select { color:green; font-size:16px; font-weight:bold; }
+.pol_table { margin-top:0; }
+.pol_table th { color:grey; }
+.pol_table td { padding-right:20px; }
+.pol_table a { text-decoration:none; }
+.pol_table a:hover { text-decoration:underline; }
+.pforo { border-top: 1px solid #D4D4D4; }
+.md { color:grey; font-size:12px; margin: 0 0 0 3px; }
+.form_textarea {min-width:475px;width:90%;height:350px;color:green;font-weight:bold;}
+#homelogo a { font-size:18px; color:grey; text-decoration:none; }
+#homelogo a:hover { text-decoration:underline; }
+.amarillo, .azul {background:#FFFFDD;border:1px solid #FFD700;padding:5px 10px 5px 10px; border-radius: 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px;}
+.azul { border:1px solid #00CCFF;background:#D3F7FE; }
+#pols_frase {margin:0 0 0 20px;padding:4px 8px 4px 8px;font-size:18px;}
+.pn { font-weight:bold; color:red; }
+.pp { font-weight:bold; color:blue; }
+.big { font-size:18px; }
+.gris { color:grey; }
+.min { font-size:12px; }
+#palabras { margin:8px 0 0 -6px; padding:0; }
+
+dl { padding-left:0px;margin:0;margin-left:-20px;width: 154px;}
+dd {margin:0;margin-left:5px;}
+dd { *margin-left:-55px; }
+dt a { color:grey; }
+dt { font-weight:bold;border:1px solid #FFD700;border-radius: 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px;	background: #FFFFDD; font-size: 18px; padding: 2px 0 3px 8px; margin:0 0 3px 2px; }
+#menu ul { list-style: none; padding: 5px; }
+#pnick { text-align:left; }
+#pnick b { color:green; }
+.nick:hover { color:#00CCFF; }
+.pols { color:blue; }
+h1 a { color:#4BB000; } 
+#enviar {background:#FFFFB7;padding:20px 0 20px 50px;}
+.ciudadano, .desarrollador { color:#06f; }
+.turista, .validar { color:#66B3FF; }
+.expulsado { color:#FF8A8A; }
+.extrangero { color:#CCC; }
+
+.vcc, .vc, .vcn, .vcnn { font-weight:bold; font-size:17px; }
+.vcc { color:#EA9800; }
+.vc { color:orange; }
+.vcn { color:#FF3E43; }
+.vcnn { color:#D20000; }
+
+
+#chatmsg { vertical-align: bottom; height:400px; overflow:auto; background:white; }
+#chatmsg ul { padding:0; margin:0; position:static; }
+#chatmsg ul li { padding:0; margin:0; color:#666666; background:none; font-size:15px; list-style:none;}
+#chatmsg .oldc { color:#A3A3A3; }
+#chatmsg ul li:before { content:\'\'; }
+#chat_users { float:right; width:180px; height:400px; overflow:auto; margin-left:20px; background:white; }
+#chat_users ul { padding:0; margin:0; position:static; }
+#chat_users ul li { padding:0; margin:0; color:#666666; background:none; font-size:18px; font-weight:bold; list-style:none;}
+#chat_users ul li:before { content:\'\'; }
+#chat_users li { font-weight:bold; }
+#chat_users a { color:#808080; text-decoration:none; }
+#chat_users a:hover { text-decoration:underline; }
+#mensaje { color:black; border: 1px solid #808080; padding:3px; }
+.chat_title { font-weight:bold; font-size:20px; color:green; margin:0; padding:0; }
+.chat_accion { color:green; font-size:16px; }
+.chat_priv { color:#9F009F; font-size:16px; }
+.yo { color:#2D2D2D; }

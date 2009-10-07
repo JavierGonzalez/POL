@@ -1,0 +1,12 @@
+#AddHandler application/x-httpd-php .css .js
+php_value auto_prepend_file /home/teoriza/public_html/pol/img/gzip-start.php
+php_value auto_append_file /home/teoriza/public_html/pol/img/gzip-end.php
+
+Header unset ETag
+FileETag None
+
+ExpiresActive On
+expiresbytype image/gif "access plus 2 days"
+expiresbytype image/jpg "access plus 2 days"
+expiresbytype text/txt "access plus 2 days"
+expiresbytype text/js "access plus 2 days" 

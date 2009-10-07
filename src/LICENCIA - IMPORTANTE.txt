@@ -1,0 +1,63 @@
+____________________________________
+
+	####          ####      ##
+	##   #       ##    ##    ##
+	##   #       ##    ##    ##
+	####        ##    ##    ##
+	##            ##    ##	##
+	##              ####      ######
+_______________________________________
+
+
+#CHANGELOG (versiones y cambios):
+BETA 0.1 - Versión pública inicial [ESTA VERSION]
+
+
+#INTRODUCCIÓN
+
+POL es un Pueblo Virtual programado con PHP y bases de datos MySQL, liberado como software libre.
+
+El pueblo original o inicial está en: http://pol.teoriza.com/ donde también puedes descargar la ultima versión de este código fuente.
+
+El 100% del código aquí publicado ha sido escrito de forma integra por servidor, Javier González González (gonzo.teoriza.com).
+
+#LICENCIA
+
+El código fuente del sistema POL está publicado de forma integra bajo la licencia Affero (GPLv3). Puedes encontrar el texto original y completo de esta licencia en el archivo COPYING ubicado en "/www".
+
+Puede haber rectificaciones sobre la licencia, por inexperiencia en este aspecto pero la esencia perdurará.
+
+
+#INSTALACIÓN
+
+Este código fuente, por el momento, no tiene una fácil instalación. Para la creación de un POL independiente al original se deben tener en cuenta los siguientes puntos:
+
+- El desarrollo de POL en general está en una fase BETA. Donde claramente hay desarrollos que pueden entenderse como incompletos o implementaciones previstas.
+- POL está programado para su integración con el sistema de usuarios de Blogs Teoriza. Para bien o para mal, está hecho inicialmente así y por el momento no hay una adaptación genérica. Para desarrollar este sistema de usuario debes acceder al archivo "inc-login.php" donde estan las instrucciones.
+- El código de POL ha sido programado "a mi manera". No me hago responsable de los destrozos o absurdos que se puedan encontrar en el. Sin embargo he puesto todo mi empeño en que el código sea eficaz, rápido y seguro.
+- Se intentará mejorar estos aspectos en la medida de lo posible.
+- Falta la carpeta "tiny_mce" ubicada en "/www/img". Corresponde al famoso editor de texto enriquecido Javascript TinyMCE. Lo omito al no tener claro si tengo permiso para publicarlo.
+- Falta el archivo "jquery.js" ubicado dentro de "/www/img/"  Corresponde a la famosa libreria javascript "JQuery". Omitido por el momento.
+- Los archivos cron-*.php (cron-24h.php y cron-accion.php) deben tener permisos de ejecución TAN SOLO por el servidor local. No deben poder ejecutarlo los usuarios.
+- Se necesita configurar un CRON, cada 24h a las 20:00, que ejecute de forma local cron-24h.php
+
+
+#AGRADECIMIENTOS (es necesario agradecer)
+
+Agradecimiento especial a Mia (Carolina Botey) por apoyarme y cubrirme en el trabajo "que nos dá el pan", mientras he dedicado tantas horas desarrollando POL (y lo que queda).
+
+Gracias a Pablo1 (Pablo Rodríguez) por motivarme con el inicio de esta aventura, fue el que encendió la mecha.
+
+Gracias a los mejores testers durante la versión Alpha: iulius y Guillermolla (Guillermo Molla), que estuvieron los primeros y dificiles dias motivando y probando mucho.
+
+Gracias a los veteranos del POL antiguo, quienes en el 2004 sin apenas recursos tecnicos, crearon en el IRC-Hispano el germen y estructura de lo que es ahora POL. Muchos de ellos hacen POL posible de nuevo.
+
+Gracias a los Ciudadanos más asíduos de POL, gracias a su acción POL ha nacido (en orden de tiempo online): selvatgi, Pablo1, jmirab, Mia, MarioQuartz, NachE, InNaT, Carlos_Crespo, Guillermolla, jovendigital, drosan, Diver, Axioum, Arguez, Rsvcap, Argoss, Johnny_Palillo, seba842, Acros, dondado...
+
+Gracias a TODOS los Ciudadanos de POL, POL es por y gracias a todos ellos.
+
+
+_______________________________________
+Por GONZO (Javier González González) a 15 de Octubre del 2008
+- gonzomail@gmail.com		- blogs@teoriza.com
+- http://gonzo.teoriza.com/	- http://www.teoriza.com

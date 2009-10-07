@@ -1,4 +1,7 @@
 <?php 
+
+// THEME VERSION MOVIL de paises (desarrollo incompleto y no publicado)
+
 if ($link) { mysql_close($link); }
 if (!$txt) { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
 if ($_SERVER['HTTP_HOST'] == 'ninguno.virtualpol.com') { header('Location: http://www.virtualpol.com/'); exit; }

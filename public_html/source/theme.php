@@ -308,7 +308,7 @@ if ($pol['user_ID'] == 1) {
 </div>
 
 <center style="margin:15px 0 0 0;"><span class="azul" style="padding:8px;color:#808080;opacity:0.8;">
-<a href="http://www.virtualpol.com/" title="Simulador Politico">Comunidad <b>VirtualPOL</b></a> | <a href="http://desarrollo.virtualpol.com/">Blog <b>Desarrollo</b></a> | Paises: <?php $n = 0; foreach ($vp['paises'] AS $pais) { if ($n++ != 0) { echo ' &amp; '; } echo '<a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a>'; } ?> | Creado por: <a href="http://gonzo.teoriza.com/">GONZO</a>, <a href="http://mia.teoriza.com/">Mia</a> y <a href="http://www.teoriza.com/">Blogs Teoriza</a> <?=$kw?>
+<a href="http://www.virtualpol.com/" title="Simulador Politico">Comunidad <b>VirtualPOL</b></a> | <a href="http://desarrollo.virtualpol.com/">Blog <b>Desarrollo</b></a> | <a href="http://code.google.com/p/virtualpol/"><b>C&oacute;digo</b></a> | Paises: <?php $n = 0; foreach ($vp['paises'] AS $pais) { if ($n++ != 0) { echo ' &amp; '; } echo '<a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a>'; } ?> | Creado por: <a href="http://gonzo.teoriza.com/">GONZO</a>, <a href="http://mia.teoriza.com/">Mia</a> y <a href="http://www.teoriza.com/">Blogs Teoriza</a> <?=$kw?>
 </span></center>
 
 </div>

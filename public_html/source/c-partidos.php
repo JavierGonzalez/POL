@@ -102,7 +102,7 @@ ORDER BY ID ASC", $link);
 
 				$result3 = mysql_query("SELECT nick, estado
 FROM ".SQL_USERS."
-WHERE partido_afiliado = '" . $row['ID'] . "' AND pais = '".PAIS."'
+WHERE partido_afiliado = '" . $row['ID'] . "' AND pais = '".PAIS."' AND estado = 'ciudadano'
 ORDER BY fecha_registro ASC", $link);
 				while($row3 = mysql_fetch_array($result3)){ 
 					$afiliados .= ' ' . crear_link($row3['nick'], 'nick', $row3['estado']) . ','; 

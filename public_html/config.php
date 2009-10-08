@@ -2,8 +2,10 @@
 
 // INICIALIZACION
 
-// obtiene $host[0] que es el subdominio
-$host = explode('.', $_SERVER['HTTP_HOST']);
+
+$host = explode('.', $_SERVER['HTTP_HOST']); // obtiene $host[0] que es el subdominio
+$host[0] = str_replace('_dev', '', $host[0]); // convierte subdominios "pais_dev" en "pais" para que funcione la version dev
+
 if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
 
 // paises existentes y colores
@@ -43,11 +45,14 @@ default:
 	break;
 }
 
-// carga variables comunes del sistema
+// variables del sistema
 define('MONEDA', '<img src="/img/m.gif" border="0" />');
 define('MONEDA_NOMBRE', 'POLs');
-
+define('RAIZ', '/home/teoriza/public_html/virtualpol.com/');
 define('HOST', $_SERVER['HTTP_HOST']);
+define('VERSION', 'BETA 0.3');
+
+// variables de tablas SQL
 define('SQL_USERS', 'users');
 define('SQL_REFERENCIAS', 'referencias');
 define('SQL_MENSAJES', 'mensajes');
@@ -57,15 +62,18 @@ define('SQL_EXPULSIONES', 'expulsiones');
 // variables del sistema de usuarios
 define('USERCOOKIE', '.virtualpol.com');
 define('CLAVE', ''); // clave de coockie (cambiar en caso de robo de claves md5)
-define('VERSION', 'BETA 0.3');
-define('RAIZ', '/home/teoriza/public_html/virtualpol.com/');
 define('REGISTRAR', 'http://www.virtualpol.com/registrar/');
 
-// arrancar la base de datos MySQL, configurar clave
 function conectar() {
+
+	// configuracion MySQL, CUIDADO!!!!
+	$mysql_db = 'SET_DATABASE';
+	$mysql_user = 'SET_USER';
+	$mysql_pass = 'SET_PASS';
+
 	$error_msg = '<h1>MySQL Error</h1><p>Lo siento, la base de datos no funciona temporalmente.</p>';
-	if (!($l=@mysql_connect('localhost', 'teoriza_virtualp', 'SET_PASS'))) { echo $error_msg; exit; }
-	if (!@mysql_select_db('teoriza_virtualpol', $l)) { echo $error_msg; exit; } 
+	if (!($l=@mysql_connect('localhost', $mysql_user, $mysql_pass))) { echo $error_msg; exit; }
+	if (!@mysql_select_db($mysql_db, $l)) { echo $error_msg; exit; } 
 	return $l;
 }
 

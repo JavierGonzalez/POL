@@ -112,7 +112,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 <center style="margin:5px 0 -2px 0;"><span class="azul" style="padding:6px;color:grey;opacity:0.8;"><a href="http://www.virtualpol.com/">Comunidad <b>VirtualPol</b></a> | <a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a> | Paises: 
 <?php $n = 0; foreach ($vp['paises'] AS $pais) { if ($n++ != 0) { echo ' &amp; '; } echo '<a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a>'; } ?>
- | Soportado por <a href="http://www.teoriza.com/">Blogs Teoriza</a> | Simulador Politico Espa&ntilde;ol
+ | Soportado por <a href="http://www.teoriza.com/">Blogs Teoriza</a> | Simulador Politico Espa&ntilde;ol s
 </span></center>
 
 </div>

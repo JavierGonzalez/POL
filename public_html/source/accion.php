@@ -467,7 +467,7 @@ case 'despacho-oval':
 ($_POST['pols_examen'] >= 0) AND 
 ($pol['config']['pols_mensajeurgente'] >= 0) AND
 ($_POST['num_escanos'] <= 30) AND
-($_POST['num_escanos'] >= 0) AND 
+($_POST['num_escanos'] >= 1) AND 
 (strlen($_POST['palabra_gob0']) <= 200) AND
 ($_POST['impuestos'] <= 5) AND
 ($_POST['impuestos'] >= 0) AND

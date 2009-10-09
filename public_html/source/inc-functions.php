@@ -69,7 +69,7 @@ ORDER BY nivel ASC", $link);
 			$f .= '<option value="' . $row['nivel'] . '"' . $selected . '>' . $row['nivel'] . ' &nbsp; ' . $row['nombre'] . '</option>' . "\n";
 		}
 	}
-	if (($pol['user_ID'] == 1) AND ($nivel_select == 120)) { $f .= '<option value="120" selected="selected">120 &nbsp; Dev</option>'; }
+	if ($nivel_select == 120) { $f .= '<option value="120" selected="selected">120 &nbsp; Dev</option>'; }
 	$f .= '</select>';
 	return $f;
 }

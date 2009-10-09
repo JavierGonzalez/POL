@@ -183,7 +183,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <span style="float:right;">
 <?php
 unset($txt);
-if ($pol['user_ID'] == 1) {
+if ($pol['estado'] == 'desarrollador') {
 	$mtime = explode(' ', microtime()); 
 	$tiempofinal = $mtime[1] + $mtime[0]; 
 	$tiempototal = number_format($tiempofinal - $tiempoinicial, 3); 

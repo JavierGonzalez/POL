@@ -5,7 +5,7 @@ pol_mercado	(ID, user_ID, title, descripcion, pols ,tipo, time, estado)
 pol_pujas		(ID, mercado_ID, user_ID, pols, time)
 */
 
- if (($_GET['a'] == 'frase') AND ($_GET['b'] == 'editar') AND (($pol['config']['pols_fraseedit'] == $pol['user_ID']) OR ($pol['user_ID'] == 1))) {
+ if (($_GET['a'] == 'frase') AND ($_GET['b'] == 'editar') AND ($pol['config']['pols_fraseedit'] == $pol['user_ID'])) {
 
 	$url = str_replace("http://", "", explodear("\"", $pol['config']['pols_frase'], 1));
 	$frase = explodear("<", explodear(">", $pol['config']['pols_frase'], 1), 0);

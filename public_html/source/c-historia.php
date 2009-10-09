@@ -63,7 +63,7 @@ WHERE estado = 'ok'
 ORDER BY time ASC", $link);
 while($row = mysql_fetch_array($result)) {
 
-	if (($row['nick'] == $pol['nick']) OR ($pol['nick'] == 'GONZO')) {
+	if (($row['nick'] == $pol['nick']) OR ($pol['estado'] == 'desarrollador')) {
 		$boton = boton('x', '/accion.php?a=historia&b=del&ID='.$row['ID'], 'm');
 	} else { $boton = ''; }
 

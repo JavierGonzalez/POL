@@ -283,19 +283,21 @@ foreach(explode(";", $pol['config']['palabras']) as $t) {
 <span style="float:right;">
 <?php
 unset($txt);
-if ($pol['user_ID'] == 1) {
+if ($pol['estado'] == 'desarrollador') {
 	$mtime = explode(' ', microtime()); 
 	$tiempofinal = $mtime[1] + $mtime[0]; 
 	$tiempototal = number_format($tiempofinal - $tiempoinicial, 3); 
 	echo ' | ' . $tiempototal . 's ' . floor(memory_get_usage() / 1024) . 'kb';
 } elseif (!$pol['user_ID']) {
+
+	// Enlaces hacia Teoriza, solo lo ven los no-registrados, no quitar por favor :))))
 	$teoriza_b = array(
+'www.teoriza.com|Teoriza', 
 'gonzo.teoriza.com|GONZO', 
 'mia.teoriza.com|Mia', 
 'ocio.teoriza.com|Ocio',
 'chat.teoriza.com|Chat',
 'intimidades.teoriza.com|Intimidades',
-'aziroet.com|Crear Blog',
 );
 	$teoriza_b = explode("|", $teoriza_b[array_rand($teoriza_b)]);
 	echo '+<a href="http://' . $teoriza_b[0] . '/">' . $teoriza_b[1] . '</a>';
@@ -310,7 +312,7 @@ if ($pol['user_ID'] == 1) {
 </div>
 
 <center style="margin:15px 0 0 0;"><span class="azul" style="padding:8px;color:#808080;opacity:0.8;">
-<a href="http://www.virtualpol.com/" title="Simulador Politico">Comunidad <b>VirtualPOL</b></a> | <a href="http://desarrollo.virtualpol.com/">Blog <b>Desarrollo</b></a> | <a href="http://code.google.com/p/virtualpol/"><b>C&oacute;digo</b></a> | Paises: <?php $n = 0; foreach ($vp['paises'] AS $pais) { if ($n++ != 0) { echo ' &amp; '; } echo '<a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a>'; } ?> | Creado por: <a href="http://gonzo.teoriza.com/">GONZO</a>, <a href="http://mia.teoriza.com/">Mia</a> y <a href="http://www.teoriza.com/">Blogs Teoriza</a> <?=$kw?>
+<a href="http://www.virtualpol.com/" title="Simulador Politico">Comunidad <b>VirtualPOL</b></a> | <a href="http://desarrollo.virtualpol.com/">Blog <b>Desarrollo</b></a> | <a href="http://code.google.com/p/virtualpol/"><b>C&oacute;digo</b></a> | Paises: <?php $n = 0; foreach ($vp['paises'] AS $pais) { if ($n++ != 0) { echo ' &amp; '; } echo '<a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a>'; } ?> | Fundado por: <a href="http://gonzo.teoriza.com/">GONZO</a>, <a href="http://mia.teoriza.com/">Mia</a> <?=$kw?>
 </span></center>
 
 </div>

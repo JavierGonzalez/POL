@@ -32,7 +32,7 @@ case 'historia':
 	if (($_GET['b'] == 'add')) {
 		mysql_query("INSERT INTO hechos (time, nick, texto, estado, time2, pais) VALUES ('".$_POST['year']."-".$_POST['mes']."-".$_POST['dia']."', '".$pol['nick']."', '".strip_tags($_POST['hecho'],'<b>,<a>')."', 'ok', '".$date."', '".$_POST['pais']."')", $link);
 	} elseif ($_GET['b'] == 'del') {
-		mysql_query("UPDATE hechos SET estado = 'del' WHERE ID = '".$_GET['ID']."' AND (nick = '".$pol['nick']."' OR '".$pol['nick']."' = 'GONZO') LIMIT 1", $link);
+		mysql_query("UPDATE hechos SET estado = 'del' WHERE ID = '".$_GET['ID']."' AND (nick = '".$pol['nick']."' OR '".$pol['estado']."' = 'desarrollador') LIMIT 1", $link);
 	}
 
 
@@ -943,7 +943,7 @@ case 'foro':
 	} elseif (($_GET['b'] == 'eliminarhilo') AND ($_GET['ID'])) {
 		$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."foros_hilos WHERE ID = '".$_GET['ID']."' AND ('1' = '".$pol['user_ID']."' OR user_ID = '".$pol['user_ID']."') LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ $es_ok = true; }
-		if (($es_ok) OR ($pol['user_ID'] == 1)) {
+		if ($es_ok) {
 			mysql_query("DELETE FROM ".SQL."foros_hilos WHERE ID = '".$_GET['ID']."' AND ('1' = '".$pol['user_ID']."' OR user_ID = '".$pol['user_ID']."') LIMIT 1", $link);
 			mysql_query("DELETE FROM ".SQL."foros_msg WHERE hilo_ID = '".$_GET['ID']."'", $link);
 		}
@@ -954,7 +954,7 @@ case 'foro':
 		$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."foros_msg WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND time > '".date('Y-m-d H:i:s', time() - 3600)."' LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ $es_ok = true; }
 
-		if (($es_ok) OR ($pol['user_ID'] == 1)) {
+		if ($es_ok) {
 			mysql_query("DELETE FROM ".SQL."foros_msg WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 			mysql_query("UPDATE ".SQL."foros_hilos SET num = num-1 WHERE ID = '".$_GET['hilo_ID']."' LIMIT 1", $link);
 		}

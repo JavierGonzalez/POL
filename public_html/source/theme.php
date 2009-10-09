@@ -51,6 +51,8 @@ menu_ID = <?=$menu_ID?>;
 defcon = <?=$pol['config']['defcon']?>;
 window.google_analytics_uacct = "UA-59186-46";
 </script>
+<script type="text/javascript" src="/img/scripts.js"></script>
+
 <style type="text/css">
 body { background: <?=$body_bg?>; }
 div#footer, div.column, div.content, div#header {
@@ -315,7 +317,6 @@ if ($pol['user_ID'] == 1) {
 
 <div id="pnick" class="azul" style="display:none;opacity:0.9;"></div>
 
-<script type="text/javascript" src="/img/scripts.js"></script>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

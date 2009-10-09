@@ -148,6 +148,13 @@ if ((!isset($_POST['a'])) AND (isset($_POST['n']))) {
 						$elnick = $pol['nick'].'&rarr;'.$row['nick'];
 					}
 					break;
+					
+				case 'parlamento':
+					if(($pol['cargo'] == 22) AND ($chat_id == 1)){
+						$elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial- Presidente del Parlamento)</b></span>';
+						$tipo = 'm';
+					}
+					break;
 			}
 			$msg = null; if ($elmsg) { $msg = $elmsg; }
 			

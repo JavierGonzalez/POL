@@ -139,6 +139,13 @@ if ((!isset($_REQUEST['a'])) AND (isset($_REQUEST['n']))) {
 						$tipo = 'p';
 					}
 					break;
+					
+					case 'parlamento':
+					if(($pol['cargo'] == 22) AND ($chat_id == 1)){
+						$elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial- Presidente del Parlamento)</b></span>';
+						$tipo = 'm';
+					}
+					break;
 			}
 			$msg = null; if ($elmsg) { $msg = $elmsg; }
 			

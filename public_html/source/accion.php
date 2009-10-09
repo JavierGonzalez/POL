@@ -166,7 +166,7 @@ case 'expulsar':
 		$result = mysql_query("SELECT nick, ID FROM ".SQL_USERS." 
 WHERE ID = '".$_GET['ID']."' 
 AND estado != 'expulsado' 
-AND cargo = '0' OR cargo = '21'
+AND cargo = '0'
 LIMIT 1", $link);
 		while ($row = mysql_fetch_array($result)) {
 			mysql_query("UPDATE ".SQL_USERS." SET estado = 'expulsado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);

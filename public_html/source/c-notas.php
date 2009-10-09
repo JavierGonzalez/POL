@@ -12,7 +12,7 @@ if ($_GET['a'] == 'mmm') {
 
 } else {						// NOTAS HOME
 	$txt_title = 'Notas';
-	$notame_max = 160;
+	$notame_max = 130;			// Cambiado el numero de caracteres de 160 a 130 para compatiblidad con twitter
 
 	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."foros_msg WHERE hilo_ID = '-1'", $link);
 	while($row = mysql_fetch_array($result)) { $notas_num = $row['num']; }
@@ -24,7 +24,7 @@ if ($_GET['a'] == 'mmm') {
 
 <table border="0" cellpadding="0" width="700" cellspacing="5" class="pol_table">';
 
-if (($pol['pais'] == PAIS) AND (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador'))) {
+if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { //eliminada limitacion a extranjeros
 	$txt .= '
 <form action="/accion.php?a=foro&b=reply" method="post">
 <input type="hidden" name="subforo" value="-1"  />

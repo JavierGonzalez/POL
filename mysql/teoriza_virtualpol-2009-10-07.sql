@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `expulsiones` (
   KEY `user_ID` (`user_ID`),
   KEY `estado` (`estado`),
   KEY `IP` (`IP`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=148 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `hechos` (
   `pais` enum('VirtualPol','POL','VULCAN','Hispania') NOT NULL default 'VirtualPol',
   PRIMARY KEY  (`ID`),
   KEY `time` (`time`,`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=111 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `hispania_ban` (
   KEY `user_ID` (`user_ID`),
   KEY `estado` (`estado`),
   KEY `IP` (`IP`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `hispania_chat_0` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14065 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `hispania_chat_1` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `hispania_chat_2` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -226,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `hispania_chat_3` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -248,7 +248,7 @@ CREATE TABLE IF NOT EXISTS `hispania_chat_4` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -270,7 +270,7 @@ CREATE TABLE IF NOT EXISTS `hispania_chat_5` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=385 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -292,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `hispania_chat_6` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=376 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -336,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `hispania_chat_8` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -377,7 +377,7 @@ CREATE TABLE IF NOT EXISTS `hispania_cuentas` (
   UNIQUE KEY `nombre` (`nombre`),
   KEY `user_ID` (`user_ID`),
   KEY `nivel` (`nivel`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=51 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -414,7 +414,7 @@ CREATE TABLE IF NOT EXISTS `hispania_docs` (
   UNIQUE KEY `url` (`url`),
   KEY `estado` (`estado`),
   KEY `cat_ID` (`cat_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -432,7 +432,7 @@ CREATE TABLE IF NOT EXISTS `hispania_elec` (
   `pols_init` mediumint(8) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   KEY `time` (`time`,`tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -449,7 +449,7 @@ CREATE TABLE IF NOT EXISTS `hispania_elecciones` (
   `time` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=45 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -470,7 +470,7 @@ CREATE TABLE IF NOT EXISTS `hispania_empresas` (
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `url` (`url`,`cat_ID`),
   KEY `cat_ID` (`cat_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=60 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -491,7 +491,7 @@ CREATE TABLE IF NOT EXISTS `hispania_estudios_users` (
   KEY `estado` (`estado`),
   KEY `ID_estudio` (`ID_estudio`),
   KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=657 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -509,7 +509,7 @@ CREATE TABLE IF NOT EXISTS `hispania_examenes_preg` (
   `tiempo` varchar(6) NOT NULL default '',
   PRIMARY KEY  (`ID`),
   KEY `examen_ID` (`examen_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1163 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -534,7 +534,7 @@ CREATE TABLE IF NOT EXISTS `hispania_foros_hilos` (
   KEY `sub_ID` (`sub_ID`),
   KEY `time_last` (`time_last`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=329 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -555,7 +555,7 @@ CREATE TABLE IF NOT EXISTS `hispania_foros_msg` (
   KEY `foro_ID` (`hilo_ID`),
   KEY `time` (`time`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1864 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -572,7 +572,7 @@ CREATE TABLE IF NOT EXISTS `hispania_log` (
   `dato` mediumint(8) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=864 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -599,7 +599,7 @@ CREATE TABLE IF NOT EXISTS `hispania_mapa` (
   KEY `pos_y` (`pos_y`),
   KEY `estado` (`estado`),
   KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=622 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -638,7 +638,7 @@ CREATE TABLE IF NOT EXISTS `hispania_partidos` (
   UNIQUE KEY `siglas` (`siglas`),
   UNIQUE KEY `ID_presidente` (`ID_presidente`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -653,7 +653,7 @@ CREATE TABLE IF NOT EXISTS `hispania_partidos_listas` (
   `orden` tinyint(3) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -670,7 +670,7 @@ CREATE TABLE IF NOT EXISTS `hispania_pujas` (
   PRIMARY KEY  (`ID`),
   KEY `mercado_ID` (`mercado_ID`),
   KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=258 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -691,7 +691,7 @@ CREATE TABLE IF NOT EXISTS `hispania_ref` (
   `tipo` enum('sondeo','referendum','parlamento') NOT NULL default 'sondeo',
   PRIMARY KEY  (`ID`),
   KEY `tipo` (`tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -706,7 +706,7 @@ CREATE TABLE IF NOT EXISTS `hispania_ref_votos` (
   `voto` tinyint(3) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   KEY `ref_ID` (`ref_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=246 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -734,7 +734,7 @@ CREATE TABLE IF NOT EXISTS `hispania_stats` (
   `confianza` smallint(5) NOT NULL,
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=86 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -753,7 +753,7 @@ CREATE TABLE IF NOT EXISTS `hispania_transacciones` (
   KEY `emisor_ID` (`emisor_ID`),
   KEY `receptor_ID` (`receptor_ID`),
   KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1229 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -767,7 +767,7 @@ CREATE TABLE IF NOT EXISTS `mails` (
   `time` datetime NOT NULL,
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=690 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -788,7 +788,7 @@ CREATE TABLE IF NOT EXISTS `mensajes` (
   KEY `recibe_ID` (`recibe_ID`),
   KEY `leido` (`leido`),
   KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39991 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -811,7 +811,7 @@ CREATE TABLE IF NOT EXISTS `pol_ban` (
   KEY `user_ID` (`user_ID`),
   KEY `estado` (`estado`),
   KEY `IP` (`IP`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=356 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -896,7 +896,7 @@ CREATE TABLE IF NOT EXISTS `pol_chat_0` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90235 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -918,7 +918,7 @@ CREATE TABLE IF NOT EXISTS `pol_chat_1` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3373 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -940,7 +940,7 @@ CREATE TABLE IF NOT EXISTS `pol_chat_2` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -962,7 +962,7 @@ CREATE TABLE IF NOT EXISTS `pol_chat_3` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -984,7 +984,7 @@ CREATE TABLE IF NOT EXISTS `pol_chat_4` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=205 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1006,7 +1006,7 @@ CREATE TABLE IF NOT EXISTS `pol_chat_5` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1230 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1028,7 +1028,7 @@ CREATE TABLE IF NOT EXISTS `pol_chat_6` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=400 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1050,7 +1050,7 @@ CREATE TABLE IF NOT EXISTS `pol_chat_7` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1072,7 +1072,7 @@ CREATE TABLE IF NOT EXISTS `pol_chat_8` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1094,7 +1094,7 @@ CREATE TABLE IF NOT EXISTS `pol_chat_9` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10108 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1113,7 +1113,7 @@ CREATE TABLE IF NOT EXISTS `pol_cuentas` (
   UNIQUE KEY `nombre` (`nombre`),
   KEY `user_ID` (`user_ID`),
   KEY `nivel` (`nivel`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=299 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1127,7 +1127,7 @@ CREATE TABLE IF NOT EXISTS `pol_diputados` (
   `user_ID` mediumint(8) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=86 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1150,7 +1150,7 @@ CREATE TABLE IF NOT EXISTS `pol_docs` (
   UNIQUE KEY `url` (`url`),
   KEY `estado` (`estado`),
   KEY `cat_ID` (`cat_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=522 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1168,7 +1168,7 @@ CREATE TABLE IF NOT EXISTS `pol_elec` (
   `pols_init` mediumint(8) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   KEY `time` (`time`,`tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1185,7 +1185,7 @@ CREATE TABLE IF NOT EXISTS `pol_elecciones` (
   `time` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=201 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1206,7 +1206,7 @@ CREATE TABLE IF NOT EXISTS `pol_empresas` (
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `url` (`url`,`cat_ID`),
   KEY `cat_ID` (`cat_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=295 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1227,7 +1227,7 @@ CREATE TABLE IF NOT EXISTS `pol_estudios_users` (
   KEY `estado` (`estado`),
   KEY `ID_estudio` (`ID_estudio`),
   KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13556 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1245,7 +1245,7 @@ CREATE TABLE IF NOT EXISTS `pol_examenes_preg` (
   `tiempo` varchar(6) NOT NULL default '',
   PRIMARY KEY  (`ID`),
   KEY `examen_ID` (`examen_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='(ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo)' AUTO_INCREMENT=1071 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='(ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo)' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1270,7 +1270,7 @@ CREATE TABLE IF NOT EXISTS `pol_foros_hilos` (
   KEY `sub_ID` (`sub_ID`),
   KEY `time_last` (`time_last`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4168 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1291,7 +1291,7 @@ CREATE TABLE IF NOT EXISTS `pol_foros_msg` (
   KEY `foro_ID` (`hilo_ID`),
   KEY `time` (`time`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41166 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1308,7 +1308,7 @@ CREATE TABLE IF NOT EXISTS `pol_log` (
   `dato` mediumint(8) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20373 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1335,7 +1335,7 @@ CREATE TABLE IF NOT EXISTS `pol_mapa` (
   KEY `pos_y` (`pos_y`),
   KEY `estado` (`estado`),
   KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7074 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1354,7 +1354,7 @@ CREATE TABLE IF NOT EXISTS `pol_mercado` (
   `estado` enum('ok','old') NOT NULL default 'ok',
   PRIMARY KEY  (`ID`),
   KEY `tipo` (`tipo`,`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1374,7 +1374,7 @@ CREATE TABLE IF NOT EXISTS `pol_partidos` (
   UNIQUE KEY `siglas` (`siglas`),
   UNIQUE KEY `ID_presidente` (`ID_presidente`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=176 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1389,7 +1389,7 @@ CREATE TABLE IF NOT EXISTS `pol_partidos_listas` (
   `orden` tinyint(3) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1406,7 +1406,7 @@ CREATE TABLE IF NOT EXISTS `pol_pujas` (
   PRIMARY KEY  (`ID`),
   KEY `mercado_ID` (`mercado_ID`),
   KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7882 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1427,7 +1427,7 @@ CREATE TABLE IF NOT EXISTS `pol_ref` (
   `tipo` enum('sondeo','referendum','parlamento') NOT NULL default 'sondeo',
   PRIMARY KEY  (`ID`),
   KEY `tipo` (`tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=656 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1442,7 +1442,7 @@ CREATE TABLE IF NOT EXISTS `pol_ref_votos` (
   `voto` tinyint(3) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   KEY `ref_ID` (`ref_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12725 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1470,7 +1470,7 @@ CREATE TABLE IF NOT EXISTS `pol_stats` (
   `confianza` smallint(5) NOT NULL,
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=445 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1489,7 +1489,7 @@ CREATE TABLE IF NOT EXISTS `pol_transacciones` (
   KEY `emisor_ID` (`emisor_ID`),
   KEY `receptor_ID` (`receptor_ID`),
   KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=71069 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1509,7 +1509,7 @@ CREATE TABLE IF NOT EXISTS `referencias` (
   UNIQUE KEY `IP` (`IP`),
   KEY `user_ID` (`user_ID`),
   KEY `pagado` (`pagado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6647 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1561,7 +1561,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `voto_confianza` (`voto_confianza`),
   KEY `pais` (`pais`),
   KEY `ref_num` (`ref_num`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=200418 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1580,7 +1580,7 @@ CREATE TABLE IF NOT EXISTS `votos` (
   KEY `estado` (`estado`),
   KEY `uservoto_ID` (`uservoto_ID`),
   KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6161 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1603,7 +1603,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_ban` (
   KEY `user_ID` (`user_ID`),
   KEY `estado` (`estado`),
   KEY `IP` (`IP`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=63 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1688,7 +1688,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_chat_0` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12307 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1710,7 +1710,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_chat_1` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1732,7 +1732,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_chat_2` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1754,7 +1754,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_chat_3` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1776,7 +1776,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_chat_4` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1798,7 +1798,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_chat_5` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=133 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1820,7 +1820,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_chat_6` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=273 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1842,7 +1842,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_chat_7` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=77 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1864,7 +1864,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_chat_8` (
   KEY `cargo` (`cargo`),
   KEY `time` (`time`),
   KEY `nick` (`nick`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1883,7 +1883,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_cuentas` (
   UNIQUE KEY `nombre` (`nombre`),
   KEY `user_ID` (`user_ID`),
   KEY `nivel` (`nivel`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=53 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1920,7 +1920,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_docs` (
   UNIQUE KEY `url` (`url`),
   KEY `estado` (`estado`),
   KEY `cat_ID` (`cat_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=76 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1938,7 +1938,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_elec` (
   `pols_init` mediumint(8) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   KEY `time` (`time`,`tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1955,7 +1955,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_elecciones` (
   `time` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=104 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1976,7 +1976,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_empresas` (
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `url` (`url`,`cat_ID`),
   KEY `cat_ID` (`cat_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1997,7 +1997,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_estudios_users` (
   KEY `estado` (`estado`),
   KEY `ID_estudio` (`ID_estudio`),
   KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=634 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2015,7 +2015,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_examenes_preg` (
   `tiempo` varchar(6) NOT NULL default '',
   PRIMARY KEY  (`ID`),
   KEY `examen_ID` (`examen_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=432 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2040,7 +2040,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_foros_hilos` (
   KEY `sub_ID` (`sub_ID`),
   KEY `time_last` (`time_last`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=544 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2061,7 +2061,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_foros_msg` (
   KEY `foro_ID` (`hilo_ID`),
   KEY `time` (`time`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3452 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2078,7 +2078,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_log` (
   `dato` mediumint(8) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1314 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2105,7 +2105,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_mapa` (
   KEY `pos_y` (`pos_y`),
   KEY `estado` (`estado`),
   KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2336 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2124,7 +2124,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_mercado` (
   `estado` enum('ok','old') NOT NULL default 'ok',
   PRIMARY KEY  (`ID`),
   KEY `tipo` (`tipo`,`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2144,7 +2144,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_partidos` (
   UNIQUE KEY `siglas` (`siglas`),
   UNIQUE KEY `ID_presidente` (`ID_presidente`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2159,7 +2159,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_partidos_listas` (
   `orden` tinyint(3) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2176,7 +2176,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_pujas` (
   PRIMARY KEY  (`ID`),
   KEY `mercado_ID` (`mercado_ID`),
   KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=380 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2197,7 +2197,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_ref` (
   `tipo` enum('sondeo','referendum','parlamento') NOT NULL default 'sondeo',
   PRIMARY KEY  (`ID`),
   KEY `tipo` (`tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=114 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2212,7 +2212,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_ref_votos` (
   `voto` tinyint(3) NOT NULL default '0',
   PRIMARY KEY  (`ID`),
   KEY `ref_ID` (`ref_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=683 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2240,7 +2240,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_stats` (
   `confianza` smallint(5) NOT NULL,
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=167 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2259,7 +2259,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_transacciones` (
   KEY `emisor_ID` (`emisor_ID`),
   KEY `receptor_ID` (`receptor_ID`),
   KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3672 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 
 -- phpMyAdmin SQL Dump
@@ -2294,7 +2294,7 @@ CREATE TABLE IF NOT EXISTS `hispania_cat` (
   PRIMARY KEY  (`ID`),
   KEY `url` (`url`,`tipo`),
   KEY `tipo` (`tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `hispania_cat`
@@ -2332,7 +2332,7 @@ CREATE TABLE IF NOT EXISTS `hispania_config` (
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `dato` (`dato`),
   KEY `autoload` (`autoload`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `hispania_config`
@@ -2398,7 +2398,7 @@ CREATE TABLE IF NOT EXISTS `hispania_estudios` (
   KEY `nivel` (`nivel`),
   KEY `nombre` (`nombre`),
   KEY `asigna` (`asigna`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `hispania_estudios`
@@ -2447,7 +2447,7 @@ CREATE TABLE IF NOT EXISTS `hispania_examenes` (
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `titulo` (`titulo`),
   KEY `nota` (`nota`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=62 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `hispania_examenes`
@@ -2503,7 +2503,7 @@ CREATE TABLE IF NOT EXISTS `hispania_foros` (
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `url` (`url`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `hispania_foros`
@@ -2544,7 +2544,7 @@ CREATE TABLE IF NOT EXISTS `pol_cat` (
   PRIMARY KEY  (`ID`),
   KEY `url` (`url`,`tipo`),
   KEY `tipo` (`tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `pol_cat`
@@ -2582,7 +2582,7 @@ CREATE TABLE IF NOT EXISTS `pol_config` (
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `dato` (`dato`),
   KEY `autoload` (`autoload`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `pol_config`
@@ -2648,7 +2648,7 @@ CREATE TABLE IF NOT EXISTS `pol_estudios` (
   KEY `nivel` (`nivel`),
   KEY `nombre` (`nombre`),
   KEY `asigna` (`asigna`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `pol_estudios`
@@ -2697,7 +2697,7 @@ CREATE TABLE IF NOT EXISTS `pol_examenes` (
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `titulo` (`titulo`),
   KEY `nota` (`nota`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='(ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num' AUTO_INCREMENT=61 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='(ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num' AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `pol_examenes`
@@ -2770,7 +2770,7 @@ CREATE TABLE IF NOT EXISTS `pol_foros` (
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `url` (`url`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `pol_foros`
@@ -2809,7 +2809,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_cat` (
   PRIMARY KEY  (`ID`),
   KEY `url` (`url`,`tipo`),
   KEY `tipo` (`tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `vulcan_cat`
@@ -2845,7 +2845,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_config` (
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `dato` (`dato`),
   KEY `autoload` (`autoload`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `vulcan_config`
@@ -2911,7 +2911,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_estudios` (
   KEY `nivel` (`nivel`),
   KEY `nombre` (`nombre`),
   KEY `asigna` (`asigna`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `vulcan_estudios`
@@ -2960,7 +2960,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_examenes` (
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `titulo` (`titulo`),
   KEY `nota` (`nota`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=53 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `vulcan_examenes`
@@ -3019,7 +3019,7 @@ CREATE TABLE IF NOT EXISTS `vulcan_foros` (
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `url` (`url`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `vulcan_foros`

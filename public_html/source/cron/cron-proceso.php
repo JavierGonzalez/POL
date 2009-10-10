@@ -223,7 +223,7 @@ WHERE
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".$margen_90dias."' AND fecha_last <= '".$margen_60dias."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_90dias."' AND fecha_registro <= '".$margen_30dias."' AND fecha_last <= '".$margen_30dias."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_30dias."' AND fecha_last <= '".$margen_10dias."') OR
-(estado = 'expulsado' AND fecha_last <= '".$margen_10dias."') OR
+((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".$margen_10dias."') OR
 (estado = 'validar' AND fecha_last <= '".$margen_10dias."')
 ", $link);
 while($row = mysql_fetch_array($result)) {

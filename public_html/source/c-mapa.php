@@ -125,7 +125,7 @@ Tama&ntilde;o: <b>' . $row['size_x'] . 'x' . $row['size_y'] . '=' . ($row['size_
 
 </form>
 
-<p><a href="/"><b>Ver mapa</b></a> &nbsp; <a href="/mapa/propiedades/"><b>Ver tus propiedades</b></a></p>';
+<p><a href="/mapa/"><b>Ver mapa</b></a> &nbsp; <a href="/mapa/propiedades/"><b>Ver tus propiedades</b></a></p>';
 	}
 
 

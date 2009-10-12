@@ -111,7 +111,7 @@ LIMIT 1", $link);
 		$ref = $row3['ref']; 
 		$IP = $row3['IP'];
 	}
-	if (($user_ID) AND ($_POST['pais'] == PAIS)) { // RECHAZAR CIUDADANIA
+	if (($user_ID) AND ($_POST['pais'] == PAIS) AND ($pols >=0)) { // RECHAZAR CIUDADANIA
 
 		// moneda
 		if ($pols >= 0) {

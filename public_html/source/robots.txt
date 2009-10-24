@@ -1,5 +1,5 @@
 User-Agent: *
 Allow: /
-Disallow: /accion.php
-Disallow: /ajax.php
-Disallow: /api.php?*
+Disallow: /accion.php*
+Disallow: /ajax.php*
+Disallow: /api.php*

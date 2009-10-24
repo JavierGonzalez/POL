@@ -35,7 +35,7 @@ case 'censo':
 	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM ".SQL_USERS." WHERE estado = 'expulsado'", $link));
 	$censo_expulsados = $result[0];
 
-	if (!is_numeric($_GET['c'])) {
+	if ((!is_numeric($_GET['c'])) AND (isset($_GET['c']))) {
 		$pagina = $_GET['d'];
 		$pagina_url = '/info/censo/busqueda/' . $_GET['c'] . '/';
 	} elseif (($_GET['b']) AND (!is_numeric($_GET['b']))) { 

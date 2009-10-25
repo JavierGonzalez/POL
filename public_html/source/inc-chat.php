@@ -232,9 +232,12 @@ function print_msg(data) {
 
 					list += "<li id=\"" + mli[0] + "\" class=\"cf_p chat_priv\">" + mli[2] + " <span class=\"chat_priv\" OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
 				}
-			} else {
-				if ("' . $pol['nick'] . '" != "") { var txt = txt.replace(/' . $pol['nick'] . '/gi, "<b style=\"color:orange;\">" + minick + "</b>"); }
-				var yo = "";
+			} else {';
+
+	if ($pol['nick']) {$txt_header .= 'if ("' . $pol['nick'] . '" != "") { var txt = txt.replace(/' . $pol['nick'] . '/gi, "<b style=\"color:orange;\">" + minick + "</b>"); }'; }
+
+
+	$txt_header .= 'var yo = "";
 				if (minick == mli[3]) { var yo = " class=\"yo\""; }
 				list += "<li id=\"" + mli[0] + "\" class=\"cf_m\">" + mli[2] + " <img src=\"/img/cargos/" + mli[1] + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[mli[1]] + "\" /> <b" + yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
 			}
@@ -324,3 +327,7 @@ return msg;
 </script>';
 
 ?>
+
+
+
+

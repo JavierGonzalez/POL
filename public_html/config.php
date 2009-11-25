@@ -57,7 +57,7 @@ if ($dev) {
 }
 
 define('HOST', $_SERVER['HTTP_HOST']);
-define('VERSION', 'BETA 1.0');
+define('VERSION', '1.0 Beta');
 
 // variables de tablas SQL
 define('SQL_USERS', 'users');

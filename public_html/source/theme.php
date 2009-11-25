@@ -51,7 +51,7 @@ menu_ID = <?=$menu_ID?>;
 defcon = <?=$pol['config']['defcon']?>;
 window.google_analytics_uacct = "UA-59186-46";
 </script>
-<script type="text/javascript" src="/img/jquery.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 
 <style type="text/css">
 body { background: <?=$body_bg?>; }

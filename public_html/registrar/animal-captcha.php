@@ -14,7 +14,7 @@ Powered by: Blogs Teoriza (www.Teoriza.com)
 $ac_dir = 'animal/';		// images directory of animals or things
 $width = 120;
 $jpg_quality = 76; 			// final jpg quality, recomended: 76
-$ac_num = 2;				// number of animals/objects (1 normal, 2 default, 4 max)
+$ac_num = 1;				// number of animals/objects (1 normal, 2 default, 4 max)
 $bg_trans = rand(32,35); 	// transparency of background image, recomended: rand(30,35)
 
 $polygons_num = false; 		// number of random polygons, false to disable, recomended: false

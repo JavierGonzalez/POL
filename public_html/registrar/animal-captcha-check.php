@@ -1,10 +1,10 @@
 <?php 
 /*
-### ANIMAL CAPTCHA 1.3
+### ANIMAL CAPTCHA 1.4
 Author: GONZO (Javier Gonzalez Gonzalez) gonzomail@gmail.com
 url: http://gonzo.teoriza.com/animal-captcha
 Blogs Teoriza (www.Teoriza.com)
-2009/10/03
+2009/11/20
 ###
 */
 
@@ -18,11 +18,20 @@ function animal_captcha_check($try) {
 	$try = ereg_replace("[ÚÙÛúùû]", "u", $try);
 	$try = ereg_replace("[çÇ]", "c", $try);
 	$try = ereg_replace("[ñÑ]", "n", $try);
-	$delete = array('²', '¡', 'º', 'ª', '“', '”', '„', '"', '\'', '.', ',', '_', ':',';','.', '´','!','¿','?','[',']','{','}','(',')','/','%','&','$','@');
-	$try = str_replace(" ", "-", str_replace($delete, "", $try));
+	$delete = array('²', '¡', 'º', 'ª', '“', '”', '„', '"', "'", '.', ',', '_', ':',';','.', '´','!','¿','?','[',']','{','}','(',')','/','%','&','$','@');
+	$try = str_replace($delete, "", $try);
 	$try = utf8_encode(strtolower($try));
-	$animals = explode('-', $_SESSION['animalcaptcha']);
-	if (in_array($try, $animals)) { return true; }  //captcha is OK (true)
-	else { return false; } //captcha ERROR (false)
+	$trys = explode(" ", $try);
+	$animals = explode('|', $_SESSION['animalcaptcha']);
+	unset($_SESSION['animalcaptcha']);
+	$result = true;
+	$e = 0;
+	foreach($animals AS $one_animal) {	
+		$animals_resp = explode('-', $one_animal);
+		if (!$trys[$e]) { $trys[$e] = $trys[0]; }
+		if (!in_array($trys[$e], $animals_resp)) { $result = false; }
+		$e++;
+	}
+	return $result;
 }
 ?>

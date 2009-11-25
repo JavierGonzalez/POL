@@ -1,83 +1,88 @@
 <?php
 /*
-### ANIMAL CAPTCHA 1.3
-Author: GONZO (Javier Gonzalez Gonzalez) gonzomail@gmail.com
+### ANIMAL CAPTCHA 1.4
+Author: GONZO (Javier Gonzalez, gonzomail@gmail.com)
 url: http://gonzo.teoriza.com/animal-captcha
-Blogs Teoriza (www.Teoriza.com)
-2009/10/03
+Powered by: Blogs Teoriza (www.Teoriza.com)
+2009/11/20
 ###
 */
 
 
 // *** CONFIG ***
 
-$dir_animals = 'animal/';			// images directory of animals or things
+$ac_dir = 'animal/';		// images directory of animals or things
 $width = 120;
-$height = 120;
-$jpg_quality = 90; 					// final jpg quality (good:90, poor: 60), recomended: 90 max
+$jpg_quality = 76; 			// final jpg quality, recomended: 76
+$ac_num = 2;				// number of animals/objects (1 normal, 2 default, 4 max)
+$bg_trans = rand(32,35); 	// transparency of background image, recomended: rand(30,35)
 
-$polygons_num = false; 				// number of random polygons, false to disable, recomended: 0-2
-$polygons_trans = mt_rand(30,40);	// transparency of polygons, recomended: mt_rand(30,40)
-
-$img_bg_trans = mt_rand(30,35); 	// transparency of background image, recomended: mt_rand(30,35)
-$img_rotate = false; 				// random rotate image, false to disable, recomended: mt_rand(-6,6)
+$polygons_num = false; 		// number of random polygons, false to disable, recomended: false
+$polygons_trans = false;	// transparency of polygons, recomended: rand(30,40)
 
 
 
 // *** CORE ***
 
-if (!isset($_SESSION)) { session_start(); }
+$height = $width;
 
-// Select one random image name
-chdir($dir_animals);
+// gen images list
+chdir($ac_dir);
 $dir = opendir('.');
 while (($file = readdir($dir)) !== false) {
-	if (($file != '.') && ($file != '..') && (is_file($file)) && ($file != 'index.html')) { $files[] = $file; }
+	$ext = explode('.', $file);
+	if (($ext[1] == 'jpg') && (is_file($file))) { $files[] = $file; } 
 }
 closedir($dir);
 chdir('../');
 
-// select primary animal image
-srand((float) microtime() * 10000000);
-$file = array_rand($files);
-$animal = explode('.', $files[$file]);
-$animal = $animal[0]; 
-$a_name = explode('_', $animal);
-$_SESSION['animalcaptcha'] = $a_name[0]; // true answer random of the image, format: 'name-othername-othername_id-opcional.jpg'
+// load N animals images
+$img_final = imagecreatetruecolor($width*$ac_num, $height);
+$ac_rand = array_rand($files, ($ac_num+1));
 
-// select secundary animal image, for background
-$animal_bg = array_rand($files);
-$animal_bg = $files[$animal_bg]; 
+for ($i=1;$i<=$ac_num;$i++) {
+	// select primary animal image
+	$an = explode('.', $files[$ac_rand[$i]]);
+	$an = $an[0]; 
+	$a_name = explode('_', $an);
+	if (isset($ac_result)) { $ac_result .= '|'; }
+	$ac_result .= $a_name[0];
+	$img = imagecreatefromjpeg($ac_dir.$an.'.jpg');
+	imagecopy($img_final, $img, $width*($i-1), 0, 0, 0, $width, $height);
+	imagedestroy($img);
+}
 
-
-
-// load random image
-$img = imagecreatefromjpeg($dir_animals.$animal.'.jpg');
+// random background image
+$ac_bg = $files[$ac_rand[0]];
+$img_bg_size = imagecreatetruecolor($width*$ac_num, $height);
+$img_bg = imagecreatefromjpeg($ac_dir.$ac_bg);
+$img_bg = imagerotate($img_bg, (90*rand(1,3)), -1); // invert random background animal
+imagecopyresized($img_bg_size, $img_bg, 0, 0, 0, 0, $width*$ac_num, $height, $width, $height);
+imagedestroy($img_bg);
+imagecopymerge($img_final, $img_bg_size, 0, 0, 0, 0, $width*$ac_num, $height, $bg_trans);
+imagedestroy($img_bg_size);
 
 // random transparent polygons
 if ($polygons_num) {
 	for ($i=0;$i<$polygons_num;$i++) {
 		$c_min = 200; $c_max = 255;
-		$polygon_color = imagecolorallocatealpha($img, mt_rand($c_min, $c_max), mt_rand($c_min, $c_max), mt_rand($c_min, $c_max), $polygons_trans);
-		imagefilledpolygon($img, array(
-			mt_rand(-0*$width,$width*1), mt_rand(-0*$width,$width*1),
-			mt_rand(-0*$width,$width*1), mt_rand(-0*$width,$width*1),
-			mt_rand(-0*$width,$width*1), mt_rand(-0*$width,$width*1),
-		), 3, $polygon_color);
+		$polygon_color = imagecolorallocatealpha($img_final, rand($c_min, $c_max), rand($c_min, $c_max), rand($c_min, $c_max), $polygons_trans);
+		$wf1 = $width*$ac_num;
+		imagefilledpolygon($img_final, 
+		array(rand($wf1,$wf1), rand(-0*$wf1,$wf1), rand(-0*$wf1,$wf1), rand(-0*$wf1,$wf1), rand(-0*$wf1,$wf1), rand(-0*$wf1,$wf1),), 3, $polygon_color);
 	}
 }
 
-// load random background image
-$img_bg = imagecreatefromjpeg($dir_animals.$animal_bg);
-// invert background animal
-$img_bg = imagerotate($img_bg, (90*mt_rand(1,3)), -1); 
-imagecopymerge($img, $img_bg, 0, 0, 0, 0, $width, $height, $img_bg_trans);
+// set session result
+if (!isset($_SESSION)) { session_start(); }
+$_SESSION['animalcaptcha'] = $ac_result;
 
-// random rotate
-if ($img_rotate) { $img = imagerotate($img, $img_rotate, -1); }
 
 // print image and destroy
 header('Content-type: image/jpeg');
-imagejpeg($img, NULL, $jpg_quality);
-imagedestroy($img);
+imagejpeg($img_final, NULL, $jpg_quality);
+imagedestroy($img_final);
+
+
+
 ?>

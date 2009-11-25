@@ -992,7 +992,7 @@ case 'kick':
 		if (($es_policiaexpulsador) OR ($pol['cargos'][13])) { 
 			mysql_query("UPDATE ".SQL."ban SET estado = 'cancelado' WHERE estado = 'activo' AND ID = '".$_GET['ID']."' LIMIT 1", $link); 
 		}
-		$refer_url = 'control/expulsiones/';
+		$refer_url = 'control/kick/';
 
 	} elseif ($_POST['nick']) {
 		$result = mysql_query("SELECT ID, nick, IP, cargo, pais FROM ".SQL_USERS." WHERE nick = '".$_POST['nick']."' LIMIT 1", $link);

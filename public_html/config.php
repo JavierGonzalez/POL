@@ -48,9 +48,9 @@ default:
 // variables del sistema
 define('MONEDA', '<img src="/img/m.gif" border="0" />');
 define('MONEDA_NOMBRE', 'POLs');
-define('RAIZ', '/home/teoriza/public_html/virtualpol.com/');
+define('RAIZ', '/home/teoriza/public_html/virtualpol_dev/');
 define('HOST', $_SERVER['HTTP_HOST']);
-define('VERSION', 'BETA 0.3');
+define('VERSION', 'BETA 1.0');
 
 // variables de tablas SQL
 define('SQL_USERS', 'users');
@@ -62,19 +62,9 @@ define('SQL_EXPULSIONES', 'expulsiones');
 // variables del sistema de usuarios
 define('USERCOOKIE', '.virtualpol.com');
 define('CLAVE', ''); // clave de coockie (cambiar en caso de robo de claves md5)
-define('REGISTRAR', 'http://www.virtualpol.com/registrar/');
+define('REGISTRAR', 'http://www-dev.virtualpol.com/registrar/');
 
-function conectar() {
 
-	// configuracion MySQL, CUIDADO!!!!
-	$mysql_db = 'SET_DATABASE';
-	$mysql_user = 'SET_USER';
-	$mysql_pass = 'SET_PASS';
-
-	$error_msg = '<h1>MySQL Error</h1><p>Lo siento, la base de datos no funciona temporalmente.</p>';
-	if (!($l=@mysql_connect('localhost', $mysql_user, $mysql_pass))) { echo $error_msg; exit; }
-	if (!@mysql_select_db($mysql_db, $l)) { echo $error_msg; exit; } 
-	return $l;
-}
-
+// funciones con passwords importantes
+include('config-pwd.php');
 ?>

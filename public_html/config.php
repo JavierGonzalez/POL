@@ -1,5 +1,7 @@
 <?php
 
+$dev = false;
+
 // INICIALIZACION
 
 
@@ -48,7 +50,12 @@ default:
 // variables del sistema
 define('MONEDA', '<img src="/img/m.gif" border="0" />');
 define('MONEDA_NOMBRE', 'POLs');
-define('RAIZ', '/home/teoriza/public_html/virtualpol_dev/');
+if ($dev) {
+	define('RAIZ', '/home/teoriza/public_html/virtualpol_dev/');
+} else {
+	define('RAIZ', '/home/teoriza/public_html/virtualpol.com/');
+}
+
 define('HOST', $_SERVER['HTTP_HOST']);
 define('VERSION', 'BETA 1.0');
 
@@ -62,7 +69,12 @@ define('SQL_EXPULSIONES', 'expulsiones');
 // variables del sistema de usuarios
 define('USERCOOKIE', '.virtualpol.com');
 define('CLAVE', ''); // clave de coockie (cambiar en caso de robo de claves md5)
-define('REGISTRAR', 'http://www-dev.virtualpol.com/registrar/');
+if ($dev) {
+	define('REGISTRAR', 'http://www-dev.virtualpol.com/registrar/');
+} else {
+	define('REGISTRAR', 'http://www.virtualpol.com/registrar/');
+}
+
 
 
 // funciones con passwords importantes

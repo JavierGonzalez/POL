@@ -1,21 +1,17 @@
 <?php
 
-$dev = false;
-
 // INICIALIZACION
-
-
 $host = explode('.', $_SERVER['HTTP_HOST']); // obtiene $host[0] que es el subdominio
 $host[0] = str_replace('-dev', '', $host[0]); // convierte subdominios "pais-dev" en "pais" para que funcione la version dev
-
 if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
 
-// paises existentes y colores
+
+// Configuracion Paises y colores
 $vp['paises'] = array('POL', 'Hispania', 'VULCAN');
-$vp['bg'] = array('POL'=>'#E1EDFF', 'VULCAN'=>'#FFD7B3', 'Hispania'=>'#FFFF4F', 'ninguno'=>'#FFFFFF'); //#FFFF00
+$vp['bg'] = array('POL'=>'#E1EDFF', 'VULCAN'=>'#FFD7B3', 'Hispania'=>'#FFFF4F', 'ninguno'=>'#FFFFFF');
 $vp['bg2'] = array('POL'=>'#BFD9FF', 'VULCAN'=>'#FFB3B3', 'Hispania'=>'#D9D900', 'ninguno'=>'#FFFFFF');
 
-// carga las variables de los paises
+// Configuracion por pais
 switch ($host[0]) {
 
 case 'pol':
@@ -51,8 +47,10 @@ default:
 define('MONEDA', '<img src="/img/m.gif" border="0" />');
 define('MONEDA_NOMBRE', 'POLs');
 if ($dev) {
+	// Version DEV
 	define('RAIZ', '/home/teoriza/public_html/virtualpol_dev/');
 } else {
+	// version REAL (www.virtualpol.com)
 	define('RAIZ', '/home/teoriza/public_html/virtualpol.com/');
 }
 

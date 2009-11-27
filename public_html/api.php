@@ -31,7 +31,7 @@ if (($_GET['a']) AND ($_GET['pass'])) {
 			case 'debug': $txt = "debug: nick|user_ID|MONEDA\n" . $r['nick'] . "|" . $r['user_ID'] . "|" . $r['pols'] . "\n"; break;
 
 
-			case 'transacciones_OFF': 
+			case 'transacciones': exit; 
 				$txt = '';
 				if (substr($_GET['cuenta'], 0, 1) == '-') {
 					$result = mysql_query("SELECT *,
@@ -57,7 +57,7 @@ LIMIT 500", $link);
 
 
 
-			case 'transferenciaQUITADO': 
+			case 'transferencia': exit;
 				$txt = 'error';
 				if ((ctype_digit($_GET['pols'])) AND ($_GET['pols'] > 0) AND ($_GET['destino']) AND ($_GET['concepto'])) {
 					$concepto = strip_tags(trim($_GET['concepto']));

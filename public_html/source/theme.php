@@ -45,6 +45,16 @@ if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\'/img/bg/'.$pol['config']
 <meta name="description" content="<?=$txt_description?>" />
 <link href="/img/style.css" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="/favicon.ico" />
+<link rel="stylesheet" type="text/css" media="screen" href="/img/superfish2.css" /> 
+		<script type="text/javascript" src="/img/hoverIntent.js"></script> 
+		<script type="text/javascript" src="/img/superfish.js"></script> 
+		<script type="text/javascript"> 
+		 
+			$(document).ready(function(){ 
+				$("ul.sfn-menu").superfish(); 
+			}); 
+		 
+		</script>
 
 <script type="text/javascript">
 menu_ID = <?=$menu_ID?>;
@@ -155,7 +165,31 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <td width="10"><a href="/img/banderas/<?=PAIS?>_500.gif"><img src="/img/banderas/<?=PAIS?>_60.gif" alt="Bandera de <?=PAIS?>, Simulador Politico en Espa&ntilde;ol juego online" border="0" style="float:left;margin:-9px 8px -2px -8px;" /></a></td>
 
-<td><span id="homelogo"><a href="http://<?=HOST?>/" class="gris"><b><?=PAIS?></b></a> | <a href="http://www.virtualpol.com/" style="font-size:14px;" title="Simulador Pol&iacute;tico">Comunidad VirtualPol</b></a></span></td>
+
+<td><ul class="sfn-menu">
+			<li class="current">
+				<a href="#a"><b><?=PAIS?></b></a>
+				<ul>
+					<li>
+						<a href="http://pol.virtualpol.com/"><b>POL</b></a>
+					</li>
+					<li class="current">
+						<a href="http://vulcan.virtualpol.com/">VULCAN</a>
+					</li>
+					<li>
+						<a href="http://hispania.virtualpol.com/">Hispania</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">Comunidad VirtualPOL</a>
+					<ul>
+						<li><a href="http://www.virtualpol.com/">Comunidad VirtualPOL</a></li>
+						<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
+						<li><a href="http://code.google.com/p/virtualpol/">Codigo</a></li>
+					</ul>
+			</li>
+		</ul></td>
 
 <td align="right" nowrap="nowrap"><?=$txt_perfil?></td>
 

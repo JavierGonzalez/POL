@@ -46,6 +46,8 @@ if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\'/img/bg/'.$pol['config']
 <link href="/img/style.css" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="/favicon.ico" />
 <link rel="stylesheet" type="text/css" media="screen" href="/img/superfish2.css" /> 
+<link rel="stylesheet" type="text/css" media="screen" href="/img/superfish.css" /> 
+
 		<script type="text/javascript" src="/img/hoverIntent.js"></script> 
 		<script type="text/javascript" src="/img/superfish.js"></script> 
 		<script type="text/javascript"> 
@@ -168,7 +170,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <td><ul class="sfn-menu">
 			<li class="current">
-				<a href="#a"><b><?=PAIS?></b></a>
+				<a href="#a"><b><?=PAIS?> ▼ |</b></a>
 				<ul>
 					<li>
 						<a href="http://pol.virtualpol.com/"><b>POL</b></a>
@@ -182,7 +184,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 				</ul>
 			</li>
 			<li>
-				<a href="#">Comunidad VirtualPOL</a>
+				<a href="#">Comunidad VirtualPOL ▼ </a>
 					<ul>
 						<li><a href="http://www.virtualpol.com/">Comunidad VirtualPOL</a></li>
 						<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
@@ -214,68 +216,86 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 
 <dl id="menu">
-<dt><a href="#">Comunicaci&oacute;n</a></dt>
-<dd>
-<ul>
-<li><a href="/" style="font-size:20px;"><b>Plaza</b></a></li>
-<li><a href="/chat/hotel-arts/">Hotel Arts</a></li>
-<li><a href="/chat/parlamento/">Parlamento</a></li>
-<li><a href="/chat/comisaria/">Comisar&iacute;a</a></li>
-<li><a href="/chat/tribunales/">Tribunales</a></li>
-<li><a href="http://www.virtualpol.com/chat/plaza-internacional/">Plaza Int.</a></li>
-<li><a href="/notas/"><b>Notas</b></a></li>
-<li><a href="/foro/" class="big"><b>Foro</b></a></li>
-</ul>
-</dd>
-
-<dt><a href="#">Informaci&oacute;n</a></dt>
-<dd>
-<ul>
-<li><a href="/info/censo/" class="big">Censo</a><span class="md">(<?=$pol['config']['info_censo']?>)</span></li>
-<li><a href="/poderes/"><b>Poderes</b></a></li>
-<li><a href="/doc/">Documentos</a><span class="md">(<?=$pol['config']['info_documentos']?>)</span></li>
-<li><a href="/info/estadisticas/">Estad&iacute;sticas</a></li>
-<li><a href="/mapa/">Mapa</a></li>
-<li><a href="/log-eventos/">Log de eventos</a></li>
-<li><a href="http://pol.virtualpol.com/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>
-<li><a href="/historia/">Hechos Hist&oacute;ricos</a></li>
-</ul>
-</dd>
-
-<dt><a href="#">Pol&iacute;tica</a></dt>
-<dd>
-<ul>
-<li><a href="/doc/boletin-oficial-de-<?=strtolower(PAIS)?>/">BO<?=substr(PAIS,0,1)?></a></li>
-<li><a href="/cargos/"><b>Cargos</b></a></li>
-<li><a href="/partidos/"><b>Partidos</b></a><span class="md">(<?=$pol['config']['info_partidos']?>)</span></li>
-<li><a href="/control/"><b>Control</b></a></li>
-<li><a href="/referendum/">Consultas</a><span class="md">(<?=$pol['config']['info_consultas']?>)</span></li>
-<li><a href="/elecciones/"><b>Elecciones</b></a></li>
-</ul>
-</dd>
-
-<dt><a href="#">Econom&iacute;a</a></dt>
-<dd>
-<ul>
-<li><a href="/empresas/"><b>Empresas</b></a></li>
-<li><a href="/pols/cuentas/">Cuentas</a></li>
-<li><a href="/pols/cuentas/1/">Cuenta <em>Gobierno</em></a></li>
-<li><a href="/subasta/">Subastas</a></li>
-<li><a href="/info/economia/">Economia Global</a></li>
-</ul>
-</dd>
-<?php if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { ?>
-<dt><a href="#"><?=$pol['nick']?></a></dt>
-<dd>
-<ul>
-<li><a href="/perfil/<?=$nick_lower?>/">Perfil</a> <a href="/pols/"><?=MONEDA?></a></li>
-<li><a href="/examenes/"><b>Ex&aacute;menes</b></a></li>
-<li><a href="/mapa/propiedades/">Propiedades</a></li>
-<li><a href="http://aziroet.com/blog/aziroet-quiere-ser-la-plataforma-web-de-tu-blog.php">Crear Blog</a></li>
-</ul>
-</dd>
-<?php } ?>
-</dl>
+<ul class="sf-menu sf-vertical">
+			<li class="current">
+				<a href="#a">Comunicación</a>
+				<ul>
+					<li>
+						<a href="/"><b>Plaza</b></a>
+					</li>
+					<li class="current">
+						<a href="/notas/">Notas</a>
+					</li>
+					<li>
+						<a href="/foro/">Foro</a>
+					</li>
+					<li>
+						<a href="#">Otras salas</a>
+						<ul>
+							<li><a href="/chat/hotel-arts/">Hotel Arts</a></li>
+							<li><a href="/chat/parlamento/">Parlamento</a></li>
+							<li><a href="/chat/comisaria/">Comisar&iacute;a</a></li>
+							<li><a href="/chat/tribunales/">Tribunales</a></li>
+							<li><a href="http://www.virtualpol.com/chat/plaza-internacional/">Plaza Int.</a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">Informaci&oacute;n</a>
+					<ul>
+						<li><a href="/info/censo/">Censo <span class="md">(<?=$pol['config']['info_censo']?>)</span></a></li>
+						<li><a href="/poderes/">Poderes</a></li>
+						<li><a href="/doc/">Documentos <span class="md">(<?=$pol['config']['info_documentos']?>)</span></a></li>
+						<li><a href="/mapa/">Mapa</a></li>
+						<li><a href="#">Mas información</a>
+							<ul>
+								<li><a href="/log-eventos/">Log de eventos</a></li>
+								<li><a href="/info/estadisticas/">Estad&iacute;sticas</a></li>
+								<li><a href="http://pol.virtualpol.com/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>
+								<li><a href="/historia/">Hechos Hist&oacute;ricos</a></li>
+							</ul>
+						</li>
+					</ul>
+			</li>
+			<li>
+				<a href="#">Pol&iacute;tica</a>
+				<ul>
+					<li>
+						<a href="/doc/boletin-oficial-de-<?=strtolower(PAIS)?>/">BO<?=substr(PAIS,0,1)?></a>
+					</li>
+					<li><a href="/cargos/">Cargos</a></li>
+					<li><a href="/partidos/">Partidos <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
+					<li><a href="/control/"><b>Control</b></a></li>
+					<li><a href="/referendum/">Consultas <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
+					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">Econom&iacute;a</a>
+				<ul>
+					<li><a href="/empresas/"><b>Empresas</b></a></li>
+					<li><a href="/pols/cuentas/">Cuentas</a></li>
+					<li><a href="/pols/cuentas/1/">Cuenta <em>Gobierno</em></a></li>
+					<li><a href="/subasta/">Subastas</a></li>
+					<li><a href="/info/economia/">Economia Global</a></li>
+				</ul>
+			</li><?php if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { ?>
+			<li>
+				<a href="#"><?=$pol['nick']?></a>
+				<ul>
+					<li><a href="/perfil/<?=$nick_lower?>/">Perfil</a></li>
+					<li><a href="/pols/">Dinero</a></li>
+					<li><a href="/examenes/">Ex&aacute;menes</a></li>
+					<li><a href="/mapa/propiedades/">Parcelas</a></li>
+					<li><a href="http://aziroet.com/blog/aziroet-quiere-ser-la-plataforma-web-de-tu-blog.php">Crear Blog</a></li>
+				</ul>
+			</li>			<?php } ?><?php if ($pol['config']['info_consultas'] > 0) { ?>
+			<li>
+				<a href="/referendum/">Consultas (<?=$pol['config']['info_consultas']?>)</a>
+			</li><?php } ?>
+			
+		</ul></dd></dl>
 
 <hr style="margin:5px 20px -5px -5px;color:#FF6;" />
 

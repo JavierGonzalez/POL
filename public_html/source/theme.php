@@ -227,7 +227,7 @@ if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hi
 					<li>
 						<a href="/foro/">Foro</a>
 					</li>
-					<li>Otras salas &#9658;
+					<li><a href="#">Otras salas &#9658;</a>
 						<ul>
 							<li><a href="/chat/hotel-arts/">Hotel Arts</a></li>
 							<li><a href="/chat/parlamento/">Parlamento</a></li>
@@ -245,7 +245,7 @@ if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hi
 						<li><a href="/poderes/">Poderes</a></li>
 						<li><a href="/doc/">Documentos <span class="md">(<?=$pol['config']['info_documentos']?>)</span></a></li>
 						<li><a href="/mapa/">Mapa</a></li>
-						<li>Mas informaci&oacute;n &#9658;
+						<li><a href="#">M&aacute;s &#9658;</a>
 							<ul>
 								<li><a href="/log-eventos/">Log de eventos</a></li>
 								<li><a href="/info/estadisticas/">Estad&iacute;sticas</a></li>

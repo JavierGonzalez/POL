@@ -168,30 +168,28 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <td width="10"><a href="/img/banderas/<?=PAIS?>_500.gif"><img src="/img/banderas/<?=PAIS?>_60.gif" alt="Bandera de <?=PAIS?>, Simulador Politico en Espa&ntilde;ol juego online" border="0" style="float:left;margin:-9px 8px -2px -8px;" /></a></td>
 
 
-<td><ul class="sfn-menu">
-			<li class="current">
-				<a href="#a"><b><?=PAIS?> ▼ |</b></a>
-				<ul>
-					<li>
-						<a href="http://pol.virtualpol.com/"><b>POL</b></a>
-					</li>
-					<li class="current">
-						<a href="http://vulcan.virtualpol.com/">VULCAN</a>
-					</li>
-					<li>
-						<a href="http://hispania.virtualpol.com/">Hispania</a>
-					</li>
-				</ul>
-			</li>
-			<li>
-				<a href="#">Comunidad VirtualPOL ▼ </a>
-					<ul>
-						<li><a href="http://www.virtualpol.com/">Comunidad VirtualPOL</a></li>
-						<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
-						<li><a href="http://code.google.com/p/virtualpol/">Codigo</a></li>
-					</ul>
-			</li>
-		</ul></td>
+<td>
+<ul class="sfn-menu">
+	<li class="current">
+		<a href="#"><b><?=PAIS?> &#9660;</b></a> |
+		<ul>
+<?php
+if (PAIS != 'POL') { echo '<li><a href="http://pol.virtualpol.com/">POL</a></li>'; }
+if (PAIS != 'VULCAN') { echo '<li><a href="http://vulcan.virtualpol.com/">VULCAN</a></li>'; }
+if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hispania</a></li>'; }
+?>
+		</ul>
+	</li>
+	<li>
+		<a href="#">Comunidad VirtualPOL &#9660;</a>
+			<ul>
+				<li><a href="http://www.virtualpol.com/">VirtualPOL</a></li>
+				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
+				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo</a></li>
+			</ul>
+	</li>
+</ul>
+</td>
 
 <td align="right" nowrap="nowrap"><?=$txt_perfil?></td>
 
@@ -218,7 +216,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <dl id="menu">
 <ul class="sf-menu sf-vertical">
 			<li class="current">
-				<a href="#a">Comunicación</a>
+				<a href="#a">Comunicaci&oacute;n</a>
 				<ul>
 					<li>
 						<a href="/"><b>Plaza</b></a>
@@ -229,8 +227,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 					<li>
 						<a href="/foro/">Foro</a>
 					</li>
-					<li>
-						<a href="#">Otras salas</a>
+					<li>Otras salas &#9658;
 						<ul>
 							<li><a href="/chat/hotel-arts/">Hotel Arts</a></li>
 							<li><a href="/chat/parlamento/">Parlamento</a></li>
@@ -248,7 +245,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 						<li><a href="/poderes/">Poderes</a></li>
 						<li><a href="/doc/">Documentos <span class="md">(<?=$pol['config']['info_documentos']?>)</span></a></li>
 						<li><a href="/mapa/">Mapa</a></li>
-						<li><a href="#">Mas información</a>
+						<li><a href="#">Mas informaci&oacute;n &#9658;</a>
 							<ul>
 								<li><a href="/log-eventos/">Log de eventos</a></li>
 								<li><a href="/info/estadisticas/">Estad&iacute;sticas</a></li>

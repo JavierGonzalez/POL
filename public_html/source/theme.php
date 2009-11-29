@@ -171,7 +171,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <td>
 <ul class="sfn-menu">
 	<li class="current">
-		<a href="#"><b><?=PAIS?> &#9660;</b></a> |
+		<a href="#"><b><?=PAIS?> &#9660;</b></a> 
 		<ul>
 <?php
 if (PAIS != 'POL') { echo '<li><a href="http://pol.virtualpol.com/">POL</a></li>'; }
@@ -245,7 +245,7 @@ if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hi
 						<li><a href="/poderes/">Poderes</a></li>
 						<li><a href="/doc/">Documentos <span class="md">(<?=$pol['config']['info_documentos']?>)</span></a></li>
 						<li><a href="/mapa/">Mapa</a></li>
-						<li><a href="#">Mas informaci&oacute;n &#9658;</a>
+						<li>Mas informaci&oacute;n &#9658;
 							<ul>
 								<li><a href="/log-eventos/">Log de eventos</a></li>
 								<li><a href="/info/estadisticas/">Estad&iacute;sticas</a></li>

@@ -361,14 +361,6 @@ if ($pol['estado'] == 'desarrollador') {
 </div>
 </div>
 </div>
-
-<center style="margin:15px 0 0 0;"><span class="azul" style="padding:8px;color:#808080;opacity:0.8;">
-<a href="http://www.virtualpol.com/" title="Simulador Politico">Comunidad <b>VirtualPOL</b></a> | 
-<a href="http://desarrollo.virtualpol.com/">Blog <b>Desarrollo</b></a> | 
-<a href="http://code.google.com/p/virtualpol/"><b>C&oacute;digo</b></a> v<?=VERSION?> | 
-Paises: <?php $n = 0; foreach ($vp['paises'] AS $pais) { if ($n++ != 0) { echo ' &amp; '; } echo '<a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a>'; } echo $kw; ?>
-</span></center>
-
 </div>
 
 <div id="pnick" class="azul" style="display:none;opacity:0.9;"></div>

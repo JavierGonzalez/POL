@@ -461,18 +461,15 @@ case 'despacho-oval':
 	if (
 ($_GET['b'] == 'config') AND 
 ($pol['nivel'] >= 98) AND  
-($_POST['factor_propiedad'] <= 10) AND 
-($_POST['factor_propiedad'] >= 0) AND 
+($_POST['factor_propiedad'] <= 10) AND ($_POST['factor_propiedad'] >= 0) AND 
 ($_POST['pols_mensajetodos'] >= 1000) AND 
 ($_POST['pols_examen'] >= 0) AND 
 ($pol['config']['pols_mensajeurgente'] >= 0) AND
-($_POST['num_escanos'] <= 30) AND
-($_POST['num_escanos'] >= 1) AND 
+($_POST['num_escanos'] <= 30) AND ($_POST['num_escanos'] >= 1) AND 
 (strlen($_POST['palabra_gob0']) <= 200) AND
-($_POST['impuestos'] <= 5) AND
-($_POST['impuestos'] >= 0) AND
-($_POST['arancel_salida'] <= 100) AND
-($_POST['arancel_salida'] >= 0)
+($_POST['impuestos'] <= 5) AND ($_POST['impuestos'] >= 0) AND
+($_POST['impuestos_empresa'] <= 1000) AND ($_POST['impuestos_empresa'] >= 0) AND
+($_POST['arancel_salida'] <= 100) AND ($_POST['arancel_salida'] >= 0)
 ) {
 
 $dato_array = array(

@@ -20,21 +20,7 @@ if ($txt_title) {
 }
 if (!$txt_description) { $txt_description = $txt_title . ' - ' . $kw . PAIS.' | VirtualPol'; }
 
-$menu_ID = 0;
-$menu_select = array(
-1=>'/doc\/boletin-oficial|info\/censo|\/doc\/|info\/estadisticas|log-eventos|poderes\//',
-2=>'/cargos\/|partidos\/|referendum\/|control\/|elecciones\/|foro\/politica/',
-3=>'/empresas\/|pols\/cuentas|info\/economia|info\/censo\/riqueza|subasta\/|foro\/economia|foro\/mercado|foro\/parlamento|foro\/gobierno/',
-4=>'/perfil\/|form\/afiliarse|examenes\/|msg\/enviar|mapa\/propiedades|pols\//',
-);
-foreach($menu_select as $key => $val) { if (preg_match($val, $_SERVER['REQUEST_URI'])) { $menu_ID = $key; break; } }
-unset($menu_select);
-
-
-
 if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\'/img/bg/'.$pol['config']['bg'].'\') repeat fixed top left'; } else { $body_bg = COLOR_BG; }
-
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -51,7 +37,6 @@ if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\'/img/bg/'.$pol['config']
 $(document).ready(function(){ 
 	$("ul.sfn-menu").superfish(); 
 }); 
-menu_ID = <?=$menu_ID?>;
 defcon = <?=$pol['config']['defcon']?>;
 window.google_analytics_uacct = "UA-59186-46";
 </script>
@@ -249,7 +234,28 @@ if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hi
 					</li>
 					<li><a href="/cargos/">Cargos</a></li>
 					<li><a href="/partidos/">Partidos <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
-					<li><a href="/control/"><b>Control</b></a></li>
+					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Control</b></a>
+						<ul>
+							<li><a href="/control/despacho-oval/">Despacho Oval</a></li>
+							<li><a href="/control/kick/">Kicks</a></li>
+							<li><a href="/control/expulsiones/">Expulsiones</a></li>
+							<li><a href="/control/judicial/">Judicial</a></li>
+							<li><a href="/mapa/propiedades/">Propiedades del Estado</a></li>
+							<li><a href="/referendum/crear/">Sondeos</a></li>
+						</ul>
+					</li>
+
+
+
+
+
+
+
+
+
+
+
+
 					<li><a href="/referendum/">Consultas <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
 					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
 				</ul>

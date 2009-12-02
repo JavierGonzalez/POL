@@ -44,21 +44,13 @@ if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\'/img/bg/'.$pol['config']
 <meta name="language" content="es_ES" />
 <meta name="description" content="<?=$txt_description?>" />
 <link href="/img/style.css" rel="stylesheet" type="text/css" />
-<link rel="shortcut icon" href="/favicon.ico" />
-<link rel="stylesheet" type="text/css" media="screen" href="/img/superfish2.css" /> 
 <link rel="stylesheet" type="text/css" media="screen" href="/img/superfish.css" /> 
-
-		<script type="text/javascript" src="/img/hoverIntent.js"></script> 
-		<script type="text/javascript" src="/img/superfish.js"></script> 
-		<script type="text/javascript"> 
-		 
-			$(document).ready(function(){ 
-				$("ul.sfn-menu").superfish(); 
-			}); 
-		 
-		</script>
+<script type="text/javascript" src="/img/superfish.js"></script> 
 
 <script type="text/javascript">
+$(document).ready(function(){ 
+	$("ul.sfn-menu").superfish(); 
+}); 
 menu_ID = <?=$menu_ID?>;
 defcon = <?=$pol['config']['defcon']?>;
 window.google_analytics_uacct = "UA-59186-46";
@@ -73,8 +65,8 @@ border-width: 0 2px 2px 0;
 }
 </style>
 
-
 <?=$txt_header?>
+<link rel="shortcut icon" href="/favicon.ico" /> 
 </head>
 
 <body class="fullwidth">
@@ -171,7 +163,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <td>
 <ul class="sfn-menu">
 	<li class="current">
-		<a href="#"><b><?=PAIS?> &#9660;</b></a> 
+		<a href="/"><b><?=PAIS?> &#9660;</b></a> 
 		<ul>
 <?php
 if (PAIS != 'POL') { echo '<li><a href="http://pol.virtualpol.com/">POL</a></li>'; }
@@ -181,11 +173,11 @@ if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hi
 		</ul>
 	</li>
 	<li>
-		<a href="#">Comunidad VirtualPOL &#9660;</a>
+		<a href="http://www.virtualpol.com/">Comunidad VirtualPOL &#9660;</a>
 			<ul>
-				<li><a href="http://www.virtualpol.com/">VirtualPOL</a></li>
 				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
 				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo</a></li>
+				<li><a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct">Gu&iacute;a inicial</a></li>
 			</ul>
 	</li>
 </ul>
@@ -218,22 +210,16 @@ if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hi
 			<li class="current">
 				<a href="#a">Comunicaci&oacute;n</a>
 				<ul>
-					<li>
-						<a href="/"><b>Plaza</b></a>
-					</li>
-					<li class="current">
-						<a href="/notas/">Notas</a>
-					</li>
-					<li>
-						<a href="/foro/">Foro</a>
-					</li>
-					<li><a href="#">Otras salas &#9658;</a>
+					<li><a href="/"><b>Plaza</b></a></li>
+					<li><a href="http://www.virtualpol.com/chat/plaza-internacional/">Plaza Int.</a></li>
+					<li><a href="/notas/">Notas</a></li>
+					<li><a href="/foro/">Foro</a></li>
+					<li><a href="#"><span style="float:right;">&#9658;</span>Otras salas</a>
 						<ul>
 							<li><a href="/chat/hotel-arts/">Hotel Arts</a></li>
 							<li><a href="/chat/parlamento/">Parlamento</a></li>
 							<li><a href="/chat/comisaria/">Comisar&iacute;a</a></li>
 							<li><a href="/chat/tribunales/">Tribunales</a></li>
-							<li><a href="http://www.virtualpol.com/chat/plaza-internacional/">Plaza Int.</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -244,13 +230,13 @@ if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hi
 						<li><a href="/info/censo/">Censo <span class="md">(<?=$pol['config']['info_censo']?>)</span></a></li>
 						<li><a href="/poderes/">Poderes</a></li>
 						<li><a href="/doc/">Documentos <span class="md">(<?=$pol['config']['info_documentos']?>)</span></a></li>
-						<li><a href="/mapa/">Mapa</a></li>
-						<li><a href="#">M&aacute;s &#9658;</a>
+						<li><a href="#"><span style="float:right;">&#9658;</span>M&aacute;s</a>
 							<ul>
 								<li><a href="/log-eventos/">Log de eventos</a></li>
 								<li><a href="/info/estadisticas/">Estad&iacute;sticas</a></li>
+								<li><a href="/mapa/">Mapa</a></li>
 								<li><a href="http://pol.virtualpol.com/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>
-								<li><a href="/historia/">Hechos Hist&oacute;ricos</a></li>
+								<li><a href="/historia/">Historia</a></li>
 							</ul>
 						</li>
 					</ul>

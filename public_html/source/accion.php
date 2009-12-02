@@ -727,7 +727,7 @@ case 'pols':
 		} elseif (ctype_digit($_POST['origen'])) { 
 			//Cuenta
 
-			$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['nivel']."' OR (nivel != 0 AND '".$pol['nivel']."' >= nivel)) LIMIT 1", $link);
+			$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."')) LIMIT 1", $link);
 			while($row = mysql_fetch_array($result)){ $origen = 'cuenta'; }
 
 		}

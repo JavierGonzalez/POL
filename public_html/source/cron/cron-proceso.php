@@ -267,11 +267,15 @@ ORDER BY fecha_registro ASC", $link);
 if ($pol['config']['impuestos_empresa'] > 0) {	
 	$result = mysql_query("SELECT COUNT(ID) AS num, user_ID FROM ".SQL."empresas GROUP BY user_ID ORDER BY num DESC", $link);
 	while($row = mysql_fetch_array($result)) { 
-		$impuesto = round($pol['config']['impuestos_empresa'] * $row['num']);
-		$recaudacion_empresas += $impuesto;
 
+		// comprueba si existe el propietario de la empresa antes de ejecutar el impuesto
+		$result2 = mysql_query("SELECT ID FROM ".SQL_USERS." WHERE ID = '".$row['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
+		while($row2 = mysql_fetch_array($result2)) { 
+			$impuesto = round($pol['config']['impuestos_empresa'] * $row['num']);
+			$recaudacion_empresas += $impuesto;
 
-		pols_transferir($impuesto, $row['user_ID'], '-1', 'IMPUESTO EMPRESAS '.date('Y-m-d').': '.$row['num'].' empresas');
+			pols_transferir($impuesto, $row['user_ID'], '-1', 'IMPUESTO EMPRESAS '.date('Y-m-d').': '.$row['num'].' empresas');
+		}
 	}
 	evento_chat('<b>[PROCESO] IMPUESTO EMPRESAS '.date('Y-m-d').'</b>, recaudado: '.pols($recaudacion_empresas).' '.MONEDA);
 }

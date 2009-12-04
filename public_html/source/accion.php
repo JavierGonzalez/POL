@@ -141,7 +141,7 @@ LIMIT 1", $link);
 		mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '".$user_ID."'", $link);
 		mysql_query("DELETE FROM ".SQL."pujas WHERE user_ID = '".$user_ID."'", $link);
 	}
-	header('Location: http://www.virtualpol.com/registrar/');
+	header('Location: '.REGISTRAR);
 	exit;
 	break;
 

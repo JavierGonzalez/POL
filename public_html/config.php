@@ -2,7 +2,7 @@
 
 // INICIALIZACION
 $host = explode('.', $_SERVER['HTTP_HOST']); // obtiene $host[0] que es el subdominio
-$host[0] = str_replace('-dev', '', $host[0]); // convierte subdominios "pais-dev" en "pais" para que funcione la version dev
+$host[0] = str_replace('-dev', '', $host[0], $dev); // convierte subdominios "pais-dev" en "pais" para que funcione la version dev
 if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
 
 

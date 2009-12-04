@@ -256,14 +256,14 @@ case 'solicitar-ciudadania':
 			$trae = ' (Trayendo consigo: '.pols($pol['pols']).' '.MONEDA.')';
 		} else { $trae = ''; }
 
-		evento_chat('<b>[#] <a href="http://'.strtolower($_POST['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'/" class="nick">' . $pol['nick'] . '</a> acepta la Ciudadania</b> de ' . $_POST['pais'] . $trae, 0, 0, false, 'e', $_POST['pais']);
+		evento_chat('<b>[#] <a href="http://'.strtolower($_POST['pais']).DEV.'.virtualpol.com/perfil/'.$pol['nick'].'/" class="nick">' . $pol['nick'] . '</a> acepta la Ciudadania</b> de ' . $_POST['pais'] . $trae, 0, 0, false, 'e', $_POST['pais']);
 
 		mysql_query("INSERT INTO " . strtolower($_POST['pais']) . "_log 
 (time, user_ID, user_ID2, accion, dato) 
 VALUES ('" . date('Y-m-d H:i:s') . "', '" . $pol['user_ID'] . "', '" . $pol['user_ID'] . "', '2', '')", $link);
-		header('Location: http://'.strtolower($_POST['pais']).'.virtualpol.com/');
+		header('Location: http://'.strtolower($_POST['pais']).DEV.'.virtualpol.com/');
 	
-	} else { header('Location: http://www.virtualpol.com/registrar/'); }
+	} else { header('Location: '.REGISTRAR); }
 	
 	break;
 
@@ -287,7 +287,7 @@ if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) {
 	$txt .= '<h1><span class="gris">1. Crear usuario | 2. Solicitar Ciudadan&iacute;a</span> | 3. Ser Ciudadano</h1><hr />
 <p>Felicidades! <b>ya eres Ciudadano de ' . $pol['pais'] . '</b>.</p>
 
-<p>Puedes entrar en tu Pais <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/"><b>'.$pol['pais'].'</b></a> y saluda a tus compa&ntilde;eros Ciudadanos!</p>
+<p>Puedes entrar en tu Pais <a href="http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/"><b>'.$pol['pais'].'</b></a> y saluda a tus compa&ntilde;eros Ciudadanos!</p>
 
 <br /><br /><hr />
 
@@ -306,7 +306,7 @@ if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) {
 
 if (strtotime($pol['rechazo_last']) < (time() - 21600)) { // 6 horas
 	$txt .= '
-<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=rechazar-ciudadania" method="POST">
+<form action="http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/accion.php?a=rechazar-ciudadania" method="POST">
 <input type="hidden" name="pais" value="'.$pol['pais'].'" />
 <p><b style="color:red;">[<input type="submit" value="Rechazar Ciudadania de '.$pol['pais'].'" />]</b></p>
 </form>';
@@ -356,8 +356,8 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 
 
 <ul>
-<li><b>Aceptas ser Ciudadano de <a href="http://'.strtolower($_GET['pais']).'.virtualpol.com/">'.$_GET['pais'].'</a></b>, con tus derechos y obligaciones.</li>
-<li><b>Aceptas <a href="http://'.strtolower($_GET['pais']).'.virtualpol.com/doc/">La Constituci&oacute;n</a> y las <a href="http://'.strtolower($_GET['pais']).'.virtualpol.com/doc/">Leyes</a> de '.$_GET['pais'].'</b>.</li></ul>
+<li><b>Aceptas ser Ciudadano de <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/">'.$_GET['pais'].'</a></b>, con tus derechos y obligaciones.</li>
+<li><b>Aceptas <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/doc/">La Constituci&oacute;n</a> y las <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/doc/">Leyes</a> de '.$_GET['pais'].'</b>.</li></ul>
 
 <div class="pol_form">
 <form action="?a=solicitar-ciudadania" method="post">

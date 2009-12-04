@@ -69,8 +69,10 @@ define('USERCOOKIE', '.virtualpol.com');
 define('CLAVE', ''); // clave de coockie (cambiar en caso de robo de claves md5)
 if ($dev) {
 	define('REGISTRAR', 'http://www-dev.virtualpol.com/registrar/');
+	define('DEV', '-dev');
 } else {
 	define('REGISTRAR', 'http://www.virtualpol.com/registrar/');
+	define('DEV', '');
 }
 
 

@@ -848,13 +848,13 @@ case 'referendum':
 			$result = mysql_unbuffered_query("SELECT fecha_registro FROM ".SQL_USERS." WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 			while($row = mysql_fetch_array($result)){ $fecha_registro = $row['fecha_registro']; }
 
-			$result = mysql_unbuffered_query("SELECT tipo, pregunta FROM ".SQL."ref WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
-			while($row = mysql_fetch_array($result)){ $tipo = $row['tipo']; $pregunta = $row['pregunta']; }
+			$result = mysql_unbuffered_query("SELECT tipo, pregunta, estado FROM ".SQL."ref WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
+			while($row = mysql_fetch_array($result)){ $tipo = $row['tipo']; $pregunta = $row['pregunta']; $estado = $row['estado']; }
 
 			$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."estudios_users WHERE user_ID = '".$pol['user_ID']."' AND cargo = '1' AND ID_estudio = '6' LIMIT 1", $link);
 			while($row = mysql_fetch_array($result)){ $es_diputado = true; }
 
-			if (($tipo == 'sondeo') OR ($tipo == 'referendum') OR (($tipo == 'parlamento') AND ($es_diputado))) {
+			if (($estado == 'ok') AND (($tipo == 'sondeo') OR ($tipo == 'referendum') OR (($tipo == 'parlamento') AND ($es_diputado)))) {
 				$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."ref_votos WHERE user_ID = '".$pol['user_ID']."' AND ref_ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 				while($row = mysql_fetch_array($result)){ $ha_votado = true; }
 				if ((!$ha_votado) AND (strtotime($fecha_registro) < (time() - 86400))) {

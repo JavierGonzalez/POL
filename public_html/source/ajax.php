@@ -58,8 +58,8 @@ if ((!isset($_POST['a'])) AND (isset($_POST['n']))) {
 	}
 	
 	if ($pol['estado'] == 'extranjero') {
-		$result = mysql_query("SELECT valor FROM ".SQL."config WHERE dato = 'frontera' LIMIT 1", $link);
-		while($row = mysql_fetch_array($result)){ $pol['config']['frontera'] = $row['valor']; }
+		$result = mysql_query("SELECT valor FROM ".SQL."config WHERE dato = 'frontera_con_".$pol['pais']."' LIMIT 1", $link);
+		while($row = mysql_fetch_array($result)){ $pol['config']['frontera_con_'.$pol['pais']] = $row['valor']; }
 	}
 
 	// BANEADO? EXPULSADO!
@@ -80,7 +80,7 @@ if ((!isset($_POST['a'])) AND (isset($_POST['n']))) {
 (
 ($pol['estado'] == 'ciudadano') OR
 ($pol['estado'] == 'desarrollador') OR
-(($pol['estado'] == 'extranjero') AND ($pol['config']['frontera'] == 'abierta'))
+(($pol['estado'] == 'extranjero') AND ($pol['config']['frontera_con_'.$pol['pais']] == 'abierta'))
 )
 ) {
 

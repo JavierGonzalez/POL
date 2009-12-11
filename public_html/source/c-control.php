@@ -516,9 +516,6 @@ function change_bg(img) {
 
 $palabra_gob = explode(':', $pol['config']['palabra_gob']);
 
-$sel = '';
-$sel[$pol['config']['frontera']] = ' selected="selected"';
-
 $sel_exp = '';
 $sel_exp[$pol['config']['examenes_exp']] = ' selected="selected"';
 
@@ -533,18 +530,24 @@ http://<input type="text" name="palabra_gob1" size="19" maxlength="200" value="'
 <option value="5184000"' . $sel_exp['5184000'] . '>2 meses</option>
 <option value="2592000"' . $sel_exp['2592000'] . '>1 mes</option>
 <option value="1296000"' . $sel_exp['1296000'] . '>15 dias</option>
-</select>
+</select>';
 
 
-
-<tr><td align="right">Frontera:</td>
+foreach ($vp['paises'] AS $pais) {
+$sel = '';
+$sel[$pol['config']['frontera_con_' . $pais]] = ' selected="selected"';
+if (PAIS != $pais)
+$txt .= '
+<tr><td align="right">Frontera con ' . $pais. ':</td>
 <td>
-<select name="frontera"' . $dis . '>
+<select name="frontera_con_' . $pais . '"' . $dis . '>
 <option value="abierta"' . $sel['abierta'] . '>Abierta</option>
 <option value="cerrada"' . $sel['cerrada'] . '>Cerrada</option>
 </select>
-</tr>
+</tr>';
+}
 
+$txt .= '
 <tr><td colspan="2"><br /><b>Dise&ntilde;o:</b></td></tr>
 <tr><td align="right">Imagen tapiz:</td>
 <td>

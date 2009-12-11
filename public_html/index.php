@@ -52,7 +52,7 @@ foreach ($vp['paises'] AS $pais) {
 	while($row = mysql_fetch_array($result)) { $pais_vice = '<a href="http://'.$pais_low.'.virtualpol.com/perfil/'.strtolower($row['nick']).'/" class="nick" style="font-size:18px;">' . $row['nick'] . '</a>'; }
 
 	// DEFCON
-	$result = mysql_query("SELECT valor, dato FROM ".$pais_low."_config WHERE dato = 'defcon' OR dato = 'frontera' OR dato = 'arancel_salida' OR dato = 'pais_des'", $link);
+	$result = mysql_query("SELECT valor, dato FROM ".$pais_low."_config WHERE dato = 'defcon' OR dato LIKE 'frontera%' OR dato = 'arancel_salida' OR dato = 'pais_des'", $link);
 	while($row = mysql_fetch_array($result)) { $pais_config[$row['dato']] = $row['valor']; }
 
 	// CHAT ONLINE
@@ -86,9 +86,15 @@ foreach ($vp['paises'] AS $pais) {
 <td nowrap="nowrap" align="right"><b>' . $pais_dias . '</b> d&iacute;as</td>
 <td nowrap="nowrap"><img src="http://pol.virtualpol.com/img/cargos/7.gif" alt="Presidente de '.$pais.'" title="Presidente de '.$pais.'" /> '.$pais_presidente.'<br /><img src="http://pol.virtualpol.com/img/cargos/19.gif" alt="Vicepresidente de '.$pais.'" title="Vicepresidente de '.$pais.'" /> '.$pais_vice.'</td>
 
-<td align="right" nowrap="nowrap" style="font-size:13px;"><acronym title="CONdici&oacute;n de DEFensa">DEFCON</acronym> <b>' . $pais_config['defcon'] . '</b><br />
-Frontera <b>' . ucfirst($pais_config['frontera']) . '</b><br />
-' . pols($pais_monedas_p + $pais_monedas_c) . ' '.MONEDA.' <acronym style="color:red;" title="Arancel de salida de moneda.">'.$pais_config['arancel_salida'].'%</acronym>
+<td align="right" nowrap="nowrap" style="font-size:13px;"><acronym title="CONdici&oacute;n de DEFensa">DEFCON</acronym> <b>' . $pais_config['defcon'] . '</b><br />';
+
+foreach ($vp['paises'] as $pais2) {
+if ($pais != $pais2)
+$txt .= 
+'Frontera con '.$pais2.' <b>' . ucfirst($pais_config['frontera_con_'.$pais2]) . '</b><br />';
+}
+$txt .=
+pols($pais_monedas_p + $pais_monedas_c) . ' '.MONEDA.' <acronym style="color:red;" title="Arancel de salida de moneda.">'.$pais_config['arancel_salida'].'%</acronym>
 </td>
 
 <td style="font-size:13px;"><a href="http://'.$pais_low.'.virtualpol.com/poderes/">Poderes</a><br />

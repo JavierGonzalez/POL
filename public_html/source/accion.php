@@ -485,7 +485,6 @@ $dato_array = array(
 'factor_propiedad'=>'Factor propiedad',
 'pols_examen'=>'Coste hacer un examen',
 'pols_mensajeurgente'=>'Coste mensaje urgente',
-'frontera'=>'Frontera',
 'examenes_exp'=>'Expiracion de examen',
 'impuestos'=>'Impuesto de patrimonio',
 'impuestos_minimo'=>'Minimo patrimonio imponible',
@@ -496,7 +495,10 @@ $dato_array = array(
 'palabra_gob'=>'Mensaje Del Gobierno',
 );
 
-
+foreach ($vp['paises'] AS $pais) {
+	if (PAIS != $pais)
+			$dato_array['frontera_con_' . $pais] = 'Frontera con ' . $pais;
+}
 
 foreach ($_POST AS $dato => $valor) {
 	if ((substr($dato, 0, 8) != 'salario_') AND ($dato != 'palabra_gob1')) {

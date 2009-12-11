@@ -54,7 +54,7 @@ if (
 ($pol['estado'] == 'ciudadano') OR 
 ($pol['estado'] == 'desarrollador') OR
 ($pol['cargo'] == 42) OR
-((($pol['estado'] == 'turista') OR ($pol['estado'] == 'extranjero')) AND ($pol['config']['frontera'] == 'abierta'))
+(($pol['estado'] == 'extranjero') AND ($pol['config']['frontera_con_'.$pol['pais']] == 'abierta'))
 ) OR (($pol['chat_accesos']) AND (in_array($pol['nick'], $pol['chat_accesos_list'])))
 
 
@@ -90,8 +90,8 @@ if (
 } else {
 	if ($pol['chat_accesos']) {
 		$txt .= '<p class="azul"><b>La participaci&oacute;n en este chat est&aacute; restringida.</a></b></p>';
-	} elseif (($pol['estado'] == 'extranjero') OR ($pol['estado'] == 'turista')) {
-		$txt .= '<p class="azul"><b>Las fronteras estan cerradas, solo los Ciudadanos de '.PAIS.' pueden participar.</a></b></p>';
+	} elseif ($pol['estado'] == 'extranjero') {
+		$txt .= '<p class="azul"><b>Las fronteras con '.$pol['pais'].' están cerradas, no puedes participar.</a></b></p>';
 	} else {
 		$txt .= '<p class="azul"><b>Para participar en el chat debes ser Ciudadano de '.PAIS.', <a href="'.REGISTRAR.'">reg&iacute;strate aqu&iacute;!</a></b></p>';
 	}

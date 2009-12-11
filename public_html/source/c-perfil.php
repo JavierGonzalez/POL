@@ -98,7 +98,7 @@ ORDER BY nick ASC", $link);
 						$estudios .= '<form action="/accion.php?a=cargo&b=ceder&ID=' . $row2['ID_estudio'] . '" method="post">';
 						$dimitir .= '<select name="user_ID"><option value=""></option>' . $diputados . '</select><input type="submit" value="Ceder" onclick="if (!confirm(\'&iquest;Seguro que quieres CEDER de este cargo?\')) { return false; }"></form>'; 
 					} else {
-						$dimitir .= ' <form action="/accion.php?a=cargo&b=dimitir&ID='.$row2['ID_estudio'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="Dimitir" /></form>';
+						$dimitir .= ' <form action="/accion.php?a=cargo&b=dimitir&ID='.$row2['ID_estudio'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="Dimitir"  onclick="if (!confirm(\'&iquest;Seguro que quieres DIMITIR del cargo de ' . $row2['nombre'] . '?\')) { return false; }"/></form>';
 					}
 					
 				}

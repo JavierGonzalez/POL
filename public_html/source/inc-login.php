@@ -12,7 +12,6 @@ $link = conectar();
 
 // LOGIN
 if (isset($_COOKIE['teorizauser'])) { 
-	session_set_cookie_params(864000);
 	session_start();
 	
 	if (!isset($_SESSION['pol'])) { //NO existe sesion

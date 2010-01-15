@@ -112,7 +112,7 @@ if ((!isset($_POST['a'])) AND (isset($_POST['n']))) {
 
 				case 'd4':
 					$elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el d4... <b>' . mt_rand(1,4) . '</b> &nbsp; <em>' . $msg_rest . '</em>';	    
-                    break;
+                    			break;
 
 				case 'd8':
 					$elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el d8... <b>' . mt_rand(1,8) . '</b> &nbsp; <em>' . $msg_rest . '</em>';	    
@@ -128,6 +128,10 @@ if ((!isset($_POST['a'])) AND (isset($_POST['n']))) {
 				
 				case 'd20':
 					$elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el d20... <b>' . mt_rand(1,20) . '</b> &nbsp; <em>' . $msg_rest . '</em>';	    
+					break;
+				
+				case 'd%':
+                                        $elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el d%... <b>' . mt_rand(00,99) . '</b> &nbsp; <em>' . $msg_rest . '</em>';
 					break;
 
 				case 'calc': 

@@ -24,15 +24,13 @@ if (($_GET['a']) AND (isset($pol['chat_id']))) {
 	$result = mysql_query("SELECT valor, dato FROM pol_config WHERE dato = 'pols_frase' OR dato = 'palabras' LIMIT 2", $link);
 	while ($row = mysql_fetch_array($result)) { $media['POL'][$row['dato']] = $row['valor']; }
 
-	$result = mysql_query("SELECT valor, dato FROM vulcan_config WHERE dato = 'pols_frase' OR dato = 'palabras' LIMIT 2", $link);
-	while ($row = mysql_fetch_array($result)) { $media['VULCAN'][$row['dato']] = $row['valor']; }
 
 	$result = mysql_query("SELECT valor, dato FROM hispania_config WHERE dato = 'pols_frase' OR dato = 'palabras' LIMIT 2", $link);
 	while ($row = mysql_fetch_array($result)) { $media['Hispania'][$row['dato']] = $row['valor']; }
 
 
 	$txt .= '<br /><span class="amarillo" id="pols_frase"><b>'.$media['POL']['pols_frase'].'</b></span> (POL)<br /><br />';
-	$txt .= '<span class="amarillo" id="pols_frase"><b>'.$media['VULCAN']['pols_frase'].'</b></span> (VULCAN)<br /><br />';
+
 	$txt .= '<span class="amarillo" id="pols_frase"><b>'.$media['Hispania']['pols_frase'].'</b></span> (Hispania)';
 
 

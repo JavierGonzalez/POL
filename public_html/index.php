@@ -4,7 +4,7 @@ $adsense_exclude = true;
 
 $txt_title = 'VirtualPol | Simulador Pol&iacute;tico Espa&ntilde;ol | Juego online de democracia politica | simuladores Espa&ntilde;a, Latinoamerica';
 
-$txt_description = 'La Primera y Unica Plataforma de Auto-gestion y Democracia. Simulador Politico Espa&ntilde;ol, Juego online, experimento social, el mejor simulador de politica de Espa&ntilde;a. Simuladores geo-politica POL VULCAN Hispania. El mejor simulador politico.'; 
+$txt_description = 'La Primera y Unica Plataforma de Auto-gestion y Democracia. Simulador Politico Espa&ntilde;ol, Juego online, experimento social, el mejor simulador de politica de Espa&ntilde;a. Simuladores geo-politica POL Hispania. El mejor simulador politico.'; 
 
 $txt .= '<h1>Bienvenido a VirtualPol - Simulador Politico</h1>
 
@@ -166,8 +166,8 @@ $txt .= '
 <img src="http://chart.apis.google.com/chart?cht=lc
 &chs=320x90
 &cht=bvs
-&chco='.substr($vp['bg']['POL'],1).','.substr($vp['bg']['VULCAN'],1).','.substr($vp['bg']['Hispania'],1).'
-&chd=t:'.$gph['POL'].','.$pais_pob_num['POL'].'|'.$gph['VULCAN'].','.$pais_pob_num['VULCAN'].'|'.$gph['Hispania'].','.$pais_pob_num['Hispania'].'
+&chco='.substr($vp['bg']['POL'],1).','.substr($vp['bg']['Hispania'],1).'
+&chd=t:'.$gph['POL'].','.$pais_pob_num['POL'].'|'.$gph['Hispania'].','.$pais_pob_num['Hispania'].'
 &chds=0,'.$gph_max.'
 &chxt=r
 &chxl=0:||'.round($poblacion_num / 2).'|'.$poblacion_num.'
@@ -198,8 +198,6 @@ while($row = mysql_fetch_array($result)){
 	if ($pais_url == 'ninguno') { $pais_url = 'pol'; }
 	$li_online .= ' <a href="http://'.$pais_url.'.virtualpol.com/perfil/'.$row['nick'].'/" class="nick '.$row['estado'].'" style="padding:2px;line-height:25px;background:' . $vp['bg'][$row['pais']] . ';">'.$row['nick'].'</a>'; 
 }
-
-$gf['censo_online'] = $gf['censo_online']['POL'].','.$gf['censo_online']['VULCAN'];
 
 $txt .= '<br /><div class="amarillo">
 <table border="0">

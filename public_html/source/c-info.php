@@ -452,8 +452,8 @@ $txt .= '</ol>
 <img src="http://chart.apis.google.com/chart?cht=lc
 &chs=330x350
 &cht=bvs
-&chco='.substr($vp['bg']['POL'],1).','.substr($vp['bg']['VULCAN'],1).','.substr($vp['bg']['Hispania'],1).'
-&chd=t:'.$gph['POL'].','.$total_pais['POL'].'|'.$gph['VULCAN'].','.$total_pais['VULCAN'].'|'.$gph['Hispania'].','.$total_pais['Hispania'].'
+&chco='.substr($vp['bg']['POL'],1).','.substr($vp['bg']['Hispania'],1).'
+&chd=t:'.$gph['POL'].','.$total_pais['POL'].'|'.$gph['Hispania'].','.$total_pais['Hispania'].'
 &chds=0,'.$moneda_mundial.'
 &chxt=r
 &chxl=0:||'.round($moneda_mundial / 2).'|'.$moneda_mundial.'
@@ -462,7 +462,7 @@ $txt .= '</ol>
 
 <td align="center" colspan="6" valign="top">
 <h2>Reparto econ&oacute;mico:</h2><br />
-<img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.round(($total_pais['POL']*100)/$total_moneda).','.round(($total_pais['VULCAN']*100)/$total_moneda).','.round(($total_pais['Hispania']*100)/$total_moneda).'&chs=300x190&chl=POL|VULCAN|Hispania&chco='.substr($vp['bg']['POL'],1).','.substr($vp['bg']['VULCAN'],1).','.substr($vp['bg']['Hispania'],1).'" alt="Reparto economico." /></td>
+<img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.round(($total_pais['POL']*100)/$total_moneda).','.round(($total_pais['Hispania']*100)/$total_moneda).'&chs=300x190&chl=POL|Hispania&chco='.substr($vp['bg']['POL'],1).','.substr($vp['bg']['Hispania'],1).'" alt="Reparto economico." /></td>
 
 </tr>
 

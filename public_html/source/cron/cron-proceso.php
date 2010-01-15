@@ -151,6 +151,7 @@ mysql_query("UPDATE ".SQL."config SET valor = '" . $las_palabras . "' WHERE dato
 
 // COSTE PROPIEDADES
 $p['user_ID'] = 1;
+$recaudado_propiedades = 0;
 $result = mysql_query("SELECT ID, size_x, size_y, user_ID, estado, superficie,
 (SELECT pols FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS pols_total
 FROM ".SQL."mapa 
@@ -161,6 +162,7 @@ while($row = mysql_fetch_array($result)){
 		//ejecuta ciudadano
 		if ($p['pols_total'] >= $p['pols']) {
 			pols_transferir($p['pols'], $p['user_ID'], '-1', 'CP');
+			$recaudado_propiedades += $p['pols']; 
 		} else {
 			foreach($p['prop'] as $unID => $uncoste) {
 				mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '" . $unID . "' AND user_ID = '" . $p['user_ID'] . "' LIMIT 1", $link);
@@ -177,13 +179,14 @@ while($row = mysql_fetch_array($result)){
 //ejecuta ultimo ciudadano
 if ($p['pols_total'] >= $p['pols']) {
 	pols_transferir($p['pols'], $p['user_ID'], '-1', 'CP');
+	$recaudado_propiedades += $p['pols']; 
 } else {
 	foreach($p['prop'] as $unID => $uncoste) {
 		mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '" . $unID . "' AND user_ID = '" . $p['user_ID'] . "' LIMIT 1", $link);
 	}
 }
 
-evento_chat('<b>[PROCESO] Coste de propiedades efectuado.</b> (factor de propiedad: <b>' . $pol['config']['factor_propiedad'] . '</b>)');
+evento_chat('<b>[PROCESO] Coste de propiedades efectuado,</b> recaudado: '.pols($recaudado_propiedades).' '.MONEDA);
 
 
 // NOTAS MEDIA

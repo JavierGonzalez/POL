@@ -14,7 +14,9 @@ $txt .= '
 
 <select name="year">
 <option value="2008">2008</option>
-<option value="2009" selected="selected">2009</option>
+<option value="2009"">2009</option>
+<option value="2010" selected="selected">2010</option>
+<option value="2011">2011</option>
 </select> -
 <select name="mes">
 <option value="01" selected="selected">01</option>
@@ -62,7 +64,7 @@ WHERE estado = 'ok'
 ORDER BY time ASC", $link);
 while($row = mysql_fetch_array($result)) {
 
-	if (($row['nick'] == $pol['nick']) OR ($pol['estado'] == 'desarrollador')) {
+	if (($row['nick'] == $pol['nick']) OR ($pol['estado'] == 'desarrollador') OR ($pol['nivel'] == 100)) {
 		$boton = boton('x', '/accion.php?a=historia&b=del&ID='.$row['ID'], 'm');
 	} else { $boton = ''; }
 

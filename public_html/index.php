@@ -89,10 +89,10 @@ foreach ($vp['paises'] AS $pais) {
 <td align="right" nowrap="nowrap" style="font-size:13px;"><acronym title="CONdici&oacute;n de DEFensa">DEFCON</acronym> <b>' . $pais_config['defcon'] . '</b><br />';
 
 foreach ($vp['paises'] as $pais2) {
-if ($pais != $pais2)
-$txt .= 
-'Frontera con '.$pais2.' <b>' . ucfirst($pais_config['frontera_con_'.$pais2]) . '</b><br />';
-}
+	if ($pais != $pais2) {
+		$txt .= 'Frontera con '.$pais2.' <b>' . ucfirst($pais_config['frontera_con_'.$pais2]) . '</b><br />';
+	}
+}	
 $txt .=
 pols($pais_monedas_p + $pais_monedas_c) . ' '.MONEDA.' <acronym style="color:red;" title="Arancel de salida de moneda.">'.$pais_config['arancel_salida'].'%</acronym>
 </td>

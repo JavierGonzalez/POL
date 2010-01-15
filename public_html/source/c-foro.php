@@ -85,7 +85,7 @@ ORDER BY nivel DESC", $link);
 	} else {
 		
 		if ($pol['estado'] == 'extranjero') {
-			return '<p class="azul"><b>Las fronteras con  '.$pol['pais'].' están cerradas, no puedes participar.</a></b></p>'; 
+			return '<p class="azul"><b>La frontera con '.$pol['pais'].' est&aacute; cerrada, no puedes participar.</a></b></p>'; 
 		} else {
 			return '<p class="azul"><b>Debes ser Ciudadano para participar, <a href="'.REGISTRAR.'">reg&iacute;strate aqu&iacute;!</a></b></p>'; 
 		}

@@ -536,7 +536,7 @@ http://<input type="text" name="palabra_gob1" size="19" maxlength="200" value="'
 foreach ($vp['paises'] AS $pais) {
 $sel = '';
 $sel[$pol['config']['frontera_con_' . $pais]] = ' selected="selected"';
-if (PAIS != $pais)
+if (PAIS != $pais) {
 $txt .= '
 <tr><td align="right">Frontera con ' . $pais. ':</td>
 <td>
@@ -545,6 +545,7 @@ $txt .= '
 <option value="cerrada"' . $sel['cerrada'] . '>Cerrada</option>
 </select>
 </tr>';
+}
 }
 
 $txt .= '

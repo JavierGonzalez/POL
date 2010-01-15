@@ -496,8 +496,9 @@ $dato_array = array(
 );
 
 foreach ($vp['paises'] AS $pais) {
-	if (PAIS != $pais)
+	if (PAIS != $pais) {
 			$dato_array['frontera_con_' . $pais] = 'Frontera con ' . $pais;
+	}
 }
 
 foreach ($_POST AS $dato => $valor) {

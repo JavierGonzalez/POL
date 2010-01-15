@@ -91,7 +91,7 @@ if (
 	if ($pol['chat_accesos']) {
 		$txt .= '<p class="azul"><b>La participaci&oacute;n en este chat est&aacute; restringida.</a></b></p>';
 	} elseif ($pol['estado'] == 'extranjero') {
-		$txt .= '<p class="azul"><b>Las fronteras con '.$pol['pais'].' están cerradas, no puedes participar.</a></b></p>';
+		$txt .= '<p class="azul"><b>La frontera con '.$pol['pais'].' est&aacute; cerrada, no puedes participar.</a></b></p>';
 	} else {
 		$txt .= '<p class="azul"><b>Para participar en el chat debes ser Ciudadano de '.PAIS.', <a href="'.REGISTRAR.'">reg&iacute;strate aqu&iacute;!</a></b></p>';
 	}

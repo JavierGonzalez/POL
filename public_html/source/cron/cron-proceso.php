@@ -174,6 +174,15 @@ while($row = mysql_fetch_array($result)){
 	$p['pols_total'] = $row['pols_total'];
 	$p['prop'][$row['ID']] = $coste;
 }
+//ejecuta ultimo ciudadano
+if ($p['pols_total'] >= $p['pols']) {
+	pols_transferir($p['pols'], $p['user_ID'], '-1', 'CP');
+} else {
+	foreach($p['prop'] as $unID => $uncoste) {
+		mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '" . $unID . "' AND user_ID = '" . $p['user_ID'] . "' LIMIT 1", $link);
+	}
+}
+
 evento_chat('<b>[PROCESO] Coste de propiedades efectuado.</b> (factor de propiedad: <b>' . $pol['config']['factor_propiedad'] . '</b>)');
 
 

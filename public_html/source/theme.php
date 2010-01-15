@@ -152,7 +152,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 		<ul>
 <?php
 if (PAIS != 'POL') { echo '<li><a href="http://pol.virtualpol.com/">POL</a></li>'; }
-if (PAIS != 'VULCAN') { echo '<li><a href="http://vulcan.virtualpol.com/">VULCAN</a></li>'; }
 if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hispania</a></li>'; }
 ?>
 		</ul>

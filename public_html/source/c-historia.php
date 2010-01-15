@@ -39,7 +39,6 @@ $txt .= '
 <select name="pais">
 <option value="VirtualPol">VirtualPol</option>
 <option value="POL">POL</option>
-<option value="VULCAN">VULCAN</option>
 <option value="Hispania">Hispania</option>
 </select>
 

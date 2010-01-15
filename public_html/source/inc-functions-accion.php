@@ -84,8 +84,11 @@ function enviar_email($user_ID, $asunto, $mensaje, $email='') {
 	mail($email, $asunto, $mensaje, $cabeceras);
 }
 
-function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto) {
+function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais='') {
 	global $link, $pol;
+
+	if (!$pais) { $sql = SQL; $pais = PAIS; } else { $sql = strtolower($pais).'_'; }
+
 	$return = false;
 	$pols = strval($pols);
 	if (($pols != 0) AND ($concepto)) {
@@ -93,22 +96,22 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto) {
 
 		//quitar
 		if ($emisor_ID > 0) {
-			mysql_query("UPDATE ".SQL_USERS." SET pols = pols - " . $pols . " WHERE ID = '" . $emisor_ID . "' AND pais = '".PAIS."' LIMIT 1", $link);
+			mysql_query("UPDATE ".SQL_USERS." SET pols = pols - " . $pols . " WHERE ID = '" . $emisor_ID . "' AND pais = '".$pais."' LIMIT 1", $link);
 		} else {
 
 			if ($pol['nick']) { $concepto = '<b>'.$pol['nick'].'&rsaquo;</b> '.$concepto; }
 
-			mysql_query("UPDATE ".SQL."cuentas SET pols = pols - " . $pols . " WHERE ID = '" . substr($emisor_ID, 1) . "' LIMIT 1", $link);
+			mysql_query("UPDATE ".$pais."cuentas SET pols = pols - " . $pols . " WHERE ID = '" . substr($emisor_ID, 1) . "' LIMIT 1", $link);
 		}
 
 		//ingresar
 		if ($receptor_ID > 0) {
-			mysql_query("UPDATE ".SQL_USERS." SET pols = pols + " . $pols . " WHERE ID = '" . $receptor_ID . "' AND pais = '".PAIS."' LIMIT 1", $link);
+			mysql_query("UPDATE ".SQL_USERS." SET pols = pols + " . $pols . " WHERE ID = '" . $receptor_ID . "' AND pais = '".$pais."' LIMIT 1", $link);
 		} else {
-			mysql_query("UPDATE ".SQL."cuentas SET pols = pols + " . $pols . " WHERE ID = '" . substr($receptor_ID, 1) . "' LIMIT 1", $link);
+			mysql_query("UPDATE ".$sql."cuentas SET pols = pols + " . $pols . " WHERE ID = '" . substr($receptor_ID, 1) . "' LIMIT 1", $link);
 		}
 
-		mysql_query("INSERT INTO ".SQL."transacciones (pols, emisor_ID, receptor_ID, concepto, time) VALUES (" . $pols . ", '" . $emisor_ID . "', '" . $receptor_ID . "', '" . $concepto . "', '" . date('Y-m-d H:i:s') . "')", $link);
+		mysql_query("INSERT INTO ".$sql."transacciones (pols, emisor_ID, receptor_ID, concepto, time) VALUES (" . $pols . ", '" . $emisor_ID . "', '" . $receptor_ID . "', '" . $concepto . "', '" . date('Y-m-d H:i:s') . "')", $link);
 		$return = true;
 	}
 	return $return;

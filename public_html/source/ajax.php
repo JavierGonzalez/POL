@@ -106,33 +106,22 @@ if ((!isset($_POST['a'])) AND (isset($_POST['n']))) {
 			$user_ID_priv = '0';
 
 			switch ($msg_key) {
+
 				case 'dado':
-					$elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el dado... <b>' . mt_rand(1,6) . '</b> &nbsp; <em>' . $msg_rest . '</em>';
+					$param = $msg_array[1]; // parametro despues de /dado
+					if ((is_numeric($param)) AND ($param > 1)) {
+						$result_rand = mt_rand(1, $param);
+						$result_type = ' de '.$param.' numeros';
+					} elseif ($param == '%') {
+						$result_rand = mt_rand(00, 99).'%';
+						$result_type = ' de porcentaje';
+					} else { // dado normal
+						$result_rand = mt_rand(1, 6);
+						$result_type = '';
+					}
+					$elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el <b>dado'.$result_type.': <span style="font-size:16px;">'.$result_rand.'</span></b>';
 					break;
 
-				case 'd4':
-					$elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el d4... <b>' . mt_rand(1,4) . '</b> &nbsp; <em>' . $msg_rest . '</em>';	    
-                    			break;
-
-				case 'd8':
-					$elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el d8... <b>' . mt_rand(1,8) . '</b> &nbsp; <em>' . $msg_rest . '</em>';	    
-					break;
-				
-				case 'd10':
-					$elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el d10... <b>' . mt_rand(1,10) . '</b> &nbsp; <em>' . $msg_rest . '</em>';	    
-					break;
-				
-				case 'd12':
-					$elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el d12... <b>' . mt_rand(1,12) . '</b> &nbsp; <em>' . $msg_rest . '</em>';	    
-					break;
-				
-				case 'd20':
-					$elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el d20... <b>' . mt_rand(1,20) . '</b> &nbsp; <em>' . $msg_rest . '</em>';	    
-					break;
-				
-				case 'd%':
-                                        $elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el d%... <b>' . mt_rand(00,99) . '</b> &nbsp; <em>' . $msg_rest . '</em>';
-					break;
 
 				case 'calc': 
 					if (ereg("^[0-9\+-\/\*\(\)\.]{1,100}$", strtolower($msg_rest))) { 

@@ -135,7 +135,8 @@ if ((!isset($_REQUEST['a'])) AND (isset($_REQUEST['n']))) {
 					break;
 				case 'me': $elmsg = '<b style="margin-left:20px;">' . $pol['nick'] . '</b> ' . $msg_rest; break;
 				case 'ayuda':
-				case 'novatos': $elmsg = '<b>[#] ' . $pol['nick'] . '</b> Ayuda: <a href="/doc/empezar-en-'.strtolower(PAIS).'/" target="_blank">C&oacute;mo empezar, FAQ</a>'; break;
+				case 'novatos': $elmsg = '<b>[#] ' . $pol['nick'] . '</b> ofrece ayuda: <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b>, <a href="/doc/empezar-en-'.strtolower(PAIS).'/" target="_blank">C&oacute;mo empezar, FAQ</a>.</a>'; 
+				break;
 				case 'policia':
 					if (($pol['cargo'] == 13) OR ($pol['cargo'] == 12)) {
 						$elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>';

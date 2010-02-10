@@ -644,7 +644,29 @@ ORDER BY salario DESC", $link);
 
 <p style="text-align:center;"><input value="EJECUTAR" style="font-size:20px;" type="submit"' . $dis . ' /></p>
 
-</form>';
+</form>
+<br/>
+<form action="/accion.php?a=vaciar_listas" method="POST">
+<table border="0" cellspacing="3" cellpadding="0" class="pol_table">
+<tr>
+<td class="amarillo"colspan="7"><b class="big">Listas electorales</b></td>
+</tr>
+
+<tr>';
+
+$elecciones_dias_quedan = round((strtotime($pol['config']['elecciones_inicio']) - time()) / 86400);
+$elecciones_frecuencia_dias = round($pol['config']['elecciones_frecuencia'] / 86400);
+if (($elecciones_dias_quedan <= 5) OR ($elecciones_dias_quedan == $elecciones_frecuencia_dias)) {
+	 $dis = ' disabled="disabled"'; 
+}
+
+$txt .= '
+<td><input type="hidden" name="pais" value="'.$pol['pais'].'" /><p><input type="submit" value="Vaciar listas electorales" onclick="if (!confirm(\'&iquest;Seguro que quieres VACIAR LAS LISTAS ELECTORALES?\')) { return false; }"' . $dis . ' /></td>
+</tr>
+
+</table>
+</form>
+';
 
 }
 

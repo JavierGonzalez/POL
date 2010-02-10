@@ -26,6 +26,20 @@ OR (($pol['estado'] == 'extranjero') AND ($_GET['a'] == 'mercado'))
 switch ($_GET['a']) { // #####################################################
 
 
+case 'vaciar_listas':
+
+	if (($pol['nivel'] >= 98) AND ($_POST['pais'] == PAIS)) {
+		$elecciones_dias_quedan = round((strtotime($pol['config']['elecciones_inicio']) - time()) / 86400);
+		$elecciones_frecuencia_dias = round($pol['config']['elecciones_frecuencia'] / 86400);
+		if (($elecciones_dias_quedan > 5) AND ($elecciones_dias_quedan < $elecciones_frecuencia_dias)) {
+			mysql_query("DELETE FROM ".SQL."partidos_listas", $link);
+			evento_chat('<b>[GOBIERNO]</b> Se han vaciado las listas electorales ('.crear_link($pol['nick']).', <a href="/control/despacho-oval/">Despacho Oval</a>)');
+		}
+	}
+
+	$refer_url = 'partidos/';
+
+	break;
 
 case 'historia':
 

@@ -654,8 +654,8 @@ ORDER BY salario DESC", $link);
 
 <tr>';
 
-$elecciones_dias_quedan = round((strtotime($pol['config']['elecciones_inicio']) - time()) / 86400);
-$elecciones_frecuencia_dias = round($pol['config']['elecciones_frecuencia'] / 86400);
+$elecciones_dias_quedan = ceil((strtotime($pol['config']['elecciones_inicio']) - time()) / 86400);
+$elecciones_frecuencia_dias = ceil($pol['config']['elecciones_frecuencia'] / 86400);
 if (($elecciones_dias_quedan <= 5) OR ($elecciones_dias_quedan == $elecciones_frecuencia_dias)) {
 	 $dis = ' disabled="disabled"'; 
 }

@@ -139,7 +139,7 @@ input, area, div.content-in select {
 	font-weight:bold; 
 }
 
-input[type="submit"][disabled="disabled"], area[disabled="disabled"], div.content-in select[disabled="disabled"] { 
+input[type="submit"][disabled="disabled"], input[type="button"][disabled="disabled"], area[disabled="disabled"], div.content-in select[disabled="disabled"] { 
 	color:gray;
 	font-weight:normal; 
 }

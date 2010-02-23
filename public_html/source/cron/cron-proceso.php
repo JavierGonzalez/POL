@@ -221,6 +221,10 @@ mysql_query("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '
 // ELIMINAR examenes antiguos
 //mysql_query("DELETE FROM ".SQL."estudios_users WHERE cargo = '0' AND time < '" . $margen_60dias . "'", $link);
 
+// ELIMINAR privilegios de desarrollador (nadie deberia tenerlo de forma continua, así queda para uso ocasional de mantenimiento)
+mysql_query("UPDATE ".SQL_USERS." SET estado = 'ciudadano' WHERE estado = 'desarrollador'", $link);
+
+
 
 // ELIMINAR USUARIOS  (15 dias)
 /*

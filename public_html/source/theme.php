@@ -142,13 +142,23 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 
-<td width="10"><a href="/img/banderas/<?=PAIS?>_500.gif"><img src="/img/banderas/<?=PAIS?>_60.gif" alt="Bandera de <?=PAIS?>, Simulador Politico en Espa&ntilde;ol juego online" border="0" style="float:left;margin:-9px 8px -2px -8px;" /></a></td>
-
 
 <td>
 <ul class="sfn-menu">
+
+
 	<li class="current">
-		<a href="/"><b><?=PAIS?> &#9660;</b></a> 
+		<a href="http://www.virtualpol.com/" title="VirtualPOL"><img src="/img/logo-virtualpol-40original.gif" border="0" alt="VirtualPOL" style="margin:-10px 0 -18px -14px;" /> &#9660;</a>
+			<ul>
+				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
+				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo</a></li>
+				<li><a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct">Gu&iacute;a inicial</a></li>
+			</ul>
+	</li>
+
+
+	<li>
+		<a href="/"><img src="/img/banderas/<?=PAIS?>_60.gif" alt="Bandera de <?=PAIS?>, Simulador Politico en Espa&ntilde;ol juego online" border="0" style="margin:-10px 0 -18px 0;" /> <b><?=PAIS?> &#9660;</b></a> 
 		<ul>
 <?php
 if (PAIS != 'POL') { echo '<li><a href="http://pol.virtualpol.com/">POL</a></li>'; }
@@ -156,14 +166,9 @@ if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hi
 ?>
 		</ul>
 	</li>
-	<li>
-		<a href="http://www.virtualpol.com/">Comunidad VirtualPOL &#9660;</a>
-			<ul>
-				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
-				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo</a></li>
-				<li><a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct">Gu&iacute;a inicial</a></li>
-			</ul>
-	</li>
+
+
+
 </ul>
 </td>
 
@@ -192,7 +197,7 @@ if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hi
 <dl id="menu">
 <ul class="sf-menu sf-vertical">
 			<li class="current">
-				<a href="#a">Comunicaci&oacute;n</a>
+				<a href="/">Comunicaci&oacute;n</a>
 				<ul>
 					<li><a href="/"><b>Plaza</b></a></li>
 					<li><a href="http://www.virtualpol.com/chat/plaza-internacional/">Plaza Int.</a></li>

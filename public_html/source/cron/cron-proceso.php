@@ -102,7 +102,7 @@ while($row = mysql_fetch_array($result)) {
 if ($pols_gobierno - $gasto_total != $pols_gobierno2) {
 	mysql_query("UPDATE ".SQL."cuentas SET pols = pols - ".$gasto_total." WHERE ID = '1' LIMIT 1", $link);
 	$pols_gobierno -= $gasto_total;
-	evento_chat('<b>[PROCESO] Correcci&oacute;n efectuada.</b> Descontado el gasto en salarios. El error era de <em>'. pols($pols_gobierno2 - $pols_gobierno).' '.MONEDA);
+	evento_chat('<b>[PROCESO] Correcci&oacute;n efectuada.</b> Descontado el gasto en salarios. El error era de <em>'. pols($pols_gobierno2 - $pols_gobierno).' '.MONEDA.'</em>');
 }
 else {
 	$pols_gobierno = $pols_gobierno2;
@@ -129,7 +129,7 @@ while($row = mysql_fetch_array($result)) {
 
 if ($pols_gobierno - $gasto_total != $pols_gobierno2) {
 	mysql_query("UPDATE ".SQL."cuentas SET pols = pols - ".$gasto_total." WHERE ID = '1' LIMIT 1", $link);
-	evento_chat('<b>[PROCESO] Correcci&oacute;n efectuada.</b> Descontado el gasto en INEMPOL. El error era de <em>'. pols($pols_gobierno2 - $pols_gobierno + $gasto_total).' '.MONEDA);
+	evento_chat('<b>[PROCESO] Correcci&oacute;n efectuada.</b> Descontado el gasto en INEMPOL. El error era de <em>'. pols($pols_gobierno2 - $pols_gobierno + $gasto_total).' '.MONEDA.'</em>');
 }
 
 //enviar_email(null, "[POL] CRON 24h - Sueldos ejecutados", "Sueldos<br /><br />" . $txt, "gonzomail@gmail.com");

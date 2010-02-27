@@ -74,6 +74,11 @@ WHERE cargo = '1'
 ORDER BY user_ID ASC", $link);
 while($row = mysql_fetch_array($result)){ if ($salarios[$row['user_ID']] < $row['salario']) { $salarios[$row['user_ID']] = $row['salario']; } }
 
+$result = mysql_query("SELECT pols FROM ".SQL."cuentas WHERE ID = 1 LIMIT 1", $link);
+while($row = mysql_fetch_array($result)) {
+	$pols_gobierno = $row['pols'];
+}
+
 $gasto_total = 0;
 foreach($salarios as $user_ID => $salario) {
 	$result = mysql_query("SELECT ID
@@ -89,6 +94,19 @@ LIMIT 1", $link);
 }
 evento_chat('<b>[PROCESO] Sueldos efectuados.</b> Gasto: <em>' . pols($gasto_total) . ' '.MONEDA.'</em>');
 
+$result = mysql_query("SELECT pols FROM ".SQL."cuentas WHERE ID = '1' LIMIT 1", $link);
+while($row = mysql_fetch_array($result)) {
+	$pols_gobierno2 = $row['pols'];
+}
+
+if ($pols_gobierno - $gasto_total != $pols_gobierno2) {
+	mysql_query("UPDATE ".SQL."cuentas SET pols = pols - ".$gasto_total." WHERE ID = '1' LIMIT 1", $link);
+	$pols_gobierno -= $gasto_total;
+	evento_chat('<b>[PROCESO] Correcci&oacute;n efectuada.</b> Descontado el gasto en salarios. El error era de <em>'. pols($pols_gobierno2 - $pols_gobierno).' '.MONEDA);
+}
+else {
+	$pols_gobierno = $pols_gobierno2;
+}
 
 // INEMPOL
 $salario_inempol = $pol['config']['pols_inem'];
@@ -103,6 +121,17 @@ if ($salario_inempol > 0) {
 	}
 }
 evento_chat('<b>[PROCESO] INEMPOL efectuado.</b> Gasto: <em>' . pols($gasto_total) . ' '.MONEDA.'</em>');
+
+$result = mysql_query("SELECT pols FROM ".SQL."cuentas WHERE ID = '1' LIMIT 1", $link);
+while($row = mysql_fetch_array($result)) {
+	$pols_gobierno2 = $row['pols'];
+}
+
+if ($pols_gobierno - $gasto_total != $pols_gobierno2) {
+	mysql_query("UPDATE ".SQL."cuentas SET pols = pols - ".$gasto_total." WHERE ID = '1' LIMIT 1", $link);
+	evento_chat('<b>[PROCESO] Correcci&oacute;n efectuada.</b> Descontado el gasto en INEMPOL. El error era de <em>'. pols($pols_gobierno2 - $pols_gobierno + $gasto_total).' '.MONEDA);
+}
+
 //enviar_email(null, "[POL] CRON 24h - Sueldos ejecutados", "Sueldos<br /><br />" . $txt, "gonzomail@gmail.com");
 
 sleep(1);

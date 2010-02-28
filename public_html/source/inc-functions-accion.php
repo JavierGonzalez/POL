@@ -204,10 +204,10 @@ function gen_text($text, $type='') {
 		$text = strip_tags($text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>,<span>,<font>,<strong>,<p>,<b>,<em>,<ul>,<ol>,<li>,<blockquote>,<a>,<h2>,<h3>,<h4>,<br>,<hr>,<table>,<tr>,<td>,<th>");
 		$text = str_replace("\n\n", "<br /><br />\n\n", $text); //LINUX
 		$text = str_replace("\r\n\r\n", "<br /><br />\r\n\r\n", $text); //WINDOWS
-	}
+	} 
 	//acentos
-	$mal = array(chr(183), chr(231), chr(199), chr(128), 'º', 'ª', '©', '®', '°', 'á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú', 'ñ', 'Ñ', 'ü', 'Ü', chr(191), '¡');
-	$ok	= array('&#183;', '&#231;', '&#199;', '&#128;', '&ordm;', '&ordf;', '&copy;', '&reg;', '&deg;', '&aacute;', '&eacute;', '&iacute;', '&oacute;', '&uacute;', '&Aacute;', '&Eacute;', '&Iacute;', '&Oacute;', '&Uacute;', '&ntilde;', '&Ntilde;', '&uuml;', '&Uuml;', '&iquest;', '&iexcl;');
+	$mal = array(chr(183), chr(231), chr(199), chr(128), 'º', 'ª', '©', '®', '°', 'á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú', 'ñ', 'Ñ', 'ü', 'Ü', chr(191), '¡', 'à', 'è', 'ì', 'ò', 'ù', 'À', 'È', 'Ì', 'Ò', 'Ù');
+	$ok	= array('&#183;', '&#231;', '&#199;', '&#128;', '&ordm;', '&ordf;', '&copy;', '&reg;', '&deg;', '&aacute;', '&eacute;', '&iacute;', '&oacute;', '&uacute;', '&Aacute;', '&Eacute;', '&Iacute;', '&Oacute;', '&Uacute;', '&ntilde;', '&Ntilde;', '&uuml;', '&Uuml;', '&iquest;', '&iexcl;', '&agrave;', '&egrave;', '&igrave;', '&ograve;', '&ugrave;', '&Agrave;', '&Egrave;', '&Igrave;', '&Ograve;', '&Ugrave;');
 	$text = str_replace($mal, $ok, $text);
 
 	return $text;

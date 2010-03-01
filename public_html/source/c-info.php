@@ -292,7 +292,7 @@ case 'economia':
 // #CUADRAR
 // TOTAL 11 AGOSTO: 544.645 | 554.528 | 674.518
 
-$moneda_mundial = '674518';
+$moneda_mundial = '865741';
 
 
 $txt .= '<br /><table border="0" cellspacing="0" cellpadding="2">

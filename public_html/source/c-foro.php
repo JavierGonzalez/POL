@@ -51,7 +51,7 @@ ORDER BY nivel DESC", $link);
 <h2>Nuevo hilo</h2>
 
 <p>T&iacute;tulo:<br />
-<input name="title" size="60" maxlength="200" type="text" value="' . $edit_title . '" /></p>
+<input name="title" size="60" maxlength="80" type="text" value="' . $edit_title . '" /></p>
 
 <p>Mensaje:<br />
 <textarea name="text" style="color: green; font-weight: bold; width: 570px; height: 250px;">' . $edit_text . '</textarea><br />

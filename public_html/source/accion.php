@@ -907,7 +907,10 @@ case 'foro':
 			$url = gen_url($title);
 			$exito = mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
 			if (!$exito) {
-				$url = gen_url($title.'-'.date('dmyHi'));
+				if (strlen($url) > 69) {
+					 $url = substr($title, 0, 69);	
+				}
+				$url = $url.'-'.date('dmyHi');
 				mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
 			}
 

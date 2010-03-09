@@ -905,7 +905,12 @@ case 'foro':
 		if (($_GET['b'] == 'hilo') AND ($_POST['title'])) {
 			$title = strip_tags($_POST['title']);
 			$url = gen_url($title);
-			mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
+			$exito = mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
+			if (!$exito) {
+				$url = gen_url($title.'-'.date('dmyHi'));
+				mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
+			}
+
 			evento_chat('<b>[FORO]</b> Nuevo hilo de '.$pol['nick'].': <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a>');
 
 		} elseif ($_GET['b'] == 'reply') {

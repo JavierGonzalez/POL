@@ -20,7 +20,7 @@ case 'supervisor-censo':
 	if (($pol['cargos'][21]) OR ($pol['estado'] == 'desarrollador')) {
 
 
-		$result = mysql_query("SELECT nick FROM ".SQL_USERS." WHERE cargo = '21' OR estado = 'desarrollador'" . $limit);
+		$result = mysql_query("SELECT nick FROM ".SQL_USERS." WHERE cargo = '21'" . $limit);
 		while ($row = mysql_fetch_array($result)) {
 			if ($supervisores) { $supervisores .= ', '; }
 			$supervisores .= crear_link($row['nick']); 

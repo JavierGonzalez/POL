@@ -231,7 +231,7 @@ function print_msg(data) {
 					var nick_solo = mli[3].split("&rarr;");
 					
 					if (minick == nick_solo[0]) {
-						list += "<li id=\"" + mli[0] + "\" class=\"cf_p chat_priv\">" + mli[2] + " <span class=\"chat_priv\" style=\"color:#0066FF\" ;OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
+						list += "<li id=\"" + mli[0] + "\" class=\"cf_p chat_priv\">" + mli[2] + " <span class=\"chat_priv\" style=\"color:#004FC6\" ;OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
 					} else {
 						list += "<li id=\"" + mli[0] + "\" class=\"cf_p chat_priv\">" + mli[2] + " <span class=\"chat_priv\" OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
 					}

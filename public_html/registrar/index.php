@@ -79,6 +79,9 @@ espalpsp.com
 espalnds.com
 espalwii.com
 uggsrock.com
+yopmail.com
+owlpic.com
+666.joliekemulder.nl
 ';
 
 $emails_falsos = explode("\n", $emails_falsos);

@@ -23,7 +23,7 @@ pol_pujas		(ID, mercado_ID, user_ID, pols, time)
 <form action="/accion.php?a=mercado&b=editarfrase" method="post">
 <table border="0"><tr>
 <td align="right">Texto: <input value="' . $frase . '" type="text" name="frase" size="50" maxlength="70" /><br />
-http://<input type="text" name="url" size="50" maxlength="80" value="' . $url . '" /></td><td>
+http://<input type="text" name="url" size="50" maxlength="150" value="' . $url . '" /></td><td>
 <input type="submit" value="Editar" style="height:40px;" /></form></b></td></tr>
 <tr><td align="right">
 <form action="/accion.php?a=mercado&b=cederfrase" method="post">

@@ -46,7 +46,7 @@ Ceder al Ciudadano: <input type="text" name="nick" size="14" maxlength="20" valu
 
 <table border="0"><tr>
 <td>Texto: <input value="' . $t[2] . '" type="text" name="text" size="12" maxlength="10" /><br />
-http://<input type="text" name="url" size="50" maxlength="90" value="' . $t[1] . '" /></td><td>
+http://<input type="text" name="url" size="50" maxlength="150" value="' . $t[1] . '" /></td><td>
 <input type="submit" value="Editar" style="height:40px;" /></form></b></td></tr>
 
 <tr><td align="right">

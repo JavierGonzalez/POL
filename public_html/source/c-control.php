@@ -800,7 +800,7 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 <th></th>
 </tr>';
 
-
+	mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '" . $date . "'", $link); 
 	$margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); //30dias
 	$result = mysql_query("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado,

@@ -373,7 +373,7 @@ $txt .= '</table>
 
 
 		if ($user_ID != $pol['user_ID']) {
-			$txt .= '<p>' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.virtualpol.com/msg/' . strtolower($nick) . '/') . ' &nbsp; ' . boton('Transferir '.MONEDA_NOMBRE.'', '/pols/transferir/' . strtolower($nick) . '/') . '</p>';
+			$txt .= '<p>' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/msg/' . strtolower($nick) . '/') . ' &nbsp; ' . boton('Transferir '.MONEDA_NOMBRE.'', 'http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/pols/transferir/' . strtolower($nick) . '/') . '</p>';
 		}
 		$txt .= '</div>';
 

@@ -65,7 +65,7 @@ case 'desarrollo':
 	$pol['chat_id'] = 9;
 	$pol['chat_nombre'] = 'Sala de Desarrolladores';
 	$pol['chat_accesos'] = true;
-	$pol['chat_accesos_list'] = array('fermuned', 'bradduk', 'GONZO',  'selvatgi');
+	$pol['chat_accesos_list'] = array('Max_Power', 'oportunista', 'GONZO',  'selvatgi');
 	break;
 	
 	

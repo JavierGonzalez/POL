@@ -12,7 +12,7 @@ if ($_GET['a'] == 'mmm') {
 
 } else {						// NOTAS HOME
 	$txt_title = 'Notas';
-	$notame_max = 130;			// Cambiado el numero de caracteres de 160 a 130 para compatiblidad con twitter
+	$notame_max = 160;			// Restaurados los 160 caracteres
 
 	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."foros_msg WHERE hilo_ID = '-1'", $link);
 	while($row = mysql_fetch_array($result)) { $notas_num = $row['num']; }

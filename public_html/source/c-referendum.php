@@ -192,7 +192,7 @@ ORDER BY num DESC", $link);
 </select>
 <input type="submit" value="Votar" /></p>';
 				} else {
-					$txt .= 'Voto <b>ok</b>. Tu voto ha sido recogido correctamente.';
+					$txt .= 'Tu voto ha sido recogido correctamente.';
 				}
 			}
 		}

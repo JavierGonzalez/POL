@@ -17,7 +17,7 @@ switch ($_GET['a']) {
 
 case 'supervisor-censo':
 
-	if (($pol['cargos'][21]) OR ($pol['estado'] == 'desarrollador')) {
+	if ($pol['estado'] == 'desarrollador') {
 
 
 		$result = mysql_query("SELECT nick FROM ".SQL_USERS." WHERE cargo = '21'" . $limit);
@@ -704,7 +704,7 @@ FROM ".SQL_EXPULSIONES."
 ORDER BY expire DESC", $link);
 while($row = mysql_fetch_array($result)){
 	
-	if ((($pol['estado'] == 'desarrollador') OR ($pol['cargo'] == 21) OR ($pol['cargo'] == 9) OR ($pol['cargo'] == 7)) AND ($row['expulsado_pais']) AND ($row['estado'] == 'expulsado')) { 
+	if ((($pol['estado'] == 'desarrollador') OR  ($pol['cargo'] == 9) OR ($pol['cargo'] == 7)) AND ($row['expulsado_pais']) AND ($row['estado'] == 'expulsado')) { 
 		$expulsar = boton('Cancelar', '/accion.php?a=expulsar&b=desexpulsar&ID=' . $row['ID'], '&iquest;Seguro que quieres CANCELAR la EXPULSION del usuario: '.$row['tiempo'].'?'); 
 	} elseif ($row['estado'] == 'cancelado') { $expulsar = '<b style="font-weight:bold;">Cancelado</b>'; } else { $expulsar = ''; }
 
@@ -723,8 +723,8 @@ while($row = mysql_fetch_array($result)){
 <td valign="top" nowrap="nowrap"><img src="/img/cargos/' . $row['cargo'] . '.gif" border="0" /> ' . crear_link($row['nick_autor']) . '</td><td valign="top" align="right" valign="top" nowrap="nowrap"><acronym title="' . $row['expire'] . '">' . $duracion . '</acronym></td><td valign="top"><b style="font-size:13px;">' . $row['razon'] . '</b></td><td valign="top" align="center">' . $expulsar . '</td></tr>' . "\n";
 
 }
-$txt .= '</table><hr /><p>Las expulsiones son ejecutadas por los <b><img src="/img/cargos/21.gif" />Supervisores del Censo</b> a cualquier usuario que no ejerzan ningun cargo en su pais.</p>
-<p>Las expulsiones pueden ser canceladas por el <b><img src="/img/cargos/21.gif" />Supervisor del Censo</b>, <b><img src="/img/cargos/7.gif" />Presidente</b> y <b><img src="/img/cargos/9.gif" />Juez Supremo</b>, antes de que el expulsado sea eliminado (ocurre tras 10 dias inactivo).</p>';
+$txt .= '</table><hr /><p>Las expulsiones son ejecutadas por los desarrolladores a cualquier usuario que no ejerzan ningun cargo en su pais.</p>
+<p>Las expulsiones pueden ser canceladas por el <b><img src="/img/cargos/7.gif" />Presidente</b> y <b><img src="/img/cargos/9.gif" />Juez Supremo</b>, antes de que el expulsado sea eliminado (ocurre tras 10 dias inactivo).</p>';
 	break;
 
 
@@ -910,7 +910,7 @@ $txt .= '</table><br />
 <tr>';
 
 
-if (($pol['cargo'] == 21) OR ($pol['estado'] == 'desarrollador')) {
+if ($pol['estado'] == 'desarrollador') {
 	$txt .= '<td nowrap="nowrap"><a class="abig" href="/control/supervisor-censo/"><b>Supervisi&oacute;n del Censo</b></a></td>';
 } else {
 	$txt .= '<td nowrap="nowrap"><b class="abig gris">Supervisi&oacute;n del Censo</b></td>';

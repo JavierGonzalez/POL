@@ -1274,7 +1274,7 @@ case 'cargo':
 					if ($b == 'add') {
 						if (($cargo_ID != 21) OR (($cargo_ID == 21) AND (strtotime($asignado['fecha_registro']) <= (time()-8640000)) AND ($asignado['online'] >= 864000))) {
 							cargo_add($cargo_ID, $_POST['user_ID']);
-							evento_chat('<b>[CARGO] El cargo de '.'<img src="/img/cargos/'.$cargo_ID.'.gif" />'.$row['nombre'].'ha sido asignado a '.crear_link($nick_asignado).' por '.crear_link($pol['nick']));
+							evento_chat('<b>[CARGO]</b> El cargo de '.'<img src="/img/cargos/'.$cargo_ID.'.gif" />'.$row['nombre'].' ha sido asignado a '.crear_link($nick_asignado).' por '.crear_link($pol['nick']));
 						}
 					}
 					elseif ($b == 'del') { 

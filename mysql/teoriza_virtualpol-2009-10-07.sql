@@ -15,6 +15,59 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 -- --------------------------------------------------------
 
+
+--
+-- Estructura de tabla para la tabla `chats`
+--
+
+CREATE TABLE IF NOT EXISTS `chats` (
+  `chat_ID` smallint(5) unsigned NOT NULL auto_increment,
+  `estado` enum('activo','bloqueado','en_proceso','expirado','borrado') NOT NULL default 'en_proceso',
+  `pais` enum('POL','Hispania') NOT NULL,
+  `url` varchar(20) NOT NULL,
+  `titulo` varchar(150) NOT NULL,
+  `user_ID` mediumint(8) unsigned NOT NULL,
+  `acceso_leer` enum('privado','nivel','antiguedad','ciudadanos_pais','ciudadanos_global','usuarios','anonimos') NOT NULL,
+  `acceso_escribir` enum('privado','nivel','antiguedad','ciudadanos_pais','ciudadanos_global','usuarios','anonimos') NOT NULL,
+  `acceso_cfg_leer` varchar(500) default NULL,
+  `acceso_cfg_escribir` varchar(500) default NULL,
+  `fecha_creacion` datetime NOT NULL,
+  `fecha_last` datetime NOT NULL,
+  `dias_expira` smallint(5) unsigned default NULL,
+  `url_externa` varchar(500) default NULL,
+  `stats_visitas` int(12) unsigned NOT NULL default '0',
+  `stats_msgs` int(12) unsigned NOT NULL default '0',
+  `GMT` tinyint(2) NOT NULL default '1',
+  PRIMARY KEY  (`chat_ID`),
+  UNIQUE KEY `url` (`url`),
+  KEY `estado` (`estado`),
+  KEY `pais` (`pais`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+--
+-- Estructura de tabla para la tabla `chats_msg`
+--
+
+CREATE TABLE IF NOT EXISTS `chats_msg` (
+  `ID` int(12) unsigned NOT NULL auto_increment,
+  `chat_ID` smallint(5) unsigned NOT NULL,
+  `msg_ID` int(12) unsigned NOT NULL,
+  `nick` varchar(14) NOT NULL,
+  `msg` varchar(900) NOT NULL,
+  `time` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `cargo` tinyint(3) unsigned NOT NULL default '0',
+  `user_ID` mediumint(6) unsigned NOT NULL default '0',
+  `tipo` enum('m','p','e','c') NOT NULL default 'm',
+  PRIMARY KEY  (`ID`),
+  KEY `chat_ID` (`chat_ID`,`msg_ID`,`nick`,`msg`,`time`,`cargo`,`user_ID`,`tipo`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+
+
+
+
 --
 -- Estructura de tabla para la tabla `expulsiones`
 --

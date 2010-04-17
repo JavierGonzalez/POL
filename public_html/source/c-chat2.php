@@ -14,10 +14,10 @@ MEJORAS:
 
 
 TAREAS:		(- por hacer, x hecho)
-- Crear nueva tabla "chats".
-- Crear nueva tabla "chats_msg".
-- Copiar el nucleo del chat que servirá como comienzo.
-- Aglutinar el HTML, CSS y JS del chat, aislandolo del resto del codigo.
+x Crear nueva tabla "chats".
+x Crear nueva tabla "chats_msg".
+x Copiar el nucleo del chat que servirá como comienzo.
+x Aglutinar el HTML, CSS y JS del chat, aislandolo del resto del codigo.
 - Sortear los conflictos derivados de que hay multiples paises.
 - Panel de creación de nuevos chats. Opciones:
 	- Tiempo de expiración: tras N dias de inactividad, perpetuo. 
@@ -30,85 +30,82 @@ TAREAS:		(- por hacer, x hecho)
 - Página mostrando los chats activos, su URL externa donde se visualiza (si la hay) y estadisticas de visitas de los chats.
 - ...
 
-
-
 */
 
 
-include('inc-login.php');
-$adsense_exclude = true;
-$pol['chat_accesos'] = false;
-
-switch ($_GET['a']) {
-
-case 'plaza':
-	$pol['chat_id'] = 0;
-	$pol['chat_nombre'] = 'Plaza de '.PAIS;
 
 
-	//redireccion
-	if ($_GET['b'] != 'm') { header('Location: http://'.strtolower(PAIS).'.virtualpol.com/'); exit; }
 
-	break;
+if ($_GET['a'] == 'solicitar-chat') { // Crear chat
+	include('inc-login.php');
 
-case 'parlamento':
-	$pol['chat_id'] = 1;
-	$pol['chat_nombre'] = 'Parlamento de '.PAIS;
-	break;
+	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
+	while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
 
-case 'comisaria':
-	$pol['chat_id'] = 2;
-	$pol['chat_nombre'] = 'Comisaria de '.PAIS;
-	break;
+	foreach ($vp['paises'] AS $pais) { $txt_li .= '<option value="'.$pais.'"'.($pais==PAIS?' selected="selected"':'').'>'.$pais.'</option>';}
 
-case 'tribunales':
-	$pol['chat_id'] = 3;
-	$pol['chat_nombre'] = 'Tribunales de '.PAIS;
-	break;
+	$txt .= '<h1><a href="/chat2/">Chats</a>: Solicitar chat</h1>
 
-case 'gobierno':
-	$pol['chat_id'] = 4;
-	$pol['chat_nombre'] = 'Gobierno de '.PAIS;
-	break;
+<form action="/accion.php?a=chat&b=solicitar" method="post">
 
-case 'hotel-arts':
-	$pol['chat_id'] = 5;
-	$pol['chat_nombre'] = 'Hotel Arts de '.PAIS;
-	break;
+<ol>
+<li><b>Pais:</b><br />
+<select name="pais">' . $txt_li . '</select> (No modificable)
+<br /><br /></li>
 
-case 'universidad':
-	$pol['chat_id'] = 6;
-	$pol['chat_nombre'] = 'Universidad de '.PAIS;
-	break;
+<li><b>Nombre del chat:</b><br />
+<input type="text" name="nombre" size="20" maxlength="20" /> (No modificable)
+<br /><br /></li>
 
-case 'antiguedad':
-	if (strtotime($pol['fecha_registro']) < (time() - 2592000)) {
-		$pol['chat_id'] = 7;
-		$pol['chat_nombre'] = 'Antiguedad de '.PAIS;
-	}
-	break;
+<li>' . boton('Solicitar chat', false, false, '', $pol['config']['pols_crearchat']) . '</li>
+</ol>
 
-case 'anfiteatro':
-	if (PAIS == 'POL') {
-		$pol['chat_id'] = 8;
-		$pol['chat_nombre'] = 'Anfiteatro (Club <a href="http://pol.virtualpol.com/foro/general/nacimiento-del-club-privado-de-debate-mmmmm-y-de-la-ongd-baobab/">mmmmm</a>)';
-		$pol['chat_accesos'] = true;
-		$pol['chat_accesos_list'] = array('Jazunzu', 'born', 'Sanchez', 'GONZO', 'dannnyql', 'selvatgi', 'fran');
-	}
-	break;
+<p><a href="/chat2/"><b>Ver Chats</b></a></p>
+
+</form>';
+
+
+
+	include('theme.php');
+
+} elseif ($_GET['a']) { // Chats
+
+	include('inc-chat2.php');
+
+} else { // Listado de chats
+	include('inc-login.php');
 	
-	
-	default: header('Location: http://'.HOST.'/'); break;
+	$txt .= '<table width="0" border="0">
+<tr>
+<th>Estado</th>
+<th>Pais</th>
+<th>Chat</th>
+<th>Acceso Leer</th>
+<th>Acceso Escribir</th>
+<th>Fundador</th>
+<th>Hace...</th>
+</tr>';
+	$result = mysql_query("SELECT *,
+(SELECT nick FROM users WHERE ID = chats.user_ID LIMIT 1) AS fundador
+FROM chats ORDER BY estado DESC", $link);
+	while ($r = mysql_fetch_array($result)) { 
+		
+		$txt .= '<tr>
+<td align="right"><b style="color:#888;">'.ucfirst($r['estado']).'</b></td>
+<td><b>'.$r['pais'].'</b></td>
+<td><a href="http://'.strtolower($r['pais']).'-dev.virtualpol.com/chat2/'.$r['url'].'/"><b>'.$r['titulo'].'</b></a></td>
+<td>'.$r['acceso_leer'].($r['acceso_cfg_leer']?' ('.$r['acceso_cfg_leer'].')':'').'</td>
+<td>'.$r['acceso_escribir'].($r['acceso_cfg_escribir']?' ('.$r['acceso_cfg_escribir'].')':'').'</td>
+<td>'.($r['user_ID']==0?'<em>Sistema</em>':crear_link($r['fundador'])).'</td>
+<td align="right">'.duracion(time() - strtotime($r['fecha_creacion'])).'</td>
+</tr>';
+	}
+
+	$txt .= '</table><p>'.boton('Solicitar chat', '/chat2/solicitar-chat/').'</p>';
+
+	include('theme.php');
 }
 
 
-if (($_GET['a']) AND (isset($pol['chat_id']))) {
-
-	include('inc-chat.php');
-	
-	$txt_title = strip_tags('CHAT: ' . $pol['chat_nombre']);
-}
-
-if ($_GET['b'] == 'm') { include('theme-m.php'); } else { include('theme.php'); }
 
 ?>

@@ -450,7 +450,7 @@ ORDER BY time ASC", $link);
 		$txt .= '
 <input name="subforos" value="'.$subforos.'" type="hidden" />
 <tr>
-<td align="center" colspan="8"><input value="Guardar cambios" style="font-size:18px;" type="submit"' . $dis . ' /></td>
+<td align="center" colspan="8"><input value="Guardar cambios" style="font-size:18px;" type="submit"'.$dis.' /></td>
 </tr>
 <tr>
 <td colspan="8">* Los Extranjeros tienen nivel <b>0</b>, los Ciudadanos sin cargo nivel <b>1</b> y el nivel asciende en adelante segun los cargos ejercidos hasta el nivel <b>100</b> que es el Presidente.</td>
@@ -469,7 +469,7 @@ ORDER BY time ASC", $link);
 <tr>
 <td>Nombre:</td>
 <td><input type="text" name="nombre" size="10" maxlength="15" value="" /></td>
-<td><input value="Crear subforo" style="font-size:18px;" type="submit"' . $dis . ' /></td>
+<td><input value="Crear subforo" style="font-size:18px;" type="submit"'.$dis.' /></td>
 </tr>
 
 </table>
@@ -478,7 +478,7 @@ ORDER BY time ASC", $link);
 
 
 
-	$defcon = '<select name="defcon"' . $dis . ' style="font-size:25px;color:grey;">';
+	$defcon = '<select name="defcon"'.$dis.' style="font-size:25px;color:grey;">';
 	for ($i=5;$i>=1;$i--) {
 		if ($i == $pol['config']['defcon']) { $sel = ' selected="selected"'; } else { $sel = ''; }
 		$defcon .= '<option value="' . $i . '" style="background:' . $defcon_bg[$i] . ';"' . $sel . '>' . $i . '</option>';
@@ -509,10 +509,10 @@ function change_bg(img) {
 <tr><td colspan="2" class="amarillo"><b class="big">Control Ejecutivo</b></td></tr>
 
 
-<tr><td align="right">Descripcion Pais:</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'"' . $dis . ' /></td></tr>
+<tr><td align="right">Descripcion Pais:</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'"'.$dis.' /></td></tr>
 <tr><td align="right">DEFCON:</td><td>' . $defcon . '</td></tr>
-<tr><td align="right">Referencia tras:</td><td><input style="text-align:right;" type="text" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '"' . $dis . ' /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td></tr>
-<tr><td align="right">Esca&ntilde;os:</td><td><input style="text-align:right;" type="text" name="num_escanos" size="3" maxlength="10" value="' . $pol['config']['num_escanos'] . '"' . $dis . ' /> Diputados</td></tr>';
+<tr><td align="right">Referencia tras:</td><td><input style="text-align:right;" type="text" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '"'.$dis.' /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td></tr>
+<tr><td align="right">Esca&ntilde;os:</td><td><input style="text-align:right;" type="text" name="num_escanos" size="3" maxlength="10" value="' . $pol['config']['num_escanos'] . '"'.$dis.' /> Diputados</td></tr>';
 
 $palabra_gob = explode(':', $pol['config']['palabra_gob']);
 
@@ -521,11 +521,11 @@ $sel_exp[$pol['config']['examenes_exp']] = ' selected="selected"';
 
 $txt .= '
 <tr><td align="right" valign="top"><acronym title="Mensaje del Gobierno">Mensaje Gobierno</acronym>:</td><td align="right">
-<input type="text" name="palabra_gob0" size="24" maxlength="200" value="' . $palabra_gob[0] . '"' . $dis . ' /><br />
-http://<input type="text" name="palabra_gob1" size="19" maxlength="200" value="' . $palabra_gob[1] . '"' . $dis . ' /></td></tr>
+<input type="text" name="palabra_gob0" size="24" maxlength="200" value="' . $palabra_gob[0] . '"'.$dis.' /><br />
+http://<input type="text" name="palabra_gob1" size="19" maxlength="200" value="' . $palabra_gob[1] . '"'.$dis.' /></td></tr>
 
 <tr><td align="right"><acronym title="Tiempo de vigencia maxima de un examen">Caducidad Examenes</acronym>:</td><td>
-<select name="examenes_exp"' . $dis . '>
+<select name="examenes_exp"'.$dis.'>
 <option value="7776000"' . $sel_exp['7776000'] . '>3 meses</option>
 <option value="5184000"' . $sel_exp['5184000'] . '>2 meses</option>
 <option value="2592000"' . $sel_exp['2592000'] . '>1 mes</option>
@@ -540,7 +540,7 @@ if (PAIS != $pais) {
 $txt .= '
 <tr><td align="right">Frontera con ' . $pais. ':</td>
 <td>
-<select name="frontera_con_' . $pais . '"' . $dis . '>
+<select name="frontera_con_' . $pais . '"'.$dis.'>
 <option value="abierta"' . $sel['abierta'] . '>Abierta</option>
 <option value="cerrada"' . $sel['cerrada'] . '>Cerrada</option>
 </select>
@@ -549,6 +549,11 @@ $txt .= '
 }
 
 $txt .= '
+
+<tr><td align="right">Expiraci&oacute;n chats:</td><td><input type="text" name="chat_diasexpira" size="2" maxlength="6" value="'.$pol['config']['chat_diasexpira'].'"'.$dis.' /> <acronym title="Dia inactivos">Dias</acronym></td></tr
+
+
+
 <tr><td colspan="2"><br /><b>Dise&ntilde;o:</b></td></tr>
 <tr><td align="right">Imagen tapiz:</td>
 <td>
@@ -580,29 +585,30 @@ $txt .= '</select>
 
 
 
-<tr><td align="right">Inem'.PAIS.':</td><td><input style="text-align:right;" class="pols" type="text" name="pols_inem" size="3" maxlength="6" value="' . $pol['config']['pols_inem'] . '"' . $dis . ' /> '.MONEDA.' por d&iacute;a activo</td></tr>
-<tr><td align="right">Referencia:</td><td><input style="text-align:right;" class="pols" type="text" name="pols_afiliacion" size="3" maxlength="6" value="' . $pol['config']['pols_afiliacion'] . '"' . $dis . ' /> '.MONEDA.'</td></tr>
-<tr><td align="right">Crear empresa:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_empresa" size="3" maxlength="6" value="' . $pol['config']['pols_empresa'] . '"' . $dis . ' /> '.MONEDA.'</td></tr>
-<tr><td align="right">Crear cuenta bancaria:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_cuentas" size="3" maxlength="6" value="' . $pol['config']['pols_cuentas'] . '"' . $dis . ' /> '.MONEDA.'</td></tr>
-<tr><td align="right">Crear partido:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_partido" size="3" maxlength="6" value="' . $pol['config']['pols_partido'] . '"' . $dis . ' /> '.MONEDA.'</td></tr>
-<tr><td align="right">Hacer examen:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_examen" size="3" maxlength="6" value="' . $pol['config']['pols_examen'] . '"' . $dis . ' /> '.MONEDA.'</td></tr>
-<tr><td align="right"><acronym title="Mensaje privado a todos los Ciudadanos.">Mensaje Global</acronym>:</td><td><input style="text-align:right;" type="text" name="pols_mensajetodos" size="3" maxlength="6" class="pols" value="' . $pol['config']['pols_mensajetodos'] . '"' . $dis . ' /> '.MONEDA.' (minimo '.pols(1000).')</td></tr>
-<tr><td align="right">Mensaje urgente:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_mensajeurgente" size="3" maxlength="6" value="' . $pol['config']['pols_mensajeurgente'] . '"' . $dis . ' /> '.MONEDA.'</td></tr>
+<tr><td align="right">Inem'.PAIS.':</td><td><input style="text-align:right;" class="pols" type="text" name="pols_inem" size="3" maxlength="6" value="' . $pol['config']['pols_inem'] . '"'.$dis.' /> '.MONEDA.' por d&iacute;a activo</td></tr>
+<tr><td align="right">Referencia:</td><td><input style="text-align:right;" class="pols" type="text" name="pols_afiliacion" size="3" maxlength="6" value="' . $pol['config']['pols_afiliacion'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
+<tr><td align="right">Crear empresa:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_empresa" size="3" maxlength="6" value="' . $pol['config']['pols_empresa'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
+<tr><td align="right">Crear cuenta bancaria:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_cuentas" size="3" maxlength="6" value="' . $pol['config']['pols_cuentas'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
+<tr><td align="right">Crear partido:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_partido" size="3" maxlength="6" value="' . $pol['config']['pols_partido'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
+<tr><td align="right">Hacer examen:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_examen" size="3" maxlength="6" value="' . $pol['config']['pols_examen'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
+<tr><td align="right"><acronym title="Mensaje privado a todos los Ciudadanos.">Mensaje Global</acronym>:</td><td><input style="text-align:right;" type="text" name="pols_mensajetodos" size="3" maxlength="6" class="pols" value="' . $pol['config']['pols_mensajetodos'] . '"'.$dis.' /> '.MONEDA.' (minimo '.pols(1000).')</td></tr>
+<tr><td align="right">Mensaje urgente:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_mensajeurgente" size="3" maxlength="6" value="' . $pol['config']['pols_mensajeurgente'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
+<tr><td align="right">Crear chat:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_crearchat" size="3" maxlength="6" value="' . $pol['config']['pols_crearchat'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
 
 <tr><td colspan="2"><br /><b>Internacional:</b></td></tr>
-<tr><td align="right">Arancel de salida:</td><td><input style="text-align:right;" type="text" name="arancel_salida" size="3" maxlength="6" value="' . $pol['config']['arancel_salida'] . '"' . $dis . ' /><b>%</b></td></tr>
+<tr><td align="right">Arancel de salida:</td><td><input style="text-align:right;" type="text" name="arancel_salida" size="3" maxlength="6" value="' . $pol['config']['arancel_salida'] . '"'.$dis.' /><b>%</b></td></tr>
 
 
 <tr><td colspan="2"><br /><b>Impuestos diarios:</b></td></tr>
-<tr><td align="right"><acronym title="Porcentaje que se impondr&aacute; al patrimonio de cada ciudadano que supere el limite. Se redondea. Incluye cuentas y personal.">Impuesto de patrimonio</acronym>:</td><td><input style="text-align:right;" type="text" name="impuestos" size="3" maxlength="6" value="' . $pol['config']['impuestos'] . '"' . $dis . ' /><b>%</b></td></tr>
-<tr><td align="right"><acronym title="Limite minimo de patrimonio para recibir impuestos.">Minimo patrimonio</acronym>:</td><td><input class="pols" style="text-align:right;" type="text" name="impuestos_minimo" size="3" maxlength="6" value="' . $pol['config']['impuestos_minimo'] . '"' . $dis . ' /> '.MONEDA.'</td></tr>
-<tr><td align="right"><acronym title="Impuesto fijo diario por cada empresa.">Impuesto de empresa</acronym>:</td><td><input class="pols" style="text-align:right;" type="text" name="impuestos_empresa" size="3" maxlength="6" value="' . $pol['config']['impuestos_empresa'] . '"' . $dis . ' /> '.MONEDA.'</td></tr>
+<tr><td align="right"><acronym title="Porcentaje que se impondr&aacute; al patrimonio de cada ciudadano que supere el limite. Se redondea. Incluye cuentas y personal.">Impuesto de patrimonio</acronym>:</td><td><input style="text-align:right;" type="text" name="impuestos" size="3" maxlength="6" value="' . $pol['config']['impuestos'] . '"'.$dis.' /><b>%</b></td></tr>
+<tr><td align="right"><acronym title="Limite minimo de patrimonio para recibir impuestos.">Minimo patrimonio</acronym>:</td><td><input class="pols" style="text-align:right;" type="text" name="impuestos_minimo" size="3" maxlength="6" value="' . $pol['config']['impuestos_minimo'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
+<tr><td align="right"><acronym title="Impuesto fijo diario por cada empresa.">Impuesto de empresa</acronym>:</td><td><input class="pols" style="text-align:right;" type="text" name="impuestos_empresa" size="3" maxlength="6" value="' . $pol['config']['impuestos_empresa'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
 
 
 
 <tr><td colspan="2"><br /><b>Mapa:</b></td></tr>
-<tr><td align="right">Precio de un solar:</td><td><input style="text-align:right;" class="pols" type="text" name="pols_solar" size="3" maxlength="6" value="' . $pol['config']['pols_solar'] . '"' . $dis . ' /> '.MONEDA.'</td></tr>
-<tr><td align="right">Factor de propiedad:</td><td><input style="text-align:right;" type="text" name="factor_propiedad" size="3" maxlength="6" value="' . $pol['config']['factor_propiedad'] . '"' . $dis . ' /> * superficie = coste</td></tr>
+<tr><td align="right">Precio de un solar:</td><td><input style="text-align:right;" class="pols" type="text" name="pols_solar" size="3" maxlength="6" value="' . $pol['config']['pols_solar'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
+<tr><td align="right">Factor de propiedad:</td><td><input style="text-align:right;" type="text" name="factor_propiedad" size="3" maxlength="6" value="' . $pol['config']['factor_propiedad'] . '"'.$dis.' /> * superficie = coste</td></tr>
 ';
 
 $sel = '';
@@ -623,7 +629,7 @@ $sel[$pol['config']['frontera']] = ' selected="selected"';
 FROM ".SQL."estudios
 ORDER BY salario DESC", $link);
 	while($row = mysql_fetch_array($result)){
-		$txt .= '<tr><td align="right">' . $row['nombre'] . ':</td><td><input style="text-align:right;" type="text" name="salario_' . $row['ID'] . '" size="3" maxlength="6" class="pols" value="' . $row['salario'] . '"' . $dis . ' /> '.MONEDA.'</td></tr>';
+		$txt .= '<tr><td align="right">' . $row['nombre'] . ':</td><td><input style="text-align:right;" type="text" name="salario_' . $row['ID'] . '" size="3" maxlength="6" class="pols" value="' . $row['salario'] . '"'.$dis.' /> '.MONEDA.'</td></tr>';
 	}
 
 
@@ -642,7 +648,7 @@ ORDER BY salario DESC", $link);
 
 
 
-<p style="text-align:center;"><input value="EJECUTAR" style="font-size:20px;" type="submit"' . $dis . ' /></p>
+<p style="text-align:center;"><input value="EJECUTAR" style="font-size:20px;" type="submit"'.$dis.' /></p>
 
 </form>
 <br/>
@@ -661,7 +667,7 @@ if (($elecciones_dias_quedan <= 5) OR ($elecciones_dias_quedan == $elecciones_fr
 }
 
 $txt .= '
-<td><input type="hidden" name="pais" value="'.$pol['pais'].'" /><p><input type="submit" value="Vaciar listas electorales" onclick="if (!confirm(\'&iquest;Seguro que quieres VACIAR LAS LISTAS ELECTORALES?\')) { return false; }"' . $dis . ' /></td>
+<td><input type="hidden" name="pais" value="'.$pol['pais'].'" /><p><input type="submit" value="Vaciar listas electorales" onclick="if (!confirm(\'&iquest;Seguro que quieres VACIAR LAS LISTAS ELECTORALES?\')) { return false; }"'.$dis.' /></td>
 </tr>
 
 </table>

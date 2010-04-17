@@ -26,6 +26,43 @@ OR (($pol['estado'] == 'extranjero') AND ($_GET['a'] == 'mercado'))
 switch ($_GET['a']) { // #####################################################
 
 
+
+
+
+case 'chat':
+
+	if (($_GET['b'] == 'solicitar') AND ($pol['pols'] >= $pol['config']['pols_crearchat']) AND ($_POST['nombre']) AND ($_POST['pais'])) {
+
+		$nombre = $_POST['nombre'];
+		$url = gen_url($nombre);
+
+
+		mysql_query("INSERT INTO chats (pais, url, titulo, user_ID, fecha_creacion, fecha_last, dias_expira) 
+VALUES ('".$_POST['pais']."', '".$url."', '".$nombre."', '".$pol['user_ID']."', '".$date."', '".$date."', '".$pol['config']['chat_diasexpira']."')", $link);
+
+		pols_transferir($pol['config']['pols_crearchat'], $pol['user_ID'], '-1', 'Solicitud chat: '.$nombre);
+
+	} elseif (($_GET['b'] == 'editar') AND ($_POST['txt'])) {
+
+		//mysql_query("UPDATE ".SQL."empresas SET descripcion = '".$txt."' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+
+	} elseif (($_GET['b'] == 'aprobar') AND ($_GET['chat_ID'])) {
+		//mysql_query("DELETE FROM ".SQL."empresas WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+	
+	} elseif (($_GET['b'] == 'bloquear') AND ($_GET['chat_ID'])) {
+		//mysql_query("DELETE FROM ".SQL."empresas WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+	}
+
+	$refer_url = 'chat2/';
+	break;
+
+
+
+
+
+
+
+
 case 'vaciar_listas':
 
 	if (($pol['nivel'] >= 98) AND ($_POST['pais'] == PAIS)) {
@@ -483,7 +520,8 @@ case 'despacho-oval':
 (strlen($_POST['palabra_gob0']) <= 200) AND
 ($_POST['impuestos'] <= 5) AND ($_POST['impuestos'] >= 0) AND
 ($_POST['impuestos_empresa'] <= 1000) AND ($_POST['impuestos_empresa'] >= 0) AND
-($_POST['arancel_salida'] <= 100) AND ($_POST['arancel_salida'] >= 0)
+($_POST['arancel_salida'] <= 100) AND ($_POST['arancel_salida'] >= 0) AND
+($_POST['chat_diasexpira'] >= 10)
 ) {
 
 $dato_array = array(
@@ -507,6 +545,8 @@ $dato_array = array(
 'bg'=>'Imagen de fondo',
 'pais_des'=>'Descripcion del Pais',
 'palabra_gob'=>'Mensaje Del Gobierno',
+'pols_crearchat'=>'Coste creacion chat',
+'chat_diasexpira'=>'Dias expiracion chat',
 );
 
 foreach ($vp['paises'] AS $pais) {

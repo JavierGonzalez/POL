@@ -49,13 +49,13 @@ SET acceso_leer = '".$_POST['acceso_leer']."',
 acceso_escribir = '".$_POST['acceso_escribir']."', 
 acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', 
 acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."'
-WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR '".$pol['nivel']."' >= 95) 
+WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' 
 LIMIT 1", $link);
 
 	} elseif (($_GET['b'] == 'activar') AND ($_GET['chat_ID']) AND ($pol['nivel'] >= 98)) {
 		mysql_query("UPDATE chats SET estado = 'activo' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado != 'activo' AND pais = '".PAIS."' LIMIT 1", $link);
-	} elseif (($_GET['b'] == 'bloquear') AND ($_GET['chat_ID']) AND ($pol['nivel'] >= 98)) {
-		mysql_query("UPDATE chats SET estado = 'bloqueado' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' LIMIT 1", $link);
+	} elseif (($_GET['b'] == 'bloquear') AND ($_GET['chat_ID']) AND (() OR ($pol['nivel'] >= 95))) {
+		mysql_query("UPDATE chats SET estado = 'bloqueado' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR ((acceso_escribir = 'anonimos') AND ('".$pol['nivel']."' >= 95))) LIMIT 1", $link);
 	}
 
 	$refer_url = 'chat2/';

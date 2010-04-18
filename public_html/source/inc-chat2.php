@@ -13,11 +13,11 @@ while ($r = mysql_fetch_array($result)) {
 	// Nucleo de accesos: determina si se tiene acceso de escritura y lectura
 	foreach (array('leer','escribir') AS $a) {
 		$acceso[$a] = false;
-		if (($r['acceso_'.$a] == 'privado') AND (in_array($pol['user_ID'], explode("|", $r['acceso_cfg_'.$a])))) { $acceso[$a] = true; } 
+		if (($r['acceso_'.$a] == 'privado') AND (in_array($pol['nick'], explode(" ", $r['acceso_cfg_'.$a])))) { $acceso[$a] = true; } 
 		elseif (($r['acceso_'.$a] == 'nivel') AND ($pol['nivel'] >= $r['acceso_cfg_'.$a])) { $acceso[$a] = true; }
 		elseif (($r['acceso_'.$a] == 'antiguedad') AND (strtotime($pol['fecha_registro']) >= strtotime($r['acceso_cfg_'.$a]))) { $acceso[$a] = true; }
 		elseif (($r['acceso_'.$a] == 'ciudadanos_pais') AND ($pol['pais'] == $r['acceso_cfg_'.$a])) { $acceso[$a] = true; }
-		elseif (($r['acceso_'.$a] == 'ciudadanos_global') AND (isset($pol['user_ID']))) { $acceso[$a] = true; }
+		elseif (($r['acceso_'.$a] == 'ciudadanos') AND (isset($pol['user_ID']))) { $acceso[$a] = true; }
 		elseif ($r['acceso_'.$a] == 'anonimos') { $acceso[$a] = true; }
 	}
 }
@@ -37,7 +37,7 @@ if ((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($pol['pais'] == PAIS))
 
 
 $txt .= '
-<p class="vp_chat_title">'.$pol['chat_nombre'].'</p>
+<h1 style="margin-bottom:4px;"><span style="float:right;">[<a href="/chat2/'.$_GET['a'].'/opciones/">Opciones</a>]</span><a href="/chat2/">Chat</a>: '.$titulo.'</h1>
 
 <div id="vp_chat_users">
 <ul id="chat_list">
@@ -100,7 +100,6 @@ $txt_header .= '
 #vp_chat_users a { color:#808080; text-decoration:none; }
 #vp_chat_users a:hover { text-decoration:underline; }
 #vp_chat_msg { color:black; border: 1px solid #808080; padding:3px; }
-.vp_chat_title { font-weight:bold; font-size:20px; color:green; margin:0; padding:0; }
 .vp_chat_accion { color:green; font-size:16px; }
 .vp_chat_priv { color:#9F009F; font-size:16px; }
 .vp_chat_yo { color:#2D2D2D; }

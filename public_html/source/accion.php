@@ -42,15 +42,20 @@ VALUES ('".$_POST['pais']."', '".$url."', '".$nombre."', '".$pol['user_ID']."', 
 
 		pols_transferir($pol['config']['pols_crearchat'], $pol['user_ID'], '-1', 'Solicitud chat: '.$nombre);
 
-	} elseif (($_GET['b'] == 'editar') AND ($_POST['txt'])) {
+	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {
 
-		//mysql_query("UPDATE ".SQL."empresas SET descripcion = '".$txt."' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("UPDATE chats 
+SET acceso_leer = '".$_POST['acceso_leer']."', 
+acceso_escribir = '".$_POST['acceso_escribir']."', 
+acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', 
+acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."'
+WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR '".$pol['nivel']."' >= 95) 
+LIMIT 1", $link);
 
-	} elseif (($_GET['b'] == 'aprobar') AND ($_GET['chat_ID'])) {
-		//mysql_query("DELETE FROM ".SQL."empresas WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-	
-	} elseif (($_GET['b'] == 'bloquear') AND ($_GET['chat_ID'])) {
-		//mysql_query("DELETE FROM ".SQL."empresas WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+	} elseif (($_GET['b'] == 'activar') AND ($_GET['chat_ID']) AND ($pol['nivel'] >= 98)) {
+		mysql_query("UPDATE chats SET estado = 'activo' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado != 'activo' AND pais = '".PAIS."' LIMIT 1", $link);
+	} elseif (($_GET['b'] == 'bloquear') AND ($_GET['chat_ID']) AND ($pol['nivel'] >= 98)) {
+		mysql_query("UPDATE chats SET estado = 'bloqueado' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' LIMIT 1", $link);
 	}
 
 	$refer_url = 'chat2/';

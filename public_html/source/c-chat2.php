@@ -128,13 +128,13 @@ FROM chats ORDER BY estado ASC, fecha_creacion ASC", $link);
 		
 		$txt .= '<tr>
 <td valign="top" align="right"><b style="color:#888;">'.ucfirst($r['estado']).'</b></td>
-<td valign="top" nowrap="nowrap"><a href="http://'.strtolower($r['pais']).'-dev.virtualpol.com/chat2/'.$r['url'].'/"><b>'.$r['titulo'].'</b></a></td>
+<td valign="top" nowrap="nowrap"><a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chat2/'.$r['url'].'/"><b>'.$r['titulo'].'</b></a></td>
 <td valign="top">'.$r['pais'].'</td>
 <td valign="top" style="background:#5CB3FF;">'.ucfirst($r['acceso_leer']).($r['acceso_cfg_leer']?' <span style="font-size:11px;">['.$r['acceso_cfg_leer'].']</span>':'').'</td>
 <td valign="top" style="background:#F97E7B;">'.ucfirst($r['acceso_escribir']).($r['acceso_cfg_escribir']?' <span style="font-size:11px;">['.$r['acceso_cfg_escribir'].']</span>':'').'</td>
 <td valign="top">'.($r['user_ID']==0?'<em>Sistema</em>':crear_link($r['fundador'])).'</td>
 <td valign="top" align="right" nowrap="nowrap">'.duracion(time() - strtotime($r['fecha_creacion'])).'</td>
-<td valign="top" align="right">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).'-dev.virtualpol.com/chat2/'.$r['url'].'/opciones/">Editar</a>':'').'</td>
+<td valign="top" align="right">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chat2/'.$r['url'].'/opciones/">Editar</a>':'').'</td>
 <td>'.($r['estado']=='activo'?boton('Bloquear', '/accion.php?a=chat&b=bloquear&chat_ID=' . $r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?'):'').($r['estado']!='activo'?boton('Activar', '/accion.php?a=chat&b=activar&chat_ID=' . $r['chat_ID']):'').'</td>
 </tr>';
 	}

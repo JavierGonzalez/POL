@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS `chats` (
   `url` varchar(20) NOT NULL,
   `titulo` varchar(150) NOT NULL,
   `user_ID` mediumint(8) unsigned NOT NULL,
-  `acceso_leer` enum('privado','nivel','antiguedad','ciudadanos_pais','ciudadanos_global','anonimos') default NULL,
-  `acceso_escribir` enum('privado','nivel','antiguedad','ciudadanos_pais','ciudadanos_global','anonimos') default NULL,
+  `acceso_leer` enum('privado','nivel','antiguedad','ciudadanos_pais','ciudadanos','anonimos') NOT NULL default 'anonimos',
+  `acceso_escribir` enum('privado','nivel','antiguedad','ciudadanos_pais','ciudadanos','anonimos') NOT NULL default 'ciudadanos',
   `acceso_cfg_leer` varchar(500) default NULL,
   `acceso_cfg_escribir` varchar(500) default NULL,
   `fecha_creacion` datetime NOT NULL,
@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS `chats` (
   KEY `estado` (`estado`),
   KEY `pais` (`pais`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
 
 
 --

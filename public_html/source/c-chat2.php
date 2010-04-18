@@ -58,7 +58,7 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 </form>';
 
 
-
+	$txt .= '<br /><br /><p style="text-align:center;color:red;font-size:12px;">CHAT2 EN DESARROLLO, FASE ALPHA. (interfaz 95%, nucleo de chat 5%)</p>';
 	include('theme.php');
 } elseif ($_GET['b'] == 'opciones') { // Configurar chat
 	include('inc-login.php');
@@ -91,19 +91,22 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 </tr>
 </table>
 
-<p><input type="submit" value="Editar"'.((($r['user_ID']==$pol['user_ID']) OR ($pol['nivel']>=95))?'':' disabled="disabled"').' /> [Puede editar el Fundador y el Gobierno de '.PAIS.' (nivel +95)]</p>
+<p><input type="submit" value="Editar"'.($r['user_ID']==$pol['user_ID']?'':' disabled="disabled"').' /> [Solo el Fundador puede editar estos par&aacute;metros.]</p>
 
 </form>
 ';
 	}
-
+	
+	$txt .= '<br /><br /><p style="text-align:center;color:red;font-size:12px;">CHAT2 EN DESARROLLO, FASE ALPHA. (interfaz 95%, nucleo de chat 5%)</p>';
 	include('theme.php');
 } elseif ($_GET['a']) { // Chats
 	include('inc-chat2.php');
 } else { // Listado de chats
 	include('inc-login.php');
 	
-	$txt .= '<table border="0" width="0" cellspacing="0" cellpadding="4">
+	$txt .= '<h1><a href="/chat2/">Chats</a>:</h1>
+
+<table border="0" width="0" cellspacing="0" cellpadding="4">
 <tr>
 <th colspan="3"></th>
 <th colspan="2" align="center">Acceso</th>
@@ -128,21 +131,23 @@ FROM chats ORDER BY estado ASC, fecha_creacion ASC", $link);
 		
 		$txt .= '<tr>
 <td valign="top" align="right"><b style="color:#888;">'.ucfirst($r['estado']).'</b></td>
-<td valign="top" nowrap="nowrap"><a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chat2/'.$r['url'].'/"><b>'.$r['titulo'].'</b></a></td>
+<td valign="top" nowrap="nowrap">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chat2/'.$r['url'].'/"><b>'.$r['titulo'].'</b></a>':'<b>'.$r['titulo'].'</b>').'</td>
 <td valign="top">'.$r['pais'].'</td>
 <td valign="top" style="background:#5CB3FF;">'.ucfirst($r['acceso_leer']).($r['acceso_cfg_leer']?' <span style="font-size:11px;">['.$r['acceso_cfg_leer'].']</span>':'').'</td>
 <td valign="top" style="background:#F97E7B;">'.ucfirst($r['acceso_escribir']).($r['acceso_cfg_escribir']?' <span style="font-size:11px;">['.$r['acceso_cfg_escribir'].']</span>':'').'</td>
 <td valign="top">'.($r['user_ID']==0?'<em>Sistema</em>':crear_link($r['fundador'])).'</td>
 <td valign="top" align="right" nowrap="nowrap">'.duracion(time() - strtotime($r['fecha_creacion'])).'</td>
 <td valign="top" align="right">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chat2/'.$r['url'].'/opciones/">Editar</a>':'').'</td>
-<td>'.($r['estado']=='activo'?boton('Bloquear', '/accion.php?a=chat&b=bloquear&chat_ID=' . $r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?'):'').($r['estado']!='activo'?boton('Activar', '/accion.php?a=chat&b=activar&chat_ID=' . $r['chat_ID']):'').'</td>
+<td>'.($r['estado']=='activo' AND (($r['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= 95) AND ($r['acceso_escribir'] == 'anonimos')))?boton('Bloquear', '/accion.php?a=chat&b=bloquear&chat_ID=' . $r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?'):'').($r['estado']!='activo'?boton('Activar', '/accion.php?a=chat&b=activar&chat_ID=' . $r['chat_ID']):'').'</td>
 </tr>';
 	}
 
 	$txt .= '</table><p>'.boton('Solicitar chat', '/chat2/solicitar-chat/').'</p>';
 
+	$txt .= '<br /><br /><p style="text-align:center;color:red;font-size:12px;">CHAT2 EN DESARROLLO, FASE ALPHA. (interfaz 95%, nucleo de chat 5%)</p>';
 	include('theme.php');
 }
+
 
 
 

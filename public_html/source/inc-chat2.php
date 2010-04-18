@@ -10,16 +10,20 @@ while ($r = mysql_fetch_array($result)) {
 	$chat_ID = $r['chat_ID'];
 	$titulo = $r['titulo'];
 
-	// Nucleo de accesos: determina si se tiene acceso de escritura y lectura
+	// NUCLEO ACCESOS
 	foreach (array('leer','escribir') AS $a) {
 		$acceso[$a] = false;
-		if (($r['acceso_'.$a] == 'privado') AND (in_array(strtolower($pol['nick']), explode(" ", $r['acceso_cfg_'.$a])))) { $acceso[$a] = true; } 
-		elseif (($r['acceso_'.$a] == 'nivel') AND ($pol['nivel'] >= $r['acceso_cfg_'.$a])) { $acceso[$a] = true; }
-		elseif (($r['acceso_'.$a] == 'antiguedad') AND (strtotime($pol['fecha_registro']) >= strtotime($r['acceso_cfg_'.$a]))) { $acceso[$a] = true; }
-		elseif (($r['acceso_'.$a] == 'ciudadanos_pais') AND ($pol['pais'] == $r['acceso_cfg_'.$a])) { $acceso[$a] = true; }
-		elseif (($r['acceso_'.$a] == 'ciudadanos') AND (isset($pol['user_ID']))) { $acceso[$a] = true; }
-		elseif ($r['acceso_'.$a] == 'anonimos') { $acceso[$a] = true; }
+		if (($r['acceso_'.$a] == 'privado') AND (in_array(strtolower($_SESSION['pol']['nick']), explode(" ", $r['acceso_cfg_'.$a])))) { $acceso[$a] = true; } 
+		elseif (($r['acceso_'.$a] == 'nivel') AND ($_SESSION['pol']['nivel'] >= $r['acceso_cfg_'.$a])) { $acceso[$a] = true; }
+		elseif (($r['acceso_'.$a] == 'antiguedad') AND (strtotime($_SESSION['pol']['fecha_registro']) >= strtotime($r['acceso_cfg_'.$a]))) { $acceso[$a] = true; }
+		elseif (($r['acceso_'.$a] == 'ciudadanos_pais') AND ($_SESSION['pol']['pais'] == $r['acceso_cfg_'.$a])) { $acceso[$a] = true; }
+		elseif (($r['acceso_'.$a] == 'ciudadanos') AND (isset($_SESSION['pol']['user_ID']))) { $acceso[$a] = true; }
+		elseif (($r['acceso_'.$a] == 'anonimos') AND ($_SESSION['pol']['estado'] != 'expulsado')) { $acceso[$a] = true; }
 	}
+	$acceso_leer = $r['acceso_leer'];
+	$acceso_escribir = $r['acceso_escribir'];
+	$acceso_cfg_leer = $r['acceso_cfg_leer'];
+	$acceso_cfg_escribir = $r['acceso_cfg_escribir'];
 }
 
 // genera array js, nombres cargos
@@ -48,10 +52,12 @@ $txt .= '
 <ul id="vp_chat_ul">
 
 <li style="margin-top:380px;color:#AAA;"><b>
-VirtualPol<br />
-Pais: '.PAIS.'<br />
-Chat: '.$pol['chat_nombre'].'<br />
-Fecha: '.date('Y-m-d H:i:s').'<br />
+VirtualPOL<br />
+Gobierno de '.PAIS.'<br />
+Chat: '.$titulo.'<br />
+'.date('Y-m-d H:i:s').'<br />
+Acceso leer: '.$acceso_leer.($acceso_cfg_leer?' [<em>'.$acceso_cfg_leer.'</em>]':'').'<br />
+Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_escribir.'</em>]':'').'<br />
 Nick: '.($pol['nick']?$pol['nick']:'Anonimo').'<br />
 <hr />
 </b></li>
@@ -108,10 +114,11 @@ $txt_header .= '
 
 <script type="text/javascript"> 
 // INIT
-msg_ID = null;
+msg_ID = -1;
 elnick = "'.$pol['nick'].'";
-minick = "'.$pol['nick'].'";
-chat_id = "'.$chat_ID.'";
+if (!elnick) { elnick = "_" + prompt("nick?"); }
+minick = elnick;
+chat_ID = "'.$chat_ID.'";
 ajax_refresh = true;
 chat_delay = 5000;
 chat_delay1 = "";
@@ -121,6 +128,8 @@ chat_delay4 = setTimeout("change_delay(15000)", 120000);
 chat_delay5 = setTimeout("change_delay(60000)", 300000);
 chat_filtro = "normal";
 chat_time = "";
+acceso_leer = '.($acceso['leer']?'true':'false').';
+acceso_escribir = '.($acceso['escribir']?'true':'false').';
 
 al = new Array();
 al_cargo = new Array();
@@ -188,16 +197,18 @@ function msgkeydown(evt, elem) {
 }
 
 function chat_query_ajax() {
-	ajax_refresh = false;
-	clearTimeout(refresh);
-	$.post("/ajax.php", { id: chat_id, n: msg_ID },
-		function(data){
-			ajax_refresh = true;
-			if (data) { print_msg(data); }
-			refresh = setTimeout(chat_query_ajax, chat_delay);
-		}
-	);
-	if (ajax_refresh == true) { merge_list(); }
+	if (acceso_leer) {
+		ajax_refresh = false;
+		clearTimeout(refresh);
+		$.post("/ajax2.php", { chat_ID: chat_ID, n: msg_ID },
+			function(data){
+				ajax_refresh = true;
+				if (data) { print_msg(data); }
+				refresh = setTimeout(chat_query_ajax, chat_delay);
+			}
+		);
+		if (ajax_refresh == true) { merge_list(); }
+	}
 }
 
 function auto_priv(nick) {
@@ -232,7 +243,7 @@ function print_msg(data) {
 						list += "<li id=\"" + mli[0] + "\" class=\"cf_p vp_chat_priv\">" + mli[2] + " <span class=\"vp_chat_priv\" OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
 					}
 				}
-			} else {'.($pol['nick']?'if ("' . $pol['nick'] . '" != "") { var txt = txt.replace(/' . $pol['nick'] . '/gi, "<b style=\"color:orange;\">" + minick + "</b>"); }':'').'
+			} else {'.($pol['nick']?'if ("'.$pol['nick'].'" != "") { var txt = txt.replace(/'.$pol['nick'].'/gi, "<b style=\"color:orange;\">" + minick + "</b>"); }':'').'
 				var vp_chat_yo = "";
 				if (minick == mli[3]) { var vp_chat_yo = " class=\"vp_chat_yo\""; }
 				list += "<li id=\"" + mli[0] + "\" class=\"cf_m\">" + mli[2] + " <img src=\"/img/cargos/" + mli[1] + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[mli[1]] + "\" /> <b" + vp_chat_yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
@@ -276,13 +287,13 @@ function print_delay() {
 
 function enviarmsg() {
 	var elmsg = $("#vp_chat_msg").attr("value");
-	if (elmsg) {
+	if ((elmsg) && (acceso_escribir)) {
 		$("#botonenviar").attr("disabled","disabled");
 		$("#vp_chat_msg").attr("value","").css("background", "none").css("color", "black");
 
 		ajax_refresh = false;
 		clearTimeout(refresh);  
-		$.post("/ajax.php", { a: "enviar", id: chat_id, n: msg_ID, msg: elmsg }, 
+		$.post("/ajax2.php", { a: "enviar", chat_ID: chat_ID, n: msg_ID, msg: elmsg }, 
 		function(data){ 
 			ajax_refresh = true;
 			if (data) {
@@ -326,7 +337,7 @@ if (!$externo) {
 	include('theme.php');
 } else {
 	// ES chat externo (incrustado en una web fuera de virtualpol.com)
-	echo $txt_header.$txt;
+	echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>'.$txt_header.$txt;
 	if ($link) { mysql_error($link); }
 }
 

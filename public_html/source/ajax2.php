@@ -1,12 +1,13 @@
 <?php
 session_start(); 
-if (!isset($_SESSION['pol']['user_ID'])) {
-	include('inc-login.php');
-} else { include('../config.php'); $link = @conectar(); }
+if (!isset($_SESSION['pol']['user_ID'])) { include('inc-login.php'); } // No hay login, hace login
+else { include('../config-pwd.php'); $link = @conectar(); } // Conecta MySQL solo
 header('connection: close');
 header('Content-Type: text/plain');
 
-exit; // SIN HACER....
+$host = explode('.', $_SERVER['HTTP_HOST']);
+define('PAIS', str_replace('-dev', '', $host[0], $dev));
+define('SQL', strtolower(PAIS).'_');
 
 /*
 ID CARGO 00:00 NICK MSG
@@ -16,15 +17,39 @@ e - evento
 c - print comando
 */
 
-function chat_refresh($id, $n) {
+function acceso_check($chat_ID, $ac=null) {
+	global $link, $_SESSION;
+	if (isset($ac)) { $check = array($ac); } else { $check = array('leer','escribir'); }
+	$result = mysql_query("SELECT acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
+	while ($r = mysql_fetch_array($result)) { 
+		// NUCLEO ACCESOS
+		foreach ($check AS $a) {
+			$acceso[$a] = false;
+			if (($r['acceso_'.$a] == 'privado') AND (in_array(strtolower($_SESSION['pol']['nick']), explode(" ", $r['acceso_cfg_'.$a])))) { $acceso[$a] = true; } 
+			elseif (($r['acceso_'.$a] == 'nivel') AND ($_SESSION['pol']['nivel'] >= $r['acceso_cfg_'.$a])) { $acceso[$a] = true; }
+			elseif (($r['acceso_'.$a] == 'antiguedad') AND (strtotime($_SESSION['pol']['fecha_registro']) >= strtotime($r['acceso_cfg_'.$a]))) { $acceso[$a] = true; }
+			elseif (($r['acceso_'.$a] == 'ciudadanos_pais') AND ($_SESSION['pol']['pais'] == $r['acceso_cfg_'.$a])) { $acceso[$a] = true; }
+			elseif (($r['acceso_'.$a] == 'ciudadanos') AND (isset($_SESSION['pol']['user_ID']))) { $acceso[$a] = true; }
+			elseif (($r['acceso_'.$a] == 'anonimos') AND ($_SESSION['pol']['estado'] != 'expulsado')) { $acceso[$a] = true; }
+		}
+	}
+	if (isset($ac)) { return $acceso[$ac]; } else { return $acceso; }
+}
+
+
+function chat_refresh($chat_ID, $msg_ID=0) {
 	global $link, $_SESSION;
 	$t = '';
 
-	if (($id != 4) OR (($_SESSION['pol']['cargo'] == 7) OR ($_SESSION['pol']['cargo'] == 19) OR ($_SESSION['pol']['cargo'] == 16))) {  
-		$res = mysql_unbuffered_query("SELECT * FROM ".SQL."chat_" . $id . " WHERE ID_msg > '" . $n . "' AND (user_ID = '0' OR user_ID = '" . $_SESSION['pol']['user_ID'] . "' OR (tipo = 'p' AND nick LIKE '".$_SESSION['pol']['nick']."&rarr;%')) ORDER BY ID_msg DESC LIMIT 60", $link);
+	if (acceso_check($chat_ID, 'leer') === true) { // Permite leer  
+		$res = mysql_unbuffered_query("SELECT * FROM chats_msg 
+WHERE chat_ID = '".$chat_ID."' AND 
+msg_ID > '".$msg_ID."' AND 
+(user_ID = '0' OR user_ID = '".$_SESSION['pol']['user_ID']."' OR (tipo = 'p' AND nick LIKE '".$_SESSION['pol']['nick']."&rarr;%')) 
+ORDER BY msg_ID DESC LIMIT 50", $link);
 		while ($r = @mysql_fetch_array($res)) { 
 			if ($r['tipo'] != 'm') { $r['cargo'] = $r['tipo']; }
-			$t = $r['ID_msg'] . ' ' . $r['cargo'] . ' ' . substr($r['time'], 11, 5) . ' ' . $r['nick'] . ' ' . $r['msg'] . "\n" . $t; 
+			$t = $r['msg_ID'].' '.$r['cargo'].' '.date('H:i', $r['time']).' '.$r['nick'].' '.$r['msg']."\n".$t; 
 		}
 		return $t;
 	}
@@ -32,67 +57,32 @@ function chat_refresh($id, $n) {
 
 
 
-$chat_id = mysql_real_escape_string($_POST['id']);
 
+if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 
-if ((!isset($_POST['a'])) AND (isset($_POST['n']))) {
+	echo chat_refresh($_REQUEST['chat_ID'], $_REQUEST['n']);
 
-	echo chat_refresh($chat_id, $_POST['n']);
-
-
-} elseif ($_POST['a'] == 'enviar') {
+} elseif (($_REQUEST['a'] == 'enviar') AND (is_numeric($_REQUEST['chat_ID']))) {
 
 	$date = date('Y-m-d H:i:s');
-
-	// carga ciudadano si existe
-	$result = mysql_unbuffered_query("SELECT ID, nick, cargo, estado, pais FROM ".SQL_USERS." WHERE ID = '" . $_SESSION['pol']['user_ID'] . "' LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)){
-		$pol['user_ID'] = $row['ID']; 
-		$pol['nick'] = $row['nick'];
-		$pol['pais'] = $row['pais'];
-		$pol['cargo'] = $row['cargo'];
-		$pol['estado'] = $row['estado'];
-		if ($pol['estado'] == 'desarrollador'){ $pol['pais'] = PAIS; $pol['cargo'] = 0; }
-		if (($pol['pais'] != PAIS) AND ($pol['estado'] == 'ciudadano')) { 
-			if ($pol['cargo'] != 42) { $pol['cargo'] = 99; $pol['estado'] = 'extranjero'; }
-		}
-	}
-	
-	if ($pol['estado'] == 'extranjero') {
-		$result = mysql_query("SELECT valor FROM ".SQL."config WHERE dato = 'frontera_con_".$pol['pais']."' LIMIT 1", $link);
-		while($row = mysql_fetch_array($result)){ $pol['config']['frontera_con_'.$pol['pais']] = $row['valor']; }
-	}
+	$chat_ID = $_REQUEST['chat_ID'];
 
 	// BANEADO? EXPULSADO!
-	$result = mysql_unbuffered_query("SELECT expire FROM ".SQL."ban WHERE estado = 'activo' AND (user_ID = '" . $pol['user_ID'] . "' OR (IP != '0' AND IP != '' AND IP = '" . $_SERVER['REMOTE_ADDR'] . "')) LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)){ 
-		if ($row['expire'] < $date) { // DESBANEAR
-			mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '" . $date . "'", $link); 
-		} else { $pol['estado'] = 'expulsado'; }
+	$result = mysql_unbuffered_query("SELECT expire FROM ".SQL."ban WHERE estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = '".$_SERVER['REMOTE_ADDR']."')) LIMIT 1", $link);
+	while($r = mysql_fetch_array($result)){ 
+		if ($r['expire'] < $date) { // DESBANEAR
+			mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '".$date."'", $link); 
+		} else { $expulsado = true; }
 	}
 
+
 	// CHECK MSG
-	$msg_len = strlen($_POST['msg']);
-	if (
-($msg_len > 0) AND
-($msg_len < 280) AND
-($pol['nick'] == $_SESSION['pol']['nick']) AND
-($pol['user_ID']) AND
-(
-($pol['estado'] == 'ciudadano') OR
-($pol['estado'] == 'desarrollador') OR
-(($pol['estado'] == 'extranjero') AND ($pol['config']['frontera_con_'.$pol['pais']] == 'abierta'))
-)
-) {
+	$msg_len = strlen($_REQUEST['msg']);
+	if (($msg_len > 0) AND ($msg_len < 280) AND ($expulsado != true) AND (acceso_check($chat_ID, 'escribir') === true)) {
 
 
 		// limpia MSG
-		$msg = $_POST['msg'];
-
-		// limitacion caracteres
-		
-		//$msg = eregi_replace("[^a-z0-9 áéíóúñçüÁÉÍÓÚÑÇÜ \.\: ,; () {} ¿? ¡!\"-_·\$%&| ]", "", $msg);
-		//$msg = utf8_encode($msg);
+		$msg = $_REQUEST['msg'];
 
 		$msg = str_replace("\r", "", str_replace("\n", "", trim(strip_tags($msg))));
 		$msg = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/()]","<a target=\"_blank\" href=\"\\0\">\\0</a>", $msg);
@@ -120,7 +110,7 @@ if ((!isset($_POST['a'])) AND (isset($_POST['n']))) {
 						$result_rand = mt_rand(1, 6);
 						$result_type = '';
 					}
-					$elmsg = '<b>[$]</b> <em>' . $pol['nick'] . '</em> tira el <b>dado'.$result_type.': <span style="font-size:16px;">'.$result_rand.'</span></b>';
+					$elmsg = '<b>[$]</b> <em>' . $_SESSION['pol']['nick'] . '</em> tira el <b>dado'.$result_type.': <span style="font-size:16px;">'.$result_rand.'</span></b>';
 					break;
 
 
@@ -128,44 +118,44 @@ if ((!isset($_POST['a'])) AND (isset($_POST['n']))) {
 					if (ereg("^[0-9\+-\/\*\(\)\.]{1,100}$", strtolower($msg_rest))) { 
 						@eval("\$result=" . $msg_rest . ";");
 						if (substr($result, 0, 8) == 'Resource') { $result = 'calc error'; }
-						$elmsg = '<b>[$] ' . $pol['nick'] . '</b> calc: <b style="color:blue">' . $msg_rest . '</b> <b style="color:grey;">=</b> <b style="color:red">' . $result . '</b>';
+						$elmsg = '<b>[$] ' . $_SESSION['pol']['nick'] . '</b> calc: <b style="color:blue">' . $msg_rest . '</b> <b style="color:grey;">=</b> <b style="color:red">' . $result . '</b>';
 					}
 					break;
 
-				case 'aleatorio': $elmsg = '<b>[$] ' . $pol['nick'] . '</b> aleatorio: <b>' . mt_rand(00000,99999) . '</b>'; break;
+				case 'aleatorio': $elmsg = '<b>[$] ' . $_SESSION['pol']['nick'] . '</b> aleatorio: <b>' . mt_rand(00000,99999) . '</b>'; break;
 				case 'servidor':  
 					if ($msg_rest == 'cs') {
-						$elmsg = '<b>[#] ' . $pol['nick'] . '</b> Servidor de Counter-Strike: <span class="gris">' . $_SERVER['REMOTE_ADDR'] . ':27015</span>';
+						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> Servidor de Counter-Strike: <span class="gris">' . $_SERVER['REMOTE_ADDR'] . ':27015</span>';
 					} elseif ($msg_rest == 'aoe') {
-						$elmsg = '<b>[#] ' . $pol['nick'] . '</b> Servidor de AOE: ...';
+						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> Servidor de AOE: ...';
 					} elseif ($msg_rest == 'BFV') {
-						$elmsg = '<b>[#] ' . $pol['nick'] . '</b> Servidor de Battlefield Vietnam: <span class="gris">' . $_SERVER['REMOTE_ADDR'] . ':15567</span>';
+						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> Servidor de Battlefield Vietnam: <span class="gris">' . $_SERVER['REMOTE_ADDR'] . ':15567</span>';
 					}
 					break;
-				case 'me': $elmsg = '<b style="margin-left:20px;">' . $pol['nick'] . '</b> ' . $msg_rest; break;
+				case 'me': $elmsg = '<b style="margin-left:20px;">' . $_SESSION['pol']['nick'] . '</b> ' . $msg_rest; break;
 
 				case 'ayuda':
-				case 'novatos': $elmsg = '<b>[#] ' . $pol['nick'] . '</b> ofrece ayuda: <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="/doc/empezar-en-'.strtolower(PAIS).'/" target="_blank">C&oacute;mo empezar, FAQ</a>.</a>'; break;
+				case 'novatos': $elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> ofrece ayuda: <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="/doc/empezar-en-'.strtolower(PAIS).'/" target="_blank">C&oacute;mo empezar, FAQ</a>.</a>'; break;
 
 				case 'policia':
-					if (($pol['cargo'] == 13) OR ($pol['cargo'] == 12)) {
+					if (($_SESSION['pol']['cargo'] == 13) OR ($_SESSION['pol']['cargo'] == 12)) {
 						$elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>';
 						$tipo = 'm';
 					}
 					break;
 				case 'msg':
 					$nick_receptor = trim($msg_array[1]);
-					$result = mysql_unbuffered_query("SELECT ID, nick FROM ".SQL_USERS." WHERE nick = '" . $nick_receptor . "' LIMIT 1", $link);
+					$result = mysql_unbuffered_query("SELECT ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1", $link);
 					while($row = mysql_fetch_array($result)){ 
 						$elmsg = substr($msg_rest, (strlen($row['nick'])));
 						$target_ID = $row['ID'];
 						$tipo = 'p';
-						$elnick = $pol['nick'].'&rarr;'.$row['nick'];
+						$elnick = $_SESSION['pol']['nick'].'&rarr;'.$row['nick'];
 					}
 					break;
 					
 				case 'parlamento':
-					if(($pol['cargo'] == 22) AND ($chat_id == 1)){
+					if(($_SESSION['pol']['cargo'] == 22) AND ($chat_ID == 1)){
 						$elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial- Presidente del Parlamento)</b></span>';
 						$tipo = 'm';
 					}
@@ -177,29 +167,28 @@ if ((!isset($_POST['a'])) AND (isset($_POST['n']))) {
 
 		// insert MSG
 		if ($msg) {
-			if (!$elnick) { $elnick = $pol['nick']; }
-			mysql_query("INSERT INTO ".SQL."chat_" . $chat_id . " (nick, time, msg, cargo, user_ID, tipo) VALUES ('" . $elnick . "', '" . $date . "', '" . $msg . "', '" . $pol['cargo'] . "', '" . $target_ID . "', '" . $tipo . "')", $link);
+			if (!$elnick) { $elnick = $_SESSION['pol']['nick']; }
+			mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) 
+VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$_SESSION['pol']['cargo']."', '".$target_ID."', '".$tipo."')", $link);
 		}
 
 		// refresca last
-		mysql_query("UPDATE ".SQL_USERS." SET fecha_last = '" . $date . "' WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1");
+		mysql_query("UPDATE users SET fecha_last = '" . $date . "' WHERE ID = '" . $_SESSION['pol']['user_ID'] . "' LIMIT 1");
 
-		// limpia msg antiguos
-		$time_margen = date('Y-m-d H:i:00', time() - 86400); //24h
-		mysql_query("DELETE FROM ".SQL."chat_" . $chat_id . " WHERE time < '" . $time_margen . "'", $link);
 
 		// print refresh
-		if ($_POST['n']) { echo chat_refresh($chat_id, $_POST['n']); } else { echo 'ok'; }
+		if ($_REQUEST['n']) { echo chat_refresh($chat_ID, $_REQUEST['n']); } else { echo 'ok'; }
 
 	} else { echo 'n 0 ---- - <b style="color:#FF0000;">Chat Error :(</b>'. "\n"; }
 
-} elseif (($_POST['a'] == 'whois') AND (isset($_POST['nick']))) {
+
+} elseif (($_REQUEST['a'] == 'whois') AND (isset($_REQUEST['nick']))) {
 
 	$res = mysql_unbuffered_query("SELECT ID, fecha_registro, partido_afiliado, fecha_last, nivel, online, nota, avatar, estado, pais, cargo,
-(SELECT siglas FROM ".SQL."partidos WHERE ID = ".SQL_USERS.".partido_afiliado LIMIT 1) AS partido,
-(SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = ".SQL_USERS.".ID LIMIT 1) AS num_hilos,
-(SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = ".SQL_USERS.".ID LIMIT 1) AS num_msg
-FROM ".SQL_USERS." WHERE estado != 'desarrollador' AND nick = '" . mysql_real_escape_string($_POST['nick']) . "' LIMIT 1", $link);
+(SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS partido,
+(SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
+(SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
+FROM users WHERE estado != 'desarrollador' AND nick = '" . mysql_real_escape_string($_REQUEST['nick']) . "' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($res)) { 
 		include('inc-functions.php');
 		if ($r['avatar'] == 'true') { $r['avatar'] = 1; } else { $r['avatar'] = 0; }

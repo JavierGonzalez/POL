@@ -91,7 +91,7 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 </tr>
 </table>
 
-<p><input type="submit" value="Editar"'.($r['user_ID']==$pol['user_ID']?'':' disabled="disabled"').' /> [Solo el Fundador puede editar estos par&aacute;metros.]</p>
+<p><input type="submit" value="Editar"'.(($r['user_ID'] == $pol['user_ID']) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))?'':' disabled="disabled"').' /> [Solo el Fundador puede editar estos par&aacute;metros.]</p>
 
 </form>
 ';
@@ -122,7 +122,7 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 <th>Fundador</th>
 <th>Hace...</th>
 <th></th>
-<td></td>
+<th></th>
 </tr>';
 	$result = mysql_query("SELECT *,
 (SELECT nick FROM users WHERE ID = chats.user_ID LIMIT 1) AS fundador
@@ -138,9 +138,14 @@ FROM chats ORDER BY estado ASC, fecha_creacion ASC", $link);
 <td valign="top">'.($r['user_ID']==0?'<em>Sistema</em>':crear_link($r['fundador'])).'</td>
 <td valign="top" align="right" nowrap="nowrap">'.duracion(time() - strtotime($r['fecha_creacion'])).'</td>
 <td valign="top" align="right">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chat2/'.$r['url'].'/opciones/">Editar</a>':'').'</td>
-<td>'.($r['estado']=='activo' AND (($r['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= 95) AND ($r['acceso_escribir'] == 'anonimos')))?boton('Bloquear', '/accion.php?a=chat&b=bloquear&chat_ID=' . $r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?'):'').($r['estado']!='activo'?boton('Activar', '/accion.php?a=chat&b=activar&chat_ID=' . $r['chat_ID']):'').'</td>
+<td>';
+
+		if (($r['estado'] == 'activo') AND ($r['user_ID'] != 0) AND (($r['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= 95) AND ($r['acceso_escribir'] == 'anonimos')))) { 
+			$txt .= boton('Bloquear', '/accion.php?a=chat&b=bloquear&chat_ID='.$r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?');
+		}							
+		$txt .= ($r['estado'] != 'activo'?boton('Activar', '/accion.php?a=chat&b=activar&chat_ID='.$r['chat_ID']):'').'</td>
 </tr>';
-	}
+}
 
 	$txt .= '</table><p>'.boton('Solicitar chat', '/chat2/solicitar-chat/').'</p>';
 

@@ -15,13 +15,17 @@ if (isset($_COOKIE['teorizauser'])) {
 	session_start();
 	
 	if (!isset($_SESSION['pol'])) { //NO existe sesion
-		$result = mysql_query("SELECT ID, pass, nick, cargo FROM ".SQL_USERS." WHERE nick = '" .mysql_real_escape_string($_COOKIE['teorizauser'])."' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado FROM ".SQL_USERS." WHERE nick = '" .mysql_real_escape_string($_COOKIE['teorizauser'])."' LIMIT 1", $link);
 		while ($row = mysql_fetch_array($result)) {
 			if (md5(CLAVE.$row['pass']) == $_COOKIE['teorizapass']) {
 				$session_new = true;
 				$_SESSION['pol']['nick'] = $row['nick'];
 				$_SESSION['pol']['user_ID'] = $row['ID'];
 				$_SESSION['pol']['cargo'] = $row['cargo'];
+				$_SESSION['pol']['nivel'] = $row['nivel'];
+				$_SESSION['pol']['fecha_registro'] = $row['fecha_registro'];
+				$_SESSION['pol']['pais'] = $row['pais'];
+				$_SESSION['pol']['estado'] = $row['estado'];
 			}
 		}  
 	}

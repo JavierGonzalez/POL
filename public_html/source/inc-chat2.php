@@ -337,7 +337,7 @@ if (!$externo) {
 	include('theme.php');
 } else {
 	// ES chat externo (incrustado en una web fuera de virtualpol.com)
-	echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>'.$txt_header.$txt;
+	echo ($_GET['c']=='jqueryoff'?'':'<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>').$txt_header.$txt;
 	if ($link) { mysql_error($link); }
 }
 

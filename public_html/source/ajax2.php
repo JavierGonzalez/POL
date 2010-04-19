@@ -6,8 +6,8 @@ header('connection: close');
 header('Content-Type: text/plain');
 
 $host = explode('.', $_SERVER['HTTP_HOST']);
-define('PAIS', str_replace('-dev', '', $host[0], $dev));
-define('SQL', strtolower(PAIS).'_');
+define('pais', str_replace('-dev', '', $host[0], $dev));
+define('SQL', strtolower(pais).'_');
 
 /*
 ID CARGO 00:00 NICK MSG
@@ -49,7 +49,7 @@ msg_ID > '".$msg_ID."' AND
 ORDER BY msg_ID DESC LIMIT 50", $link);
 		while ($r = @mysql_fetch_array($res)) { 
 			if ($r['tipo'] != 'm') { $r['cargo'] = $r['tipo']; }
-			$t = $r['msg_ID'].' '.$r['cargo'].' '.date('H:i', $r['time']).' '.$r['nick'].' '.$r['msg']."\n".$t; 
+			$t = $r['msg_ID'].' '.$r['cargo'].' '.date('H:i', strtotime($r['time'])).' '.$r['nick'].' '.$r['msg']."\n".$t; 
 		}
 		return $t;
 	}
@@ -62,17 +62,19 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 
 	echo chat_refresh($_REQUEST['chat_ID'], $_REQUEST['n']);
 
-} elseif (($_REQUEST['a'] == 'enviar') AND (is_numeric($_REQUEST['chat_ID']))) {
+} elseif (($_REQUEST['a'] == 'enviar') AND (is_numeric($_REQUEST['chat_ID'])) AND (isset($_SESSION['pol']['user_ID']))) {
 
 	$date = date('Y-m-d H:i:s');
 	$chat_ID = $_REQUEST['chat_ID'];
 
 	// BANEADO? EXPULSADO!
-	$result = mysql_unbuffered_query("SELECT expire FROM ".SQL."ban WHERE estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = '".$_SERVER['REMOTE_ADDR']."')) LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){ 
-		if ($r['expire'] < $date) { // DESBANEAR
-			mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '".$date."'", $link); 
-		} else { $expulsado = true; }
+	if ($_SESSION['pol']['user_ID']) {
+		$result = mysql_unbuffered_query("SELECT expire FROM ".SQL."ban WHERE estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = '".$_SERVER['REMOTE_ADDR']."')) LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)){ 
+			if ($r['expire'] < $date) { // DESBANEAR
+				mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '".$date."'", $link); 
+			} else { $expulsado = true; }
+		}
 	}
 
 
@@ -102,7 +104,7 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 					$param = $msg_array[1]; // parametro despues de /dado
 					if ((is_numeric($param)) AND ($param > 1)) {
 						$result_rand = mt_rand(1, $param);
-						$result_type = ' de '.$param.' numeros';
+						$result_type = ' de '.$param.' n&uacute;meros';
 					} elseif ($param == '%') {
 						$result_rand = mt_rand(00, 99).'%';
 						$result_type = ' de porcentaje';
@@ -168,8 +170,16 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 		// insert MSG
 		if ($msg) {
 			if (!$elnick) { $elnick = $_SESSION['pol']['nick']; }
+
+			$elcargo = $_SESSION['pol']['cargo'];
+			if ((strtolower($_SESSION['pol']['pais']) != pais) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { 
+				if ($_SESSION['pol']['cargo'] != 42) { $elcargo = 99; }
+			}
+
+
+
 			mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) 
-VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$_SESSION['pol']['cargo']."', '".$target_ID."', '".$tipo."')", $link);
+VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."')", $link);
 		}
 
 		// refresca last

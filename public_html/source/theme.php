@@ -200,8 +200,8 @@ if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hi
 				<a href="/">Comunicaci&oacute;n</a>
 				<ul>
 					<li><a href="/chats/">Chats</a></li>
-					<li><a href="/notas/">Notas</a></li>
 					<li><a href="/foro/">Foro</a></li>
+					<li><a href="/notas/">Notas</a></li>
 				</ul>
 			</li>
 			<li>

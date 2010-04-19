@@ -66,11 +66,6 @@ foreach ($vp['paises'] AS $pais) {
 	$result = mysql_query("SELECT valor, dato FROM ".$pais_low."_config WHERE dato = 'defcon' OR dato LIKE 'frontera%' OR dato = 'arancel_salida' OR dato = 'pais_des'", $link);
 	while($row = mysql_fetch_array($result)) { $pais_config[$row['dato']] = $row['valor']; }
 
-	// CHAT ONLINE
-	$result = mysql_query("SELECT COUNT(DISTINCT nick) AS num FROM ".$pais_low."_chat_0 WHERE time > '" . date('Y-m-d H:i:s', time() - 1800) . "'", $link);
-	echo mysql_error($link);
-	while($row = mysql_fetch_array($result)) { $pais_plaza_num = $row['num']; }
-
 
 	// GEN GRAFICO CIRCULAR
 	if ($gf['censo_num']) { $gf['censo_num'] .= ','; }
@@ -110,7 +105,7 @@ pols($pais_monedas_p + $pais_monedas_c) . ' '.MONEDA.' <acronym style="color:red
 
 <td style="font-size:13px;"><a href="http://'.$pais_low.'.virtualpol.com/poderes/">Poderes</a><br />
 <a href="http://'.$pais_low.'.virtualpol.com/foro/">Foro</a><br />
-<a href="http://'.$pais_low.'.virtualpol.com/chat/plaza/">Chat</a> (' . $pais_plaza_num . ')</td>
+<a href="http://'.$pais_low.'.virtualpol.com/chats/">Chats</a></td>
 
 </tr>';
 

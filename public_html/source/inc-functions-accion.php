@@ -29,17 +29,22 @@ theme_advanced_resizing : true,
 	return '<textarea name="' . $name . '" style="width:750px;height:350px;">' . $txt . '</textarea>';
 }
 
-function evento_chat($msg, $user_ID='0', $sql_chat=0, $secret=false, $tipo='e', $pais='') {
+function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', $pais='') {
 	global $pol, $link, $vp;
 	if ($secret) { $nick = '_'; } else { $nick = $pol['nick']; }
 	if (!$pais) { $pais = PAIS; }
-	mysql_query("INSERT INTO ".strtolower($pais)."_chat_" . $sql_chat . " (nick, time, msg, cargo, user_ID, tipo) VALUES ('" . $nick . "', '" . date('Y-m-d H:i:s') . "', '" . $msg . "', '0', '" . $user_ID . "', '" . $tipo . "')", $link);
+	if (!$chat_ID) { if (PAIS == 'POL') { $chat_ID = 1; } elseif (PAIS == 'Hispania') { $chat_ID = 2; } }
+	//mysql_query("INSERT INTO ".strtolower($pais)."_chat_" . $chat_ID . " (nick, time, msg, cargo, user_ID, tipo) VALUES ('" . $nick . "', '" . date('Y-m-d H:i:s') . "', '" . $msg . "', '0', '" . $user_ID . "', '" . $tipo . "')", $link);
+	mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) 
+VALUES ('".$chat_ID."', '".$nick."', '".$msg."', '0', '".$user_ID."', '".$tipo."')", $link);
 
-	if (($sql_chat == 0) AND ($tipo == 'e')) {
+	/*
+	if (($chat_ID == 0) AND ($tipo == 'e')) {
 		$msg = str_replace("href=\"/", "href=\"http://".HOST."/", $msg);
 		if (!$pais) { $pais = PAIS; }
 		mysql_query("INSERT INTO pol_chat_9 (nick, time, msg, cargo, user_ID, tipo) VALUES ('" . $nick . "', '" . date('Y-m-d H:i:s') . "', '<span style=\"background:".$vp['bg'][$pais].";\" >" . $msg . "<span>', '0', '" . $user_ID . "', '" . $tipo . "')", $link);
 	}
+	*/
 }
 
 function evento_log($accion, $dato='', $user_ID2='', $user_ID='') {

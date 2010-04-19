@@ -199,18 +199,9 @@ if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hi
 			<li class="current">
 				<a href="/">Comunicaci&oacute;n</a>
 				<ul>
-					<li><a href="/"><b>Plaza</b></a></li>
-					<li><a href="http://www.virtualpol.com/chat/plaza-internacional/">Plaza Int.</a></li>
+					<li><a href="/chats/">Chats</a></li>
 					<li><a href="/notas/">Notas</a></li>
 					<li><a href="/foro/">Foro</a></li>
-					<li><a href="#"><span style="float:right;">&#9658;</span>Otras salas</a>
-						<ul>
-							<li><a href="/chat/hotel-arts/">Hotel Arts</a></li>
-							<li><a href="/chat/parlamento/">Parlamento</a></li>
-							<li><a href="/chat/comisaria/">Comisar&iacute;a</a></li>
-							<li><a href="/chat/tribunales/">Tribunales</a></li>
-						</ul>
-					</li>
 				</ul>
 			</li>
 			<li>

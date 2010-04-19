@@ -129,7 +129,7 @@ chat_delay2 = "";
 chat_delay3 = setTimeout("change_delay(10000)", 60000);
 chat_delay4 = setTimeout("change_delay(15000)", 120000);
 chat_delay5 = setTimeout("change_delay(60000)", 300000);
-chat_delay_close = setTimeout(prompt("Volver a activar chat?"), 108000000);
+//chat_delay_close = setTimeout(prompt("Volver a activar chat?"), 108000000);
 chat_filtro = "normal";
 chat_time = "";
 acceso_leer = '.($acceso['leer']?'true':'false').';
@@ -311,7 +311,7 @@ function enviarmsg() {
 			clearTimeout(chat_delay3); chat_delay3 = setTimeout("change_delay(10000)", 60000);
 			clearTimeout(chat_delay4); chat_delay4 = setTimeout("change_delay(15000)", 120000);
 			clearTimeout(chat_delay5); chat_delay5 = setTimeout("change_delay(60000)", 300000);
-			clearTimeout(chat_delay_close); chat_delay_close = setTimeout(prompt("Volver a activar chat?"), 108000000);
+			//clearTimeout(chat_delay_close); chat_delay_close = setTimeout(prompt("Volver a activar chat?"), 108000000);
 		} );
 	}
 	return false;

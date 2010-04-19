@@ -132,7 +132,7 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 </tr>';
 	$result = mysql_query("SELECT *,
 (SELECT nick FROM users WHERE ID = chats.user_ID LIMIT 1) AS fundador,
-(SELECT COUNT(DISTINCT user_ID) FROM chats_msg WHERE chat_ID = chats.chat_ID AND time > ".(time() - 108000).") AS online
+(SELECT COUNT(DISTINCT user_ID) FROM chats_msg WHERE chat_ID = chats.chat_ID AND time > ".(time() - 1800).") AS online
 FROM chats ORDER BY estado ASC, online DESC, fecha_creacion ASC", $link);
 	while ($r = mysql_fetch_array($result)) { 
 		

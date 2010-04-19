@@ -140,7 +140,7 @@ FROM chats ORDER BY estado ASC, online DESC, fecha_creacion ASC", $link);
 <td valign="top" align="right"><b style="color:#888;">'.ucfirst($r['estado']).'</b></td>
 <td valign="top" align="right"><b>'.$r['online'].'</b></td>
 <td valign="top" nowrap="nowrap">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/"><b>'.$r['titulo'].'</b></a>':'<b>'.$r['titulo'].'</b>').'</td>
-<td valign="top" style="background:'.$vp['bg'][$r['pais']].';">'.$r['pais'].'</td>
+<td valign="top" style="background:'.$vp['bg'][$r['pais']].';" title="'.$r['pais'].'">&nbsp;</td>
 <td valign="top" style="background:#5CB3FF;">'.ucfirst($r['acceso_leer']).($r['acceso_cfg_leer']?' <span style="font-size:11px;">['.$r['acceso_cfg_leer'].']</span>':'').'</td>
 <td valign="top" style="background:#F97E7B;">'.ucfirst($r['acceso_escribir']).($r['acceso_cfg_escribir']?' <span style="font-size:11px;">['.$r['acceso_cfg_escribir'].']</span>':'').'</td>
 <td valign="top">'.($r['user_ID']==0?'<em>Sistema</em>':crear_link($r['fundador'])).'</td>

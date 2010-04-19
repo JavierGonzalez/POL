@@ -58,7 +58,7 @@ LIMIT 1", $link);
 		mysql_query("UPDATE chats SET estado = 'bloqueado' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR ((acceso_escribir = 'anonimos') AND ('".$pol['nivel']."' >= 95))) LIMIT 1", $link);
 	}
 
-	$refer_url = 'chat2/';
+	$refer_url = 'chats/';
 	break;
 
 
@@ -220,8 +220,8 @@ case 'expulsar':
 	} elseif (($pol['estado'] == 'desarrollador') OR ($pol['cargo'] == 21) AND ($_GET['razon'])) {
 
 		$result = mysql_query("SELECT nick, ID FROM users 
-WHERE ID = '".$_GET['ID']."' 
-AND estado != 'expulsado' 
+WHERE ID = '".$_GET['ID']."',
+AND estado != 'expulsado',
 AND (cargo = '0' OR cargo = '21')
 LIMIT 1", $link);
 		while ($row = mysql_fetch_array($result)) {

@@ -64,10 +64,8 @@ ORDER BY fecha_creacion ASC", $link);
 
 
 // CHAT PLAZA
-$pol['chat_accesos'] = false;
-$pol['chat_id'] = 0;
-$pol['chat_nombre'] = 'Plaza de '.PAIS;
-include('inc-chat.php');
+$_GET['a'] = strtolower(PAIS);
+include('inc-chats.php');
 
 
 
@@ -75,8 +73,6 @@ if ($pol['config']['palabra_gob'] != ':') {
 	$palabra_gob = explode(':', $pol['config']['palabra_gob']);
 	$txt .= '<div style="margin:10px 0 0 0;"><div class="azul"><acronym title="Mensaje Del Gobierno">MDG</acronym>: <b><a href="http://'.$palabra_gob[1].'">'.$palabra_gob[0].'</a></b></div></div>';
 }
-
-
 
 //THEME
 include('theme.php');

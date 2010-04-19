@@ -225,8 +225,8 @@ case 'expulsar':
 	} elseif (($pol['estado'] == 'desarrollador') OR ($pol['cargo'] == 21) AND ($_GET['razon'])) {
 
 		$result = mysql_query("SELECT nick, ID FROM users 
-WHERE ID = '".$_GET['ID']."',
-AND estado != 'expulsado',
+WHERE ID = '".$_GET['ID']."'
+AND estado != 'expulsado'
 AND (cargo = '0' OR cargo = '21')
 LIMIT 1", $link);
 		while ($row = mysql_fetch_array($result)) {

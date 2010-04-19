@@ -44,6 +44,8 @@ VALUES ('".$_POST['pais']."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_
 
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {
 
+		if ($_POST['acceso_escribir'] == 'anonimos') { $_POST['acceso_escribir'] = 'ciudadanos'; } // QUITAR ESTO PARA PERMITIR ANONIMOS
+
 		mysql_query("UPDATE chats 
 SET acceso_leer = '".$_POST['acceso_leer']."', 
 acceso_escribir = '".$_POST['acceso_escribir']."', 
@@ -1456,6 +1458,7 @@ VALUES ('".$pol['user_ID']."', '".$date."', '".strtoupper($_POST['siglas'])."', 
 
 
 if ($_GET['a'] == 'logout') {
+	unset($_SESSION['pol']);
 	session_unset(); session_destroy();
 	header('Location: '.REGISTRAR.'login.php?a=logout');
 	exit;

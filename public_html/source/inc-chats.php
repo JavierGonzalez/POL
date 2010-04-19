@@ -3,9 +3,11 @@ if ($_GET['b'] == 'e') { $externo = true; } else { $externo = false; }
 
 
 
-$result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' AND pais = '".PAIS."' LIMIT 1", $link);
+$result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
 while ($r = mysql_fetch_array($result)) { 
 		 
+	if ($r['pais'] != PAIS) { header('Location: http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$_GET['a'].'/'.($_GET['b']?$_GET['b'].'/':'')); exit; }
+
 	$chat_ID = $r['chat_ID'];
 	$titulo = $r['titulo'];
 
@@ -49,8 +51,8 @@ $txt .= '
 
 <div id="vp_chat">
 <ul id="vp_chat_ul">
-
 <li style="margin-top:380px;color:#AAA;"><b>
+'.($acceso['leer']?'
 VirtualPOL<br />
 Gobierno de '.PAIS.'<br />
 Chat: '.$titulo.'<br />
@@ -59,8 +61,8 @@ Acceso leer: '.$acceso_leer.($acceso_cfg_leer?' [<em>'.$acceso_cfg_leer.'</em>]'
 Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_escribir.'</em>]':'').'<br />
 Nick: '.($pol['nick']?$pol['nick']:'Anonimo').'<br />
 <hr />
-</b></li>
-</ul>
+':'<span style="color:red;">No tienes acceso de lectura, lo siento.</span>').'
+</b></li></ul>
 </div>';
 
 if ($acceso['escribir']) {
@@ -77,7 +79,7 @@ if ($acceso['escribir']) {
 
 <td><input type="submit" value="Enviar" id="botonenviar" style="width:150px;" /></td>
 
-<td><sub>2.0 BETA</sub></td>
+<td></td>
 
 </tr>
 </table>
@@ -115,7 +117,9 @@ $txt_header .= '
 // INIT
 msg_ID = -1;
 elnick = "'.$pol['nick'].'";
-//if (!elnick) { elnick = "_" + prompt("nick?"); }
+if (!elnick) { 
+	elnick = "#Anonimo"; // prompt("nick?") 
+}
 minick = elnick;
 chat_ID = "'.$chat_ID.'";
 ajax_refresh = true;
@@ -139,8 +143,7 @@ window.onload = function(){
 	document.getElementById("vp_chat").scrollTop = 900000;
 	merge_list();
 	$("#vp_chat_msg").focus();
-	refresh = setTimeout(chat_query_ajax, 6000);
-	chat_query_ajax();
+	'.($acceso['leer']?'refresh = setTimeout(chat_query_ajax, 6000); chat_query_ajax();':'').'
 }
 
 
@@ -268,7 +271,7 @@ function merge_list() {
 			al[elnick] = null;
 			al_cargo[elnick] = null;
 		} else {
-			list += "<li>' . $js_kick . ' <img src=\"/img/cargos/" + al_cargo[elnick] + ".gif\" title=\"" + array_ncargos[al_cargo[elnick]] + "\" /> <a href=\"http://'.strtolower(PAIS).'.virtualpol.com/perfil/" + elnick  + "/\" class=\"nick\">" + elnick + "</a></li>\n";
+			list += "<li>' . $js_kick . ' <img src=\"/img/cargos/" + al_cargo[elnick] + ".gif\" title=\"" + array_ncargos[al_cargo[elnick]] + "\" /> <a href=\"http://'.strtolower(PAIS).DEV.'.virtualpol.com/perfil/" + elnick  + "/\" class=\"nick\">" + elnick + "</a></li>\n";
 		}
 	}
 	$("#chat_list").html(list);

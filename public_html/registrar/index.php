@@ -193,10 +193,10 @@ VALUES ('" . $nick . "', '0', '" . $date . "', '" . $date . "', '', 'validar', '
 
 
 
-									$texto_email = "Hola $nick\n\n\nEste email es para crear tu usuario en VirtualPol. Tan solo debes acceder a la siguiente direccion web, para activar tu usuario.\n\nUsuario: $nick\nContraseña: $pass1\n\n ".REGISTRAR."?a=verificar&nick=" . $nick . "&code=" . $api_pass . "\n\nEsperamos que te diviertas!\n\n\n Atentamente,\nVirtualPol\npol@teoriza.com";
+									$texto_email = "Hola $nick\n\n\nEste email es para crear tu usuario en VirtualPOL. Tan solo debes acceder a la siguiente direccion web, para activar tu usuario.\n\nUsuario: $nick\nContraseña: $pass1\n\n ".REGISTRAR."?a=verificar&nick=" . $nick . "&code=" . $api_pass . "\n\nEsperamos que te diviertas!\n\n\n Atentamente,\nVirtualPOL\npol@teoriza.com";
 
 
-									mail($email, "Verificacion de " . $nick, $texto_email, "FROM: VirtualPol <pol@teoriza.com> \nReturn-Path: pol@teoriza.com \nX-Sender: pol@teoriza.com \nX-Mailer:PHP 4.4 \nMIME-Version: 1.0\n"); 
+									mail($email, "Verificacion de " . $nick, $texto_email, "FROM: VirtualPOL <pol@teoriza.com> \nReturn-Path: pol@teoriza.com \nX-Sender: pol@teoriza.com \nX-Mailer:PHP 4.4 \nMIME-Version: 1.0\n"); 
 
 									$registro_txt .= '<p><span style="color:blue;"><b>OK</b></span>. El usuario se ha creado correctamente. Su estado actual es: <em>En espera de validaci&oacute;n</em>.</p>';
 									$registro_txt .= '<p><b>Te hemos enviado un email de verificaci&oacute;n</b>, rev&iacute;salo ahora. En el email te hemos indicado una direccion web que debes visitar para as&iacute; verificar tu usuario.</p><p class="gris">(<b>Rescata el email si est&aacute; como no deseado o spam!</b>)</p>';
@@ -384,8 +384,6 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 	if ($_POST['condiciones'] == 'ok') { $condiciones = ' checked="checked"'; } else { $condiciones = ''; }
 	$txt .= '<h1>1. Crear usuario <span class="gris">| 2. Solicitar Ciudadan&iacute;a | 3. Ser Ciudadano</span></h1><hr />
 
-<p class="gris">VirtualPol es la &Uacute;NICA Comunidad Auto-gestionada Democr&aacute;ticamente de toda Internet. 100% sin admins, sin GODs.</p>
-
 <form action="?a=registrar" method="POST">
 <input type="hidden" name="repid" value="' . $rn . '" />
 <input type="hidden" name="crono" value="' . time() . '" />
@@ -399,13 +397,14 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 <li><b>Email</b>: debe funcionar bien, te enviar&eacute;mos un email para verificarlo.<br />
 <input type="text" name="email" value="' . $email . '" size="30" maxlength="50" /><br /><br /></li>
 
-<li><b>Contrase&ntilde;a</b>: elije una buena contrase&ntilde;a, nunca te la pediremos v&iacute;a email.<br />
+<li><b>Contrase&ntilde;a</b>: elije una contrase&ntilde;a que no olvides.<br />
 <input type="password" autocomplete="off" name="pass1" value="' . $pass1 . '" maxlength="40" /><br />
 <input type="password" autocomplete="off" name="pass2" value="' . $pass2 . '" maxlength="40" style="margin-top:1px;" /><br /><br /></li>
 
-<img src="animal-captcha.php" alt="Animal" style="float:right;" />
 
-<li><b>&iquest;Qu&eacute; animal es el de la derecha?</b>: si eres humano lo sabr&aacute;s. &rarr;<br />
+<img src="animal-captcha.php" alt="Animal" id="animalcaptchaimg"  onclick="document.getElementById(\'animalcaptchaimg\').src=\'animal-captcha.php?\'+Math.random();" style="float:right;margin-right:250px;cursor:pointer;" />
+
+<li><b>&iquest;Qu&eacute; animal es?</b> &nbsp; &rarr;<br />
 <input type="text" name="animal" value="" autocomplete="off" maxlength="20" /><br /><br /><br /><br /></li>
 
 
@@ -414,9 +413,9 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 
 <div class="azul" style="margin-top:-10px;">
 <ul>
-<li>Comprendes que <b>esta comunidad es para todos los publicos</b>, y por tanto, no proceden contenidos violentos, pornogr&aacute;ficos o inadecuados.</li>
-<li>Aceptas que tu usuario es <b>&Uacute;NICO, PERSONAL e intransferible</b>. Solo se permite uno por persona en VirtualPol. Infringir esta norma b&aacute;sica conlleva una expulsi&oacute;n perpetua de todos los usuarios implicados, sin necesidad de juicio previo. Se encargan de esta tar&eacute;a los Supervisores del Censo.</li>
-<li><b>Si compartes conexi&oacute;n</b> a Internet con otros usuarios de VirtualPol, <b>debes notificarlo</b> a los Supervisores del Censo.</li>
+<li>Comprendes que esta comunidad es <b>para todos los publicos</b>, y por tanto, no proceden contenidos violentos, para adultos o inadecuados.</li>
+<li>Aceptas que tu usuario es <b>&Uacute;NICO</b>, personal e intransferible. Solo se permite uno por persona en VirtualPOL. Infringir esta norma b&aacute;sica conlleva una expulsi&oacute;n perpetua de todos los usuarios implicados, sin necesidad de juicio previo.</li>
+<li><b>Si compartes conexi&oacute;n</b> a Internet con otros usuarios de VirtualPOL, debes notificarlo a los Supervisores del Censo.</li>
 <li>Podr&aacute;s recibir algunas notificaciones v&iacute;a email (nunca spam).</li>
 <li>Tu usuario expirar&aacute; completamente si no tienes actividad de 10 dias a 90 dias, dependiendo de tu antiguedad.</li>
 <li>Si te conectas desde un ordenador p&uacute;blico, usa la acci&oacute;n de <b>Salir</b>, por seguridad.</li>
@@ -430,7 +429,9 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 
 <li value="6"><input type="submit" value="Crear usuario" style="height:40px;font-size:22px;" /></li>
 </form>
-</ol>';
+</ol>
+<hr />
+<p class="gris">VirtualPOL es la &uacute;nica comunidad auto-gestionada democr&aacute;ticamente de toda Internet. 100% sin admins, sin GODs.</p>';
 }
 
 include('../theme.php');

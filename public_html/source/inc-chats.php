@@ -320,11 +320,11 @@ function change_delay(delay) {
 }
 
 function delays() {
-	chat_delay1 = setTimeout("change_delay(6)", 25000);
-	chat_delay2 = setTimeout("change_delay(10)", 60000);
-	chat_delay3 = setTimeout("change_delay(15)", 120000);
-	chat_delay4 = setTimeout("change_delay(60)", 300000);
-	chat_delay_close = setTimeout("chat_close()", 1800000);
+	if (chat_delay1) { clearTimeout(chat_delay1); } chat_delay1 = setTimeout("change_delay(6)", 25000);
+	if (chat_delay2) { clearTimeout(chat_delay2); } chat_delay2 = setTimeout("change_delay(10)", 60000);
+	if (chat_delay3) { clearTimeout(chat_delay3); } chat_delay3 = setTimeout("change_delay(15)", 120000);
+	if (chat_delay4) { clearTimeout(chat_delay4); } chat_delay4 = setTimeout("change_delay(60)", 300000);
+	if (chat_delay_close) { clearTimeout(chat_delay_close); } chat_delay_close = setTimeout("chat_close()", 1800000);
 }
 
 function auto_priv(nick) {

@@ -335,20 +335,3 @@ h1 a {
 .vcnn { 
 	color:#D20000; 
 }
-
-
-#chatmsg { vertical-align: bottom; height:400px; overflow:auto; background:white; }
-#chatmsg ul { padding:0; margin:0; position:static; }
-#chatmsg ul li { padding:0; margin:0; color:#666666; background:none; font-size:15px; list-style:none;}
-#chatmsg .oldc { color:#A3A3A3; }
-#chat_users { float:right; width:180px; height:400px; overflow:auto; margin-left:20px; background:white; }
-#chat_users ul { padding:0; margin:0; position:static; }
-#chat_users ul li { padding:0; margin:0; color:#666666; background:none; font-size:18px; font-weight:bold; list-style:none;}
-#chat_users li { font-weight:bold; }
-#chat_users a { color:#808080; text-decoration:none; }
-#chat_users a:hover { text-decoration:underline; }
-#mensaje { color:black; border: 1px solid #808080; padding:3px; }
-.chat_title { font-weight:bold; font-size:20px; color:green; margin:0; padding:0; }
-.chat_accion { color:green; font-size:16px; }
-.chat_priv { color:#9F009F; font-size:16px; }
-.yo { color:#2D2D2D; }

@@ -42,15 +42,17 @@ if ((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($pol['pais'] == PAIS))
 
 
 $txt .= '
-<h1 style="margin-bottom:4px;"><span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones/">Opciones</a>]</span><a href="/chats/">Chat</a>: '.$titulo.'</h1>
+<div id="vp_c">
 
-<div id="vp_chat_users">
+<h1 style="margin-bottom:6px;">'.($externo?'<span style="float:right;"><a href="http://www'.DEV.'.virtualpol.com/registrar/">Crear ciudadano</a></span>'.$titulo:'<span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones/">Opciones</a>]</span><a href="/chats/">Chat</a>: '.$titulo).'</h1>
+
+<div id="vpc_u">
 <ul id="chat_list">
 </ul>
 </div>
 
-<div id="vp_chat">
-<ul id="vp_chat_ul">
+<div id="vpc">
+<ul id="vpc_ul">
 <li style="margin-top:380px;color:#AAA;"><b>
 '.($acceso['leer']?'
 VirtualPOL<br />
@@ -63,6 +65,7 @@ Nick: '.($pol['nick']?$pol['nick']:'Anonimo').'<br />
 <hr />
 ':'<span style="color:red;">No tienes acceso de lectura, lo siento.</span>').'
 </b></li></ul>
+</div>
 </div>';
 
 if ($acceso['escribir']) {
@@ -73,7 +76,7 @@ if ($acceso['escribir']) {
 <table border="0" width="100%">
 <tr>
 
-<td width="100%"><input type="text" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" id="vp_chat_msg" tabindex="1" autocomplete="off" size="65" maxlength="250" style="width:95%;" /></td>
+<td width="100%"><input type="text" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" id="vpc_msg" tabindex="1" autocomplete="off" size="65" maxlength="250" style="width:95%;" /></td>
 
 <td><input name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" style="margin-top:8px;" title="Filtro de eventos" /></td>
 
@@ -88,7 +91,7 @@ if ($acceso['escribir']) {
 
 </div>';
 
-} else { $txt .= '<p class="azul"><b>No tienes permiso de escritura.</b></p>'; }
+} else { $txt .= '<p class="azul"><span style="color:red;"><b>No tienes permiso para escribir.</b></span></p>'; }
 
 
 
@@ -96,20 +99,25 @@ if ($acceso['escribir']) {
 $txt_header .= '
 
 <style type="text/css">
-#vp_chat { vertical-align: bottom; height:400px; overflow:auto; background:white; }
-#vp_chat ul { padding:0; margin:0; position:static; }
-#vp_chat ul li { padding:0; margin:0; color:#666666; background:none; font-size:15px; list-style:none;}
-#vp_chat .oldc { color:#A3A3A3; }
-#vp_chat_users { float:right; width:180px; height:400px; overflow:auto; margin-left:20px; background:white; }
-#vp_chat_users ul { padding:0; margin:0; position:static; }
-#vp_chat_users ul li { padding:0; margin:0; color:#666666; background:none; font-size:18px; font-weight:bold; list-style:none;}
-#vp_chat_users li { font-weight:bold; }
-#vp_chat_users a { color:#808080; text-decoration:none; }
-#vp_chat_users a:hover { text-decoration:underline; }
-#vp_chat_msg { color:black; border: 1px solid #808080; padding:3px; }
-.vp_chat_accion { color:green; font-size:16px; }
-.vp_chat_priv { color:#9F009F; font-size:16px; }
-.vp_chat_yo { color:#2D2D2D; }
+#vp_c { font-family: "Arial", "Helvetica", sans-serif; font-size:17px; }
+#vp_c h1 { font-size:19px; color:green; margin:0; padding:0; line-height:12px; }
+#vp_c a { color:#06f;text-decoration:none; }
+#vp_c a:hover { text-decoration:underline; }
+#vp_c h1 a { color:#4BB000; } 
+#vpc { vertical-align: bottom; height:400px; overflow:auto; background:white; }
+#vpc ul { padding:0; margin:0; position:static; }
+#vpc ul li { padding:0; margin:0; color:#666666; background:none; font-size:15px; list-style:none;}
+#vpc .oldc { color:#A3A3A3; }
+#vpc_u { float:right; width:180px; height:400px; overflow:auto; margin-left:20px; background:white; }
+#vpc_u ul { padding:0; margin:0; position:static; }
+#vpc_u ul li { padding:0; margin:0; color:#666666; background:none; font-size:18px; font-weight:bold; list-style:none;}
+#vpc_u li { font-weight:bold; }
+#vpc_u a { color:#808080; text-decoration:none; }
+#vpc_u a:hover { text-decoration:underline; }
+#vpc_msg { color:black; border: 1px solid #808080; padding:3px; }
+.vpc_accion { color:green; font-size:16px; }
+.vpc_priv { color:#9F009F; font-size:16px; }
+.vpc_yo { color:#2D2D2D; }
 </style>
 
 
@@ -118,18 +126,18 @@ $txt_header .= '
 msg_ID = -1;
 elnick = "'.$pol['nick'].'";
 if (!elnick) { 
-	elnick = "#Anonimo"; // prompt("nick?") 
+	//elnick = "#" + prompt("nick?"); 
 }
 minick = elnick;
 chat_ID = "'.$chat_ID.'";
 ajax_refresh = true;
-chat_delay = 5000;
+chat_delay = 4000;
 chat_delay1 = "";
 chat_delay2 = "";
-chat_delay3 = setTimeout("change_delay(10000)", 60000);
-chat_delay4 = setTimeout("change_delay(15000)", 120000);
-chat_delay5 = setTimeout("change_delay(60000)", 300000);
-//chat_delay_close = setTimeout(prompt("Volver a activar chat?"), 108000000);
+chat_delay3 = setTimeout("change_delay(10)", 60000);
+chat_delay4 = setTimeout("change_delay(15)", 120000);
+chat_delay5 = setTimeout("change_delay(60)", 300000);
+chat_delay_close = setTimeout("chat_close()", 1500000);
 chat_filtro = "normal";
 chat_time = "";
 acceso_leer = '.($acceso['leer']?'true':'false').';
@@ -141,9 +149,9 @@ array_ncargos = new Array();
 array_ncargos = { 0:"", 99:"Extranjero", '.$array_ncargos.' };
 
 window.onload = function(){
-	document.getElementById("vp_chat").scrollTop = 900000;
+	document.getElementById("vpc").scrollTop = 900000;
 	merge_list();
-	$("#vp_chat_msg").focus();
+	$("#vpc_msg").focus();
 	'.($acceso['leer']?'refresh = setTimeout(chat_query_ajax, 6000); chat_query_ajax();':'').'
 }
 
@@ -158,7 +166,7 @@ function chat_filtro_change() {
 	} else {
 		chat_filtro = "normal";
 		$(".cf_c, .cf_e").fadeIn("slow");
-		document.getElementById("vp_chat").scrollTop = 900000;
+		document.getElementById("vpc").scrollTop = 900000;
 	}
 }
 
@@ -214,10 +222,6 @@ function chat_query_ajax() {
 	}
 }
 
-function auto_priv(nick) {
-	$("#vp_chat_msg").attr("value","/msg " + nick + " ").css("background", "#FF7777").css("color", "#952500").focus();
-}
-
 function print_msg(data) {
 	if (ajax_refresh) {
 		var arraydata = data.split("\n");
@@ -234,22 +238,22 @@ function print_msg(data) {
 			}
 
 			if ((mli[1] == "c") || (mli[1] == "e")) {
-				list += "<li id=\"" + mli[0] + "\" class=\"cf_" + mli[1] + "\">" + mli[2] + " <span class=\"vp_chat_accion\">" + txt + "</span></li>\n";
+				list += "<li id=\"" + mli[0] + "\" class=\"cf_" + mli[1] + "\">" + mli[2] + " <span class=\"vpc_accion\">" + txt + "</span></li>\n";
 			} else if (mli[1] == "p") {
 				if ((mli[3] == minick) && (mli[4] == "<b>Nuevo")) { } else {
 					
 					var nick_solo = mli[3].split("&rarr;");
 					
 					if (minick == nick_solo[0]) {
-						list += "<li id=\"" + mli[0] + "\" class=\"cf_p vp_chat_priv\">" + mli[2] + " <span class=\"vp_chat_priv\" style=\"color:#004FC6\" ;OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
+						list += "<li id=\"" + mli[0] + "\" class=\"cf_p vpc_priv\">" + mli[2] + " <span class=\"vpc_priv\" style=\"color:#004FC6\" ;OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
 					} else {
-						list += "<li id=\"" + mli[0] + "\" class=\"cf_p vp_chat_priv\">" + mli[2] + " <span class=\"vp_chat_priv\" OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
+						list += "<li id=\"" + mli[0] + "\" class=\"cf_p vpc_priv\">" + mli[2] + " <span class=\"vpc_priv\" OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
 					}
 				}
 			} else {'.($pol['nick']?'if ("'.$pol['nick'].'" != "") { var txt = txt.replace(/'.$pol['nick'].'/gi, "<b style=\"color:orange;\">" + minick + "</b>"); }':'').'
-				var vp_chat_yo = "";
-				if (minick == mli[3]) { var vp_chat_yo = " class=\"vp_chat_yo\""; }
-				list += "<li id=\"" + mli[0] + "\" class=\"cf_m\">" + mli[2] + " <img src=\"/img/cargos/" + mli[1] + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[mli[1]] + "\" /> <b" + vp_chat_yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
+				var vpc_yo = "";
+				if (minick == mli[3]) { var vpc_yo = " class=\"vpc_yo\""; }
+				list += "<li id=\"" + mli[0] + "\" class=\"cf_m\">" + mli[2] + " <img src=\"/img/cargos/" + mli[1] + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[mli[1]] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
 			}
 			if (((msg_num - 1) == i) && (msg_num != "n")) { msg_ID = mli[0]; }
 			if ((mli[1] != "p") && (mli[1] != "e") && (mli[1] != "c")) { 
@@ -257,7 +261,7 @@ function print_msg(data) {
 				al_cargo[mli[3]] = mli[1];
 			}
 		}
-		$("#vp_chat_ul").append(emoticono(list));
+		$("#vpc_ul").append(emoticono(list));
 		merge_list();
 		print_delay();
 	}
@@ -279,20 +283,20 @@ function merge_list() {
 }
 
 function print_delay() {
-	$("#vp_chat li:last").hide();
+	$("#vpc li:last").hide();
 	if (chat_filtro == "solochat") { $(".cf_c, .cf_e").css("display","none"); }
-	$("#vp_chat_msg").focus();
+	$("#vpc_msg").focus();
 	setTimeout(function(){
-		$("#vp_chat li:last").fadeIn("slow");
-		document.getElementById("vp_chat").scrollTop = 900000;
+		$("#vpc li:last").fadeIn("slow");
+		document.getElementById("vpc").scrollTop = 900000;
 	}, 200);
 }
 
 function enviarmsg() {
-	var elmsg = $("#vp_chat_msg").attr("value");
+	var elmsg = $("#vpc_msg").attr("value");
 	if ((elmsg) && (acceso_escribir)) {
 		$("#botonenviar").attr("disabled","disabled");
-		$("#vp_chat_msg").attr("value","").css("background", "none").css("color", "black");
+		$("#vpc_msg").attr("value","").css("background", "none").css("color", "black");
 
 		ajax_refresh = false;
 		clearTimeout(refresh);  
@@ -301,24 +305,32 @@ function enviarmsg() {
 			ajax_refresh = true;
 			if (data) {
 				print_msg(data);
-				chat_delay = 3000;
+				chat_delay = 4000;
 			}
 			refresh = setTimeout(chat_query_ajax, chat_delay);
 
-			setTimeout(function(){ $("#botonenviar").removeAttr("disabled"); }, 1500);
-			clearTimeout(chat_delay1); chat_delay1 = setTimeout("change_delay(4000)", 10000);
-			clearTimeout(chat_delay2); chat_delay2 = setTimeout("change_delay(6000)", 20000);
-			clearTimeout(chat_delay3); chat_delay3 = setTimeout("change_delay(10000)", 60000);
-			clearTimeout(chat_delay4); chat_delay4 = setTimeout("change_delay(15000)", 120000);
-			clearTimeout(chat_delay5); chat_delay5 = setTimeout("change_delay(60000)", 300000);
-			//clearTimeout(chat_delay_close); chat_delay_close = setTimeout(prompt("Volver a activar chat?"), 108000000);
+			setTimeout(function(){ $("#botonenviar").removeAttr("disabled"); }, 1600);
+			clearTimeout(chat_delay1); chat_delay1 = setTimeout("change_delay(4)", 10000);
+			clearTimeout(chat_delay2); chat_delay2 = setTimeout("change_delay(6)", 20000);
+			clearTimeout(chat_delay3); chat_delay3 = setTimeout("change_delay(10)", 60000);
+			clearTimeout(chat_delay4); chat_delay4 = setTimeout("change_delay(15)", 120000);
+			clearTimeout(chat_delay5); chat_delay5 = setTimeout("change_delay(60)", 300000);
+			clearTimeout(chat_delay_close); chat_delay_close = setTimeout("chat_close()", 1500000);
 		} );
 	}
 	return false;
 }
 
 function change_delay(delay) {
-	chat_delay = delay; 
+	chat_delay = parseInt(delay) * parseInt(1000); 
+}
+
+function auto_priv(nick) {
+	$("#vpc_msg").attr("value","/msg " + nick + " ").css("background", "#FF7777").css("color", "#952500").focus();
+}
+
+function chat_close() {
+	alert("Si no usas este chat cierralo por favor.\n\nConsume recursos de VirtualPOL!");
 }
 
 function emoticono(msg) {

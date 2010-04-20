@@ -26,7 +26,7 @@ menu_ID = 0;
 defcon = 5;
 window.google_analytics_uacct = "UA-59186-46";
 </script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 
 <style type="text/css">
 body { background: <?=COLOR_BG?> url('/img/vp.gif') repeat fixed top left; }

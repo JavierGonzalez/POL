@@ -131,13 +131,15 @@ if (!elnick) {
 minick = elnick;
 chat_ID = "'.$chat_ID.'";
 ajax_refresh = true;
-chat_delay = 4000;
+
+chat_delay = 4500;
 chat_delay1 = "";
 chat_delay2 = "";
-chat_delay3 = setTimeout("change_delay(10)", 60000);
-chat_delay4 = setTimeout("change_delay(15)", 120000);
-chat_delay5 = setTimeout("change_delay(60)", 300000);
-chat_delay_close = setTimeout("chat_close()", 1500000);
+chat_delay3 = "";
+chat_delay4 = "";
+chat_delay_close = "";
+delays();
+
 chat_filtro = "normal";
 chat_time = "";
 acceso_leer = '.($acceso['leer']?'true':'false').';
@@ -297,25 +299,17 @@ function enviarmsg() {
 	if ((elmsg) && (acceso_escribir)) {
 		$("#botonenviar").attr("disabled","disabled");
 		$("#vpc_msg").attr("value","").css("background", "none").css("color", "black");
-
 		ajax_refresh = false;
 		clearTimeout(refresh);  
 		$.post("/ajax2.php", { a: "enviar", chat_ID: chat_ID, n: msg_ID, msg: elmsg }, 
 		function(data){ 
 			ajax_refresh = true;
-			if (data) {
-				print_msg(data);
-				chat_delay = 4000;
-			}
-			refresh = setTimeout(chat_query_ajax, chat_delay);
-
+			if (data) { print_msg(data); }
 			setTimeout(function(){ $("#botonenviar").removeAttr("disabled"); }, 1600);
-			clearTimeout(chat_delay1); chat_delay1 = setTimeout("change_delay(4)", 10000);
-			clearTimeout(chat_delay2); chat_delay2 = setTimeout("change_delay(6)", 20000);
-			clearTimeout(chat_delay3); chat_delay3 = setTimeout("change_delay(10)", 60000);
-			clearTimeout(chat_delay4); chat_delay4 = setTimeout("change_delay(15)", 120000);
-			clearTimeout(chat_delay5); chat_delay5 = setTimeout("change_delay(60)", 300000);
-			clearTimeout(chat_delay_close); chat_delay_close = setTimeout("chat_close()", 1500000);
+
+			chat_delay = 4500;
+			refresh = setTimeout(chat_query_ajax, chat_delay);
+			delays();
 		} );
 	}
 	return false;
@@ -325,12 +319,23 @@ function change_delay(delay) {
 	chat_delay = parseInt(delay) * parseInt(1000); 
 }
 
+function delays() {
+	chat_delay1 = setTimeout("change_delay(6)", 25000);
+	chat_delay2 = setTimeout("change_delay(10)", 60000);
+	chat_delay3 = setTimeout("change_delay(15)", 120000);
+	chat_delay4 = setTimeout("change_delay(60)", 300000);
+	chat_delay_close = setTimeout("chat_close()", 1800000);
+}
+
 function auto_priv(nick) {
 	$("#vpc_msg").attr("value","/msg " + nick + " ").css("background", "#FF7777").css("color", "#952500").focus();
 }
 
 function chat_close() {
-	alert("Si no usas este chat cierralo por favor.\n\nConsume recursos de VirtualPOL!");
+	alert("Cierra este chat si no lo usas, por favor.\n\nConsume recursos de VirtualPOL. Gracias!");
+	chat_delay = 4500;
+	refresh = setTimeout(chat_query_ajax, chat_delay);
+	delays();
 }
 
 function emoticono(msg) {

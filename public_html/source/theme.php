@@ -31,6 +31,7 @@ if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\'/img/bg/'.$pol['config']
 <meta name="description" content="<?=$txt_description?>" />
 <link href="/img/style.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" media="screen" href="/img/superfish.css" /> 
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript" src="/img/superfish.js"></script> 
 
 <script type="text/javascript">
@@ -40,7 +41,6 @@ $(document).ready(function(){
 defcon = <?=$pol['config']['defcon']?>;
 window.google_analytics_uacct = "UA-59186-46";
 </script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 
 <style type="text/css">
 body { background: <?=$body_bg?>; }

@@ -18,7 +18,6 @@ $(".bred").click(function(){
 	if (bg != "none") { $(this).css("background-image", "none"); return false; }
 });
 
-$("dd:not(:eq(" + menu_ID + "))").hide();
 $("dt a").click(function(){
 	$("dd:visible").slideUp("normal");
 	$(this).parent().next().slideDown("normal");

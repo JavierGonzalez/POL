@@ -106,6 +106,10 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 	include('inc-chats.php');
 } else { // Listado de chats
 
+		// Borrar chats para refrescar
+	mysql_query("DELETE FROM chats_msg WHERE time < '".date('Y-m-d H:i:s', time() - 18000)."' ORDER BY time DESC", $link);
+
+
 	if (($pol['pais']) AND ($pol['pais'] != PAIS)) { header('Location: http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/chats/'); exit; }
 
 	
@@ -162,6 +166,6 @@ FROM chats ORDER BY estado ASC, online DESC, fecha_creacion ASC", $link);
 }
 
 
-include('theme.php');
+if (!$externo) { include('theme.php'); }
 
 ?>

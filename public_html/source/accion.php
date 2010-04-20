@@ -323,7 +323,7 @@ case 'examenes':
 		$pregunta = ucfirst($_POST['pregunta']);
 		mysql_query("INSERT INTO ".SQL."examenes_preg (examen_ID, user_ID, time, pregunta, respuestas, tiempo) VALUES ('" . $_GET['ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', '" . $pregunta . "', '" . $respuestas . "', " . $_POST['tiempo'] . ")", $link);
 		
-		evento_chat('<b>[EXAMEN]</b> Nueva pregunta. <a href="/examenes/editar/' . $_GET['ID'] . '/">Editar examen</a>. (' . crear_link($pol['nick']) . ')', 0, 6);
+		//evento_chat('<b>[EXAMEN]</b> Nueva pregunta. <a href="/examenes/editar/' . $_GET['ID'] . '/">Editar examen</a>. (' . crear_link($pol['nick']) . ')', 0, 6);
 		$refer_url = 'examenes/editar/' . $_GET['ID'] . '/';
 
 	} elseif (($_GET['b'] == 'eliminar-pregunta') AND ($_GET['ID'] != null) AND (($pol['cargos'][35]) OR ($pol['cargos'][34]))) {

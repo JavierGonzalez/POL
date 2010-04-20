@@ -339,7 +339,12 @@ return msg;
 
 if ($externo) {
 	// ES chat externo (incrustado en una web fuera de virtualpol.com)
-	echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>'.$txt_header.$txt;
+	echo '
+<html>
+<body>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+'.$txt_header.$txt.'
+</body></html>';
 	if ($link) { mysql_error($link); }
 }
 

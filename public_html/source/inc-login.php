@@ -15,7 +15,7 @@ if (isset($_COOKIE['teorizauser'])) {
 	session_start();
 	
 	if (!isset($_SESSION['pol'])) { //NO existe sesion
-		$result = mysql_query("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado FROM ".SQL_USERS." WHERE nick = '" .mysql_real_escape_string($_COOKIE['teorizauser'])."' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado FROM users WHERE nick = '" .mysql_real_escape_string($_COOKIE['teorizauser'])."' LIMIT 1", $link);
 		while ($row = mysql_fetch_array($result)) {
 			if (md5(CLAVE.$row['pass']) == $_COOKIE['teorizapass']) {
 				$session_new = true;
@@ -44,8 +44,8 @@ if (isset($pol['user_ID'])) {
 
 	// LOAD: $pol
 	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, fecha_last, fecha_registro, nivel, fecha_init, cargo,
-(SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE recibe_ID = ".SQL_USERS.".ID AND leido = '0') AS msg
-FROM ".SQL_USERS." WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+(SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE recibe_ID = users.ID AND leido = '0') AS msg
+FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	while($row = mysql_fetch_array($result)) {
 		$pol['pols'] = $row['pols'];
 		$pol['pais'] = $row['pais'];
@@ -80,7 +80,7 @@ FROM ".SQL_USERS." WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 				$update .= ", online = online + " . (strtotime($fecha_last) - strtotime($fecha_init)); 
 			}
 		}
-		mysql_query("UPDATE ".SQL_USERS." SET paginas = paginas + 1, fecha_last = '" . $date . "'" . $update . " WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+		mysql_query("UPDATE users SET paginas = paginas + 1, fecha_last = '" . $date . "'" . $update . " WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	} else { $pol = null; session_unset(); session_destroy(); } // impide el acceso a expulsados
 
 

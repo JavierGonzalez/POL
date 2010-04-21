@@ -1,7 +1,9 @@
 <?php
+if (!isset($_COOKIE['teorizauser'])) { session_start(); }
+
 if ($_GET['b'] == 'e') { $externo = true; } else { $externo = false; }
 
-
+if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['pol']['nick']; }
 
 $result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
 while ($r = mysql_fetch_array($result)) { 
@@ -124,14 +126,11 @@ $txt_header .= '
 <script type="text/javascript"> 
 // INIT
 msg_ID = -1;
-elnick = "'.$pol['nick'].'";
-if (!elnick) { 
-	//elnick = "#" + prompt("nick?"); 
-}
+elnick = "'.$_SESSION['pol']['nick'].'";
 minick = elnick;
 chat_ID = "'.$chat_ID.'";
 ajax_refresh = true;
-
+anonimo = false;
 chat_delay = 4500;
 chat_delay1 = "";
 chat_delay2 = "";
@@ -154,12 +153,28 @@ window.onload = function(){
 	document.getElementById("vpc").scrollTop = 900000;
 	merge_list();
 	$("#vpc_msg").focus();
+
+	if ((!elnick) && ("'.$acceso_escribir.'" == "anonimos")) {
+		$("#chatform").hide().after("<div id=\"cf\">Nick: <input type=\"input\" id=\"cf_nick\" size=\"10\" maxlength=\"14\" /> <button onclick=\"cf_cambiarnick();\">Entrar al chat</button></div>");
+	}
+
 	'.($acceso['leer']?'refresh = setTimeout(chat_query_ajax, 6000); chat_query_ajax();':'').'
 }
 
 
 
 // FUNCIONES
+
+function cf_cambiarnick() {
+	nick_anonimo = $("#cf_nick").val();
+	if ((nick_anonimo) && (nick_anonimo.length >= 3) && (nick_anonimo.length <= 14)) {
+		elnick = "-" + nick_anonimo.replace(" ", "_"); 
+		anonimo = elnick;
+		$("#cf").hide();
+		$("#chatform").show();
+	} else { $("#cf_nick").val(""); }
+}
+
 
 function chat_filtro_change() {
 	if (chat_filtro == "normal") {
@@ -301,7 +316,7 @@ function enviarmsg() {
 		$("#vpc_msg").attr("value","").css("background", "none").css("color", "black");
 		ajax_refresh = false;
 		clearTimeout(refresh);  
-		$.post("/ajax2.php", { a: "enviar", chat_ID: chat_ID, n: msg_ID, msg: elmsg }, 
+		$.post("/ajax2.php", { a: "enviar", chat_ID: chat_ID, n: msg_ID, msg: elmsg, anonimo: anonimo }, 
 		function(data){ 
 			ajax_refresh = true;
 			if (data) { print_msg(data); }

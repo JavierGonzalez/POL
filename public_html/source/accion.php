@@ -47,7 +47,7 @@ VALUES ('".$_POST['pais']."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_
 
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {
 
-		if ($_POST['acceso_escribir'] == 'anonimos') { $_POST['acceso_escribir'] = 'ciudadanos'; } // QUITAR ESTO PARA PERMITIR ANONIMOS
+		if ($_POST['acceso_escribir'] == 'anonimos') { $_POST['acceso_escribir'] = 'ciudadanos'; }
 
 		mysql_query("UPDATE chats 
 SET acceso_leer = '".$_POST['acceso_leer']."', 
@@ -1090,9 +1090,7 @@ case 'kick':
 			mysql_query("INSERT INTO ".SQL."ban (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$kick_user_ID."', '".$pol['user_ID']."', '".$expire."', '".$_POST['razon']."', 'activo', '".$_POST['expire']."', '".$kick_IP."', '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
 
 
-			if ($pol['cargos'][22]) { $sala_chat = '1'; } else { $sala_chat = '0'; }
-
-			evento_chat('<span style="color:red;"><img src="/img/kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="/img/cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>', 0, $sala_chat);
+			evento_chat('<span style="color:red;"><img src="/img/kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="/img/cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>');
 		}
 		$refer_url = 'control/kick/';
 	}
@@ -1461,8 +1459,11 @@ VALUES ('".$pol['user_ID']."', '".$date."', '".strtoupper($_POST['siglas'])."', 
 
 
 if ($_GET['a'] == 'logout') {
-	unset($_SESSION['pol']);
-	session_unset(); session_destroy();
+	if (($_SESSION) AND (substr($_SESSION['pol']['nick'], 0, 1) != '-')) { 
+		unset($_SESSION);
+		session_unset(); session_destroy();
+	}
+
 	header('Location: '.REGISTRAR.'login.php?a=logout');
 	exit;
 }

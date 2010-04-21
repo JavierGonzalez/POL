@@ -111,7 +111,7 @@ FROM chats ORDER BY estado ASC, online DESC, fecha_creacion ASC", $link);
 	while ($r = mysql_fetch_array($result)) { 
 		
 		$txt .= '<tr>
-<td valign="top" align="right"><b style="color:#888;">'.ucfirst($r['estado']).'</b></td>
+<td valign="top" align="right">'.($r['estado']=='activo'?'':'<b style="color:#888;">'.ucfirst($r['estado']).'</b>').'</td>
 <td valign="top" align="right"><b>'.$r['online'].'</b></td>
 <td valign="top" nowrap="nowrap">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/"><b>'.$r['titulo'].'</b></a>':'<b>'.$r['titulo'].'</b>').'</td>
 <td valign="top" style="background:'.$vp['bg'][$r['pais']].';" title="'.$r['pais'].'">&nbsp;</td>
@@ -126,7 +126,7 @@ FROM chats ORDER BY estado ASC, online DESC, fecha_creacion ASC", $link);
 			$txt .= boton('Bloquear', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=bloquear&chat_ID='.$r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?');
 		}							
 		$txt .= ((($r['estado'] != 'activo') AND ($pol['pais'] == $r['pais']) AND ($pol['nivel'] >= 95))?boton('Activar', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=activar&chat_ID='.$r['chat_ID']):'').
-((($r['estado'] == 'bloqueado') AND ($pol['pais'] == $r['pais']) AND ($pol['user_ID'] == $r['user_ID']))?boton('Borrar', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=eliminar&chat_ID='.$r['chat_ID']):'').'</td>
+((($r['estado'] == 'bloqueado') AND ($pol['user_ID'] == $r['user_ID']))?boton('Borrar', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=eliminar&chat_ID='.$r['chat_ID']):'').'</td>
 </tr>';
 }
 

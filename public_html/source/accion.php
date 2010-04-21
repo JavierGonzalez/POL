@@ -59,6 +59,8 @@ LIMIT 1", $link);
 
 	} elseif (($_GET['b'] == 'activar') AND ($_GET['chat_ID']) AND ($pol['nivel'] >= 98)) {
 		mysql_query("UPDATE chats SET estado = 'activo' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado != 'activo' AND pais = '".PAIS."' LIMIT 1", $link);
+	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['chat_ID'])) {
+		mysql_query("DELETE FROM chats WHERE chat_ID = '".$_GET['chat_ID']."' AND estado = 'bloqueado' AND pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	} elseif (($_GET['b'] == 'bloquear') AND ($_GET['chat_ID'])) {
 		mysql_query("UPDATE chats SET estado = 'bloqueado' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR ((acceso_escribir = 'anonimos') AND ('".$pol['nivel']."' >= 95))) LIMIT 1", $link);
 	}

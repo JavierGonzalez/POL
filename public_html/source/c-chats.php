@@ -1,35 +1,5 @@
 <?php 
-/* ### Proyecto CHAT 2 ###
-
-2010-04-16 <GONZO> La idea consiste en desarrollar un nuevo chat que cuando esté listo suplantará al antiguo sistema, con el mismo nucleo pero con una evolución sustancial.
-
-
-MEJORAS:
-1. Crear una tabla en BD de chats activos. Esto nos permitirá: crear y eliminar chats flexiblemente, configurar parámetros por cada chat (por ejemplo habilitar/deshabilitar extranjeros o anonimos), acceso privado.
-3. Centralizar las tablas de chat en una unica a ser posible.
-2. Crear una versión html del chat puro para que sirva como recurso a webs externas (a modo de widget, con una linea de js). Esto expandirá la comunidad y aportará un sentido util y práctico de existir (moderar, vigilar y controlar los chats basandonos en nuestro sistema democrático).
-3. Permitir acceso opcional a anonimos sin registrar y sus correspondientes medidas de control y mitigación (por ejemplo un comando para avisar a un policia).
-4. ¿Ideas?
-
-
-TAREAS:		(- por hacer, x hecho)
-x Crear nueva tabla "chats".
-x Crear nueva tabla "chats_msg".
-x Copiar el nucleo del chat que servirá como comienzo.
-x Aglutinar el HTML, CSS y JS del chat, aislandolo del resto del codigo.
-x Sortear los conflictos derivados de que hay multiples paises.
-x Panel de creación de nuevos chats. Opciones:
-x Panel de configuracion de un chat existente. Opciones:
-	x Acceso minimo para lectura: N nivel, N antiguedad, ciudadanos de X pais, cualquier ciudadano, abierto.
-	x Acceso minimo para escritura: N nivel, N antiguedad, ciudadanos de X pais, cualquier ciudadano, anonimos.
-x Añadir en Despacho Oval control para quien puede crear un chat,
-x Página mostrando los chats activos, su URL externa donde se visualiza (si la hay) y estadisticas de visitas de los chats.
-x Evolucionar chat
-x Evolucionar nuevo ajax.php
-- Resolver conflictos derivados de los usuarios anonimos.
-- Bans a usuarios anonimos
-
-*/
+/* ### Proyecto CHAT 2 ### */
 
 include('inc-login.php');
 

@@ -84,7 +84,6 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <div class="column-in">
 
 <p>
-<a href="http://www.virtualpol.com/chat/plaza-internacional/"><b>Plaza Int.</b></a><br />
 <a href="http://desarrollo.virtualpol.com/"><b>Blog Desarrollo</b></a><br />
 <a href="http://pol.virtualpol.com/info/economia/
 "><b>Economia Global</b></a><br />

@@ -1,6 +1,6 @@
 <?php
 session_start(); 
-if (!isset($_SESSION['pol']['user_ID'])) { include('inc-login.php'); } // No hay login, hace login
+if ((isset($_COOKIE['teorizauser'])) AND (!isset($_SESSION['pol']['user_ID']))) { include('inc-login.php'); } // No hay login, hace login
 else { include('../config-pwd.php'); $link = @conectar(); } // Conecta MySQL solo
 header('connection: close');
 header('Content-Type: text/plain');
@@ -62,26 +62,28 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 
 	echo chat_refresh($_REQUEST['chat_ID'], $_REQUEST['n']);
 
-} elseif (($_REQUEST['a'] == 'enviar') AND (is_numeric($_REQUEST['chat_ID'])) AND (isset($_SESSION['pol']['user_ID']))) {
+} elseif (($_REQUEST['a'] == 'enviar') AND (is_numeric($_REQUEST['chat_ID']))) {
 
 	$date = date('Y-m-d H:i:s');
 	$chat_ID = $_REQUEST['chat_ID'];
 
 	// BANEADO? EXPULSADO!
-	if ($_SESSION['pol']['user_ID']) {
-		$result = mysql_unbuffered_query("SELECT expire FROM ".SQL."ban WHERE estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = '".$_SERVER['REMOTE_ADDR']."')) LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)){ 
-			if ($r['expire'] < $date) { // DESBANEAR
-				mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '".$date."'", $link); 
-			} else { $expulsado = true; }
-		}
+	$result = mysql_unbuffered_query("SELECT expire FROM ".SQL."ban WHERE estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = '".ip2long($_SERVER['REMOTE_ADDR'])."')) LIMIT 1", $link);
+	while($r = mysql_fetch_array($result)){ 
+		if ($r['expire'] < $date) { // DESBANEAR
+			mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '".$date."'", $link); 
+		} else { $expulsado = true; }
 	}
 
 
 	// CHECK MSG
 	$msg_len = strlen($_REQUEST['msg']);
-	if (($msg_len > 0) AND ($msg_len < 280) AND ($expulsado != true) AND (acceso_check($chat_ID, 'escribir') === true)) {
-
+	if (($msg_len > 0) AND ($msg_len < 280) AND (!$expulsado) AND (acceso_check($chat_ID, 'escribir') === true)) {
+		
+		if ((!$_SESSION['pol']['nick']) AND (substr($_POST['anonimo'], 0, 1) == '-')) { 
+			$_SESSION['pol']['nick'] = $_POST['anonimo'];
+			$_SESSION['pol']['estado'] = 'anonimo';
+		}
 
 		// limpia MSG
 		$msg = $_REQUEST['msg'];
@@ -158,7 +160,7 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 					
 				case 'parlamento':
 					if(($_SESSION['pol']['cargo'] == 22) AND ($chat_ID == 1)){
-						$elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial- Presidente del Parlamento)</b></span>';
+						$elmsg = '<span style="color:blue;">'.$msg_rest.' <b>(Aviso Oficial- Presidente del Parlamento)</b></span>';
 						$tipo = 'm';
 					}
 					break;
@@ -174,20 +176,19 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 			$elcargo = $_SESSION['pol']['cargo'];
 			if ((strtolower($_SESSION['pol']['pais']) != pais) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { 
 				if ($_SESSION['pol']['cargo'] != 42) { $elcargo = 99; }
+			} elseif (substr($elnick, 0, 1) == '-') {
+				$elcargo = 98;
 			}
 
-
-
-			mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) 
-VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."')", $link);
+			mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."')", $link);
 		}
 
 		// refresca last
-		mysql_query("UPDATE users SET fecha_last = '" . $date . "' WHERE ID = '" . $_SESSION['pol']['user_ID'] . "' LIMIT 1");
+		mysql_query("UPDATE users SET fecha_last = '".$date."' WHERE ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1");
 
 
 		// print refresh
-		if ($_REQUEST['n']) { echo chat_refresh($chat_ID, $_REQUEST['n']); } else { echo 'ok'; }
+		if ($_REQUEST['n']) { echo chat_refresh($chat_ID, $_REQUEST['n']); }
 
 	} else { echo 'n 0 ---- - <b style="color:#FF0000;">Chat Error :(</b>'. "\n"; }
 
@@ -198,7 +199,7 @@ VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID
 (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS partido,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
-FROM users WHERE estado != 'desarrollador' AND nick = '" . mysql_real_escape_string($_REQUEST['nick']) . "' LIMIT 1", $link);
+FROM users WHERE estado != 'desarrollador' AND nick = '".mysql_real_escape_string($_REQUEST['nick'])."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($res)) { 
 		include('inc-functions.php');
 		if ($r['avatar'] == 'true') { $r['avatar'] = 1; } else { $r['avatar'] = 0; }

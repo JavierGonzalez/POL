@@ -35,7 +35,7 @@ function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', 
 	if (!$pais) { $pais = PAIS; }
 	if (!$chat_ID) { if ($pais == 'POL') { $chat_ID = 1; } elseif ($pais == 'Hispania') { $chat_ID = 2; } }
 
-	if ($chat_ID != 0) {
+	if ($chat_ID != -1) {
 		mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) 
 VALUES ('".$chat_ID."', '".$nick."', '".$msg."', '0', '".$user_ID."', '".$tipo."')", $link);
 	} else {

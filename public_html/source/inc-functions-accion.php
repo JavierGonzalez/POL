@@ -29,6 +29,7 @@ theme_advanced_resizing : true,
 	return '<textarea name="' . $name . '" style="width:750px;height:350px;">' . $txt . '</textarea>';
 }
 
+// -1 en chat_ID para publicar el mensaje en las dos plazas (Hispania y Pol)
 function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', $pais='') {
 	global $pol, $link, $vp;
 	if ($secret) { $nick = '_'; } else { $nick = $pol['nick']; }

@@ -49,7 +49,20 @@ if ((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($pol['pais'] == PAIS))
 $txt .= '
 <div id="vp_c">
 
-<h1 style="margin-bottom:6px;">'.($externo?'<span style="float:right;"><a href="http://www'.DEV.'.virtualpol.com/registrar/">Crear ciudadano</a></span>'.$titulo:'<span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones/">Opciones</a>]</span><a href="/chats/">Chat</a>: '.$titulo).'</h1>
+<h1 style="margin-bottom:6px;">';
+
+if ($externo) {
+	if ($_SESSION['pol']['user_ID']) {
+		$txt .= '<span style="float:right;"><a href="http://www'.DEV.'.virtualpol.com/">Volver a VirtualPOL</a></span>'.$titulo;
+	} else {
+		$txt .= '<span style="float:right;" class="redondo"><a href="http://www'.DEV.'.virtualpol.com/registrar/">Crear ciudadano</a></span>'.$titulo;
+	}
+} else {
+	$txt .= '<span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones/">Opciones</a>]</span><a href="/chats/">Chat</a>: '.$titulo;
+}
+
+
+$txt .= '</h1>
 
 <div id="vpc_u">
 <ul id="chat_list">
@@ -104,6 +117,14 @@ if ($acceso['escribir']) {
 $txt_header .= '
 
 <style type="text/css">
+.redondo {
+background:#FFFFDD;
+border:1px solid #FFD700;
+padding:5px 10px 5px 10px; 
+border-radius: 6px; 
+-moz-border-radius: 6px; 
+-webkit-border-radius: 6px;
+}
 input, area, div.content-in select { color:green; font-size:16px; font-weight:bold; }
 #vp_c { font-family: "Arial", "Helvetica", sans-serif; font-size:17px; }
 #vp_c h1 { font-size:19px; color:green; margin:0; padding:0; line-height:12px; }
@@ -297,7 +318,12 @@ function merge_list() {
 			al[elnick] = null;
 			al_cargo[elnick] = null;
 		} else {
-			list += "<li>' . $js_kick . ' <img src=\"/img/cargos/" + al_cargo[elnick] + ".gif\" title=\"" + array_ncargos[al_cargo[elnick]] + "\" /> <a href=\"http://'.strtolower(PAIS).DEV.'.virtualpol.com/perfil/" + elnick  + "/\" class=\"nick\">" + elnick + "</a></li>\n";
+			if (al_cargo[elnick] == 98) {
+				list += "<li>' . $js_kick . ' <img src=\"/img/cargos/" + al_cargo[elnick] + ".gif\" title=\"" + array_ncargos[al_cargo[elnick]] + "\" /> " + elnick + "</li>\n";
+			} else {
+				list += "<li>' . $js_kick . ' <img src=\"/img/cargos/" + al_cargo[elnick] + ".gif\" title=\"" + array_ncargos[al_cargo[elnick]] + "\" /> <a href=\"http://'.strtolower(PAIS).DEV.'.virtualpol.com/perfil/" + elnick  + "/\" class=\"nick\">" + elnick + "</a></li>\n";
+			}
+			
 		}
 	}
 	$("#chat_list").html(list);

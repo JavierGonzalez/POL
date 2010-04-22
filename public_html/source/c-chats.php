@@ -79,6 +79,10 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 		// Borrar chats para refrescar
 	mysql_query("DELETE FROM chats_msg WHERE time < '".date('Y-m-d H:i:s', time() - 18000)."' ORDER BY time DESC", $link);
 
+	$result = mysql_query("SELECT COUNT(*) AS num FROM chats_msg WHERE time > '".date('Y-m-d H:i:s', time() - 600)."'", $link);
+	while ($r = mysql_fetch_array($result)) { 
+		$msgnum_10min = $r['num'];
+	}
 
 	if (($pol['pais']) AND ($pol['pais'] != PAIS)) { header('Location: http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/chats/'); exit; }
 
@@ -130,7 +134,7 @@ FROM chats ORDER BY estado ASC, online DESC, fecha_creacion ASC", $link);
 </tr>';
 }
 
-	$txt .= '</table><p>'.boton('Solicitar chat', '/chats/solicitar-chat/').' <span style="font-size:12px;">[El Presidente o Vicepresidente activar&aacute; el chat.]</span></p>';
+	$txt .= '</table><span style="float:right;color:#888;font-size:18px;"><b>'.round(($msgnum_10min / 10), 1).'</b> msg/min</span><p>'.boton('Solicitar chat', '/chats/solicitar-chat/').' <span style="font-size:12px;">[El Presidente o Vicepresidente activar&aacute; el chat.]</span></p>';
 
 
 

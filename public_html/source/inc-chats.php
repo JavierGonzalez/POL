@@ -49,13 +49,13 @@ if ((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($pol['pais'] == PAIS))
 $txt .= '
 <div id="vp_c">
 
-<h1 style="margin-bottom:6px;">';
+<h1 style="margin-bottom:18px;">';
 
 if ($externo) {
 	if ($_SESSION['pol']['user_ID']) {
 		$txt .= '<span style="float:right;"><a href="http://www'.DEV.'.virtualpol.com/">Volver a VirtualPOL</a></span>'.$titulo;
 	} else {
-		$txt .= '<span style="float:right;" class="redondo"><a href="http://www'.DEV.'.virtualpol.com/registrar/">Crear ciudadano</a></span>'.$titulo;
+		$txt .= '<span style="float:right;"><a href="http://www'.DEV.'.virtualpol.com/registrar/">Crear ciudadano</a></span>'.$titulo;
 	}
 } else {
 	$txt .= '<span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones/">Opciones</a>]</span><a href="/chats/">Chat</a>: '.$titulo;

@@ -185,7 +185,7 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 
 		// refresca last
 		mysql_query("UPDATE users SET fecha_last = '".$date."' WHERE ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1");
-
+		mysql_query("UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
 
 		// print refresh
 		if ($_REQUEST['n']) { echo chat_refresh($chat_ID, $_REQUEST['n']); }

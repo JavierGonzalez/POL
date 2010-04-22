@@ -7,8 +7,11 @@ if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['
 
 $result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
 while ($r = mysql_fetch_array($result)) { 
-		 
+	
 	if ($r['pais'] != PAIS) { header('Location: http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$_GET['a'].'/'.($_GET['b']?$_GET['b'].'/':'')); exit; }
+
+
+	mysql_query("UPDATE chats SET stats_visitas = stats_visitas + 1, fecha_last = '".$date."' WHERE chat_ID = ".$r['chat_ID']." LIMIT 1", $link);
 
 	$chat_ID = $r['chat_ID'];
 	$titulo = $r['titulo'];
@@ -101,6 +104,7 @@ if ($acceso['escribir']) {
 $txt_header .= '
 
 <style type="text/css">
+input, area, div.content-in select { color:green; font-size:16px; font-weight:bold; }
 #vp_c { font-family: "Arial", "Helvetica", sans-serif; font-size:17px; }
 #vp_c h1 { font-size:19px; color:green; margin:0; padding:0; line-height:12px; }
 #vp_c a { color:#06f;text-decoration:none; }
@@ -147,7 +151,7 @@ acceso_escribir = '.($acceso['escribir']?'true':'false').';
 al = new Array();
 al_cargo = new Array();
 array_ncargos = new Array();
-array_ncargos = { 0:"", 99:"Extranjero", '.$array_ncargos.' };
+array_ncargos = { 0:"", 98:"Turista", 99:"Extranjero", '.$array_ncargos.' };
 
 window.onload = function(){
 	document.getElementById("vpc").scrollTop = 900000;
@@ -155,7 +159,7 @@ window.onload = function(){
 	$("#vpc_msg").focus();
 
 	if ((!elnick) && ("'.$acceso_escribir.'" == "anonimos")) {
-		$("#chatform").hide().after("<div id=\"cf\">Nick: <input type=\"input\" id=\"cf_nick\" size=\"10\" maxlength=\"14\" /> <button onclick=\"cf_cambiarnick();\">Entrar al chat</button></div>");
+		$("#chatform").hide().after("<div id=\"cf\"><b>Nick:</b> <input type=\"input\" id=\"cf_nick\" size=\"10\" maxlength=\"14\" /> <button onclick=\"cf_cambiarnick();\">Entrar al chat</button></div>");
 	}
 
 	'.($acceso['leer']?'refresh = setTimeout(chat_query_ajax, 6000); chat_query_ajax();':'').'

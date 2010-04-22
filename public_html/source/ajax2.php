@@ -148,13 +148,15 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 					}
 					break;
 				case 'msg':
-					$nick_receptor = trim($msg_array[1]);
-					$result = mysql_unbuffered_query("SELECT ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1", $link);
-					while($row = mysql_fetch_array($result)){ 
-						$elmsg = substr($msg_rest, (strlen($row['nick'])));
-						$target_ID = $row['ID'];
-						$tipo = 'p';
-						$elnick = $_SESSION['pol']['nick'].'&rarr;'.$row['nick'];
+					if ($_SESSION['pol']['user_ID']) {
+						$nick_receptor = trim($msg_array[1]);
+						$result = mysql_unbuffered_query("SELECT ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1", $link);
+						while($row = mysql_fetch_array($result)){ 
+							$elmsg = substr($msg_rest, (strlen($row['nick'])));
+							$target_ID = $row['ID'];
+							$tipo = 'p';
+							$elnick = $_SESSION['pol']['nick'].'&rarr;'.$row['nick'];
+						}
 					}
 					break;
 					
@@ -178,6 +180,7 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 				if ($_SESSION['pol']['cargo'] != 42) { $elcargo = 99; }
 			} elseif (substr($elnick, 0, 1) == '-') {
 				$elcargo = 98;
+				$elnick = substr($elnick, 1);
 			}
 
 			mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."')", $link);

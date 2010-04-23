@@ -45,6 +45,13 @@ case 'censo':
 		$pagina = $_GET['b']; 
 		$pagina_url = '/info/censo/';
 	}
+	
+	if ($_GET['b'] == 'turistas') {
+		$num_element_pag = $censo_turistas;
+	}
+	elseif ($_GET['b'] == 'expulsados') {
+		$num_element_pag = $censo_expulsados;
+	}
 
 	paginacion('censo', $pagina_url, null, $pagina, $num_element_pag, 50);
 

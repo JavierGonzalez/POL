@@ -7,6 +7,7 @@ function dato_nombre($dato, $tipo) {
 		case 'documento': $table = 'docs'; $result = 'url'; break;
 		case 'partido': $table = 'partidos'; $result = 'siglas'; break;
 		case 'cargo': $table = 'estudios'; $result = 'nombre'; break;
+		case 'kick': $table = 'ban'; $result = 'expire'; break;
 	}
 	$result2 = mysql_query("SELECT " . $result . " FROM ".SQL."" . $table . " WHERE ID = '" . $dato . "' LIMIT 1", $link);
 	while($row2 = mysql_fetch_array($result2)){ return $row2[$result]; }
@@ -62,6 +63,7 @@ LIMIT " . $p_limit, $link);
 11 x Cargo asignado (user_ID2=user_ID, dato=cargo_ID)
 12 x Cargo quitado (user_ID2=user_ID, dato=cargo_ID)
 13 - Rechazar ciudadania
+14 - Kick cancelado
 */
 switch ($row['accion']) {
 	case 1: $accion = 'Nuevo Turista'; break;
@@ -84,6 +86,10 @@ switch ($row['accion']) {
 	case 12: $accion = 'Cargo <em>' . dato_nombre($row['dato'], 'cargo') . '</em> quitado a ' . crear_link($row['nick2']); break;
 
 	case 13: $accion = 'Rechaza la Ciudadania'; break;
+	case 14:
+		$fecha_hora_fin_kick = dato_nombre($row['dato'], 'kick');
+		$accion = 'Cancelado el kick a ' . crear_link($row['nick2']) . '. Terminaba: ' . $fecha_hora_fin_kick; 
+		break;
 	default: $accion = $row['accion'];
 }
 

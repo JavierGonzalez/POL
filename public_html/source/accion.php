@@ -609,7 +609,7 @@ foreach ($_POST AS $dato => $valor) {
 	$result = mysql_query("SELECT ID, salario, nombre FROM ".SQL."estudios", $link);
 	while($row = mysql_fetch_array($result)){
 		$salario = $_POST['salario_'.$row['ID']];
-		if (($salario >= 0) AND ($salario <= 10000)) {
+		if (($salario >= 0) AND ($salario <= 1000)) {
 			if ($salario != $row['salario']) { evento_chat('<b>[GOBIERNO]</b> El salario de <img src="/img/cargos/'.$row['ID'].'.gif" /><b>'.$row['nombre'].'</b> se ha cambiado de '.pols($row['salario']).' '.MONEDA.' a '.pols($salario).' '.MONEDA.' ('.crear_link($pol['nick']).', <a href="/control/despacho-oval/">Despacho Oval</a>)');  }
 			mysql_query("UPDATE ".SQL."estudios SET salario = '".$salario."' WHERE ID = '".$row['ID']."' LIMIT 1", $link);
 		}

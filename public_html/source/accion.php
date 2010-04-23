@@ -1074,11 +1074,23 @@ case 'kick':
 
 
 		$es_policiaexpulsador = false;
-		$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."ban WHERE ID = '".$_GET['ID']."' AND autor = '".$pol['user_ID']."' LIMIT 1", $link);
-		while($row = mysql_fetch_array($result)){ $es_policiaexpulsador = true; }
+		$result = mysql_unbuffered_query("SELECT ID, user_ID, autor FROM ".SQL."ban WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+		while($row = mysql_fetch_array($result)){ 
+			if ($pol['user_ID'] == $row['autor']) {
+				$es_policiaexpulsador = true;
+			}
+			$kickeado_id = $row['user_ID'];
+			$kick_id = $row['ID']; 
+		}
 	
-		if (($es_policiaexpulsador) OR ($pol['cargos'][13]) OR ($pol['cargos'][9])) { 
+		if (($es_policiaexpulsador) OR ($pol['cargos'][13]) OR ($pol['cargos'][9])) {
 			mysql_query("UPDATE ".SQL."ban SET estado = 'cancelado' WHERE estado = 'activo' AND ID = '".$_GET['ID']."' LIMIT 1", $link); 
+			if (mysql_affected_rows()==1) {
+				$result = mysql_query("SELECT nick FROM users WHERE ID = '".$kickeado_id."' LIMIT 1", $link);
+				while($row = mysql_fetch_array($result)){ $kickeado_nick = $row['nick'];}
+				evento_log(14, $kick_id, $kickeado_id); // Kick cancelado
+				evento_chat('<span style="color:red;"><img src="/img/kick.gif" alt="Kick" border="0" /> <b>[KICK]</b> El kick a <b>'.$kickeado_nick.'</b> ha sido cancelado por <img src="/img/cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>.</span>');
+			}
 		}
 		$refer_url = 'control/kick/';
 

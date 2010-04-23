@@ -1077,7 +1077,7 @@ case 'kick':
 		$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."ban WHERE ID = '".$_GET['ID']."' AND autor = '".$pol['user_ID']."' LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ $es_policiaexpulsador = true; }
 	
-		if (($es_policiaexpulsador) OR ($pol['cargos'][13])) { 
+		if (($es_policiaexpulsador) OR ($pol['cargos'][13]) OR ($pol['cargos'][9])) { 
 			mysql_query("UPDATE ".SQL."ban SET estado = 'cancelado' WHERE estado = 'activo' AND ID = '".$_GET['ID']."' LIMIT 1", $link); 
 		}
 		$refer_url = 'control/kick/';

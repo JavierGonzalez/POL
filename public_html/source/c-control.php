@@ -816,7 +816,7 @@ FROM ".SQL."ban
 WHERE expire > '" . $margen_30dias . "' AND estado != 'expulsado'
 ORDER BY expire DESC", $link);
 	while($row = mysql_fetch_array($result)){
-		if ((($row['autor'] == $pol['user_ID']) OR ($pol['cargos'][13])) AND ($row['estado'] == 'activo')) { $expulsar = boton('X', '/accion.php?a=kick&b=quitar&ID=' . $row['ID'], '&iquest;Seguro que quieres hacer INACTIVO este kick?'); } else { $expulsar = ''; }
+		if ((($row['autor'] == $pol['user_ID']) OR ($pol['cargos'][13]) OR ($pol['cargos'][9])) AND ($row['estado'] == 'activo')) { $expulsar = boton('X', '/accion.php?a=kick&b=quitar&ID=' . $row['ID'], '&iquest;Seguro que quieres hacer INACTIVO este kick?'); } else { $expulsar = ''; }
 
 		$duracion = '<acronym title="' . $row['expire'] . '">' . duracion((time() + $row['tiempo']) - strtotime($row['expire'])) . '</acronym>';
 		if ($row['estado'] == 'activo') {

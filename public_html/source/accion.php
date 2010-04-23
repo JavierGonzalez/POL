@@ -524,6 +524,14 @@ case 'despacho-oval':
 	if (
 ($_GET['b'] == 'config') AND 
 ($pol['nivel'] >= 98) AND  
+($_POST['online_ref'] >= 60) AND
+($_POST['pols_inem'] >= 0) AND ($_POST['pols_inem'] <= 500) AND
+($_POST['pols_afiliacion'] >= 0) AND ($_POST['pols_afiliacion'] <= 2000) AND
+($_POST['pols_empresa'] >= 0) AND
+($_POST['pols_cuentas'] >= 0) AND
+($_POST['pols_partido'] >= 0) AND
+($_POST['pols_solar'] >= 0) AND
+($_POST['pols_crearchat'] >= 0) AND
 ($_POST['factor_propiedad'] <= 10) AND ($_POST['factor_propiedad'] >= 0) AND 
 ($_POST['pols_mensajetodos'] >= 1000) AND 
 ($_POST['pols_examen'] >= 0) AND 
@@ -531,6 +539,7 @@ case 'despacho-oval':
 ($_POST['num_escanos'] <= 30) AND ($_POST['num_escanos'] >= 1) AND 
 (strlen($_POST['palabra_gob0']) <= 200) AND
 ($_POST['impuestos'] <= 5) AND ($_POST['impuestos'] >= 0) AND
+($_POST['impuestos_minimo'] >= 0) AND
 ($_POST['impuestos_empresa'] <= 1000) AND ($_POST['impuestos_empresa'] >= 0) AND
 ($_POST['arancel_salida'] <= 100) AND ($_POST['arancel_salida'] >= 0) AND
 ($_POST['chat_diasexpira'] >= 10)

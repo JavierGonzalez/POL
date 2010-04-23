@@ -537,6 +537,7 @@ case 'despacho-oval':
 ) {
 
 $dato_array = array(
+'online_ref'=>'Tiempo online en minutos para referencia',
 'pols_mensajetodos'=>'Coste mensaje Global',
 'pols_solar'=>'Coste solar del mapa',
 'num_escanos'=>'Numero de esca&ntilde;os y Diputados',
@@ -584,6 +585,10 @@ foreach ($_POST AS $dato => $valor) {
 
 		if ($pol['config'][$dato] != $valor) { 
 			if ($valor == '') { $valor = '<em>null</em>'; }
+			if ($dato == 'online_ref') {
+				$valor = intval($valor)/60; 
+				$pol['config'][$dato] = $pol['config'][$dato]/60;
+			}
 			evento_chat('<b>[GOBIERNO]</b> Configuraci&oacute;n ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/despacho-oval/">Despacho Oval</a>)'); 
 		}
 	

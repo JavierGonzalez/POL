@@ -831,7 +831,7 @@ ORDER BY expire DESC", $link);
 		if ($row['motivo']) { $motivo = '<a href="/control/kick/info/'.$row['ID'].'/">#</a>'; } else { $motivo = ''; }
 		$txt .= '<tr><td valign="top"><img src="/img/kick.gif" alt="Kick" border="0" /></td><td valign="top"><b>' . $estado . '</b></td><td valign="top"><b>' . crear_link($row['expulsado'], 'nick', $row['expulsado_estado']) . '</b></td><td valign="top" nowrap="nowrap"><img src="/img/cargos/' . $row['cargo'] . '.gif" border="0" /> ' . crear_link($row['nick_autor']) . '</td><td align="right" valign="top" nowrap="nowrap"><acronym title="' . $row['expire'] . '">' . $duracion . '</acronym></td><td align="right" valign="top" nowrap="nowrap">' . duracion($row['tiempo']+1) . '</td><td><b style="font-size:13px;">' . $row['razon'] . '</b></td><td>' . $expulsar . '</td><td>'.$motivo.'</td></tr>' . "\n";
 	}
-	$txt .= '</table><p>Los kicks solo pueden ser revocadas por el Comisario de Policia o el Polic&iacute;a autor de la expulsi&oacute;n.</p>';
+	$txt .= '</table><p>Los kicks solo pueden ser revocadas por un Comisario de Policia, un Juez Supremo o el Polic&iacute;a autor de la expulsi&oacute;n.</p>';
 
 
 	}

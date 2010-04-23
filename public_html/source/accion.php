@@ -1157,7 +1157,7 @@ case 'enviar-mensaje':
 					enviar_email($row['ID'], $asunto, $mensaje); 
 				}
 
-				evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower($row['pais']).'.virtualpol.com/msg/"><b>Leer!</b></a>)', $row['ID'], 0, false, 'p'); 
+				evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower($row['pais']).'.virtualpol.com/msg/"><b>Leer!</b></a>)', $row['ID'], -1, false, 'p'); 
 			}
 		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'])) {
 

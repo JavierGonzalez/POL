@@ -67,9 +67,11 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 <p><input type="submit" value="Editar"'.(($r['user_ID'] == $pol['user_ID']) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))?'':' disabled="disabled"').' /> [Solo el Fundador puede editar estos par&aacute;metros.]</p>
 
 </form>
+
+Codigo HTML: <input type="text" value="&lt;iframe width=&quot;730&quot; height=&quot;460&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; transparency=&quot;transparency&quot; src=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/e/&quot;&gt;&lt;p&gt;&lt;a href=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/&quot;&gt;&lt;b&gt;Entra al chat&lt;/b&gt;&lt;/a&gt;&lt;/p&gt;&lt;/iframe&gt;" size="70" />
+
 ';
 	}
-	$txt .= '<br /><br /><p style="text-align:center;color:red;font-size:12px;">Acceso de escritura para anonimos EN DESARROLLO.</p>';
 
 
 } elseif ($_GET['a']) { // Chats

@@ -52,12 +52,13 @@ CREATE TABLE IF NOT EXISTS `chats` (
 CREATE TABLE IF NOT EXISTS `chats_msg` (
   `msg_ID` int(12) unsigned NOT NULL auto_increment,
   `chat_ID` smallint(5) unsigned NOT NULL,
-  `nick` varchar(32) NOT NULL,
+  `nick` varchar(14) NOT NULL,
   `msg` varchar(900) NOT NULL,
   `time` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `cargo` tinyint(3) unsigned NOT NULL default '0',
   `user_ID` mediumint(6) unsigned NOT NULL default '0',
   `tipo` enum('m','p','e','c') NOT NULL default 'm',
+  `IP` int(10) default NULL,
   PRIMARY KEY  (`msg_ID`),
   KEY `chat_ID` (`chat_ID`,`nick`,`time`,`cargo`,`user_ID`,`tipo`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;

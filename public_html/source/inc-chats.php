@@ -41,7 +41,7 @@ while ($row = mysql_fetch_array($result)) {
 
 // SI es Policia o Comisario del pais, muestra control de kicks.
 if ((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($pol['pais'] == PAIS)) {
-	$js_kick = '<a href=\"/control/kick/" + elnick  + "/\" target=\"_blank\"><img src=\"/img/kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a> ';
+	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/\" target=\"_blank\"><img src=\"/img/kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a> ';
 } else { $js_kick = ''; }
 
 
@@ -175,11 +175,9 @@ window.onload = function(){
 	document.getElementById("vpc").scrollTop = 900000;
 	merge_list();
 	$("#vpc_msg").focus();
-
 	if ((!elnick) && ("'.$acceso_escribir.'" == "anonimos")) {
 		$("#chatform").hide().after("<div id=\"cf\"><b>Nick:</b> <input type=\"input\" id=\"cf_nick\" size=\"10\" maxlength=\"14\" /> <button onclick=\"cf_cambiarnick();\">Entrar al chat</button></div>");
 	}
-
 	'.($acceso['leer']?'refresh = setTimeout(chat_query_ajax, 6000); chat_query_ajax();':'').'
 }
 
@@ -268,20 +266,16 @@ function print_msg(data) {
 		for (i=0;i<msg_num;i++) {
 			var mli = arraydata[i].split(" ");
 			var txt = ""; var ml = mli.length; for (var e=4; e<ml; e++) { txt += mli[e] + " "; }
-
 			if (chat_time == mli[2]) {
 				mli[2] = "<span style=\"color:white;\">" + mli[2] + "</span>";
 			} else {
 				chat_time = mli[2];
 			}
-
 			if ((mli[1] == "c") || (mli[1] == "e")) {
 				list += "<li id=\"" + mli[0] + "\" class=\"cf_" + mli[1] + "\">" + mli[2] + " <span class=\"vpc_accion\">" + txt + "</span></li>\n";
 			} else if (mli[1] == "p") {
 				if ((mli[3] == minick) && (mli[4] == "<b>Nuevo")) { } else {
-					
 					var nick_solo = mli[3].split("&rarr;");
-					
 					if (minick == nick_solo[0]) {
 						list += "<li id=\"" + mli[0] + "\" class=\"cf_p vpc_priv\">" + mli[2] + " <span class=\"vpc_priv\" style=\"color:#004FC6\" ;OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
 					} else {
@@ -291,7 +285,8 @@ function print_msg(data) {
 			} else {'.($pol['nick']?'if ("'.$pol['nick'].'" != "") { var txt = txt.replace(/'.$pol['nick'].'/gi, "<b style=\"color:orange;\">" + minick + "</b>"); }':'').'
 				var vpc_yo = "";
 				if (minick == mli[3]) { var vpc_yo = " class=\"vpc_yo\""; }
-				list += "<li id=\"" + mli[0] + "\" class=\"cf_m\">" + mli[2] + " <img src=\"/img/cargos/" + mli[1] + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[mli[1]] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
+				if (mli[1].substr(0,3) == "98_") { var cargo_ID = 98; } else { var cargo_ID = mli[1]; }
+				list += "<li id=\"" + mli[0] + "\" class=\"cf_m\">" + mli[2] + " <img src=\"/img/cargos/" + cargo_ID + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[cargo_ID] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
 			}
 			if (((msg_num - 1) == i) && (msg_num != "n")) { msg_ID = mli[0]; }
 			if ((mli[1] != "p") && (mli[1] != "e") && (mli[1] != "c")) { 
@@ -314,12 +309,13 @@ function merge_list() {
 			al[elnick] = null;
 			al_cargo[elnick] = null;
 		} else {
-			if (al_cargo[elnick] == 98) {
-				list += "<li>' . $js_kick . ' <img src=\"/img/cargos/" + al_cargo[elnick] + ".gif\" title=\"" + array_ncargos[al_cargo[elnick]] + "\" /> " + elnick + "</li>\n";
+			if (al_cargo[elnick].substr(0,3) == "98_") {
+				var kick_nick  = "-" + al_cargo[elnick].substr(3);
+				list += "<li>'.$js_kick.' <img src=\"/img/cargos/98.gif\" title=\"" + array_ncargos[98] + "\" /> " + elnick + "</li>\n";
 			} else {
-				list += "<li>' . $js_kick . ' <img src=\"/img/cargos/" + al_cargo[elnick] + ".gif\" title=\"" + array_ncargos[al_cargo[elnick]] + "\" /> <a href=\"http://'.strtolower(PAIS).DEV.'.virtualpol.com/perfil/" + elnick  + "/\" class=\"nick\">" + elnick + "</a></li>\n";
+				var kick_nick  = elnick;
+				list += "<li>'.$js_kick.' <img src=\"/img/cargos/" + al_cargo[elnick] + ".gif\" title=\"" + array_ncargos[al_cargo[elnick]] + "\" /> <a href=\"http://'.strtolower(PAIS).DEV.'.virtualpol.com/perfil/" + elnick  + "/\" class=\"nick\">" + elnick + "</a></li>\n";
 			}
-			
 		}
 	}
 	$("#chat_list").html(list);
@@ -347,7 +343,6 @@ function enviarmsg() {
 			ajax_refresh = true;
 			if (data) { print_msg(data); }
 			setTimeout(function(){ $("#botonenviar").removeAttr("disabled"); }, 1600);
-
 			chat_delay = 4500;
 			refresh = setTimeout(chat_query_ajax, chat_delay);
 			delays();

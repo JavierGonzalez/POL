@@ -47,7 +47,7 @@ VALUES ('".$_POST['pais']."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_
 
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {
 
-		if ($_POST['acceso_escribir'] == 'anonimos') { $_POST['acceso_escribir'] = 'ciudadanos'; }
+		//if ($_POST['acceso_escribir'] == 'anonimos') { $_POST['acceso_escribir'] = 'ciudadanos'; }
 
 		mysql_query("UPDATE chats 
 SET acceso_leer = '".$_POST['acceso_leer']."', 
@@ -1095,11 +1095,24 @@ case 'kick':
 		$refer_url = 'control/kick/';
 
 	} elseif ($_POST['nick']) {
-		$result = mysql_query("SELECT ID, nick, IP, cargo, pais FROM users WHERE nick = '".$_POST['nick']."' LIMIT 1", $link);
-		while($row = mysql_fetch_array($result)){ $kick_cargo = $row['cargo']; $kick_user_ID = $row['ID']; $kick_nick = $row['nick']; $kick_IP = $row['IP']; $kick_pais = $row['pais']; }
+		if ((substr($_POST['nick'], 0, 1) == '-') AND (is_numeric(substr($_POST['nick'], 1)))) {
+			// kick a anonimo
+			$kick_cargo = 98; 
+			$kick_user_ID = 0; 
+			$kick_IP = substr($_POST['nick'], 1); 
+			$result = mysql_query("SELECT nick FROM chats_msg WHERE IP = ".$kick_IP." ORDER BY msg_ID DESC LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)){ $kick_nick = $r['nick']; }
+			$_POST['razon'] = '['.$kick_nick.'] '.$_POST['razon'];
+			$kick_pais = PAIS;
+			$result = mysql_query("SELECT ID FROM ".SQL."ban WHERE IP = ".$kick_IP." AND estado = 'activo' LIMIT 1", $link);
+			while($row = mysql_fetch_array($result)){ $user_kicked = true; }
+		} else {
+			$result = mysql_query("SELECT ID, nick, IP, cargo, pais FROM users WHERE nick = '".$_POST['nick']."' LIMIT 1", $link);
+			while($row = mysql_fetch_array($result)){ $kick_cargo = $row['cargo']; $kick_user_ID = $row['ID']; $kick_nick = $row['nick']; $kick_IP = '\''.$row['IP'].'\''; $kick_pais = $row['pais']; }
+			$result = mysql_query("SELECT ID FROM ".SQL."ban WHERE user_ID = '".$kick_user_ID."' AND estado = 'activo' LIMIT 1", $link);
+			while($row = mysql_fetch_array($result)){ $user_kicked = true; }
+		}
 
-		$result = mysql_query("SELECT ID FROM ".SQL."ban WHERE user_ID = '".$kick_user_ID."' AND estado = 'activo' LIMIT 1", $link);
-		while($row = mysql_fetch_array($result)){ $user_kicked = true; }
 
 		$_POST['razon'] = ereg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['razon']));
 
@@ -1107,7 +1120,7 @@ case 'kick':
 
 		if (
 (($pol['cargos'][12]) OR ($pol['cargos'][13]) OR ($pol['cargos'][22])) AND 
-($kick_user_ID) AND 
+($kick_user_ID >= 0) AND 
 ($user_kicked != true) AND 
 ((($kick_cargo != 7) AND ($kick_cargo != 13)) OR ($kick_pais != PAIS)) AND
 ($_POST['razon']) AND
@@ -1115,7 +1128,7 @@ case 'kick':
 ) {
 			$_POST['razon'] = ucfirst(strip_tags($_POST['razon']));
 			$expire = date('Y-m-d H:i:s', time() + $_POST['expire']);
-			mysql_query("INSERT INTO ".SQL."ban (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$kick_user_ID."', '".$pol['user_ID']."', '".$expire."', '".$_POST['razon']."', 'activo', '".$_POST['expire']."', '".$kick_IP."', '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
+			mysql_query("INSERT INTO ".SQL."ban (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$kick_user_ID."', '".$pol['user_ID']."', '".$expire."', '".$_POST['razon']."', 'activo', '".$_POST['expire']."', ".$kick_IP.", '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
 
 
 			evento_chat('<span style="color:red;"><img src="/img/kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="/img/cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>');

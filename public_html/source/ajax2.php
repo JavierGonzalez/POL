@@ -80,7 +80,7 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 	$msg_len = strlen($_REQUEST['msg']);
 	if (($msg_len > 0) AND ($msg_len < 280) AND (!$expulsado) AND (acceso_check($chat_ID, 'escribir') === true)) {
 		
-		if ((!$_SESSION['pol']['nick']) AND (substr($_POST['anonimo'], 0, 1) == '-')) { 
+		if ((!$_SESSION['pol']['nick']) AND (substr($_POST['anonimo'], 0, 1) == '-') AND (strlen($_POST['anonimo']) >= 3) AND (strlen($_POST['anonimo']) <= 15)) { 
 			$_SESSION['pol']['nick'] = $_POST['anonimo'];
 			$_SESSION['pol']['estado'] = 'anonimo';
 		}

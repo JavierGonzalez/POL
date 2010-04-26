@@ -1,4 +1,3 @@
-
 /*
  * Superfish v1.4.8 - jQuery menu widget
  * Copyright (c) 2008 Joel Birch
@@ -15,7 +14,7 @@
 
 		var sf = $.fn.superfish,
 			c = sf.c,
-			$arrow = $(['<span class="',c.arrowClass,'"> &#187;</span>'].join('')),
+			$arrow = $([''].join('')),
 			over = function(){
 				var $$ = $(this), menu = getMenu($$);
 				clearTimeout(menu.sfTimer);

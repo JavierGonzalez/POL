@@ -41,7 +41,7 @@ while ($row = mysql_fetch_array($result)) {
 
 // SI es Policia o Comisario del pais, muestra control de kicks.
 if ((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($pol['pais'] == PAIS)) {
-	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/\" target=\"_blank\"><img src=\"/img/kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a> ';
+	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"/img/kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a> ';
 } else { $js_kick = ''; }
 
 
@@ -176,7 +176,7 @@ window.onload = function(){
 	merge_list();
 	$("#vpc_msg").focus();
 	if ((!elnick) && ("'.$acceso_escribir.'" == "anonimos")) {
-		$("#chatform").hide().after("<div id=\"cf\"><b>Nick:</b> <input type=\"input\" id=\"cf_nick\" size=\"10\" maxlength=\"14\" /> <button onclick=\"cf_cambiarnick();\">Entrar al chat</button></div>");
+		$("#chatform").hide().after("<div id=\"cf\"><b>Nick:</b> <input type=\"input\" id=\"cf_nick\" size=\"10\" maxlength=\"14\" /> <button onclick=\"cf_cambiarnick();\" style=\"font-weight:bold;color:green;font-size:18px;\">Entrar al chat</button></div>");
 	}
 	'.($acceso['leer']?'refresh = setTimeout(chat_query_ajax, 6000); chat_query_ajax();':'').'
 }
@@ -310,7 +310,7 @@ function merge_list() {
 			al_cargo[elnick] = null;
 		} else {
 			if (al_cargo[elnick].substr(0,3) == "98_") {
-				var kick_nick  = "-" + al_cargo[elnick].substr(3);
+				var kick_nick  = "ip-" + al_cargo[elnick].substr(3);
 				list += "<li>'.$js_kick.' <img src=\"/img/cargos/98.gif\" title=\"" + array_ncargos[98] + "\" /> " + elnick + "</li>\n";
 			} else {
 				var kick_nick  = elnick;
@@ -370,6 +370,7 @@ function chat_close() {
 
 function chat_enabled() {
 	$("#chat_alert").remove();
+	chat_query_ajax();
 	chat_delay = 4500;
 	refresh = setTimeout(chat_query_ajax, chat_delay);
 	delays();

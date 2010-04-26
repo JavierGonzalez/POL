@@ -761,7 +761,7 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/kick/">Kicks</a> | <img src="/img/kick.gif" alt="Kick" border="0" /> Kickear</h1><p>Esta acci&oacute;n privilegiada bloquea totalmente las acciones de un Ciudadano y los que comparten su IP.</p>
 
 <form action="/accion.php?a=kick" method="post">
-
+'.($_GET['c']?'<input type="hidden" name="chat_ID" value="'.$_GET['c'].'" />':'').'
 <ol>
 <li><b>Nick:</b> el Ciudadano.<br /><input type="text" value="' . $_GET['b'] . '" name="nick" size="20" maxlength="20" /><br /><br /></li>
 
@@ -773,7 +773,7 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 <option value="900">15 minutos</option>
 <option value="1200">20 minutos</option>
 <option value="1800">30 minutos</option>
-<option value="3600">1 hora</option>
+<option value="3600" selected="selected">1 hora</option>
 <option value="18000">5 horas</option>
 <option value="86400">1 d&iacute;a</option>
 <option value="172800">2 d&iacute;as</option>

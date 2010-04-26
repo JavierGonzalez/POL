@@ -36,7 +36,7 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 
 	if (($pol['pais']) AND ($pol['pais'] != PAIS)) { header('Location: http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/chats/'.$_GET['a'].'/'.$_GET['b'].'/'); exit; }
 
-	$result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' AND pais = '".PAIS."' LIMIT 1", $link);
+	$result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
 
 

@@ -73,13 +73,11 @@ $txt .= '</h1>
 <ul id="vpc_ul">
 <li style="margin-top:380px;color:#AAA;"><b>
 '.($acceso['leer']?'
-VirtualPOL<br />
-Gobierno de '.PAIS.'<br />
-Chat: '.$titulo.'<br />
-'.date('Y-m-d H:i:s').'<br />
+<img src="/img/logo-virtualpol-40original.gif" alt="VirtualPOL" border="0" height="40" /><br />
+'.$titulo.', Gobierno de '.PAIS.'<br />
 Acceso leer: '.$acceso_leer.($acceso_cfg_leer?' [<em>'.$acceso_cfg_leer.'</em>]':'').'<br />
 Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_escribir.'</em>]':'').'<br />
-Nick: '.($pol['nick']?$pol['nick']:'Anonimo').'<br />
+<span style="float:right;">'.date('Y-m-d H:i:s').' &nbsp;</span>Nick: '.($pol['nick']?$pol['nick']:'Anonimo').'<br />
 <hr />
 ':'<span style="color:red;">No tienes acceso de lectura, lo siento.</span>').'
 </b></li></ul>
@@ -149,7 +147,6 @@ input, area, div.content-in select { color:green; font-size:16px; font-weight:bo
 
 
 <script type="text/javascript"> 
-// INIT
 msg_ID = -1;
 elnick = "'.$_SESSION['pol']['nick'].'";
 minick = elnick;
@@ -227,7 +224,6 @@ function msgkeydown(evt, elem) {
 	else if ("keyCode" in evt) { keyCode=evt.keyCode; }
 	else if ("keyCode" in window.event) { keyCode=window.event.keyCode; }
 	else if ("which" in window.event) { keyCode=evt.which; }
-	// TAB
 	if (keyCode == 9) {
 		var elmsg = $(elem).attr("value");
 		var array_elmsg = elmsg.split(" ");
@@ -369,32 +365,37 @@ function delays() {
 	if (chat_delay2) { clearTimeout(chat_delay2); } chat_delay2 = setTimeout("change_delay(10)", 60000);
 	if (chat_delay3) { clearTimeout(chat_delay3); } chat_delay3 = setTimeout("change_delay(15)", 120000);
 	if (chat_delay4) { clearTimeout(chat_delay4); } chat_delay4 = setTimeout("change_delay(60)", 300000);
-	if (chat_delay_close) { clearTimeout(chat_delay_close); } chat_delay_close = setTimeout("chat_close()", 1800000);
+	if (chat_delay_close) { clearTimeout(chat_delay_close); } chat_delay_close = setTimeout("chat_close()", 1800000); // 30min
+}
+
+function chat_close() {
+	clearTimeout(refresh);
+	$("body").before("<div id=\"chat_alert\" style=\"position:absolute;top:40%;left:40%;\"><button onclick=\"chat_enabled();\" style=\"font-weight:bold;font-size:28px;color:#888;\">Volver al chat...</button></div>");
+}
+
+function chat_enabled() {
+	$("#chat_alert").remove();
+	chat_delay = 4500;
+	refresh = setTimeout(chat_query_ajax, chat_delay);
+	delays();
 }
 
 function auto_priv(nick) {
 	$("#vpc_msg").attr("value","/msg " + nick + " ").css("background", "#FF7777").css("color", "#952500").focus();
 }
 
-function chat_close() {
-	alert("Cierra este chat si no lo usas, por favor.\n\nConsume recursos de VirtualPOL. Gracias!");
-	chat_delay = 4500;
-	refresh = setTimeout(chat_query_ajax, chat_delay);
-	delays();
-}
-
-function emoticono(msg) {
-msg = msg.replace(/(\s|^):\)/gi, " <img src=\"/img/smiley/sonrie.gif\" border=\"0\" alt=\":)\" title=\":)\" />");			// :)
-msg = msg.replace(/(\s|^):\(/gi, " <img src=\"/img/smiley/disgustado.gif\" border=\"0\" alt=\":(\" title=\":(\" />");		// :(
-msg = msg.replace(/(\s|^):\|/gi, " <img src=\"/img/smiley/desconcertado.gif\" border=\"0\" alt=\":|\" title=\":|\" />");	// :|
-msg = msg.replace(/(\s|^):D/gi, " <img src=\"/img/smiley/xd.gif\" alt=\":D\" border=\"0\" title=\":D\" />");				// :D
-msg = msg.replace(/(\s|^):\*/gi, " <img src=\"/img/smiley/muacks.gif\" alt=\":*\" border=\"0\" title=\":*\" />");			// :*
-msg = msg.replace(/(\s|^);\)/gi, " <img src=\"/img/smiley/guino.gif\" alt=\";)\" border=\"0\" title=\";)\" />");			// ;)
-msg = msg.replace(/(\s|^):O/gi, " <img src=\"/img/smiley/bocaabierta.gif\" alt=\":O\" border=\"0\" title=\":O\" />");		// :O
-msg = msg.replace(/(\s|^):tarta:/gi, " <img src=\"/img/smiley/tarta.gif\" alt=\":tarta:\" border=\"0\" title=\":tarta:\" />");
-msg = msg.replace(/(\s|^):roto2:/gi, " <img src=\"/img/smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" />");
-msg = msg.replace(/(\s|^):moneda:/gi, " <img src=\"/img/m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" />");
-return msg;
+function emoticono(m) {
+m = m.replace(/(\s|^):\)/gi, " <img src=\"/img/smiley/sonrie.gif\" border=\"0\" alt=\":)\" title=\":)\" />");
+m = m.replace(/(\s|^):\(/gi, " <img src=\"/img/smiley/disgustado.gif\" border=\"0\" alt=\":(\" title=\":(\" />");
+m = m.replace(/(\s|^):\|/gi, " <img src=\"/img/smiley/desconcertado.gif\" border=\"0\" alt=\":|\" title=\":|\" />");
+m = m.replace(/(\s|^):D/gi, " <img src=\"/img/smiley/xd.gif\" alt=\":D\" border=\"0\" title=\":D\" />");
+m = m.replace(/(\s|^):\*/gi, " <img src=\"/img/smiley/muacks.gif\" alt=\":*\" border=\"0\" title=\":*\" />");
+m = m.replace(/(\s|^);\)/gi, " <img src=\"/img/smiley/guino.gif\" alt=\";)\" border=\"0\" title=\";)\" />");
+m = m.replace(/(\s|^):O/gi, " <img src=\"/img/smiley/bocaabierta.gif\" alt=\":O\" border=\"0\" title=\":O\" />");
+m = m.replace(/(\s|^):tarta:/gi, " <img src=\"/img/smiley/tarta.gif\" alt=\":tarta:\" border=\"0\" title=\":tarta:\" />");
+m = m.replace(/(\s|^):roto2:/gi, " <img src=\"/img/smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" />");
+m = m.replace(/(\s|^):moneda:/gi, " <img src=\"/img/m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" />");
+return m;
 }
 
 </script>';

@@ -49,6 +49,7 @@ msg_ID > '".$msg_ID."' AND
 ORDER BY msg_ID DESC LIMIT 50", $link);
 		while ($r = @mysql_fetch_array($res)) { 
 			if ($r['tipo'] != 'm') { $r['cargo'] = $r['tipo']; }
+			if ($r['cargo'] == 98) { $r['cargo'] .= '_'.$r['IP']; }
 			$t = $r['msg_ID'].' '.$r['cargo'].' '.date('H:i', strtotime($r['time'])).' '.$r['nick'].' '.$r['msg']."\n".$t; 
 		}
 		return $t;
@@ -174,6 +175,7 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 		// insert MSG
 		if ($msg) {
 			if (!$elnick) { $elnick = $_SESSION['pol']['nick']; }
+			if ($_SESSION['pol']['estado'] == 'anonimo') { $sql_ip = 'inet_aton("'.$_SERVER['REMOTE_ADDR'].'")'; } else { $sql_ip = 'NULL'; }
 
 			$elcargo = $_SESSION['pol']['cargo'];
 			if ((strtolower($_SESSION['pol']['pais']) != pais) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { 
@@ -183,7 +185,7 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 				$elnick = substr($elnick, 1);
 			}
 
-			mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."')", $link);
+			mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.")", $link);
 		}
 
 		// refresca last

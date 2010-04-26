@@ -808,7 +808,7 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 
 	mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '" . $date . "'", $link); 
 	$margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); //30dias
-	$result = mysql_query("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
+	$result = mysql_query("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo, user_ID,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado,
 (SELECT estado FROM ".SQL_USERS." WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado_estado,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."ban.autor LIMIT 1) AS nick_autor
@@ -829,7 +829,7 @@ ORDER BY expire DESC", $link);
 		if (!$row['expulsado_estado']) { $row['expulsado_estado'] = 'expulsado'; }
 
 		if ($row['motivo']) { $motivo = '<a href="/control/kick/info/'.$row['ID'].'/">#</a>'; } else { $motivo = ''; }
-		$txt .= '<tr><td valign="top"><img src="/img/kick.gif" alt="Kick" border="0" /></td><td valign="top"><b>' . $estado . '</b></td><td valign="top"><b>' . crear_link($row['expulsado'], 'nick', $row['expulsado_estado']) . '</b></td><td valign="top" nowrap="nowrap"><img src="/img/cargos/' . $row['cargo'] . '.gif" border="0" /> ' . crear_link($row['nick_autor']) . '</td><td align="right" valign="top" nowrap="nowrap"><acronym title="' . $row['expire'] . '">' . $duracion . '</acronym></td><td align="right" valign="top" nowrap="nowrap">' . duracion($row['tiempo']+1) . '</td><td><b style="font-size:13px;">' . $row['razon'] . '</b></td><td>' . $expulsar . '</td><td>'.$motivo.'</td></tr>' . "\n";
+		$txt .= '<tr><td valign="top"><img src="/img/kick.gif" alt="Kick" border="0" /></td><td valign="top"><b>' . $estado . '</b></td><td valign="top"><b>'.($row['user_ID'] == 0?'Anonimo':crear_link($row['expulsado'], 'nick', $row['expulsado_estado'])).'</b></td><td valign="top" nowrap="nowrap"><img src="/img/cargos/' . $row['cargo'] . '.gif" border="0" /> ' . crear_link($row['nick_autor']) . '</td><td align="right" valign="top" nowrap="nowrap"><acronym title="' . $row['expire'] . '">' . $duracion . '</acronym></td><td align="right" valign="top" nowrap="nowrap">' . duracion($row['tiempo']+1) . '</td><td><b style="font-size:13px;">' . $row['razon'] . '</b></td><td>' . $expulsar . '</td><td>'.$motivo.'</td></tr>' . "\n";
 	}
 	$txt .= '</table><p>Los kicks solo pueden ser revocadas por un Comisario de Policia, un Juez Supremo o el Polic&iacute;a autor de la expulsi&oacute;n.</p>';
 

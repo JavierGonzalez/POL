@@ -69,7 +69,9 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 	$chat_ID = $_REQUEST['chat_ID'];
 
 	// BANEADO? EXPULSADO!
-	$result = mysql_unbuffered_query("SELECT expire FROM ".SQL."ban WHERE estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = '".ip2long($_SERVER['REMOTE_ADDR'])."')) LIMIT 1", $link);
+	$result = mysql_unbuffered_query("SELECT expire FROM ".SQL."ban 
+WHERE estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = inet_aton('".$_SERVER['REMOTE_ADDR']."'))) 
+LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){ 
 		if ($r['expire'] < $date) { // DESBANEAR
 			mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '".$date."'", $link); 
@@ -195,7 +197,7 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 		// print refresh
 		if ($_REQUEST['n']) { echo chat_refresh($chat_ID, $_REQUEST['n']); }
 
-	} else { echo 'n 0 ---- - <b style="color:#FF0000;">Chat Error :(</b>'. "\n"; }
+	} else { echo 'n 0 ---- - <b style="color:#FF0000;">Chat bloqueado.</b>'. "\n"; }
 
 
 } elseif (($_REQUEST['a'] == 'whois') AND (isset($_REQUEST['nick']))) {

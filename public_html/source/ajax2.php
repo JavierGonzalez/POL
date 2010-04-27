@@ -92,7 +92,7 @@ LIMIT 1", $link);
 		$msg = $_REQUEST['msg'];
 
 		$msg = str_replace("\r", "", str_replace("\n", "", trim(strip_tags($msg))));
-		$msg = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/()]","<a target=\"_blank\" href=\"\\0\">\\0</a>", $msg);
+		if ($_SESSION['pol']['estado'] != 'anonimo') { $msg = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/()]","<a target=\"_blank\" href=\"\\0\">\\0</a>", $msg); }
 		$target_ID = 0;
 		$tipo = 'c';
 

@@ -44,10 +44,14 @@ VALUES ('".$_POST['pais']."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_
 		while($row = mysql_fetch_array($result)) {
 			pols_transferir($pol['config']['pols_crearchat'], $pol['user_ID'], '-1', 'Solicitud chat: '.$nombre);
 		}
+	} elseif (($_GET['b'] == 'cambiarfundador') AND ($_POST['fundador']) AND ($_POST['chat_ID'])) {
+
+		$result = mysql_query("SELECT ID FROM users WHERE nick = '".$_POST['fundador']."' AND estado = 'ciudadano' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) {
+			mysql_query("UPDATE chats SET user_ID = ".$r['ID']." WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		}
 
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {
-
-		//if ($_POST['acceso_escribir'] == 'anonimos') { $_POST['acceso_escribir'] = 'ciudadanos'; }
 
 		mysql_query("UPDATE chats 
 SET acceso_leer = '".$_POST['acceso_leer']."', 

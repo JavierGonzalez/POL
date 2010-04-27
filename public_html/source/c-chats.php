@@ -68,7 +68,13 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 
 </form>
 
-Codigo HTML: <input type="text" value="&lt;iframe width=&quot;730&quot; height=&quot;460&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; transparency=&quot;transparency&quot; src=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/e/&quot;&gt;&lt;p&gt;&lt;a href=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/&quot;&gt;&lt;b&gt;Entra al chat&lt;/b&gt;&lt;/a&gt;&lt;/p&gt;&lt;/iframe&gt;" size="70" />
+<form action="/accion.php?a=chat&b=cambiarfundador" method="post">
+<input type="hidden" name="chat_ID" value="'.$r['chat_ID'].'" />
+<p>Ceder el chat al ciudadano: <input type="text" name="fundador" size="10" maxlength="16" value="" /> <input type="submit" value="Cambiar Fundador"'.(($r['user_ID'] == $pol['user_ID']) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))?'':' disabled="disabled"').' /></p>
+
+</form>
+
+<p>Codigo HTML: <input type="text" value="&lt;iframe width=&quot;730&quot; height=&quot;460&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; transparency=&quot;transparency&quot; src=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/e/&quot;&gt;&lt;p&gt;&lt;a href=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/&quot;&gt;&lt;b&gt;Entra al chat&lt;/b&gt;&lt;/a&gt;&lt;/p&gt;&lt;/iframe&gt;" size="70" /></p>
 
 ';
 	}

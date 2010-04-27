@@ -13,7 +13,7 @@ case 'foto':
 
 	$txt .= '<h1>Instantanea de VirtualPol</h1><br />';
 	$result = mysql_query("SELECT ID, nick, pais
-FROM ".SQL_USERS."
+FROM users
 WHERE estado = 'ciudadano' AND avatar = 'true'
 ORDER BY online DESC
 LIMIT 300", $link);
@@ -28,11 +28,11 @@ case 'censo':
 
 
 	// num turistas
-	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM ".SQL_USERS." WHERE estado = 'turista'", $link));
+	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'turista'", $link));
 	$censo_turistas = $result[0];
 
 	// num expulsados
-	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM ".SQL_USERS." WHERE estado = 'expulsado'", $link));
+	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'expulsado'", $link));
 	$censo_expulsados = $result[0];
 
 	if ((!is_numeric($_GET['c'])) AND ($_GET['b'] == 'busqueda')) {
@@ -119,18 +119,18 @@ $txt .= '<p>' . $p_paginas . ' &nbsp; <a href="/info/censo/">Ciudadanos</a>: <b>
 
 	if ($p_init) { $orden = $p_init + 1; } else { $orden = 1; }
 
-	if ($pol['estado']) { $sql_extra = ", (SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '" . $pol['user_ID'] . "' AND user_ID = ".SQL_USERS.".ID LIMIT 1) AS has_votado"; }
+	if ($pol['estado']) { $sql_extra = ", (SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '" . $pol['user_ID'] . "' AND user_ID = users.ID LIMIT 1) AS has_votado"; }
 
 	$result = mysql_query("SELECT *,
-(SELECT siglas FROM ".SQL."partidos WHERE ".SQL_USERS.".partido_afiliado != '0' AND ID = ".SQL_USERS.".partido_afiliado LIMIT 1) AS siglas" . $sql_extra . "
-FROM ".SQL_USERS." " . $order_by . " LIMIT " . $p_limit, $link);
+(SELECT siglas FROM ".SQL."partidos WHERE users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas" . $sql_extra . "
+FROM users " . $order_by . " LIMIT " . $p_limit, $link);
 	while($row = mysql_fetch_array($result)){
 		$txt .= mysql_error($link);
 		$veterano = '';		
 		if ($row['nivel'] == 120) { $row['nivel'] = 1; }
 		if ($row['online'] != 0) { $online = duracion($row['online']); } else { $online = ''; }
 		if ($row['ref'] != 0) {
-			$result2 = mysql_query("SELECT nick FROM ".SQL_USERS." WHERE ID = '" . $row['ref'] . "' LIMIT 1", $link);
+			$result2 = mysql_query("SELECT nick FROM users WHERE ID = '" . $row['ref'] . "' LIMIT 1", $link);
 			while($row2 = mysql_fetch_array($result2)){ $veterano = '(Ref: ' . crear_link($row2['nick']) . ')'; }
 		}
 		if ($row['avatar'] == 'true') { $avatar = avatar($row['ID'], 40) . ' '; } else { $avatar = ''; }
@@ -331,23 +331,23 @@ $txt .= '<br /><table border="0" cellspacing="0" cellpadding="2">
 
 foreach ($vp['paises'] AS $pais) {
 
-$result = mysql_query("SELECT SUM(pols + IFNULL((SELECT SUM(pols) FROM ".strtolower($pais)."_cuentas WHERE user_ID = ".SQL_USERS.".ID GROUP BY user_ID),0)) AS pols_ciudadanos,
-(SELECT COUNT(ID) FROM ".SQL_USERS." WHERE pais = '".$pais."' AND estado = 'ciudadano') AS num_ciudadanos,
+$result = mysql_query("SELECT SUM(pols + IFNULL((SELECT SUM(pols) FROM ".strtolower($pais)."_cuentas WHERE user_ID = users.ID GROUP BY user_ID),0)) AS pols_ciudadanos,
+(SELECT COUNT(ID) FROM users WHERE pais = '".$pais."' AND estado = 'ciudadano') AS num_ciudadanos,
 (SELECT SUM(pols) FROM ".strtolower($pais)."_cuentas WHERE nivel > 0) AS pols_gobierno,
-(SELECT SUM(pols) FROM ".SQL_USERS." WHERE pais = '".$pais."' AND pols < 0) AS pols_negativo,
+(SELECT SUM(pols) FROM users WHERE pais = '".$pais."' AND pols < 0) AS pols_negativo,
 (SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'arancel_salida' LIMIT 1) AS arancel_salida,
 (SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'impuestos' LIMIT 1) AS impuestos,
 (SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'impuestos_minimo' LIMIT 1) AS impuestos_minimo,
 (SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'pols_inem' LIMIT 1) AS inem,
 (SELECT AVG(salario) FROM ".strtolower($pais)."_estudios) AS salario_medio
-FROM ".SQL_USERS."
+FROM users
 WHERE pais = '".$pais."'");
 	while($row = mysql_fetch_array($result)) {
 
 
 		$result2 = mysql_query("SELECT nick, pais,
-(pols + IFNULL((SELECT SUM(pols) FROM ".strtolower($pais)."_cuentas WHERE user_ID = ".SQL_USERS.".ID GROUP BY user_ID),0)) AS pols_total
-FROM ".SQL_USERS."
+(pols + IFNULL((SELECT SUM(pols) FROM ".strtolower($pais)."_cuentas WHERE user_ID = users.ID GROUP BY user_ID),0)) AS pols_total
+FROM users
 WHERE pais = '".$pais."'
 ORDER BY pols_total DESC 
 LIMIT 25", $link);
@@ -407,7 +407,7 @@ $txt .= '<td align="right">'.pols($row['inem']).'</td>
 }
 
 
-	$result = mysql_query("SELECT SUM(pols) AS pols_total FROM ".SQL_USERS." WHERE pais = 'ninguno'");
+	$result = mysql_query("SELECT SUM(pols) AS pols_total FROM users WHERE pais = 'ninguno'");
 	while($row = mysql_fetch_array($result)) {
 		$pols_turistas = $row['pols_total'];
 	}
@@ -453,7 +453,27 @@ $txt .= '</ol>
 
 </td>
 
+<td colspan="6" valign="top">
+
+<h2>Deudores:</h2><ol>';
+
+$result = mysql_query("SELECT pols, pais, nick FROM users WHERE pols < 0 ORDER BY pols ASC");
+while($row = mysql_fetch_array($result)) {
+	$txt .= '<li>'.pols($row['pols']).' '.MONEDA.' <b class="big">'.crear_link($row['nick'], 'nick', 'ciudadano', $row['pais']).'</b></li>';
+}
+
+$txt .= '</ol>
+
+
+</td>
+
+
 <td align="center" colspan="6" valign="top">
+<h2>Reparto econ&oacute;mico:</h2><br />
+<img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.round(($total_pais['POL']*100)/$total_moneda).','.round(($total_pais['Hispania']*100)/$total_moneda).'&chs=300x190&chl=POL|Hispania&chco='.substr($vp['bg']['POL'],1).','.substr($vp['bg']['Hispania'],1).'" alt="Reparto economico." />
+
+<br /><br />
+
 <h2>Evoluci&oacute;n de la econom&iacute;a:</h2><br />
 
 <img src="http://chart.apis.google.com/chart?cht=lc
@@ -465,11 +485,8 @@ $txt .= '</ol>
 &chxt=r
 &chxl=0:||'.round($moneda_mundial / 2).'|'.$moneda_mundial.'
 " alt="Monedas" />
-</td>
 
-<td align="center" colspan="6" valign="top">
-<h2>Reparto econ&oacute;mico:</h2><br />
-<img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.round(($total_pais['POL']*100)/$total_moneda).','.round(($total_pais['Hispania']*100)/$total_moneda).'&chs=300x190&chl=POL|Hispania&chco='.substr($vp['bg']['POL'],1).','.substr($vp['bg']['Hispania'],1).'" alt="Reparto economico." /></td>
+</td>
 
 </tr>
 

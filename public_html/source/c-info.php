@@ -463,7 +463,7 @@ while($row = mysql_fetch_array($result)) {
 }
 
 $txt .= '</ol>
-
+<span style="color:#888;">No contabiliza el dinero en cuentas bancarias.</span>
 
 </td>
 

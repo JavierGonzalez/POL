@@ -115,14 +115,6 @@ if ($acceso['escribir']) {
 $txt_header .= '
 
 <style type="text/css">
-.redondo {
-background:#FFFFDD;
-border:1px solid #FFD700;
-padding:5px 10px 5px 10px; 
-border-radius: 6px; 
--moz-border-radius: 6px; 
--webkit-border-radius: 6px;
-}
 input, area, div.content-in select { color:green; font-size:16px; font-weight:bold; }
 #vp_c { font-family: "Arial", "Helvetica", sans-serif; font-size:17px; }
 #vp_c h1 { font-size:19px; color:green; margin:0; padding:0; line-height:12px; }
@@ -176,7 +168,7 @@ window.onload = function(){
 	merge_list();
 	$("#vpc_msg").focus();
 	if ((!elnick) && ("'.$acceso_escribir.'" == "anonimos")) {
-		$("#chatform").hide().after("<div id=\"cf\"><b>Nick:</b> <input type=\"input\" id=\"cf_nick\" size=\"10\" maxlength=\"14\" /> <button onclick=\"cf_cambiarnick();\" style=\"font-weight:bold;color:green;font-size:18px;\">Entrar al chat</button></div>");
+		$("#chatform").hide().after("<div id=\"cf\"><b>Nick:</b> <input type=\"input\" id=\"cf_nick\" size=\"10\" maxlength=\"14\" /> <button onclick=\"cf_cambiarnick();\" style=\"font-weight:bold;color:green;font-size:16px;\">Entrar al chat</button></div>");
 	}
 	'.($acceso['leer']?'refresh = setTimeout(chat_query_ajax, 6000); chat_query_ajax();':'').'
 }
@@ -187,6 +179,7 @@ window.onload = function(){
 
 function cf_cambiarnick() {
 	nick_anonimo = $("#cf_nick").val();
+	nick_anonimo = nick_anonimo.replace(/[^A-Za-z0-9_-]/g, "");
 	if ((nick_anonimo) && (nick_anonimo.length >= 3) && (nick_anonimo.length <= 14)) {
 		elnick = "-" + nick_anonimo.replace(" ", "_"); 
 		anonimo = elnick;

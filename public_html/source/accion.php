@@ -1116,7 +1116,7 @@ case 'kick':
 			while($row = mysql_fetch_array($result)){ $kick_cargo = $row['cargo']; $kick_user_ID = $row['ID']; $kick_nick = $row['nick']; $kick_IP = '\''.$row['IP'].'\''; $kick_pais = $row['pais']; }
 			$result = mysql_query("SELECT ID FROM ".SQL."ban WHERE user_ID = '".$kick_user_ID."' AND estado = 'activo' LIMIT 1", $link);
 			while($row = mysql_fetch_array($result)){ $user_kicked = true; }
-			$el_userid = $pol['user_ID'];
+			$el_userid = $kick_user_ID;
 		}
 
 

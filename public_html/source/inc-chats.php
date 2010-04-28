@@ -121,11 +121,11 @@ input, area, div.content-in select { color:green; font-size:16px; font-weight:bo
 #vp_c a { color:#06f;text-decoration:none; }
 #vp_c a:hover { text-decoration:underline; }
 #vp_c h1 a { color:#4BB000; } 
-#vpc { vertical-align: bottom; height:400px; overflow:auto; background:white; }
+#vpc { vertical-align: bottom; height:400px; overflow:auto; overflow-x:hidden; background:white; }
 #vpc ul { padding:0; margin:0; position:static; }
 #vpc ul li { padding:0; margin:0; color:#666666; background:none; font-size:15px; list-style:none;}
 #vpc .oldc { color:#A3A3A3; }
-#vpc_u { float:right; width:180px; height:400px; overflow:auto; margin-left:20px; background:white; }
+#vpc_u { float:right; width:180px; height:400px; overflow:auto; overflow-x:hidden; margin-left:20px; background:white; }
 #vpc_u ul { padding:0; margin:0; position:static; }
 #vpc_u ul li { padding:0; margin:0; color:#666666; background:none; font-size:18px; font-weight:bold; list-style:none;}
 #vpc_u li { font-weight:bold; }

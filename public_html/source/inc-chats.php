@@ -18,13 +18,13 @@ while ($r = mysql_fetch_array($result)) {
 
 	// NUCLEO ACCESOS
 	foreach (array('leer','escribir') AS $a) {
-		$acceso[$a] = false;
 		if (($r['acceso_'.$a] == 'privado') AND (in_array(strtolower($_SESSION['pol']['nick']), explode(" ", $r['acceso_cfg_'.$a])))) { $acceso[$a] = true; } 
 		elseif (($r['acceso_'.$a] == 'nivel') AND ($_SESSION['pol']['nivel'] >= $r['acceso_cfg_'.$a]) AND ($_SESSION['pol']['pais'] == $r['pais'])) { $acceso[$a] = true; }
 		elseif (($r['acceso_'.$a] == 'antiguedad') AND (strtotime($_SESSION['pol']['fecha_registro']) >= strtotime($r['acceso_cfg_'.$a]))) { $acceso[$a] = true; }
 		elseif (($r['acceso_'.$a] == 'ciudadanos_pais') AND ($_SESSION['pol']['pais'] == $r['pais'])) { $acceso[$a] = true; }
 		elseif (($r['acceso_'.$a] == 'ciudadanos') AND (isset($_SESSION['pol']['user_ID']))) { $acceso[$a] = true; }
 		elseif (($r['acceso_'.$a] == 'anonimos') AND ($_SESSION['pol']['estado'] != 'expulsado')) { $acceso[$a] = true; }
+		else { $acceso[$a] = false; }
 	}
 	$acceso_leer = $r['acceso_leer'];
 	$acceso_escribir = $r['acceso_escribir'];
@@ -144,6 +144,7 @@ elnick = "'.$_SESSION['pol']['nick'].'";
 minick = elnick;
 chat_ID = "'.$chat_ID.'";
 ajax_refresh = true;
+refresh = "";
 anonimo = false;
 chat_delay = 4500;
 chat_delay1 = "";
@@ -237,7 +238,7 @@ function msgkeydown(evt, elem) {
 }
 
 function chat_query_ajax() {
-	if (acceso_leer) {
+	if (ajax_refresh) {
 		ajax_refresh = false;
 		clearTimeout(refresh);
 		$.post("/ajax2.php", { chat_ID: chat_ID, n: msg_ID },
@@ -327,10 +328,10 @@ function print_delay() {
 function enviarmsg() {
 	var elmsg = $("#vpc_msg").attr("value");
 	if ((elmsg) && (acceso_escribir)) {
+		ajax_refresh = false;
+		clearTimeout(refresh);
 		$("#botonenviar").attr("disabled","disabled");
 		$("#vpc_msg").attr("value","").css("background", "none").css("color", "black");
-		ajax_refresh = false;
-		clearTimeout(refresh);  
 		$.post("/ajax2.php", { a: "enviar", chat_ID: chat_ID, n: msg_ID, msg: elmsg, anonimo: anonimo }, 
 		function(data){ 
 			ajax_refresh = true;

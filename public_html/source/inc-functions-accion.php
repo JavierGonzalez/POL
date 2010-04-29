@@ -111,7 +111,7 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais='') {
 
 			if ($pol['nick']) { $concepto = '<b>'.$pol['nick'].'&rsaquo;</b> '.$concepto; }
 
-			mysql_query("UPDATE ".$pais."cuentas SET pols = pols - " . $pols . " WHERE ID = '" . substr($emisor_ID, 1) . "' LIMIT 1", $link);
+			mysql_query("UPDATE ".$sql."cuentas SET pols = pols - " . $pols . " WHERE ID = " . substr($emisor_ID, 1) . " LIMIT 1", $link);
 		}
 
 		//ingresar

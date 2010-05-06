@@ -148,7 +148,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 
 	<li class="current">
-		<a href="http://www.virtualpol.com/" title="VirtualPOL"><img src="/img/logo-virtualpol-40original.gif" border="0" alt="VirtualPOL" style="margin:-10px 0 -18px -14px;" /> &#9660;</a>
+		<a href="http://www.virtualpol.com/" title="VirtualPOL"><img src="/img/vp-logo.png" border="0" alt="VirtualPOL" style="margin:-10px 0 -18px -14px;" /> &#9660;</a>
 			<ul>
 				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
 				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo</a></li>
@@ -158,7 +158,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 
 	<li>
-		<a href="/"><img src="/img/banderas/<?=PAIS?>_60.gif" alt="Bandera de <?=PAIS?>, Simulador Politico en Espa&ntilde;ol juego online" border="0" style="margin:-10px 0 -18px 0;" /> <b><?=PAIS?> &#9660;</b></a> 
+		<a href="/"><img src="/img/banderas/<?=PAIS?>-logo.png" alt="<?=PAIS?>, Simulador Politico en Espa&ntilde;ol juego online" border="0" style="margin:-10px 0 -18px 0;" /> <b><?=PAIS?> &#9660;</b></a> 
 		<ul>
 <?php
 if (PAIS != 'POL') { echo '<li><a href="http://pol.virtualpol.com/">POL</a></li>'; }

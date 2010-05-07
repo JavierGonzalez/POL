@@ -138,7 +138,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 }
 ?>
-<div style="margin:10px 0 2px 0; min-width:1024px;">
+<div style="margin:10px 0 2px 0;">
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 

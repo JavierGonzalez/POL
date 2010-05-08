@@ -19,7 +19,7 @@ body.fullwidth div#container {
 
 div#header {
 	color: inherit;
-	background-color: #fff;
+	background:url(bg75.png) repeat;
 }
 
 div#header-in {
@@ -36,7 +36,7 @@ div.lcol div.content {
 
 div.content {
 	color: inherit;min-height:470px;
-	background-color: #fff;
+	background:url(bg75.png) repeat;
 }
 
 div.content-in { 
@@ -89,7 +89,7 @@ div.lcol div.column {
 div.column { 
 	width: 160px;
 	color: inherit;
-	background-color: #fff;
+	background:url(bg75.png) repeat;
 }
 
 div.column-in { 
@@ -100,7 +100,7 @@ div.column-in {
 div#footer { 
 	clear:both;
 	color: inherit;
-	background-color: #fff;
+	background:url(bg75.png) repeat;
 }
 
 div#footer-in {
@@ -335,4 +335,12 @@ h1 a {
 
 .vcnn { 
 	color:#D20000; 
+}
+#vpc_fondo {
+	background-color:#fff;
+	border: solid thin #000;
+	border-radius: 5px; 
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px;
+	padding: 5px 5px 5px 5px;
 }

@@ -1,5 +1,6 @@
 <?php 
-
+if ($_SERVER['REMOTE_ADDR'] != '82.165.128.8') { echo 'Acceso denegado.'; exit; }
+$root_dir = '/var/www/vhosts/virtualpol.com/httpdocs/real/';
 
 
 // MICROTIME ON
@@ -7,9 +8,9 @@ $mtime = explode(' ', microtime());
 $tiempoinicial = $mtime[1] + $mtime[0]; 
 
 
-include('../../config.php');
-include('../inc-functions.php');
-include('../inc-functions-accion.php');
+include($root_dir.'config.php');
+include($root_dir.'source/inc-functions.php');
+include($root_dir.'source/inc-functions-accion.php');
 $link = conectar();
 
 // INICIO PROCESO
@@ -399,7 +400,7 @@ VALUES ('" . date('Y-m-d 20:00:00') . "', '" . $st['ciudadanos'] . "', '" . $st[
 
 
 // ¿ELECCIONES?
-include('cron-elecciones.php');
+include($root_dir.'source/cron/cron-elecciones.php');
 
 
 // MICROTIME OFF

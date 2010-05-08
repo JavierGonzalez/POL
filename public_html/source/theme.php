@@ -45,8 +45,7 @@ window.google_analytics_uacct = "UA-59186-46";
 <style type="text/css">
 body { background: <?=$body_bg?>; }
 div#footer, div.column, div.content, div#header {
-border: 1px solid <?=COLOR_BG2?>;
-border-width: 0 2px 2px 0;
+border: 1px solid #000;
 }
 </style>
 

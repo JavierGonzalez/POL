@@ -385,6 +385,7 @@ m = m.replace(/(\s|^);\)/gi, " <img src=\"/img/smiley/guino.gif\" alt=\";)\" bor
 m = m.replace(/(\s|^):O/gi, " <img src=\"/img/smiley/bocaabierta.gif\" alt=\":O\" border=\"0\" title=\":O\" />");
 m = m.replace(/(\s|^):tarta:/gi, " <img src=\"/img/smiley/tarta.gif\" alt=\":tarta:\" border=\"0\" title=\":tarta:\" />");
 m = m.replace(/(\s|^):roto2:/gi, " <img src=\"/img/smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" />");
+m = m.replace(/(\s|^):facepalm:/gi, " <img src=\"/img/smiley/palm.gif\" alt=\":facepalm:\" border=\"0\" title=\":facepalm:\" />");
 m = m.replace(/(\s|^):moneda:/gi, " <img src=\"/img/m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" />");
 return m;
 }

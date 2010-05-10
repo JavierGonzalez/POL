@@ -49,7 +49,7 @@ if ((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($pol['pais'] == PAIS))
 $txt .= '
 <div id="vp_c">
 
-<h1 style="margin:10px 0 18px 0;">';
+<h1 style="margin:0 0 18px 0;">';
 
 if ($externo) {
 	if ($_SESSION['pol']['user_ID']) {
@@ -117,7 +117,7 @@ $txt_header .= '
 
 <style type="text/css">
 input, area, div.content-in select { color:green; font-size:16px; font-weight:bold; }
-#vp_c { font-family: "Arial", "Helvetica", sans-serif; font-size:17px; padding-top:10px; }
+#vp_c { font-family: "Arial", "Helvetica", sans-serif; font-size:17px; }
 #vp_c h1 { font-size:19px; color:green; margin:0; padding:0; line-height:12px; }
 #vp_c a { color:#06f;text-decoration:none; }
 #vp_c a:hover { text-decoration:underline; }

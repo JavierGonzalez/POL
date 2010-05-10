@@ -49,7 +49,7 @@ if ((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($pol['pais'] == PAIS))
 $txt .= '
 <div id="vp_c">
 
-<h1 style="margin-bottom:18px;">';
+<h1 style="margin:10px 0 18px 0;">';
 
 if ($externo) {
 	if ($_SESSION['pol']['user_ID']) {

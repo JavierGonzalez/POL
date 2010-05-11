@@ -14,7 +14,7 @@ div#container {
 
 body.fullwidth div#container { 
 	width: 100%;
-	min-width:1024px;
+	min-width:970px;
 }
 
 div#header {

@@ -196,7 +196,7 @@ VALUES ('" . $nick . "', '0', '" . $date . "', '" . $date . "', '', 'validar', '
 									$texto_email = "Hola $nick\n\n\nEste email es para crear tu usuario en VirtualPOL. Tan solo debes acceder a la siguiente direccion web, para activar tu usuario.\n\nUsuario: $nick\nContraseña: $pass1\n\n ".REGISTRAR."?a=verificar&nick=" . $nick . "&code=" . $api_pass . "\n\nEsperamos que te diviertas!\n\n\n Atentamente,\nVirtualPOL\npol@teoriza.com";
 
 
-									mail($email, "Verificacion de " . $nick, $texto_email, "FROM: VirtualPOL <pol@teoriza.com> \nReturn-Path: pol@teoriza.com \nX-Sender: pol@teoriza.com \nX-Mailer:PHP 4.4 \nMIME-Version: 1.0\n"); 
+									mail($email, "[VirtualPOL] Verifica " . $nick, $texto_email, "FROM: VirtualPOL <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
 
 									$registro_txt .= '<p><span style="color:blue;"><b>OK</b></span>. El usuario se ha creado correctamente. Su estado actual es: <em>En espera de validaci&oacute;n</em>.</p>';
 									$registro_txt .= '<p><b>Te hemos enviado un email de verificaci&oacute;n</b>, rev&iacute;salo ahora. En el email te hemos indicado una direccion web que debes visitar para as&iacute; verificar tu usuario.</p><p class="gris">(<b>Rescata el email si est&aacute; como no deseado o spam!</b>)</p>';

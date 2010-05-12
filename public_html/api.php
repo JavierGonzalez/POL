@@ -1,6 +1,4 @@
 <?php
-/* si teneis ideas/sabéis desarrollar, estoy en ello, hablad conmigo (soy fran */
-
 include('config.php');
 include('source/inc-functions.php');
 include('source/inc-functions-accion.php');
@@ -29,7 +27,6 @@ if (($_GET['a']) AND ($_GET['pass'])) {
 		//acciones
 		switch ($_GET['a']) {
 			case 'info': 
-			$txt = "debug: nick|user_ID|MONEDA\n" . $r['nick'] . "|" . $r['user_ID'] . "|" . $r['pols'] . "\n"; 
 			$txt = "<b>Información</b>
 			<br><b>Nick</b> ".$r['nick']."
 			<br><b>Pais</b> ".$r['pais']."
@@ -40,7 +37,7 @@ if (($_GET['a']) AND ($_GET['pass'])) {
 			<br><b>Nota</b> ".$r['nota']."
 			<br><b>Cargo</b> ".$r['cargo']."
 			<br><b>Confianza</b> ".$r['voto_confianza']."
-			<br><b>Nivel</b> ".$r['nivel'].;
+			<br><b>Nivel</b> ".$r['nivel'];
 			break;
 
 

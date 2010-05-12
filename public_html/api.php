@@ -19,8 +19,8 @@ if (($_GET['a']) AND ($_GET['pass'])) {
 	$txt = 'pass error';
 	//check PASS
 	$res = mysql_query("SELECT ID AS user_ID, nick, pols, nivel, pais, fecha_registro, partido_afiliado, nota, cargo, voto_confianza,
-	(SELECT nombre FROM ".SQL."estudios WHERE id = '".$r['cargo']."') AS nombre_cargo,
-	(SELECT siglas FROM ".SQL."partidos WHERE ID = '".$r['partido_afiliado']."') AS siglas
+	(SELECT nombre FROM ".SQL."estudios WHERE id = ".SQL_USERS.".cargo') AS nombre_cargo,
+	(SELECT siglas FROM ".SQL."partidos WHERE ID = '".SQL_USERS.".partido_afiliado') AS siglas
 	FROM  ".SQL_USERS." 
 	WHERE api_pass = '" . filtro_sql($_GET['pass']) . "' 
 	LIMIT 1", $link);

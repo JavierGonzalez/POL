@@ -16,14 +16,17 @@ function api_pass() { return substr(md5(mt_rand(1000000000,9999999999)), 0, 12);
 
 // COMANDO API
 if (($_GET['a']) AND ($_GET['pass'])) {
-	header('Content-Type: text/plain');
 	$txt = 'pass error';
 	//check PASS
-	$res = mysql_query("SELECT ID AS user_ID, nick, pols, nivel, pais, fecha_registro, partido_afiliado, nota, cargo, voto_confianza FROM  ".SQL_USERS." WHERE api_pass = '" . filtro_sql($_GET['pass']) . "' LIMIT 1", $link);
+	$res = mysql_query("SELECT ID AS user_ID, nick, pols, nivel, pais, fecha_registro, partido_afiliado, nota, cargo, voto_confianza,
+	(SELECT nombre FROM ".SQL."estudios WHERE id = ".$r['cargo'].") AS nombre_cargo,
+	(SELECT siglas FROM ".SQL."partidos WHERE ID = "$r['partido_afiliado']") AS siglas
+	FROM  ".SQL_USERS." 
+	WHERE api_pass = '" . filtro_sql($_GET['pass']) . "' 
+	LIMIT 1", $link);
 	while($r = mysql_fetch_array($res)){
 		mysql_query("UPDATE  ".SQL_USERS." SET api_num = api_num + 1 WHERE ID = '" . $r['user_ID'] . "' LIMIT 1", $link);
 		$txt = 'ok';
-
 		//acciones
 		switch ($_GET['a']) {
 			case 'info': 
@@ -32,10 +35,10 @@ if (($_GET['a']) AND ($_GET['pass'])) {
 			<br><b>Pais</b> ".$r['pais']."
 			<br><b>Pols (en el usuario)</b> ".$r['pols']."
 			<br><b>Fecha de registro</b> ".$r['fecha_registro']."
-			<br><b>Partido</b> ".$r['partido_afiliado']."
+			<br><b>Partido</b> ".$r['siglas']."
 			<br><b>ID del usuario</b> ".$r['user_ID']."
 			<br><b>Nota</b> ".$r['nota']."
-			<br><b>Cargo</b> ".$r['cargo']."
+			<br><b>Cargo</b> ".$r['nombre_cargo']."
 			<br><b>Confianza</b> ".$r['voto_confianza']."
 			<br><b>Nivel</b> ".$r['nivel'];
 			break;

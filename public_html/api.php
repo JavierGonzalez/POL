@@ -1,5 +1,5 @@
 <?php
-
+/* si teneis ideas/sabéis desarrollar, estoy en ello, hablad conmigo (soy fran */
 
 include('config.php');
 include('source/inc-functions.php');
@@ -21,14 +21,27 @@ if (($_GET['a']) AND ($_GET['pass'])) {
 	header('Content-Type: text/plain');
 	$txt = 'pass error';
 	//check PASS
-	$res = mysql_query("SELECT ID AS user_ID, nick, pols, nivel FROM  ".SQL_USERS." WHERE api_pass = '" . filtro_sql($_GET['pass']) . "' LIMIT 1", $link);
+	$res = mysql_query("SELECT ID AS user_ID, nick, pols, nivel, pais, fecha_registro, partido_afiliado, nota, cargo, voto_confianza FROM  ".SQL_USERS." WHERE api_pass = '" . filtro_sql($_GET['pass']) . "' LIMIT 1", $link);
 	while($r = mysql_fetch_array($res)){
 		mysql_query("UPDATE  ".SQL_USERS." SET api_num = api_num + 1 WHERE ID = '" . $r['user_ID'] . "' LIMIT 1", $link);
 		$txt = 'ok';
 
 		//acciones
 		switch ($_GET['a']) {
-			case 'debug': $txt = "debug: nick|user_ID|MONEDA\n" . $r['nick'] . "|" . $r['user_ID'] . "|" . $r['pols'] . "\n"; break;
+			case 'info': 
+			$txt = "debug: nick|user_ID|MONEDA\n" . $r['nick'] . "|" . $r['user_ID'] . "|" . $r['pols'] . "\n"; 
+			$txt = "<b>Información</b>
+			<br><b>Nick</b> ".$r['nick']."
+			<br><b>Pais</b> ".$r['pais']."
+			<br><b>Pols (en el usuario)</b> ".$r['pols']."
+			<br><b>Fecha de registro</b> ".$r['fecha_registro']."
+			<br><b>Partido</b> ".$r['partido_afiliado']."
+			<br><b>ID del usuario</b> ".$r['user_ID']."
+			<br><b>Nota</b> ".$r['nota']."
+			<br><b>Cargo</b> ".$r['cargo']."
+			<br><b>Confianza</b> ".$r['voto_confianza']."
+			<br><b>Nivel</b> ".$r['nivel'].;
+			break;
 
 
 			case 'transacciones': exit; 

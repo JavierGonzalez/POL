@@ -16,16 +16,16 @@ if (isset($_COOKIE['teorizauser'])) {
 	
 	if (!isset($_SESSION['pol'])) { //NO existe sesion
 		$result = mysql_query("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado FROM users WHERE nick = '" .mysql_real_escape_string($_COOKIE['teorizauser'])."' LIMIT 1", $link);
-		while ($row = mysql_fetch_array($result)) {
-			if (md5(CLAVE.$row['pass']) == $_COOKIE['teorizapass']) {
+		while ($r = mysql_fetch_array($result)) {
+			if (md5(CLAVE.$r['pass']) == $_COOKIE['teorizapass']) {
 				$session_new = true;
-				$_SESSION['pol']['nick'] = $row['nick'];
-				$_SESSION['pol']['user_ID'] = $row['ID'];
-				$_SESSION['pol']['cargo'] = $row['cargo'];
-				$_SESSION['pol']['nivel'] = $row['nivel'];
-				$_SESSION['pol']['fecha_registro'] = $row['fecha_registro'];
-				$_SESSION['pol']['pais'] = $row['pais'];
-				$_SESSION['pol']['estado'] = $row['estado'];
+				$_SESSION['pol']['nick'] = $r['nick'];
+				$_SESSION['pol']['user_ID'] = $r['ID'];
+				$_SESSION['pol']['cargo'] = $r['cargo'];
+				$_SESSION['pol']['nivel'] = $r['nivel'];
+				$_SESSION['pol']['fecha_registro'] = $r['fecha_registro'];
+				$_SESSION['pol']['pais'] = $r['pais'];
+				$_SESSION['pol']['estado'] = $r['estado'];
 			}
 		}  
 	}
@@ -37,7 +37,7 @@ if (isset($_COOKIE['teorizauser'])) {
 
 // LOAD CONFIG
 $result = mysql_unbuffered_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'si'", $link);
-while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
+while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 // USER OK
 if (isset($pol['user_ID'])) {
@@ -46,22 +46,25 @@ if (isset($pol['user_ID'])) {
 	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, fecha_last, fecha_registro, nivel, fecha_init, cargo,
 (SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE recibe_ID = users.ID AND leido = '0') AS msg
 FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)) {
-		$pol['pols'] = $row['pols'];
-		$pol['pais'] = $row['pais'];
-		$pol['estado'] = $row['estado'];
-		$pol['partido'] = $row['partido_afiliado'];
-		$pol['fecha_registro'] = $row['fecha_registro'];
-		$pol['nivel'] = $row['nivel'];
-		$pol['msg'] = $row['msg'];
-		$pol['online'] = $row['online'];
-		$pol['cargo'] = $row['cargo'];
-		$fecha_init = $row['fecha_init'];
-		$fecha_last = $row['fecha_last'];
+	while($r = mysql_fetch_array($result)) {
+		$pol['pols'] = $r['pols'];
+		$pol['pais'] = $r['pais'];
+		$pol['estado'] = $r['estado'];
+		$pol['partido'] = $r['partido_afiliado'];
+		$pol['fecha_registro'] = $r['fecha_registro'];
+		$pol['nivel'] = $r['nivel'];
+		$pol['msg'] = $r['msg'];
+		$pol['online'] = $r['online'];
+		$pol['cargo'] = $r['cargo'];
+		$fecha_init = $r['fecha_init'];
+		$fecha_last = $r['fecha_last'];
+
+		$_SESSION['pol']['cargo'] = $r['cargo'];
+		$_SESSION['pol']['nivel'] = $r['nivel'];
 
 		if ($pol['estado'] == 'desarrollador') { $pol['pais'] = PAIS; $pol['nivel'] = 120; }
 
-		if (($row['pais'] != PAIS) AND ($pol['estado'] == 'ciudadano')) { 
+		if (($r['pais'] != PAIS) AND ($pol['estado'] == 'ciudadano')) { 
 			// es extranjero
 			$pol['estado'] = 'extranjero';
 			if (($pol['cargo'] != 42) AND ($pol['cargo'] != 21)) { $pol['cargo'] = 99; }
@@ -86,8 +89,8 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 
 	// EXPULSADO?
 	$result = mysql_query("SELECT expire FROM ".SQL."ban WHERE estado = 'activo' AND (user_ID = '" . $pol['user_ID'] . "' OR (IP != '0' AND IP = '" . $IP . "')) LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)){ 
-		if ($row['expire'] < $date) { // DESBANEAR!
+	while($r = mysql_fetch_array($result)){ 
+		if ($r['expire'] < $date) { // DESBANEAR!
 			mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '" . $date . "'", $link); 
 		} else { // BANEADO 
 			$pol['estado'] = 'kickeado';

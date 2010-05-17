@@ -133,7 +133,7 @@ LIMIT 1", $link);
 				
 				case 'ciudadano': 
 					if ($_SESSION['pol']['user_ID']) {
-						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> te anima a unirte a la comunidad: <a href="http://'.strtolower(PAIS).'.virtualpol.com/r/'.strtolower($_SESSION['pol']['nick']).'/" target="_blank"><b>Crear Usuario</b></a>'; 
+						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> te anima a unirte a la comunidad: <a href="http://'.pais.'.virtualpol.com/r/'.strtolower($_SESSION['pol']['nick']).'/" target="_blank"><b>Crear Usuario</b></a>'; 
 					}
 					break;
 
@@ -149,7 +149,7 @@ LIMIT 1", $link);
 				case 'me': $elmsg = '<b style="margin-left:20px;">' . $_SESSION['pol']['nick'] . '</b> ' . $msg_rest; break;
 
 				case 'ayuda':
-				case 'novatos': $elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> ofrece ayuda: <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="/doc/empezar-en-'.strtolower(PAIS).'/" target="_blank">C&oacute;mo empezar, FAQ</a>.</a>'; break;
+				case 'novatos': $elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> ofrece ayuda: <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="/doc/empezar-en-'.pais.'/" target="_blank">C&oacute;mo empezar, FAQ</a>.</a>'; break;
 
 				case 'policia':
 					if (($_SESSION['pol']['cargo'] == 13) OR ($_SESSION['pol']['cargo'] == 12)) {

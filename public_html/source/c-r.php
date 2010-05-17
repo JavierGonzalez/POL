@@ -17,5 +17,5 @@ VALUES ('" . $row['ID'] . "', '" . $IP . "', '" . $date . "', '" . $_SERVER['HTT
 }
 if ($link) { mysql_close($link); }
 header('HTTP/1.1 301 Moved Permanently');
-header('Location: http://www.virtualpol.com/');
+header('Location: http://www.virtualpol.com/registrar/');
 ?>

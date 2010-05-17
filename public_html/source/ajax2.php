@@ -131,7 +131,11 @@ LIMIT 1", $link);
 
 				case 'aleatorio': $elmsg = '<b>[$] ' . $_SESSION['pol']['nick'] . '</b> aleatorio: <b>' . mt_rand(00000,99999) . '</b>'; break;
 				
-				case 'ciudadano': $elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> te anima a unirte a la comunidad: <a href="http://www.virtualpol.com/registrar/" target="_blank"><b>Crear Usuario</b></a>'; break;
+				case 'ciudadano': 
+					if ($_SESSION['pol']['user_ID']) {
+						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> te anima a unirte a la comunidad: <a href="http://'.strtolower(PAIS).'.virtualpol.com/r/'.strtolower($_SESSION['pol']['nick']).'/" target="_blank"><b>Crear Usuario</b></a>'; 
+					}
+					break;
 
 				case 'servidor':  
 					if ($msg_rest == 'cs') {

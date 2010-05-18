@@ -134,7 +134,7 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 
 <table border="0" width="100%" cellspacing="0" cellpadding="4">
 <tr>
-<th colspan="4"></th>
+<th colspan="3"></th>
 <th colspan="2" align="center">Acceso</th>
 <th colspan="4"></th>
 </tr>
@@ -143,7 +143,6 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 <th></th>
 <th align="right"><acronym title="Online en los ultimos 30 minutos.">#</acronym></th>
 <th>Chat</th>
-<th>Pais</th>
 <th style="background:#5CB3FF;">Leer</th>
 <th style="background:#F97E7B;">Escribir</th>
 <th>Stats</th>
@@ -161,8 +160,7 @@ FROM chats ORDER BY estado ASC, online DESC, fecha_creacion ASC", $link);
 		$txt .= '<tr>
 <td valign="top" align="right">'.($r['estado']=='activo'?'':'<b style="color:#888;">'.ucfirst($r['estado']).'</b>').'</td>
 <td valign="top" align="right"><b>'.$r['online'].'</b></td>
-<td valign="top" nowrap="nowrap">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/"><b>'.$r['titulo'].'</b></a>':'<b>'.$r['titulo'].'</b>').'</td>
-<td valign="top" style="background:'.$vp['bg'][$r['pais']].';" title="'.$r['pais'].'">&nbsp;</td>
+<td valign="top" nowrap="nowrap" style="background:'.$vp['bg'][$r['pais']].';" title="'.$r['pais'].'">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/"><b>'.$r['titulo'].'</b></a>':'<b>'.$r['titulo'].'</b>').'</td>
 
 <td valign="top" style="background:#5CB3FF;">'.($r['acceso_cfg_leer']?'<acronym title="['.$r['acceso_cfg_leer'].']">':'').ucfirst($r['acceso_leer']).($r['acceso_cfg_leer']?'</acronym>':'').'</td>
 

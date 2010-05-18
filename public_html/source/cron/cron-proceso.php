@@ -409,27 +409,6 @@ $tiempofinal = $mtime[1] + $mtime[0];
 $tiempototal = number_format($tiempofinal - $tiempoinicial, 3); 
 
 
-// GRAFICO AFILIADOS
-$result = mysql_query("SELECT siglas,
-(SELECT COUNT(*) FROM users WHERE partido_afiliado = ".SQL."partidos.ID) AS afiliados_num
-FROM ".SQL."partidos WHERE estado = 'ok'", $link);
-while($r = mysql_fetch_array($result)){
-	$g_afiliados[$r['siglas']] = $r['afiliados_num'];
-	$g_total += $r['afiliados_num'];
-	if ($g_max > $r['afiliados_num']) { $g_max = $r['afiliados_num']; }
-}
-foreach ($g_afiliados AS $siglas => $num) {
-	if (isset($g_datos)) { $g_datos .= ','; }
-	$g_datos .= $num;
-	if (isset($g_siglas)) { $g_siglas .= '|'; }
-	$g_siglas .= $siglas;
-}
-evento_chat('<b>[PROCESO] PARTIDOS Y AFILIADOS<br /><img src="http://chart.apis.google.com/chart?cht=p&chs=350x200
-&chd=t:'.$g_datos.'
-&chl='.$g_siglas.'
-" alt="Afiliados por partido" title="Afiliados por partido" />');
-
-
 
 evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, ' . $tiempototal . 's (<a href="/info/estadisticas/">estadisticas actualizadas</a>)');
 

@@ -9,11 +9,35 @@
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
+-- --------------------------------------------------------
+
+
 --
--- Base de datos: `teoriza_virtualpol`
+-- Estructura de tabla para la tabla `stats`
 --
 
--- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `stats` (
+  `stats_ID` smallint(5) unsigned NOT NULL auto_increment,
+  `pais` enum('POL','VULCAN','Hispania') NOT NULL,
+  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `ciudadanos` smallint(5) unsigned NOT NULL default '0',
+  `nuevos` smallint(5) unsigned NOT NULL default '0',
+  `pols` int(10) NOT NULL default '0',
+  `pols_cuentas` int(10) NOT NULL default '0',
+  `transacciones` smallint(5) unsigned NOT NULL default '0',
+  `hilos_msg` smallint(5) unsigned NOT NULL default '0',
+  `pols_gobierno` int(10) NOT NULL default '0',
+  `partidos` tinyint(3) unsigned NOT NULL default '0',
+  `frase` smallint(5) unsigned NOT NULL default '0',
+  `empresas` smallint(5) unsigned NOT NULL default '0',
+  `eliminados` smallint(5) unsigned NOT NULL default '0',
+  `mapa` tinyint(3) unsigned NOT NULL default '0',
+  `mapa_vende` tinyint(3) unsigned NOT NULL default '0',
+  `24h` smallint(5) unsigned NOT NULL default '0',
+  `confianza` smallint(5) NOT NULL,
+  PRIMARY KEY  (`stats_ID`),
+  KEY `time` (`time`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 
 --

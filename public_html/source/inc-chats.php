@@ -291,6 +291,7 @@ function print_msg(data) {
 			}
 			if (((msg_num - 1) == i) && (msg_num != "n")) { msg_ID = mli[0]; }
 			if ((mli[1] != "e") && (mli[1] != "c")) { 
+				if (mli[1] == "p") { var nick_p = mli[3].split("&rarr"); mli[3] = nick_p[0]; mli[1] = "0"; }
 				al[mli[3]] = parseInt(new Date().getTime().toString().substring(0, 10));
 				al_cargo[mli[3]] = mli[1];
 			}

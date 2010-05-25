@@ -53,11 +53,18 @@ VALUES ('".$_POST['pais']."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_
 
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {
 
+		if ($_POST['acceso_cfg_leer']) { 
+			$_POST['acceso_cfg_leer'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_leer']))); 
+		}
+		if ($_POST['acceso_cfg_escribir']) { 
+			$_POST['acceso_cfg_escribir'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir'])));
+		}
+
 		mysql_query("UPDATE chats 
 SET acceso_leer = '".$_POST['acceso_leer']."', 
 acceso_escribir = '".$_POST['acceso_escribir']."', 
-acceso_cfg_leer = '".strtolower($_POST['acceso_cfg_leer'])."', 
-acceso_cfg_escribir = '".strtolower($_POST['acceso_cfg_escribir'])."'
+acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', 
+acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."'
 WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' AND ((user_ID = '".$pol['user_ID']."') OR ((user_ID = 0) AND (".$pol['nivel']." >= 98))) 
 LIMIT 1", $link);
 

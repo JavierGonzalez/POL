@@ -22,15 +22,20 @@ global $link, $_SESSION;
 if (isset($ac)) { $check = array($ac); } else { $check = array('leer','escribir'); }
 $result = mysql_query("SELECT acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir, pais FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
 while ($r = mysql_fetch_array($result)) { 
-	// NUCLEO ACCESOS
 	foreach ($check AS $a) {
-		if (($r['acceso_'.$a] == 'privado') AND (in_array(strtolower($_SESSION['pol']['nick']), explode(" ", trim(ereg_replace( ' +', ' ', $r['acceso_cfg_'.$a])))))) { $acceso[$a] = true; } 
-		elseif (($r['acceso_'.$a] == 'nivel') AND ($_SESSION['pol']['nivel'] >= $r['acceso_cfg_'.$a]) AND ($_SESSION['pol']['pais'] == $r['pais'])) { $acceso[$a] = true; }
-		elseif (($r['acceso_'.$a] == 'antiguedad') AND (strtotime($_SESSION['pol']['fecha_registro']) >= strtotime($r['acceso_cfg_'.$a]))) { $acceso[$a] = true; }
-		elseif (($r['acceso_'.$a] == 'ciudadanos_pais') AND ($_SESSION['pol']['pais'] == $r['pais'])) { $acceso[$a] = true; }
-		elseif (($r['acceso_'.$a] == 'ciudadanos') AND (isset($_SESSION['pol']['user_ID']))) { $acceso[$a] = true; }
-		elseif (($r['acceso_'.$a] == 'anonimos') AND ($_SESSION['pol']['estado'] != 'expulsado')) { $acceso[$a] = true; }
-		else { $acceso[$a] = false; }
+
+// ### NUCLEO ACCESOS
+switch ($r['acceso_'.$a]) {
+	case 'privado': if (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $r['acceso_cfg_'.$a]))) { $acceso[$a] = true; } break;
+	case 'nivel': if (($_SESSION['pol']['nivel'] >= $r['acceso_cfg_'.$a]) AND ($_SESSION['pol']['pais'] == $r['pais'])) { $acceso[$a] = true; } break;
+	case 'antiguedad': if (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($r['acceso_cfg_'.$a]*86400))) { $acceso[$a] = true; } break;
+	case 'ciudadanos_pais': if ($_SESSION['pol']['pais'] == $r['pais']) { $acceso[$a] = true; } break;
+	case 'ciudadanos': if (isset($_SESSION['pol']['user_ID'])) { $acceso[$a] = true; } break;
+	case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $acceso[$a] = true; } break;
+	default: $acceso[$a] = false;
+}
+// ###
+
 	}
 }
 if (isset($ac)) { return $acceso[$ac]; } else { return $acceso; }

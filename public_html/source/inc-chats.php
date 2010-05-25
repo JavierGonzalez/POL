@@ -290,7 +290,7 @@ function print_msg(data) {
 				list += "<li id=\"" + mli[0] + "\" class=\"cf_m\">" + mli[2] + " <img src=\"/img/cargos/" + cargo_ID + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[cargo_ID] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
 			}
 			if (((msg_num - 1) == i) && (msg_num != "n")) { msg_ID = mli[0]; }
-			if ((mli[1] != "p") && (mli[1] != "e") && (mli[1] != "c")) { 
+			if ((mli[1] != "e") && (mli[1] != "c")) { 
 				al[mli[3]] = parseInt(new Date().getTime().toString().substring(0, 10));
 				al_cargo[mli[3]] = mli[1];
 			}

@@ -41,10 +41,10 @@ define('MONEDA', '<img src="/img/m.gif" border="0" />');
 define('MONEDA_NOMBRE', 'POLs');
 if ($dev) {
 	// Version DEV
-	define('RAIZ', '/home/teoriza/public_html/virtualpol_dev/');
+	define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/devel/');
 } else {
 	// version REAL (www.virtualpol.com)
-	define('RAIZ', '/home/teoriza/public_html/virtualpol.com/');
+	define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/real/');
 }
 
 define('HOST', $_SERVER['HTTP_HOST']);

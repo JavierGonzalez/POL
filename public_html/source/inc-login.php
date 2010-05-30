@@ -83,7 +83,7 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 				$update .= ", online = online + " . (strtotime($fecha_last) - strtotime($fecha_init)); 
 			}
 		}
-		mysql_query("UPDATE users SET paginas = paginas + 1, fecha_last = '" . $date . "'" . $update . " WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+		mysql_query("UPDATE LOW_PRIORITY users SET paginas = paginas + 1, fecha_last = '" . $date . "'" . $update . " WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	} else { $pol = null; session_unset(); session_destroy(); } // impide el acceso a expulsados
 
 
@@ -91,7 +91,7 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	$result = mysql_query("SELECT expire FROM ".SQL."ban WHERE estado = 'activo' AND (user_ID = '" . $pol['user_ID'] . "' OR (IP != '0' AND IP = '" . $IP . "')) LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){ 
 		if ($r['expire'] < $date) { // DESBANEAR!
-			mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '" . $date . "'", $link); 
+			mysql_query("UPDATE LOW_PRIORITY ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '" . $date . "'", $link); 
 		} else { // BANEADO 
 			$pol['estado'] = 'kickeado';
 		}

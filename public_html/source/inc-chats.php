@@ -248,7 +248,7 @@ function chat_query_ajax() {
 	if (ajax_refresh) {
 		ajax_refresh = false;
 		clearTimeout(refresh);
-		$.post("/ajax2.php", { chat_ID: chat_ID, n: msg_ID },
+		$.post("/ajax.php", { chat_ID: chat_ID, n: msg_ID },
 			function(data){
 				ajax_refresh = true;
 				if (data) { print_msg(data); }
@@ -340,7 +340,7 @@ function enviarmsg() {
 		clearTimeout(refresh);
 		$("#botonenviar").attr("disabled","disabled");
 		$("#vpc_msg").attr("value","").css("background", "none").css("color", "black");
-		$.post("/ajax2.php", { a: "enviar", chat_ID: chat_ID, n: msg_ID, msg: elmsg, anonimo: anonimo }, 
+		$.post("/ajax.php", { a: "enviar", chat_ID: chat_ID, n: msg_ID, msg: elmsg, anonimo: anonimo }, 
 		function(data){ 
 			ajax_refresh = true;
 			if (data) { print_msg(data); }

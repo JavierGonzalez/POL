@@ -20,7 +20,7 @@ c - print comando
 function acceso_check($chat_ID, $ac=null) {
 global $link, $_SESSION;
 if (isset($ac)) { $check = array($ac); } else { $check = array('leer','escribir'); }
-$result = mysql_query("SELECT acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir, pais FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
+$result = mysql_query("SELECT HIGH_PRIORITY acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir, pais FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
 while ($r = mysql_fetch_array($result)) { 
 	foreach ($check AS $a) {
 
@@ -47,7 +47,7 @@ function chat_refresh($chat_ID, $msg_ID=0) {
 	$t = '';
 
 	if (acceso_check($chat_ID, 'leer') === true) { // Permite leer  
-		$res = mysql_unbuffered_query("SELECT * FROM chats_msg 
+		$res = mysql_unbuffered_query("SELECT HIGH_PRIORITY * FROM chats_msg 
 WHERE chat_ID = '".$chat_ID."' AND 
 msg_ID > '".$msg_ID."' AND 
 (user_ID = '0' OR user_ID = '".$_SESSION['pol']['user_ID']."' OR (tipo = 'p' AND nick LIKE '".$_SESSION['pol']['nick']."&rarr;%')) 

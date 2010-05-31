@@ -74,12 +74,12 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 	$chat_ID = $_REQUEST['chat_ID'];
 
 	// BANEADO? EXPULSADO!
-	$result = mysql_unbuffered_query("SELECT expire FROM ".SQL."ban 
+	$result = mysql_unbuffered_query("SELECT HIGH_PRIORITY expire FROM ".SQL."ban 
 WHERE estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = inet_aton('".$_SERVER['REMOTE_ADDR']."'))) 
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){ 
 		if ($r['expire'] < $date) { // DESBANEAR
-			mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '".$date."'", $link); 
+			mysql_query("UPDATE HIGH_PRIORITY ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '".$date."'", $link); 
 		} else { $expulsado = true; }
 	}
 
@@ -165,7 +165,7 @@ LIMIT 1", $link);
 				case 'msg':
 					if ($_SESSION['pol']['user_ID']) {
 						$nick_receptor = trim($msg_array[1]);
-						$result = mysql_unbuffered_query("SELECT ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1", $link);
+						$result = mysql_unbuffered_query("SELECT HIGH_PRIORITY ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1", $link);
 						while($row = mysql_fetch_array($result)){ 
 							$elmsg = substr($msg_rest, (strlen($row['nick'])));
 							$target_ID = $row['ID'];
@@ -202,8 +202,8 @@ LIMIT 1", $link);
 			mysql_query("INSERT DELAYED INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.")", $link);
 
 			mysql_query("
-UPDATE DELAYED users SET fecha_last = '".$date."' WHERE ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1;
-UPDATE DELAYED chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMIT 1;
+UPDATE HIGH_PRIORITY users SET fecha_last = '".$date."' WHERE ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1;
+UPDATE HIGH_PRIORITY chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMIT 1;
 ", $link);
 
 		}

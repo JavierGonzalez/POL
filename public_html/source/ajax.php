@@ -73,12 +73,19 @@ if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
 	$date = date('Y-m-d H:i:s');
 	$chat_ID = $_REQUEST['chat_ID'];
 
-	// BANEADO? EXPULSADO!
+	// EXPULSADO?
+	$result = mysql_unbuffered_query("SELECT HIGH_PRIORITY ID FROM expulsiones WHERE estado = 'expulsado' AND user_ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1", $link);
+	while($r = mysql_fetch_array($result)){ 
+		$expulsado = true;
+		session_destroy();
+	}
+
+	// KICKEADO?
 	$result = mysql_unbuffered_query("SELECT HIGH_PRIORITY expire FROM ".SQL."ban 
 WHERE estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = inet_aton('".$_SERVER['REMOTE_ADDR']."'))) 
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){ 
-		if ($r['expire'] < $date) { // DESBANEAR
+		if ($r['expire'] < $date) { // QUITAR KICK
 			mysql_query("UPDATE HIGH_PRIORITY ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '".$date."'", $link); 
 		} else { $expulsado = true; }
 	}

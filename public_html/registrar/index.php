@@ -5,6 +5,7 @@ $adsense_exclude = true;
 function comprobar_email($email){
     $mail_correcto = false;
 	$emails_falsos = '
+yopmail.com
 binkmail.com
 chogmail.com
 devnullmail.com

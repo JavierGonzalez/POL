@@ -227,6 +227,10 @@ while($row = mysql_fetch_array($result)){
 evento_chat('<b>[PROCESO] Calculadas las notas media.</b>');
 
 
+// ELIMINAR CHAT INACTIVOS TRAS N DIAS
+$margen_chatexpira = date('Y-m-d 20:00:00', time() - (86400 * $pol['config']['chat_diasexpira']));
+mysql_query("DELETE FROM chats WHERE pais = '".PAIS."' AND fecha_last < '".$margen_chatexpira."'", $link);
+
 // ELIMINAR MENSAJES PRIVADOS
 mysql_query("DELETE FROM ".SQL_MENSAJES." WHERE time < '".$margen_15dias."'", $link);
 

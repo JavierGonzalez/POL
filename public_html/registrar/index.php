@@ -5,7 +5,6 @@ $adsense_exclude = true;
 function comprobar_email($email){
     $mail_correcto = false;
 	$emails_falsos = '
-yopmail.com
 binkmail.com
 chogmail.com
 devnullmail.com
@@ -83,10 +82,10 @@ uggsrock.com
 yopmail.com
 owlpic.com
 666.joliekemulder.nl
+yopmail.com
 ';
 
-$emails_falsos = explode("\n", $emails_falsos);
-
+	$emails_falsos = explode("\n", $emails_falsos);
 
 	$domain = explode("@", $email); $domain = strtolower($domain[1]);	
 

@@ -363,13 +363,6 @@ pageTracker._setDomainName("virtualpol.com");
 pageTracker._trackPageview();
 } catch(err) {}</script>
 
-<script type="text/javascript" src="http://include.reinvigorate.net/re_.js"></script>
-<script type="text/javascript">
-try {
-var re_name_tag = "<?=($pol['nick']?$pol['nick']:'')?>";
-reinvigorate.track("gkvr6-bf000m1i91");
-} catch(err) {}
-</script>
 
 </body>
 </html>

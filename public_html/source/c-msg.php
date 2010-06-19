@@ -74,7 +74,7 @@ ORDER BY nombre ASC", $link);
 <script type="text/javascript">
 
 window.onload = function(){
-	$("#ciudadano").focus();
+	$("'.($_GET['a'] != 'enviar'?'#text':'#ciudadano').'").focus();
 }
 
 function click_form(tipo) {

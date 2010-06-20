@@ -7,8 +7,6 @@ if ($_GET['pass']) {
 	$link = conectar();
 }
 
-ob_start('ob_gzhandler');
-
 
 //Funciones
 function api_pass() { return substr(md5(mt_rand(1000000000,9999999999)), 0, 12); }
@@ -16,55 +14,56 @@ function api_pass() { return substr(md5(mt_rand(1000000000,9999999999)), 0, 12);
 
 // COMANDO API
 if (($_GET['a']) AND ($_GET['pass'])) {
-	$txt = 'pass error';
+	header('connection: close');
+	header('Content-Type: text/plain');
+
+	$txt = 'error: pass';
 	//check PASS
-	$res = mysql_query("SELECT ID AS user_ID, nick, pols, nivel, pais, fecha_registro, partido_afiliado, nota, cargo, voto_confianza,
-	(SELECT nombre FROM ".SQL."estudios WHERE id = '".SQL_USERS.".cargo') AS nombre_cargo,
-	(SELECT siglas FROM ".SQL."partidos WHERE id = '".SQL_USERS.".partido_afiliado') AS siglas
-	FROM  ".SQL_USERS." 
-	WHERE api_pass = '" . filtro_sql($_GET['pass']) . "' 
-	LIMIT 1", $link);
+	$res = mysql_query("SELECT * FROM  ".SQL_USERS." WHERE api_pass = '".filtro_sql($_GET['pass'])."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($res)){
-		mysql_query("UPDATE  ".SQL_USERS." SET api_num = api_num + 1 WHERE ID = '" . $r['user_ID'] . "' LIMIT 1", $link);
+		mysql_query("UPDATE ".SQL_USERS." SET api_num = api_num + 1 WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+		
 		$txt = 'ok';
-		//acciones
-		switch ($_GET['a']) {
+		
+		switch ($_GET['a']) { //acciones
+
+
 			case 'info': 
-			$txt = "<b>Información</b>
-			<br><b>Nick</b> ".$r['nick']."
-			<br><b>Pais</b> ".$r['pais']."
-			<br><b>Pols (en el usuario)</b> ".$r['pols']."
-			<br><b>Fecha de registro</b> ".$r['fecha_registro']."
-			<br><b>Partido</b> ".$r['siglas']."
-			<br><b>ID del usuario</b> ".$r['user_ID']."
-			<br><b>Nota</b> ".$r['nota']."
-			<br><b>Cargo</b> ".$r['nombre_cargo']."
-			<br><b>Confianza</b> ".$r['voto_confianza']."
-			<br><b>Nivel</b> ".$r['nivel'];
-			break;
+				$txt = "#Info
+nick: ".$r['nick']."
+user_ID: ".$r['ID']."
+estado: ".$r['estado']."
+pais: ".$r['pais']."
+pols: ".$r['pols']."
+fecha_registro: ".$r['fecha_registro']."
+partido_afiliado: ".$r['partido_afiliado']."
+nota_media: ".$r['nota']."
+cargo: ".$r['cargo']."
+confianza: ".$r['voto_confianza']."
+nivel: ".$r['nivel'];
+				break;
 
 
-			case 'transacciones': exit; 
+			case 'transacciones':
 				$txt = '';
 				if (substr($_GET['cuenta'], 0, 1) == '-') {
-					$result = mysql_query("SELECT *,
-(SELECT nick FROM  ".SQL_USERS." WHERE ".SQL."transacciones.emisor_ID != '" . filtro_sql($_GET['cuenta']) . "' AND ID = ".SQL."transacciones.emisor_ID LIMIT 1) AS emisor_nick,
-(SELECT nick FROM  ".SQL_USERS." WHERE ".SQL."transacciones.receptor_ID != '" . filtro_sql($_GET['cuenta']) . "' AND ID = ".SQL."transacciones.receptor_ID LIMIT 1) AS receptor_nick
+					$result2 = mysql_query("SELECT *,
+(SELECT nick FROM  ".SQL_USERS." WHERE ".SQL."transacciones.emisor_ID != '".filtro_sql($_GET['cuenta'])."' AND ID = ".SQL."transacciones.emisor_ID LIMIT 1) AS emisor_nick,
+(SELECT nick FROM  ".SQL_USERS." WHERE ".SQL."transacciones.receptor_ID != '".filtro_sql($_GET['cuenta'])."' AND ID = ".SQL."transacciones.receptor_ID LIMIT 1) AS receptor_nick
 FROM ".SQL."transacciones 
-WHERE emisor_ID = '" . filtro_sql($_GET['cuenta']) . "' OR receptor_ID = '" . filtro_sql($_GET['cuenta']) . "' 
+WHERE emisor_ID = '".filtro_sql($_GET['cuenta'])."' OR receptor_ID = '".filtro_sql($_GET['cuenta'])."' 
 ORDER BY time DESC
 LIMIT 500", $link);
-					while($row = mysql_fetch_array($result)){ 
-						if ($row['emisor_ID'] == $_GET['cuenta']) { 
-							$row['pols'] = '-' . $row['pols']; 
+					while($r2 = mysql_fetch_array($result2)){ 
+						if ($r2['emisor_ID'] == $_GET['cuenta']) { 
+							$r2['pols'] = '-'.$r2['pols']; 
 						}
-						if (substr($row['emisor_ID'], 0, 1) != '-') { $row['emisor_ID'] = $row['emisor_nick']; }
-						if (substr($row['receptor_ID'], 0, 1) != '-') { $row['receptor_ID'] = $row['receptor_nick']; }
+						if (substr($r2['emisor_ID'], 0, 1) != '-') { $r2['emisor_ID'] = $r2['emisor_nick']; }
+						if (substr($r2['receptor_ID'], 0, 1) != '-') { $r2['receptor_ID'] = $r2['receptor_nick']; }
 
-						$txt .= $row['ID'] . '|' . $row['pols'] . '|' . $row['emisor_ID'] . '|' . $row['receptor_ID'] . '|' . strtotime($row['time']) . '|' . $row['concepto'] . "|\n";
+						$txt .= $r2['ID'].'|'.$r2['pols'].'|'.$r2['emisor_ID'].'|'.$r2['receptor_ID'].'|'.strtotime($r2['time']).'|'.$r2['concepto']."|\n";
 					}
 				}
-
 				if (!$txt) { $txt = 'error'; }
 				break;
 
@@ -81,11 +80,11 @@ LIMIT 500", $link);
 					if ($_GET['origen']) {
 						// cuenta
 						$_GET['origen'] = str_replace('-', '', $_GET['origen']);
-						$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '" . filtro_sql($_GET['origen']) . "' AND pols >= '" . filtro_sql($_GET['pols']) . "' AND (user_ID = '" . $r['user_ID'] . "' OR '" . $r['nivel'] . "' >= nivel) LIMIT 1", $link);
-						while($row = mysql_fetch_array($result)){ $origen = '-' . $_GET['origen']; }
+						$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '".filtro_sql($_GET['origen'])."' AND pols >= '".filtro_sql($_GET['pols'])."' AND (user_ID = '".$r['ID']."' OR '".$r['nivel']."' >= nivel) LIMIT 1", $link);
+						while($row = mysql_fetch_array($result)){ $origen = '-'.$_GET['origen']; }
 					} else {
 						// personal
-						if ($r['pols'] >= $_GET['pols']) { $origen = $r['user_ID']; }
+						if ($r['pols'] >= $_GET['pols']) { $origen = $r['ID']; }
 					}
 
 					
@@ -93,17 +92,17 @@ LIMIT 500", $link);
 					if (substr($_GET['destino'], 0, 1) == '-') {
 						// Cuenta
 						$_GET['destino'] = str_replace('-', '', $_GET['destino']);
-						$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '" . filtro_sql($_GET['destino']) . "' LIMIT 1", $link);
-						while($row = mysql_fetch_array($result)){ $destino = '-' . $row['ID']; }
+						$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '".filtro_sql($_GET['destino'])."' LIMIT 1", $link);
+						while($row = mysql_fetch_array($result)){ $destino = '-'.$row['ID']; }
 					} else {
 						// NICK
-						$result = mysql_query("SELECT ID FROM  ".SQL_USERS." WHERE nick = '" . filtro_sql($_GET['destino']) . "' LIMIT 1", $link);
+						$result = mysql_query("SELECT ID FROM  ".SQL_USERS." WHERE nick = '".filtro_sql($_GET['destino'])."' LIMIT 1", $link);
 						while($row = mysql_fetch_array($result)){ $destino = $row['ID']; }
 					}
 
 					// ejecuta transferencia
 					if (($origen) AND ($destino)) { 
-						pols_transferir($_GET['pols'], $origen, $destino, 'API: ' . $concepto); 
+						pols_transferir($_GET['pols'], $origen, $destino, 'API: '.$concepto); 
 						$txt = 'ok'; 
 					}
 				}
@@ -197,8 +196,5 @@ Devuelve la lista de las ultimas 500 transferencias de MONEDA de una cuenta banc
 <?php
 }
 
-
-
-ob_end_flush();
 if ($link) { mysql_close($link); }
 ?>

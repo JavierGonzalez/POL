@@ -29,18 +29,7 @@ if (($_GET['a']) AND ($_GET['pass'])) {
 
 
 			case 'info': 
-				$txt = "#Info
-nick: ".$r['nick']."
-user_ID: ".$r['ID']."
-estado: ".$r['estado']."
-pais: ".$r['pais']."
-pols: ".$r['pols']."
-fecha_registro: ".$r['fecha_registro']."
-partido_afiliado: ".$r['partido_afiliado']."
-nota_media: ".$r['nota']."
-cargo: ".$r['cargo']."
-confianza: ".$r['voto_confianza']."
-nivel: ".$r['nivel'];
+				$txt = "nick=".$r['nick']."&user_ID=".$r['ID']."&estado=".$r['estado']."&pais=".$r['pais']."&pols=".$r['pols']."&fecha_registro=".$r['fecha_registro']."&partido_afiliado=".$r['partido_afiliado']."&nota_media=".$r['nota']."&cargo=".$r['cargo']."&confianza=".$r['voto_confianza']."&nivel=".$r['nivel'];
 				break;
 
 
@@ -161,21 +150,24 @@ li em { color:green; font-size:18px; }
 
 <h3>3.1. Acciones:</h3>
 <ul>
-<!--<li><em>&a=<b>transferencia</b></em><br />
+<li><s><em>&a=<b>transferencia</b></em></s> [EN DESARROLLO]<br />
 <em>&pols=POLS</em> &nbsp; (n&uacute;mero)<br />
 <em>&origen=cuenta_ID</em> &nbsp; (opcional, solo necesario en caso de que el origen sea una cuenta bancaria)<br />
 <em>&destino=NICK|cuenta_ID</em> &nbsp; (nick o ID en negativo de una cuenta en concreto, ejemplo: -1)<br />
 <em>&concepto=TEXTO</em><br />
 Devuelve: ok|error<br />
 Transfiere una cantidad de POLs desde tu Ciudadano o una cuenta de tu propiedad, a otro Ciudadano o cuenta cual quiera. Verifica si los datos son correctos y si hay fondos suficientes. En caso de petici&oacute;n erronea no efectua ninguna acci&oacute;n.<br />
-</li>-->
+</li>
 </ul>
 
 <h3>3.2. Obtener informaci&oacute;n:</h3>
 <ul>
 
 <li><em>&a=<b>debug</b></em><br />
-Permite hacer un test. Devuelve informaci&oacute;n sobre tu propio usuario.<br /><br /></li>
+Permite hacer un test.<br /><br /></li>
+
+<li><em>&a=<b>info</b></em><br />
+Devuelve informacion completa del usuario.<br /><br /></li>
 
 <li><em>&a=<b>transacciones</b></em><br />
 <em>&cuenta=cuenta_ID</em> (ID de cuenta bancaria, con signo negativo. Ejemplo: -1)<br />

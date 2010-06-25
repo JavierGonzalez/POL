@@ -106,7 +106,7 @@ case 'historia':
 	if (($_GET['b'] == 'add') AND ($_POST['hecho'] != '')) {
 		mysql_query("INSERT INTO hechos (time, nick, texto, estado, time2, pais) VALUES ('".$_POST['year']."-".$_POST['mes']."-".$_POST['dia']."', '".$pol['nick']."', '".strip_tags($_POST['hecho'],'<b>,<a>')."', 'ok', '".$date."', '".$_POST['pais']."')", $link);
 	} elseif ($_GET['b'] == 'del') {
-		mysql_query("UPDATE hechos SET estado = 'del' WHERE ID = '".$_GET['ID']."' AND (nick = '".$pol['nick']."' OR '".$pol['nivel']."' = '100') LIMIT 1", $link);
+		mysql_query("UPDATE hechos SET estado = 'del' WHERE ID = '".$_GET['ID']."' AND (nick = '".$pol['nick']."' OR '".$pol['nivel']."' = '100' OR '".$pol['estado']."' = 'desarrollador') LIMIT 1", $link);
 	}
 
 

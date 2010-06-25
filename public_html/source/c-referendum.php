@@ -137,7 +137,7 @@ LIMIT 1", $link);
 
 <p style="text-align:right;">Creado por <b>' . $row['nick'] . '</b> a fecha de <em>' . $row['time'] . '</em>, con una duraci&oacute;n de ' . $duracion . '.</p>';
 
-		if ($time_expire < time()) { //ha terminado 
+		if (($time_expire < time()) OR ($pol['estado'] == 'desarrollador')) { //ha terminado 
 			if (($row['estado'] == 'ok') AND ($time_expire < time())) { 
 				include_once('inc-functions-accion.php');
 				evento_chat('<b>[' . strtoupper($row['tipo']) . ']</b> Finalizado, resultados: <a href="/referendum/' . $row['ID'] . '/"><b>' . $row['pregunta'] . '</b></a> <span style="color:grey;">(votos: ' . $row['num'] . ')</span>');

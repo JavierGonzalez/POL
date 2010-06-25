@@ -3,12 +3,16 @@ include('inc-login.php');
 
 function gen_grafico($datos, $fecha='', $cero=false) {
 	$maxValue = max($datos);
+	$dato_last = $datos[count($datos)-1];
+	 
+
 	if ($cero) { $datos = strtr(chart_data($datos), 'A', '_'); } else { $datos = chart_data($datos); }
-	return 'http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y&chxl=0:|_____|'.$maxValue.'&chd=s:'.$datos.'&chf=bg,s,FFFFDD,0&chco=0066FF&chm=B,FFFFFF,0,0,0';
+	return 'http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|___|'.$dato_last.'&chd=s:'.$datos.'&chf=bg,s,FFFFDD,0&chco=0066FF&chm=B,FFFFFF,0,0,0';
 }
 
 function gen_datos($datos, $cero=false, $datos2) {
 	$maxValue = max($datos);
+	$dato_last = $datos[count($datos)-1];
 	if ($cero) { $datos = strtr(chart_data($datos), 'A', '_'); } else { $datos = chart_data($datos); }
 
 	if ($datos2) {
@@ -17,7 +21,7 @@ function gen_datos($datos, $cero=false, $datos2) {
 		if ($cero) { $datos = $datos.','.strtr(chart_data($datos2), 'A', '_'); } else { $datos = $datos.','.chart_data($datos2); }
 	}
 
-	return '&chxl=0:|_____|'.$maxValue.'&chd=s:'.$datos;
+	return '&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|__|'.$dato_last.'&chd=s:'.$datos;
 }
 
 $txt_title = 'Estad&iacute;sticas';
@@ -55,8 +59,9 @@ while($r = mysql_fetch_array($result)) {
 	$d['partidos'][$i] = $r['partidos'];
 	$d['empresas'][$i] = $r['empresas'];
 
-	$d['pols'][$i] = $r['pols'];
-	$d['pols_cuentas'][$i] = $r['pols_cuentas'];
+	$pols_cuentas = $r['pols_cuentas']-$r['pols_gobierno'];
+	$d['pols'][$i] = $r['pols']+$pols_cuentas;
+	$d['pols_cuentas'][$i] = $pols_cuentas;
 
 	
 	if (substr($r['pols_gobierno'], 0, 1) == '-') { 
@@ -76,6 +81,7 @@ while($r = mysql_fetch_array($result)) {
 	
 	++$i;
 }
+$d['paises'][0] = 0;
 
 
 
@@ -93,17 +99,17 @@ if ($_GET['a'] == 'POL') {
 
 $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as)</span></h1>
 
-<div id="stats">
+<div id="stats" style="margin-left:-10px;">
 
 <h2 style="margin-top:35px;">1. DEMOGRAF&Iacute;A</h2>
 <p class="amarillo">
 
 <b>1.1 <span style="color:#0000FF;">Ciudadanos</span>/<span style="color:#FF0000;">paises</span></b> (<a href="/info/censo/">Ver censo</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.gen_datos($d['ciudadanos'], false, $d['paises']).'" alt="Ciudadanos/paises" border="0" />
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.gen_datos($d['ciudadanos'], false, $d['paises']).'" alt="Ciudadanos/paises" border="0" />
 
 
 <br /><b>1.2 Ciudadanos <span style="color:#0000FF;">nuevos</span>/<span style="color:#FF0000;">expirados</span></b>  (<a href="/info/censo/nuevos/">Ver nuevos</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.gen_datos($d['nuevos'], false, $d['eliminados']).'" alt="Ciudadanos nuevos/expirados" border="0" />
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.gen_datos($d['nuevos'], false, $d['eliminados']).'" alt="Ciudadanos nuevos/expirados" border="0" />
 
 </p>
 
@@ -120,7 +126,7 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as)</span></h1>
 <img src="'.gen_grafico($d['partidos']).'" alt="Partidos" border="0" />
 
 <br /><b>2.4 <span style="color:#0000FF;">Empresas</span>/<span style="color:#FF0000;">transacciones</span></b> (<a href="/empresas/">Ver empresas</a> , <a href="/pols/">Ver transferencias</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.gen_datos($d['empresas'], true, $d['transacciones']).'" alt="Empresas" border="0" />
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.gen_datos($d['empresas'], true, $d['transacciones']).'" alt="Empresas" border="0" />
 
 
 <br /><b>2.5 Confianza general</b> (<a href="/info/confianza/">Ver confianza</a>)<br />
@@ -134,7 +140,7 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as)</span></h1>
 <br /><b>3.2 '.MONEDA.' de Ciudadanos</b> (<a href="/info/censo/riqueza/">Ver los m&aacute;s ricos</a>)<br />
 <img src="'.gen_grafico($d['pols'], '', true).'" alt="'.MONEDA_NOMBRE.' de ciudadanos" border="0" />
 
-<br /><b>3.3 '.MONEDA.' en Cuentas</b> (<a href="/pols/cuentas/">Ver cuentas</a>)<br />
+<br /><b>3.3 '.MONEDA.' en Cuentas personales</b> (<a href="/pols/cuentas/">Ver cuentas</a>)<br />
 <img src="'.gen_grafico($d['pols_cuentas'], '', true).'" alt="'.MONEDA_NOMBRE.' en cuentas" border="0" />
 
 <br /><b>3.4 '.MONEDA.' del Gobierno</b> (Ver cuentas: <a href="/pols/cuentas/1/">Gobierno</a> y <a href="/pols/cuentas/2/">Tesoro Publico</a>)<br />
@@ -145,11 +151,13 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as)</span></h1>
 
 <br /><b>3.6 Mapa: porcentaje de ocupaci&oacute;n</b> (<a href="/">Ver Mapa</a>)<br />
 <img src="'.gen_grafico($d['mapa']).'" alt="Porcentaje de ocupacion" border="0" />
+
 </p>
 
 
 <h2 style="margin-top:35px;">4. POL&Iacute;TICA</h2>
-<p class="amarillo"><b>4.1 Afiliados</b><br />';
+<div class="amarillo">
+<p><b>4.1 Afiliados</b></p><div style="background:FFFFDD;"><table border="0"><tr>';
 
 foreach ($vp['paises'] AS $PAIS) {
 	// GRAFICO AFILIADOS
@@ -174,18 +182,20 @@ ORDER BY num DESC", $link);
 	}
 
 	$txt .= '
-<b>'.$PAIS.'</b><br />
-<img src="http://chart.apis.google.com/chart?cht=p&chs=350x200
+<td><b>'.$PAIS.'</b><br />
+<img src="http://chart.apis.google.com/chart?cht=p&chs=350x220
 &chd=t:'.$g_datos.'
 &chl='.$g_siglas.'
-" alt="Afiliados por partido" title="Afiliados por partido" /><br />
-';
+&chf=bg,s,FFFFDD,0" alt="Afiliados por partido" title="Afiliados por partido" />
+</td>';
 	unset($g_siglas, $g_datos);
 }
 
 $txt .= '
 
-</p>
+</tr></table>
+</div>
+</div>
 
 
 </div>

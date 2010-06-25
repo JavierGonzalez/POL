@@ -397,13 +397,7 @@ $result = mysql_query("SELECT SUM(voto) AS num FROM ".SQL_VOTOS." WHERE estado =
 while($row = mysql_fetch_array($result)) { $st['confianza'] = $row['num']; }
 
 
-// STATS ANTIGUO - QUITAR CUANDO ESTE TERMINADO EL SISTEMA NUEVO (CENTRALIZADO EN UNA UNICA TABLA)
-mysql_query("INSERT INTO ".SQL."stats 
-(time, ciudadanos, nuevos, pols, pols_cuentas, transacciones, hilos_msg, pols_gobierno, partidos, frase, empresas, eliminados, mapa, mapa_vende, 24h, confianza) 
-VALUES ('".date('Y-m-d 20:00:00')."', '".$st['ciudadanos']."', '".$st['nuevos']."', '".$st['pols']."', '".$st['pols_cuentas']."', '".$st['transacciones']."', '".$st['hilos_msg']."', '".$st['pols_gobierno']."', '".$st['partidos']."', '".$pujas_total."', '".$st['empresas']."', '".$st['eliminados']."', '".$st['mapa']."', '".$st['mapa_vende']."', '".$st['24h']."', '".$st['confianza']."')", $link);
-
-
-// STATS NUEVO (SIN TERMINAR)
+// STATS NUEVO
 mysql_query("INSERT INTO stats 
 (pais, time, ciudadanos, nuevos, pols, pols_cuentas, transacciones, hilos_msg, pols_gobierno, partidos, frase, empresas, eliminados, mapa, mapa_vende, 24h, confianza) 
 VALUES ('".PAIS."', '".date('Y-m-d 20:00:00')."', '".$st['ciudadanos']."', '".$st['nuevos']."', '".$st['pols']."', '".$st['pols_cuentas']."', '".$st['transacciones']."', '".$st['hilos_msg']."', '".$st['pols_gobierno']."', '".$st['partidos']."', '".$pujas_total."', '".$st['empresas']."', '".$st['eliminados']."', '".$st['mapa']."', '".$st['mapa_vende']."', '".$st['24h']."', '".$st['confianza']."')", $link);

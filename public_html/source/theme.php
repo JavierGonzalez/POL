@@ -212,12 +212,12 @@ if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hi
 						<li><a href="#"><span style="float:right;">&#9658;</span>M&aacute;s</a>
 							<ul>
 								<li><a href="/log-eventos/">Log de eventos</a></li>
-								<li><a href="/info/estadisticas/">Estad&iacute;sticas</a></li>
 								<li><a href="/mapa/">Mapa</a></li>
 								<li><a href="http://pol.virtualpol.com/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>
-								<li><a href="/historia/">Historia</a></li>
 							</ul>
 						</li>
+						<li><a href="/historia/">Historia</a></li>
+						<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
 					</ul>
 			</li>
 			<li>

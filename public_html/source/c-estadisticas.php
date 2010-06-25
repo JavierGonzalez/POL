@@ -2,12 +2,23 @@
 include('inc-login.php');
 
 function gen_grafico($datos, $fecha='', $cero=false) {
-	if ($datos) { $maxValue = max($datos); }
-	if ($minValue >= 0) { $minValue = 0;  }
+	$maxValue = max($datos);
 	if ($cero) { $datos = strtr(chart_data($datos), 'A', '_'); } else { $datos = chart_data($datos); }
 	return 'http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y&chxl=0:|_____|'.$maxValue.'&chd=s:'.$datos.'&chf=bg,s,FFFFDD,0&chco=0066FF&chm=B,FFFFFF,0,0,0';
 }
 
+function gen_datos($datos, $cero=false, $datos2) {
+	$maxValue = max($datos);
+	if ($cero) { $datos = strtr(chart_data($datos), 'A', '_'); } else { $datos = chart_data($datos); }
+
+	if ($datos2) {
+		$maxValue2 = max($datos2);
+		if ($maxValue2 > $maxValue) { $maxValue = $maxValue2; }
+		if ($cero) { $datos = $datos.','.strtr(chart_data($datos2), 'A', '_'); } else { $datos = $datos.','.chart_data($datos2); }
+	}
+
+	return '&chxl=0:|_____|'.$maxValue.'&chd=s:'.$datos;
+}
 
 $txt_title = 'Estad&iacute;sticas';
 
@@ -69,25 +80,31 @@ while($r = mysql_fetch_array($result)) {
 
 
 
-$txt .= '<div style="float:right;"><a href="/estadisticas/POL/">POL</a> | <a href="/estadisticas/Hispania/">Hispania</a></div>
+$txt .= '<h1>';
 
-<h1>'.$p_paginas.' Estad&iacute;sticas: <span style="font-size:12px;">(&Uacute;ltimos '.$i.' d&iacute;as)</span> <span style="color:red;">ALPHA</span></h1>
+if ($_GET['a'] == 'POL') {
+	$txt .= '<a href="/estadisticas/">Estad&iacute;sticas</a>:  <b>POL</b> | <a href="/estadisticas/Hispania/">Hispania</a>';
+} elseif ($_GET['a'] == 'Hispania') {
+	$txt .= '<a href="/estadisticas/">Estad&iacute;sticas</a>:  <a href="/estadisticas/POL/">POL</a> | <b>Hispania</b>';
+} else {
+	$txt .= '<b>Estad&iacute;sticas</b>:  <a href="/estadisticas/POL/">POL</a> | <a href="/estadisticas/Hispania/">Hispania</a>';
+}
+
+
+$txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as)</span></h1>
 
 <div id="stats">
 
 <h2 style="margin-top:35px;">1. DEMOGRAF&Iacute;A</h2>
-<p class="amarillo"><b>0.1 Paises</b><br />
-<img src="'.gen_grafico($d['paises']).'" alt="Paises" border="0" /><br />
+<p class="amarillo">
+
+<b>1.1 <span style="color:#0000FF;">Ciudadanos</span>/<span style="color:#FF0000;">paises</span></b> (<a href="/info/censo/">Ver censo</a>)<br />
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.gen_datos($d['ciudadanos'], false, $d['paises']).'" alt="Ciudadanos/paises" border="0" />
 
 
-<b>1.1 Ciudadanos</b> (<a href="/info/censo/">Ver censo</a>)<br />
-<img src="'.gen_grafico($d['ciudadanos']).'" alt="Ciudadanos censo" border="0" />
+<br /><b>1.2 Ciudadanos <span style="color:#0000FF;">nuevos</span>/<span style="color:#FF0000;">expirados</span></b>  (<a href="/info/censo/nuevos/">Ver nuevos</a>)<br />
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.gen_datos($d['nuevos'], false, $d['eliminados']).'" alt="Ciudadanos nuevos/expirados" border="0" />
 
-<br /><b>1.2 Ciudadanos nuevos</b>  (<a href="/info/censo/nuevos/">Ver nuevos</a>)<br />
-<img src="'.gen_grafico($d['nuevos']).'" alt="Ciudadanos nuevos" border="0" />
-
-<br /><b>1.3 Ciudadanos expirados</b><br />
-<img src="'.gen_grafico($d['eliminados']).'" alt="Ciudadanos expirados" border="0" />
 </p>
 
 
@@ -102,13 +119,11 @@ $txt .= '<div style="float:right;"><a href="/estadisticas/POL/">POL</a> | <a hre
 <br /><b>2.3 Partidos pol&iacute;ticos</b> (<a href="/partidos/">Ver partidos</a>)<br />
 <img src="'.gen_grafico($d['partidos']).'" alt="Partidos" border="0" />
 
-<br /><b>2.4 Empresas</b> (<a href="/empresas/">Ver empresas</a>)<br />
-<img src="'.gen_grafico($d['empresas'], '', true).'" alt="Empresas" border="0" />
+<br /><b>2.4 <span style="color:#0000FF;">Empresas</span>/<span style="color:#FF0000;">transacciones</span></b> (<a href="/empresas/">Ver empresas</a> , <a href="/pols/">Ver transferencias</a>)<br />
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.gen_datos($d['empresas'], true, $d['transacciones']).'" alt="Empresas" border="0" />
 
-<br /><b>2.5 Transacciones</b> (<a href="/pols/">Ver transferencias</a>)<br />
-<img src="'.gen_grafico($d['transacciones'], '', true).'" alt="Transacciones" border="0" />
 
-<br /><b>2.6 Confianza general</b> (<a href="/info/confianza/">Ver confianza</a>)<br />
+<br /><b>2.5 Confianza general</b> (<a href="/info/confianza/">Ver confianza</a>)<br />
 <img src="'.gen_grafico($d['confianza'], '', true).'" alt="Confianza" border="0" />
 </p>
 

@@ -785,33 +785,6 @@ CREATE TABLE IF NOT EXISTS `hispania_ref_votos` (
   KEY `ref_ID` (`ref_ID`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `hispania_stats`
---
-
-CREATE TABLE IF NOT EXISTS `hispania_stats` (
-  `ID` smallint(5) unsigned NOT NULL auto_increment,
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `ciudadanos` smallint(5) unsigned NOT NULL default '0',
-  `nuevos` smallint(5) unsigned NOT NULL default '0',
-  `pols` int(10) NOT NULL default '0',
-  `pols_cuentas` int(10) NOT NULL default '0',
-  `transacciones` smallint(5) unsigned NOT NULL default '0',
-  `hilos_msg` smallint(5) unsigned NOT NULL default '0',
-  `pols_gobierno` int(10) NOT NULL default '0',
-  `partidos` tinyint(3) unsigned NOT NULL default '0',
-  `frase` smallint(5) unsigned NOT NULL default '0',
-  `empresas` smallint(5) unsigned NOT NULL default '0',
-  `eliminados` smallint(5) unsigned NOT NULL default '0',
-  `mapa` tinyint(3) unsigned NOT NULL default '0',
-  `mapa_vende` tinyint(3) unsigned NOT NULL default '0',
-  `24h` smallint(5) unsigned NOT NULL default '0',
-  `confianza` smallint(5) NOT NULL,
-  PRIMARY KEY  (`ID`),
-  UNIQUE KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1523,33 +1496,6 @@ CREATE TABLE IF NOT EXISTS `pol_ref_votos` (
 
 -- --------------------------------------------------------
 
---
--- Estructura de tabla para la tabla `pol_stats`
---
-
-CREATE TABLE IF NOT EXISTS `pol_stats` (
-  `ID` smallint(5) unsigned NOT NULL auto_increment,
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `ciudadanos` smallint(5) unsigned NOT NULL default '0',
-  `nuevos` smallint(5) unsigned NOT NULL default '0',
-  `pols` int(10) NOT NULL default '0',
-  `pols_cuentas` int(10) NOT NULL default '0',
-  `transacciones` smallint(5) unsigned NOT NULL default '0',
-  `hilos_msg` smallint(5) unsigned NOT NULL default '0',
-  `pols_gobierno` int(10) NOT NULL default '0',
-  `partidos` tinyint(3) unsigned NOT NULL default '0',
-  `frase` smallint(5) unsigned NOT NULL default '0',
-  `empresas` smallint(5) unsigned NOT NULL default '0',
-  `eliminados` smallint(5) unsigned NOT NULL default '0',
-  `mapa` tinyint(3) unsigned NOT NULL default '0',
-  `mapa_vende` tinyint(3) unsigned NOT NULL default '0',
-  `24h` smallint(5) unsigned NOT NULL default '0',
-  `confianza` smallint(5) NOT NULL,
-  PRIMARY KEY  (`ID`),
-  UNIQUE KEY `time` (`time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `pol_transacciones`

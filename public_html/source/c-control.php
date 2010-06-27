@@ -205,7 +205,7 @@ ORDER BY fecha_registro DESC", $link);
 			$proxys_array = explode(', ', long2ip($row['IP']).', '.$row['IP_proxy']);
 
 			foreach ($proxys_array AS $IP) {
-				if ($IP_anterior != $IP) {
+				if (($IP_anterior != $IP) AND ($IP != '127.0.0.1') AND ($IP != '-1')) {
 					$IP_anterior = $IP;
 					
 					$host = gethostbyaddr($IP);

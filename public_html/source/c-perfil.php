@@ -25,11 +25,11 @@ while($row = mysql_fetch_array($result)){
 			$host = '';
 			if (strlen($hosts[count($hosts)-3]) > 3) { $host = $hosts[count($hosts)-3] . '.' . $hosts[count($hosts)-2] . '.' . $hosts[count($hosts)-1]; }
 
-			if ($row['cargo'] != 0) { $exp_disabled = ' disabled="disabled"'; } else { $exp_disabled = ''; }
+			//if ($row['cargo'] != 0) { $exp_disabled = ' disabled="disabled"'; } else { $exp_disabled = ''; }
 			$extras = '<tr><td colspan="2"><input style="float:right;" value="Expulsar" onclick="if (!confirm(\'&iquest;Seguro que quieres EXPULSAR a este usuario?\')) { return false; } else { var razon = prompt(\'&iquest;Razon de expulsion?\',\'\').replace(\'&\',\'%26\'); if (razon) { window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=expulsar&ID=' . $row['ID'] . '&nick=' . $row['nick'] . '&razon=\' + razon; } }" type="button"'.$exp_disabled.' />('.$row['email'].', *.' . $host . ')<br /><span style="font-size:9px;color:#666;">'.$row['nav'].'</span></td></tr>'; 
 		} elseif ($pol['estado'] == 'desarrollador') {
 
-			if ($row['cargo'] != 0) { $exp_disabled = ' disabled="disabled"'; } else { $exp_disabled = ''; }
+			//if ($row['cargo'] != 0) { $exp_disabled = ' disabled="disabled"'; } else { $exp_disabled = ''; }
 			$extras = '<tr><td colspan="2"><input style="float:right;" value="Expulsar" onclick="if (!confirm(\'&iquest;Seguro que quieres EXPULSAR a este usuario?\')) { return false; } else { var razon = prompt(\'&iquest;Razon de expulsion?\',\'\').replace(\'&\',\'%26\'); if (razon) { window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=expulsar&ID=' . $row['ID'] . '&nick=' . $row['nick'] . '&razon=\' + razon; } }" type="button"'.$exp_disabled.' />(' . $row['ID'] . ', '.$row['email'].', *.' . $row['host'] . ', <a href="http://www.geoiptool.com/es/?IP='.long2ip($row['IP']).'">GeoIP</a>)<br /><span style="font-size:9px;color:#666;">'.$row['nav'].'</span></td></tr>';
 		
 		} else { $extras = ''; }

@@ -694,7 +694,6 @@ case 'expulsiones':
 <tr>
 <th>Expulsado</th>
 <th>Pa&iacute;s</th>
-<th><img src="/img/cargos/0.gif" border="0" /> Autor</th>
 <th>Cuando</th>
 <th>Motivo</th>
 <th></th>
@@ -726,7 +725,7 @@ while($row = mysql_fetch_array($result)){
 
 	$txt .= '<b>' . crear_link($row['tiempo'], 'nick', $row['expulsado_estado'], $row['expulsado_pais']) . '</b></td>
 <td valign="top">'.$row['expulsado_pais'].'</td>
-<td valign="top" nowrap="nowrap"><img src="/img/cargos/' . $row['cargo'] . '.gif" border="0" /> ' . crear_link($row['nick_autor']) . '</td><td valign="top" align="right" valign="top" nowrap="nowrap"><acronym title="' . $row['expire'] . '">' . $duracion . '</acronym></td><td valign="top"><b style="font-size:13px;">' . $row['razon'] . '</b></td><td valign="top" align="center">' . $expulsar . '</td></tr>' . "\n";
+<td valign="top" align="right" valign="top" nowrap="nowrap"><acronym title="' . $row['expire'] . '">' . $duracion . '</acronym></td><td valign="top"><b style="font-size:13px;">' . $row['razon'] . '</b></td><td valign="top" align="center">' . $expulsar . '</td></tr>' . "\n";
 
 }
 $txt .= '</table><hr /><p>Las expulsiones son ejecutadas por los desarrolladores a cualquier usuario que no ejerzan ningun cargo en su pais.</p>

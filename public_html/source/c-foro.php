@@ -272,7 +272,7 @@ LIMIT 1", $link);
 			} else { $editar = ''; }
 
 
-			$txt .= '<tr class="amarillo"><td align="right" valign="top">' . print_lateral($row['nick'], $row['encalidad'], $row['time'], $row['siglas'], $row['user_ID'], $row['avatar'], $row['cargo'], $row['confianza']) . '</td><td valign="top" width="80%"><p style="text-align:justify;">' . $editar . $row['text'] . '</p></td></tr>';
+			$txt .= '<tr class="amarillo"><td align="right" valign="top">' . print_lateral($row['nick'], $row['encalidad'], $row['time'], $row['siglas'], $row['user_ID'], $row['avatar'], $row['cargo'], $row['confianza']) . '</td><td valign="top" width="80%"><p style="text-align:justify;">' . $editar . emoticonos($row['text']) . '</p></td></tr>';
 
 			$result2 = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,

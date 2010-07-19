@@ -6,6 +6,35 @@ pol_foros_hilos		(`ID` `sub_ID``url` `user_ID` `title` `time` `time_last` `text`
 pol_foros_msg		(`ID``hilo_ID` `user_ID` `time` `text` `cargo`)
 */
 
+function emoticonos($cadena) {
+	$inicio_patron = '/(\s|^)';
+	$patrones = array();
+	$patrones[0] = $inicio_patron.':\)/';
+	$patrones[1] = $inicio_patron.':\(/';
+	$patrones[2] = $inicio_patron.':\|/';
+	$patrones[3] = $inicio_patron.':D/';
+	$patrones[4] = $inicio_patron.':\*/';
+	$patrones[5] = $inicio_patron.';\)/';
+	$patrones[6] = $inicio_patron.':O/';
+	$patrones[7] = $inicio_patron.':tarta:/';
+	$patrones[8] = $inicio_patron.':roto2:/';
+	$patrones[9] = $inicio_patron.':facepalm:/';
+	$patrones[10] = $inicio_patron.':moneda:/';
+	$reemplazos = array();
+	$reemplazos[0] = ' <img src="/img/smiley/sonrie.gif" border="0" alt=":)" title=":)" />';
+	$reemplazos[1] = ' <img src="/img/smiley/disgustado.gif" border="0" alt=":(" title=":(" />';
+	$reemplazos[2] = ' <img src="/img/smiley/desconcertado.gif" border="0" alt=":|" title=":|" />';
+	$reemplazos[3] = ' <img src="/img/smiley/xd.gif" alt=":D" border="0" title=":D" />';
+	$reemplazos[4] = ' <img src="/img/smiley/muacks.gif" alt=":*" border="0" title=":*" />';
+	$reemplazos[5] = ' <img src="/img/smiley/guino.gif" alt=";)" border="0" title=";)" />';
+	$reemplazos[6] = ' <img src="/img/smiley/bocaabierta.gif" alt=":O" border="0" title=":O" />';
+	$reemplazos[7] = ' <img src="/img/smiley/tarta.gif" alt=":tarta:" border="0" title=":tarta:" />';
+	$reemplazos[8] = ' <img src="/img/smiley/roto2.gif" alt=":roto2:" border="0" title=":roto2:" />';
+	$reemplazos[9] = ' <img src="/img/smiley/palm.gif" alt=":facepalm:" border="0" title=":facepalm:" />';
+	$reemplazos[10] = ' <img src="/img/m.gif" alt=":moneda:" border="0" title=":moneda:" />';
+	return preg_replace($patrones, $reemplazos, $cadena);
+}
+
 function foro_enviar($subforo, $hilo=null, $edit=null) {
 	global $pol, $link, $return_url;
 
@@ -264,7 +293,7 @@ LIMIT " . $p_limit, $link);
 					$editar = boton('Papelera', '/accion.php?a=foro&b=borrar&c=mensaje&ID=' . $row2['ID'] . '/', '&iquest;Quieres enviar a la PAPELERA este MENSAJE?') . ' '; 
 				} else { $editar = ''; }
 
-				$txt .= '<tr id="m-' . $row2['ID'] . '"><td align="right" valign="top">' . print_lateral($row2['nick'], $row2['encalidad'], $row2['time'], $row2['siglas'], $row2['user_ID'], $row2['avatar'], $row2['cargo'], $row2['confianza']) . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $row2['ID'] . '">#</a></span>' . $row2['text'] . '</p></td></tr>';
+				$txt .= '<tr id="m-' . $row2['ID'] . '"><td align="right" valign="top">' . print_lateral($row2['nick'], $row2['encalidad'], $row2['time'], $row2['siglas'], $row2['user_ID'], $row2['avatar'], $row2['cargo'], $row2['confianza']) . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $row2['ID'] . '">#</a></span>' . emoticonos($row2['text']) . '</p></td></tr>';
 			}
 			$txt .= '</table> <p>' . $p_paginas . '</p>';
 

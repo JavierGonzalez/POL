@@ -96,12 +96,22 @@ LIMIT 1", $link);
 	if (($msg_len > 0) AND ($msg_len < 280) AND (!$expulsado) AND (acceso_check($chat_ID, 'escribir') === true)) {
 		
 		if ((!$_SESSION['pol']['nick']) AND (substr($_POST['anonimo'], 0, 1) == '-') AND (strlen($_POST['anonimo']) >= 3) AND (strlen($_POST['anonimo']) <= 15) AND (!stristr($_POST['anonimo'], '__'))) { 
-			$_SESSION['pol']['nick'] = $_POST['anonimo'];
-			$_SESSION['pol']['estado'] = 'anonimo';
+			$result = mysql_query("SELECT nick FROM users WHERE nick='".substr($_POST['anonimo'], 1)."'", $link);
+			if (mysql_fetch_array($result)) { 
+				$borrar_msg = true;
+				echo 'n 0 ---- - <b style="color:#FF0000;">Nick inv&aacute;lido por estar registrado.</b>'. "\n"; 
+			}
+			else {
+				$_SESSION['pol']['nick'] = $_POST['anonimo'];
+				$_SESSION['pol']['estado'] = 'anonimo';
+			}
 		}
 
 		// limpia MSG
 		$msg = $_REQUEST['msg'];
+		if ($borrar_msg) {
+			$msg='';
+		}
 
 		$msg = str_replace("\r", "", str_replace("\n", "", trim(strip_tags($msg))));
 		if ($_SESSION['pol']['estado'] != 'anonimo') { $msg = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/()]","<a target=\"_blank\" href=\"\\0\">\\0</a>", $msg); }

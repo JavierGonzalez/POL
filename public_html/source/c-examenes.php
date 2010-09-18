@@ -291,6 +291,7 @@ ORDER BY examen_ID DESC, RAND() LIMIT " . $row['num_preguntas'], $link);
 			$limite_tiempo = time() + $tiempo;
 			$_SESSION['examen'] = $respuestas_correctas;
 			$_SESSION['examen']['tiempo'] = $limite_tiempo;
+			$_SESSION['examen']['ID'] = $_GET['b'];
 
 			
 			$txt .= '</ol>

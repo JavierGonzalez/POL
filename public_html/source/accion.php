@@ -360,13 +360,14 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 			$num_depreguntas = $row['num_depreguntas'];
 		}
 
-		if (($num_depreguntas >= 5) AND ($examen_ID)) {
+		if (($num_depreguntas >= 5) AND ($examen_ID) AND isset($_SESSION['examen'])) {
 
+			$respuestas_correctas = $_SESSION['examen'];
 			$nota['ok'] = 0;
 			$nota['fail'] = 0;
 			$nota['total'] = 0;
 			$pregs = explode("|", $_POST['pregs']);
-			foreach($pregs as $ID) { $nota['total']++; if ($_POST['respuesta' . $ID] == 'a') { $nota['ok']++; } else { $nota['fail']++; } }
+			foreach($pregs as $ID) { if ($_POST['respuesta' . $ID] == $respuestas_correctas[$nota['total']]) { $nota['ok']++; } else { $nota['fail']++; } $nota['total']++; }
 		
 			$nota['nota'] = number_format(round(($nota['ok'] / $nota['total']) * 10, 1), 1, '.', '');
 			if ($nota['nota'] >= $nota_aprobado) { $estado = ", estado = 'ok'"; } else { $estado = ", estado = 'examen'"; }
@@ -379,6 +380,8 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 			mysql_query("UPDATE ".SQL."estudios_users SET time = '" . $date . "', nota = '" . $nota['nota'] . "'" . $estado . " WHERE user_ID = '" . $pol['user_ID'] . "' AND ID_estudio = '" . $cargo_ID . "' LIMIT 1", $link);
 
 			$refer_url = 'examenes/mis-examenes/';
+			unset($_SESSION['examen']);
+			unset($_SESSION['tiempo_examen']);
 		}
 	}
 

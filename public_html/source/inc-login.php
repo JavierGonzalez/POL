@@ -32,6 +32,13 @@ if (isset($_COOKIE['teorizauser'])) {
 
 	$pol['nick'] = $_SESSION['pol']['nick'];
 	$pol['user_ID'] = $_SESSION['pol']['user_ID'];
+
+	// Control del tiempo para responder un examen. Puesto aquí para que sirva también para eliminar $_SESION['examen'] si se empieza un examen y no se reciben las respuestas. 
+	if (isset($_SESSION['examen'])) {
+		if (($_SESSION['examen']['tiempo'] + 10) <= time()) {
+			unset($_SESSION['examen']);
+		} 
+	}
 }
 
 

@@ -260,6 +260,7 @@ VALUES ('" . $row['cargo_ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', 
 
 			// ".SQL."examenes_preg 	(ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo)
 			$tiempo = 0;
+			$respuestas_correctas = array();
 			$result2 = mysql_query("SELECT ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo
 FROM ".SQL."examenes_preg
 WHERE examen_ID = '" . $_GET['b'] . "' OR examen_ID = 0
@@ -271,6 +272,7 @@ ORDER BY examen_ID DESC, RAND() LIMIT " . $row['num_preguntas'], $link);
 				
 				
 				$res2['a'] = $res[0];
+				$respuestas_correctas[] = md5($res[0]);
 				$res2['b'] = $res[1];
 				if ($res[2]) { $res2['c'] = $res[2]; }
 				if ($res[3]) { $res2['d'] = $res[3]; }
@@ -280,20 +282,21 @@ ORDER BY examen_ID DESC, RAND() LIMIT " . $row['num_preguntas'], $link);
 
 				$tiempo += $row2['tiempo'];
 				foreach($res2 as $ID => $respuesta) {
-					$respuestas .= '<input type="radio" name="respuesta' . $row2['ID'] . '" value="' . $ID . '" />' . $respuesta . '<br />';
+					$respuestas .= '<input type="radio" name="respuesta' . $row2['ID'] . '" value="' . md5($respuesta) . '" />' . $respuesta . '<br />';
 				}
 				if ($pregs) { $pregs .= '|'; } $pregs .= $row2['ID'];
 				$txt .= '<li><b>&iquest;' . $row2['pregunta'] . '?</b><br />' . $respuestas . '</li>';
 			}
 			$tiempo += 10;
+			$limite_tiempo = time() + $tiempo;
+			$_SESSION['examen'] = $respuestas_correctas;
+			$_SESSION['examen']['tiempo'] = $limite_tiempo;
 
 			
-
-
 			$txt .= '</ol>
 
 <input type="hidden" name="pregs" value="' . $pregs . '" />
-<input type="hidden" name="tlgs" value="' . (time() + $tiempo) . '" />
+<input type="hidden" name="tlgs" value="' . $limite_tiempo . '" />
 
 </div>
 

@@ -193,7 +193,7 @@ LIMIT 1", $link);
 					break;
 					
 				case 'parlamento':
-					if(($_SESSION['pol']['cargo'] == 22) AND ($chat_ID == 1)){
+					if ($_SESSION['pol']['cargo'] == 22) {
 						$elmsg = '<span style="color:blue;">'.$msg_rest.' <b>(Aviso Oficial- Presidente del Parlamento)</b></span>';
 						$tipo = 'm';
 					}

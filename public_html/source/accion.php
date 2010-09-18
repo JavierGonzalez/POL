@@ -361,27 +361,27 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 		}
 
 		if (($num_depreguntas >= 5) AND ($examen_ID) AND isset($_SESSION['examen'])) {
-
-			$respuestas_correctas = $_SESSION['examen'];
-			$nota['ok'] = 0;
-			$nota['fail'] = 0;
-			$nota['total'] = 0;
-			$pregs = explode("|", $_POST['pregs']);
-			foreach($pregs as $ID) { if ($_POST['respuesta' . $ID] == $respuestas_correctas[$nota['total']]) { $nota['ok']++; } else { $nota['fail']++; } $nota['total']++; }
+			if ($examen_ID == $_SESSION['examen']['ID']) {
+				$respuestas_correctas = $_SESSION['examen'];
+				$nota['ok'] = 0;
+				$nota['fail'] = 0;
+				$nota['total'] = 0;
+				$pregs = explode("|", $_POST['pregs']);
+				foreach($pregs as $ID) { if ($_POST['respuesta' . $ID] == $respuestas_correctas[$nota['total']]) { $nota['ok']++; } else { $nota['fail']++; } $nota['total']++; }
 		
-			$nota['nota'] = number_format(round(($nota['ok'] / $nota['total']) * 10, 1), 1, '.', '');
-			if ($nota['nota'] >= $nota_aprobado) { $estado = ", estado = 'ok'"; } else { $estado = ", estado = 'examen'"; }
+				$nota['nota'] = number_format(round(($nota['ok'] / $nota['total']) * 10, 1), 1, '.', '');
+				if ($nota['nota'] >= $nota_aprobado) { $estado = ", estado = 'ok'"; } else { $estado = ", estado = 'examen'"; }
 
-			$evento_examen = '<b>[EXAMEN]</b> &nbsp; <b style="color:grey;">' . $nota['nota'] . '</b> ' . crear_link($pol['nick']) . ' en el examen <a href="/examenes/' . $examen_ID . '/">' . $examen_titulo . '</a>';
+				$evento_examen = '<b>[EXAMEN]</b> &nbsp; <b style="color:grey;">' . $nota['nota'] . '</b> ' . crear_link($pol['nick']) . ' en el examen <a href="/examenes/' . $examen_ID . '/">' . $examen_titulo . '</a>';
 
-			if ($nota['nota'] >= $nota_aprobado) { evento_chat($evento_examen); }
-			//evento_chat($evento_examen, 0, 6);
+				if ($nota['nota'] >= $nota_aprobado) { evento_chat($evento_examen); }
+				//evento_chat($evento_examen, 0, 6);
 
-			mysql_query("UPDATE ".SQL."estudios_users SET time = '" . $date . "', nota = '" . $nota['nota'] . "'" . $estado . " WHERE user_ID = '" . $pol['user_ID'] . "' AND ID_estudio = '" . $cargo_ID . "' LIMIT 1", $link);
+				mysql_query("UPDATE ".SQL."estudios_users SET time = '" . $date . "', nota = '" . $nota['nota'] . "'" . $estado . " WHERE user_ID = '" . $pol['user_ID'] . "' AND ID_estudio = '" . $cargo_ID . "' LIMIT 1", $link);
 
-			$refer_url = 'examenes/mis-examenes/';
+				$refer_url = 'examenes/mis-examenes/';
+			}
 			unset($_SESSION['examen']);
-			unset($_SESSION['tiempo_examen']);
 		}
 	}
 

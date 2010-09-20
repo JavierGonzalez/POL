@@ -210,16 +210,17 @@ ORDER BY estado ASC, nota DESC", $link);
 
 	$result = mysql_query("SELECT ID, titulo, user_ID, time, cargo_ID, nota, num_preguntas,
 (SELECT time FROM ".SQL."estudios_users WHERE ID_estudio = ".SQL."examenes.cargo_ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS fecha_ultimoexamen,
-(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas
+(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_preguntas_especificas,
+(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = 0 LIMIT 1) AS num_preguntas_generales
 FROM ".SQL."examenes
 WHERE ID = '" . $_GET['b'] . "'
 LIMIT 1", $link);
 	while($row = mysql_fetch_array($result)){
 
 
-
+		$preguntas_disponibles = $row['num_preguntas_especificas_especificas'] + $row['num_preguntas_generales'];
 		$margen_ultimoexamen = strtotime($row['fecha_ultimoexamen']) + $pol['config']['examen_repe'];
-		if ((!$row['fecha_ultimoexamen']) OR ($margen_ultimoexamen < time()) AND ($row['num_depreguntas'] >= 5) AND ($pol['pols'] >= $pol['config']['pols_examen'])) {
+		if (((!$row['fecha_ultimoexamen']) OR ($margen_ultimoexamen < time())) AND ($row['num_preguntas_especificas'] >= 5) AND ($preguntas_disponibles >= $row['num_preguntas']) AND ($pol['pols'] >= $pol['config']['pols_examen'])) {
 
 			// marca examen como hecho	
 			if ($row['fecha_ultimoexamen']) {
@@ -270,7 +271,6 @@ ORDER BY examen_ID DESC, RAND() LIMIT " . $row['num_preguntas'], $link);
 				$res2 = '';
 				$res = explode("|", $row2['respuestas']);
 				
-				
 				$res2['a'] = $res[0];
 				$respuestas_correctas[] = md5($res[0]);
 				$res2['b'] = $res[1];
@@ -293,7 +293,7 @@ ORDER BY examen_ID DESC, RAND() LIMIT " . $row['num_preguntas'], $link);
 			$_SESSION['examen']['tiempo'] = $limite_tiempo;
 			$_SESSION['examen']['ID'] = $_GET['b'];
 
-			
+
 			$txt .= '</ol>
 
 <input type="hidden" name="pregs" value="' . $pregs . '" />
@@ -350,7 +350,7 @@ window.onload = function(){
 } elseif (($_GET['a']) AND ($_GET['a'] != 0)) {				// VER EXAMEN
 
 	$result = mysql_query("SELECT ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas,
-(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas,
+(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_preguntas_especificas,
 (SELECT time FROM ".SQL."estudios_users WHERE ID_estudio = ".SQL."examenes.cargo_ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS fecha_ultimoexamen
 FROM ".SQL."examenes
 WHERE ID = '" . $_GET['a'] . "'
@@ -363,7 +363,7 @@ LIMIT 1", $link);
 
 <p class="amarillo"><b>Temario:</b><br />' . $row['descripcion'] . '</p>
 
-<p>Nota minima para aprobar: <b class="gris">' . $row['nota'] . '</b>. Examen tipo test, tiempo limitado, <b>' . $row['num_preguntas'] . '</b> preguntas de entre <b>' . $row['num_depreguntas'] . '</b> en total.</p>
+<p>Nota minima para aprobar: <b class="gris">' . $row['nota'] . '</b>. Examen tipo test, tiempo limitado, <b>' . $row['num_preguntas'] . '</b> preguntas de entre <b>' . $row['num_preguntas_especificas'] . '</b> en total.</p>
 
 <p>No podr&aacute;s repetir este examen hasta <b>' . duracion($pol['config']['examen_repe']) . '</b> despu&eacute;s.</p>';
 
@@ -431,12 +431,12 @@ $txt .= '
 
 
 	$result = mysql_query("SELECT ID, titulo, user_ID, time, cargo_ID, nota, num_preguntas,
-(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas,
+(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_preguntas_especificas,
 (SELECT COUNT(*) FROM ".SQL."estudios_users WHERE ID_estudio = ".SQL."examenes.cargo_ID AND nota != '') AS examinados,
 (SELECT COUNT(*) FROM ".SQL."estudios_users WHERE ID_estudio = ".SQL."examenes.cargo_ID AND nota != '' AND estado = 'ok') AS aprobados
 FROM ".SQL."examenes
 WHERE ID != 0
-ORDER BY nota DESC, num_depreguntas DESC", $link);
+ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 	while($row = mysql_fetch_array($result)){
 
 		if (substr($row['cargo_ID'], 0, 1) != '-') {
@@ -451,8 +451,8 @@ ORDER BY nota DESC, num_depreguntas DESC", $link);
 			$aprobados = round(($row['aprobados'] * 100) / $row['examinados']) . '%';	
 		} else { $aprobados = '0%'; }
 
-
-		if ($row['num_depreguntas'] >= 5) {
+		$num_preguntas_disponibles = $num_generales + $row['num_preguntas_especificas'];
+		if (($row['num_preguntas_especificas'] >= 5) AND ($num_preguntas_disponibles >= $row['num_preguntas'])) {
 			$url = '<a href="/examenes/' . $row['ID'] . '/"><b>' . $row['titulo'] . '</b></a>';
 		} else {
 			$url = '<b>' . $row['titulo'] . '</b>';
@@ -461,7 +461,7 @@ ORDER BY nota DESC, num_depreguntas DESC", $link);
 
 
 		$txt .= '<tr>
-<td valign="top">' . $row['num_preguntas'] . ' de ' . $row['num_depreguntas'] . '</td>
+<td valign="top">' . $row['num_preguntas'] . ' de ' . $row['num_preguntas_especificas'] . '</td>
 <td valign="top"><b style="color:grey;">' . $row['nota'] . '</b></td>
 <td valign="top" align="right">' . $aprobados . '</td>
 <td valign="top" align="right">' . $row['aprobados'] . '</td>

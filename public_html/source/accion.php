@@ -358,18 +358,27 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 			$examen_titulo = $row['titulo'];
 			$examen_ID = $row['ID'];
 			$num_depreguntas = $row['num_depreguntas'];
+			$num_preguntas = $row['num_preguntas'];
 		}
 
 		if (($num_depreguntas >= 5) AND ($examen_ID) AND isset($_SESSION['examen'])) {
 			if ($examen_ID == $_SESSION['examen']['ID']) {
-				$respuestas_correctas = $_SESSION['examen'];
+				$respuestas_correctas = $_SESSION['examen']['respuestas'];
 				$nota['ok'] = 0;
-				$nota['fail'] = 0;
-				$nota['total'] = 0;
+				$indice = 0;
 				$pregs = explode("|", $_POST['pregs']);
-				foreach($pregs as $ID) { if ($_POST['respuesta' . $ID] == $respuestas_correctas[$nota['total']]) { $nota['ok']++; } else { $nota['fail']++; } $nota['total']++; }
-		
-				$nota['nota'] = number_format(round(($nota['ok'] / $nota['total']) * 10, 1), 1, '.', '');
+				foreach($pregs as $ID) { 
+					if ($_POST['respuesta' . $ID] == $respuestas_correctas[$indice]) { 
+						$nota['ok']++; 
+					} 
+					$indice++; 
+				}
+				if ($indice == $num_preguntas) {
+					$nota['nota'] = number_format(round(($nota['ok'] / $num_preguntas) * 10, 1), 1, '.', '');
+				}
+				else {
+					$nota['nota'] = 0;
+				}
 				if ($nota['nota'] >= $nota_aprobado) { $estado = ", estado = 'ok'"; } else { $estado = ", estado = 'examen'"; }
 
 				$evento_examen = '<b>[EXAMEN]</b> &nbsp; <b style="color:grey;">' . $nota['nota'] . '</b> ' . crear_link($pol['nick']) . ' en el examen <a href="/examenes/' . $examen_ID . '/">' . $examen_titulo . '</a>';

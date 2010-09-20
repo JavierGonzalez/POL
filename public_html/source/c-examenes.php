@@ -218,7 +218,7 @@ LIMIT 1", $link);
 	while($row = mysql_fetch_array($result)){
 
 
-		$preguntas_disponibles = $row['num_preguntas_especificas_especificas'] + $row['num_preguntas_generales'];
+		$preguntas_disponibles = $row['num_preguntas_especificas'] + $row['num_preguntas_generales'];
 		$margen_ultimoexamen = strtotime($row['fecha_ultimoexamen']) + $pol['config']['examen_repe'];
 		if (((!$row['fecha_ultimoexamen']) OR ($margen_ultimoexamen < time())) AND ($row['num_preguntas_especificas'] >= 5) AND ($preguntas_disponibles >= $row['num_preguntas']) AND ($pol['pols'] >= $pol['config']['pols_examen'])) {
 

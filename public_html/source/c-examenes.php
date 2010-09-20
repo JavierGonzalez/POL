@@ -224,7 +224,7 @@ LIMIT 1", $link);
 			// marca examen como hecho	
 			if ($row['fecha_ultimoexamen']) {
 				//update 
-				mysql_query("UPDATE ".SQL."estudios_users SET time = '" . $date . "' WHERE ID_estudio = '" . $row['cargo_ID'] . "' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+				mysql_query("UPDATE ".SQL."estudios_users SET time = '" . $date . "', nota = 0.0, estado = 'examen' WHERE ID_estudio = '" . $row['cargo_ID'] . "' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 			} else {
 				//insert
 				mysql_query("INSERT INTO ".SQL."estudios_users 
@@ -289,7 +289,7 @@ ORDER BY examen_ID DESC, RAND() LIMIT " . $row['num_preguntas'], $link);
 			}
 			$tiempo += 10;
 			$limite_tiempo = time() + $tiempo;
-			$_SESSION['examen'] = $respuestas_correctas;
+			$_SESSION['examen']['respuestas'] = $respuestas_correctas;
 			$_SESSION['examen']['tiempo'] = $limite_tiempo;
 			$_SESSION['examen']['ID'] = $_GET['b'];
 

@@ -185,7 +185,13 @@ ORDER BY estado ASC, nota DESC", $link);
 	while($row = mysql_fetch_array($result)){
 		if ($row['estado'] == 'ok') { $sello = '<img src="/img/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = ''; }
 		if ($row['cargo'] == 1) { $cargo = '(Cargo ejercido)'; } else { $cargo = ''; }
-		$txt .= '<tr><td>' . $sello . '</td><td align="right"><b style="color:grey;">' . $row['nota'] . '</b></td><td><a href="/examenes/' . $row['examen_ID'] . '/"><b>' . $row['nombre_examen'] . '</b></a></td><td>' . $cargo . '</td><td align="right"><acronym title="' . $row['time'] . '">' . duracion(time() - strtotime($row['time'])) .  '</acronym></td></tr>';
+		if (($row['ID_estudio'] <= 0) AND (time()-strtotime($row['time']) > $pol['config']['examen_repe']*6)) {
+			$caducar_examen = ' <form action="/accion.php?a=examenes&b=caducar_examen&ID='.$row['ID'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="X"  onclick="if (!confirm(\'&iquest;Seguro que quieres que CADUQUE el examen de ' . $row['nombre_examen'] . '?\')) { return false; }"/></form>';
+		}
+		else {
+			$caducar_examen = '';
+		}
+		$txt .= '<tr><td>' . $sello . '</td><td align="right"><b style="color:grey;">' . $row['nota'] . '</b></td><td><a href="/examenes/' . $row['examen_ID'] . '/"><b>' . $row['nombre_examen'] . '</b></a></td><td>' . $cargo . '</td><td align="right"><acronym title="' . $row['time'] . '">' . duracion(time() - strtotime($row['time'])) .  '</acronym></td><td><b>'. $caducar_examen .'</b></td></tr>';
 	}
 
 	$txt .= '</table><p style="color:red;">Tiempo de expiraci&oacute;n: <b>'.duracion($pol['config']['examenes_exp']).'</b></p>';

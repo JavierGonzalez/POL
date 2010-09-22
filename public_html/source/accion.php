@@ -392,6 +392,12 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 			}
 			unset($_SESSION['examen']);
 		}
+	} elseif (($_GET['b'] == 'caducar_examen') AND ($_GET['ID'] != null)) {
+	
+		if ($_POST['pais'] == PAIS) {
+			mysql_query("DELETE FROM ".SQL."estudios_users WHERE ID = '".$_GET['ID']."' AND user_ID = '". $pol['user_ID']."' AND time < '".date('Y-m-d 20:00:00', time() - $pol['config']['examen_repe']*6)."' AND ID_estudio <= 0", $link);
+			$refer_url = 'examenes/mis-examenes//';
+		}
 	}
 
 	break;

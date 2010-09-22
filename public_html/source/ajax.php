@@ -174,7 +174,7 @@ LIMIT 1", $link);
 				case 'novatos': $elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> ofrece ayuda: <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="/doc/empezar-en-'.pais.'/" target="_blank">C&oacute;mo empezar, FAQ</a>.</a>'; break;
 
 				case 'policia':
-					if (($_SESSION['pol']['cargo'] == 13) OR ($_SESSION['pol']['cargo'] == 12)) {
+				if ((($_SESSION['pol']['cargo'] == 13) OR ($_SESSION['pol']['cargo'] == 12)) AND (strtolower($_SESSION['pol']['pais']) == pais))  {
 						$elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>';
 						$tipo = 'm';
 					}
@@ -193,7 +193,7 @@ LIMIT 1", $link);
 					break;
 					
 				case 'parlamento':
-					if ($_SESSION['pol']['cargo'] == 22) {
+					if (($_SESSION['pol']['cargo'] == 22) AND (strtolower($_SESSION['pol']['pais']) == pais)) {
 						$elmsg = '<span style="color:blue;">'.$msg_rest.' <b>(Aviso Oficial- Presidente del Parlamento)</b></span>';
 						$tipo = 'm';
 					}

@@ -1,4 +1,6 @@
 <?php
+// Dominio
+define('URL', 'virtualpol.com');
 
 // INICIALIZACION
 $host = explode('.', $_SERVER['HTTP_HOST']); // obtiene $host[0] que es el subdominio

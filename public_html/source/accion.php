@@ -1202,7 +1202,7 @@ case 'enviar-mensaje':
 					enviar_email($row['ID'], $asunto, $mensaje); 
 				}
 
-				evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower($row['pais']).'.virtualpol.com/msg/"><b>Leer!</b></a>)', $row['ID'], -1, false, 'p'); 
+				evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower($row['pais']).DEV.'.virtualpol.com/msg/"><b>Leer!</b></a>)', $row['ID'], -1, false, 'p'); 
 			}
 		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'])) {
 
@@ -1221,7 +1221,7 @@ case 'enviar-mensaje':
 			while($row = mysql_fetch_array($result)){ 
 				if ($row['user_ID'] != $pol['user_ID']) {
 					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$row['user_ID']."', '".$date."', '<b>Mensaje multiple: ".$cargo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."')", $link);
-				evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.URL.'/msg/"><b>Leer!</b></a>)', $row['user_ID'], -1, false, 'p');
+					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).DEV.'.'.URL.'/msg/"><b>Leer!</b></a>)', $row['user_ID'], -1, false, 'p');
 				}
 			}
 		} elseif (($_POST['para'] == 'todos') AND ($pol['pols'] >= $pol['config']['pols_mensajetodos'])) {

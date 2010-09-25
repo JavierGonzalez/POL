@@ -42,6 +42,7 @@ $txt .= '
 <option value="VirtualPol">VirtualPol</option>
 <option value="POL">POL</option>
 <option value="Hispania">Hispania</option>
+<option value="Atlantis">Atlantis</option>
 </select>
 
 <input value="Guardar" type="submit">

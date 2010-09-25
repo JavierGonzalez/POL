@@ -12,6 +12,7 @@ $pol['cargos'] = cargos();
 // prevent SSX
 if ($_GET['ID']) { $_GET['ID'] = mysql_real_escape_string($_GET['ID']); }
 
+
 // Solo ciudadanos
 if (
 ((PAIS == $pol['pais']) AND ($pol['estado'] == 'ciudadano'))
@@ -155,19 +156,25 @@ case 'pass':
 			$email = $row['email'];
 			$user_ID = $row['ID'];
 			$nick = $row['nick'];
-		
 		}
 
-		if ($email) {
+		if ($user_ID) {
 			$new_pass = $nick.rand(1000,9999);
-			$asunto = '[VirtualPol] Contrase&ntilde;a reseteada del usuario: '.$nick;
-			$mensaje = 'Hola Ciudadano,<br /><br />Se ha procedido a resetear tu contrase&ntilde;a de seguridad. Por lo tanto tu contrase&ntilde;a ha cambiado.<br /><br /><hr />Usuario: <b>'.$_GET['nick'].'</b><br />Contrase&ntilde;a nueva: <b>'.$new_pass.'</b><br />Login en: <a href="http://www.virtualpol.com/">http://www.virtualpol.com</a><hr /><br />Gracias, nos vemos en VirtualPol ;)<br /><br /><br />VirtualPol<br />http://'.HOST;
-			enviar_email($user_ID, $asunto, $mensaje); 
+
+			$asunto = '[VirtualPol] Contraseña reseteada del usuario: '.$nick;
+
+			$mensaje = "Hola Ciudadano,\n\nSe ha procedido a resetear tu contraseña de seguridad. Por lo tanto tu contraseña ha cambiado.\n\n\nUsuario: ".$nick."\nNueva contraseña: ".$new_pass."\n\nLogin en: http://www.virtualpol.com/\n\nGracias, nos vemos en VirtualPol ;)\n\n\nVirtualPol\nhttp://www.virtualpol.com";
+
+			mail($email, $asunto, $mensaje, "FROM: VirtualPOL <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
 
 			mysql_query("UPDATE users SET pass = '".md5($new_pass)."' WHERE ID = '".$user_ID."' LIMIT 1", $link);
 		}	
+
 	}
 	break;
+
+
+
 
 case 'rechazar-ciudadania':
 

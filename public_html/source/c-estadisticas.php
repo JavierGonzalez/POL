@@ -88,13 +88,14 @@ $d['paises'][0] = 0;
 
 $txt .= '<h1>';
 
-if ($_GET['a'] == 'POL') {
-	$txt .= '<a href="/estadisticas/">Estad&iacute;sticas</a>:  <b>POL</b> | <a href="/estadisticas/Hispania/">Hispania</a>';
-} elseif ($_GET['a'] == 'Hispania') {
-	$txt .= '<a href="/estadisticas/">Estad&iacute;sticas</a>:  <a href="/estadisticas/POL/">POL</a> | <b>Hispania</b>';
-} else {
-	$txt .= '<b>Estad&iacute;sticas</b>:  <a href="/estadisticas/POL/">POL</a> | <a href="/estadisticas/Hispania/">Hispania</a>';
+
+$txt .= '<b>Estad&iacute;sticas</b>: ';
+foreach ($vp['paises'] AS $pais) { 
+	if ($_GET['a'] == $pais) {  
+		$txt .= '<b>'.$pais.'</b> | '; 
+	} else { $txt .= '<a href="/estadisticas/'.$pais.'/">'.$pais.'</a> | '; }
 }
+
 
 
 $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as)</span></h1>

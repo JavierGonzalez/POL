@@ -34,7 +34,7 @@ function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', 
 	global $pol, $link, $vp;
 	if ($secret) { $nick = '_'; } else { $nick = $pol['nick']; }
 	if (!$pais) { $pais = PAIS; }
-	if (!$chat_ID) { if ($pais == 'POL') { $chat_ID = 1; } elseif ($pais == 'Hispania') { $chat_ID = 2; } }
+	if (!$chat_ID) { if ($pais == 'POL') { $chat_ID = 1; } elseif ($pais == 'Hispania') { $chat_ID = 2; } elseif ($pais == 'Atlantis') { $chat_ID = 3; } }
 
 	if ($chat_ID != -1) {
 		mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) 
@@ -84,7 +84,7 @@ LIMIT 1", $link);
 
 
 function enviar_email($user_ID, $asunto, $mensaje, $email='') {
-	$cabeceras = "From: VirtualPol <pol@teoriza.com> \nReturn-Path: VirtualPol <pol@teoriza.com>\n X-Sender: VirtualPol <pol@teoriza.com>\n From: VirtualPol <pol@teoriza.com>\n MIME-Version: 1.0\nContent-type: text/html\n";
+	$cabeceras = "From: VirtualPol <desarrollo@virtualpol.com> \nReturn-Path: VirtualPol <desarrollo@virtualpol.com>\n X-Sender: VirtualPol <desarrollo@virtualpol.com>\n From: VirtualPol <desarrollo@virtualpol.com>\n MIME-Version: 1.0\nContent-type: text/html\n";
 
 	if (($user_ID) AND ($email == '')) {
 		global $link;

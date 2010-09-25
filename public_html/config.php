@@ -9,9 +9,9 @@ if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header
 
 
 // Configuracion Paises y colores
-$vp['paises'] = array('POL', 'Hispania');
-$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'ninguno'=>'#FFFFFF');
-$vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'ninguno'=>'#FFFFFF');
+$vp['paises'] = array('POL', 'Hispania', 'Atlantis');
+$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#AAAAAA', 'ninguno'=>'#FFFFFF');
+$vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#DDDDDD', 'ninguno'=>'#FFFFFF');
 
 // Configuracion por pais
 switch ($host[0]) {
@@ -26,6 +26,13 @@ case 'pol':
 case 'hispania':
 	define('PAIS', 'Hispania');
 	define('SQL', 'hispania_');
+	define('COLOR_BG', $vp['bg'][PAIS]);
+	define('COLOR_BG2', $vp['bg2'][PAIS]);
+	break;
+
+case 'atlantis':
+	define('PAIS', 'Atlantis');
+	define('SQL', 'atlantis_');
 	define('COLOR_BG', $vp['bg'][PAIS]);
 	define('COLOR_BG2', $vp['bg2'][PAIS]);
 	break;

@@ -141,7 +141,7 @@ case 'registrar': //CHECK
 		if (animal_captcha_check($_POST['animal']) == true) {
 
 			//CONTROL: solo letras y numeros en nick
-			if ((onlynumbers($nick) == true) AND ($nick != 'pol') AND ($nick != 'hispania') AND ($nick != 'virtualpol') AND ($nick != 'teoriza') AND ($nick != 'presidente') AND ($nick != 'god') AND ($nick != 'admin')) { 
+			if ((onlynumbers($nick) == true) AND ($nick != 'pol') AND ($nick != 'hispania') AND ($nick != 'atlantis') AND ($nick != 'virtualpol') AND ($nick != 'teoriza') AND ($nick != 'presidente') AND ($nick != 'god') AND ($nick != 'admin')) { 
 
 				//CONTROL: contraseñas
 				$rn = $_POST['repid'];
@@ -251,7 +251,7 @@ case 'solicitar-ciudadania':
 	$result = mysql_query("SELECT pais FROM ".SQL_USERS." WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	while ($row = mysql_fetch_array($result)) { $user_pais = $row['pais']; }
 
-	if (($pol['user_ID']) AND ($tiene_kick != true) AND ($user_pais == 'ninguno') AND ($pol['estado'] == 'turista') AND (($_POST['pais'] == 'POL') OR ($_POST['pais'] == 'Hispania'))) {
+	if (($pol['user_ID']) AND ($tiene_kick != true) AND ($user_pais == 'ninguno') AND ($pol['estado'] == 'turista') AND (($_POST['pais'] == 'POL') OR ($_POST['pais'] == 'Hispania') OR ($_POST['pais'] == 'Atlantis'))) {
 		mysql_query("UPDATE ".SQL_USERS." SET estado = 'ciudadano', pais = '" . $_POST['pais'] . "' WHERE estado = 'turista' AND pais = 'ninguno' AND ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	
 		include('../source/inc-functions-accion.php');

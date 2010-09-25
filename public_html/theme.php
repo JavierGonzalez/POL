@@ -91,7 +91,8 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 <p>Pa&iacute;ses:<br />
 <a href="http://pol.virtualpol.com/"><b>POL</b></a><br />
-<a href="http://hispania.virtualpol.com/"><b>Hispania</b></a>
+<a href="http://hispania.virtualpol.com/"><b>Hispania</b></a><br />
+<a href="http://atlantis.virtualpol.com/"><b>Atlantis</b></a>
 </p>
 
 

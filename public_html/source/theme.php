@@ -159,10 +159,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 	<li>
 		<a href="/"><img src="/img/banderas/<?=PAIS?>-logo.png" alt="<?=PAIS?>, Simulador Politico en Espa&ntilde;ol juego online" border="0" style="margin:-10px 0 -18px 0;" /> <b> &#9660;</b></a> 
 		<ul>
-<?php
-if (PAIS != 'POL') { echo '<li><a href="http://pol.virtualpol.com/">POL</a></li>'; }
-if (PAIS != 'Hispania') { echo '<li><a href="http://hispania.virtualpol.com/">Hispania</a></li>'; }
-?>
+<?php foreach ($vp['paises'] AS $pais) { if (PAIS != $pais) {  echo '<li><a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a></li>'; } } ?>
 		</ul>
 	</li>
 

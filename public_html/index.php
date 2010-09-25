@@ -4,7 +4,7 @@ $adsense_exclude = true;
 
 $txt_title = 'VirtualPol | Simulador Pol&iacute;tico Espa&ntilde;ol | Juego online de democracia politica | simuladores Espa&ntilde;a, Latinoamerica';
 
-$txt_description = 'La Primera y Unica Plataforma de Auto-gestion y Democracia. Simulador Politico Espa&ntilde;ol, Juego online, experimento social, el mejor simulador de politica de Espa&ntilde;a. Simuladores geo-politica POL Hispania. El mejor simulador politico.'; 
+$txt_description = 'La Primera y Unica Plataforma de Auto-gestion y Democracia. Simulador Politico Espa&ntilde;ol, Juego online, experimento social, el mejor simulador de politica de Espa&ntilde;a. Simuladores geo-politica POL Hispania Atlantis. El mejor simulador politico.'; 
 
 
 if (isset($pol['user_ID'])) {
@@ -79,7 +79,7 @@ foreach ($vp['paises'] AS $pais) {
 	if ($gf['paises']) { $gf['paises'] .= '|'; }
 	$gf['paises'] .= $pais;
 
-	if ($pais == 'Hispania') { $moneda = 'Pesetas'; } else { $moneda = $pais .'s'; }
+	$moneda = 'Monedas';
 
 
 	$txt .= '<tr style="background:'.$vp['bg'][$pais].';">
@@ -172,8 +172,8 @@ $txt .= '
 <img src="http://chart.apis.google.com/chart?cht=lc
 &chs=320x90
 &cht=bvs
-&chco='.substr($vp['bg']['POL'],1).','.substr($vp['bg']['Hispania'],1).'
-&chd=t:'.$gph['POL'].','.$pais_pob_num['POL'].'|'.$gph['Hispania'].','.$pais_pob_num['Hispania'].'
+&chco='.substr($vp['bg']['POL'],1).','.substr($vp['bg']['Hispania'],1).','.substr($vp['bg']['Atlantis'],1).'
+&chd=t:'.$gph['POL'].','.$pais_pob_num['POL'].'|'.$gph['Hispania'].','.$pais_pob_num['Hispania'].'|'.$gph['Atlantis'].','.$pais_pob_num['Atlantis'].'
 &chds=0,'.$gph_max.'
 &chxt=r
 &chxl=0:||'.round($poblacion_num / 2).'|'.$poblacion_num.'

@@ -1170,7 +1170,7 @@ case 'kick':
 
 			$kick_msg = '<span style="color:red;"><img src="/img/kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="/img/cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>';
 			evento_chat($kick_msg);
-			if ((isset($_POST['chat_ID'])) AND ($_POST['chat_ID'] != 1) AND ($_POST['chat_ID'] != 2)) { evento_chat($kick_msg, 0, $_POST['chat_ID']); }
+			if ((isset($_POST['chat_ID'])) AND ($_POST['chat_ID'] != 1) AND ($_POST['chat_ID'] != 2) AND ($_POST['chat_ID'] != 3)) { evento_chat($kick_msg, 0, $_POST['chat_ID']); }
 		}
 		$refer_url = 'control/kick/';
 	}

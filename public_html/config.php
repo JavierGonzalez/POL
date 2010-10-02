@@ -80,5 +80,5 @@ if ($dev) {
 
 
 // funciones con passwords importantes
-include('config-pwd.php');
+include(RAIZ.'config-pwd.php');
 ?>

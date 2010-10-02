@@ -304,7 +304,31 @@ ORDER BY fecha_registro ASC", $link);
 
 		// TRANSFERIR
 		if ($impuesto > 0) {
-			pols_transferir($impuesto, $row['ID'], '-1', 'IMPUESTO '.date('Y-m-d').': '.$pol['config']['impuestos'].'%');
+			$resto_impuestos = $impuesto;
+
+			if ($row['pols'] < 0) {
+				$pols_total = $row['pols_cuentas'];
+			}
+
+			$result2 = mysql_query("SELECT ID, pols FROM ".SQL."cuentas WHERE user_ID = '".$row['ID']."' AND nivel = '0'", $link);
+			while($row2 = mysql_fetch_array($result2)) {
+				$proporcion_cuenta = $row2['pols']/$pols_total;
+				$impuesto_cuenta = floor($proporcion_cuenta * $impuesto);
+				pols_transferir($impuesto_cuenta, '-'.$row2['ID'], '-1', 'IMPUESTO '.date('Y-m-d').': '.$pol['config']['impuestos'].'%');
+				$resto_impuestos -= $impuesto_cuenta;
+			}
+
+			if ($row['pols'] >= $resto_impuestos) {
+				pols_transferir($resto_impuestos, $row['ID'], '-1', 'IMPUESTO '.date('Y-m-d').': '.$pol['config']['impuestos'].'%');	
+				$resto_impuestos = 0;
+			}
+
+			if ($resto_impuestos > 0) {
+				$result2 = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE user_ID = '".$row['ID']."' AND nivel = '0' ORDER BY pols DESC LIMIT 1", $link);
+				while($row2 = mysql_fetch_array($result2)) { 
+					pols_transferir($resto_impuestos, '-'.$row2['ID'], '-1', 'IMPUESTO '.date('Y-m-d').': '.$pol['config']['impuestos'].'%. Ajuste por redondeos.');
+				}
+			}
 		}
 	}
 	evento_chat('<b>[PROCESO] IMPUESTO PATRIMONIO '.date('Y-m-d').'</b>, recaudado: '.pols($redaudacion).' '.MONEDA);

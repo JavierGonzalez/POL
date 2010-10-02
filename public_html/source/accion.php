@@ -912,7 +912,7 @@ case 'pols':
 			}
 
 			// insert historial
-			if ($pols > 0) {
+			if (($pols > 0) AND ($emisor_ID != $receptor_ID)) {
 				mysql_query("INSERT INTO ".SQL."transacciones (pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".$pols."', '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".$date."')", $link);
 
 				if ($transf_int) {

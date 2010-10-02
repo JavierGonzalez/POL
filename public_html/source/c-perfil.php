@@ -133,7 +133,7 @@ ORDER BY nick ASC", $link);
 
 
 
-$result2 = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE dato = 'impuestos' OR dato = 'impuestos_limite'", $link);
+$result2 = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE dato = 'impuestos' OR dato = 'impuestos_minimo'", $link);
 while($row2 = mysql_fetch_array($result2)){ $pol['config'][$row2['dato']] = $row2['valor']; }
 
 
@@ -163,7 +163,7 @@ while($row2 = mysql_fetch_array($result2)){
 }
 
 
-if ($patrimonio >= $pol['config']['impuestos_limite']) {
+if ($patrimonio >= $pol['config']['impuestos_minimo']) {
 	$impuesto = floor( ( $patrimonio * $pol['config']['impuestos']) / 100);
 	$impuestos = '<em>Impuestos al dia: '.pols(-$impuesto).' '.MONEDA.'</em>';
 } else {

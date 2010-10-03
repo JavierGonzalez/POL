@@ -328,8 +328,6 @@ $txt .= '</blockquote></div>';
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';
 	$atrack = '"/atrack/registro/solicitar.html"'; 
 
-	if (!$_GET['pais']) { $_GET['pais'] = 'POL'; }
-
 	$txt .= '<h1><span class="gris">1. Crear usuario |</span> 2. Solicitar Ciudadan&iacute;a <span class="gris">| 3. Ser Ciudadano</span></h1>
 	
 <hr /><br />
@@ -339,7 +337,8 @@ $txt .= '</blockquote></div>';
 <form name="rp" action="">
 Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\''.REGISTRAR.'?pais=\' + document.forms.rp.r_p[document.forms.rp.r_p.selectedIndex].value);">
 ';
-
+	
+	$txt .= '<option value="" >Selecciona pa&iacute;s</option>';
 
 	foreach ($vp['paises'] as $pais) {
 
@@ -356,10 +355,10 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 	}
 
 
-	$txt .= '</select></form>
+	$txt .= '</select></form>';
 
-
-<ul>
+		if ($_GET['pais'] != '') {
+			$txt .= '<ul>
 <li><b>Aceptas ser Ciudadano de <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/">'.$_GET['pais'].'</a></b>, con tus derechos y obligaciones.</li>
 <li><b>Aceptas <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/doc/">La Constituci&oacute;n</a> y las <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/doc/">Leyes</a> de '.$_GET['pais'].'</b>.</li></ul>
 
@@ -371,9 +370,9 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 </blockquote>
 </form>
 
-</div>
-
 </div>';
+	}
+	$txt .= '</div>';
 
 } elseif ($registro_txt) {
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';

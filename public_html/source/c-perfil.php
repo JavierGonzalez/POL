@@ -139,6 +139,7 @@ while($row2 = mysql_fetch_array($result2)){ $pol['config'][$row2['dato']] = $row
 
 
 $patrimonio = $row['pols'];
+$patrimonio_libre_impuestos = 0;
 $txt .= '
 
 <b>Tu Economia (<a href="/info/economia/">Economia Global</a>)</b>
@@ -151,20 +152,27 @@ $txt .= '
 </tr>';
 
 
-$result2 = mysql_query("SELECT ID, pols, nombre FROM ".SQL."cuentas WHERE user_ID = '".$row['ID']."'", $link);
+$result2 = mysql_query("SELECT ID, pols, nombre, exenta_impuestos FROM ".SQL."cuentas WHERE user_ID = '".$row['ID']."'", $link);
 while($row2 = mysql_fetch_array($result2)){
+	if ($row2['exenta_impuestos'] == 1) {
+		$patrimonio_libre_impuestos += $row2['pols'];
+		$sin_impuestos = ' - <em style="#AAA">Sin impuestos</em>';
+	}
+	else {
+		$sin_impuestos = '';
+	}
 	$patrimonio += $row2['pols'];
 	$txt .= '
 <tr>
 <td align="right">Cuenta</td>
 <td align="right">' . pols($row2['pols']) . ' '.MONEDA.'</td>
-<td><a href="/pols/cuentas/'.$row2['ID'].'/"><em>'.$row2['nombre'].'</em></a></td>
+<td><a href="/pols/cuentas/'.$row2['ID'].'/"><em>'.$row2['nombre'].'</em></a>'.$sin_impuestos.'</td>
 </tr>';
 }
 
-
-if ($patrimonio >= $pol['config']['impuestos_minimo']) {
-	$impuesto = floor( ( $patrimonio * $pol['config']['impuestos']) / 100);
+$patrimonio_con_impuestos = $patrimonio - $patrimonio_libre_impuestos;
+if ($patrimonio_con_impuestos >= $pol['config']['impuestos_minimo']) {
+	$impuesto = floor( ( $patrimonio_con_impuestos * $pol['config']['impuestos']) / 100);
 	$impuestos = '<em>Impuestos al dia: '.pols(-$impuesto).' '.MONEDA.'</em>';
 } else {
 	$impuestos = '<em style="#AAA">Sin impuestos.</em>';

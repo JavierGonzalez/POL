@@ -290,7 +290,7 @@ if ($pol['config']['impuestos'] > 0) {
 	$porcentaje = $pol['config']['impuestos'];
 
 	$result = mysql_query("SELECT ID, nick, pols, estado,
-(SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = ".SQL_USERS.".ID AND nivel = '0' GROUP BY user_ID) AS pols_cuentas
+(SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = ".SQL_USERS.".ID AND nivel = '0' AND exenta_impuestos = '0' GROUP BY user_ID) AS pols_cuentas
 FROM ".SQL_USERS." WHERE pais = '".PAIS."' AND estado != 'desarrollador'
 ORDER BY fecha_registro ASC", $link);
 	while($row = mysql_fetch_array($result)) { 
@@ -310,7 +310,7 @@ ORDER BY fecha_registro ASC", $link);
 				$pols_total = $row['pols_cuentas'];
 			}
 
-			$result2 = mysql_query("SELECT ID, pols FROM ".SQL."cuentas WHERE user_ID = '".$row['ID']."' AND nivel = '0'", $link);
+			$result2 = mysql_query("SELECT ID, pols FROM ".SQL."cuentas WHERE user_ID = '".$row['ID']."' AND nivel = '0' AND exenta_impuestos = '0'", $link);
 			while($row2 = mysql_fetch_array($result2)) {
 				$proporcion_cuenta = $row2['pols']/$pols_total;
 				$impuesto_cuenta = floor($proporcion_cuenta * $impuesto);
@@ -324,7 +324,7 @@ ORDER BY fecha_registro ASC", $link);
 			}
 
 			if ($resto_impuestos > 0) {
-				$result2 = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE user_ID = '".$row['ID']."' AND nivel = '0' ORDER BY pols DESC LIMIT 1", $link);
+				$result2 = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE user_ID = '".$row['ID']."' AND nivel = '0' AND exenta_impuestos = '0' ORDER BY pols DESC LIMIT 1", $link);
 				while($row2 = mysql_fetch_array($result2)) { 
 					pols_transferir($resto_impuestos, '-'.$row2['ID'], '-1', 'IMPUESTO '.date('Y-m-d').': '.$pol['config']['impuestos'].'%. Ajuste por redondeos.');
 				}

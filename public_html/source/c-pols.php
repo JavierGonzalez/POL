@@ -105,7 +105,13 @@ LIMIT " . $p_limit, $link);
 
 
 } elseif ($_GET['a'] == 'cuentas') {
-
+	if ($pol['nivel'] < 98) {
+		$disabled = ' disabled="disabled"';
+	}
+	else {
+		$disabled = '';
+	}
+	$txt .= '<form action="/accion.php?a=exencion_impuestos" method="post">';
 	$txt_title = 'Cuentas Bancarias';
 	$txt .= '<h1>Cuentas:</h1>
 
@@ -116,28 +122,38 @@ LIMIT " . $p_limit, $link);
 <th align="right">'.MONEDA.'</th>
 <th>Cuenta</th>
 <th>Propietario</th>
+<th>Sin impuestos</th>
 <th></th>
 </tr>';
 
-	$result = mysql_query("SELECT ID, nombre, user_ID, pols, nivel, time,
+	$result = mysql_query("SELECT ID, nombre, user_ID, pols, nivel, time, exenta_impuestos,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."cuentas.user_ID LIMIT 1) AS nick
 FROM ".SQL."cuentas
 ORDER BY nivel DESC, pols DESC", $link);
 	while($row = mysql_fetch_array($result)) {
 		if ($row['nivel'] == 0) {
 			$propietario = crear_link($row['nick']);
+			$checkbox = '<input class="checkbox_impuestos" type="checkbox" name="exenta_impuestos'.$row['ID'].'" value="1"'.$disabled;
+			if ($row['exenta_impuestos'] == '1') {
+				$checkbox .= ' checked="checked"';
+			}
+			$checkbox .= ' />';
 		} elseif ($row['nivel']) {
 			$propietario = '<b>Gobierno</b> (nivel: ' . $row['nivel'] . ')';
+			$checkbox = '';
 		} else {
 			$propietario = '??';
 		}
 		if (($row['pols'] == '0') AND ($row['user_ID'] == $pol['user_ID']) AND ($row['nivel'] == '0')) {
 			$boton = boton('X', '/accion.php?a=pols&b=eliminar-cuenta&ID=' . $row['ID'], '&iquest;Seguro que quieres ELIMINAR tu cuenta Bancaria?');
 		} else { $boton = ''; }
-		$txt .= '<tr><td align="right">' . pols($row['pols']) . '</td><td><a href="/pols/cuentas/' . $row['ID'] . '/"><b>' . $row['nombre'] . '</b></a></td><td>' . $propietario . '</td><td>' . boton('&rarr;', '/pols/transferir/-' . $row['ID']  . '/', 'm') . $boton . '</td></tr>';
+		$txt .= '<tr><td align="right">' . pols($row['pols']) . '</td><td><a href="/pols/cuentas/' . $row['ID'] . '/"><b>' . $row['nombre'] . '</b></a></td><td>' . $propietario . '</td><td align="center">'.$checkbox.'</td><td>' . boton('&rarr;', '/pols/transferir/-' . $row['ID']  . '/', 'm') . $boton . '</td></tr>';
 	}
 	$txt .= '</table><p>' . boton('Crear Cuenta', '/pols/cuentas/crear/', false, false, $pol['config']['pols_cuentas']) . ' &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>';
 
+	if ($pol['nivel'] >= 98) {
+		$txt .= '<input type="submit" value="Cambiar exención de impuestos" /></form>';
+	}
 
 
 
@@ -148,7 +164,7 @@ ORDER BY nivel DESC, pols DESC", $link);
 
 
 	if (PAIS != $pol['pais']) {
-		header('Location: http://'.strtolower($pol['pais']).'.virtualpol.com/pols/');
+		header('Location: http://'.strtolower($pol['pais']).'.'.URL.'/pols/');
 		exit;
 	}
 

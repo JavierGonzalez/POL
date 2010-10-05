@@ -27,7 +27,20 @@ OR (($pol['estado'] == 'extranjero') AND ($_GET['a'] == 'mercado'))
 switch ($_GET['a']) { // #####################################################
 
 
-
+case 'exencion_impuestos':
+	if ($pol['nivel'] >= 98) {
+		$result = mysql_query("SELECT ID, exenta_impuestos FROM ".SQL."cuentas where nivel = '0'", $link);
+		while($row = mysql_fetch_array($result)) {
+			if (($_POST['exenta_impuestos'.$row['ID']] == '1') AND ($row['exenta_impuestos'] == '0')) {
+				mysql_query("UPDATE ".SQL."cuentas SET exenta_impuestos = 1 where ID = '".$row['ID']."'", $link);
+			}
+			elseif  (!isset($_POST['exenta_impuestos'.$row['ID']]) AND ($row['exenta_impuestos'] == '1')) {
+				mysql_query("UPDATE ".SQL."cuentas SET exenta_impuestos = 0 where ID = '".$row['ID']."'", $link);
+			}
+		}
+		$refer_url = 'pols/cuentas/';
+	} 
+	break;
 
 
 case 'chat':

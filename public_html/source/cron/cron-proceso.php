@@ -343,12 +343,24 @@ if ($pol['config']['impuestos_empresa'] > 0) {
 	while($row = mysql_fetch_array($result)) { 
 
 		// comprueba si existe el propietario de la empresa antes de ejecutar el impuesto
-		$result2 = mysql_query("SELECT ID FROM ".SQL_USERS." WHERE ID = '".$row['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
+		$result2 = mysql_query("SELECT ID, pols FROM ".SQL_USERS." WHERE ID = '".$row['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
 		while($row2 = mysql_fetch_array($result2)) { 
 			$impuesto = round($pol['config']['impuestos_empresa'] * $row['num']);
-			$recaudacion_empresas += $impuesto;
+			if ($row2['pols'] >= $impuesto) {
+				$recaudacion_empresas += $impuesto;
 
-			pols_transferir($impuesto, $row['user_ID'], '-1', 'IMPUESTO EMPRESAS '.date('Y-m-d').': '.$row['num'].' empresas');
+				pols_transferir($impuesto, $row['user_ID'], '-1', 'IMPUESTO EMPRESAS '.date('Y-m-d').': '.$row['num'].' empresas');	
+			} 
+			else {
+				$result3 = mysql_query("SELECT ID, pols FROM ".SQL."cuentas WHERE user_ID = '".$row['user_ID']."' AND nivel = '0' ORDER BY pols DESC LIMIT 1", $link);
+				while($row3 = mysql_fetch_array($result3)) {
+					 if ($row3['pols'] >= $impuesto) {
+						$recaudacion_empresas += $impuesto;
+
+						pols_transferir($impuesto, '-'.$row3['ID'], '-1', 'IMPUESTO EMPRESAS '.date('Y-m-d').': '.$row['num'].' empresas');	
+					} 
+				}
+			}
 		}
 	}
 	evento_chat('<b>[PROCESO] IMPUESTO EMPRESAS '.date('Y-m-d').'</b>, recaudado: '.pols($recaudacion_empresas).' '.MONEDA);

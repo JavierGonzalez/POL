@@ -412,11 +412,22 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 			}
 			unset($_SESSION['examen']);
 		}
+	} elseif (($_GET['b'] == 'eliminar-examen') AND ($_POST['ID'] != null) AND ($pol['cargos'][35])) { 
+		$result = mysql_query("SELECT cargo_ID,
+(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas,
+(SELECT COUNT(*) FROM ".SQL."estudios_users WHERE ID_estudio = ".SQL."examenes.ID) AS num_usuarios
+FROM ".SQL."examenes WHERE ID = '" . $_POST['ID'] . "' LIMIT 1", $link);
+		while($row = mysql_fetch_array($result)){ 
+			if (($row['cargo_ID'] < 0) AND ($row['num_depreguntas'] == 0) AND ($row['num_usuarios'] == 0)) {
+				mysql_query("DELETE FROM ".SQL."examenes WHERE ID = '".$_POST['ID']."'", $link);
+				$refer_url = 'examenes/';
+			}
+		}
 	} elseif (($_GET['b'] == 'caducar_examen') AND ($_GET['ID'] != null)) {
 	
 		if ($_POST['pais'] == PAIS) {
 			mysql_query("DELETE FROM ".SQL."estudios_users WHERE ID = '".$_GET['ID']."' AND user_ID = '". $pol['user_ID']."' AND time < '".date('Y-m-d 20:00:00', time() - $pol['config']['examen_repe']*6)."' AND ID_estudio <= 0", $link);
-			$refer_url = 'examenes/mis-examenes//';
+			$refer_url = 'examenes/mis-examenes/';
 		}
 	}
 

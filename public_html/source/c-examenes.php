@@ -134,7 +134,7 @@ ORDER BY time DESC", $link);
 <li><b>Temario:</b> descripci&oacute;n breve y precisa de los temas abarcados<br />
 <textarea name="descripcion" style="color: green; font-weight: bold; width: 570px; height: 100px;">' . strip_tags($row['descripcion']) . '</textarea></li>
 
-<li><b>Nota para aprobar:</b> <input type="text" name="nota" size="3" maxlength="4" value="' . $row['nota'] . '" style="text-align:right;" /</li>
+<li><b>Nota para aprobar:</b> <input type="text" name="nota" size="3" maxlength="4" value="' . $row['nota'] . '" style="text-align:right;" /></li>
 
 <li><b>Extensi&oacute;n:</b> <input type="text" name="num_preguntas" size="3" maxlength="4" value="' . $row['num_preguntas'] . '" style="text-align:right;" /> preguntas</li>
 
@@ -142,6 +142,21 @@ ORDER BY time DESC", $link);
 
 </ol>
 </form>';
+			if (($pol['cargos'][35]) AND ($row['cargo_ID'] < 0))  {
+				$result3 = mysql_query("SELECT (SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas,
+(SELECT COUNT(*) FROM ".SQL."estudios_users WHERE ID_estudio = ".SQL."examenes.ID) AS num_usuarios
+FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
+				while($row3 = mysql_fetch_array($result3)){ 
+					if (($row3['num_depreguntas'] == 0) AND ($row3['num_usuarios'] == 0)) {
+						$txt .='<hr />
+<form action="/accion.php?a=examenes&b=eliminar-examen" method="post">
+<input type="hidden" name="ID" value="' . $row['ID'] . '" /> 
+<input type="submit" value="Eliminar examen"/>
+</form>';
+					}
+				}
+			}
+
 		}
 		$txt .= '</div>';
 

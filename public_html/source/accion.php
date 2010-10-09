@@ -414,12 +414,12 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 		}
 	} elseif (($_GET['b'] == 'eliminar-examen') AND ($_POST['ID'] != null) AND ($pol['cargos'][35])) { 
 		$result = mysql_query("SELECT cargo_ID,
-(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas,
-(SELECT COUNT(*) FROM ".SQL."estudios_users WHERE ID_estudio = ".SQL."examenes.ID) AS num_usuarios
+(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas
 FROM ".SQL."examenes WHERE ID = '" . $_POST['ID'] . "' LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ 
-			if (($row['cargo_ID'] < 0) AND ($row['num_depreguntas'] == 0) AND ($row['num_usuarios'] == 0)) {
+			if (($row['cargo_ID'] < 0) AND ($row['num_depreguntas'] == 0)) {
 				mysql_query("DELETE FROM ".SQL."examenes WHERE ID = '".$_POST['ID']."'", $link);
+				mysql_query("DELETE FROM ".SQL."estudios_users WHERE ID_estudio = '".$row['cargo_ID']."'", $link);
 				$refer_url = 'examenes/';
 			}
 		}

@@ -143,11 +143,10 @@ ORDER BY time DESC", $link);
 </ol>
 </form>';
 			if (($pol['cargos'][35]) AND ($row['cargo_ID'] < 0))  {
-				$result3 = mysql_query("SELECT (SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas,
-(SELECT COUNT(*) FROM ".SQL."estudios_users WHERE ID_estudio = ".SQL."examenes.ID) AS num_usuarios
+				$result3 = mysql_query("SELECT (SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas
 FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
 				while($row3 = mysql_fetch_array($result3)){ 
-					if (($row3['num_depreguntas'] == 0) AND ($row3['num_usuarios'] == 0)) {
+					if ($row3['num_depreguntas'] == 0) {
 						$txt .='<hr />
 <form action="/accion.php?a=examenes&b=eliminar-examen" method="post">
 <input type="hidden" name="ID" value="' . $row['ID'] . '" /> 
@@ -156,7 +155,6 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
 					}
 				}
 			}
-
 		}
 		$txt .= '</div>';
 

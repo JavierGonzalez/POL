@@ -42,7 +42,7 @@ foreach ($vp['paises'] AS $pais) {
 	while($row = mysql_fetch_array($result)) { $pais_pob = $row['num']; $pais_pob_num[$pais] = $row['num']; $pais_conf = $row['confianza']; }
 
 	// dias de existencia
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".$pais_low."_stats", $link);
+	$result = mysql_query("SELECT COUNT(ID) AS num FROM stats WHERE pais = '".$pais."'", $link);
 	while($row = mysql_fetch_array($result)) { $pais_dias = $row['num']; }
 
 	// dinero en personal

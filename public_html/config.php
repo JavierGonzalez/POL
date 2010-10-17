@@ -46,8 +46,6 @@ default:
 }
 
 // variables del sistema
-define('MONEDA', '<img src="/img/m.gif" border="0" />');
-define('MONEDA_NOMBRE', 'POLs');
 if (DEV == '-dev') {
 	// Version DEV
 	define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/devel/');
@@ -60,6 +58,8 @@ define('HOST', $_SERVER['HTTP_HOST']);
 define('VERSION', '1.0 Beta');
 define('IMG', 'http://www'.DEV.'.virtualpol.com/img/'); // Directorio en el que deben ir todos los elementos estáticos (gif, jpg, css, js)
 
+define('MONEDA', '<img src="'.IMG.'m.gif" border="0" />');
+define('MONEDA_NOMBRE', 'POLs');
 // variables de tablas SQL
 define('SQL_USERS', 'users');
 define('SQL_REFERENCIAS', 'referencias');

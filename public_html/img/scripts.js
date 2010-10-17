@@ -5,14 +5,14 @@ whois_cache = new Array();
 function print_whois(whois, wnick) {
 var w = whois.split(":");
 if (!whois) { $("#pnick").html("&dagger;"); } else {
-if (w[6] == 1) { var wa = "<img src=\"/img/a/" + w[0] + ".jpg\" style=\"float:right;margin:0 -6px 0 0;\" />"; } else { var wa = ""; }
-if (w[11] != 0) { var wc = "<img src=\"/img/cargos/" + w[11] + ".gif\" width=\"16\" /> "; } else { var wc = ""; }
+if (w[6] == 1) { var wa = "<img src=\"http://www.virtualpol.com/img/a/" + w[0] + ".jpg\" style=\"float:right;margin:0 -6px 0 0;\" />"; } else { var wa = ""; }
+if (w[11] != 0) { var wc = "<img src=\"http://www.virtualpol.com/img/cargos/" + w[11] + ".gif\" width=\"16\" /> "; } else { var wc = ""; }
 $("#pnick").html(wc + "<b style=\"color:grey;\">" + wnick + " (<span class=\"" + w[9] + "\">" + w[9].substr(0,1).toUpperCase() + w[9].substr(1,w[9].length) + "</span> de " + w[10] + ")</b><br />" + wa + "Nivel: <b>" + w[3] + "</b><br />Nota: <b>" + w[4] + "</b><br />Partido: <b>" + w[7] + "</b><br />Foro: <b>" + w[8] + "</b><br /><br />Online: <b>" + w[5] + "</b><br />Ultimo acceso: <b>" + w[2] + "</b><br />Registrado hace: <b>" + w[1] + "</b>").css("display","inline");
 }
 }
 
 $(document).ready(function(){
-$(".bred").css("background-image", "url(/img/alerta_roja.gif)");
+$(".bred").css("background-image", "url(http://www.virtualpol.com/img/alerta_roja.gif)");
 $(".bred").click(function(){
 	var bg = $(this).css("background-image");
 	if (bg != "none") { $(this).css("background-image", "none"); return false; }

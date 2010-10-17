@@ -252,7 +252,7 @@ case 'expulsar':
 			mysql_query("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$row['user_ID']."' LIMIT 1", $link);
 			mysql_query("UPDATE ".SQL_EXPULSIONES." SET estado = 'cancelado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
 
-			evento_chat('<span class="expulsado"><img src="/img/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$row['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="/img/cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>');
+			evento_chat('<span class="expulsado"><img src="'.IMG.'expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$row['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>');
 		}
 
 	} elseif (($pol['estado'] == 'desarrollador') OR ($pol['cargo'] == 21) AND ($_GET['razon'])) {
@@ -267,7 +267,7 @@ LIMIT 1", $link);
 			
 			mysql_query("INSERT INTO ".SQL_EXPULSIONES." (user_ID, autor, expire, razon, estado, tiempo, IP, cargo) VALUES ('".$row['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_GET['razon']))."', 'expulsado', '".$row['nick']."', '0', '".$pol['cargo']."')", $link);
 
-			evento_chat('<span class="expulsado"><img src="/img/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$row['nick'].'</b> ha sido expulsado de VirtualPol. Razon: <b>'.$_GET['razon'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>');
+			evento_chat('<span class="expulsado"><img src="'.IMG.'expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$row['nick'].'</b> ha sido expulsado de VirtualPol. Razon: <b>'.$_GET['razon'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>');
 		}
 	}
 	$refer_url = 'control/expulsiones/';
@@ -307,7 +307,7 @@ case 'voto':
 
 
 case 'avatar':
-	$img_root = RAIZ.'source/img/a/';
+	$img_root = RAIZ.'/img/a/';
 	if ($_GET['b'] == 'upload') {
 		$nom_file = $pol['user_ID'].'.jpg';
 		$img_name = $_FILES['avatar']['name'];
@@ -670,7 +670,7 @@ foreach ($_POST AS $dato => $valor) {
 	while($row = mysql_fetch_array($result)){
 		$salario = $_POST['salario_'.$row['ID']];
 		if (($salario >= 0) AND ($salario <= 1000)) {
-			if ($salario != $row['salario']) { evento_chat('<b>[GOBIERNO]</b> El salario de <img src="/img/cargos/'.$row['ID'].'.gif" /><b>'.$row['nombre'].'</b> se ha cambiado de '.pols($row['salario']).' '.MONEDA.' a '.pols($salario).' '.MONEDA.' ('.crear_link($pol['nick']).', <a href="/control/despacho-oval/">Despacho Oval</a>)');  }
+			if ($salario != $row['salario']) { evento_chat('<b>[GOBIERNO]</b> El salario de <img src="'.IMG.'cargos/'.$row['ID'].'.gif" /><b>'.$row['nombre'].'</b> se ha cambiado de '.pols($row['salario']).' '.MONEDA.' a '.pols($salario).' '.MONEDA.' ('.crear_link($pol['nick']).', <a href="/control/despacho-oval/">Despacho Oval</a>)');  }
 			mysql_query("UPDATE ".SQL."estudios SET salario = '".$salario."' WHERE ID = '".$row['ID']."' LIMIT 1", $link);
 		}
 	}
@@ -1150,7 +1150,7 @@ case 'kick':
 				$result = mysql_query("SELECT nick FROM users WHERE ID = '".$kickeado_id."' LIMIT 1", $link);
 				while($row = mysql_fetch_array($result)){ $kickeado_nick = $row['nick'];}
 				evento_log(14, $kick_id, $kickeado_id); // Kick cancelado
-				evento_chat('<span style="color:red;"><img src="/img/kick.gif" alt="Kick" border="0" /> <b>[KICK]</b> El kick a <b>'.$kickeado_nick.'</b> ha sido cancelado por <img src="/img/cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>.</span>');
+				evento_chat('<span style="color:red;"><img src="'.IMG.'kick.gif" alt="Kick" border="0" /> <b>[KICK]</b> El kick a <b>'.$kickeado_nick.'</b> ha sido cancelado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>.</span>');
 			}
 		}
 		$refer_url = 'control/kick/';
@@ -1192,7 +1192,7 @@ case 'kick':
 			$expire = date('Y-m-d H:i:s', time() + $_POST['expire']);
 			mysql_query("INSERT INTO ".SQL."ban (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$el_userid."', ".$pol['user_ID'].", '".$expire."', '".$_POST['razon']."', 'activo', '".$_POST['expire']."', ".$kick_IP.", '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
 
-			$kick_msg = '<span style="color:red;"><img src="/img/kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="/img/cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>';
+			$kick_msg = '<span style="color:red;"><img src="'.IMG.'kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>';
 			evento_chat($kick_msg);
 			if ((isset($_POST['chat_ID'])) AND ($_POST['chat_ID'] != 1) AND ($_POST['chat_ID'] != 2) AND ($_POST['chat_ID'] != 3)) { evento_chat($kick_msg, 0, $_POST['chat_ID']); }
 		}
@@ -1391,7 +1391,7 @@ case 'cargo':
 
 		$result2 = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
 		while($row2 = mysql_fetch_array($result2)){ 
-			evento_chat('<b>[CARGO] '.crear_link($pol['nick']).' dimite</b> del cargo <img src="/img/cargos/'.$_GET['ID'].'.gif" />'.$row2['nombre']);
+			evento_chat('<b>[CARGO] '.crear_link($pol['nick']).' dimite</b> del cargo <img src="'.IMG.'cargos/'.$_GET['ID'].'.gif" />'.$row2['nombre']);
 		}
 		$refer_url = 'perfil/'.strtolower($pol['nick']).'/';
 
@@ -1427,12 +1427,12 @@ case 'cargo':
 					if ($b == 'add') {
 						if (($cargo_ID != 21) OR (($cargo_ID == 21) AND (strtotime($asignado['fecha_registro']) <= (time()-8640000)) AND ($asignado['online'] >= 864000))) {
 							cargo_add($cargo_ID, $_POST['user_ID']);
-							evento_chat('<b>[CARGO]</b> El cargo de '.'<img src="/img/cargos/'.$cargo_ID.'.gif" />'.$row['nombre'].' ha sido asignado a '.crear_link($nick_asignado).' por '.crear_link($pol['nick']));
+							evento_chat('<b>[CARGO]</b> El cargo de '.'<img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$row['nombre'].' ha sido asignado a '.crear_link($nick_asignado).' por '.crear_link($pol['nick']));
 						}
 					}
 					elseif ($b == 'del') { 
 						cargo_del($cargo_ID, $_POST['user_ID']); 
-						evento_chat('<b>[CARGO] '.crear_link($pol['nick']).' quita</b> el cargo <img src="/img/cargos/'.$cargo_ID.'.gif" />'.$row['nombre'].' a '. crear_link($nick_asignado));
+						evento_chat('<b>[CARGO] '.crear_link($pol['nick']).' quita</b> el cargo <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$row['nombre'].' a '. crear_link($nick_asignado));
 					}
 				}
 				$refer_url = 'cargos/'.$cargo_ID.'/';

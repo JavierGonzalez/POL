@@ -217,7 +217,7 @@ ORDER BY siglas ASC", $link);
 			while($row2 = mysql_fetch_array($result2)) {
 				if ($row2['ha_votado'] != null) { $ha_votado = ' style="background:blue;"';
 				} else { $ha_votado = ' style="background:red;"'; }
-				$txt .= '<tr><td><img src="/img/cargos/6.gif" /> <b>' . crear_link($row2['nick']) . '</b></td><td><b>' . crear_link($row2['siglas'], 'partido') . '</b></td><td' . $ha_votado . '></td><td><b>' . $respuestas[$row2['ha_votado']]  . '</b></td></tr>';
+				$txt .= '<tr><td><img src="'.IMG.'cargos/6.gif" /> <b>' . crear_link($row2['nick']) . '</b></td><td><b>' . crear_link($row2['siglas'], 'partido') . '</b></td><td' . $ha_votado . '></td><td><b>' . $respuestas[$row2['ha_votado']]  . '</b></td></tr>';
 			}
 			$txt .= '</table>';
 

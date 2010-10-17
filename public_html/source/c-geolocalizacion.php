@@ -100,11 +100,11 @@ geocoder = "";
 function createMarker(point, nombre, pais, user_ID) {
 	var baseIcon = new GIcon(G_DEFAULT_ICON);
 	var letteredIcon = new GIcon(baseIcon);
-	letteredIcon.image = "http://'.strtolower(PAIS).'.virtualpol.com/img/geo/marker_" + pais + ".png";
+	letteredIcon.image = "'.IMG.'geo/marker_" + pais + ".png";
 	var marker = new GMarker(point, {title: nombre, icon:letteredIcon });
 
 	GEvent.addListener(marker, "click", function() {
-		marker.openInfoWindowHtml("<b>" + nombre + "</b><br />Ciudadano de " + pais + "<br /><img src=\"/img/a/" + user_ID + ".jpg\" alt=\"" + nombre + "\" /><br /><br /><br /><br />");
+		marker.openInfoWindowHtml("<b>" + nombre + "</b><br />Ciudadano de " + pais + "<br /><img src=\"'.IMG.'a/" + user_ID + ".jpg\" alt=\"" + nombre + "\" /><br /><br /><br /><br />");
 	});
 	return marker;
 } 

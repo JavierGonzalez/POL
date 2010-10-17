@@ -18,7 +18,7 @@ if ($txt_title) { $txt_title .= ' | VirtualPol'; } else { $txt_title = 'VirtualP
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="language" content="es_ES" />
 <meta name="description" content="<?=$txt_description?>" />
-<link href="/img/style.css" rel="stylesheet" type="text/css" />
+<link href="/img/style-home.css" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="/favicon.ico" />
 
 <script type="text/javascript">

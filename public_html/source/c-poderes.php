@@ -20,7 +20,7 @@ FROM ".SQL."estudios_users WHERE ID_estudio = '" . $cargo_ID . "' AND cargo = '1
 		if ($html) { $html .= ', '; }
 		$html .= crear_link($row['nick']); 
 	}
-	return '<img src="/img/cargos/' . $cargo_ID . '.gif" /> '.$html;
+	return '<img src="'.IMG.'cargos/' . $cargo_ID . '.gif" /> '.$html;
 }
 
 if ($pol['paises']) {
@@ -97,9 +97,9 @@ $txt .= mysql_error($link);
 while ($row = mysql_fetch_array($result)) {
 	if (!$first) { 
 		$first = true;
-		$txt .= '<li><img src="/img/cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . '</b></li>';
+		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . '</b></li>';
 	} else {
-		$txt .= '<li><img src="/img/cargos/' . $row['cargo'] . '.gif" /> ' . crear_link($row['nick']) . '</li>';
+		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> ' . crear_link($row['nick']) . '</li>';
 	}
 }
 
@@ -139,9 +139,9 @@ while ($row = mysql_fetch_array($result)) {
 	if (!$first) { 
 		$first = true;
 		// (' . ($row['s'] - $row['num'])  . ')
-		$txt .= '<li><img src="/img/cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</b></li>';
+		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</b></li>';
 	} else {
-		$txt .= '<li><img src="/img/cargos/' . $row['cargo'] . '.gif" /> ' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</li>';
+		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> ' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</li>';
 	}
 }
 

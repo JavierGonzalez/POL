@@ -196,7 +196,7 @@ function direccion_IP($tipo='') {
 
 function avatar($user_ID, $size='') {
 	if ($size) { $extra = '_' . $size; } else { $extra = ''; }
-	return '<img src="/img/a/' . $user_ID . $extra . '.jpg" alt="' . $user_ID . '" />'; 
+	return '<img src="'.IMG.'a/' . $user_ID . $extra . '.jpg" alt="' . $user_ID . '" />'; 
 }
 
 

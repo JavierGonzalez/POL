@@ -6,7 +6,7 @@ if ($pol['user_ID']) {
 if ($_GET['a'] == 'mensajes-enviados') {
 
 	$txt_title = 'Tus mensajes enviados';
-	$txt .= '<h1><img src="/img/email.gif" alt="Msg" /> <a href="/msg/">Mensajes privados</a>: Mensajes enviados</h1>';
+	$txt .= '<h1><img src="'.IMG.'email.gif" alt="Msg" /> <a href="/msg/">Mensajes privados</a>: Mensajes enviados</h1>';
 	
 	$txt .= '<p>' . boton('Enviar mensaje', '/msg/enviar/') . ' &nbsp; <span class="gris">Mensajes enviados por ti.</span></p>';
 
@@ -113,7 +113,7 @@ function click_form(tipo) {
 
 	$disabled_todos = '';
 	if ($pol['config']['pols_mensajetodos'] > $pol['pols']) { $disabled_todos = ' disabled="disabled"'; }
-	$txt .= '<h1><img src="/img/email.gif" alt="Msg" /> <a href="/msg/">Mensajes privados</a>: Enviar mensaje</h1>
+	$txt .= '<h1><img src="'.IMG.'email.gif" alt="Msg" /> <a href="/msg/">Mensajes privados</a>: Enviar mensaje</h1>
 
 <form action="/accion.php?a=enviar-mensaje" method="post">
 
@@ -144,7 +144,7 @@ function click_form(tipo) {
 
 } else {
 	$txt_title = $pol['msg'] . ' mensajes recibidos';
-	$txt .= '<h1><img src="/img/email.gif" alt="Msg" /> Mensajes privados: <a href="/msg/mensajes-enviados/">Mensajes enviados</a></h1>
+	$txt .= '<h1><img src="'.IMG.'email.gif" alt="Msg" /> Mensajes privados: <a href="/msg/mensajes-enviados/">Mensajes enviados</a></h1>
 
 <p>' . boton('Enviar mensaje', '/msg/enviar/') . ' &nbsp; <span class="gris">Tienes <b>' . $pol['msg'] . '</b> mensajes</span></p>
 
@@ -175,7 +175,7 @@ LIMIT 100", $link);
 		}
 
 
-		if ($row['cargo'] != '0') { $cargo = ' <img src="/img/cargos/' . $row['cargo'] . '.gif" title="' . $row['cargo_nom'] . '" />'; } else { $cargo = ''; }
+		if ($row['cargo'] != '0') { $cargo = ' <img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" title="' . $row['cargo_nom'] . '" />'; } else { $cargo = ''; }
 
 		$txt .= '<tr' . $fondo . '><td valign="top">' . $boton . '</td><td valign="top" align="right" nowrap="nowrap"><b>' . crear_link($row['nick_envia']) . '</b>' . $cargo . '<br /><acronym title="' . $row['time'] . '" style="font-size:12px;">' . duracion(time() - strtotime($row['time'])) . '</acronym></td><td valign="top">' . $row['text'] . '<hr /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($row['nick_envia']) . '/') . '</td><td valign="top">' . boton('X', '/accion.php?a=borrar-mensaje&ID=' . $row['ID']) . '</td></tr>' . "\n";
 	}

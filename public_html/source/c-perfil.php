@@ -16,7 +16,7 @@ while($row = mysql_fetch_array($result)){
 	} elseif ($user_ID) { //nick existe
 
 		$nick = $row['nick'];
-		if ($row['avatar'] == 'true') { $p_avatar = '<img src="/img/a/' . $row['ID'] . '.jpg" alt="'.$nick.'" />'; }
+		if ($row['avatar'] == 'true') { $p_avatar = '<img src="'.IMG.'a/' . $row['ID'] . '.jpg" alt="'.$nick.'" />'; }
 
 		$extras = '';
 		if ($row['estado'] == 'desarrollador') { $row['pais'] = 'VirtualPol'; }
@@ -38,7 +38,7 @@ while($row = mysql_fetch_array($result)){
 
 
 
-		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="2">'.$p_avatar.'</td><td nowrap="nowrap"><h1><span class="amarillo"><img src="/img/cargos/'.$row['cargo'].'.gif" alt="Cargo" style="margin-bottom:0;" border="0" /> ' . $nick . ' &nbsp; <span style="color:grey;"><span class="' . $row['estado'] . '">' . ucfirst($row['estado']) . '</span> de ' . $row['pais'] . '</span></span></h1></td><td nowrap="nowrap">';
+		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="2">'.$p_avatar.'</td><td nowrap="nowrap"><h1><span class="amarillo"><img src="'.IMG.'cargos/'.$row['cargo'].'.gif" alt="Cargo" style="margin-bottom:0;" border="0" /> ' . $nick . ' &nbsp; <span style="color:grey;"><span class="' . $row['estado'] . '">' . ucfirst($row['estado']) . '</span> de ' . $row['pais'] . '</span></span></h1></td><td nowrap="nowrap">';
 
 
 
@@ -105,10 +105,10 @@ ORDER BY nick ASC", $link);
 			}
 			$estudios_num++;
 			if ($row2['estado'] == 'ok') { 
-				$sello = '<img src="/img/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" /> '; 
+				$sello = '<img src="'.IMG.'estudiado.gif" alt="Aprobado" title="Aprobado" border="0" /> '; 
 			} else { $sello = ''; }
 
-			if ($row2['ID_estudio'] > 0) { $cargo_img = '<img src="/img/cargos/' . $row2['ID_estudio'] . '.gif" border="0" />'; } else { $cargo_img = ''; }
+			if ($row2['ID_estudio'] > 0) { $cargo_img = '<img src="'.IMG.'cargos/' . $row2['ID_estudio'] . '.gif" border="0" />'; } else { $cargo_img = ''; }
 			$estudios .= '<tr>
 <td>' . $sello . '</td>
 <td align="right" class="gris">' . $row2['nota'] . '</td>

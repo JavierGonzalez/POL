@@ -49,7 +49,7 @@ while ($row = mysql_fetch_array($result)) {
 
 // SI es Policia o Comisario del pais, muestra control de kicks.
 if ((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($pol['pais'] == PAIS)) {
-	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"/img/kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a> ';
+	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"'.IMG.'kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a> ';
 } else { $js_kick = ''; }
 
 
@@ -82,7 +82,7 @@ $txt .= '</h1>
 <ul id="vpc_ul">
 <li style="margin-top:380px;color:#AAA;"><b>
 '.($acceso['leer']?'
-<img src="/img/logo-virtualpol-40original.gif" alt="VirtualPOL" border="0" height="40" /><br />
+<img src="'.IMG.'logo-virtualpol-40original.gif" alt="VirtualPOL" border="0" height="40" /><br />
 '.$titulo.', Gobierno de '.PAIS.'<br />
 Acceso leer: '.$acceso_leer.($acceso_cfg_leer?' [<em>'.$acceso_cfg_leer.'</em>]':'').'<br />
 Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_escribir.'</em>]':'').'<br />
@@ -289,7 +289,7 @@ function print_msg(data) {
 				var vpc_yo = "";
 				if (minick == mli[3]) { var vpc_yo = " class=\"vpc_yo\""; }
 				if (mli[1].substr(0,3) == "98_") { var cargo_ID = 98; } else { var cargo_ID = mli[1]; }
-				list += "<li id=\"" + mli[0] + "\" class=\"cf_m\">" + mli[2] + " <img src=\"/img/cargos/" + cargo_ID + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[cargo_ID] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
+				list += "<li id=\"" + mli[0] + "\" class=\"cf_m\">" + mli[2] + " <img src=\"'.IMG.'cargos/" + cargo_ID + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[cargo_ID] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
 			}
 			if (((msg_num - 1) == i) && (msg_num != "n")) { msg_ID = mli[0]; }
 			if ((mli[1] != "e") && (mli[1] != "c")) { 
@@ -315,10 +315,10 @@ function merge_list() {
 		} else {
 			if (al_cargo[elnick].substr(0,3) == "98_") {
 				var kick_nick  = "ip-" + al_cargo[elnick].substr(3);
-				list += "<li>'.$js_kick.' <img src=\"/img/cargos/98.gif\" title=\"" + array_ncargos[98] + "\" /> " + elnick + "</li>\n";
+				list += "<li>'.$js_kick.' <img src=\"'.IMG.'cargos/98.gif\" title=\"" + array_ncargos[98] + "\" /> " + elnick + "</li>\n";
 			} else {
 				var kick_nick  = elnick;
-				list += "<li>'.$js_kick.' <img src=\"/img/cargos/" + al_cargo[elnick] + ".gif\" title=\"" + array_ncargos[al_cargo[elnick]] + "\" /> <a href=\"http://'.strtolower(PAIS).DEV.'.virtualpol.com/perfil/" + elnick  + "/\" class=\"nick\">" + elnick + "</a></li>\n";
+				list += "<li>'.$js_kick.' <img src=\"'.IMG.'cargos/" + al_cargo[elnick] + ".gif\" title=\"" + array_ncargos[al_cargo[elnick]] + "\" /> <a href=\"http://'.strtolower(PAIS).DEV.'.virtualpol.com/perfil/" + elnick  + "/\" class=\"nick\">" + elnick + "</a></li>\n";
 			}
 		}
 	}
@@ -385,17 +385,17 @@ function auto_priv(nick) {
 }
 
 function emoticono(m) {
-m = m.replace(/(\s|^):\)/gi, " <img src=\"/img/smiley/sonrie.gif\" border=\"0\" alt=\":)\" title=\":)\" />");
-m = m.replace(/(\s|^):\(/gi, " <img src=\"/img/smiley/disgustado.gif\" border=\"0\" alt=\":(\" title=\":(\" />");
-m = m.replace(/(\s|^):\|/gi, " <img src=\"/img/smiley/desconcertado.gif\" border=\"0\" alt=\":|\" title=\":|\" />");
-m = m.replace(/(\s|^):D/gi, " <img src=\"/img/smiley/xd.gif\" alt=\":D\" border=\"0\" title=\":D\" />");
-m = m.replace(/(\s|^):\*/gi, " <img src=\"/img/smiley/muacks.gif\" alt=\":*\" border=\"0\" title=\":*\" />");
-m = m.replace(/(\s|^);\)/gi, " <img src=\"/img/smiley/guino.gif\" alt=\";)\" border=\"0\" title=\";)\" />");
-m = m.replace(/(\s|^):O/gi, " <img src=\"/img/smiley/bocaabierta.gif\" alt=\":O\" border=\"0\" title=\":O\" />");
-m = m.replace(/(\s|^):tarta:/gi, " <img src=\"/img/smiley/tarta.gif\" alt=\":tarta:\" border=\"0\" title=\":tarta:\" />");
-m = m.replace(/(\s|^):roto2:/gi, " <img src=\"/img/smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" />");
-m = m.replace(/(\s|^):facepalm:/gi, " <img src=\"/img/smiley/palm.gif\" alt=\":facepalm:\" border=\"0\" title=\":facepalm:\" />");
-m = m.replace(/(\s|^):moneda:/gi, " <img src=\"/img/m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" />");
+m = m.replace(/(\s|^):\)/gi, " <img src=\"'.IMG.'smiley/sonrie.gif\" border=\"0\" alt=\":)\" title=\":)\" />");
+m = m.replace(/(\s|^):\(/gi, " <img src=\"'.IMG.'smiley/disgustado.gif\" border=\"0\" alt=\":(\" title=\":(\" />");
+m = m.replace(/(\s|^):\|/gi, " <img src=\"'.IMG.'smiley/desconcertado.gif\" border=\"0\" alt=\":|\" title=\":|\" />");
+m = m.replace(/(\s|^):D/gi, " <img src=\"'.IMG.'smiley/xd.gif\" alt=\":D\" border=\"0\" title=\":D\" />");
+m = m.replace(/(\s|^):\*/gi, " <img src=\"'.IMG.'smiley/muacks.gif\" alt=\":*\" border=\"0\" title=\":*\" />");
+m = m.replace(/(\s|^);\)/gi, " <img src=\"'.IMG.'smiley/guino.gif\" alt=\";)\" border=\"0\" title=\";)\" />");
+m = m.replace(/(\s|^):O/gi, " <img src=\"'.IMG.'smiley/bocaabierta.gif\" alt=\":O\" border=\"0\" title=\":O\" />");
+m = m.replace(/(\s|^):tarta:/gi, " <img src=\"'.IMG.'smiley/tarta.gif\" alt=\":tarta:\" border=\"0\" title=\":tarta:\" />");
+m = m.replace(/(\s|^):roto2:/gi, " <img src=\"'.IMG.'smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" />");
+m = m.replace(/(\s|^):facepalm:/gi, " <img src=\"'.IMG.'smiley/palm.gif\" alt=\":facepalm:\" border=\"0\" title=\":facepalm:\" />");
+m = m.replace(/(\s|^):moneda:/gi, " <img src=\"'.IMG.'m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" />");
 return m;
 }
 

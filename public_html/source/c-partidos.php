@@ -26,7 +26,7 @@ WHERE ID_partido = '" . $row['ID'] . "'
 ORDER BY ID ASC", $link);
 			while($row2 = mysql_fetch_array($result2)){ 
 				if (!$li_listas) {  $li_presi = ' &larr; Candidato a Presidente'; } else { $li_presi = ''; }
-				$li_listas .= '<li><form action="/accion.php?a=partido-lista&b=del&ID=' . $row['ID'] . '" method="post"><input type="hidden" name="user_ID" value="' . $row2['user_ID'] . '"  /><input style="height:26px;" type="submit" value="X" /> <img src="/img/cargos/'.$row2['cargo'].'.gif" /><b>' . crear_link($row2['nick']) . ' ' . confianza($row2['confianza']) . '</b> ' . $li_presi . '</form></li>' . "\n"; 
+				$li_listas .= '<li><form action="/accion.php?a=partido-lista&b=del&ID=' . $row['ID'] . '" method="post"><input type="hidden" name="user_ID" value="' . $row2['user_ID'] . '"  /><input style="height:26px;" type="submit" value="X" /> <img src="'.IMG.'cargos/'.$row2['cargo'].'.gif" /><b>' . crear_link($row2['nick']) . ' ' . confianza($row2['confianza']) . '</b> ' . $li_presi . '</form></li>' . "\n"; 
 				$candidatos_num++;
 			}
 
@@ -50,7 +50,7 @@ ORDER BY nick DESC", $link);
 			if (($candidatos_num >= $pol['config']['num_escanos']) OR ($ciudadanos_num == 0)) { $disabled = ' disabled="disabled"'; } else { $disabled = ''; }
 
 			include('inc-functions-accion.php');
-			$txt .= '<h1><img src="/img/doc-edit.gif" alt="Editar" /> <a href="/partidos/">Partidos</a>: ' . $row['siglas'] . ' (' . $row['nombre'] . ')</h1>
+			$txt .= '<h1><img src="'.IMG.'doc-edit.gif" alt="Editar" /> <a href="/partidos/">Partidos</a>: ' . $row['siglas'] . ' (' . $row['nombre'] . ')</h1>
 <ul id="partido">
 
 <li><form action="/accion.php?a=partido-lista&b=add&ID=' . $row['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos . '</select> <input type="submit" value="A&ntilde;adir a la lista"' . $disabled . ' /> (afiliados a tu partido y con estudio de Diputado)</form><br /></li>

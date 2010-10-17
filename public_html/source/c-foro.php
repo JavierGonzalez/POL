@@ -21,17 +21,17 @@ function emoticonos($cadena) {
 	$patrones[9] = $inicio_patron.':facepalm:/';
 	$patrones[10] = $inicio_patron.':moneda:/';
 	$reemplazos = array();
-	$reemplazos[0] = ' <img src="/img/smiley/sonrie.gif" border="0" alt=":)" title=":)" />';
-	$reemplazos[1] = ' <img src="/img/smiley/disgustado.gif" border="0" alt=":(" title=":(" />';
-	$reemplazos[2] = ' <img src="/img/smiley/desconcertado.gif" border="0" alt=":|" title=":|" />';
-	$reemplazos[3] = ' <img src="/img/smiley/xd.gif" alt=":D" border="0" title=":D" />';
-	$reemplazos[4] = ' <img src="/img/smiley/muacks.gif" alt=":*" border="0" title=":*" />';
-	$reemplazos[5] = ' <img src="/img/smiley/guino.gif" alt=";)" border="0" title=";)" />';
-	$reemplazos[6] = ' <img src="/img/smiley/bocaabierta.gif" alt=":O" border="0" title=":O" />';
-	$reemplazos[7] = ' <img src="/img/smiley/tarta.gif" alt=":tarta:" border="0" title=":tarta:" />';
-	$reemplazos[8] = ' <img src="/img/smiley/roto2.gif" alt=":roto2:" border="0" title=":roto2:" />';
-	$reemplazos[9] = ' <img src="/img/smiley/palm.gif" alt=":facepalm:" border="0" title=":facepalm:" />';
-	$reemplazos[10] = ' <img src="/img/m.gif" alt=":moneda:" border="0" title=":moneda:" />';
+	$reemplazos[0] = ' <img src="'.IMG.'smiley/sonrie.gif" border="0" alt=":)" title=":)" />';
+	$reemplazos[1] = ' <img src="'.IMG.'smiley/disgustado.gif" border="0" alt=":(" title=":(" />';
+	$reemplazos[2] = ' <img src="'.IMG.'smiley/desconcertado.gif" border="0" alt=":|" title=":|" />';
+	$reemplazos[3] = ' <img src="'.IMG.'smiley/xd.gif" alt=":D" border="0" title=":D" />';
+	$reemplazos[4] = ' <img src="'.IMG.'smiley/muacks.gif" alt=":*" border="0" title=":*" />';
+	$reemplazos[5] = ' <img src="'.IMG.'smiley/guino.gif" alt=";)" border="0" title=";)" />';
+	$reemplazos[6] = ' <img src="'.IMG.'smiley/bocaabierta.gif" alt=":O" border="0" title=":O" />';
+	$reemplazos[7] = ' <img src="'.IMG.'smiley/tarta.gif" alt=":tarta:" border="0" title=":tarta:" />';
+	$reemplazos[8] = ' <img src="'.IMG.'smiley/roto2.gif" alt=":roto2:" border="0" title=":roto2:" />';
+	$reemplazos[9] = ' <img src="'.IMG.'smiley/palm.gif" alt=":facepalm:" border="0" title=":facepalm:" />';
+	$reemplazos[10] = ' <img src="'.IMG.'m.gif" alt=":moneda:" border="0" title=":moneda:" />';
 	return preg_replace($patrones, $reemplazos, $cadena);
 }
 
@@ -126,7 +126,7 @@ function print_lateral($nick, $cargo, $time, $siglas='', $user_ID='', $avatar=''
 	$extra = '';
 	if ($cargo_ID == 99) { $cargo = 'Extranjero'; }
 	if ($avatar == 'true') { $avatar = '<span class="flateral">' . avatar($user_ID, 40) . '</span>'; } else { $avatar = ''; }
-	if ($cargo_ID) { $extra .= ' <img src="/img/cargos/' . $cargo_ID . '.gif" title="' . $cargo . '" />'; }
+	if ($cargo_ID) { $extra .= ' <img src="'.IMG.'cargos/' . $cargo_ID . '.gif" title="' . $cargo . '" />'; }
 	if ($confianza != '') { $extra .= ' ' . confianza($confianza) . ' '; }
 	
 	return $avatar . '<b>' . crear_link($nick) . $extra . '</b><br /><span class="min"><acronym title="' . $time . '">' . duracion(time() - strtotime($time)) .  '</acronym> ' . $siglas . '</span><br /><br />';

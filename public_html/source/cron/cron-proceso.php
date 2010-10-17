@@ -451,7 +451,7 @@ $tiempototal = number_format($tiempofinal - $tiempoinicial, 3);
 
 
 
-evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, '.$tiempototal.'s (<a href="/info/estadisticas/">estadisticas actualizadas</a>)');
+evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, '.$tiempototal.'s (<a href="/estadisticas/">estadisticas actualizadas</a>)');
 
 mysql_close($link);
 

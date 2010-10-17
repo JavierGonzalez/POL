@@ -2,7 +2,7 @@
 
 function editor_enriquecido($name, $txt='') {
 	$GLOBALS['txt_header'] .= '
-<script type="text/javascript" src="/img/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="'.IMG.'tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 tinyMCE.init({
 mode : "textareas",
@@ -163,7 +163,7 @@ LIMIT 1", $link);
 		mysql_query("DELETE FROM ".SQL_VOTOS." WHERE user_ID = '" . $user_ID . "' OR uservoto_ID = '" . $user_ID . "'", $link);
 		mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '" . $user_ID . "' AND hilo_ID = '-1'", $link);
 
-		$img_root = RAIZ.'pol/img/a/' . $user_ID;
+		$img_root = RAIZ.'/img/a/' . $user_ID;
 		if (file_exists($img_root . '.jpg')) {
 			@unlink($img_root . '.jpg');
 			@unlink($img_root . '_40.jpg');

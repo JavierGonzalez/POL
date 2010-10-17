@@ -34,7 +34,7 @@ ORDER BY nivel DESC", $link);
 
 		$estudiar = '';
 		if ($row['estado'] == 'ok') { //ya estudiado
-			$estudiar = '<img src="/img/estudiado.gif" alt="Estudiado" border="0" />';
+			$estudiar = '<img src="'.IMG.'estudiado.gif" alt="Estudiado" border="0" />';
 		} elseif ($row['estado'] == 'estudiando') { //estudiando
 
 			$t_inicio = strtotime($estudiando['time']);
@@ -43,10 +43,10 @@ ORDER BY nivel DESC", $link);
 			$p_estudiado = round(($t_estudiado * 100) / $row['tiempo']);
 
 
-			$estudiar = '<b>' . $p_estudiado . '% <img src="/img/estudiando.gif" alt="Estudiando" title="Estudiando..." border="0" /></b> ';
+			$estudiar = '<b>' . $p_estudiado . '% <img src="'.IMG.'estudiando.gif" alt="Estudiando" title="Estudiando..." border="0" /></b> ';
 		} else { //no estudiado
 			if (!$estudiando['ID_estudio']) {
-				$estudiar = '<a href="/accion.php?a=estudiar&id=' . $row['ID'] . '" title="Estudiar"><img src="/img/play.gif" alt="Estudiar" border="0" /></a> ';
+				$estudiar = '<a href="/accion.php?a=estudiar&id=' . $row['ID'] . '" title="Estudiar"><img src="'.IMG.'play.gif" alt="Estudiar" border="0" /></a> ';
 			}
 		}
 

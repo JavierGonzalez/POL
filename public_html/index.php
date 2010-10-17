@@ -83,14 +83,14 @@ foreach ($vp['paises'] AS $pais) {
 
 
 	$txt .= '<tr style="background:'.$vp['bg'][$pais].';">
-<td><a href="http://' . $pais_low . '.virtualpol.com/"><img src="http://pol.virtualpol.com/img/banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.' - Simulador Politico" /></a></td>
+<td><a href="http://' . $pais_low . '.virtualpol.com/"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.' - Simulador Politico" /></a></td>
 
 <td><a href="http://' . $pais_low . '.virtualpol.com/"><b style="font-size:24px;">' . $pais . '</b></a><br /><em style="color:#999;">'.$pais_config['pais_des'].'</em></td>
 
 <td align="right"><b style="font-size:20px;">' . $pais_pob . '</b></td>
 <td><acronym title="Nivel de Confianza media">'.confianza(round($pais_conf, 1)).'</acronym></td>
 <td nowrap="nowrap" align="right"><b>' . $pais_dias . '</b> d&iacute;as</td>
-<td nowrap="nowrap"><img src="http://pol.virtualpol.com/img/cargos/7.gif" alt="Presidente de '.$pais.'" title="Presidente de '.$pais.'" /> '.$pais_presidente.'<br /><img src="http://pol.virtualpol.com/img/cargos/19.gif" alt="Vicepresidente de '.$pais.'" title="Vicepresidente de '.$pais.'" /> '.$pais_vice.'</td>
+<td nowrap="nowrap"><img src="'.IMG.'cargos/7.gif" alt="Presidente de '.$pais.'" title="Presidente de '.$pais.'" /> '.$pais_presidente.'<br /><img src="'.IMG.'cargos/19.gif" alt="Vicepresidente de '.$pais.'" title="Vicepresidente de '.$pais.'" /> '.$pais_vice.'</td>
 
 <td align="right" nowrap="nowrap" style="font-size:13px;"><acronym title="CONdici&oacute;n de DEFensa">DEFCON</acronym> <b>' . $pais_config['defcon'] . '</b><br />';
 

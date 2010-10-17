@@ -428,7 +428,7 @@ ORDER BY time DESC LIMIT 1", $link);
 
 					if ($t[1]) {
 						if ($cargo == '1') {
-							$tabla .= '<tr><td align="right">' . crear_link($t[1], 'partido') . '</td><td><img src="/img/cargos/6.gif" alt="Diputado" title="Diputado" border="0" /> <b>' . crear_link($t[2], 'nick', $nestado) . '</b></td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';
+							$tabla .= '<tr><td align="right">' . crear_link($t[1], 'partido') . '</td><td><img src="'.IMG.'cargos/6.gif" alt="Diputado" title="Diputado" border="0" /> <b>' . crear_link($t[2], 'nick', $nestado) . '</b></td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';
 						} else {
 							$tabla .= '<tr><td align="right">' . crear_link($t[1], 'partido') . '</td><td>' . crear_link($t[2], 'nick', $nestado) . '</td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';
 						}

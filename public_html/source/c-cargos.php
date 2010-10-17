@@ -12,7 +12,7 @@ FROM ".SQL."estudios
 WHERE ID = '" . $_GET['a'] . "'
 LIMIT 1", $link);
 	while($row = mysql_fetch_array($result)) {
-		$txt .= '<h1><img src="/img/doc-edit.gif" alt="Editar" /> <a href="/cargos/">Cargo</a>: ' . $row['nombre'] . '</h1><ul>';
+		$txt .= '<h1><img src="'.IMG.'doc-edit.gif" alt="Editar" /> <a href="/cargos/">Cargo</a>: ' . $row['nombre'] . '</h1><ul>';
 
 		$result2 = mysql_query("SELECT user_ID, nota,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick,
@@ -95,15 +95,15 @@ ORDER BY nick ASC", $link);
 		switch ($row['asigna']) {
 			case -3: case -2: $asignado_por = '<acronym title="Consulta Ejecutiva (proximamente)"><b>C. Ejecutiva</b></acronym>'; break;
 			case 0: $asignado_por = '<acronym title="Elecciones Generales"><b>Elecciones</b></acronym>'; break;
-			case 7: $asignado_por = '<img src="/img/cargos/7.gif" title="Presidente" />'; break;
-			case 9: $asignado_por = '<img src="/img/cargos/9.gif" title="Juez Supremo" />'; break;
-			case 13: $asignado_por = '<img src="/img/cargos/13.gif" title="Comisario de Policia" />'; break;
-			case 35: $asignado_por = '<img src="/img/cargos/35.gif" title="Decano" />'; break;
-			case 22: $asignado_por = '<img src="/img/cargos/22.gif" title="Presidente del Parlamento" />'; break;
+			case 7: $asignado_por = '<img src="'.IMG.'cargos/7.gif" title="Presidente" />'; break;
+			case 9: $asignado_por = '<img src="'.IMG.'cargos/9.gif" title="Juez Supremo" />'; break;
+			case 13: $asignado_por = '<img src="'.IMG.'cargos/13.gif" title="Comisario de Policia" />'; break;
+			case 35: $asignado_por = '<img src="'.IMG.'cargos/35.gif" title="Decano" />'; break;
+			case 22: $asignado_por = '<img src="'.IMG.'cargos/22.gif" title="Presidente del Parlamento" />'; break;
 		}
 
 
-		if ($row['ico'] == true) { $ico = '<img src="/img/cargos/' . $row['ID'] . '.gif" alt="icono ' . $row['nombre'] . '" border="0" /> '; } else { $ico = ''; }
+		if ($row['ico'] == true) { $ico = '<img src="'.IMG.'cargos/' . $row['ID'] . '.gif" alt="icono ' . $row['nombre'] . '" border="0" /> '; } else { $ico = ''; }
 
 		$txt .= '<tr>
 <td align="right" valign="top">' . $row['nivel'] . '</td>

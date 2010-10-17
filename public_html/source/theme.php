@@ -20,7 +20,7 @@ if ($txt_title) {
 }
 if (!$txt_description) { $txt_description = $txt_title . ' - ' . $kw . PAIS.' | VirtualPol'; }
 
-if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\'/img/bg/'.$pol['config']['bg'].'\') repeat fixed top left'; } else { $body_bg = COLOR_BG; }
+if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\''.IMG.'bg/'.$pol['config']['bg'].'\') repeat fixed top left'; } else { $body_bg = COLOR_BG; }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -29,10 +29,10 @@ if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\'/img/bg/'.$pol['config']
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="language" content="es_ES" />
 <meta name="description" content="<?=$txt_description?>" />
-<link href="/img/style.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" media="screen" href="/img/superfish.css" /> 
+<link href="<?=IMG?>style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?=IMG?>superfish.css" /> 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script type="text/javascript" src="/img/superfish.js"></script> 
+<script type="text/javascript" src="<?=IMG?>superfish.js"></script> 
 
 <script type="text/javascript">
 $(document).ready(function(){ 
@@ -75,14 +75,14 @@ if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { //
 			case 'parl': $elecciones = ' <a href="/elecciones/" style="color:blue;"><b>Elecciones en curso</b>, queda <b style="font-size:18px;">' .  duracion($elecciones_quedan) . '</b></a> |';  break;
 		}
 	}
-	if ($pol['cargo']) { $cargo_icono = ' <img src="/img/cargos/' . $pol['cargo'] . '.gif" border="0" />'; } else { $cargo_icono = ''; }
-	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a> | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a> | <a href="/msg/" title="Mensajes">(' . $num_msg . ') <img src="/img/email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a> | <a href="/foro/mis-respuestas/" title="Respuestas a tus mensajes en el foro">Resp</a> |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';
+	if ($pol['cargo']) { $cargo_icono = ' <img src="'.IMG.'cargos/' . $pol['cargo'] . '.gif" border="0" />'; } else { $cargo_icono = ''; }
+	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a> | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a> | <a href="/msg/" title="Mensajes">(' . $num_msg . ') <img src="'.IMG.'email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a> | <a href="/foro/mis-respuestas/" title="Respuestas a tus mensajes en el foro">Resp</a> |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'extranjero') { // extranjero
-	$txt_perfil = '<a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <img src="/img/cargos/99.gif" style="margin-bottom:-2px;" border="0" /> (<b class="extranjero">Extranjero</b>) |  <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes">(' . $num_msg . ') <img src="/img/email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a> | <a href="/accion.php?a=logout">Salir</a>';
+	$txt_perfil = '<a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <img src="'.IMG.'cargos/99.gif" style="margin-bottom:-2px;" border="0" /> (<b class="extranjero">Extranjero</b>) |  <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes">(' . $num_msg . ') <img src="'.IMG.'email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a> | <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'turista') { // TURISTA
 	$txt_perfil = $pol['nick'] . ' (<b class="turista">Turista</b>) ' . $pol['tiempo_ciudadanizacion'] . ' | ' . boton('Solicitar Ciudadania', 'http://www.virtualpol.com/registrar/') . ' | <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'kickeado') { // KICKEADO
-	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Kickeado</b>) | <a href="/control/kick/"><b>Ver Kicks</b></a> | <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes">(' . $num_msg . ') <img src="/img/email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a>';
+	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Kickeado</b>) | <a href="/control/kick/"><b>Ver Kicks</b></a> | <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes">(' . $num_msg . ') <img src="'.IMG.'email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a>';
 } elseif ($pol['estado'] == 'expulsado') { // EXPULSADO
 	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Expulsado</b>)';
 } elseif ($pol['nick']) { // sin identificar, login OK
@@ -147,7 +147,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 
 	<li class="current">
-		<a href="http://www.virtualpol.com/" title="VirtualPOL"><img src="/img/vp-logo.png" border="0" alt="VirtualPOL" style="margin:-10px 0 -18px -14px;" /> &#9660;</a>
+		<a href="http://www.virtualpol.com/" title="VirtualPOL"><img src="<?=IMG?>vp-logo.png" border="0" alt="VirtualPOL" style="margin:-10px 0 -18px -14px;" /> &#9660;</a>
 			<ul>
 				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
 				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo</a></li>
@@ -157,7 +157,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 
 	<li>
-		<a href="/"><img src="/img/banderas/<?=PAIS?>-logo.png" alt="<?=PAIS?>, Simulador Politico en Espa&ntilde;ol juego online" border="0" style="margin:-10px 0 -18px 0;" /> <b> &#9660;</b></a> 
+		<a href="/"><img src="<?=IMG?>banderas/<?=PAIS?>-logo.png" alt="<?=PAIS?>, Simulador Politico en Espa&ntilde;ol juego online" border="0" style="margin:-10px 0 -18px 0;" /> <b> &#9660;</b></a> 
 		<ul>
 <?php foreach ($vp['paises'] AS $pais) { if (PAIS != $pais) {  echo '<li><a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a></li>'; } } ?>
 		</ul>
@@ -348,7 +348,7 @@ if ($pol['estado'] == 'desarrollador') {
 
 <div id="pnick" class="azul" style="display:none;opacity:0.9;"></div>
 
-<script type="text/javascript" src="/img/scripts.js"></script>
+<script type="text/javascript" src="<?=IMG?>scripts.js"></script>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

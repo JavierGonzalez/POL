@@ -18,7 +18,7 @@ WHERE estado = 'ciudadano' AND avatar = 'true'
 ORDER BY online DESC
 LIMIT 300", $link);
 	while($row = mysql_fetch_array($result)) { 
-		$txt .= '<img src="/img/a/'.$row['ID'].'.jpg" alt="'.$row['nick'].'" title="'.$row['nick'].'" />'; 
+		$txt .= '<img src="'.IMG.'a/'.$row['ID'].'.jpg" alt="'.$row['nick'].'" title="'.$row['nick'].'" />'; 
 	}
 
 	break;
@@ -144,7 +144,7 @@ FROM users " . $order_by . " LIMIT " . $p_limit, $link);
 <td align="right" class="gris">' . $orden++ . '</td>
 <td align="right">' . $row['nivel'] . '</td>
 <td>' . $avatar . '</td>
-<td><img src="/img/cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick'], 'nick', $row['estado']) . '</b></td>
+<td><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick'], 'nick', $row['estado']) . '</b></td>
 <td>' . $partido . '</td>
 <td align="right" nowrap="nowrap">' . $online . '</td>
 <td class="gris" align="right">' . $row['nota'] . '</td>

@@ -56,7 +56,7 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 		$mip = explode('.', long2ip($r['IP']));
 		$txt .= '<tr>
 <td align="right" nowrap="nowrap" style="font-size:12px;">'.$mip[0].'.'.$mip[1].'.'.$mip[2].'.* &nbsp;</td>
-<td nowrap="nowrap"><a href="/chats/'.$r['url'].'/">Ir</a>'.(((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($r['pais'] == $pol['pais']))?' <a href="/control/kick/ip-'.$r['IP'].'/'.$r['chat_ID'].'/" style="color:red;"><img src="http://pol.virtualpol.com/img/kick.gif" border="0" alt="KICK" title="KICK" /></a> &nbsp;':'').'</td>
+<td nowrap="nowrap"><a href="/chats/'.$r['url'].'/">Ir</a>'.(((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($r['pais'] == $pol['pais']))?' <a href="/control/kick/ip-'.$r['IP'].'/'.$r['chat_ID'].'/" style="color:red;"><img src="'.IMG.'kick.gif" border="0" alt="KICK" title="KICK" /></a> &nbsp;':'').'</td>
 <td align="right" nowrap="nowrap" style="font-size:14px;">' . duracion(time() - strtotime($r['time'])) . '</td>
 <td align="right" nowrap="nowrap" style="color:#666;" style="font-size:15px;"><b>'.$r['nick'].'</b>:</td>
 <td style="color:#AAA;font-size:15px;" width="100%">&nbsp; '.$r['msg'].'</td>

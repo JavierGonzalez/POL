@@ -39,7 +39,7 @@ case 'supervisor-censo':
 				$txt_title = 'Control: Supervision del Censo - Nuevos ciudadanos';
 				$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a></h1>
 
-<p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="/img/cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="'.IMG.'cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
 				$txt .= '<h1>1. Actividad de nuevos Ciudadanos (ultimos 60)</h1><hr />
 <table border="0" cellspacing="0" cellpadding="2">
@@ -123,7 +123,7 @@ LIMIT 60", $link);
 		$txt_title = 'Control: Supervision del Censo';
 		$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a></h1>
 
-<p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="/img/cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="'.IMG.'cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 		
 
 		$txt .= '<h1>1. Coincidencias de IP</h1><hr /><table border="0" cellspacing="4">';
@@ -489,7 +489,7 @@ ORDER BY time ASC", $link);
 $txt_header .= '
 <script type="text/javascript">
 function change_bg(img) {
-	$("body").css("background","#FFFFFF url(\'/img/bg/"+img+"\') repeat top left");
+	$("body").css("background","#FFFFFF url(\''.IMG.'bg/"+img+"\') repeat top left");
 }
 </script>';
 
@@ -562,7 +562,7 @@ $txt .= '
 
 $sel2[$pol['config']['bg']] = ' selected="selected"';
 
-$directorio = opendir('img/bg/'); 
+$directorio = opendir(RAIZ.'/img/bg/'); 
 while ($archivo = readdir($directorio)) {
 	if (($archivo != '.') AND ($archivo != '..') AND (substr($archivo,0,1) != '.') AND ($archivo != 'index.php')) {
 		$txt .= '<option value="'.$archivo.'"'.$sel2[$archivo].' onclick="change_bg(\''.$archivo.'\')"  onmouseover="change_bg(\''.$archivo.'\')">'.$archivo.'</option>';
@@ -643,7 +643,7 @@ ORDER BY salario DESC", $link);
 <table border="0" cellspacing="3" cellpadding="0" class="pol_table">
 
 <tr><td colspan="2" class="amarillo"><b class="big">Emoticonos</b></td></tr>
-<tr><td><a href="/img/smiley/roto2.gif"><p>roto2</p></a></td><td><input type="checkbox" value="roto2" /></td>
+<tr><td><a href="'.IMG.'smiley/roto2.gif"><p>roto2</p></a></td><td><input type="checkbox" value="roto2" /></td>
 </table>
 
 
@@ -676,7 +676,7 @@ $txt .= '
 
 }
 
-$txt .= '<p class="azul" style="color:grey;">Este control pertenece al Presidente <img src="/img/cargos/7.gif" /><b>' . crear_link($presidente) . '</b> y Vicepresidente <img src="/img/cargos/19.gif" /><b>' . crear_link($vicepresidente) . '</b>.</p>';
+$txt .= '<p class="azul" style="color:grey;">Este control pertenece al Presidente <img src="'.IMG.'cargos/7.gif" /><b>' . crear_link($presidente) . '</b> y Vicepresidente <img src="'.IMG.'cargos/19.gif" /><b>' . crear_link($vicepresidente) . '</b>.</p>';
 	break;
 
 
@@ -686,7 +686,7 @@ $txt .= '<p class="azul" style="color:grey;">Este control pertenece al President
 
 case 'expulsiones':
 	$txt_title = 'Control:  Expulsiones';
-	$txt .= '<h1><a href="/control/">Control</a>: <img src="/img/expulsar.gif" alt="Expulsado" border="0" /> Expulsiones</h1>
+	$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'expulsar.gif" alt="Expulsado" border="0" /> Expulsiones</h1>
 
 <p>Una expulsi&oacute;n bloquea de forma perpetua a un usuario de <a href="http://www.virtualpol.com/">VirtualPol</a>. Debe usarse tan solo en casos de <b>clones</b> o <b>ataques al sistema</b>.</p>
 
@@ -720,8 +720,8 @@ while($row = mysql_fetch_array($result)){
 	$txt .= '<tr><td valign="top" nowrap="nowrap">';
 	
 	if ($row['estado'] == 'expulsado') {
-		$txt .= '<img src="/img/expulsar.gif" alt="Expulsado" border="0" /> ';
-	} else { $txt .= '<img src="/img/cargos/0.gif" border="0" /> '; }
+		$txt .= '<img src="'.IMG.'expulsar.gif" alt="Expulsado" border="0" /> ';
+	} else { $txt .= '<img src="'.IMG.'cargos/0.gif" border="0" /> '; }
 
 	$txt .= '<b>' . crear_link($row['tiempo'], 'nick', $row['expulsado_estado'], $row['expulsado_pais']) . '</b></td>
 <td valign="top">'.$row['expulsado_pais'].'</td>
@@ -729,7 +729,7 @@ while($row = mysql_fetch_array($result)){
 
 }
 $txt .= '</table><hr /><p>Las expulsiones son ejecutadas por los desarrolladores a cualquier usuario que no ejerzan ningun cargo en su pais.</p>
-<p>Las expulsiones pueden ser canceladas por el <b><img src="/img/cargos/7.gif" />Presidente</b> y <b><img src="/img/cargos/9.gif" />Juez Supremo</b>, antes de que el expulsado sea eliminado (ocurre tras 10 dias inactivo).</p>';
+<p>Las expulsiones pueden ser canceladas por el <b><img src="'.IMG.'cargos/7.gif" />Presidente</b> y <b><img src="'.IMG.'cargos/9.gif" />Juez Supremo</b>, antes de que el expulsado sea eliminado (ocurre tras 10 dias inactivo).</p>';
 	break;
 
 
@@ -757,7 +757,7 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 	} elseif ($_GET['b']) {
 		if ($_GET['b'] == 'expulsar') { $_GET['b'] = ''; }
 		if (($pol['cargos'][12]) OR ($pol['cargos'][13]) OR ($pol['cargos'][22])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
-		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/kick/">Kicks</a> | <img src="/img/kick.gif" alt="Kick" border="0" /> Kickear</h1><p>Esta acci&oacute;n privilegiada bloquea totalmente las acciones de un Ciudadano y los que comparten su IP.</p>
+		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/kick/">Kicks</a> | <img src="'.IMG.'kick.gif" alt="Kick" border="0" /> Kickear</h1><p>Esta acci&oacute;n privilegiada bloquea totalmente las acciones de un Ciudadano y los que comparten su IP.</p>
 
 <form action="/accion.php?a=kick" method="post">
 '.($_GET['c']?'<input type="hidden" name="chat_ID" value="'.$_GET['c'].'" />':'').'
@@ -792,7 +792,7 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 			
 ';
 	} else {
-		$txt .= '<h1><a href="/control/">Control</a>: <img src="/img/kick.gif" alt="Kick" border="0" /> Kicks</h1><p>' . boton('KICK', '/control/kick/expulsar/') . ' Un kick bloquea temporalmente a un Ciudadano y su IP de todas las acciones en '.PAIS.'.</p>
+		$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'kick.gif" alt="Kick" border="0" /> Kicks</h1><p>' . boton('KICK', '/control/kick/expulsar/') . ' Un kick bloquea temporalmente a un Ciudadano y su IP de todas las acciones en '.PAIS.'.</p>
 
 <table border="0" cellspacing="1" cellpadding="" class="pol_table">
 <tr>
@@ -828,7 +828,7 @@ ORDER BY expire DESC", $link);
 		if (!$row['expulsado_estado']) { $row['expulsado_estado'] = 'expulsado'; }
 
 		if ($row['motivo']) { $motivo = '<a href="/control/kick/info/'.$row['ID'].'/">#</a>'; } else { $motivo = ''; }
-		$txt .= '<tr><td valign="top"><img src="/img/kick.gif" alt="Kick" border="0" /></td><td valign="top"><b>' . $estado . '</b></td><td valign="top"><b>'.($row['user_ID'] == 0?'Anonimo':crear_link($row['expulsado'], 'nick', $row['expulsado_estado'])).'</b></td><td valign="top" nowrap="nowrap"><img src="/img/cargos/' . $row['cargo'] . '.gif" border="0" /> ' . crear_link($row['nick_autor']) . '</td><td align="right" valign="top" nowrap="nowrap"><acronym title="' . $row['expire'] . '">' . $duracion . '</acronym></td><td align="right" valign="top" nowrap="nowrap">' . duracion($row['tiempo']+1) . '</td><td><b style="font-size:13px;">' . $row['razon'] . '</b></td><td>' . $expulsar . '</td><td>'.$motivo.'</td></tr>' . "\n";
+		$txt .= '<tr><td valign="top"><img src="'.IMG.'kick.gif" alt="Kick" border="0" /></td><td valign="top"><b>' . $estado . '</b></td><td valign="top"><b>'.($row['user_ID'] == 0?'Anonimo':crear_link($row['expulsado'], 'nick', $row['expulsado_estado'])).'</b></td><td valign="top" nowrap="nowrap"><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" border="0" /> ' . crear_link($row['nick_autor']) . '</td><td align="right" valign="top" nowrap="nowrap"><acronym title="' . $row['expire'] . '">' . $duracion . '</acronym></td><td align="right" valign="top" nowrap="nowrap">' . duracion($row['tiempo']+1) . '</td><td><b style="font-size:13px;">' . $row['razon'] . '</b></td><td>' . $expulsar . '</td><td>'.$motivo.'</td></tr>' . "\n";
 	}
 	$txt .= '</table><p>Los kicks solo pueden ser revocadas por un Comisario de Policia, un Juez Supremo o el Polic&iacute;a autor de la expulsi&oacute;n.</p>';
 
@@ -897,18 +897,18 @@ $txt .= '</table><br />
 <table border="0" cellspacing="6">
 
 <tr><td nowrap="nowrap"><a class="abig" href="/control/despacho-oval/"><b>Despacho Oval</b></a></td>
-<td align="right" nowrap="nowrap"><img src="/img/cargos/7.gif" title="Presidente" /> <img src="/img/cargos/19.gif" title="Vicepresidente" /></td>
+<td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/7.gif" title="Presidente" /> <img src="'.IMG.'cargos/19.gif" title="Vicepresidente" /></td>
 <td>El m&aacute;ximo poder ejecutivo.</td></tr>
 
 <tr>
-<td nowrap="nowrap"><img src="/img/kick.gif" alt="Kick" border="0" /> <a class="abig" href="/control/kick/"><b>Kicks</b></a></td>
-<td align="right" nowrap="nowrap"><img src="/img/cargos/13.gif" title="Comisario de Policia" /> <img src="/img/cargos/12.gif" title="Policia" /></td>
+<td nowrap="nowrap"><img src="'.IMG.'kick.gif" alt="Kick" border="0" /> <a class="abig" href="/control/kick/"><b>Kicks</b></a></td>
+<td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/13.gif" title="Comisario de Policia" /> <img src="'.IMG.'cargos/12.gif" title="Policia" /></td>
 <td>F&eacute;rreo control de control de acceso temporal.</td>
 </tr>
 
 <tr>
-<td nowrap="nowrap"><img src="/img/expulsar.gif" alt="Expulsado" border="0" /> <a class="abig" href="/control/expulsiones/"><b>Expulsiones</b></a></td>
-<td align="right" nowrap="nowrap"><img src="/img/cargos/21.gif" title="Supervisor del Censo" /></td>
+<td nowrap="nowrap"><img src="'.IMG.'expulsar.gif" alt="Expulsado" border="0" /> <a class="abig" href="/control/expulsiones/"><b>Expulsiones</b></a></td>
+<td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/21.gif" title="Supervisor del Censo" /></td>
 <td>Expulsiones permanentes de VirtualPol. Zona com&uacute;n entre Paises.</td>
 </tr>
 
@@ -923,22 +923,22 @@ if ($pol['estado'] == 'desarrollador') {
 
 
 $txt .= '
-<td align="right" nowrap="nowrap"><img src="/img/cargos/21.gif" title="Supervisor del Censo" /></td>
+<td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/21.gif" title="Supervisor del Censo" /></td>
 <td>Informaci&oacute;n procesada y analizada sobre el censo. Reservado.</td></tr>
 
 
 
 <tr><td nowrap="nowrap"><a class="abig" href="/control/judicial/"><b>Judicial</b></a></td>
-<td align="right" nowrap="nowrap"><img src="/img/cargos/9.gif" title="Judicial" /></td>
+<td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/9.gif" title="Judicial" /></td>
 <td>El panel judicial que permite efectuar sanciones.</td></tr>
 
 
 <tr><td nowrap="nowrap"><a class="abig" href="/mapa/propiedades/"><b>Propiedades del Estado</b></a></td>
-<td align="right" nowrap="nowrap"><img src="/img/cargos/40.gif" title="Arquitecto" /></td>
+<td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/40.gif" title="Arquitecto" /></td>
 <td>El Arquitecto tiene el control de las propiedades del Estado.</td></tr>
 
 <tr><td nowrap="nowrap"><a class="abig" href="/referendum/crear/"><b>Sondeos</b></a></td>
-<td align="right" nowrap="nowrap"><img src="/img/cargos/41.gif" title="Consultor" /></td>
+<td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/41.gif" title="Consultor" /></td>
 <td>El Consultor puede hacer sondeos de petici&oacute;n popular.</td></tr>
 
 </table>';

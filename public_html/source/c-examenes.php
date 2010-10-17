@@ -196,7 +196,7 @@ FROM ".SQL."estudios_users
 WHERE user_ID = '" . $pol['user_ID'] . "'
 ORDER BY estado ASC, nota DESC", $link);
 	while($row = mysql_fetch_array($result)){
-		if ($row['estado'] == 'ok') { $sello = '<img src="/img/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = ''; }
+		if ($row['estado'] == 'ok') { $sello = '<img src="'.IMG.'estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = ''; }
 		if ($row['cargo'] == 1) { $cargo = '(Cargo ejercido)'; } else { $cargo = ''; }
 		if (($row['ID_estudio'] <= 0) AND (time()-strtotime($row['time']) > $pol['config']['examen_repe']*6)) {
 			$caducar_examen = ' <form action="/accion.php?a=examenes&b=caducar_examen&ID='.$row['ID'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="X"  onclick="if (!confirm(\'&iquest;Seguro que quieres que CADUQUE el examen de ' . $row['nombre_examen'] . '?\')) { return false; }"/></form>';
@@ -409,8 +409,8 @@ LIMIT 1", $link);
 FROM ".SQL."estudios_users WHERE ID_estudio = '" . $row['cargo_ID'] . "' AND nota != '' ORDER BY nota DESC, cargo DESC, fecha_registro ASC LIMIT 100", $link);
 		$txt .= mysql_error($link);
 		while($row2 = mysql_fetch_array($result2)){ 
-			if ($row2['cargo'] == 1) { $cargo = '<img src="/img/cargos/'.$row['cargo_ID'].'.gif" />'; } else { $cargo = ''; }
-			if ($row2['estado'] == 'ok') { $sello = '<img src="/img/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = '<span style="margin-left:21px;"></span>'; }
+			if ($row2['cargo'] == 1) { $cargo = '<img src="'.IMG.'cargos/'.$row['cargo_ID'].'.gif" />'; } else { $cargo = ''; }
+			if ($row2['estado'] == 'ok') { $sello = '<img src="'.IMG.'estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = '<span style="margin-left:21px;"></span>'; }
 			$txt .= '<li><b class="gris">' . $sello . ' ' . $row2['nota'] . ' ' . $cargo . crear_link($row2['nick']) . '</b></li>';
 		}
 
@@ -460,7 +460,7 @@ ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 
 		if (substr($row['cargo_ID'], 0, 1) != '-') {
 			$result2 = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '" . $row['cargo_ID'] . "' LIMIT 1", $link);
-			while($row2 = mysql_fetch_array($result2)){ $cargo = '<img src="/img/cargos/' . $row['cargo_ID'] . '.gif" title="' . $row2['nombre'] . '" />'; }
+			while($row2 = mysql_fetch_array($result2)){ $cargo = '<img src="'.IMG.'cargos/' . $row['cargo_ID'] . '.gif" title="' . $row2['nombre'] . '" />'; }
 		} else { $cargo = ''; }
 
 		if (($pol['cargos'][35]) OR ($pol['cargos'][34])) { $boton = boton('Editar', '/examenes/editar/' . $row['ID'] . '/', 'm'); } 

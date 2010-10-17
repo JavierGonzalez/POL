@@ -19,7 +19,7 @@ LIMIT 1", $link);
 			$txt .= '<form action="/accion.php?a=editar-documento&ID=' . $row['ID'] . '" method="post">
 <input type="hidden" name="url" value="' . $row['url'] . '"  />
 
-<h1><img src="/img/doc-edit.gif" alt="Editar Documento" /> <a href="/doc/">Documento</a>: <input type="text" name="titulo" value="' . $row['title'] . '" size="60" /></h1>
+<h1><img src="'.IMG.'doc-edit.gif" alt="Editar Documento" /> <a href="/doc/">Documento</a>: <input type="text" name="titulo" value="' . $row['title'] . '" size="60" /></h1>
 
 
 <p>Nivel de acceso: <b>' . $row['nivel'] . '</b><br />
@@ -34,7 +34,7 @@ LIMIT 1", $link);
 
 		} else { 
 
-			$txt .= '<h1><img src="/img/doc.gif" alt="Documento" /> <a href="/doc/">Documento</a>: ' . $row['title'] . '</h1><div style="text-align:justify;margin:20px;">' . $row['text'] . '</div><br /><br /><hr style="width:100%;" />'; 
+			$txt .= '<h1><img src="'.IMG.'doc.gif" alt="Documento" /> <a href="/doc/">Documento</a>: ' . $row['title'] . '</h1><div style="text-align:justify;margin:20px;">' . $row['text'] . '</div><br /><br /><hr style="width:100%;" />'; 
 
 			if ($pol['nivel'] >= $row['nivel']) { 
 				if (($pol['nivel'] >= 50) OR ($pol['user_ID'] == $row['user_ID'])) {
@@ -66,7 +66,7 @@ $(document).ready(function(){
 */
 
 	$txt_title = 'Documentos';
-	$txt .= '<h1><img src="/img/doc.gif" alt="Documento" /> Documentos:</h1>
+	$txt .= '<h1><img src="'.IMG.'doc.gif" alt="Documento" /> Documentos:</h1>
 
 <p>Los Documentos de '.PAIS.' es el sistema principal para organizar textos. Esto permite crear un documento normal u oficial para cualquier fin. Los documentos pueden confeccionarse de forma colaborativa y con diversos niveles de acceso.</p>
 

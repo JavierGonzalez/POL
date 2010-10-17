@@ -6,7 +6,7 @@ define('URL', 'virtualpol.com');
 $host = explode('.', $_SERVER['HTTP_HOST']); // obtiene $host[0] que es el subdominio
 $host[0] = str_replace('-dev', '', $host[0], $dev); // convierte subdominios "pais-dev" en "pais" para que funcione la version dev
 if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
-
+if ($dev) { define('DEV', '-dev'); } else { define('DEV', ''); }
 
 // Configuracion Paises y colores
 $vp['paises'] = array('POL', 'Hispania', 'Atlantis');
@@ -48,7 +48,7 @@ default:
 // variables del sistema
 define('MONEDA', '<img src="/img/m.gif" border="0" />');
 define('MONEDA_NOMBRE', 'POLs');
-if ($dev) {
+if (DEV == '-dev') {
 	// Version DEV
 	define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/devel/');
 } else {
@@ -58,6 +58,7 @@ if ($dev) {
 
 define('HOST', $_SERVER['HTTP_HOST']);
 define('VERSION', '1.0 Beta');
+define('IMG', 'http://www'.DEV.'.virtualpol.com/img/'); // Directorio en el que deben ir todos los elementos estáticos (gif, jpg, css, js)
 
 // variables de tablas SQL
 define('SQL_USERS', 'users');
@@ -68,14 +69,7 @@ define('SQL_EXPULSIONES', 'expulsiones');
 
 // variables del sistema de usuarios
 define('USERCOOKIE', '.virtualpol.com');
-
-if ($dev) {
-	define('REGISTRAR', 'http://www-dev.virtualpol.com/registrar/');
-	define('DEV', '-dev');
-} else {
-	define('REGISTRAR', 'http://www.virtualpol.com/registrar/');
-	define('DEV', '');
-}
+define('REGISTRAR', 'http://www'.DEV.'.virtualpol.com/registrar/');
 
 
 

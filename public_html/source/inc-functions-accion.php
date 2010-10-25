@@ -4,6 +4,7 @@ function editor_enriquecido($name, $txt='') {
 	$GLOBALS['txt_header'] .= '
 <script type="text/javascript" src="'.IMG.'tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
+domain = 'virtualpol.com';
 tinyMCE.init({
 mode : "textareas",
 theme : "advanced",

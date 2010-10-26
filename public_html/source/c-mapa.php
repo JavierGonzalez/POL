@@ -312,7 +312,7 @@ ORDER BY estado ASC, time ASC", $link);
 
 
 
-	$txt .= '</table><br /><p><a href="/"><b>Ver mapa</b></a> &nbsp; <a href="/doc/mapa-de-pol/"><b>Ver documentaci&oacute;n</b></a></p>';
+	$txt .= '</table><br /><p><a href="/mapa/"><b>Ver mapa</b></a> &nbsp; <a href="/doc/mapa-de-pol/"><b>Ver documentaci&oacute;n</b></a></p>';
 
 } elseif (($_GET['a'] == 'comprar') AND ($_GET['b'])) { //Comprar
 
@@ -344,7 +344,7 @@ ORDER BY estado ASC, time ASC", $link);
 
 </form>
 
-<p><a href="/"><b>Ver mapa</b></a> &nbsp; <a href="/mapa/propiedades/"><b>Ver tus propiedades</b></a></p>';
+<p><a href="/mapa/"><b>Ver mapa</b></a> &nbsp; <a href="/mapa/propiedades/"><b>Ver tus propiedades</b></a></p>';
 
 } else {
 

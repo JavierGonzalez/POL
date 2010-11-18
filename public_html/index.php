@@ -115,7 +115,7 @@ pols($pais_monedas_p + $pais_monedas_c) . ' '.MONEDA.' <acronym style="color:red
 
 // GEN GRAFICO VISITAS
 $n = 0;
-$result = mysql_query("SELECT ciudadanos, time FROM ".strtolower($pais)."_stats ORDER BY time DESC LIMIT 9", $link);
+$result = mysql_query("SELECT ciudadanos, time FROM stats WHERE pais = '".$pais."' ORDER BY time DESC LIMIT 9", $link);
 while($row = mysql_fetch_array($result)){
 		
 	if ($gph[$pais]) { $gph[$pais] = ',' . $gph[$pais]; }

@@ -2,6 +2,7 @@
 
 // THEME VERSION MOVIL de paises (desarrollo incompleto y no publicado)
 // RECORDAR cambiar menus
+// Se tiene que crear una pagina de menu
 
 if ($link) { mysql_close($link); }
 if (!$txt) { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }

@@ -269,7 +269,7 @@ $txt .= '<td align="right">'.pols($row['inem']).'</td>
 
 	// GEN GRAFICO VISITAS
 	$n = 0;
-	$result = mysql_query("SELECT pols, pols_cuentas FROM ".strtolower($pais)."_stats ORDER BY time DESC LIMIT 9", $link);
+	$result = mysql_query("SELECT pols, pols_cuentas FROM stats WHERE pais = '".$pais."' ORDER BY time DESC LIMIT 9", $link);
 	while($row = mysql_fetch_array($result)){
 		if ($gph[$pais]) { $gph[$pais] = ',' . $gph[$pais]; }
 		$gph_maxx[$n] += $row['pols'] + $row['pols_cuentas'];

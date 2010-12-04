@@ -103,9 +103,9 @@ ORDER BY nivel DESC, title ASC", $link);
 	}
 
 
-	$txt .= '</div>'
+	$txt .= '</div>
 
-'<p>' . boton('Crear Documento', '/form/crear-documento/') . '</p>';
+<p>' . boton('Crear Documento', '/form/crear-documento/') . '</p>';
 
 }
 

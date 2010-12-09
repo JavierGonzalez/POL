@@ -10,8 +10,8 @@ if ($dev) { define('DEV', '-dev'); } else { define('DEV', ''); }
 
 // Configuracion Paises y colores
 $vp['paises'] = array('POL', 'Hispania', 'Atlantis');
-$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#DDDDDD', 'ninguno'=>'#FFFFFF');
-$vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#EEEEEE', 'ninguno'=>'#FFFFFF');
+$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#FF8C00', 'ninguno'=>'#FFFFFF');
+$vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#D57500', 'ninguno'=>'#FFFFFF');
 
 // Configuracion por pais
 switch ($host[0]) {

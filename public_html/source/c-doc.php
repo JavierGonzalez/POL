@@ -70,7 +70,7 @@ $(document).ready(function(){
 
 <p>Los Documentos de '.PAIS.' es el sistema principal para organizar textos. Esto permite crear un documento normal u oficial para cualquier fin. Los documentos pueden confeccionarse de forma colaborativa y con diversos niveles de acceso.</p>
 
-<p>' . boton('Crear Documento', '/form/crear-documento/') . '</p>;
+<p>' . boton('Crear Documento', '/form/crear-documento/') . '</p>
 
 <div id="docs">';
 

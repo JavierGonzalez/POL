@@ -29,6 +29,7 @@
 </div>
 <br />
 <div id="noms"><?php
+$time_pre = date('Y-m-d H:i:00', time() - 1800); // 30 minutos
 $result = mysql_query("SELECT nick, pais, estado
 FROM ".SQL_USERS." 
 WHERE fecha_last > '" . $time_pre . "' AND estado != 'desarrollador' AND estado != 'expulsado'

@@ -34,7 +34,7 @@
     <td id="atlantis" style="background:url(atlantis.png)">&nbsp;</td>
   </tr>
   <tr>
-    <td id="estadisticas"><img src="chart.png" /><a href="http://virtualpol.com/">Población</a><br /><a href="http://pol.virtualpol.com/info/economia/">+Estadisticas</a></td>
+    <td id="estadisticas"><a href="http://virtualpol.com/">Población</a><br /><a href="http://pol.virtualpol.com/info/economia/">+Estadisticas</a></td>
     <td colspan="2" id="ciudadanos"><?php
 $time_pre = date('Y-m-d H:i:00', time() - 1800); // 30 minutos
 $result = mysql_query("SELECT nick, pais, estado

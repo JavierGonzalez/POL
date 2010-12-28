@@ -76,7 +76,7 @@ if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { //
 		}
 	}
 	if ($pol['cargo']) { $cargo_icono = ' <img src="'.IMG.'cargos/' . $pol['cargo'] . '.gif" border="0" />'; } else { $cargo_icono = ''; }
-	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a> | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a> | <a href="/msg/" title="Mensajes">(' . $num_msg . ') <img src="'.IMG.'email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a> | <a href="/foro/mis-respuestas/" title="Respuestas a tus mensajes en el foro">Resp</a> |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';
+	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a> | <a href="/pols/"><b>' . pols($pol['pols']) . '.000</b> ' . MONEDA . '</a> | <a href="/msg/" title="Mensajes">(' . $num_msg . ') <img src="'.IMG.'email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a> | <a href="/foro/mis-respuestas/" title="Respuestas a tus mensajes en el foro">Resp</a> |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'extranjero') { // extranjero
 	$txt_perfil = '<a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <img src="'.IMG.'cargos/99.gif" style="margin-bottom:-2px;" border="0" /> (<b class="extranjero">Extranjero</b>) |  <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes">(' . $num_msg . ') <img src="'.IMG.'email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a> | <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'turista') { // TURISTA

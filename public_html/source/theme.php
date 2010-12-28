@@ -224,6 +224,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 						<a href="/doc/boletin-oficial-de-<?=strtolower(PAIS)?>/">BO<?=substr(PAIS,0,1)?></a>
 					</li>
 					<li><a href="/cargos/">Cargos</a></li>
+					<li><a href="/mod.php">Modulo de Guerra</a></li>
 					<li><a href="/partidos/">Partidos <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
 					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Control</b></a>
 						<ul>

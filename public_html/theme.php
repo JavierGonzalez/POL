@@ -80,24 +80,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 </div>
 </div>
 <div id="content-wrap" class="clear lcol">
-<div class="column">
-<div class="column-in">
 
-<p>
-<a href="http://desarrollo.virtualpol.com/"><b>Blog Desarrollo</b></a><br />
-<a href="http://pol.virtualpol.com/info/economia/
-"><b>Economia Global</b></a><br />
-</p>
-
-<p>Pa&iacute;ses:<br />
-<a href="http://pol.virtualpol.com/"><b>POL</b></a><br />
-<a href="http://hispania.virtualpol.com/"><b>Hispania</b></a><br />
-<a href="http://atlantis.virtualpol.com/"><b>Atlantis</b></a>
-</p>
-
-
-</div>
-</div>
 <div class="content">
 <div class="content-in">
 

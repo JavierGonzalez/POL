@@ -302,7 +302,7 @@ $txt .= '</p>
 <p>Foro: <b><acronym title="hilos+mensajes">' . $row['num_hilos'] . '+' . $row['num_msg'] . '</acronym></b></p>
 <p>Referencias: <b>' . $row['ref_num'] . '</b><br /><b>' . $refs . '</b></p>
 <p>Afiliado a: <b>' . crear_link($row['partido'], 'partido') . '</b></p>
-<p>Bando: <b>' . $pol['bando'] . '</b></p>';
+<p>Bando: <b>' . $row['bando'] . '</b></p>';
 
 if ($row['estado'] != 'desarrollador') {
 	$txt .= '<p>Ultimo acceso: <acronym title="' . $row['fecha_last'] . '"><b>' . duracion(time() - strtotime($row['fecha_last'])) . '</b></acronym><br />';

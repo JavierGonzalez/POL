@@ -211,9 +211,7 @@ $txt .= '<br /><div class="amarillo">
 <td><b style="font-size:34px;">' . $li_online_num . '</b></td>
 <td>Ciudadanos online: ' . $li_online . '</td>
 </tr>
-</table></div>
-
-
+</table></div>'; //añadido mailto en la palabra contactar
 
 
 $txt_header .= '<style type="text/css">td b { font-size:15px; }</style>';

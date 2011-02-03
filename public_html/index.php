@@ -213,7 +213,7 @@ $txt .= '<br /><div class="amarillo">
 </tr>
 </table></div>
 
-<p style="color:grey;">* Si quieres disponer de tu propio simulador pol&iacute;tico  y Pa&iacute;s independiente, has de reunir al menos 15 Ciudadanos activos y <a href="mailto:desarrollador@virtualpol.com">contactar</a> con <em>desarrollador@virtualpol.com</em>.</p>'; //añadido mailto en la palabra contactar
+
 
 
 $txt_header .= '<style type="text/css">td b { font-size:15px; }</style>';

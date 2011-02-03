@@ -151,16 +151,14 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
 				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo</a></li>
 				<li><a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct">Gu&iacute;a inicial</a></li>
+				<li><a href="http://pol.virtualpol.com">POL</a></li>
+				<li><a href="http://hispania.virtualpol.com">Hispania</a></li>
+				<li><a href="http://atlantis.virtualpol.com">Atlantis</a></li>
 			</ul>
 	</li>
 
 
-	<li>
-		<a href="/"><img src="<?=IMG?>banderas/<?=PAIS?>-logo.png" alt="<?=PAIS?>, Simulador Politico en Espa&ntilde;ol juego online" border="0" style="margin:-10px 0 -18px 0;" /> <b> &#9660;</b></a> 
-		<ul>
-<?php foreach ($vp['paises'] AS $pais) { if (PAIS != $pais) {  echo '<li><a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a></li>'; } } ?>
-		</ul>
-	</li>
+	
 
 
 

@@ -4,7 +4,7 @@ body.fullwidth div#container { width: 100%; }
 div#header {color: inherit;background-color: #fff;}
 div#header-in { padding: 2px 20px 2px 20px; }
 div#content-wrap {padding: 6px 0;}
-div.lcol div.content { margin: 0 0 0 170px; }
+div.lcol div.content { margin: 0 0 0 0px; }
 div.content {color: inherit;min-height:470px;background-color: #fff;}
 div.content-in { padding: 15px 10px 10px 20px; color:#5D5D5D; }
 div.content-in h1 { font-size:19px; color:green; margin:0; padding:0; line-height:12px; }

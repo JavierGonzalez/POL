@@ -50,7 +50,7 @@ while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor
 if (isset($pol['user_ID'])) {
 
 	// LOAD: $pol
-	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, fecha_last, fecha_registro, nivel, fecha_init, cargo,
+	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo,
 (SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE recibe_ID = users.ID AND leido = '0') AS msg
 FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
@@ -58,6 +58,7 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 		$pol['pais'] = $r['pais'];
 		$pol['estado'] = $r['estado'];
 		$pol['partido'] = $r['partido_afiliado'];
+		$pol['bando'] = $r['bando'];
 		$pol['fecha_registro'] = $r['fecha_registro'];
 		$pol['nivel'] = $r['nivel'];
 		$pol['msg'] = $r['msg'];

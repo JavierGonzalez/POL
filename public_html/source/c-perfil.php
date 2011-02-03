@@ -3,6 +3,7 @@ include('inc-login.php');
 
 $result = mysql_query("SELECT *, 
 (SELECT siglas FROM ".SQL."partidos WHERE ID = ".SQL_USERS.".partido_afiliado LIMIT 1) AS partido,
+(SELECT siglas FROM ".SQL."v_bandos WHERE ID = ".SQL_USERS.".bando LIMIT 1) AS bando,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = ".SQL_USERS.".ID LIMIT 1) AS num_hilos,
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = ".SQL_USERS.".ID LIMIT 1) AS num_msg
 FROM ".SQL_USERS." 
@@ -301,7 +302,8 @@ $txt .= '</p>
 
 <p>Foro: <b><acronym title="hilos+mensajes">' . $row['num_hilos'] . '+' . $row['num_msg'] . '</acronym></b></p>
 <p>Referencias: <b>' . $row['ref_num'] . '</b><br /><b>' . $refs . '</b></p>
-<p>Afiliado a: <b>' . crear_link($row['partido'], 'partido') . '</b></p>';
+<p>Afiliado a: <b>' . crear_link($row['partido'], 'partido') . '</b></p>
+<p>Bando: <b>' . crear_link($row['bando'], 'bando') . '</b></p>';
 
 if ($row['estado'] != 'desarrollador') {
 	$txt .= '<p>Ultimo acceso: <acronym title="' . $row['fecha_last'] . '"><b>' . duracion(time() - strtotime($row['fecha_last'])) . '</b></acronym><br />';

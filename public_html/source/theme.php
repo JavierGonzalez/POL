@@ -255,7 +255,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 					<li><a href="/pols/cuentas/">Cuentas</a></li>
 					<li><a href="/pols/cuentas/1/">Cuenta <em>Gobierno</em></a></li>
 					<li><a href="/subasta/">Subastas</a></li>
-					<li><a href="/info/economia/">Economia Global</a></li>
 				</ul>
 			</li><?php if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { ?>
 			<li>

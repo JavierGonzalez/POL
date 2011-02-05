@@ -13,6 +13,11 @@ $pol['cargos'] = cargos();
 if ($_GET['ID']) { $_GET['ID'] = mysql_real_escape_string($_GET['ID']); }
 
 
+
+
+if (PAIS == 'VP') { echo 'Accion bloqueada temporalmente.'; exit; }
+
+
 // Solo ciudadanos
 if (
 ((PAIS == $pol['pais']) AND ($pol['estado'] == 'ciudadano'))
@@ -190,7 +195,7 @@ case 'pass':
 
 
 case 'rechazar-ciudadania':
-
+	
 	$user_ID = false;
 	$result3 = mysql_query("SELECT IP, pols, nick, ID, ref, estado,
 (SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = '".$pol['user_ID']."') AS pols_cuentas 

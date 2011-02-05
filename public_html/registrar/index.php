@@ -243,6 +243,7 @@ case 'verificar': //URL EMAIL
 
 case 'solicitar-ciudadania':
 	
+	if ($_POST['pais'] == 'VP') { echo 'Accion bloqueada temporalmente.'; exit; }
 
 	// tiene kick?
 	$result = mysql_query("SELECT ID FROM ".strtolower($_POST['pais'])."_ban WHERE estado = 'activo' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);

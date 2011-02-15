@@ -15,7 +15,6 @@ e - evento
 c - print comando
 */
 
-if (PAIS == 'VP') { echo 'Accion bloqueada temporalmente.'; exit; }
 
 function chat_refresh($id, $n) {
 	global $link, $_SESSION;

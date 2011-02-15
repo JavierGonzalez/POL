@@ -14,10 +14,6 @@ if ($_GET['ID']) { $_GET['ID'] = mysql_real_escape_string($_GET['ID']); }
 
 
 
-
-if (PAIS == 'VP') { echo 'Accion bloqueada temporalmente.'; exit; }
-
-
 // Solo ciudadanos
 if (
 ((PAIS == $pol['pais']) AND ($pol['estado'] == 'ciudadano'))

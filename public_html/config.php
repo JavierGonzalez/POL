@@ -9,48 +9,43 @@ if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header
 if ($dev) { define('DEV', '-dev'); } else { define('DEV', ''); }
 
 // Configuracion Paises y colores
-$vp['paises'] = array('POL', 'Hispania', 'Atlantis', 'VP');
-$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'ninguno'=>'#FFFFFF', 'vp'=>'#ACFA58');
-$vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'ninguno'=>'#FFFFFF', 'vp'=>'#9AFE2E');
+$vp['paises_congelados'] = array('POL', 'VULCAN', 'Hispania', 'Atlantis'); // aqui los paises que pasaron a ser historia (visibles pero inactivos)
+$vp['paises'] = array('POL', 'Hispania', 'Atlantis', 'VP'); // Quitar paises congelados cuando esté listo el estado "congelado".
+$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'vp'=>'#ACFA58', 'www'=>'#eeeeee');
+$vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'vp'=>'#9AFE2E', 'www'=>'grey');
+
 
 // Configuracion por pais
-switch ($host[0]) {
+switch ($host[0]) { 
 
 case 'vp':
 	define('PAIS', 'VP');
 	define('SQL', 'vp_');
-	define('COLOR_BG', $vp['bg'][PAIS]);
-	define('COLOR_BG2', $vp['bg2'][PAIS]);
 	break;
 
 case 'pol':
 	define('PAIS', 'POL');
 	define('SQL', 'pol_');
-	define('COLOR_BG', $vp['bg'][PAIS]);
-	define('COLOR_BG2', $vp['bg2'][PAIS]);
 	break;
 
 case 'hispania':
 	define('PAIS', 'Hispania');
 	define('SQL', 'hispania_');
-	define('COLOR_BG', $vp['bg'][PAIS]);
-	define('COLOR_BG2', $vp['bg2'][PAIS]);
 	break;
 
 case 'atlantis':
 	define('PAIS', 'Atlantis');
 	define('SQL', 'atlantis_');
-	define('COLOR_BG', $vp['bg'][PAIS]);
-	define('COLOR_BG2', $vp['bg2'][PAIS]);
 	break;
 
 default:
 	define('PAIS', 'POL');
 	define('SQL', 'pol_');
-	define('COLOR_BG', '#eee');
-	define('COLOR_BG2', 'grey');
 	break;
 }
+
+define('COLOR_BG', $vp['bg'][PAIS]);
+define('COLOR_BG2', $vp['bg2'][PAIS]);
 
 // variables del sistema
 if (DEV == '-dev') {

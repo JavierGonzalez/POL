@@ -351,7 +351,7 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 		while($row = mysql_fetch_array($result)) { $pais_des = $row['valor']; }
 
 		if ($_GET['pais'] == $pais) { $select = ' selected="selected"'; } else { $select = ''; } 
-		$txt .= '<option value="' . $pais . '"' . $select . '>' . $pais . ' - '.$ciudadanos_num.' ciudadanos - '.$pais_des.'</option>';
+		$txt .= '<option value="'.$pais.'"'.$select.($pais!='VP'?' disabled="disabled"':'').'>'.$pais.' - '.$ciudadanos_num.' ciudadanos - '.$pais_des.'</option>';
 	}
 
 

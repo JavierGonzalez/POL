@@ -35,12 +35,13 @@ function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', 
 	global $pol, $link, $vp;
 	if ($secret) { $nick = '_'; } else { $nick = $pol['nick']; }
 	if (!$pais) { $pais = PAIS; }
-	if (!$chat_ID) { if ($pais == 'POL') { $chat_ID = 1; } elseif ($pais == 'Hispania') { $chat_ID = 2; } elseif ($pais == 'Atlantis') { $chat_ID = 3; } }
+	if (!$chat_ID) { if ($pais == 'POL') { $chat_ID = 1; } elseif ($pais == 'Hispania') { $chat_ID = 2; } elseif ($pais == 'Atlantis') { $chat_ID = 3; } elseif ($pais == 'VP') { $chat_ID = 4; } }
 
 	if ($chat_ID == -1) {
 mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('1', '".$nick."', '".$msg."', '0', '".$user_ID."', '".$tipo."')", $link);
 mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('2', '".$nick."', '".$msg."', '0', '".$user_ID."', '".$tipo."')", $link);
 mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('3', '".$nick."', '".$msg."', '0', '".$user_ID."', '".$tipo."')", $link);
+mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('4', '".$nick."', '".$msg."', '0', '".$user_ID."', '".$tipo."')", $link);
 	} else {
 mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('".$chat_ID."', '".$nick."', '".$msg."', '0', '".$user_ID."', '".$tipo."')", $link);
 	}

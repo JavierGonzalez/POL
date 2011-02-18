@@ -116,7 +116,7 @@ ORDER BY time DESC", $link);
 
 			if (($pol['cargos'][35]) OR (($pol['cargos'][34]) AND ($row2['user_ID'] == $pol['user_ID']))) { $boton = boton('x', '/accion.php?a=examenes&b=eliminar-pregunta&ID=' . $row2['ID'] . '&re_ID=' . $row['ID'], '&iquest;Seguro que quieres ELIMINAR esta pregunta y sus respuestas?'); } else { $boton = ''; }
 
-			$txt .= '<li>' . crear_link($row2['nick']) . ': <b>&iquest;' . $row2['pregunta'] . '?</b> &nbsp; (' . $row2['tiempo'] . ' seg) &nbsp; <select name="p">' . $respuestas . '</select> ' . $boton . '</li>';
+			$txt .= '<li>' . crear_link($row2['nick']) . ': <b>&iquest;' . $row2['pregunta'] . '?</b> &nbsp; (' . $row2['tiempo'] . ' seg) &nbsp; <select name="p"><option value=""></option>' . $respuestas . '</select> ' . $boton . '</li>';
 		}
 	
 	

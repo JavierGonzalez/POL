@@ -148,6 +148,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 	<li class="current">
 		<a href="http://www.virtualpol.com/" title="VirtualPOL"><img src="<?=IMG?>vp-logo.png" border="0" alt="VirtualPOL" style="margin:-10px 0 -18px -14px;" /> &#9660;</a>
 			<ul>
+				<li><a href="http://vp.virtualpol.com">VP</a></li>
 				<li><a href="http://pol.virtualpol.com">POL</a></li>
 				<li><a href="http://hispania.virtualpol.com">Hispania</a></li>
 				<li><a href="http://atlantis.virtualpol.com">Atlantis</a></li>

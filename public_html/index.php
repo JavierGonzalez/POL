@@ -33,8 +33,8 @@ $txt .= '
 <th>Gobierno</th>
 <th colspan="3" align="center">Informaci&oacute;n</th>
 </tr>';
-
-foreach ($vp['paises'] AS $pais) {
+$vp['paises2'] = array('VP'); // cambiar cuando se cambie en el config
+foreach ($vp['paises2'] AS $pais) {
 	$pais_low = strtolower($pais);
 	
 	// ciudadanos

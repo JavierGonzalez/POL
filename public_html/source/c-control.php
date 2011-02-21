@@ -533,20 +533,6 @@ http://<input type="text" name="palabra_gob1" size="19" maxlength="200" value="'
 </select>';
 
 
-foreach ($vp['paises'] AS $pais) {
-$sel = '';
-$sel[$pol['config']['frontera_con_' . $pais]] = ' selected="selected"';
-if (PAIS != $pais) {
-$txt .= '
-<tr><td align="right">Frontera con ' . $pais. ':</td>
-<td>
-<select name="frontera_con_' . $pais . '"'.$dis.'>
-<option value="abierta"' . $sel['abierta'] . '>Abierta</option>
-<option value="cerrada"' . $sel['cerrada'] . '>Cerrada</option>
-</select>
-</tr>';
-}
-}
 
 $txt .= '
 

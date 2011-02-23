@@ -379,7 +379,7 @@ ORDER BY num ASC", $link);
 
 case 'despacho-oval':
 	$txt_title = 'Control: Despacho Oval';
-	if ($pol['nivel'] > 100) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
+	if ($pol['nivel'] >= 98) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
 
 	$result = mysql_query("SELECT (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS elnick
 	 FROM ".SQL."estudios_users WHERE ID_estudio = '7' AND cargo = '1' LIMIT 1", $link);

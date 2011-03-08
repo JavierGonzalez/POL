@@ -190,7 +190,7 @@ case 'pass':
 
 
 
-case 'rechazar-ciudadania': exit;
+case 'rechazar-ciudadania':
 	
 	$user_ID = false;
 	$result3 = mysql_query("SELECT IP, pols, nick, ID, ref, estado,

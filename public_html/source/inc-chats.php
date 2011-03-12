@@ -297,6 +297,7 @@ function print_msg(data) {
 						list += "<li id=\"" + mli[0] + "\" class=\"cf_p vpc_priv\">" + mli[2] + " <span class=\"vpc_priv\" style=\"color:#004FC6\" ;OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
 					} else {
 						list += "<li id=\"" + mli[0] + "\" class=\"cf_p vpc_priv\">" + mli[2] + " <span class=\"vpc_priv\" OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
+						chat_sin_leer_yo = chat_sin_leer_yo + "+";
 					}
 				}
 				chat_sin_leer++;

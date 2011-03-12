@@ -161,6 +161,7 @@ chat_delay2 = "";
 chat_delay3 = "";
 chat_delay4 = "";
 chat_sin_leer = 0;
+chat_sin_leer_yo = "";
 mouse_position = "";
 titulo_html = document.title;
 chat_delay_close = "";
@@ -187,6 +188,7 @@ window.onload = function(){
 
 	$("body").click(function() {
 	  chat_sin_leer = 0; 
+	  chat_sin_leer_yo = "";
 	  refresh_sin_leer();
 	});
 }
@@ -269,7 +271,7 @@ function chat_query_ajax() {
 }
 
 function refresh_sin_leer() {
-	document.title = chat_sin_leer + " - " + titulo_html;
+	document.title = chat_sin_leer_yo + chat_sin_leer + " - " + titulo_html;
 }
 
 
@@ -298,7 +300,7 @@ function print_msg(data) {
 					}
 				}
 				chat_sin_leer++;
-			} else {'.($pol['nick']?'if ("'.$pol['nick'].'" != "") { var txt = txt.replace(/'.$pol['nick'].'/gi, "<b style=\"color:orange;\">" + minick + "</b>"); }':'').'
+			} else {'.($pol['nick']?'if ("'.$pol['nick'].'" != "") { var txt_antes = txt; var txt = txt.replace(/'.$pol['nick'].'/gi, "<b style=\"color:orange;\">" + minick + "</b>"); if (txt_antes != txt) { chat_sin_leer_yo = chat_sin_leer_yo + "+"; } }':'').'
 				var vpc_yo = "";
 				if (minick == mli[3]) { var vpc_yo = " class=\"vpc_yo\""; }
 				if (mli[1].substr(0,3) == "98_") { var cargo_ID = 98; } else { var cargo_ID = mli[1]; }
@@ -360,7 +362,7 @@ function enviarmsg() {
 		$.post("/ajax.php", { a: "enviar", chat_ID: chat_ID, n: msg_ID, msg: elmsg, anonimo: anonimo }, 
 		function(data){ 
 			ajax_refresh = true;
-			if (data) { chat_sin_leer--; print_msg(data); }
+			if (data) { chat_sin_leer = -1; print_msg(data); }
 			setTimeout(function(){ $("#botonenviar").removeAttr("disabled"); }, 1600);
 			chat_delay = 4500;
 			refresh = setTimeout(chat_query_ajax, chat_delay);

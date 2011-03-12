@@ -160,6 +160,9 @@ chat_delay1 = "";
 chat_delay2 = "";
 chat_delay3 = "";
 chat_delay4 = "";
+chat_sin_leer = 0;
+mouse_position = "";
+titulo_html = document.title;
 chat_delay_close = "";
 delays();
 
@@ -181,6 +184,11 @@ window.onload = function(){
 		$("#chatform").hide().after("<div id=\"cf\"><b>Nick:</b> <input type=\"input\" id=\"cf_nick\" size=\"10\" maxlength=\"14\" /> <button onclick=\"cf_cambiarnick();\" style=\"font-weight:bold;color:green;font-size:16px;\">Entrar al chat</button></div>");
 	}
 	'.($acceso['leer']?'refresh = setTimeout(chat_query_ajax, 6000); chat_query_ajax();':'').'
+
+	$("body").click(function() {
+	  chat_sin_leer = 0; 
+	  refresh_sin_leer();
+	});
 }
 
 
@@ -197,7 +205,6 @@ function cf_cambiarnick() {
 		$("#chatform").show();
 	} else { $("#cf_nick").val(""); }
 }
-
 
 function chat_filtro_change() {
 	if (chat_filtro == "normal") {
@@ -261,6 +268,11 @@ function chat_query_ajax() {
 	}
 }
 
+function refresh_sin_leer() {
+	document.title = chat_sin_leer + " - " + titulo_html;
+}
+
+
 function print_msg(data) {
 	if (ajax_refresh) {
 		var arraydata = data.split("\n");
@@ -285,11 +297,13 @@ function print_msg(data) {
 						list += "<li id=\"" + mli[0] + "\" class=\"cf_p vpc_priv\">" + mli[2] + " <span class=\"vpc_priv\" OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
 					}
 				}
+				chat_sin_leer++;
 			} else {'.($pol['nick']?'if ("'.$pol['nick'].'" != "") { var txt = txt.replace(/'.$pol['nick'].'/gi, "<b style=\"color:orange;\">" + minick + "</b>"); }':'').'
 				var vpc_yo = "";
 				if (minick == mli[3]) { var vpc_yo = " class=\"vpc_yo\""; }
 				if (mli[1].substr(0,3) == "98_") { var cargo_ID = 98; } else { var cargo_ID = mli[1]; }
 				list += "<li id=\"" + mli[0] + "\" class=\"cf_m\">" + mli[2] + " <img src=\"'.IMG.'cargos/" + cargo_ID + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[cargo_ID] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
+				chat_sin_leer++;
 			}
 			if (((msg_num - 1) == i) && (msg_num != "n")) { msg_ID = mli[0]; }
 			if ((mli[1] != "e") && (mli[1] != "c")) { 
@@ -300,6 +314,7 @@ function print_msg(data) {
 		}
 		$("#vpc_ul").append(emoticono(list));
 		merge_list();
+		refresh_sin_leer();
 		print_delay();
 	}
 }
@@ -336,7 +351,7 @@ function print_delay() {
 }
 
 function enviarmsg() {
-	var elmsg = $("#vpc_msg").attr("value");
+ 	var elmsg = $("#vpc_msg").attr("value");
 	if ((elmsg) && (acceso_escribir)) {
 		ajax_refresh = false;
 		clearTimeout(refresh);
@@ -345,7 +360,7 @@ function enviarmsg() {
 		$.post("/ajax.php", { a: "enviar", chat_ID: chat_ID, n: msg_ID, msg: elmsg, anonimo: anonimo }, 
 		function(data){ 
 			ajax_refresh = true;
-			if (data) { print_msg(data); }
+			if (data) { chat_sin_leer--; print_msg(data); }
 			setTimeout(function(){ $("#botonenviar").removeAttr("disabled"); }, 1600);
 			chat_delay = 4500;
 			refresh = setTimeout(chat_query_ajax, chat_delay);

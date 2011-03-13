@@ -437,8 +437,6 @@ FROM ".SQL."examenes WHERE ID = '" . $_POST['ID'] . "' LIMIT 1", $link);
 
 case 'mapa':
 	//pol_mapa (ID, pos_x, pos_y, size_x, size_y, user_ID, link, text, time, pols, color, estado)
-	$columnas = 38;
-	$filas = 40;
 
 	// pasa a ESTADO
 	if ($pol['cargos'][40]) { mysql_query("UPDATE ".SQL."mapa SET estado = 'e', user_ID = '' WHERE link = 'ESTADO'", $link); }
@@ -450,7 +448,7 @@ case 'mapa':
 		while($row = mysql_fetch_array($result)){ 
 			if ($pol['user_ID'] != $row['user_ID']) {
 				pols_transferir($row['pols'], $pol['user_ID'], $row['user_ID'], 'Compra-venta propiedad: '.$row['ID']);
-				mysql_query("UPDATE ".SQL."mapa SET estado = 'p', user_ID = '".$pol['user_ID']."' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+				mysql_query("UPDATE ".SQL."mapa SET estado = 'p', user_ID = '".$pol['user_ID']."', nick = '".$pol['nick']."' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
 			}
 		}
 
@@ -570,7 +568,7 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargo
 
 			if (($cc[$pos[0]][$pos[1]] != true) AND ($pol['pols'] >= $pol['config']['pols_solar'])) { // verifica solar libre
 
-				mysql_query("INSERT INTO ".SQL."mapa (pos_x, pos_y, size_x, size_y, user_ID, link, text, time, pols, color, estado, superficie) VALUES ('".$pos[0]."', '".$pos[1]."', '1', '1', '".$pol['user_ID']."', '".$_POST['link']."', '', '".$date."', '".$pol['config']['pols_solar']."', '".$_POST['color']."', 'p', '1')", $link);
+				mysql_query("INSERT INTO ".SQL."mapa (pos_x, pos_y, size_x, size_y, user_ID, nick, link, text, time, pols, color, estado, superficie) VALUES ('".$pos[0]."', '".$pos[1]."', '1', '1', '".$pol['user_ID']."', '".$pol['nick']."', '".$_POST['link']."', '', '".$date."', '".$pol['config']['pols_solar']."', '".$_POST['color']."', 'p', '1')", $link);
 				pols_transferir($pol['config']['pols_solar'], $pol['user_ID'], '-1', 'Compra propiedad: '.$_GET['ID']);
 			}
 		}

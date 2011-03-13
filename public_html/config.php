@@ -73,7 +73,9 @@ define('SQL_EXPULSIONES', 'expulsiones');
 define('USERCOOKIE', '.virtualpol.com');
 define('REGISTRAR', 'http://www'.DEV.'.virtualpol.com/registrar/');
 
-
+// mapa (provisional)
+$columnas = 14;
+$filas = 16;
 
 // funciones con passwords importantes
 include(RAIZ.'config-pwd.php');

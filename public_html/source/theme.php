@@ -1,5 +1,4 @@
 <?php 
-if ($link) { mysql_close($link); }
 if (!$txt) { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
 if ($_SERVER['HTTP_HOST'] == 'ninguno.virtualpol.com') { header('Location: http://www.virtualpol.com/'); exit; }
 $kw = '';
@@ -288,12 +287,23 @@ foreach(explode(";", $pol['config']['palabras']) as $t) {
 		echo '</b>' . $t[2] . '<b>' . $edit . "<br />\n";
 	}
 }
+
+
+echo '</b><a href="/mapa/" class="gris" style="float:right;margin:0 11px 0 0;">Mapa</a><a href="/subasta/" class="gris" style="margin:0 0 0 -3px;">Subasta</a>';
+
+
+if (!isset($cuadrado_size)) {
+	$cuadrado_size = 10;
+	include('inc-mapa.php');
+	echo '<div style="margin:0 0 0 -4px;">'.$txt_mapa.'</div>';
+}
 ?>
-</b><a href="/subasta/" class="gris">Subasta</a>
+
+
+
+
 
 </div>
-
-
 </div>
 </div>
 <div class="content">
@@ -362,3 +372,4 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 
 </body>
 </html>
+<?php if ($link) { mysql_close($link); } ?>

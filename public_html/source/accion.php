@@ -468,6 +468,31 @@ case 'mapa':
 		mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargos'][40]."')) LIMIT 1", $link);
 		$refer_url = 'mapa/propiedades/';
 
+	} elseif (($_GET['b'] == 'separar') AND ($_GET['ID'])) {
+
+		$result = mysql_query("SELECT * FROM ".SQL."mapa WHERE ID = '".$_GET['ID']."' AND estado = 'p' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		while($row = mysql_fetch_array($result)){ 
+			
+			for ($y=1;$y<=$row['size_y'];$y++) {
+				for ($x=1;$x<=$row['size_x'];$x++) {
+					if (($x==1) AND ($y==1)) {
+						mysql_query("UPDATE ".SQL."mapa SET size_x = 1, size_y = 1, superficie = 1, time = '".$date."' WHERE ID = '".$row['ID']."' LIMIT 1", $link);
+						$puntero_x = $row['pos_x'];
+						$puntero['pos_x'] = $row['pos_x'];
+						$puntero['pos_y'] = $row['pos_y'];
+					} else {
+						mysql_query("INSERT INTO ".SQL."mapa (pos_x, pos_y, size_x, size_y, user_ID, nick, link, text, time, pols, color, estado, superficie) VALUES ('".$puntero['pos_x']."', '".$puntero['pos_y']."', '1', '1', '".$pol['user_ID']."', '".$pol['nick']."', '".$row['link']."', '', '".$date."', '".$row['pols']."', '".$row['color']."', 'p', '1')", $link);
+					}
+					$puntero['pos_x']++;
+				}
+				$puntero['pos_x'] = $puntero_x;
+				$puntero['pos_y']++;
+			}
+
+		}
+		
+		
+		$refer_url = 'mapa/propiedades/';
 
 	} elseif (($_GET['b'] == 'fusionar') AND ($_GET['ID']) AND ($_GET['f'])) {
 

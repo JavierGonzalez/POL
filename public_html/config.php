@@ -75,7 +75,7 @@ define('REGISTRAR', 'http://www'.DEV.'.virtualpol.com/registrar/');
 
 // mapa (provisional)
 $columnas = 14;
-$filas = 16;
+$filas = 18;
 
 // funciones con passwords importantes
 include(RAIZ.'config-pwd.php');

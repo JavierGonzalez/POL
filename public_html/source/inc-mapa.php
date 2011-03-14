@@ -1,6 +1,6 @@
 <?php
-$width = $cuadrado_size * $columnas;
-$height = $cuadrado_size * $filas;
+$mapa_width = $cuadrado_size * $columnas;
+$mapa_height = $cuadrado_size * $filas;
 $superficie_total = $columnas * $filas;
 
 /* estado
@@ -10,10 +10,10 @@ E - estado		Gris			(propiedad, no venta, estatal)			e|link-interno|text
 
 S - solar			Blanco		(solar, en venta, link a compra)			null
 */
-// ".SQL."mapa (ID, pos_x, pos_y, size_x, size_y, user_ID, link, text, time, pols, color, estado)
 
 $count = 1;
 $prop = '';
+$m = null;
 $result = mysql_query("SELECT ID, pos_x, pos_y, size_x, size_y, link, pols, color, estado, superficie, nick
 FROM ".SQL."mapa
 ORDER BY pos_y ASC, pos_x ASC", $link);
@@ -36,15 +36,15 @@ while($r = mysql_fetch_array($result)) {
 }
 
 if ($mapa_full) {
-	$txt_mapa .= '<h2 style="margin: 6px 0 6px 0;">Mapa: &nbsp; <input type="button" value="Actualizar" onclick="window.location=\'/mapa/\';" style="margin:-8px 0 -6px 0;padding:0;" /> <input type="button" value="Modo" onclick="colorear(\'toggle\');" style="margin:-8px 0 -6px 0;padding:0;" /> &nbsp; <acronym title="Superficie ocupada" style="color:blue;">' . round(($sup_total * 100) / $superficie_total) . '% ocupado</acronym> <acronym title="Superficie en venta" style="color:red;">' . round(($venta_total * 100) / $superficie_total) . '% en venta </acronym></h2>';
+	$txt_mapa .= '<h1 style="margin: 6px 0 6px 0;">Mapa: &nbsp; <input type="button" value="Actualizar" onclick="window.location=\'/mapa/\';" style="margin:-8px 0 -6px 0;padding:0;" /> <input type="button" value="Modo" onclick="colorear(\'toggle\');" style="margin:-8px 0 -6px 0;padding:0;" /> &nbsp; <acronym title="Superficie ocupada" style="color:blue;">' . round(($sup_total * 100) / $superficie_total) . '% ocupado</acronym> <acronym title="Superficie en venta" style="color:red;">' . round(($venta_total * 100) / $superficie_total) . '% en venta </acronym></h1>';
 }
 
 $txt_mapa .= '
 <style type="text/css">
 #polm table {
 table-layout: fixed;
-width:' . $width . 'px;
-height:' . $height . 'px;
+width:' . $mapa_width . 'px;
+height:' . $mapa_height . 'px;
 }
 
 #polm td {
@@ -141,7 +141,7 @@ unset($prop);
 $txt_mapa .= '
 
 <div id="polm">
-<table border="0" cellpadding="0" cellspacing="0" height="' . $height . '" width="' . $width . '">';
+<table border="0" cellpadding="0" cellspacing="0" height="' . $mapa_height . '" width="' . $mapa_width . '">';
 for ($y=1;$y<=$filas;$y++) {
 	$txt_mapa .= '<tr>';
 	for ($x=1;$x<=$columnas;$x++) {

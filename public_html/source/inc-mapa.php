@@ -3,8 +3,6 @@ $width = $cuadrado_size * $columnas;
 $height = $cuadrado_size * $filas;
 $superficie_total = $columnas * $filas;
 
-if ($cuadrado_size == 20) { $mapa_full = true; } else { $mapa_full = false; }
-
 /* estado
 P - propiedad	LIBRE			(propiedad, no venta)						link|nick|color|letras
 V - venta		Amarillo		(propiedad, en venta, link a compra)	v|nick|pols
@@ -15,6 +13,7 @@ S - solar			Blanco		(solar, en venta, link a compra)			null
 // ".SQL."mapa (ID, pos_x, pos_y, size_x, size_y, user_ID, link, text, time, pols, color, estado)
 
 $count = 1;
+$prop = '';
 $result = mysql_query("SELECT ID, pos_x, pos_y, size_x, size_y, link, pols, color, estado, superficie, nick
 FROM ".SQL."mapa
 ORDER BY pos_y ASC, pos_x ASC", $link);
@@ -37,7 +36,7 @@ while($r = mysql_fetch_array($result)) {
 }
 
 if ($mapa_full) {
-	$txt_mapa .= '<h2 style="margin: 6px 0 6px 0;">Mapa: &nbsp; <acronym title="Superficie ocupada" style="color:blue;">' . round(($sup_total * 100) / $superficie_total) . '% ocupado</acronym> <input type="button" value="Modo" onclick="colorear(\'toggle\');" style="margin:-8px 0 -6px 0;height:28px;padding:0;" /> <acronym title="Superficie en venta" style="color:#D2D200;">' . round(($venta_total * 100) / $superficie_total) . '% en venta </acronym></h2>';
+	$txt_mapa .= '<h2 style="margin: 6px 0 6px 0;">Mapa: &nbsp; <input type="button" value="Actualizar" onclick="window.location=\'/mapa/\';" style="margin:-8px 0 -6px 0;padding:0;" /> <input type="button" value="Modo" onclick="colorear(\'toggle\');" style="margin:-8px 0 -6px 0;padding:0;" /> &nbsp; <acronym title="Superficie ocupada" style="color:blue;">' . round(($sup_total * 100) / $superficie_total) . '% ocupado</acronym> <acronym title="Superficie en venta" style="color:red;">' . round(($venta_total * 100) / $superficie_total) . '% en venta </acronym></h2>';
 }
 
 $txt_mapa .= '

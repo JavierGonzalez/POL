@@ -148,7 +148,7 @@ Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * 
 <th>Coste</th>
 <th>Estado</th>
 </tr>';
-	$multip = 10;
+	$multip = 12;
 	
 	$result = mysql_query("SELECT *
 FROM ".SQL."mapa
@@ -172,7 +172,10 @@ ORDER BY estado ASC, time ASC", $link);
 				$prop[$r['ID']]['color'] = $r['color'];
 
 				$estado = 'Propiedad'; 
-				$botones = boton('Editar', '/mapa/editar/' . $r['ID'] . '/') . ' ' . boton('Vender', '/mapa/vender/' . $r['ID'] . '/') . ' ' . boton('X', '/accion.php?a=mapa&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR tu propiedad?\n\nSe convertira en un solar.'); 
+				$botones = boton('Editar', '/mapa/editar/' . $r['ID'] . '/') . ' 
+'.boton('Vender', '/mapa/vender/'.$r['ID'].'/').' 
+'.(($r['size_x']*$r['size_y'])>1?boton('Separar', '/accion.php?a=mapa&b=separar&ID='.$r['ID'], '&iquest;Seguro que quieres SEPARAR tu propiedad?').' ':'').'
+' . boton('X', '/accion.php?a=mapa&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR tu propiedad?\n\nSe convertira en un solar.'); 
 				break;
 
 			case 'v': 
@@ -265,7 +268,7 @@ ORDER BY estado ASC, time ASC", $link);
 <td valign="top"><b>=</b></td>
 <td valign="top" align="right">' . $ID . '</td>
 <td><div style="width:' . ($size_x + $size2_x) . 'px;height:' . $size_y . 'px; background:#' . $d['color'] . ';border:1px solid grey;"></div></td>
-<td valign="top">' . boton('Fusionar', '/accion.php?a=mapa&b=fusionar&ID=' . $ID . '-' . $ex_x . '&f=x&superficie=' . ($d['size_x'] * $prop[$ex_x]['size_x']), '&iquest;Seguro que quieres FUSIONAR estas propiedades?\n\nNo se puede revertir.') . '</td>
+<td valign="top">' . boton('Fusionar', '/accion.php?a=mapa&b=fusionar&ID=' . $ID . '-' . $ex_x . '&f=x&superficie=' . ($d['size_x'] * $prop[$ex_x]['size_x'])) . '</td>
 </tr>';
 		}
 	}
@@ -303,7 +306,7 @@ ORDER BY estado ASC, time ASC", $link);
 <td valign="top"><b>=</b></td>
 <td valign="top" align="right">' . $ID . '</td>
 <td><div style="width:' . $size_x . 'px;height:' . ($size_y + $size2_y) . 'px; background:#' . $d['color'] . ';border:1px solid grey;"></div></td>
-<td valign="top">' . boton('Fusionar', '/accion.php?a=mapa&b=fusionar&ID=' . $ID . '-' . $ex_y . '&f=y&superficie=' . ($d['size_y'] * $prop[$ex_y]['size_y']), '&iquest;Seguro que quieres FUSIONAR estas propiedades?\n\nNo se puede revertir.') . '</td>
+<td valign="top">' . boton('Fusionar', '/accion.php?a=mapa&b=fusionar&ID=' . $ID . '-' . $ex_y . '&f=y&superficie=' . ($d['size_y'] * $prop[$ex_y]['size_y'])) . '</td>
 </tr>';
 		}
 	}
@@ -348,7 +351,8 @@ ORDER BY estado ASC, time ASC", $link);
 
 } else {
 
-	$cuadrado_size = 20;
+	$cuadrado_size = 24;
+	$mapa_full = true;
 	include('inc-mapa.php');
 	$txt = $txt_mapa;
 

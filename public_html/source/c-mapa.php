@@ -34,14 +34,15 @@ WHERE ID = '" . $_GET['b'] . "' AND estado = 'v'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
-		$txt_title = 'Comprar propiedad';
-		$txt .= '<h1>Comprar propiedad ' . $_GET['b'] . '</h1>
+		$txt_title = 'Mapa: Comprar propiedad';
+		$txt .= '<h1><a href="/mapa/">Mapa</a>: Comprar propiedad ' . $_GET['b'] . '</h1>
 
 <ol>
 
 <li>Propiedad: <b>' . $r['ID'] . '</b><br />
 Posici&oacute;n: <b>' . $r['pos_x'] . '-' . $r['pos_y'] . '</b><br />
-Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * $r['size_y']) . '</b><br /><br /></li>
+Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * $r['size_y']) . '</b><br />
+Coste: <b>'.pols(round($r['pols'] / ($r['size_x'] * $r['size_y']))).'</b> <img src="http://www.virtualpol.com/img/m.gif" alt="monedas" /> por cuadrado<br /><br /></li>
 
 <li>' . boton('COMPRAR', '/accion.php?a=mapa&b=compraventa&ID=' . $r['ID'], false, false, $r['pols']) . '<br /><br /></li>
 
@@ -58,8 +59,8 @@ WHERE ID = '" . $_GET['b'] . "'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
-		$txt_title = 'Vender propiedad';
-		$txt .= '<h1>Mapa: vender propiedad ' . $_GET['b'] . '</h1>
+		$txt_title = 'Mapa: Vender propiedad';
+		$txt .= '<h1><a href="/mapa/">Mapa</a>: Vender propiedad ' . $_GET['b'] . '</h1>
 
 
 <form action="/accion.php?a=mapa&b=vender&ID=' . $_GET['b'] . '" method="post">
@@ -83,7 +84,7 @@ Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * 
 	}
 
 } elseif (($_GET['a'] == 'editar') AND ($_GET['b'])) { // EDITAR
-	$txt_title = 'Editar propiedad';
+	$txt_title = 'Mapa: Editar propiedad';
 
 	$result = mysql_query("SELECT *
 FROM ".SQL."mapa
@@ -98,7 +99,7 @@ LIMIT 1", $link);
 		}
 		
 		$tamaño = ($r['size_x'] * $r['size_y']);
-		$txt .= '<h1>Editar propiedad: ' . $_GET['b'] . '</h1>
+		$txt .= '<h1><a href="/mapa/">Mapa</a>: Editar propiedad: ' . $_GET['b'] . '</h1>
 
 <form action="/accion.php?a=mapa&b=editar&ID=' . $_GET['b'] . '" method="post">
 
@@ -133,8 +134,8 @@ Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * 
 
 } elseif ($_GET['a'] == 'propiedades') { //Propiedades
 
-	$txt_title = 'Propiedades';
-	$txt .= '<h1>Propiedades (<a href="/doc/mapa-de-vp/">Ayuda</a>)</h1>
+	$txt_title = 'Mapa: Tus propiedades';
+	$txt .= '<h1><a href="/mapa/">Mapa</a>: Tus propiedades (<a href="/doc/mapa-de-vp/">Ayuda</a>)</h1>
 
 <br />
 
@@ -148,7 +149,7 @@ Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * 
 <th>Coste</th>
 <th>Estado</th>
 </tr>';
-	$multip = 12;
+	$multip = 10;
 	
 	$result = mysql_query("SELECT *
 FROM ".SQL."mapa
@@ -174,8 +175,11 @@ ORDER BY estado ASC, time ASC", $link);
 				$estado = 'Propiedad'; 
 				$botones = boton('Editar', '/mapa/editar/' . $r['ID'] . '/') . ' 
 '.boton('Vender', '/mapa/vender/'.$r['ID'].'/').' 
-'.(($r['size_x']*$r['size_y'])>1?boton('Separar', '/accion.php?a=mapa&b=separar&ID='.$r['ID'], '&iquest;Seguro que quieres SEPARAR tu propiedad?').' ':'').'
-' . boton('X', '/accion.php?a=mapa&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR tu propiedad?\n\nSe convertira en un solar.'); 
+'.(($r['size_x']*$r['size_y'])>1?boton('Separar', '/accion.php?a=mapa&b=separar&ID='.$r['ID'], '&iquest;Seguro que quieres SEPARAR tu propiedad?').' ':'').' ' . boton('X', '/accion.php?a=mapa&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR tu propiedad?\n\nSe convertira en un solar.').'
+
+<form action="/accion.php?a=mapa&b=ceder&ID='.$r['ID'].'" method="post">
+<input type="submit" value="Ceder a:" /> <input type="text" name="nick" size="8" maxlength="20" value="" /></form> 
+'; 
 				break;
 
 			case 'v': 
@@ -189,7 +193,9 @@ ORDER BY estado ASC, time ASC", $link);
 				$prop[$r['ID']]['size_y'] = $r['size_y'];
 				$prop[$r['ID']]['color'] = $r['color'];
 
-				$botones = boton('Editar', '/mapa/editar/' . $r['ID'] . '/') . ' ' . boton('X', '/accion.php?a=mapa&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR tu propiedad?\n\nSe convertira en un solar.'); 
+				$botones = boton('Editar', '/mapa/editar/' . $r['ID'] . '/') . ' 
+'.(($r['size_x']*$r['size_y'])>1?boton('Separar', '/accion.php?a=mapa&b=separar&ID='.$r['ID'], '&iquest;Seguro que quieres SEPARAR tu propiedad?').' ':'').'
+' . boton('X', '/accion.php?a=mapa&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR tu propiedad?\n\nSe convertira en un solar.'); 
 				break;
 		}
 
@@ -219,7 +225,7 @@ ORDER BY estado ASC, time ASC", $link);
 <td nowrap="nowrap" align="right" valign="top">' . pols($r['pols']) . ' '.MONEDA.'</td>
 <td nowrap="nowrap" align="right" valign="top">' . pols($coste) . ' '.MONEDA.'/dia</td>
 <td valign="top">' . $estado . '</td>
-<td nowrap="nowrap" valign="top">' . $botones . '</td>
+<td nowrap="nowrap" valign="top" align="right">' . $botones . '</td>
 </tr>';
 		}
 	}
@@ -319,7 +325,7 @@ ORDER BY estado ASC, time ASC", $link);
 
 } elseif (($_GET['a'] == 'comprar') AND ($_GET['b'])) { //Comprar
 
-	$txt_title = 'Comprar propiedad';
+	$txt_title = 'Mapa: Comprar propiedad';
 	for ($n=1;$n <=15;$n++) {
 		$color = generar_color();
 		$colores .= '<option value="' . $color . '" style="background:#' . $color . ';width:60px;">' . $color . '</option>';
@@ -327,7 +333,7 @@ ORDER BY estado ASC, time ASC", $link);
 
 
 
-	$txt .= '<h1>Comprar propiedad:  ' . $_GET['b'] . '</h1>
+	$txt .= '<h1><a href="/mapa/">Mapa</a>: Comprar propiedad:  ' . $_GET['b'] . '</h1>
 
 <form action="/accion.php?a=mapa&b=comprar&ID=' . $_GET['b'] . '" method="post">
 
@@ -347,7 +353,7 @@ ORDER BY estado ASC, time ASC", $link);
 
 </form>
 
-<p><a href="/mapa/"><b>Ver mapa</b></a> &nbsp; <a href="/mapa/propiedades/"><b>Ver tus propiedades</b></a></p>';
+<p><a href="/mapa/propiedades/"><b>Ver tus propiedades</b></a></p>';
 
 } else {
 

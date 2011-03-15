@@ -36,7 +36,7 @@ while($r = mysql_fetch_array($result)) {
 }
 
 if ($mapa_full) {
-	$txt_mapa .= '<h1 style="margin: 6px 0 6px 0;">Mapa: &nbsp; <input type="button" value="Actualizar" onclick="window.location=\'/mapa/\';" style="margin:-8px 0 -6px 0;padding:0;" /> <input type="button" value="Modo" onclick="colorear(\'toggle\');" style="margin:-8px 0 -6px 0;padding:0;" /> &nbsp; <acronym title="Superficie ocupada" style="color:blue;">' . round(($sup_total * 100) / $superficie_total) . '% ocupado</acronym> <acronym title="Superficie en venta" style="color:red;">' . round(($venta_total * 100) / $superficie_total) . '% en venta </acronym></h1>';
+	$txt_mapa .= '<h1 style="margin: 6px 0 6px 0;">Mapa: &nbsp; <input type="button" value="Actualizar" onclick="window.location=\'/mapa/\';" style="margin:-8px 0 -6px 0;padding:0;" /> <input type="button" value="Modo" onclick="colorear(\'toggle\');" style="margin:-8px 0 -6px 0;padding:0;" /> &nbsp; <acronym title="Superficie ocupada" style="color:blue;">' . round(($sup_total * 100) / $superficie_total) . '% ocupado</acronym> <acronym title="Superficie en venta" style="color:red;">' . round(($venta_total * 100) / $superficie_total) . '% en venta </acronym> &nbsp; (<a href="/doc/mapa-de-vp/">Ayuda</a>)</h1>';
 }
 
 $txt_mapa .= '

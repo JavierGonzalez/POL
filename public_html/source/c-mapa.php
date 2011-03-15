@@ -229,9 +229,11 @@ ORDER BY estado ASC, time ASC", $link);
 </tr>';
 		}
 	}
-
-
-	$txt .= '<tr><td colspan="5"></td><td colspan="2" align="right"><b style="font-size:20px;">Total: ' . pols($coste_total) . '</b> '.MONEDA.'/dia</td><td colspan="2"></td></tr></table>
+	if (($coste_total-$pol['config']['pols_inem']) != 0) { 
+		$dias_dinero = floor($pol['pols']/($coste_total-$pol['config']['pols_inem']));
+	} else { $dias_dinero = 0; }
+	
+	$txt .= '<tr><td colspan="5"></td><td align="right"><b style="font-size:20px;">Total:</td><td>'.pols($coste_total).'</b> '.MONEDA.'/dia</td><td colspan="2"><em>Tienes para '.($dias_dinero<=5?'<b style="color:red;">':'<b>').$dias_dinero.'</b> d&iacute;as</em></td></tr></table>
 
 <p>Tienes <b>' . $prop_num . '</b> propiedades, <b>' . $superficie . '</b> de superficie. Factor de propiedad: <b>' . $pol['config']['factor_propiedad'] . '</b>, Inempol: ' . pols($pol['config']['pols_inem']) . ' '.MONEDA.' (por cada dia que entres).</p>
 

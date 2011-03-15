@@ -451,6 +451,7 @@ case 'mapa':
 				mysql_query("UPDATE ".SQL."mapa SET estado = 'p', user_ID = '".$pol['user_ID']."', nick = '".$pol['nick']."' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
 			}
 		}
+		$refer_url = 'mapa/';
 
 	} elseif (($_GET['b'] == 'cancelar-venta') AND ($_GET['ID'])) {
 

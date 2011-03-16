@@ -330,7 +330,7 @@ case 'avatar':
 		unlink($img_root . $pol['user_ID'].'_80.jpg');
 		mysql_query("UPDATE users SET avatar = 'false' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		$refer_url = 'perfil/'.strtolower($pol['nick']).'/';
-	} elseif (($_GET['b'] == 'desc') AND (strlen($_POST['desc']) <= 1300)) {
+	} elseif (($_GET['b'] == 'desc') AND (strlen($_POST['desc']) <= 1600)) {
 		$_POST['desc'] = gen_text($_POST['desc'], 'plain');
 		mysql_query("UPDATE users SET text = '".$_POST['desc']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	}

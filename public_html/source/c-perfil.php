@@ -128,7 +128,7 @@ ORDER BY nick ASC", $link);
 			$result2 = mysql_query("SELECT valor FROM ".SQL."config WHERE dato = 'pols_afiliacion' LIMIT 1", $link);
 			while($row2 = mysql_fetch_array($result2)){ if ($row2['pols'] >= $pols) { $pols_afiliacion = $row2['valor']; } }
 
-			$text_limit = 900 - strlen(strip_tags($row['text']));
+			$text_limit = 1200 - strlen(strip_tags($row['text']));
 			$txt .= '<div class="azul">';
 
 

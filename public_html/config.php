@@ -61,7 +61,7 @@ define('VERSION', '1.0 Beta');
 define('IMG', 'http://www'.DEV.'.virtualpol.com/img/'); // Directorio en el que deben ir todos los elementos estáticos (gif, jpg, css, js)
 
 define('MONEDA', '<img src="'.IMG.'m.gif" border="0" />');
-define('MONEDA_NOMBRE', 'POLs');
+define('MONEDA_NOMBRE', 'monedas');
 // variables de tablas SQL
 define('SQL_USERS', 'users');
 define('SQL_REFERENCIAS', 'referencias');

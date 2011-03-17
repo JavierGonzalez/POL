@@ -415,14 +415,21 @@ $result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."empresas", $link);
 while($row = mysql_fetch_array($result)) { $st['empresas'] = $row['num']; }
 
 // mapa
-$superficie_total = 38 * 40;
+$superficie_total = $columnas * $filas;
 $result = mysql_query("SELECT superficie, estado FROM ".SQL."mapa", $link);
 while($row = mysql_fetch_array($result)) { 
 	$sup_total += $row['superficie']; 
 	if ($row['estado'] == 'v') { $sup_vende += $row['superficie']; }
 }
 $st['mapa'] = round(($sup_total * 100) / $superficie_total);
-$st['mapa_vende'] = round(($sup_vende * 100) / $superficie_total);
+
+
+$result = mysql_query("SELECT pols FROM ".SQL."mapa WHERE estado = 'v' ORDER BY pols ASC LIMIT 1", $link);
+while($row = mysql_fetch_array($result)) { 
+	// pols de la propiedad en venta más barata
+	$st['mapa_vende'] = $row['pols'];
+}
+
 
 // 24h
 $result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL_USERS." WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".$margen_24h."'", $link);

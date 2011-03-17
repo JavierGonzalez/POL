@@ -35,10 +35,6 @@ while($r = mysql_fetch_array($result)) {
 	$prop .= $r['ID'] . ':"' . $info . '"';
 }
 
-if ($mapa_full) {
-	$txt_mapa .= '<h1 style="margin: 6px 0 6px 0;">Mapa: &nbsp; <input type="button" value="Actualizar" onclick="window.location=\'/mapa/\';" style="margin:-8px 0 -6px 0;padding:0;" /> <input type="button" value="Modo" onclick="colorear(\'toggle\');" style="margin:-8px 0 -6px 0;padding:0;" /> &nbsp; <acronym title="Superficie ocupada" style="color:blue;">' . round(($sup_total * 100) / $superficie_total) . '% ocupado</acronym> <acronym title="Superficie en venta" style="color:red;">' . round(($venta_total * 100) / $superficie_total) . '% en venta </acronym> &nbsp; (<a href="/doc/mapa-de-vp/">Ayuda</a>)</h1>';
-}
-
 $txt_mapa .= '
 <style type="text/css">
 #polm table {
@@ -48,6 +44,7 @@ height:' . $mapa_height . 'px;
 }
 
 #polm td {
+background: #FFF;
 height:' . $cuadrado_size . 'px;
 padding:0;
 margin:0;
@@ -64,14 +61,14 @@ text-align:center;
 vision = "normal";
 prop = new Array();
 prop = {
-' . $prop . '
+'.$prop.'
 };
 
 function colorear(modo) {
 	for (i in prop) {
 		var prop_a = prop[i].split("|");
 		if (prop_a[0] == "v") {
-			if ((vision != "normal") && (prop_a[1] == "' . $pol['nick'] . '")) {
+			if ((vision != "normal") && (prop_a[1] == "'.$pol['nick'].'")) {
 				var elcolor = "#FF0000"; $("#" + i).html(prop_a[2]);
 			} else {
 				if (vision != "normal") { $("#" + i).html(prop_a[2]); } else { $("#" + i).html(""); }
@@ -79,20 +76,19 @@ function colorear(modo) {
 			} 
 		} else if (prop_a[0] == "e") {
 			var elcolor = "#808080";
-			$("#" + i).text(prop_a[1]);
-			$("#" + i).css("color", "#CCC");
+			$("#" + i).text(prop_a[1]).css("color", "#CCC");
 		} else {
 			if (vision == "normal") {
-				var elcolor = "#" + prop_a[2].substring(0, 1) + prop_a[2].substring(0, 1) + prop_a[2].substring(1, 2) + prop_a[2].substring(1, 2) + prop_a[2].substring(2, 3) + prop_a[2].substring(2, 3);
+				//var elcolor = "#" + prop_a[2].substring(0, 1) + prop_a[2].substring(0, 1) + prop_a[2].substring(1, 2) + prop_a[2].substring(1, 2) + prop_a[2].substring(2, 3) + prop_a[2].substring(2, 3);
+				var elcolor = "#" + prop_a[2];
 			} else { 
-				if (prop_a[1] == "' . $pol['nick'] . '") { var elcolor = "#FF0000"; } else { var elcolor = "#AACC99"; } 
+				if (prop_a[1] == "'.$pol['nick'].'") { var elcolor = "#FF0000"; } else { var elcolor = "#AACC99"; } 
 			}
 		}
 		$("#" + i).css("background", elcolor);
 	}
 	if (vision == "normal") { vision = "comprar"; } 
 	else { vision = "normal"; }
-
 }
 
 $(document).ready(function(){
@@ -105,8 +101,10 @@ $(document).ready(function(){
 			var amsg = amsg.split("|");
 			switch (amsg[0]) {
 				case "v": var msg = "<span style=\"color:green;\"><b>En venta</b></span><br />" + amsg[1] + " (" + ID + ")<br /><span style=\"color:blue;\"><b>" + amsg[2] + "</span> '.MONEDA_NOMBRE.'</b>"; break;
+				
 				case "e": if (amsg[1]) { var msg = "<span style=\"color:grey;font-size:22fpx;\"><b>" + amsg[1] + "</b></span>"; } break;
-				default: var msg = "<span style=\"color:green;\"><b>" + amsg[0] + "</b></span><br />" + amsg[1] + " (" + ID + ")";
+				
+				default: var msg = "<span style=\"color:green;\"><b>" + amsg[0] + "</b></span><br />" + amsg[1] + " (" + ID + ")"; $(this).css("cursor", "pointer");
 			}
 		} else { var msg = "<span style=\"color:green;\">Comprar</span><br />Solar: " + ID + "<br /> <span style=\"color:blue;\"><b>' . $pol['config']['pols_solar'] . '</span> '.MONEDA_NOMBRE.'</b>"; }
 		$(this).css("border", "1px solid white");
@@ -120,14 +118,14 @@ $(document).ready(function(){
 		if (amsg) {
 			var amsg = amsg.split("|");
 			switch (amsg[0]) {
-			case "v": window.location = "http://'.HOST.'/mapa/compraventa/" + $(this).attr("id") + "/"; break;
+			case "v": window.location = "/mapa/compraventa/" + $(this).attr("id") + "/"; break;
 			default:
 				if (amsg[0]) {
-					if (amsg[0].substring(0, 1) == "/") { window.location = "http://'.HOST.'" + amsg[0]; } 
+					if (amsg[0].substring(0, 1) == "/") { window.location = amsg[0]; } 
 					else { window.location = "http://" + amsg[0]; }
 				}
 			}
-		} else { var ID = $(this).attr("id"); window.location = "http://'.HOST.'/mapa/comprar/" + ID + "/"; }
+		} else { var ID = $(this).attr("id"); window.location = "/mapa/comprar/" + ID + "/"; }
     });
 });
 
@@ -137,7 +135,6 @@ $(document).mousemove(function(e){
 
 </script>';
 unset($prop);
-//
 $txt_mapa .= '
 
 <div id="polm">

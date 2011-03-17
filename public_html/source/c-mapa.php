@@ -173,8 +173,9 @@ ORDER BY estado ASC, time ASC", $link);
 				$prop[$r['ID']]['color'] = $r['color'];
 
 				$estado = 'Propiedad'; 
-				$botones = boton('Editar', '/mapa/editar/' . $r['ID'] . '/') . ' 
-'.boton('Vender', '/mapa/vender/'.$r['ID'].'/').' 
+				$botones = ' 
+'.boton('Vender', '/mapa/vender/'.$r['ID'].'/').'
+'.boton('Editar', '/mapa/editar/' . $r['ID'] . '/').'
 '.(($r['size_x']*$r['size_y'])>1?boton('Separar', '/accion.php?a=mapa&b=separar&ID='.$r['ID'], '&iquest;Seguro que quieres SEPARAR tu propiedad?').' ':'').' ' . boton('X', '/accion.php?a=mapa&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR tu propiedad?\n\nSe convertira en un solar.').'
 
 <form action="/accion.php?a=mapa&b=ceder&ID='.$r['ID'].'" method="post">
@@ -195,7 +196,10 @@ ORDER BY estado ASC, time ASC", $link);
 
 				$botones = boton('Editar', '/mapa/editar/' . $r['ID'] . '/') . ' 
 '.(($r['size_x']*$r['size_y'])>1?boton('Separar', '/accion.php?a=mapa&b=separar&ID='.$r['ID'], '&iquest;Seguro que quieres SEPARAR tu propiedad?').' ':'').'
-' . boton('X', '/accion.php?a=mapa&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR tu propiedad?\n\nSe convertira en un solar.'); 
+' . boton('X', '/accion.php?a=mapa&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR tu propiedad?\n\nSe convertira en un solar.').'
+<form action="/accion.php?a=mapa&b=ceder&ID='.$r['ID'].'" method="post">
+<input type="submit" value="Ceder a:" /> <input type="text" name="nick" size="8" maxlength="20" value="" /></form> 
+'; 
 				break;
 		}
 
@@ -208,7 +212,7 @@ ORDER BY estado ASC, time ASC", $link);
 <td valign="top">' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['superficie']) . '</td>
 <td valign="top" colspan="3">' . $r['link'] . '</td>
 <td valign="top">Estatal</td>
-<td nowrap="nowrap" valign="top">' . $botones . '</td>
+<td nowrap="nowrap" valign="top" align="right">' . $botones . '</td>
 </tr>';
 
 		} else {
@@ -362,8 +366,62 @@ ORDER BY estado ASC, time ASC", $link);
 	$cuadrado_size = 24;
 	$mapa_full = true;
 	include('inc-mapa.php');
-	$txt = $txt_mapa;
 
+	$txt .= '<h1 style="margin: 6px 0 6px 0;">Mapa: &nbsp; <input type="button" value="Actualizar" onclick="window.location=\'/mapa/\';" style="margin:-8px 0 -6px 0;padding:0;" /> <input type="button" value="Modo" onclick="colorear(\'toggle\');" style="margin:-8px 0 -6px 0;padding:0;" /> &nbsp; (<a href="/doc/mapa-de-vp/">Ayuda</a>) &nbsp;</h1>
+<table><tr><td>
+'.$txt_mapa.'
+</td><td valign="top">
+<h1>Info</h1>
+<p><acronym title="Superficie ocupada" style="color:blue;">' . round(($sup_total * 100) / $superficie_total) . '% ocupado</acronym><br />
+<acronym title="Superficie en venta" style="color:red;">' . round(($venta_total * 100) / $superficie_total) . '% en venta </acronym>	
+</p>
+</td><td valign="top">
+<h1>Terratenientes</h1>
+<p class="gris">Con m&aacute;s propiedades</p><ol>';
+
+$n = 0;
+$result = mysql_query("SELECT SUM(superficie) AS superficie,
+(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS nick,
+(SELECT cargo FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS cargo
+FROM ".SQL."mapa
+WHERE estado != 'e'
+GROUP BY user_ID
+ORDER BY superficie DESC
+LIMIT 15");
+while ($row = mysql_fetch_array($result)) {
+	$n++;
+	if ($n <= 3) { 
+		$first = true;
+		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</b></li>';
+	} else {
+		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> ' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</li>';
+	}
+}
+
+
+	$txt .= '</ol></td><td valign="top">
+<h1>Grandes propiedades</h1>
+<p class="gris">Las propiedades m&aacute;s extensas</p><ol>';
+
+$n = 0;
+$result = mysql_query("SELECT superficie,
+(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS nick,
+(SELECT cargo FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS cargo
+FROM ".SQL."mapa
+WHERE estado != 'e'
+ORDER BY superficie DESC
+LIMIT 15");
+while ($row = mysql_fetch_array($result)) {
+	$n++;
+	if ($n <= 3) { 
+		$first = true;
+		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</b></li>';
+	} else {
+		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> ' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</li>';
+	}
+}
+
+	$txt .= '</ol></tr></table>';
 }
 
 

@@ -474,7 +474,7 @@ case 'mapa':
 	} elseif (($_GET['b'] == 'ceder') AND ($_GET['ID']) AND ($_POST['nick'])) {
 
 		$result = mysql_query("SELECT ID, user_ID, pols, 
-(SELECT ID FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' LIMIT 1) AS ceder_user_ID 
+(SELECT ID FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' AND (estado = 'ciudadano' OR estado = 'desarrollador') LIMIT 1) AS ceder_user_ID 
 FROM ".SQL."mapa 
 WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = 'p' OR estado = 'e') LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ 
@@ -493,12 +493,12 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = '
 			for ($y=1;$y<=$row['size_y'];$y++) {
 				for ($x=1;$x<=$row['size_x'];$x++) {
 					if (($x==1) AND ($y==1)) {
-						mysql_query("UPDATE ".SQL."mapa SET size_x = 1, size_y = 1, superficie = 1, time = '".$date."' WHERE ID = '".$row['ID']."' LIMIT 1", $link);
+						mysql_query("UPDATE ".SQL."mapa SET size_x = 1, size_y = 1, superficie = 1, time = '".$date."', estado = 'p' WHERE ID = '".$row['ID']."' LIMIT 1", $link);
 						$puntero_x = $row['pos_x'];
 						$puntero['pos_x'] = $row['pos_x'];
 						$puntero['pos_y'] = $row['pos_y'];
 					} else {
-						mysql_query("INSERT INTO ".SQL."mapa (pos_x, pos_y, size_x, size_y, user_ID, nick, link, text, time, pols, color, estado, superficie) VALUES ('".$puntero['pos_x']."', '".$puntero['pos_y']."', '1', '1', '".$pol['user_ID']."', '".$pol['nick']."', '".$row['link']."', '', '".$date."', '".$row['pols']."', '".$row['color']."', '".$row['estado']."', '1')", $link);
+						mysql_query("INSERT INTO ".SQL."mapa (pos_x, pos_y, size_x, size_y, user_ID, nick, link, text, time, pols, color, estado, superficie) VALUES ('".$puntero['pos_x']."', '".$puntero['pos_y']."', '1', '1', '".$pol['user_ID']."', '".$pol['nick']."', '".$row['link']."', '', '".$date."', '".$row['pols']."', '".$row['color']."', 'p', '1')", $link);
 					}
 					$puntero['pos_x']++;
 				}

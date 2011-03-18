@@ -637,7 +637,7 @@ case 'despacho-oval':
 ($_POST['pols_mensajetodos'] >= 1000) AND 
 ($_POST['pols_examen'] >= 0) AND 
 ($pol['config']['pols_mensajeurgente'] >= 0) AND
-($_POST['num_escanos'] <= 30) AND ($_POST['num_escanos'] >= 1) AND 
+($_POST['num_escanos'] <= 31) AND ($_POST['num_escanos'] >= 3) AND 
 (strlen($_POST['palabra_gob0']) <= 200) AND
 ($_POST['impuestos'] <= 5) AND ($_POST['impuestos'] >= 0) AND
 ($_POST['impuestos_minimo'] >= 0) AND
@@ -650,7 +650,7 @@ $dato_array = array(
 'online_ref'=>'Tiempo online en minutos para referencia',
 'pols_mensajetodos'=>'Coste mensaje Global',
 'pols_solar'=>'Coste solar del mapa',
-'num_escanos'=>'Numero de esca&ntilde;os y Diputados',
+'num_escanos'=>'Numero de esca&ntilde;os',
 'defcon'=>'DEFCON',
 'pols_inem'=>'INEM',
 'pols_afiliacion'=>'Pago por afiliado',
@@ -689,6 +689,10 @@ foreach ($_POST AS $dato => $valor) {
 			$dato = 'palabra_gob';
 			$valor = strip_tags($_POST['palabra_gob0']).":".strip_tags($_POST['palabra_gob1']);
 			mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
+		} elseif ($dato == 'num_escanos') {
+			if ($pol['config']['elecciones_estado'] != 'elecciones') {
+				mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
+			}
 		} else {
 			mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
 		}

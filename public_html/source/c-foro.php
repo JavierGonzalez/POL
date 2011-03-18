@@ -84,7 +84,7 @@ ORDER BY nivel DESC", $link);
 
 <p>Mensaje:<br />
 <textarea name="text" style="color: green; font-weight: bold; width: 570px; height: 250px;">' . $edit_text . '</textarea><br />
-<span style="color:grey;font-size:12px;">Etiquetas HTML permitidas: &lt;img&gt;, &lt;b&gt;, &lt;i&gt;, &lt;s&gt;, videos incrustados, enlaces auto-linkeados.</span></p>
+<span style="color:grey;font-size:12px;">Etiquetas HTML permitidas: &lt;img src="URL"&gt;, &lt;b&gt;, &lt;i&gt;, &lt;s&gt;, videos incrustados, enlaces auto-linkeados.</span></p>
 
 <p><input value="Enviar" type="submit"> En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
 </select></p>
@@ -102,7 +102,7 @@ ORDER BY nivel DESC", $link);
 
 <p>Mensaje:<br />
 <textarea name="text" style="color: green; font-weight: bold; width: 570px; height: 250px;">' . $edit_text . '</textarea><br />
-<span style="color:grey;font-size:12px;">Etiquetas HTML permitidas: &lt;img&gt;, &lt;b&gt;, &lt;i&gt;, &lt;s&gt;, videos incrustados, enlaces auto-linkeados.</span></p>
+<span style="color:grey;font-size:12px;">Etiquetas HTML permitidas: &lt;img src="URL"&gt;, &lt;b&gt;, &lt;i&gt;, &lt;s&gt;, videos incrustados, enlaces auto-linkeados.</span></p>
 
 <p><input value="Enviar" type="submit"> En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
 </select></p>

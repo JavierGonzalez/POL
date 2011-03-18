@@ -368,25 +368,26 @@ ORDER BY estado ASC, time ASC", $link);
 	include('inc-mapa.php');
 
 	$txt .= '<h1 style="margin: 6px 0 6px 0;">Mapa: &nbsp; <input type="button" value="Actualizar" onclick="window.location=\'/mapa/\';" style="margin:-8px 0 -6px 0;padding:0;" /> <input type="button" value="Modo" onclick="colorear(\'toggle\');" style="margin:-8px 0 -6px 0;padding:0;" /> &nbsp; (<a href="/doc/mapa-de-vp/">Ayuda</a>) &nbsp;</h1>
-<table><tr><td>
+<table><tr><td rowspan="2">
 '.$txt_mapa.'
-</td><td valign="top">
-<h1>Info</h1>
-<p><acronym title="Superficie ocupada" style="color:blue;">' . round(($sup_total * 100) / $superficie_total) . '% ocupado</acronym><br />
-<acronym title="Superficie en venta" style="color:red;">' . round(($venta_total * 100) / $superficie_total) . '% en venta </acronym>	
-</p>
-</td><td valign="top">
+</td><td valign="top" colspan="2">
+<h1 style="display:inline-block;">Info</h1>
+<span><acronym title="Superficie ocupada" style="color:blue;"><b>' . round(($sup_total * 100) / $superficie_total, 1) . '%</b> ocupado</acronym> 
+<acronym title="Superficie en venta" style="color:red;"><b>' . round(($venta_total * 100) / $superficie_total, 1) . '%</b> en venta </acronym>	
+</span><br /><br />
+</td></tr>
+<tr><td valign="top">
 <h1>Terratenientes</h1>
 <p class="gris">Con m&aacute;s propiedades</p><ol>';
 
 $n = 0;
-$result = mysql_query("SELECT SUM(superficie) AS superficie,
+$result = mysql_query("SELECT SUM(superficie) AS superficie, COUNT(*) AS num,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS nick,
 (SELECT cargo FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS cargo
 FROM ".SQL."mapa
 WHERE estado != 'e'
 GROUP BY user_ID
-ORDER BY superficie DESC
+ORDER BY superficie DESC, num ASC
 LIMIT 15");
 while ($row = mysql_fetch_array($result)) {
 	$n++;
@@ -404,7 +405,7 @@ while ($row = mysql_fetch_array($result)) {
 <p class="gris">Las propiedades m&aacute;s extensas</p><ol>';
 
 $n = 0;
-$result = mysql_query("SELECT superficie,
+$result = mysql_query("SELECT size_x, size_y, superficie,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS nick,
 (SELECT cargo FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS cargo
 FROM ".SQL."mapa
@@ -415,9 +416,9 @@ while ($row = mysql_fetch_array($result)) {
 	$n++;
 	if ($n <= 3) { 
 		$first = true;
-		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</b></li>';
+		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . ' ('.$row['size_x'].'x'.$row['size_y'].'=' . $row['superficie'] . ')</b></li>';
 	} else {
-		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> ' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</li>';
+		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> ' . crear_link($row['nick']) . ' ('.$row['size_x'].'x'.$row['size_y'].'=' . $row['superficie'] . ')</li>';
 	}
 }
 

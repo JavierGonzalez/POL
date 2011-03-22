@@ -370,11 +370,29 @@ ORDER BY estado ASC, time ASC", $link);
 	$txt .= '<h1 style="margin: 6px 0 6px 0;">Mapa: &nbsp; <input type="button" value="Actualizar" onclick="window.location=\'/mapa/\';" style="margin:-8px 0 -6px 0;padding:0;" /> <input type="button" value="Modo" onclick="colorear(\'toggle\');" style="margin:-8px 0 -6px 0;padding:0;" /> &nbsp; (<a href="/doc/mapa-de-vp/">Ayuda</a>) &nbsp;</h1>
 <table><tr><td rowspan="2">
 '.$txt_mapa.'
-</td><td valign="top" colspan="2">
+</td><td valign="top" colspan="2">';
+
+
+
+
+	// datos graficos
+	$result = mysql_query("SELECT mapa_vende
+FROM stats WHERE pais = '".PAIS."' AND mapa_vende != 0 
+ORDER BY time ASC LIMIT 500", $link);
+	while($row = mysql_fetch_array($result)){
+		$dgrafico[] = $row['mapa_vende'];
+	}
+	if ($dgrafico) { $dgrafico_max = max($dgrafico); } else { $dgrafico_max = 0; }
+
+
+
+
+$txt .= '
 <h1 style="display:inline-block;">Info</h1>
 <span><acronym title="Superficie ocupada" style="color:blue;"><b>' . round(($sup_total * 100) / $superficie_total, 1) . '%</b> ocupado</acronym> 
 <acronym title="Superficie en venta" style="color:red;"><b>' . round(($venta_total * 100) / $superficie_total, 1) . '%</b> en venta </acronym>	
-</span><br /><br />
+</span><br />
+<img style="margin:0 0 4px 0;" src="http://chart.apis.google.com/chart?cht=lc&chs=450x80&chxt=y&chxl=0:|0|' . round($dgrafico_max / 2) . '|' . $dgrafico_max . '&chd=s:' . chart_data($dgrafico) . '&chco=0066FF&chm=B,FFFFDD,0,0,0" />
 </td></tr>
 <tr><td valign="top">
 <h1>Terratenientes</h1>

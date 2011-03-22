@@ -31,6 +31,13 @@ case 'censo':
 	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'turista'", $link));
 	$censo_turistas = $result[0];
 
+
+	// num ciudadanos activos (los que entraron en las ultimas 24h sin ser nuevos ciudadanos)
+	$margen_24h = date('Y-m-d H:i:s', time() - 86400);	// 24 h
+	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link));
+	$censo_activos = $result[0];
+
+
 	// num expulsados
 	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'expulsado'", $link));
 	$censo_expulsados = $result[0];
@@ -74,7 +81,7 @@ case 'censo':
 		$busqueda = '';
 	}
 
-$txt .= '<p>' . $p_paginas . ' &nbsp; <a href="/info/censo/">Ciudadanos</a>: <b>' . $pol['config']['info_censo'] . '</b> | <a href="/info/censo/turistas/" class="turista">Turistas</a>: <b>' . $censo_turistas . '</b> | <a href="/info/censo/expulsados/" class="expulsado">Expulsados</a>: <b>' . $censo_expulsados . '</b> | <a href="/info/censo/riqueza/">Ricos</a> | 
+$txt .= '<p>' . $p_paginas . ' &nbsp; <a href="/info/censo/">Ciudadanos</a>: <b>' . $pol['config']['info_censo'] . '</b> | <acronym title="Ciudadanos que entraron en las ultimas 24h sin ser nuevos.">Activos:</acronym> <b>'.$censo_activos.'</b> | <a href="/info/censo/turistas/" class="turista">Turistas</a>: <b>' . $censo_turistas . '</b> | <a href="/info/censo/expulsados/" class="expulsado">Expulsados</a>: <b>' . $censo_expulsados . '</b> | <a href="/info/censo/riqueza/">Ricos</a> | 
 
 <input name="qcmq" size="10" value="'.$busqueda.'" type="text" id="cmq">
 <input value="Buscar en perfil" type="submit" onclick="var cmq = $(\'#cmq\').attr(\'value\'); window.location.href=\'/info/censo/busqueda/\'+cmq+\'/\'; return false;">

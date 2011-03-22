@@ -431,8 +431,8 @@ while($row = mysql_fetch_array($result)) {
 }
 
 
-// 24h
-$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL_USERS." WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".$margen_24h."'", $link);
+// ciudadanos que entraron en 24h (CONDICION NUEVA: y que tampoco han nacido en ese dia).
+$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL_USERS." WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link);
 while($row = mysql_fetch_array($result)) { $st['24h'] = $row['num']; }
 
 // confianza

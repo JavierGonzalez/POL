@@ -322,27 +322,21 @@ if (!isset($cuadrado_size)) {
 
 
 <div>
-<span style="float:right;">
+<span style="float:right;font-size:14px;">
 <?php
 unset($txt);
 if ($pol['estado'] == 'desarrollador') {
 	$mtime = explode(' ', microtime()); 
 	$tiempofinal = $mtime[1] + $mtime[0]; 
 	$tiempototal = number_format($tiempofinal - $tiempoinicial, 3); 
-	echo ' | ' . $tiempototal . 's ' . floor(memory_get_usage() / 1024) . 'kb';
+	echo ' | ' . $tiempototal . 's';
 } elseif (!$pol['user_ID']) {
-
 	// Enlaces hacia Teoriza, solo lo ven los no-registrados, no quitar por favor :))))
-	$teoriza_b = array(
-'www.teoriza.com|Teoriza', 
-'gonzo.teoriza.com|GONZO', 
-'mia.teoriza.com|Mia', 
-'ocio.teoriza.com|Ocio',
-'chat.teoriza.com|Chat',
-'intimidades.teoriza.com|Intimidades',
-);
-	$teoriza_b = explode("|", $teoriza_b[array_rand($teoriza_b)]);
-	echo '+<a href="http://' . $teoriza_b[0] . '/">' . $teoriza_b[1] . '</a>';
+	echo '
+<a href="http://www.teoriza.com/">Teoriza</a> &middot; 
+<a href="http://www.eventuis.com/">Eventos</a> &middot; 
+<a href="http://aziroet.com/">Blog gratis</a>
+';
 }
 ?></span>
 <b><?=PAIS?></b> <span style="font-size:11px;">DEFCON <b><?=$pol['config']['defcon']?></b></span>

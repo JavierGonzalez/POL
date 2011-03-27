@@ -176,6 +176,7 @@ al = new Array();
 al_cargo = new Array();
 array_ncargos = new Array();
 array_ncargos = { 0:"", 98:"Turista", 99:"Extranjero", '.$array_ncargos.' };
+array_ignorados = new Array();
 
 window.onload = function(){
 	document.getElementById("vpc").scrollTop = 900000;
@@ -196,6 +197,27 @@ window.onload = function(){
 
 
 // FUNCIONES
+
+function siControlPulsado(event, nick){
+	if (event.ctrlKey==1){
+		toggle_ignorados(nick);
+		return false;
+	}
+}
+
+function toggle_ignorados(nick) {
+	var idx = array_ignorados.indexOf(nick);
+	if(idx != -1) {
+		array_ignorados.splice(idx, 1);
+		$("."+nick).show();
+	//	document.getElementById("vpc").scrollTop = 900000;
+	}
+	else {
+		array_ignorados.push(nick); 
+		$("."+nick).hide();
+	}
+	merge_list();
+}
 
 function cf_cambiarnick() {
 	nick_anonimo = $("#cf_nick").val();
@@ -277,6 +299,8 @@ function refresh_sin_leer() {
 
 function print_msg(data) {
 	if (ajax_refresh) {
+		var chat_sin_leer_antes = chat_sin_leer;
+		var escondidos = new Array();
 		var arraydata = data.split("\n");
 		var msg_num = arraydata.length - 1;
 		var list = "";
@@ -294,20 +318,27 @@ function print_msg(data) {
 				if ((mli[3] == minick) && (mli[4] == "<b>Nuevo")) { } else {
 					var nick_solo = mli[3].split("&rarr;");
 					if (minick == nick_solo[0]) {
-						list += "<li id=\"" + mli[0] + "\" class=\"cf_p vpc_priv\">" + mli[2] + " <span class=\"vpc_priv\" style=\"color:#004FC6\" ;OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
+						list += "<li id=\"" + mli[0] + "\" class=\"" + nick_solo[0] + "\">" + mli[2] + " <span class=\"vpc_priv\" style=\"color:#004FC6\" ;OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
 					} else {
-						list += "<li id=\"" + mli[0] + "\" class=\"cf_p vpc_priv\">" + mli[2] + " <span class=\"vpc_priv\" OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
+						list += "<li id=\"" + mli[0] + "\" class=\"" + nick_solo[0] + "\">" + mli[2] + " <span class=\"vpc_priv\" OnClick=\"auto_priv(\'" + nick_solo[0] + "\');\"><b>[PRIV] " + mli[3] + "</b>: " + txt + "</span></li>\n";
 						chat_sin_leer_yo = chat_sin_leer_yo + "+";
 					}
 				}
-				chat_sin_leer++;
+				mli[3] = nick_solo[0];
 			} else {'.($pol['nick']?'if ("'.$pol['nick'].'" != "") { var txt_antes = txt; var txt = txt.replace(/'.$pol['nick'].'/gi, "<b style=\"color:orange;\">" + minick + "</b>"); if (txt_antes != txt) { chat_sin_leer_yo = chat_sin_leer_yo + "+"; } }':'').'
 				var vpc_yo = "";
 				if (minick == mli[3]) { var vpc_yo = " class=\"vpc_yo\""; }
 				if (mli[1].substr(0,3) == "98_") { var cargo_ID = 98; } else { var cargo_ID = mli[1]; }
-				list += "<li id=\"" + mli[0] + "\" class=\"cf_m\">" + mli[2] + " <img src=\"'.IMG.'cargos/" + cargo_ID + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[cargo_ID] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
+				list += "<li id=\"" + mli[0] + "\" class=\"" + mli[3] + "\">" + mli[2] + " <img src=\"'.IMG.'cargos/" + cargo_ID + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[cargo_ID] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
+			}
+			var idx = array_ignorados.indexOf(mli[3]);
+			if(idx != -1) {
+				escondidos.push(mli[0]);
+			}
+			else {
 				chat_sin_leer++;
 			}
+
 			if (((msg_num - 1) == i) && (msg_num != "n")) { msg_ID = mli[0]; }
 			if ((mli[1] != "e") && (mli[1] != "c")) { 
 				if (mli[1] == "p") { var nick_p = mli[3].split("&rarr"); mli[3] = nick_p[0]; mli[1] = "0"; }
@@ -317,8 +348,14 @@ function print_msg(data) {
 		}
 		$("#vpc_ul").append(emoticono(list));
 		merge_list();
-		refresh_sin_leer();
-		print_delay();
+		if ((chat_sin_leer > 0) || (chat_sin_leer_antes == -1)) {
+			refresh_sin_leer();
+			print_delay();
+		}
+		for(var i=0;i<escondidos.length;i++)
+		{
+    			$("#"+escondidos[i]).hide();
+		}
 	}
 }
 
@@ -336,7 +373,15 @@ function merge_list() {
 				list += "<li>'.$js_kick.' <img src=\"'.IMG.'cargos/98.gif\" title=\"" + array_ncargos[98] + "\" /> " + elnick + "</li>\n";
 			} else {
 				var kick_nick  = elnick;
-				list += "<li>'.$js_kick.' <img src=\"'.IMG.'cargos/" + al_cargo[elnick] + ".gif\" title=\"" + array_ncargos[al_cargo[elnick]] + "\" /> <a href=\"http://'.strtolower(PAIS).DEV.'.virtualpol.com/perfil/" + elnick  + "/\" class=\"nick\">" + elnick + "</a></li>\n";
+				var idx = array_ignorados.indexOf(elnick);
+				if(idx!=-1) {
+					nick_tachado = "<strike>" + elnick + "</strike>";
+				}
+				else
+				{
+					nick_tachado = elnick;
+				}
+				list += "<li>'.$js_kick.' <img src=\"'.IMG.'cargos/" + al_cargo[elnick] + ".gif\" title=\"" + array_ncargos[al_cargo[elnick]] + "\" /> <a href=\"http://'.strtolower(PAIS).DEV.'.' .URL. '/perfil/" + elnick  + "/\" class=\"nick\" onClick=\"return siControlPulsado(event,\'"+ elnick +"\');\">" + nick_tachado + "</a></li>\n";
 			}
 		}
 	}

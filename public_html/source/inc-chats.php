@@ -324,12 +324,17 @@ function print_msg(data) {
 						chat_sin_leer_yo = chat_sin_leer_yo + "+";
 					}
 				}
-				mli[3] = nick_solo[0];
 			} else {'.($pol['nick']?'if ("'.$pol['nick'].'" != "") { var txt_antes = txt; var txt = txt.replace(/'.$pol['nick'].'/gi, "<b style=\"color:orange;\">" + minick + "</b>"); if (txt_antes != txt) { chat_sin_leer_yo = chat_sin_leer_yo + "+"; } }':'').'
 				var vpc_yo = "";
 				if (minick == mli[3]) { var vpc_yo = " class=\"vpc_yo\""; }
 				if (mli[1].substr(0,3) == "98_") { var cargo_ID = 98; } else { var cargo_ID = mli[1]; }
 				list += "<li id=\"" + mli[0] + "\" class=\"" + mli[3] + "\">" + mli[2] + " <img src=\"'.IMG.'cargos/" + cargo_ID + ".gif\" width=\"16\" height=\"16\" title=\"" + array_ncargos[cargo_ID] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + mli[3] + "\');\">" + mli[3] + "</b>: " + txt + "</li>\n";
+			}
+			if (((msg_num - 1) == i) && (msg_num != "n")) { msg_ID = mli[0]; }
+			if ((mli[1] != "e") && (mli[1] != "c")) { 
+				if (mli[1] == "p") { var nick_p = mli[3].split("&rarr"); mli[3] = nick_p[0]; mli[1] = "0"; }
+				al[mli[3]] = parseInt(new Date().getTime().toString().substring(0, 10));
+				al_cargo[mli[3]] = mli[1];
 			}
 			var idx = array_ignorados.indexOf(mli[3]);
 			if(idx != -1) {
@@ -337,13 +342,6 @@ function print_msg(data) {
 			}
 			else {
 				chat_sin_leer++;
-			}
-
-			if (((msg_num - 1) == i) && (msg_num != "n")) { msg_ID = mli[0]; }
-			if ((mli[1] != "e") && (mli[1] != "c")) { 
-				if (mli[1] == "p") { var nick_p = mli[3].split("&rarr"); mli[3] = nick_p[0]; mli[1] = "0"; }
-				al[mli[3]] = parseInt(new Date().getTime().toString().substring(0, 10));
-				al_cargo[mli[3]] = mli[1];
 			}
 		}
 		$("#vpc_ul").append(emoticono(list));

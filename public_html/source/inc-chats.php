@@ -210,7 +210,7 @@ function toggle_ignorados(nick) {
 	if(idx != -1) {
 		array_ignorados.splice(idx, 1);
 		$("."+nick).show();
-	//	document.getElementById("vpc").scrollTop = 900000;
+		document.getElementById("vpc").scrollTop = 900000;
 	}
 	else {
 		array_ignorados.push(nick); 

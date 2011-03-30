@@ -3,7 +3,7 @@
 function get_supervisores_del_censo() {
 	global $link;
 	$margen_365d = date('Y-m-d 20:00:00', time() - 86400*365); // Un año
-	$result = mysql_query("SELECT ID, nick FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".$margen_365d."' ORDER BY voto_confianza DESC LIMIT 5", $link);
+	$result = mysql_query("SELECT ID, nick FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".$margen_365d."' AND ID != 1 ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT 5", $link);
 	while($r = mysql_fetch_array($result)){ $supervisores_del_censo[$r['ID']] = $r['nick']; }
 	$supervisores_del_censo[1] = 'GONZO'; // Añadido GONZO como Supervisor vitalicio por ser el responsable del servidor y fundador del proyecto. Es el ultimo cortafuegos en caso de ataque al sistema.
 	return $supervisores_del_censo; //devuelve un array con los Supervisores del Censo activos. Formato: $array[user_ID] = nick;

@@ -41,7 +41,7 @@ if ($_GET['a'] == 'votar') {
 
 
 
-	if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { 
+	if ($pol['estado'] == 'ciudadano') { 
 		// ciudadano
 
 

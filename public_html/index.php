@@ -194,7 +194,7 @@ if (!$pol['nick']) {
 $time_pre = date('Y-m-d H:i:00', time() - 3600); // 1 hora
 $result = mysql_query("SELECT nick, pais, estado
 FROM ".SQL_USERS." 
-WHERE fecha_last > '" . $time_pre . "' AND estado != 'desarrollador' AND estado != 'expulsado'
+WHERE fecha_last > '" . $time_pre . "' AND estado != 'expulsado'
 ORDER BY fecha_last DESC", $link);
 while($row = mysql_fetch_array($result)){ 
 	$li_online_num++; 

@@ -140,7 +140,6 @@ ORDER BY num DESC, fecha_registro DESC", $link);
 				if ($clones) { $clones .= ' & '; }
 				if ($row2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 				$clones .= '<b>'.crear_link($row2['nick'], 'nick', $row2['estado'], $row2['pais']) . '</b> ' . $siglas[$row2['partido_afiliado']];
-				if ($row2['estado'] == 'desarrollador') { $desarrollador = true; }
 			}
 			if ((!$desarrollador) AND (!$clones_expulsados)) {
 				$IPs = explode(".", long2ip($row['IP']));

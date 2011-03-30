@@ -60,7 +60,7 @@ border: 1px solid #000;
 <?php
 unset($txt_header);
 if ($pol['msg'] > 0) { $num_msg = '<b style="font-size:18px;">' . $pol['msg'] . '</b>'; } else { $num_msg = $pol['msg']; }
-if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { // ciudadano
+if ($pol['estado'] == 'ciudadano') { // ciudadano
 	$nick_lower = strtolower($pol['nick']);
 	
 	$elecciones = '';
@@ -257,7 +257,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 					<li><a href="/pols/cuentas/1/">Cuenta <em>Gobierno</em></a></li>
 					<li><a href="/subasta/">Subastas</a></li>
 				</ul>
-			</li><?php if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { ?>
+			</li><?php if ($pol['estado'] == 'ciudadano') { ?>
 			<li>
 				<a href="#"><?=$pol['nick']?></a>
 				<ul>
@@ -325,12 +325,12 @@ if (!isset($cuadrado_size)) {
 <span style="float:right;font-size:14px;">
 <?php
 unset($txt);
-if ($pol['estado'] == 'desarrollador') {
+if (isset($pol['user_ID'])) {
 	$mtime = explode(' ', microtime()); 
 	$tiempofinal = $mtime[1] + $mtime[0]; 
 	$tiempototal = number_format($tiempofinal - $tiempoinicial, 3); 
 	echo ' | ' . $tiempototal . 's';
-} elseif (!$pol['user_ID']) {
+} else {
 	// Enlaces hacia Teoriza, solo lo ven los no-registrados, no quitar por favor :))))
 	echo '
 <a href="http://www.teoriza.com/">Teoriza</a> &middot; 

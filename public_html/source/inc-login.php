@@ -70,8 +70,6 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 		$_SESSION['pol']['cargo'] = $r['cargo'];
 		$_SESSION['pol']['nivel'] = $r['nivel'];
 
-		if ($pol['estado'] == 'desarrollador') { $pol['pais'] = PAIS; $pol['nivel'] = 120; }
-
 		if (($r['pais'] != PAIS) AND ($pol['estado'] == 'ciudadano')) { 
 			// es extranjero
 			$pol['estado'] = 'extranjero';

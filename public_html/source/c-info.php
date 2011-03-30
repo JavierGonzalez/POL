@@ -128,6 +128,9 @@ $txt .= '<p>' . $p_paginas . ' &nbsp; <a href="/info/censo/">Ciudadanos</a>: <b>
 
 	if ($pol['estado']) { $sql_extra = ", (SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '" . $pol['user_ID'] . "' AND user_ID = users.ID LIMIT 1) AS has_votado"; }
 
+
+	$sc = get_supervisores_del_censo();
+
 	$result = mysql_query("SELECT *,
 (SELECT siglas FROM ".SQL."partidos WHERE users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas" . $sql_extra . "
 FROM users " . $order_by . " LIMIT " . $p_limit, $link);
@@ -151,7 +154,7 @@ FROM users " . $order_by . " LIMIT " . $p_limit, $link);
 <td align="right" class="gris">' . $orden++ . '</td>
 <td align="right">' . $row['nivel'] . '</td>
 <td>' . $avatar . '</td>
-<td><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick'], 'nick', $row['estado']) . '</b></td>
+<td><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick'], 'nick', $row['estado']) . '</b>'.(isset($sc[$row['ID']])?' <span style="color:red;">SC</span>':'').'</td>
 <td>' . $partido . '</td>
 <td align="right" nowrap="nowrap">' . $online . '</td>
 <td class="gris" align="right">' . $row['nota'] . '</td>

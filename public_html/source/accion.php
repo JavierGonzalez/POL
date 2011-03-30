@@ -242,26 +242,20 @@ LIMIT 1", $link);
 
 
 case 'expulsar':
-	if (
-(($pol['estado'] == 'desarrollador') OR ($pol['cargo'] == 21) OR ($pol['cargo'] == 9) OR ($pol['cargo'] == 7))
- AND ($_GET['b'] == 'desexpulsar') 
- AND ($_GET['ID'])
-) {
-	
+	$sc = get_supervisores_del_censo();
+	if (($sc[$pol['user_ID']] == $pol['nick']) AND ($_GET['b'] == 'desexpulsar') AND ($_GET['ID'])) {
 		$result = mysql_query("SELECT ID, user_ID, tiempo  FROM ".SQL_EXPULSIONES." WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
 		while ($row = mysql_fetch_array($result)) {
 			mysql_query("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$row['user_ID']."' LIMIT 1", $link);
 			mysql_query("UPDATE ".SQL_EXPULSIONES." SET estado = 'cancelado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
-
 			evento_chat('<span class="expulsado"><img src="'.IMG.'expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$row['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>');
 		}
 
-	} elseif (($pol['estado'] == 'desarrollador') OR ($pol['cargo'] == 21) AND ($_GET['razon'])) {
+	} elseif (($sc[$pol['user_ID']] == $pol['nick']) AND ($_GET['razon']) AND ($_GET['ID'] != 1)) { // El usuario 1 (GONZO) es Supervisor del Censo vitalicio, inexpulsable.
 
 		$result = mysql_query("SELECT nick, ID FROM users 
 WHERE ID = '".$_GET['ID']."'
 AND estado != 'expulsado'
-AND estado != 'desarrollador'
 LIMIT 1", $link);
 		while ($row = mysql_fetch_array($result)) {
 			mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
@@ -273,6 +267,7 @@ LIMIT 1", $link);
 	}
 	$refer_url = 'control/expulsiones/';
 	break;
+
 
 case 'voto':
 	if (($_GET['b'] == 'confianza') AND ($_GET['ID'] != $pol['user_ID']) AND (($_REQUEST['voto_confianza'] == '-1') OR ($_REQUEST['voto_confianza'] == '0') OR ($_REQUEST['voto_confianza'] == '1'))) {

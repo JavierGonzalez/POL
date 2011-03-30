@@ -154,7 +154,7 @@ FROM users " . $order_by . " LIMIT " . $p_limit, $link);
 <td align="right" class="gris">' . $orden++ . '</td>
 <td align="right">' . $row['nivel'] . '</td>
 <td>' . $avatar . '</td>
-<td><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick'], 'nick', $row['estado']) . '</b>'.(isset($sc[$row['ID']])?' <span style="color:red;">SC</span>':'').'</td>
+<td'.(isset($sc[$row['ID']])?' style="background:#FFA07A;"><span style="float:right;color:red;">SC</span>':'>').'<img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick'], 'nick', $row['estado']) . '</b></td>
 <td>' . $partido . '</td>
 <td align="right" nowrap="nowrap">' . $online . '</td>
 <td class="gris" align="right">' . $row['nota'] . '</td>

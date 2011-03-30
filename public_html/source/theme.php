@@ -328,8 +328,8 @@ unset($txt);
 if (isset($pol['user_ID'])) {
 	$mtime = explode(' ', microtime()); 
 	$tiempofinal = $mtime[1] + $mtime[0]; 
-	$tiempototal = number_format($tiempofinal - $tiempoinicial, 3); 
-	echo ' | ' . $tiempototal . 's';
+	$tiempototal = round(($tiempofinal-$tiempoinicial)*1000); 
+	echo $tiempototal.'ms';
 } else {
 	// Enlaces hacia Teoriza, solo lo ven los no-registrados, no quitar por favor :))))
 	echo '

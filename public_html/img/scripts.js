@@ -27,8 +27,7 @@ $("#pnick").css("display","none").css("position","absolute");
 
 $(".nick").mouseover(function(){
 	var wnick = $(this).text();
-	if (wnick == "GONZO") { $("#pnick").html("<b style=\"color:grey;\">Desarrollador</b>").css("display","inline");
-	} else if (!whois_cache[wnick]) { pnick = setTimeout(function(){ $.post("/ajax.php", { a: "whois", nick: wnick }, function(data){ $("#pnick").css("display","none"); whois_cache[wnick] = data; print_whois(data, wnick); }); }, 500);
+	if (!whois_cache[wnick]) { pnick = setTimeout(function(){ $.post("/ajax.php", { a: "whois", nick: wnick }, function(data){ $("#pnick").css("display","none"); whois_cache[wnick] = data; print_whois(data, wnick); }); }, 500);
 	} else { print_whois(whois_cache[wnick], wnick); }
 }).mouseout(function(){ clearTimeout(pnick); pnick = ""; $("#pnick").css("display","none"); });
 $(document).mousemove(function(e){ $("#pnick").css({top: e.pageY + "px", left: e.pageX + 15 + "px"}); 

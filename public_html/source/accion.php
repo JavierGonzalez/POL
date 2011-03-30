@@ -17,7 +17,6 @@ if ($_GET['ID']) { $_GET['ID'] = mysql_real_escape_string($_GET['ID']); }
 // Solo ciudadanos
 if (
 ((PAIS == $pol['pais']) AND ($pol['estado'] == 'ciudadano'))
-OR ($pol['estado'] == 'desarrollador')
 OR (($pol['estado'] == 'kickeado') AND ($_GET['a'] == 'rechazar-ciudadania'))
 OR (($pol['estado'] == 'kickeado') AND ($_GET['a'] == 'elecciones-generales'))
 OR (($pol['estado'] == 'extranjero') AND ($_GET['a'] == 'foro'))
@@ -121,7 +120,7 @@ case 'historia':
 	if (($_GET['b'] == 'add') AND ($_POST['hecho'] != '')) {
 		mysql_query("INSERT INTO hechos (time, nick, texto, estado, time2, pais) VALUES ('".$_POST['year']."-".$_POST['mes']."-".$_POST['dia']."', '".$pol['nick']."', '".strip_tags($_POST['hecho'],'<b>,<a>')."', 'ok', '".$date."', '".$_POST['pais']."')", $link);
 	} elseif ($_GET['b'] == 'del') {
-		mysql_query("UPDATE hechos SET estado = 'del' WHERE ID = '".$_GET['ID']."' AND (nick = '".$pol['nick']."' OR '".$pol['nivel']."' = '100' OR '".$pol['estado']."' = 'desarrollador') LIMIT 1", $link);
+		mysql_query("UPDATE hechos SET estado = 'del' WHERE ID = '".$_GET['ID']."' AND (nick = '".$pol['nick']."' OR '".$pol['nivel']."' = '100') LIMIT 1", $link);
 	}
 
 
@@ -144,7 +143,7 @@ case 'geolocalizacion':
 
 case 'sancion':
 
-	if ((($pol['estado'] == 'desarrollador') OR ($pol['cargo'] == 9)) AND ($_POST['pols'] <= 5000) AND ($_POST['pols'] > 0)) {
+	if (($pol['cargo'] == 9) AND ($_POST['pols'] <= 5000) AND ($_POST['pols'] > 0)) {
 
 		$result = mysql_query("SELECT ID, nick FROM users 
 WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' AND pais = '".PAIS."'
@@ -162,7 +161,7 @@ LIMIT 1", $link);
 	break;
 
 case 'pass':
-	if (($pol['estado'] == 'desarrollador') AND ($_GET['nick'])) {
+	if (($pol['user_ID'] == 1) AND ($_GET['nick'])) {
 
 
 		$result = mysql_query("SELECT ID, nick, email FROM users WHERE nick = '".$_GET['nick']."' LIMIT 1", $link);
@@ -469,7 +468,7 @@ case 'mapa':
 	} elseif (($_GET['b'] == 'ceder') AND ($_GET['ID']) AND ($_POST['nick'])) {
 
 		$result = mysql_query("SELECT ID, user_ID, pols, 
-(SELECT ID FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' AND (estado = 'ciudadano' OR estado = 'desarrollador') LIMIT 1) AS ceder_user_ID 
+(SELECT ID FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS ceder_user_ID 
 FROM ".SQL."mapa 
 WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = 'p' OR estado = 'e') LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ 
@@ -818,7 +817,7 @@ ORDER BY pols DESC LIMIT 1", $link);
 	} elseif (($_GET['b'] == 'cederfrase') AND ($pol['config']['pols_fraseedit'] == $pol['user_ID']) AND ($pol['nick'] != $_POST['nick'])) {
 
 
-		$result = mysql_query("SELECT ID, nick, pais FROM users WHERE nick = '".$_POST['nick']."' AND (estado = 'ciudadano' OR estado = 'desarrollador') LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, nick, pais FROM users WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ 
 			mysql_query("UPDATE ".SQL."config SET valor = '".$row['ID']."' WHERE dato = 'pols_fraseedit' LIMIT 1", $link);	
 			evento_chat('<b>[#] '.crear_link($pol['nick']).' cede</b> "la frase" a <b>'.crear_link($row['nick']).'</b>'); 
@@ -853,7 +852,7 @@ ORDER BY pols DESC LIMIT 1", $link);
 
 	} elseif (($_GET['b'] == 'cederpalabra') AND ($_GET['ID'] >= 0) AND ($pol['nick'] != $_POST['nick'])) {
 		
-		$result = mysql_query("SELECT ID, nick, pais FROM users WHERE nick = '".$_POST['nick']."'AND (estado = 'ciudadano' OR estado = 'desarrollador') LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, nick, pais FROM users WHERE nick = '".$_POST['nick']."'AND estado = 'ciudadano' LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ 
 
 			$dato = '';
@@ -905,7 +904,7 @@ case 'pols':
 			//Personal
 
 			//tienes dinero suficiente y nick existe
-			$result = mysql_query("SELECT ID, pais FROM users WHERE pais = '".PAIS."' AND ID = '".$pol['user_ID']."' AND pols >= '".$pols."' AND (estado = 'ciudadano' OR estado = 'desarrollador') LIMIT 1", $link);
+			$result = mysql_query("SELECT ID, pais FROM users WHERE pais = '".PAIS."' AND ID = '".$pol['user_ID']."' AND pols >= '".$pols."' AND estado = 'ciudadano' LIMIT 1", $link);
 			while($row = mysql_fetch_array($result)){ $pais_origen = $row['pais']; $origen = 'ciudadano'; }
 
 		} elseif (ctype_digit($_POST['origen'])) { 
@@ -921,7 +920,7 @@ case 'pols':
 			//Ciudadano
 
 			//nick existe
-			$result = mysql_query("SELECT ID, pais FROM users WHERE nick = '".$_POST['ciudadano']."' AND (estado = 'ciudadano' OR estado = 'desarrollador') LIMIT 1", $link);
+			$result = mysql_query("SELECT ID, pais FROM users WHERE nick = '".$_POST['ciudadano']."' AND estado = 'ciudadano' LIMIT 1", $link);
 			while($row = mysql_fetch_array($result)){  $pais_destino = $row['pais']; $destino = 'ciudadano'; $destino_user_ID = $row['ID']; }
 
 		} elseif (($_POST['destino'] == 'cuenta') AND ($_POST['cuenta'])) {
@@ -1285,7 +1284,7 @@ case 'enviar-mensaje':
 
 
 			if ($_POST['cargo_ID'] == '21') {
-				$result = mysql_query("SELECT ID AS user_ID FROM users WHERE cargo = '21' OR estado = 'desarrollador'", $link);
+				$result = mysql_query("SELECT ID AS user_ID FROM users WHERE cargo = '21'", $link);
 			} else {
 				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1'  AND estado = 'ok' AND ID_estudio = '".$_POST['cargo_ID']."' LIMIT 50", $link);
 			}

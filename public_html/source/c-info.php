@@ -329,7 +329,7 @@ foreach ($ricos AS $info => $pols_total) {
 	if (($pols_total > 0) AND ($num <= 25)) {
 		$nick = explodear(':', $info, 0);
 		$pais = explodear(':', $info, 1);
-		if ($pol['estado'] == 'desarrollador') { $extra = pols($pols_total).' '; }
+		// $extra = pols($pols_total).' ';
 		$txt .= '<li>'.MONEDA.' <b class="big">'.$extra.''.crear_link($nick, 'nick', 'ciudadano', $pais).'</b></li>';
 	}
 }

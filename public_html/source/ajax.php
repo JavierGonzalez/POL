@@ -30,7 +30,7 @@ switch ($r['acceso_'.$a]) {
 	case 'privado': if (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $r['acceso_cfg_'.$a]))) { $acceso[$a] = true; } break;
 	case 'nivel': if (($_SESSION['pol']['nivel'] >= $r['acceso_cfg_'.$a]) AND ($_SESSION['pol']['pais'] == $r['pais'])) { $acceso[$a] = true; } break;
 	case 'antiguedad': if (($_SESSION['pol']['fecha_registro']) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($r['acceso_cfg_'.$a]*86400)))) { $acceso[$a] = true; } break;
-	case 'ciudadanos_pais': if (($_SESSION['pol']['pais'] == $r['pais']) OR ($_SESSION['pol']['estado'] == 'desarrollador')) { $acceso[$a] = true; } break;
+	case 'ciudadanos_pais': if ($_SESSION['pol']['pais'] == $r['pais']) { $acceso[$a] = true; } break;
 	case 'ciudadanos': if (isset($_SESSION['pol']['user_ID'])) { $acceso[$a] = true; } break;
 	case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $acceso[$a] = true; } break;
 	default: $acceso[$a] = false;
@@ -237,11 +237,11 @@ UPDATE HIGH_PRIORITY chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$c
 
 } elseif (($_REQUEST['a'] == 'whois') AND (isset($_REQUEST['nick']))) {
 
-	$res = mysql_unbuffered_query("SELECT ID, fecha_registro, partido_afiliado, fecha_last, nivel, online, nota, avatar, estado, pais, cargo,
+	$res = mysql_query("SELECT ID, fecha_registro, partido_afiliado, fecha_last, nivel, online, nota, avatar, estado, pais, cargo,
 (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS partido,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
-FROM users WHERE estado != 'desarrollador' AND nick = '".mysql_real_escape_string($_REQUEST['nick'])."' LIMIT 1", $link);
+FROM users WHERE nick = '".mysql_real_escape_string($_REQUEST['nick'])."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($res)) { 
 		include('inc-functions.php');
 		if ($r['avatar'] == 'true') { $r['avatar'] = 1; } else { $r['avatar'] = 0; }

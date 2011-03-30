@@ -1224,7 +1224,7 @@ CREATE TABLE `users` (
   `fecha_registro` datetime NOT NULL default '0000-00-00 00:00:00',
   `fecha_last` datetime NOT NULL default '0000-00-00 00:00:00',
   `partido_afiliado` smallint(6) NOT NULL default '0',
-  `estado` enum('turista','ciudadano','expulsado','desarrollador','validar') NOT NULL default 'validar',
+  `estado` enum('turista','ciudadano','expulsado','validar') NOT NULL default 'validar',
   `nivel` tinyint(3) unsigned NOT NULL default '1',
   `email` varchar(255) NOT NULL default '',
   `pass` varchar(64) NOT NULL,

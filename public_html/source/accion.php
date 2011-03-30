@@ -12,6 +12,7 @@ $pol['cargos'] = cargos();
 // prevent SSX
 if ($_GET['ID']) { $_GET['ID'] = mysql_real_escape_string($_GET['ID']); }
 
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = str_replace("'", "&#39;", $val); }
 
 
 // Solo ciudadanos

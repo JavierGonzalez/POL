@@ -28,14 +28,12 @@ $margen_60dias	= date('Y-m-d 20:00:00', time() - 5184000); // 60 dias
 $margen_90dias	= date('Y-m-d 20:00:00', time() - 7776000); // 90 dias
 
 
-// LOAD CONFIG
+// LOAD CONFIG $pol['config'][]
 $result = mysql_query("SELECT valor, dato FROM ".SQL."config", $link);
 while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
 
 
-
-
-// examenes_exp
+// EXPIRACION DE EXAMENES
 $examenes_exp_num = 0;
 $result = mysql_query("SELECT ID, time, cargo 
 FROM ".SQL."estudios_users 
@@ -46,6 +44,7 @@ while($row = mysql_fetch_array($result)){
 	mysql_query("DELETE FROM ".SQL."estudios_users WHERE ID = '".$row['ID']."'", $link);
 }
 evento_chat('<b>[PROCESO]</b> Expirados <b>'.$examenes_exp_num.'</b> examenes.');
+
 
 // REFERENCIAS 
 $result = mysql_query("SELECT ID, user_ID, new_user_ID,
@@ -74,17 +73,13 @@ FROM ".SQL."estudios_users
 WHERE cargo = '1'
 ORDER BY user_ID ASC", $link);
 while($row = mysql_fetch_array($result)){ if ($salarios[$row['user_ID']] < $row['salario']) { $salarios[$row['user_ID']] = $row['salario']; } }
-
 $result = mysql_query("SELECT pols FROM ".SQL."cuentas WHERE ID = 1 LIMIT 1", $link);
-while($row = mysql_fetch_array($result)) {
-	$pols_gobierno = $row['pols'];
-}
-
+while($row = mysql_fetch_array($result)) { $pols_gobierno = $row['pols']; }
 $gasto_total = 0;
 foreach($salarios as $user_ID => $salario) {
 	$result = mysql_query("SELECT ID
 FROM ".SQL_USERS."
-WHERE ID = '".$user_ID."' AND estado = 'ciudadano' AND fecha_last > '".$margen_24h."' AND pais = '".PAIS."'
+WHERE ID = '".$user_ID."' AND fecha_last > '".$margen_24h."' AND pais = '".PAIS."'
 LIMIT 1", $link);
 	while($row = mysql_fetch_array($result)){
 		$txt .= $user_ID. ' - '.$salario."<br />\n";
@@ -109,11 +104,12 @@ else {
 	$pols_gobierno = $pols_gobierno2;
 }
 
+
 // INEMPOL
 $salario_inempol = $pol['config']['pols_inem'];
 $gasto_total = 0;
 if ($salario_inempol > 0) {
-	$result = mysql_query("SELECT ID FROM ".SQL_USERS." WHERE fecha_last > '".$margen_24h."' AND estado = 'ciudadano' AND pais = '".PAIS."'", $link);
+	$result = mysql_query("SELECT ID FROM ".SQL_USERS." WHERE fecha_last > '".$margen_24h."' AND pais = '".PAIS."'", $link);
 	while($row = mysql_fetch_array($result)){ 
 		if ($tiene_sueldo[$row['ID']] != 'ok') {
 			$gasto_total += $salario_inempol;
@@ -133,9 +129,8 @@ if ($pols_gobierno - $gasto_total != $pols_gobierno2) {
 	evento_chat('<b>[PROCESO] Correcci&oacute;n efectuada.</b> Descontado el gasto en INEMPOL. El error era de <em>'. pols($pols_gobierno2 - $pols_gobierno + $gasto_total).' '.MONEDA.'</em>');
 }
 
-//enviar_email(null, "[POL] CRON 24h - Sueldos ejecutados", "Sueldos<br /><br />".$txt, "gonzomail@gmail.com");
+//sleep(1);
 
-sleep(1);
 
 // SUBASTA: LA FRASE
 $result = mysql_query("SELECT pols, user_ID,
@@ -152,6 +147,7 @@ while($row = mysql_fetch_array($result)){
 	mysql_query("UPDATE ".SQL."config SET valor = '".$row['user_ID']."' WHERE dato = 'pols_fraseedit' LIMIT 1", $link);
 	mysql_query("UPDATE ".SQL."config SET valor = '".$row['nick']."' WHERE dato = 'pols_frase' LIMIT 1", $link);
 }
+
 
 // SUBASTA: LAS PALABRAS
 $gan = $pol['config']['palabras_num'];
@@ -178,7 +174,6 @@ mysql_query("DELETE FROM ".SQL."pujas WHERE mercado_ID = '2'", $link); //resetea
 mysql_query("UPDATE ".SQL."config SET valor = '".$las_palabras."' WHERE dato = 'palabras' LIMIT 1", $link);
 
 
-
 // COSTE PROPIEDADES
 $p['user_ID'] = 1;
 $recaudado_propiedades = 0;
@@ -189,7 +184,6 @@ WHERE user_ID != '0' AND estado != 'e'
 ORDER BY user_ID ASC, size_x DESC, size_y DESC", $link);
 while($row = mysql_fetch_array($result)){ 
 	if ($p['user_ID'] != $row['user_ID']) { 
-		//ejecuta ciudadano
 		if ($p['pols_total'] >= $p['pols']) {
 			pols_transferir($p['pols'], $p['user_ID'], '-1', 'CP');
 			$recaudado_propiedades += $p['pols']; 
@@ -215,7 +209,6 @@ if ($p['pols_total'] >= $p['pols']) {
 		mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '".$unID."' AND user_ID = '".$p['user_ID']."' LIMIT 1", $link);
 	}
 }
-
 evento_chat('<b>[PROCESO] Coste de propiedades efectuado,</b> recaudado: '.pols($recaudado_propiedades).' '.MONEDA);
 
 
@@ -255,18 +248,12 @@ mysql_query("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '
 // ELIMINAR examenes antiguos
 //mysql_query("DELETE FROM ".SQL."estudios_users WHERE cargo = '0' AND time < '".$margen_60dias."'", $link);
 
-// ELIMINAR privilegios de desarrollador (nadie deberia tenerlo de forma continua, así queda para uso ocasional de mantenimiento)
-//mysql_query("UPDATE ".SQL_USERS." SET estado = 'ciudadano' WHERE estado = 'desarrollador'", $link);
-
-
-
-// ELIMINAR USUARIOS  (15 dias)
-/*
+// ELIMINAR USUARIOS
+/* periodos:
 	< 30d	- 10 dias
 30d < 90d	- 30 dias 
 90d >		- 60 dias
 */
-
 $st['eliminados'] = 0;
 $result = mysql_query("SELECT ID, nick, fecha_registro, fecha_last FROM ".SQL_USERS."
 WHERE 
@@ -282,8 +269,6 @@ while($row = mysql_fetch_array($result)) {
 }
 
 
-
-
 // IMPUESTO PATRIMONIO
 if ($pol['config']['impuestos'] > 0) {	
 	$minimo = $pol['config']['impuestos_minimo'];
@@ -291,7 +276,7 @@ if ($pol['config']['impuestos'] > 0) {
 
 	$result = mysql_query("SELECT ID, nick, pols, estado,
 (SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = ".SQL_USERS.".ID AND nivel = '0' AND exenta_impuestos = '0' GROUP BY user_ID) AS pols_cuentas
-FROM ".SQL_USERS." WHERE pais = '".PAIS."' AND estado != 'desarrollador'
+FROM ".SQL_USERS." WHERE pais = '".PAIS."'
 ORDER BY fecha_registro ASC", $link);
 	while($row = mysql_fetch_array($result)) { 
 		$pols_total = ($row['pols'] + $row['pols_cuentas']);
@@ -300,7 +285,6 @@ ORDER BY fecha_registro ASC", $link);
 			$impuesto = floor( ( $pols_total * $porcentaje) / 100);
 			$redaudacion += $impuesto;
 		} else { $impuesto = 0; $num_porcentaje_0++; }
-
 
 		// TRANSFERIR
 		if ($impuesto > 0) {
@@ -335,20 +319,16 @@ ORDER BY fecha_registro ASC", $link);
 }
 
 
-
-
 // IMPUESTO EMPRESA
 if ($pol['config']['impuestos_empresa'] > 0) {	
 	$result = mysql_query("SELECT COUNT(ID) AS num, user_ID FROM ".SQL."empresas GROUP BY user_ID ORDER BY num DESC", $link);
 	while($row = mysql_fetch_array($result)) { 
-
 		// comprueba si existe el propietario de la empresa antes de ejecutar el impuesto
 		$result2 = mysql_query("SELECT ID, pols FROM ".SQL_USERS." WHERE ID = '".$row['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
 		while($row2 = mysql_fetch_array($result2)) { 
 			$impuesto = round($pol['config']['impuestos_empresa'] * $row['num']);
 			if ($row2['pols'] >= $impuesto) {
 				$recaudacion_empresas += $impuesto;
-
 				pols_transferir($impuesto, $row['user_ID'], '-1', 'IMPUESTO EMPRESAS '.date('Y-m-d').': '.$row['num'].' empresas');	
 			} 
 			else {
@@ -356,7 +336,6 @@ if ($pol['config']['impuestos_empresa'] > 0) {
 				while($row3 = mysql_fetch_array($result3)) {
 					 if ($row3['pols'] >= $impuesto) {
 						$recaudacion_empresas += $impuesto;
-
 						pols_transferir($impuesto, '-'.$row3['ID'], '-1', 'IMPUESTO EMPRESAS '.date('Y-m-d').': '.$row['num'].' empresas');	
 					} 
 				}
@@ -368,12 +347,7 @@ if ($pol['config']['impuestos_empresa'] > 0) {
 
 
 
-
-
-
-
-
-// STATS INIT
+// STATS (1º obtener variables estadísticas, 2º insertar los datos en la tabla stats)
 
 // ciudadanos
 $result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL_USERS." WHERE estado = 'ciudadano' AND pais = '".PAIS."'", $link);
@@ -423,15 +397,11 @@ while($row = mysql_fetch_array($result)) {
 }
 $st['mapa'] = round(($sup_total * 100) / $superficie_total);
 
-
+// mapa_vende: el precio de venta más bajo de una propiedad
 $result = mysql_query("SELECT pols FROM ".SQL."mapa WHERE estado = 'v' ORDER BY pols ASC LIMIT 1", $link);
-while($row = mysql_fetch_array($result)) { 
-	// pols de la propiedad en venta más barata
-	$st['mapa_vende'] = $row['pols'];
-}
+while($row = mysql_fetch_array($result)) { $st['mapa_vende'] = $row['pols']; }
 
-
-// ciudadanos que entraron en 24h (CONDICION NUEVA: y que tampoco han nacido en ese dia).
+// 24h: ciudadanos que entraron en 24h (CONDICION NUEVA: y que no sean ciudadanos nuevos).
 $result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL_USERS." WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link);
 while($row = mysql_fetch_array($result)) { $st['24h'] = $row['num']; }
 
@@ -440,26 +410,24 @@ $result = mysql_query("SELECT SUM(voto) AS num FROM ".SQL_VOTOS." WHERE estado =
 while($row = mysql_fetch_array($result)) { $st['confianza'] = $row['num']; }
 
 
-// STATS NUEVO
+
+
+// STATS GUARDADO DIARIO
 mysql_query("INSERT INTO stats 
 (pais, time, ciudadanos, nuevos, pols, pols_cuentas, transacciones, hilos_msg, pols_gobierno, partidos, frase, empresas, eliminados, mapa, mapa_vende, 24h, confianza) 
 VALUES ('".PAIS."', '".date('Y-m-d 20:00:00')."', '".$st['ciudadanos']."', '".$st['nuevos']."', '".$st['pols']."', '".$st['pols_cuentas']."', '".$st['transacciones']."', '".$st['hilos_msg']."', '".$st['pols_gobierno']."', '".$st['partidos']."', '".$pujas_total."', '".$st['empresas']."', '".$st['eliminados']."', '".$st['mapa']."', '".$st['mapa_vende']."', '".$st['24h']."', '".$st['confianza']."')", $link);
-
 
 
 // ¿ELECCIONES?
 include($root_dir.'source/cron/cron-elecciones.php');
 
 
-// MICROTIME OFF
+// Calcula el tiempo de proceso
 $mtime = explode(' ', microtime()); 
 $tiempofinal = $mtime[1] + $mtime[0]; 
 $tiempototal = number_format($tiempofinal - $tiempoinicial, 3); 
 
-
-
 evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, '.$tiempototal.'s (<a href="/estadisticas/">estadisticas actualizadas</a>)');
 
 mysql_close($link);
-
 ?>

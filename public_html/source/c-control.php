@@ -17,7 +17,7 @@ switch ($_GET['a']) {
 
 case 'supervisor-censo':
 
-	if ($sc[$pol['user_ID']] == $pol['nick']) {
+	if (isset($sc[$pol['user_ID']])) {
 
 
 		foreach ($sc AS $user_ID => $nick) {
@@ -693,7 +693,7 @@ FROM ".SQL_EXPULSIONES."
 ORDER BY expire DESC", $link);
 while($r = mysql_fetch_array($result)){
 	
-	if (($sc[$pol['user_ID']] == $pol['nick']) AND ($r['expulsado_pais']) AND ($r['estado'] == 'expulsado')) { 
+	if ((isset($sc[$pol['user_ID']])) AND ($r['expulsado_pais']) AND ($r['estado'] == 'expulsado')) { 
 		$expulsar = boton('Cancelar', '/accion.php?a=expulsar&b=desexpulsar&ID=' . $r['ID'], '&iquest;Seguro que quieres CANCELAR la EXPULSION del usuario: '.$r['tiempo'].'?'); 
 	} elseif ($r['estado'] == 'cancelado') { $expulsar = '<b style="font-weight:bold;">Cancelado</b>'; } else { $expulsar = ''; }
 
@@ -902,7 +902,7 @@ $txt .= '</table><br />
 <tr>';
 
 
-if ($sc[$pol['user_ID']] == $pol['nick']) {
+if (isset($sc[$pol['user_ID']])) {
 	$txt .= '<td nowrap="nowrap"><a class="abig" href="/control/supervisor-censo/"><b>Supervisi&oacute;n del Censo</b></a></td>';
 } else {
 	$txt .= '<td nowrap="nowrap"><b class="abig gris">Supervisi&oacute;n del Censo</b></td>';

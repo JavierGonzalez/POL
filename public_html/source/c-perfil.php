@@ -21,7 +21,7 @@ while($r = mysql_fetch_array($result)){
 		if ($r['avatar'] == 'true') { $p_avatar = '<img src="'.IMG.'a/' . $r['ID'] . '.jpg" alt="'.$nick.'" />'; }
 
 		$extras = '';
-		if ($sc[$pol['user_ID']] == $pol['nick']) {
+		if (isset($sc[$pol['user_ID']])) {
 			$hosts = explode(".", $r['host']);
 			$host = '';
 			if (strlen($hosts[count($hosts)-3]) > 3) { $host = $hosts[count($hosts)-3] . '.' . $hosts[count($hosts)-2] . '.' . $hosts[count($hosts)-1]; }

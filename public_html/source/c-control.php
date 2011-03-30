@@ -10,6 +10,7 @@ while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row[
 // load user cargos
 $pol['cargos'] = cargos();
 
+$sc = get_supervisores_del_censo();
 
 
 switch ($_GET['a']) {
@@ -17,13 +18,12 @@ switch ($_GET['a']) {
 
 case 'supervisor-censo':
 
-	if ($pol['estado'] == 'desarrollador') {
+	if ($sc[$pol['user_ID']] == $pol['nick']) {
 
 
-		$result = mysql_query("SELECT nick FROM ".SQL_USERS." WHERE cargo = '21'" . $limit);
-		while ($row = mysql_fetch_array($result)) {
+		foreach ($sc AS $user_ID => $nick) {
 			if ($supervisores) { $supervisores .= ', '; }
-			$supervisores .= crear_link($row['nick']); 
+			$supervisores .= crear_link($nick); 
 		}
 
 		// nomenclatura
@@ -129,7 +129,6 @@ LIMIT 60", $link);
 		$txt .= '<h1>1. Coincidencias de IP</h1><hr /><table border="0" cellspacing="4">';
 		$result = mysql_query("SELECT nick, IP, COUNT(*) AS num, host
 FROM ".SQL_USERS." 
-WHERE estado != 'desarrollador'
 GROUP BY IP HAVING COUNT(*) > 1
 ORDER BY num DESC, fecha_registro DESC", $link);
 		while($row = mysql_fetch_array($result)) {
@@ -695,7 +694,7 @@ FROM ".SQL_EXPULSIONES."
 ORDER BY expire DESC", $link);
 while($row = mysql_fetch_array($result)){
 	
-	if ((($pol['estado'] == 'desarrollador') OR  ($pol['cargo'] == 9) OR ($pol['cargo'] == 7)) AND ($row['expulsado_pais']) AND ($row['estado'] == 'expulsado')) { 
+	if (($sc[$pol['user_ID']] == $pol['nick']) AND ($row['expulsado_pais']) AND ($row['estado'] == 'expulsado')) { 
 		$expulsar = boton('Cancelar', '/accion.php?a=expulsar&b=desexpulsar&ID=' . $row['ID'], '&iquest;Seguro que quieres CANCELAR la EXPULSION del usuario: '.$row['tiempo'].'?'); 
 	} elseif ($row['estado'] == 'cancelado') { $expulsar = '<b style="font-weight:bold;">Cancelado</b>'; } else { $expulsar = ''; }
 
@@ -901,16 +900,20 @@ $txt .= '</table><br />
 <tr>';
 
 
-if ($pol['estado'] == 'desarrollador') {
+if ($sc[$pol['user_ID']] == $pol['nick']) {
 	$txt .= '<td nowrap="nowrap"><a class="abig" href="/control/supervisor-censo/"><b>Supervisi&oacute;n del Censo</b></a></td>';
 } else {
 	$txt .= '<td nowrap="nowrap"><b class="abig gris">Supervisi&oacute;n del Censo</b></td>';
 }
 
+foreach ($sc AS $user_ID => $nick) {
+	if ($supervisores) { $supervisores .= ', '; }
+	$supervisores .= crear_link($nick); 
+}
 
 $txt .= '
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/21.gif" title="Supervisor del Censo" /></td>
-<td>Informaci&oacute;n procesada y analizada sobre el censo. Reservado.</td></tr>
+<td>Informaci&oacute;n sobre el censo. Reservado a: <b>'.$supervisores.'</b></td></tr>
 
 
 

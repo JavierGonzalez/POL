@@ -95,12 +95,12 @@ $txt .= '<p>' . $p_paginas . ' &nbsp; <a href="/info/censo/">Ciudadanos</a>: <b>
 <th></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/nombre/">Nick</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/afiliacion/">Afil</a></th>
+<th style="padding:8px;" class="azul"><a href="/info/censo/confianza/"><acronym title="Confianza">Conf</acronym></a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/online/">Online</a></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/nota/">Nota</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/' . $old . '/">Antiguedad</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/elec/"><acronym title="Elecciones en las que ha participado">Elec</acronym></a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/refs/"><acronym title="Numero de referencias">Ref</acronym></a></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/confianza/"><acronym title="Confianza">Conf</acronym></a></th>
+<th style="padding:8px;" class="azul"><a href="/info/censo/nota/">Nota</a></th>
 <th style="padding:8px;" class="azul" colspan="2"><a href="/info/censo/">&Uacute;ltimo&nbsp;acceso&darr;</a></th>
 </tr>';
 
@@ -156,12 +156,12 @@ FROM users " . $order_by . " LIMIT " . $p_limit, $link);
 <td>' . $avatar . '</td>
 <td'.(isset($sc[$row['ID']])?' style="background:#FFA07A;"><span style="float:right;color:red;">SC</span>':'>').'<img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick'], 'nick', $row['estado']) . '</b></td>
 <td>' . $partido . '</td>
+<td>' . confianza($row['voto_confianza']) . $has_votado .'</td>
 <td align="right" nowrap="nowrap">' . $online . '</td>
-<td class="gris" align="right">' . $row['nota'] . '</td>
 <td>' . explodear(' ', $row['fecha_registro'], 0) . '</td>
 <td align="right">' . $row['num_elec'] . '</td>
 <td align="right">' . $row['ref_num'] . '</td>
-<td>' . confianza($row['voto_confianza']) . $has_votado .'</td>
+<td class="gris" align="right">' . $row['nota'] . '</td>
 <td align="right" nowrap="nowrap">' . duracion(time() - strtotime($row['fecha_last'])) . '</td>
 <td nowrap="nowrap">' . $veterano . '</td>
 </tr>' . "\n";

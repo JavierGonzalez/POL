@@ -1,5 +1,21 @@
 <?php
 
+function ocultar_IP($IP, $tipo='IP') { 
+	// devuelve el host o IP indicado cortando alguno de sus datos, para proteger la privacidad 
+	if ($tipo == 'IP') {
+		$trozos = explode('.', long2ip($IP));
+		return $trozos[0].'.'.$trozos[1].'.*';
+	} elseif ($tipo == 'host') {
+		$host = '';
+		$hosts = explode('.', $IP);
+		if (strlen($hosts[count($hosts)-3]) > 3) { 
+			$host = $hosts[count($hosts)-3].'.'.$hosts[count($hosts)-2].'.'.$hosts[count($hosts)-1]; 
+		}
+		return '*.'.$host;
+	}
+}
+
+
 function get_supervisores_del_censo() {
 	global $link;
 	$margen_365d = date('Y-m-d 20:00:00', time() - 86400*365); // Un año

@@ -24,9 +24,11 @@ while($r = mysql_fetch_array($result)){
 		if (isset($sc[$pol['user_ID']])) {
 			$hosts = explode(".", $r['host']);
 			$host = '';
-			if (strlen($hosts[count($hosts)-3]) > 3) { $host = $hosts[count($hosts)-3] . '.' . $hosts[count($hosts)-2] . '.' . $hosts[count($hosts)-1]; }
+			if (strlen($hosts[count($hosts)-3]) > 3) { 
+				$host = '*.'.$hosts[count($hosts)-3] . '.' . $hosts[count($hosts)-2] . '.' . $hosts[count($hosts)-1]; 
+			}
 	
-			$extras = '<tr><td colspan="2"><input style="float:right;" value="Expulsar" onclick="if (!confirm(\'&iquest;Seguro que quieres EXPULSAR a este usuario?\')) { return false; } else { var razon = prompt(\'&iquest;Razon de expulsion?\',\'\').replace(\'&\',\'%26\'); if (razon) { window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=expulsar&ID=' . $r['ID'] . '&nick=' . $r['nick'] . '&razon=\' + razon; } }" type="button"'.$exp_disabled.' />(' . $r['ID'] . ', '.$r['email'].', *.' . $r['host'] . ', <a href="http://www.geoiptool.com/es/?IP='.$r['IP'].'">GeoIP</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>';
+			$extras = '<tr><td colspan="2"><input style="float:right;" value="Expulsar" onclick="if (!confirm(\'&iquest;Seguro que quieres EXPULSAR a este usuario?\')) { return false; } else { var razon = prompt(\'&iquest;Razon de expulsion?\',\'\').replace(\'&\',\'%26\'); if (razon) { window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=expulsar&ID=' . $r['ID'] . '&nick=' . $r['nick'] . '&razon=\' + razon; } }" type="button"'.$exp_disabled.' />(' . $r['ID'] . ', '.$r['email'].', '.ocultar_IP($host, 'host').', <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-20,20)).'">GeoIP</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>';
 		} else { $extras = ''; }
 
 		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="2">'.$p_avatar.'</td><td nowrap="nowrap"><h1><span class="amarillo"><img src="'.IMG.'cargos/'.$r['cargo'].'.gif" alt="Cargo" style="margin-bottom:0;" border="0" /> ' . $nick . ' &nbsp; <span style="color:grey;"><span class="' . $r['estado'] . '">' . ucfirst($r['estado']) . '</span> de ' . $r['pais'] . '</span></span></h1></td><td nowrap="nowrap">';

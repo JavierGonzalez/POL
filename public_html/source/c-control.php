@@ -71,12 +71,6 @@ LIMIT 60", $link);
 			$dia_registro = date('j', strtotime($r['fecha_registro']));
 
 
-
-
-			$IPs = explode(".", long2ip($r['IP']));
-			$hosts = explode(".", $r['host']);
-			$host = '';
-			if (strlen($hosts[count($hosts)-3]) > 3) { $host = $hosts[count($hosts)-3] . '.' . $hosts[count($hosts)-2] . '.' . $hosts[count($hosts)-1]; }
 			if ($r['online'] > 60) { $online = duracion($r['online']); } else { $online = ''; }
 			if ($r['num_elec'] == '0') { $r['num_elec'] = ''; }
 
@@ -110,7 +104,7 @@ LIMIT 60", $link);
 <td align="right">' . $r['num_priv'] . '</td>
 <td align="right">' . $r['num_transf'] . '</td>
 <td align="right">' . $r['email'] . '</td>
-<td align="right" nowrap="nowrap">*.' . $host . '</td><td>' . $IPs[0] . '.' . $IPs[1] . '.*</td>
+<td align="right" nowrap="nowrap">'.ocultar_IP($r['host'], 'host').'</td><td>'.ocultar_IP($r['IP']).'</td>
 </tr>';
 			$dia_registro_last = $dia_registro;
 		}
@@ -141,11 +135,7 @@ ORDER BY num DESC, fecha_registro DESC", $link);
 				$clones .= '<b>'.crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']) . '</b> ' . $siglas[$r2['partido_afiliado']];
 			}
 			if ((!$desarrollador) AND (!$clones_expulsados)) {
-				$IPs = explode(".", long2ip($r['IP']));
-				$hosts = explode(".", $r['host']);
-				$host = '';
-				if (strlen($hosts[count($hosts)-3]) > 3) { $host = $hosts[count($hosts)-3] . '.' . $hosts[count($hosts)-2] . '.' . $hosts[count($hosts)-1]; }
-				$txt .= '<tr><td>' . $r['num'] . '</td><td>' . $clones . '</td><td align="right" nowrap="nowrap">*.' . $host . '</td><td>' . $IPs[0] . '.' . $IPs[1] . '.*.*</td></tr>';
+				$txt .= '<tr><td>' . $r['num'] . '</td><td>' . $clones . '</td><td align="right" nowrap="nowrap">'.ocultar_IP($r['host'], 'host').'</td><td>'.ocultar_IP($r['IP']).'</td></tr>';
 			}
 		}
 		$txt .= '</table>';
@@ -209,8 +199,8 @@ ORDER BY fecha_registro DESC", $link);
 					if ($host == $IP) { $host = '*'; }
 					
 					$proxys_num .= '<b>'.$num++.'.</b><br />';
-					$proxys .= $IP.'<br />';
-					$proxys_dns .= $host.'<br />';
+					$proxys .= ocultar_IP(ip2long($IP)).'<br />';
+					$proxys_dns .= ocultar_IP($host, 'host').'<br />';
 
 					// clones	
 					$result2 = mysql_query("SELECT nick, estado, pais FROM ".SQL_USERS." WHERE ID != '".$r['ID']."' AND (IP = '".ip2long($IP)."' OR IP_proxy LIKE '%".$IP."%') ORDER BY fecha_registro DESC", $link);
@@ -330,8 +320,7 @@ ORDER BY num DESC", $link);
 FROM ".SQL_USERS." WHERE num_elec > 2 AND fecha_last > '".date('Y-m-d 20:00:00', time() - 2592000)."' ORDER BY factor DESC LIMIT 20", $link);
 		while($r = mysql_fetch_array($result)) {
 			if ($r['factor'] > 0.0099) {
-				$IPs = explode(".", long2ip($r['IP']));
-				$txt .= '<tr><td>' . crear_link($r['nick'], 'nick', $r['estado'], $r['pais']) . ' ' .			$siglas[$r['partido_afiliado']] . '</td><td align="right"><b>' . $r['num_elec'] . '</b></td><td>/</td><td align="right"><b>' . duracion($r['online']) . '</b></td><td><b>=</b></td><td>' . $r['factor'] . '</td><td align="right">'.$r['visitas'].'</td><td align="right">'.$r['paginas'].'</td><td>(' . $IPs[0] . '.' . $IPs[1] . '.*.*)</td></tr>';
+				$txt .= '<tr><td>' . crear_link($r['nick'], 'nick', $r['estado'], $r['pais']) . ' ' .			$siglas[$r['partido_afiliado']] . '</td><td align="right"><b>' . $r['num_elec'] . '</b></td><td>/</td><td align="right"><b>' . duracion($r['online']) . '</b></td><td><b>=</b></td><td>' . $r['factor'] . '</td><td align="right">'.$r['visitas'].'</td><td align="right">'.$r['paginas'].'</td><td>('.ocultar_IP($r['IP']).')</td></tr>';
 			}
 		}
 		$txt .= '</table>';

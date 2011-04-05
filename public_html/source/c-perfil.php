@@ -228,7 +228,7 @@ $result2 = mysql_query("SELECT voto, time,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL_VOTOS.".uservoto_ID LIMIT 1) AS nick,
 (SELECT pais FROM ".SQL_USERS." WHERE ID = ".SQL_VOTOS.".uservoto_ID LIMIT 1) AS pais
 FROM ".SQL_VOTOS."
-WHERE estado = 'confianza' AND user_ID = '" . $user_ID . "' AND voto = 1
+WHERE estado = 'confianza' AND user_ID = '" . $user_ID . "' AND voto != 0
 ORDER BY voto DESC, time ASC", $link);
 while($r2 = mysql_fetch_array($result2)) {
 	

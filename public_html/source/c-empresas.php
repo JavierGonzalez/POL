@@ -14,17 +14,17 @@ FROM ".SQL."empresas
 WHERE ID = '" . $_GET['b'] . "' 
 AND user_ID = '" . $pol['user_ID'] . "'
 LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)) {
-		$txt_title = 'Empresa: ' . $row['nombre'] . ' - Sector: ' . $row['cat_nom'];
+	while($r = mysql_fetch_array($result)) {
+		$txt_title = 'Empresa: ' . $r['nombre'] . ' - Sector: ' . $r['cat_nom'];
 		include('inc-functions-accion.php');
-		$txt .= '<h1>Editar: ' . $row['nombre'] . '</h1>
+		$txt .= '<h1>Editar: ' . $r['nombre'] . '</h1>
 
-<form action="/accion.php?a=empresa&b=editar&ID=' . $row['ID'] . '" method="post">
-<input type="hidden" name="return" value="' . $row['cat_url'] . '/' . $row['url'] . '/" />
+<form action="/accion.php?a=empresa&b=editar&ID=' . $r['ID'] . '" method="post">
+<input type="hidden" name="return" value="' . $r['cat_url'] . '/' . $r['url'] . '/" />
 
-<p class="amarillo">Fundador: <b>' . crear_link($row['nick']) . '</b> el <em>' . explodear(" ", $row['time'], 0) . '</em>, sector: <a href="/empresas/' . $row['cat_url'] . '/">' . $row['cat_nom'] . '</a></p>
+<p class="amarillo">Fundador: <b>' . crear_link($r['nick']) . '</b> el <em>' . explodear(" ", $r['time'], 0) . '</em>, sector: <a href="/empresas/' . $r['cat_url'] . '/">' . $r['cat_nom'] . '</a></p>
 
-<p class="amarillo">' . editor_enriquecido('txt', $row['descripcion']) . '</p>
+<p class="amarillo">' . editor_enriquecido('txt', $r['descripcion']) . '</p>
 
 <p><input type="submit" value="Guardar" /> &nbsp; <a href="/empresas/"><b>Ver Empresas</b></a></form></p>
 ';
@@ -38,8 +38,8 @@ LIMIT 1", $link);
 FROM ".SQL."cat
 WHERE tipo = 'empresas'
 ORDER BY num DESC", $link);
-	while($row = mysql_fetch_array($result)) {
-		$txt_li .= '<option value="' . $row['ID'] . '">' . $row['nombre'] . '</option>';
+	while($r = mysql_fetch_array($result)) {
+		$txt_li .= '<option value="' . $r['ID'] . '">' . $r['nombre'] . '</option>';
 	}
 
 	$txt .= '<h1><a href="/empresas/">Empresas</a>: Crear Empresa</h1>
@@ -63,10 +63,10 @@ FROM ".SQL."cat
 WHERE tipo = 'empresas'
 AND url = '" . $_GET['a'] . "'
 ORDER BY num DESC", $link);
-	while($row = mysql_fetch_array($result)) {
-		$cat_ID = $row['ID'];
-		$cat_nom = $row['nombre'];
-		$cat_num = $row['num'];
+	while($r = mysql_fetch_array($result)) {
+		$cat_ID = $r['ID'];
+		$cat_nom = $r['nombre'];
+		$cat_num = $r['num'];
 	}
 	$txt .= '<h1><a href="/empresas/">Empresas</a>: ' . $cat_nom . '</h1>
 <br />
@@ -80,8 +80,8 @@ ORDER BY num DESC", $link);
 FROM ".SQL."empresas
 WHERE cat_ID = '" . $cat_ID . "'
 ORDER BY time ASC", $link);
-	while($row = mysql_fetch_array($result)) {
-		$txt .= '<tr><td align="right">' . crear_link($row['nick']) . '</td><td><a href="/empresas/' . $_GET['a'] . '/' . $row['url'] . '/"><b>' . $row['nombre'] . '</b></a></td><td></td></tr>';
+	while($r = mysql_fetch_array($result)) {
+		$txt .= '<tr><td align="right">' . crear_link($r['nick']) . '</td><td><a href="/empresas/' . $_GET['a'] . '/' . $r['url'] . '/"><b>' . $r['nombre'] . '</b></a></td><td></td></tr>';
 	}
 	$txt .= '</table><p><a href="/empresas/"><b>Ver Empresas</b></a></p>';
 
@@ -95,22 +95,23 @@ ORDER BY time ASC", $link);
 FROM ".SQL."empresas
 WHERE url = '" . $_GET['b'] . "'
 LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)) {
+	while($r = mysql_fetch_array($result)) {
 
-		mysql_query("UPDATE ".SQL."empresas SET pv = pv+1 WHERE ID = '" . $row['ID'] . "'", $link);
-		$row['pv']++;
+		mysql_query("UPDATE ".SQL."empresas SET pv = pv+1 WHERE ID = '" . $r['ID'] . "'", $link);
+		$r['pv']++;
 
-		$txt_title = 'Empresa: ' . $row['nombre'] . ' - Sector: ' . $row['cat_nom'];
-		if ($pol['user_ID'] == $row['user_ID']) { $editar .= boton('Editar', '/empresas/editar/' . $row['ID'] . '/'); }
-		$txt .= '<h1><a href="/empresas/">Empresas</a>: <a href="/empresas/' . $row['cat_url'] . '/">' . $row['cat_nom'] . '</a> | ' . $row['nombre'] . ' ' . $editar . '</h1>
+		$txt_title = 'Empresa: ' . $r['nombre'] . ' - Sector: ' . $r['cat_nom'];
+		if ($pol['user_ID'] == $r['user_ID']) { $editar .= boton('Editar', '/empresas/editar/' . $r['ID'] . '/'); }
+		$txt .= '<h1><a href="/empresas/">Empresas</a>: <a href="/empresas/' . $r['cat_url'] . '/">' . $r['cat_nom'] . '</a> | ' . $r['nombre'] . ' ' . $editar . '</h1>
 <br />
 
-<div class="amarillo">' . $row['descripcion'] . '</div>
+<div class="amarillo">' . $r['descripcion'] . '</div>
 
-<p class="azul">Fundador: <b>' . crear_link($row['nick']) . '</b> | creaci&oacute;n: <em>' . explodear(" ", $row['time'], 0) . '</em> | sector: <a href="/empresas/' . $row['cat_url'] . '/">' . $row['cat_nom'] . '</a> | visitas: ' . $row['pv'] . '</p>
+<p class="azul">Fundador: <b>' . crear_link($r['nick']) . '</b> | creaci&oacute;n: <em>' . explodear(" ", $r['time'], 0) . '</em> | sector: <a href="/empresas/' . $r['cat_url'] . '/">' . $r['cat_nom'] . '</a> | visitas: ' . $r['pv'] . '</p>
 
 ';
-		if ($row['user_ID'] == $pol['user_ID']) { $boton = boton('X', '/accion.php?a=empresa&b=eliminar&ID=' . $row['ID'], '&iquest;Estas seguro de querer ELIMINAR definitivamente esta empresa?'); }
+		if ($r['user_ID'] == $pol['user_ID']) { $boton = '<form action="/accion.php?a=empresa&b=ceder&ID='.$r['ID'].'" method="post">
+<input type="submit" value="Ceder a:" /> <input type="text" name="nick" size="8" maxlength="20" value="" /></form> '.boton('X', '/accion.php?a=empresa&b=eliminar&ID=' . $r['ID'], '&iquest;Estas seguro de querer ELIMINAR definitivamente esta empresa?'); }
 		$txt .= '<span style="float:right;">' . $boton . $editar . '</span>';
 	}
 
@@ -125,18 +126,18 @@ LIMIT 1", $link);
 FROM ".SQL."cat
 WHERE tipo = 'empresas'
 ORDER BY orden ASC", $link);
-	while($row = mysql_fetch_array($result)) {
-		$txt .= '<tr class="amarillo"><td><a href="/empresas/' . $row['url'] . '/"><b>' . $row['nombre'] . '</b></a></td><td>' . $row['num'] . '</td><td>Visitas</td></tr>';
+	while($r = mysql_fetch_array($result)) {
+		$txt .= '<tr class="amarillo"><td><a href="/empresas/' . $r['url'] . '/"><b>' . $r['nombre'] . '</b></a></td><td>' . $r['num'] . '</td><td>Visitas</td></tr>';
 
 
 
 		$result2 = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, pv, time,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
 FROM ".SQL."empresas
-WHERE cat_ID = '" . $row['ID'] . "'
+WHERE cat_ID = '" . $r['ID'] . "'
 ORDER BY pv DESC", $link);
-		while($row2 = mysql_fetch_array($result2)) {
-			$txt .= '<tr><td align="right">' . crear_link($row2['nick']) . '</td><td><a href="/empresas/' . $row['url'] . '/' . $row2['url'] . '/"><b>' . $row2['nombre'] . '</b></a></td><td align="right"><b>' . $row2['pv'] . '</b></td></tr>';
+		while($r2 = mysql_fetch_array($result2)) {
+			$txt .= '<tr><td align="right">' . crear_link($r2['nick']) . '</td><td><a href="/empresas/' . $r['url'] . '/' . $r2['url'] . '/"><b>' . $r2['nombre'] . '</b></a></td><td align="right"><b>' . $r2['pv'] . '</b></td></tr>';
 		}
 		$txt .= '<tr><td colspan="3"></td></tr>';
 	}

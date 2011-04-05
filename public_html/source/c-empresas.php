@@ -124,7 +124,7 @@ LIMIT 1", $link);
 	$result = mysql_query("SELECT ID, url, nombre, num
 FROM ".SQL."cat
 WHERE tipo = 'empresas'
-ORDER BY num ASC", $link);
+ORDER BY orden ASC", $link);
 	while($row = mysql_fetch_array($result)) {
 		$txt .= '<tr class="amarillo"><td><a href="/empresas/' . $row['url'] . '/"><b>' . $row['nombre'] . '</b></a></td><td>' . $row['num'] . '</td><td>Visitas</td></tr>';
 

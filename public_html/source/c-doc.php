@@ -76,7 +76,7 @@ $(document).ready(function(){
 
 
 
-	$result = mysql_query("SELECT ID, nombre, tipo FROM ".SQL."cat WHERE tipo = 'docs' ORDER BY time ASC", $link);
+	$result = mysql_query("SELECT ID, nombre, tipo FROM ".SQL."cat WHERE tipo = 'docs' ORDER BY orden ASC", $link);
 	while($row = mysql_fetch_array($result)){
 
 		// CAT

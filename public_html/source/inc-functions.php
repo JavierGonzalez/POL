@@ -106,7 +106,7 @@ function form_select_cat($tipo='docs', $cat_now='') {
 SELECT ID, nombre, nivel
 FROM ".SQL."cat
 WHERE tipo = '" . $tipo . "'
-ORDER BY nivel ASC, time DESC", $link);
+ORDER BY orden ASC", $link);
 	while($row = mysql_fetch_array($result)){
 		if ($cat_now == $row['ID']) { 
 			$selected = ' selected="selected"'; 

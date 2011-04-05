@@ -773,6 +773,19 @@ VALUES ('".$url."', '".$nombre."', '".$pol['user_ID']."', 'Editar...', '', '".$c
 
 		$return = $cat_url.'/'.$url.'/';
 
+	} elseif (($_GET['b'] == 'ceder') AND ($_GET['ID']) AND ($_POST['nick'])) {
+
+		$result = mysql_query("SELECT ID, user_ID, 
+(SELECT ID FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS ceder_user_ID 
+FROM ".SQL."empresas 
+WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		while($row = mysql_fetch_array($result)){ 
+			if ($row['ceder_user_ID']) {
+				mysql_query("UPDATE ".SQL."empresas SET user_ID = '".$row['ceder_user_ID']."' WHERE ID = '".$row['ID']."' LIMIT 1", $link);
+			}
+		}
+		$refer_url = 'empresas/';
+
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['txt'])) {
 
 		$txt = gen_text($_POST['txt']);

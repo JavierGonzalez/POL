@@ -1269,12 +1269,27 @@ case 'borrar-mensaje':
 	}
 	break;
 
+
 case 'enviar-mensaje':
 
 	if ((!$_GET['b']) AND ($_POST['text']) AND ($_POST['para'])) {
 		$text = gen_text($_POST['text'], 'plain');
 		if (($_POST['para'] == 'ciudadano') AND ($_POST['nick'])) {
-			$result = mysql_query("SELECT ID, pais FROM users WHERE nick = '".$_POST['nick']."' LIMIT 1", $link);
+			$envio_urgente = 0;
+
+			$mp_num = 1;
+			$enviar_nicks = '';
+			$nicks_array = explode(' ', $_POST['nick'].' ');
+			foreach ($nicks_array AS $el_nick) {
+				if (($mp_num <= 6) AND ($el_nick)) { 
+					// Maximo 6 ciudadanos. Para no suplantar el "mensaje global".
+					if ($enviar_nicks != '') { $enviar_nicks .= ','; }
+					$enviar_nicks .= "'".$el_nick."'";
+					$mp_num++;
+				}
+			}
+			
+			$result = mysql_query("SELECT ID, pais FROM users WHERE nick IN (".$enviar_nicks.")", $link);
 			while($row = mysql_fetch_array($result)){ 
 				mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$row['ID']."', '".$date."', '".$text."', '0', '".$_POST['calidad']."')", $link);
 				
@@ -1282,12 +1297,19 @@ case 'enviar-mensaje':
 				if (($_POST['urgente'] == '1') AND ($pol['pols'] >= $pol['config']['pols_mensajeurgente'])) { 
 					$asunto = '[VirtualPol] Tienes un mensaje urgente de '.$pol['nick'];
 					$mensaje = 'Hola Ciudadano,<br /><br />Has recibido un mensaje urgente enviado por el Ciudadano: '.$pol['nick'].'.<br /><br />Para leerlo has de entrar aquí: <a href="http://'.HOST.'/msg/">http://'.HOST.'/msg/</a><br /><br />Mensaje de '.$pol['nick'].':<hr />'.$text.'<hr /><br /><br />Nota: Si este aviso te ha resultado molesto puedes defender tu derecho apoyandote en la Justicia de '.PAIS.'.<br /><br /><br />VirtualPol<br />http://'.HOST;
-					pols_transferir($pol['config']['pols_mensajeurgente'], $pol['user_ID'], '-1', 'Envio mensaje urgente');
 					enviar_email($row['ID'], $asunto, $mensaje); 
+					$envio_urgente++;
 				}
 
 				evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower($row['pais']).DEV.'.virtualpol.com/msg/"><b>Leer!</b></a>)', $row['ID'], -1, false, 'p'); 
 			}
+
+			if ($envio_urgente > 0) {
+				pols_transferir(round($pol['config']['pols_mensajeurgente']*$envio_urgente), $pol['user_ID'], '-1', 'Envio mensaje urgente'.($envio_urgente>1?' x'.$envio_urgente:''));
+			}
+
+
+
 		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'])) {
 
 

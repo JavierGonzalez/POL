@@ -390,7 +390,7 @@ while($row = mysql_fetch_array($result)) { $st['empresas'] = $row['num']; }
 
 // mapa (desde el 2011/04/07 guarda el porcentaje en venta.
 $superficie_total = $columnas * $filas;
-$result = mysql_query("SELECT superficie, estado FROM ".SQL."mapa WHERE", $link);
+$result = mysql_query("SELECT superficie, estado FROM ".SQL."mapa", $link);
 while($row = mysql_fetch_array($result)) { 
 	$sup_total += $row['superficie']; 
 	if ($row['estado'] == 'v') { $sup_vende += $row['superficie']; }

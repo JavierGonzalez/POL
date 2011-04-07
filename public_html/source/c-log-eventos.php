@@ -93,7 +93,8 @@ switch ($r['accion']) {
 		$fecha_hora_fin_kick = dato_nombre($r['dato'], 'kick');
 		$accion = 'Cancelado el kick a ' . crear_link($r['nick2']) . '. Terminaba: ' . $fecha_hora_fin_kick; 
 		break;
-	case 15: $accion = 'Empresa <em>'.dato_nombre($r['dato'], 'empresa').'</em> cedida a '.crear_link($r['nick2']); case 16: $accion = 'Propiedad <em>#'.$r['dato'].'</em> cedida a '.crear_link($r['nick2']); break;
+	case 15: $accion = 'Empresa <em>'.dato_nombre($r['dato'], 'empresa').'</em> cedida a '.crear_link($r['nick2']); break;
+	case 16: $accion = 'Propiedad <em>#'.$r['dato'].'</em> cedida a '.crear_link($r['nick2']); break;
 	default: $accion = $r['accion'];
 }
 

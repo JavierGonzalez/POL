@@ -65,7 +65,8 @@ LIMIT " . $p_limit, $link);
 12 x Cargo quitado (user_ID2=user_ID, dato=cargo_ID)
 13 - Rechazar ciudadania
 14 - Kick cancelado
-15 - Ceder empresa (dato=empresa_ID)
+15 - Ceder empresa (user_ID2=user_ID, dato=empresa_ID)
+16 - Ceder propiedad (user_ID2=user_ID, dato=propiedad_ID)
 */
 switch ($r['accion']) {
 	case 1: $accion = 'Nuevo Turista'; break;
@@ -92,7 +93,7 @@ switch ($r['accion']) {
 		$fecha_hora_fin_kick = dato_nombre($r['dato'], 'kick');
 		$accion = 'Cancelado el kick a ' . crear_link($r['nick2']) . '. Terminaba: ' . $fecha_hora_fin_kick; 
 		break;
-	case 15: $accion = 'Empresa <em>'.dato_nombre($r['dato'] , 'empresa').'</em> cedida a '.crear_link($r['nick2']); break;
+	case 15: $accion = 'Empresa <em>'.dato_nombre($r['dato'], 'empresa').'</em> cedida a '.crear_link($r['nick2']); case 16: $accion = 'Propiedad <em>#'.$r['dato'].'</em> cedida a '.crear_link($r['nick2']); break;
 	default: $accion = $r['accion'];
 }
 

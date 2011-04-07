@@ -388,14 +388,14 @@ while($row = mysql_fetch_array($result)) { $st['partidos'] = $row['num']; }
 $result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."empresas", $link);
 while($row = mysql_fetch_array($result)) { $st['empresas'] = $row['num']; }
 
-// mapa
+// mapa (desde el 2011/04/07 guarda el porcentaje en venta.
 $superficie_total = $columnas * $filas;
-$result = mysql_query("SELECT superficie, estado FROM ".SQL."mapa", $link);
+$result = mysql_query("SELECT superficie, estado FROM ".SQL."mapa WHERE", $link);
 while($row = mysql_fetch_array($result)) { 
 	$sup_total += $row['superficie']; 
 	if ($row['estado'] == 'v') { $sup_vende += $row['superficie']; }
 }
-$st['mapa'] = round(($sup_total * 100) / $superficie_total);
+$st['mapa'] = round(($sup_vende * 100) / $superficie_total);
 
 // mapa_vende: el precio de venta más bajo de una propiedad
 $result = mysql_query("SELECT pols FROM ".SQL."mapa WHERE estado = 'v' ORDER BY pols ASC LIMIT 1", $link);

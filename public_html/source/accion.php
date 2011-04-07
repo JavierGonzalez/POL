@@ -475,6 +475,7 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = '
 		while($row = mysql_fetch_array($result)){ 
 			if ($row['ceder_user_ID']) {
 				mysql_query("UPDATE ".SQL."mapa SET user_ID = '".$row['ceder_user_ID']."', nick = '".$_POST['nick']."',  time = '".$date."' WHERE ID = '".$row['ID']."' LIMIT 1", $link);
+				evento_log(16, $row['ID'], $row['ceder_user_ID']); // Ceder propiedad
 			}
 		}
 
@@ -782,7 +783,7 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link
 		while($row = mysql_fetch_array($result)){ 
 			if ($row['ceder_user_ID']) {
 				mysql_query("UPDATE ".SQL."empresas SET user_ID = '".$row['ceder_user_ID']."' WHERE ID = '".$row['ID']."' LIMIT 1", $link);
-				evento_log(15, $row['ID'], $pol['user_ID'], $row['ceder_user_ID']); // Ceder empresa
+				evento_log(15, $row['ID'], $row['ceder_user_ID']); // Ceder empresa
 			}
 		}
 		$refer_url = 'empresas/';

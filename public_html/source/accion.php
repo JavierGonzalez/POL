@@ -782,6 +782,7 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link
 		while($row = mysql_fetch_array($result)){ 
 			if ($row['ceder_user_ID']) {
 				mysql_query("UPDATE ".SQL."empresas SET user_ID = '".$row['ceder_user_ID']."' WHERE ID = '".$row['ID']."' LIMIT 1", $link);
+				evento_log(15, $row['ID'], $pol['user_ID'], $row['ceder_user_ID']); // Ceder empresa
 			}
 		}
 		$refer_url = 'empresas/';

@@ -396,7 +396,7 @@ LIMIT 1", $link);
 
 		$margen_ultimoexamen = strtotime($row['fecha_ultimoexamen']) + $pol['config']['examen_repe'];
 		if ((!$row['fecha_ultimoexamen']) OR ($margen_ultimoexamen < time())) {
-			$txt .= '<p>' . boton('OK, HACER EXAMEN', '/examenes/examen/' . $row['ID'] . '/', '&iquest;Est&aacute;s preparado para EXAMINARTE?\n\nSolo podr&aacute;s intentarlo UNA VEZ cada ' . duracion($pol['config']['examen_repe']) . '.\n\nSi ejerces el cargo y suspendes lo perder&aacute;s!', false, $pol['config']['pols_examen']) . '</p>';
+			$txt .= '<p>' . boton('HACER EXAMEN', '/examenes/examen/' . $row['ID'] . '/', '&iquest;Est&aacute;s preparado para EXAMINARTE?\n\nSolo podr&aacute;s intentarlo UNA VEZ cada ' . duracion($pol['config']['examen_repe']) . '.\n\nSi ejerces el cargo y suspendes lo perder&aacute;s!', false, $pol['config']['pols_examen']) . '</p>';
 		} else {
 			$txt .= '<p><b class="amarillo">No puedes repetir el examen hasta dentro de ' . duracion($margen_ultimoexamen - time()) . '</b></p>';
 		}

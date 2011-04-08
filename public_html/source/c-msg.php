@@ -120,7 +120,7 @@ function click_form(tipo) {
 <p><b>Destinatario:</b><table border="0" style="margin-top:-15px;">
 <tr onclick="click_form(\'ciudadano\');">
 <td><input id="radio_ciudadano" type="radio" name="para" value="ciudadano" checked="checked" />Ciudadano:</td>
-<td> <input id="ciudadano" tabindex="1" type="text" name="nick" value="' . $pre_nick . '" style="font-size:17px;" /> (Puedes indicar hasta 6 ciudadanos separados por espacios)</td>
+<td><input id="ciudadano" tabindex="1" type="text" name="nick" value="' . $pre_nick . '" style="font-size:17px;" /> (Puedes indicar hasta 6 ciudadanos separados por espacios)</td>
 </tr>
 <tr onclick="click_form(\'cargos\');">
 <td><input id="radio_cargos" type="radio" name="para" value="cargo" />Cargos:</td>

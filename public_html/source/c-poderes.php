@@ -40,7 +40,7 @@ $txt .= '
 
 <center>
 <table border="0" width="100%" cellpadding="0" cellspacing="3">
-<tr><td align="right" width="50%"><b>Presidente</b></td><td width="50%" valign="top"><b>' . get_cargo(7, 1) . '</b></td></tr>
+<tr><td align="right"><b>Presidente</b></td><td valign="top"><b>' . get_cargo(7, 1) . '</b></td></tr>
 <tr><td align="right">Vicepesidente</td><td valign="top">' . get_cargo(19) . '</td></tr>
 <tr><td align="right" valign="top">Ministro</td><td valign="top">' . get_cargo(16) . '</td></tr>
 <!--<tr><td align="right" valign="top">Embajador</td><td valign="top">' . get_cargo(42) . '</td></tr>-->
@@ -64,7 +64,7 @@ $txt .= '
 
 <center>
 <table border="0" cellpadding="0" cellspacing="3" width="100%">
-<tr><td align="right"><b>Presidente</b></td><td valign="top"><b>' . get_cargo(22) . '</b></td></tr>
+<tr><td align="right"><b>Presidente</b></td><td valign="top">' . get_cargo(22) . '</td></tr>
 <tr><td align="right" valign="top">Diputados</td><td valign="top"><b>' . get_cargo(6, false, true) . '</b></td></tr>
 <!--<tr><td align="right" valign="top">Defensor Pueblo</td><td valign="top">' . get_cargo(20) . '</td></tr>-->
 </table>

@@ -34,10 +34,8 @@ if ($pol['paises']) {
 }
 
 $txt .= '
-<h1>Poderes de '.PAIS.$mas_paises.'</h1>
-
 <div id="poderes"><table border="0" width="100%" cellspacing="10" cellpadding="0">
-<tr><td class="amarillo" valign="top" width="33%"><h1>Ejecutivo</h1>
+<tr><td class="amarillo" valign="top" width="33%"><h1>Poder Ejecutivo</h1>
 <p class="gris">El Gobierno</p>
 
 <center>
@@ -45,28 +43,34 @@ $txt .= '
 <tr><td align="right" width="50%"><b>Presidente</b></td><td width="50%" valign="top"><b>' . get_cargo(7, 1) . '</b></td></tr>
 <tr><td align="right">Vicepesidente</td><td valign="top">' . get_cargo(19) . '</td></tr>
 <tr><td align="right" valign="top">Ministro</td><td valign="top">' . get_cargo(16) . '</td></tr>
-<tr><td align="right" valign="top">Embajador</td><td valign="top">' . get_cargo(42) . '</td></tr>
-<tr><td align="right" valign="top">Secretario de Estado</td><td valign="top">' . get_cargo(27) . '</td></tr>
-<tr><td align="right" valign="top">Jefe Prensa</td><td valign="top">' . get_cargo(26) . '</td></tr>
-<tr><td align="right" valign="top">Comisario de Polic&iacute;a</td><td valign="top">' . get_cargo(13) . '</td></tr>
+<!--<tr><td align="right" valign="top">Embajador</td><td valign="top">' . get_cargo(42) . '</td></tr>-->
+<!--<tr><td align="right" valign="top">Secretario de Estado</td><td valign="top">' . get_cargo(27) . '</td></tr>-->
+<!--<tr><td align="right" valign="top">Jefe Prensa</td><td valign="top">' . get_cargo(26) . '</td></tr>-->
+<tr><td align="right" valign="top">Comisario</td><td valign="top">' . get_cargo(13) . '</td></tr>
 <tr><td align="right" valign="top">Polic&iacute;a</td><td valign="top">' . get_cargo(12) . '</td></tr>
+
+
+<tr><td align="left" valign="top" colspan="2"><br /><p class="gris">Ej&eacute;rcito de '.PAIS.'</p></td></tr>
+
+<tr><td align="right">Capit&aacute;n</td><td valign="top">' . get_cargo(57) . '</td></tr>
+<tr><td align="right" valign="top">Soldado</td><td valign="top">' . get_cargo(55) . '</td></tr>
 </table>
+
 </center>
 
 
-</td><td class="amarillo" valign="top" width="33%"><h1>Legislativo</h1>
+</td><td class="amarillo" valign="top" width="33%"><h1>Poder Legislativo</h1>
 <p class="gris">El Parlamento</p>
 
 <center>
 <table border="0" cellpadding="0" cellspacing="3" width="100%">
-<tr><td align="right" width="50%"><b>Presidente</b></td><td width="50%" valign="top"><b>' . get_cargo(22) . '</b></td></tr>
-<tr><td align="right" valign="top">Diputado</td><td valign="top"><b>' . get_cargo(6, false, true) . '</b></td></tr>
-<tr><td align="right" valign="top">Defensor Pueblo</td><td valign="top">' . get_cargo(20) . '</td></tr>
-<tr><td align="right" valign="top">Supervisor Censo</td><td valign="top">' . get_cargo(21) . '</td></tr>
+<tr><td align="right"><b>Presidente</b></td><td valign="top"><b>' . get_cargo(22) . '</b></td></tr>
+<tr><td align="right" valign="top">Diputados</td><td valign="top"><b>' . get_cargo(6, false, true) . '</b></td></tr>
+<!--<tr><td align="right" valign="top">Defensor Pueblo</td><td valign="top">' . get_cargo(20) . '</td></tr>-->
 </table>
 </center>
 
-</td><td class="amarillo" valign="top" width="33%"><h1>Judicial</h1>
+</td><td class="amarillo" valign="top" width="33%"><h1>Poder Judicial</h1>
 <p class="gris">La Justicia</p>
 
 <center>

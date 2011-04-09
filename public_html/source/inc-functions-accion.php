@@ -203,7 +203,7 @@ function gen_text($text, $type='') {
 	$text = utf8_decode($text);
 	$text = preg_replace('#(<[^>]+[\s\r\n\"\'])(on|xmlns)[^>]*>#iU', "$1>", $text); //prevent XSS
 	if ($type == 'plain') {
-		$text = strip_tags($text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>");
+		$text = strip_tags($text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>,<iframe>");
 		$text = nl2br($text);
 		$text = ereg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", $text);
 	} else {

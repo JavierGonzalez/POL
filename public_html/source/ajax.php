@@ -172,6 +172,7 @@ LIMIT 1", $link);
 					break;
 				case 'me': $elmsg = '<b style="margin-left:20px;">' . $_SESSION['pol']['nick'] . '</b> ' . $msg_rest; break;
 				case 'exit': $elmsg = '<span style="margin-left:20px;color:#66004C;"><b>' . $_SESSION['pol']['nick'] . '</b> se marcha, hasta pronto!</span>'; break;
+				case 'sombras': $elmsg = '<span style="margin-left:20px;color:#585858;"><b>' . $_SESSION['pol']['nick'] . '</b> se retira a las sombras...</span>'; break;
 				case 'ayuda':
 				case 'novatos': $elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> ofrece ayuda: <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="/doc/empezar-en-'.pais.'/" target="_blank">C&oacute;mo empezar, FAQ</a>.</a>'; break;
 

@@ -51,7 +51,7 @@ function foro_enviar($subforo, $hilo=null, $edit=null) {
 				$result = mysql_query("SELECT sub_ID, text, cargo, title FROM ".SQL."foros_hilos WHERE ID = '" . $subforo . "' AND estado = 'ok' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 				while($row = mysql_fetch_array($result)){ $edit_title = $row['title']; $edit_text = $row['text']; $edit_cargo = $row['cargo']; }
 			}
-			$edit_text = strip_tags($edit_text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>");
+			$edit_text = strip_tags($edit_text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>,<iframe>");
 		}
 
 		if ($pol['nivel'] > 1) {

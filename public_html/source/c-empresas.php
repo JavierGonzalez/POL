@@ -88,12 +88,15 @@ ORDER BY time ASC", $link);
 
 } elseif ($_GET['a']) { //VER EMPRESA
 
+	$result = mysql_query("SELECT ID FROM ".SQL."cat WHERE tipo = 'empresas' AND url = '".$_GET['a']."' LIMIT 1", $link);
+	while($r = mysql_fetch_array($result)) { $cat_ID = $r['ID']; }
+
 	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
 (SELECT nombre FROM ".SQL."cat WHERE ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_nom,
 (SELECT url FROM ".SQL."cat WHERE ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_url,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
 FROM ".SQL."empresas
-WHERE url = '" . $_GET['b'] . "'
+WHERE url = '" . $_GET['b'] . "' AND cat_ID = '".$cat_ID."'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
 

@@ -113,6 +113,12 @@ LIMIT 1", $link);
 <p class="azul">Fundador: <b>' . crear_link($r['nick']) . '</b> | creaci&oacute;n: <em>' . explodear(" ", $r['time'], 0) . '</em> | sector: <a href="/empresas/' . $r['cat_url'] . '/">' . $r['cat_nom'] . '</a> | visitas: ' . $r['pv'] . '</p>
 
 ';
+if ($r['user_ID'] == $pol['user_ID']) { $boton = '<form action="/accion.php?a=empresa&b=acciones&ID='.$r['ID'].'" method="post">
+Ceder acciones a:<input type="text" name="nick" size="8" maxlength="20" value="" /><br />
+Cantidad de acciones:<input type="text" name="cantidad size="8" maxlength="3" value="" /><br />
+<input type="submit" value="Ceder" />
+</form>
+
 		if ($r['user_ID'] == $pol['user_ID']) { $boton = '<form action="/accion.php?a=empresa&b=ceder&ID='.$r['ID'].'" method="post">
 <input type="submit" value="Ceder a:" /> <input type="text" name="nick" size="8" maxlength="20" value="" /></form> '.boton('X', '/accion.php?a=empresa&b=eliminar&ID=' . $r['ID'], '&iquest;Estas seguro de querer ELIMINAR definitivamente esta empresa?'); }
 		$txt .= '<span style="float:right;">' . $boton . $editar . '</span>';

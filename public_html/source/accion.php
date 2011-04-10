@@ -781,6 +781,45 @@ VALUES ('".$nick."', '".$nombre."', '".$acciones."', '".$PAIS."')", $link);
 		pols_transferir($pol['config']['pols_empresa'], $pol['user_ID'], '-1', 'Creacion nueva empresa: '.$nombre);
 
 		$return = $cat_url.'/'.$url.'/';
+      
+		    } elseif (($_GET['b'] == 'acciones') AND ($_GET['ID']) AND ($_POST['nick'] AND ($_POST['cantidad'])) {
+
+	  $id = $_GET['ID'];
+
+	  $result = mysql_query("SELECT nombre, ID, user_ID FROM vp_empresas WHERE ID='$id', $link");
+
+	  if ($row=mysql_fetch_array($result)) {
+
+	  $id = $row['ID'];
+	  $nick = $_POST['nick'];
+	  $cantidad = $_POST['cantidad'];
+	  $id_user = $row['user_ID'];
+
+	  $acciones = mysql_query("INSERT INTO acciones (ID_empresa, num_acciones, nick, pais) 
+VALUES ('".$id."', '".$cantidad."', '".$nick."', '".$PAIS."')", $link);
+
+
+
+	  $usuario = mysql_query("SELECT nick FROM vp_users WHERE ID = '$id_user', $link");
+
+	  if ($row=mysql_fetch_array($usuario)) {
+
+	  $nick = $row['nick'];
+
+	  $cantidadacciones = mysql_query("SELECT acciones, nick, nombre_empresa FROM acciones WHERE nick = '$nick' and ID_empresa = '$id', $link");
+
+	  if ($row=mysql_fetch_array($cantidadacciones)) {
+
+	  $susacciones = $row['acciones'];
+	  $totalacciones = $susacciones - $cantidad;
+
+	  $accionesresultantes = mysql_query("update acciones set acciones='$totalacciones' where nick='$nick' and ID_empresa='$id'",$link);
+
+}
+}
+}
+
+
 
 	} elseif (($_GET['b'] == 'ceder') AND ($_GET['ID']) AND ($_POST['nick'])) {
 

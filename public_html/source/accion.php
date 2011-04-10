@@ -175,9 +175,9 @@ case 'pass':
 		if ($user_ID) {
 			$new_pass = $nick.rand(1000,9999);
 
-			$asunto = '[VirtualPol] Contraseña reseteada del usuario: '.$nick;
+			$asunto = '[VirtualPol] ContraseÃ±a reseteada del usuario: '.$nick;
 
-			$mensaje = "Hola Ciudadano,\n\nSe ha procedido a resetear tu contraseña de seguridad. Por lo tanto tu contraseña ha cambiado.\n\n\nUsuario: ".$nick."\nNueva contraseña: ".$new_pass."\n\nLogin en: http://www.virtualpol.com/\n\nGracias, nos vemos en VirtualPol ;)\n\n\nVirtualPol\nhttp://www.virtualpol.com";
+			$mensaje = "Hola Ciudadano,\n\nSe ha procedido a resetear tu contraseÃ±a de seguridad. Por lo tanto tu contraseÃ±a ha cambiado.\n\n\nUsuario: ".$nick."\nNueva contraseÃ±a: ".$new_pass."\n\nLogin en: http://www.virtualpol.com/\n\nGracias, nos vemos en VirtualPol ;)\n\n\nVirtualPol\nhttp://www.virtualpol.com";
 
 			mail($email, $asunto, $mensaje, "FROM: VirtualPOL <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
 
@@ -768,6 +768,14 @@ case 'empresa':
 		mysql_query("INSERT INTO ".SQL."empresas (url, nombre, user_ID, descripcion, web, cat_ID, time) 
 VALUES ('".$url."', '".$nombre."', '".$pol['user_ID']."', 'Editar...', '', '".$cat_ID."', '".$date."')", $link);
 
+	  mysql_query("SELECT ID FROM ".SQL."vp_empresas" WHERE nombre='$nombre'",$link);
+	  $nick = $_SESSION['pol']['nick'];
+	  $acciones = 100;
+
+	  $acciones=mysql_query("INSERT INTO ".SQL."acciones (nick, nombre_empresa, acciones, pais, ID_empresa) 
+VALUES ('".$nick."', '".$nombre."', '".$acciones."', '".$PAIS."')", $link);
+
+
 		mysql_query("UPDATE ".SQL."cat SET num = num + 1 WHERE ID = '".$cat_ID."' LIMIT 1", $link);
 
 		pols_transferir($pol['config']['pols_empresa'], $pol['user_ID'], '-1', 'Creacion nueva empresa: '.$nombre);
@@ -1080,7 +1088,7 @@ case 'referendum':
 
 
 case 'foro':
-	// añadir, editar
+	// aÃ±adir, editar
 	if ((strlen($_POST['text']) > 1) AND ($_POST['subforo'])) {
 		$text = gen_text(trim($_POST['text']), 'plain');
 		$time = $date;
@@ -1298,7 +1306,7 @@ case 'enviar-mensaje':
 				// MENSAJE URGENTE
 				if (($_POST['urgente'] == '1') AND ($pol['pols'] >= $pol['config']['pols_mensajeurgente'])) { 
 					$asunto = '[VirtualPol] Tienes un mensaje urgente de '.$pol['nick'];
-					$mensaje = 'Hola Ciudadano,<br /><br />Has recibido un mensaje urgente enviado por el Ciudadano: '.$pol['nick'].'.<br /><br />Para leerlo has de entrar aquí: <a href="http://'.HOST.'/msg/">http://'.HOST.'/msg/</a><br /><br />Mensaje de '.$pol['nick'].':<hr />'.$text.'<hr /><br /><br />Nota: Si este aviso te ha resultado molesto puedes defender tu derecho apoyandote en la Justicia de '.PAIS.'.<br /><br /><br />VirtualPol<br />http://'.HOST;
+					$mensaje = 'Hola Ciudadano,<br /><br />Has recibido un mensaje urgente enviado por el Ciudadano: '.$pol['nick'].'.<br /><br />Para leerlo has de entrar aquÃ­: <a href="http://'.HOST.'/msg/">http://'.HOST.'/msg/</a><br /><br />Mensaje de '.$pol['nick'].':<hr />'.$text.'<hr /><br /><br />Nota: Si este aviso te ha resultado molesto puedes defender tu derecho apoyandote en la Justicia de '.PAIS.'.<br /><br /><br />VirtualPol<br />http://'.HOST;
 					enviar_email($row['ID'], $asunto, $mensaje); 
 					$envio_urgente++;
 				}

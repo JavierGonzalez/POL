@@ -114,10 +114,10 @@ LIMIT 1", $link);
 
 ';
 if ($r['user_ID'] == $pol['user_ID']) { $boton = '<form action="/accion.php?a=empresa&b=acciones&ID='.$r['ID'].'" method="post">
-Ceder acciones a:<input type="text" name="nick" size="8" maxlength="20" value="" /><br />
+echo 'Ceder acciones a:<input type="text" name="nick" size="8" maxlength="20" value="" /><br />
 Cantidad de acciones:<input type="text" name="cantidad size="8" maxlength="3" value="" /><br />
 <input type="submit" value="Ceder" />
-</form>
+</form>';
                                                                                                          }
 		if ($r['user_ID'] == $pol['user_ID']) { $boton = '<form action="/accion.php?a=empresa&b=ceder&ID='.$r['ID'].'" method="post">
 <input type="submit" value="Ceder a:" /> <input type="text" name="nick" size="8" maxlength="20" value="" /></form> '.boton('X', '/accion.php?a=empresa&b=eliminar&ID=' . $r['ID'], '&iquest;Estas seguro de querer ELIMINAR definitivamente esta empresa?'); }

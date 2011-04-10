@@ -114,8 +114,8 @@ LIMIT 1", $link);
 
 ';
 if ($r['user_ID'] == $pol['user_ID']) {  $txt .= '<form action="/accion.php?a=empresa&b=acciones&ID='.$r['ID'].'" method="post">
-<input type="text" name="nick" size="8" maxlength="20" value="Ceder acciones a:" /><br />
-<input type="text" name="cantidad" size="8" maxlength="3" value="Cantidad de acciones:" /><br />
+Ceder acciones a: <input type="text" name="nick" size="8" maxlength="20" value="" /><br />
+Cantidad de acciones: <input type="text" name="cantidad" size="8" maxlength="3" value="" /><br />
 <input type="submit" value="Ceder" />
 </form>';
                                                                                                          }

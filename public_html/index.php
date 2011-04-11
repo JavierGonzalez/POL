@@ -12,15 +12,20 @@ if (isset($pol['user_ID'])) {
 
 <p>VirtualPol es una <b>plataforma democr&aacute;tica de Internet</b> donde los usuarios se auto-gestionan a s&iacute; mismos. Hasta ahora el &uacute;nico m&eacute;todo de administrar una comunidad en Internet era mediante una estructura rigida y autoritaria.</p>
 
-<p><b>VirtualPol es una revoluci&oacute;n</b>, con la <b>Democracia</b> como pilar fundamental. Las Elecciones estan automatizadas, por lo tanto no existe ning&uacute;n usuario privilegiado. No hay intervenci&oacute;n del admin, a no ser que una situación determinada dada en un momento determinado no pueda ser arreglada por la ciudadanía. Esto es un avance hist&oacute;rico en las comunidades de Internet. Todos los ciudadanos est&aacute;n en absoluta igualdad. Con las mismas oportunidades para el liderazgo o el fracaso en la b&uacute;squeda del Poder y la auto-gesti&oacute;n. Ahora mismo solo existe un país llamado VP, pero hay mas paises como Hispania, Pol, o Atlantis, los cuales se encuentran cerrados, según vaya subiendo el número de ciudadanos se irán abriendo. <a href="http://vp.virtualpol.com/historia/" target="Historia de VirtualPol"><b>Historia de VirtualPol</b></a><br /><em>Contacto redes sociales:</em><br /><a href="http://www.tuenti.com/#m=Profile&func=index&user_id=72539872" target="Tuenti">Tuenti</a>, <a href="http://twitter.com/VirtualPol" target="Twitter">Twitter</a>.</p>';
+     <p><b>VirtualPol es una revoluci&oacute;n</b>, con la <b>Democracia</b> como pilar fundamental. Las Elecciones estan automatizadas, por lo tanto no existe ning&uacute;n usuario privilegiado. No hay intervenci&oacute;n del admin, a no ser que una situación determinada dada en un momento determinado no pueda ser arreglada por la ciudadanía. Esto es un avance hist&oacute;rico en las comunidades de Internet. Todos los ciudadanos est&aacute;n en absoluta igualdad. Con las mismas oportunidades para el liderazgo o el fracaso en la b&uacute;squeda del Poder y la auto-gesti&oacute;n. Ahora mismo solo existe un país llamado VP, pero hay mas paises como Hispania, Pol, o Atlantis, los cuales se encuentran cerrados, según vaya subiendo el número de ciudadanos se irán abriendo. <a href="http://vp.virtualpol.com/historia/" target="Historia de VirtualPol"><b>Historia de VirtualPol</b></a></p><p><em>Contacto redes sociales:</em><br /><a href="http://www.tuenti.com/#m=Profile&func=index&user_id=72539872" target="Tuenti">Tuenti</a>, <a href="http://twitter.com/VirtualPol" target="Twitter">Twitter</a>.</p>';
 } else {
 
 	$txt .= '<h1>Bienvenido a VirtualPol - Simulador Politico</h1>
 
 <p><span style="float:right;margin-left:10px;"><iframe src="http://docs.google.com/present/embed?id=ddfcnxdb_15fqwwcpct&interval=30" frameborder="0" width="410" height="342"></iframe></span>VirtualPol es una <b>plataforma democr&aacute;tica de Internet</b> donde los usuarios se auto-gestionan a s&iacute; mismos. Hasta ahora el &uacute;nico m&eacute;todo de administrar una comunidad en Internet era mediante una estructura rigida y autoritaria.</p>
 
-<p><b>VirtualPol es una revoluci&oacute;n</b>, con la <b>Democracia</b> como pilar fundamental. Las Elecciones estan automatizadas, por lo tanto no existe ning&uacute;n usuario privilegiado. No hay intervenci&oacute;n del admin, a no ser que una situación determinada dada en un momento determinado no pueda ser arreglada por la ciudadanía. Esto es un avance hist&oacute;rico en las comunidades de Internet. Todos los ciudadanos est&aacute;n en absoluta igualdad. Con las mismas oportunidades para el liderazgo o el fracaso en la b&uacute;squeda del Poder y la auto-gesti&oacute;n. Ahora mismo solo existe un país llamado VP, pero hay mas paises como Hispania, Pol, o Atlantis, los cuales se encuentran cerrados, según vaya subiendo el número de ciudadanos se irán abriendo. <a href="http://vp.virtualpol.com/historia/" target="Historia de VirtualPol"><b>Historia de VirtualPol</b></a><br /><em>Contacto redes sociales:</em><br /><a href="http://www.tuenti.com/#m=Profile&func=index&user_id=72539872" target="Tuenti">Tuenti</a>, <a href="http://twitter.com/VirtualPol" target="Twitter">Twitter</a>.</p>';
+     <p><b>VirtualPol es una revoluci&oacute;n</b>, con la <b>Democracia</b> como pilar fundamental. Las Elecciones estan automatizadas, por lo tanto no existe ning&uacute;n usuario privilegiado. No hay intervenci&oacute;n del admin, a no ser que una situación determinada dada en un momento determinado no pueda ser arreglada por la ciudadanía. Esto es un avance hist&oacute;rico en las comunidades de Internet. Todos los ciudadanos est&aacute;n en absoluta igualdad. Con las mismas oportunidades para el liderazgo o el fracaso en la b&uacute;squeda del Poder y la auto-gesti&oacute;n. Ahora mismo solo existe un país llamado VP, pero hay mas paises como Hispania, Pol, o Atlantis, los cuales se encuentran cerrados, según vaya subiendo el número de ciudadanos se irán abriendo. <a href="http://vp.virtualpol.com/historia/" target="Historia de VirtualPol"><b>Historia de VirtualPol</b></a></p><p><em>Contacto redes sociales:</em><br /><a href="http://www.tuenti.com/#m=Profile&func=index&user_id=72539872" target="Tuenti">Tuenti</a>, <a href="http://twitter.com/VirtualPol" target="Twitter">Twitter</a>.</p>';
 
+}
+if (!$pol['nick']) {
+        $txt .= '<br /><center><span class="amarillo" style="background:blue;padding:17px 9px 13px 9px;"><input value="REGISTRAR CIUDADANO" onclick="window.location.href=\'/registrar/\';" type="button" style="font-size:18px;height:40px;color:red;" /></span></center><br />';
+} elseif ($pol['pais'] == 'ninguno'){ 
+        $txt .= '<p>' . boton('Solicita ciudadania!', 'http://www.virtualpol.com/registrar/') . '</p>';
 }
 
 
@@ -185,10 +190,8 @@ $txt .= '
 
 
 if (!$pol['nick']) {
-	$txt .= '<br /><center><span class="amarillo" style="background:blue;padding:17px 9px 13px 9px;"><input value="REGISTRAR CIUDADANO" onclick="window.location.href=\'/registrar/\';" type="button" style="font-size:18px;height:40px;color:red;" /></span></center><br /><h1>Simulador Pol&iacute;tico Espa&ntilde;ol | Ciudadanos online:</h1>';
-} elseif ($pol['pais'] == 'ninguno'){ 
-	$txt .= '<p>' . boton('Solicita ciudadania!', 'http://www.virtualpol.com/registrar/') . '</p>';
-}
+	$txt .= '<h1>Simulador Pol&iacute;tico Espa&ntilde;ol | Ciudadanos online:</h1>';
+} elseif ($pol['pais'] == 'ninguno')
 
 
 $time_pre = date('Y-m-d H:i:00', time() - 3600); // 1 hora

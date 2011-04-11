@@ -768,7 +768,7 @@ case 'empresa':
 		mysql_query("INSERT INTO ".SQL."empresas (url, nombre, user_ID, descripcion, web, cat_ID, time) 
 VALUES ('".$url."', '".$nombre."', '".$pol['user_ID']."', 'Editar...', '', '".$cat_ID."', '".$date."')", $link);
 
-	  mysql_query("SELECT ID FROM ".SQL."vp_empresas" WHERE nombre='$nombre'",$link);
+	  mysql_query("SELECT ID FROM ".SQL."vp_empresas WHERE nombre='$nombre'",$link);
 	  $nick = $_SESSION['pol']['nick'];
 	  $acciones = 100;
 
@@ -782,7 +782,7 @@ VALUES ('".$nick."', '".$nombre."', '".$acciones."', '".$PAIS."')", $link);
 
 		$return = $cat_url.'/'.$url.'/';
       
-		    } elseif (($_GET['b'] == 'acciones') AND ($_GET['ID']) AND ($_POST['nick'] AND ($_POST['cantidad'])) {
+		    } elseif (($_GET['b'] == 'acciones') AND ($_GET['ID']) AND ($_POST['nick'] AND ($_POST['cantidad']))) {
 
 	  $id = $_GET['ID'];
 

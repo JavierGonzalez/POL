@@ -7,7 +7,7 @@ $p['jefegabinete'] = ' ';
 $p['vice'] = ' ';
 
 
-function get_cargo($cargo_ID, $num=false, $siglas=false) {
+function get_cargo($cargo_ID, $salto=', ', $reicon=false) {
 	global $link;
 
 	$html = '';
@@ -17,7 +17,7 @@ function get_cargo($cargo_ID, $num=false, $siglas=false) {
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick
 FROM ".SQL."estudios_users WHERE ID_estudio = '" . $cargo_ID . "' AND cargo = '1'" . $limit);
 	while ($row = mysql_fetch_array($result)) {
-		if ($html) { $html .= ', '; }
+		if ($html) { $html .= $salto; if ($reicon) { $html .= '<img src="'.IMG.'cargos/' . $cargo_ID . '.gif" /> '; } }
 		$html .= crear_link($row['nick']); 
 	}
 	return '<img src="'.IMG.'cargos/' . $cargo_ID . '.gif" /> '.$html;
@@ -40,7 +40,7 @@ $txt .= '
 
 <center>
 <table border="0" width="100%" cellpadding="0" cellspacing="3">
-<tr><td align="right"><b>Presidente</b></td><td valign="top"><b>' . get_cargo(7, 1) . '</b></td></tr>
+<tr><td align="right"><b>Presidente</b></td><td valign="top"><b>' . get_cargo(7) . '</b></td></tr>
 <tr><td align="right">Vicepesidente</td><td valign="top">' . get_cargo(19) . '</td></tr>
 <tr><td align="right" valign="top">Ministro</td><td valign="top">' . get_cargo(16) . '</td></tr>
 <!--<tr><td align="right" valign="top">Embajador</td><td valign="top">' . get_cargo(42) . '</td></tr>-->
@@ -65,7 +65,7 @@ $txt .= '
 <center>
 <table border="0" cellpadding="0" cellspacing="3" width="100%">
 <tr><td align="right"><b>Presidente</b></td><td valign="top">' . get_cargo(22) . '</td></tr>
-<tr><td align="right" valign="top">Diputados</td><td valign="top"><b>' . get_cargo(6, false, true) . '</b></td></tr>
+<tr><td align="right" valign="top">Diputados</td><td valign="top"><b>' . get_cargo(6, '<br />', true) . '</b></td></tr>
 <!--<tr><td align="right" valign="top">Defensor Pueblo</td><td valign="top">' . get_cargo(20) . '</td></tr>-->
 </table>
 </center>
@@ -75,9 +75,9 @@ $txt .= '
 
 <center>
 <table border="0" width="100%" cellpadding="0" cellspacing="3">
-<tr><td align="right" valign="top" width="50%"><b>Juez&nbsp;Supremo</b></td><td width="50%" valign="top"><b>' . get_cargo(9) . '</b></td></tr>
-<tr><td align="right" valign="top">Juez de Paz</td><td valign="top">' . get_cargo(8) . '</td></tr>
-<tr><td align="right" valign="top">Fiscal</td><td valign="top">' . get_cargo(11) . '</td></tr>
+<tr><td align="right" valign="top" width="50%"><b>Juez&nbsp;Supremo</b></td><td width="50%" valign="top"><b>' . get_cargo(9, '<br />', true) . '</b></td></tr>
+<tr><td align="right" valign="top">Juez de Paz</td><td valign="top">' . get_cargo(8, '<br />', true) . '</td></tr>
+<tr><td align="right" valign="top">Fiscal</td><td valign="top">' . get_cargo(11, '<br />', true) . '</td></tr>
 </table>
 </center>
 

@@ -1330,8 +1330,8 @@ case 'enviar-mensaje':
 			$enviar_nicks = '';
 			$nicks_array = explode(' ', $_POST['nick'].' ');
 			foreach ($nicks_array AS $el_nick) {
-				if (($mp_num <= 6) AND ($el_nick)) { 
-					// Maximo 6 ciudadanos. Para no suplantar el "mensaje global".
+				if (($mp_num <= 9) AND ($el_nick)) { 
+					// Maximo 9 ciudadanos. Para no suplantar el "mensaje global".
 					if ($enviar_nicks != '') { $enviar_nicks .= ','; }
 					$enviar_nicks .= "'".$el_nick."'";
 					$mp_num++;
@@ -1358,7 +1358,16 @@ case 'enviar-mensaje':
 			}
 
 
+		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'] == 'SC')) {
 
+			$sc = get_supervisores_del_censo();
+
+			foreach ($sc AS $id => $user_ID) {
+				if ($user_ID != $pol['user_ID']) {
+					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$user_ID."', '".$date."', '<b>Mensaje multiple: Supervisor del Censo</b><br />".$text."', '0', '".$_POST['calidad']."')", $link);
+					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).DEV.'.'.URL.'/msg/"><b>Leer!</b></a>)', $user_ID, -1, false, 'p');
+				}
+			}
 		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'])) {
 
 

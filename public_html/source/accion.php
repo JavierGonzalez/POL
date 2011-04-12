@@ -1362,7 +1362,7 @@ case 'enviar-mensaje':
 
 			$sc = get_supervisores_del_censo();
 
-			foreach ($sc AS $id => $user_ID) {
+			foreach ($sc AS $user_ID => $nick) {
 				if ($user_ID != $pol['user_ID']) {
 					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$user_ID."', '".$date."', '<b>Mensaje multiple: Supervisor del Censo</b><br />".$text."', '0', '".$_POST['calidad']."')", $link);
 					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).DEV.'.'.URL.'/msg/"><b>Leer!</b></a>)', $user_ID, -1, false, 'p');

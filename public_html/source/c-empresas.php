@@ -75,13 +75,13 @@ ORDER BY num DESC", $link);
 	$txt .= '<tr class="amarillo"><td><a href="/empresas/' . $_GET['a'] . '/"><b>' . $cat_nom . '</b></a></td><td>' . $cat_num . '</td><td></td></tr>';
 
 
-	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time,
+	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
 FROM ".SQL."empresas
 WHERE cat_ID = '" . $cat_ID . "'
 ORDER BY time ASC", $link);
 	while($r = mysql_fetch_array($result)) {
-		$txt .= '<tr><td align="right">' . crear_link($r['nick']) . '</td><td><a href="/empresas/' . $_GET['a'] . '/' . $r['url'] . '/"><b>' . $r['nombre'] . '</b></a></td><td></td></tr>';
+		$txt .= '<tr><td align="right">' . crear_link($r['nick']) . '</td><td><a href="/empresas/' . $_GET['a'] . '/' . $r['url'] . '/"><b>' . $r['nombre'] . '</b></a></td><td align="right"><b>'.$r['pv'].'</b> visitas</td></tr>';
 	}
 	$txt .= '</table><p><a href="/empresas/"><b>Ver Empresas</b></a></p>';
 
@@ -136,19 +136,13 @@ FROM ".SQL."cat
 WHERE tipo = 'empresas'
 ORDER BY orden ASC", $link);
 	while($r = mysql_fetch_array($result)) {
-		$txt .= '<tr class="amarillo"><td><a href="/empresas/' . $r['url'] . '/"><b>' . $r['nombre'] . '</b></a></td><td>' . $r['num'] . '</td><td>Visitas</td></tr>';
+		$pv_num = 0;
+		$result2 = mysql_query("SELECT pv FROM ".SQL."empresas WHERE cat_ID = '" . $r['ID'] . "'", $link);
+		while($r2 = mysql_fetch_array($result2)) { $pv_num += $r2['pv']; }
 
+		$txt .= '<tr class="amarillo"><td><a href="/empresas/' . $r['url'] . '/" style="font-size:19px;"><b>' . $r['nombre'] . '</b></a></td><td align="right"><b>'.$r['num'].'</b> empresas</td><td align="right"><b>'.$pv_num.'</b> visitas</td></tr>';
 
-
-		$result2 = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, pv, time,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
-FROM ".SQL."empresas
-WHERE cat_ID = '" . $r['ID'] . "'
-ORDER BY pv DESC", $link);
-		while($r2 = mysql_fetch_array($result2)) {
-			$txt .= '<tr><td align="right">' . crear_link($r2['nick']) . '</td><td><a href="/empresas/' . $r['url'] . '/' . $r2['url'] . '/"><b>' . $r2['nombre'] . '</b></a></td><td align="right"><b>' . $r2['pv'] . '</b></td></tr>';
-		}
-		$txt .= '<tr><td colspan="3"></td></tr>';
+		$txt .= '<tr><td colspan="3" height="6"></td></tr>';
 	}
 
 	$txt .= '</table><p>' . boton('Crear Empresa', '/empresas/crear-empresa/', false, '', $pol['config']['pols_empresa']) . '</p>';

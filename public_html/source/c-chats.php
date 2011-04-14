@@ -75,7 +75,7 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 	while ($r = mysql_fetch_array($result)) { 
 
 		$txt_title = 'Chat: '.$r['titulo'].' | Opciones';
-		$acceso_tipos = array('privado'=>'Ciudadano1 C2 C3 ...', 'nivel'=>'1', 'antiguedad'=>'365', 'ciudadanos_pais'=>'', 'ciudadanos'=>'', 'anonimos'=>'');
+		$acceso_tipos = array('excluir'=>'Ciudadano1 C2 C3 ...', 'privado'=>'Ciudadano1 C2 C3 ...', 'nivel'=>'1', 'antiguedad'=>'365', 'ciudadanos_pais'=>'', 'ciudadanos'=>'', 'anonimos'=>'');
 		foreach ($acceso_tipos AS $at => $at_var) { 
 			$txt_li['leer'] .= '<input type="radio" name="acceso_leer" value="'.$at.'"'.($at==$r['acceso_leer']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_leer_var\').val(\''.$at_var.'\');" /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
 		}

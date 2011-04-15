@@ -1370,17 +1370,13 @@ case 'enviar-mensaje':
 			}
 		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'])) {
 
-
-
 			$result = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '".$_POST['cargo_ID']."' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $cargo_nombre = $r['nombre']; }
 
-
-
-			if ($_POST['cargo_ID'] == '21') {
-				$result = mysql_query("SELECT ID AS user_ID FROM users WHERE cargo = '21'", $link);
+			if ($_POST['cargo_ID'] == '55') {
+				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1'  AND estado = 'ok' AND ID_estudio IN (55, 56, 57) LIMIT 80", $link);
 			} else {
-				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1'  AND estado = 'ok' AND ID_estudio = '".$_POST['cargo_ID']."' LIMIT 50", $link);
+				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1'  AND estado = 'ok' AND ID_estudio = '".$_POST['cargo_ID']."' LIMIT 80", $link);
 			}
 			while($r = mysql_fetch_array($result)){ 
 				if ($r['user_ID'] != $pol['user_ID']) {

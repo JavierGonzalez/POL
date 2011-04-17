@@ -166,6 +166,7 @@ chat_sin_leer_yo = "";
 mouse_position = "";
 titulo_html = document.title;
 chat_delay_close = "";
+chat_scroll = 0;
 delays();
 
 chat_filtro = "normal";
@@ -180,7 +181,6 @@ array_ncargos = { 0:"", 98:"Turista", 99:"Extranjero", '.$array_ncargos.' };
 array_ignorados = new Array();
 
 window.onload = function(){
-	document.getElementById("vpc").scrollTop = 900000;
 	merge_list();
 	$("#vpc_msg").focus();
 	if ((!elnick) && ("'.$acceso_escribir.'" == "anonimos")) {
@@ -199,6 +199,13 @@ window.onload = function(){
 
 // FUNCIONES
 
+function scroll_abajo() {
+	if (chat_scroll <= document.getElementById("vpc").scrollTop) {
+		document.getElementById("vpc").scrollTop = 900000;
+		chat_scroll = document.getElementById("vpc").scrollTop;
+	}
+}
+
 function siControlPulsado(event, nick){
 	if (event.ctrlKey==1){
 		toggle_ignorados(nick);
@@ -211,7 +218,7 @@ function toggle_ignorados(nick) {
 	if(idx != -1) {
 		array_ignorados.splice(idx, 1);
 		$("."+nick).show();
-		document.getElementById("vpc").scrollTop = 900000;
+		scroll_abajo();
 	}
 	else {
 		array_ignorados.push(nick); 
@@ -238,7 +245,7 @@ function chat_filtro_change() {
 	} else {
 		chat_filtro = "normal";
 		$(".cf_c, .cf_e").fadeIn("slow");
-		document.getElementById("vpc").scrollTop = 900000;
+		scroll_abajo();
 	}
 }
 
@@ -393,7 +400,7 @@ function print_delay() {
 	$("#vpc_msg").focus();
 	setTimeout(function(){
 		$("#vpc li:last").fadeIn("slow");
-		document.getElementById("vpc").scrollTop = 900000;
+		scroll_abajo();
 	}, 200);
 }
 

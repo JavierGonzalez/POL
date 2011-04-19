@@ -174,8 +174,7 @@ LIMIT 1", $link);
 				case 'me': $elmsg = '<b style="margin-left:20px;">' . $_SESSION['pol']['nick'] . '</b> ' . $msg_rest; break;
 				case 'exit': $elmsg = '<span style="margin-left:20px;color:#66004C;"><b>' . $_SESSION['pol']['nick'] . '</b> se marcha, hasta pronto!</span>'; break;
 				case 'sombras': $elmsg = '<span style="margin-left:20px;color:#585858;"><b>' . $_SESSION['pol']['nick'] . '</b> se retira a las sombras...</span>'; break;
-				case 'ayuda':
-				case 'novatos': $elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> ofrece ayuda: <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="/doc/empezar-en-'.pais.'/" target="_blank">C&oacute;mo empezar, FAQ</a>.</a>'; break;
+				case 'ayuda': $elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> ofrece ayuda: <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="/doc/empezar-en-'.pais.'/" target="_blank">C&oacute;mo empezar, FAQ</a>.</a>'; break;
 
 				case 'policia':
 				if ((($_SESSION['pol']['cargo'] == 13) OR ($_SESSION['pol']['cargo'] == 12)) AND (strtolower($_SESSION['pol']['pais']) == pais))  {
@@ -233,7 +232,7 @@ UPDATE HIGH_PRIORITY chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$c
 		// print refresh
 		if ($_REQUEST['n']) { echo chat_refresh($chat_ID, $_REQUEST['n']); }
 
-	} else { echo 'n 0 ---- - <b style="color:#FF0000;">Chat bloqueado.</b>'. "\n"; }
+	} else { echo 'n 0 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <b style="color:#FF0000;">Chat bloqueado.</b>'."\n"; }
 
 
 } elseif (($_REQUEST['a'] == 'whois') AND (isset($_REQUEST['nick']))) {

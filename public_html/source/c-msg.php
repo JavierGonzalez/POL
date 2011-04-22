@@ -151,8 +151,9 @@ function click_form(tipo) {
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" class="pol_table" id="msg_table">
 <tr>
-<th></th>
-<th>De</th>
+<th colspan="2"><span style="float:right;">De &nbsp; &nbsp;</span>
+<button onClick="window.location.href=\'/accion.php?a=mensaje-leido&ID=all\';" style="color:#666;" />Todo leido</button>
+</th>
 <th width="100%">Mensaje</th>
 <th></th>
 </tr>';

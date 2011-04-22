@@ -28,6 +28,15 @@ OR (($pol['estado'] == 'extranjero') AND ($_GET['a'] == 'mercado'))
 switch ($_GET['a']) { // #####################################################
 
 
+case 'SC':
+	$sc = get_supervisores_del_censo();
+	if (($_GET['b'] == 'nota') AND (isset($sc[$pol['user_ID']])) AND ($_GET['ID'])) {
+		mysql_query("UPDATE users SET nota_SC = '".strip_tags($_POST['nota_SC'])."' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+		$refer_url = 'control/supervisor-censo/';
+	}
+	break;
+
+
 case 'exencion_impuestos':
 	if ($pol['nivel'] >= 98) {
 		$result = mysql_query("SELECT ID, exenta_impuestos FROM ".SQL."cuentas where nivel = '0'", $link);
@@ -1305,10 +1314,12 @@ case 'kick':
 
 
 case 'mensaje-leido':
-	if (($_GET['ID'])) {
+	if ($_GET['ID'] == 'all') {
+		mysql_query("UPDATE ".SQL_MENSAJES." SET leido = '1' WHERE recibe_ID = '".$pol['user_ID']."'", $link);
+	} elseif ($_GET['ID']) {
 		mysql_query("UPDATE ".SQL_MENSAJES." SET leido = '1' WHERE ID = '".$_GET['ID']."' AND recibe_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		$refer_url = 'msg/';
 	}
+	$refer_url = 'msg/';
 	break;
 
 case 'borrar-mensaje':

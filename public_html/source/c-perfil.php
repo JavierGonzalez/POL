@@ -28,7 +28,17 @@ while($r = mysql_fetch_array($result)){
 				$host = '*.'.$hosts[count($hosts)-3] . '.' . $hosts[count($hosts)-2] . '.' . $hosts[count($hosts)-1]; 
 			}
 	
-			$extras = '<tr><td colspan="2"><input style="float:right;" value="Expulsar" onclick="if (!confirm(\'&iquest;Seguro que quieres EXPULSAR a este usuario?\')) { return false; } else { var razon = prompt(\'&iquest;Razon de expulsion?\',\'\').replace(\'&\',\'%26\'); if (razon) { window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=expulsar&ID=' . $r['ID'] . '&nick=' . $r['nick'] . '&razon=\' + razon; } }" type="button"'.$exp_disabled.' />(' . $r['ID'] . ', '.$r['email'].', '.ocultar_IP($host, 'host').', <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-20,20)).'">GeoIP</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>';
+			$extras = '
+<tr>
+<td colspan="2"><input style="float:right;" value="Expulsar" onclick="if (!confirm(\'&iquest;Seguro que quieres EXPULSAR a este usuario?\')) { return false; } else { var razon = prompt(\'&iquest;Razon de expulsion?\',\'\').replace(\'&\',\'%26\'); if (razon) { window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=expulsar&ID=' . $r['ID'] . '&nick=' . $r['nick'] . '&razon=\' + razon; } }" type="button"'.$exp_disabled.' />(' . $r['ID'] . ', '.$r['email'].', '.ocultar_IP($host, 'host').', <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-20,20)).'">GeoIP</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
+<tr><td colspan="3" align="right">
+
+<form action="/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post">
+Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="40" value="'.$r['nota_SC'].'" />
+<input type="submit" value="Guardar" />
+</form>
+
+</td></tr>';
 		} else { $extras = ''; }
 
 		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="2">'.$p_avatar.'</td><td nowrap="nowrap"><h1><span class="amarillo"><img src="'.IMG.'cargos/'.$r['cargo'].'.gif" alt="Cargo" style="margin-bottom:0;" border="0" /> ' . $nick . ' &nbsp; <span style="color:grey;"><span class="' . $r['estado'] . '">' . ucfirst($r['estado']) . '</span> de ' . $r['pais'] . '</span></span></h1></td><td nowrap="nowrap">';
@@ -342,6 +352,21 @@ $txt .= '</table>
 
 <p style="margin-bottom:0px;">Cargos y Examenes: <b>' . $estudios_num . '</b> (<a href="/examenes/">Ver examenes</a>)</p>
 ' . $estudios . '
+
+<ul>
+';
+
+
+
+$result2 = mysql_query("SELECT pais, titulo, url, fecha_creacion, fecha_last
+FROM chats WHERE user_ID = '".$r['ID']."' 
+ORDER BY fecha_creacion ASC", $link);
+while ($r2 = mysql_fetch_array($result2)) { 
+	$txt .= '<li>'.duracion(time() - strtotime($r2['fecha_creacion'])).' <a href="http://'.strtolower($r2['pais']).DEV.'.virtualpol.com/chats/'.$r2['url'].'/"><b>'.$r2['titulo'].'</b></a> (hace '.duracion(time() - strtotime($r2['fecha_last'])).')</li>';
+}
+
+
+$txt .= '</ul>
 
 </td></tr></table>';
 

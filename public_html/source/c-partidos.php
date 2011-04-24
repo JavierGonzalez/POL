@@ -6,7 +6,7 @@ if ($_GET['a']) {
 
 	$result = mysql_query("SELECT 
 ID, siglas, nombre, descripcion, fecha_creacion, ID_presidente, 
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."partidos.ID_presidente LIMIT 1) AS nick_presidente
+(SELECT nick FROM users WHERE ID = ".SQL."partidos.ID_presidente LIMIT 1) AS nick_presidente
 FROM ".SQL."partidos 
 WHERE siglas = '" . trim($_GET['a']) . "'
 LIMIT 1", $link);
@@ -18,9 +18,9 @@ LIMIT 1", $link);
 			//print listas
 			$candidatos_num = 0;
 			$result2 = mysql_query("SELECT user_ID, orden, 
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick,
-(SELECT cargo FROM ".SQL_USERS." WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS cargo,
-(SELECT voto_confianza FROM ".SQL_USERS." WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS confianza
+(SELECT nick FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick,
+(SELECT cargo FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS cargo,
+(SELECT voto_confianza FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS confianza
 FROM ".SQL."partidos_listas
 WHERE ID_partido = '" . $r['ID'] . "'
 ORDER BY ID ASC", $link);
@@ -32,9 +32,9 @@ ORDER BY ID ASC", $link);
 
 			$ciudadanos_num = 0;
 			$result2 = mysql_query("SELECT ID, nick, fecha_last, voto_confianza,
-(SELECT user_ID FROM ".SQL."partidos_listas WHERE ID_partido = '" . $r['ID'] . "' AND user_ID = ".SQL_USERS.".ID LIMIT 1) AS en_lista, 
-(SELECT user_ID FROM ".SQL."estudios_users WHERE ID_estudio = '6' AND user_ID = ".SQL_USERS.".ID AND estado = 'ok' LIMIT 1) AS es_diputado
-FROM ".SQL_USERS." 
+(SELECT user_ID FROM ".SQL."partidos_listas WHERE ID_partido = '" . $r['ID'] . "' AND user_ID = users.ID LIMIT 1) AS en_lista, 
+(SELECT user_ID FROM ".SQL."estudios_users WHERE ID_estudio = '6' AND user_ID = users.ID AND estado = 'ok' LIMIT 1) AS es_diputado
+FROM users 
 WHERE estado != 'validar' AND estado != 'desarrollador' AND partido_afiliado = '" . $r['ID'] . "' AND pais = '".PAIS."'
 ORDER BY nick DESC", $link);
 			while($r2 = mysql_fetch_array($result2)){
@@ -78,16 +78,12 @@ ORDER BY nick DESC", $link);
 
 		} else {
 
-			//count afiliados
-			$result2 = mysql_query("SELECT COUNT(ID) FROM ".SQL_USERS." WHERE partido_afiliado = '" . $r['ID'] . "' AND pais = '".PAIS."'", $link);
-			while($r2 = mysql_fetch_array($result2)){ $num_afiliados = $r2['COUNT(ID)']; }
-
 			//print listas
 			$num_listas = 0;
 			$result2 = mysql_query("SELECT user_ID,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick,
-(SELECT voto_confianza FROM ".SQL_USERS." WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS confianza,
-(SELECT fecha_last FROM ".SQL_USERS." WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS fecha_last
+(SELECT nick FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick,
+(SELECT voto_confianza FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS confianza,
+(SELECT fecha_last FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS fecha_last
 FROM ".SQL."partidos_listas
 WHERE ID_partido = '" . $r['ID'] . "'
 ORDER BY ID ASC", $link);
@@ -101,10 +97,11 @@ ORDER BY ID ASC", $link);
 
 
 				$result3 = mysql_query("SELECT nick, estado
-FROM ".SQL_USERS."
+FROM users
 WHERE partido_afiliado = '" . $r['ID'] . "' AND pais = '".PAIS."' AND estado = 'ciudadano'
 ORDER BY fecha_registro ASC", $link);
 				while($r3 = mysql_fetch_array($result3)){ 
+					$num_afiliados++;
 					$afiliados .= ' ' . crear_link($r3['nick'], 'nick', $r3['estado']) . ','; 
 				}
 
@@ -143,7 +140,7 @@ ORDER BY fecha_registro ASC", $link);
 <tr>
 <th>Siglas</th>
 <th>Nombre</th>
-<th><acronym title="Afiliados/En Lista">Afiliados</acronym>&darr;</th>
+<th><acronym title="Afiliados/Candidatos">Afiliados</acronym>&darr;</th>
 <th>Presidente</th>
 <th><acronym title="Candidato a Presidente de '.PAIS.'">Candidato</acronym></th>
 <th>Antig&uuml;edad</th>
@@ -154,9 +151,9 @@ ORDER BY fecha_registro ASC", $link);
 
 	$result = mysql_query("SELECT 
 ID, siglas, nombre, fecha_creacion, ID_presidente,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."partidos.ID_presidente LIMIT 1) AS nick_presidente, 
-(SELECT (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick FROM ".SQL."partidos_listas WHERE ID_partido = ".SQL."partidos.ID ORDER BY ID ASC LIMIT 1) AS nick_candidato, 
-(SELECT COUNT(ID) FROM ".SQL_USERS." WHERE partido_afiliado = ".SQL."partidos.ID AND pais = '".PAIS."' LIMIT 1) AS afiliados, 
+(SELECT nick FROM users WHERE ID = ".SQL."partidos.ID_presidente LIMIT 1) AS nick_presidente, 
+(SELECT (SELECT nick FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick FROM ".SQL."partidos_listas WHERE ID_partido = ".SQL."partidos.ID ORDER BY ID ASC LIMIT 1) AS nick_candidato, 
+(SELECT COUNT(ID) FROM users WHERE partido_afiliado = ".SQL."partidos.ID AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS afiliados, 
 (SELECT COUNT(ID) FROM ".SQL."partidos_listas WHERE ID_partido = ".SQL."partidos.ID LIMIT 1) AS num_lista
 FROM ".SQL."partidos 
 WHERE estado = 'ok'
@@ -171,13 +168,14 @@ ORDER BY num_lista DESC, afiliados DESC, nombre DESC", $link);
 
 			$txt .= '<tr><td align="right" valign="top"><b style="font-size:20px;">' . crear_link($r['siglas'], 'partido') . '</b></td><td>' . $r['nombre'] . '</td><td><b>' . $r['afiliados'] . '</b>/' . $num_lista . '</td><td>' . crear_link($r['nick_presidente']) . '</td><td>' . $nick_candidato . '</td><td align="right">' . duracion(time() - strtotime($r['fecha_creacion'])) . '</td><td>' . $elecciones . '</td></tr>' . "\n";
 		} else {
-			$txt_otros .= crear_link($r['siglas'], 'partido').' ';
+			$txt_otros .= '<span title="'.$r['afiliados'].' afiliados / '.strip_tags($num_lista).' candidatos">'.crear_link($r['siglas'], 'partido').'</span> ';
 		}
 	}
 	$txt .= '</table><p style="width:700px;">Partidos que no participan en las proximas elecciones:<br />
 '.$txt_otros.'</p>';
 
-	$txt .= '<p>' . boton('Crear Partido', '/form/crear-partido/', false, false, $pol['config']['pols_partido']) . '</p><p>* Para que un partido pueda participar en las Elecciones ha de tener al menos un candidato en su lista. Para poder a&ntilde;adir candidatos en la lista, se ha de ser el Presidente del partido, el candidato ha de estar afiliado y con el examen de Diputado aprobado.</p>';
+	$txt .= '<p>* Para que un partido pueda participar en las Elecciones ha de tener al menos un candidato en su lista. Para poder a&ntilde;adir candidatos en la lista, se ha de ser el Presidente del partido, el candidato ha de estar afiliado y con el examen de Diputado aprobado.</p>
+<p>' . boton('Crear Partido', '/form/crear-partido/', false, false, $pol['config']['pols_partido']) . '</p>';
 	$txt_title = 'Partidos Pol&iacute;ticos';
 }
 

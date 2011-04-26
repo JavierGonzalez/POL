@@ -27,7 +27,7 @@ case 'supervisor-censo':
 
 		// nomenclatura
 		foreach ($vp['paises'] AS $pais) { $paises .= ' <span style="background:'.$vp['bg'][$pais].';">'.$pais.'</span>'; }
-		$nomenclatura = '<span style="float:right;">Paises:'.$paises.' | Estados: <b class="ciudadano">Ciudadano</b> <b class="turista">Turista</b> <b class="validar">Validar</b> <b class="expulsado">Expulsado</b></span>';
+		$nomenclatura = '<span style="float:right;"><!--Paises:'.$paises.' |--> Estados: <b class="ciudadano">Ciudadano</b> <b class="turista">Turista</b> <b class="validar">Validar</b> <b class="expulsado">Expulsado</b></span>';
 
 		// siglas partidos
 		$result = mysql_query("SELECT ID, siglas FROM ".SQL."partidos", $link);
@@ -38,7 +38,7 @@ case 'supervisor-censo':
 				$txt_title = 'Control: Supervision del Censo - Nuevos ciudadanos';
 				$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a></h1>
 
-<p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="'.IMG.'cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="'.IMG.'cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '.</b></p>'.$nomenclatura;
 
 				$txt .= '<h1>1. Actividad de nuevos Ciudadanos (ultimos 60)</h1><hr />
 <table border="0" cellspacing="0" cellpadding="2">
@@ -126,19 +126,22 @@ GROUP BY IP HAVING COUNT(*) > 1
 ORDER BY num DESC, fecha_registro DESC", $link);
 		while($r = mysql_fetch_array($result)) {
 			$clones = '';
+			$nota_SC = '';
 			$desarrollador = false;
 			$clones_expulsados = true;
-			$result2 = mysql_query("SELECT ID, nick, estado, pais, partido_afiliado FROM ".SQL_USERS." WHERE IP = '" . $r['IP'] . "' ORDER BY fecha_registro DESC", $link);
+			$result2 = mysql_query("SELECT ID, nick, estado, pais, partido_afiliado, nota_SC FROM users WHERE IP = '" . $r['IP'] . "' ORDER BY fecha_registro DESC", $link);
 			while($r2 = mysql_fetch_array($result2)) {
+				$nota_SC .= $r2['nota_SC'].' ';
 				if ($clones) { $clones .= ' & '; }
 				if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 				$clones .= '<b>'.crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']) . '</b> ' . $siglas[$r2['partido_afiliado']];
 			}
 			if ((!$desarrollador) AND (!$clones_expulsados)) {
-				$txt .= '<tr><td>' . $r['num'] . '</td><td>' . $clones . '</td><td align="right" nowrap="nowrap">'.ocultar_IP($r['host'], 'host').'</td><td>'.ocultar_IP($r['IP']).'</td></tr>';
+				$txt .= '<tr><td>' . $r['num'] . '</td><td>' . $clones . '</td><td align="right" nowrap="nowrap">'.ocultar_IP($r['host'], 'host').'</td><td>'.ocultar_IP($r['IP']).'</td><td><em>'.$nota_SC.'</em></td></tr>';
 			}
 		}
 		$txt .= '</table>';
+
 
 
 
@@ -151,19 +154,21 @@ ORDER BY num DESC, fecha_registro DESC", $link);
 			if (($r['pass'] != 'mmm') OR ($r['pass'] != 'e10adc3949ba59abbe56e057f20f883e')) {
 
 				$clones = '';
-				$result2 = mysql_query("SELECT ID, nick, pais, partido_afiliado, estado
+				$nota_SC = '';
+				$result2 = mysql_query("SELECT ID, nick, pais, partido_afiliado, estado, nota_SC
 FROM ".SQL_USERS." 
 WHERE pass = '" . $r['pass'] . "'", $link);
 				$clones_expulsados = true;
 				while($r2 = mysql_fetch_array($result2)) { 
 					if ($r2['nick']) {
+						$nota_SC .= $r2['nota_SC'].' ';
 						if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 						if ($clones) { $clones .= ' & '; }
 						$clones .= crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']) . '</b> ' . $siglas[$r2['partido_afiliado']] . '<b>';
 					} 
 				}
 				if (!$clones_expulsados) {
-					$txt .= '<tr><td>' . $r['num'] . '</td><td><b>' . $clones . '</b></td></tr>';
+					$txt .= '<tr><td>' . $r['num'] . '</td><td><b>' . $clones . '</b></td><td><em>'.$nota_SC.'</em></td></tr>';
 				}
 			}
 		}

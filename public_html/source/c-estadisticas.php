@@ -10,7 +10,7 @@ function gen_grafico($datos, $fecha='', $cero=false) {
 	return 'http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|___|'.$dato_last.'&chd=s:'.$datos.'&chf=bg,s,FFFFDD,0&chco=0066FF&chm=B,FFFFFF,0,0,0';
 }
 
-function gen_datos($datos, $cero=false, $datos2) {
+function gen_datos($datos, $cero=false, $datos2=false) {
 	$maxValue = max($datos);
 	$dato_last = $datos[count($datos)-1];
 	if ($cero) { $datos = strtr(chart_data($datos), 'A', '_'); } else { $datos = chart_data($datos); }
@@ -25,6 +25,67 @@ function gen_datos($datos, $cero=false, $datos2) {
 }
 
 $txt_title = 'Estad&iacute;sticas';
+
+
+if ($_GET['a'] == 'full') {
+
+
+$txt .= '
+<table>
+<tr>
+<th>Dia (20:00)</th>
+<th>Pais</th>
+<th title="Ciudadanos">C</th>
+<th title="Ciudadanos nuevos">CN</th>
+<th title="Ciudadanos eliminados">CE</th>
+<th title="Ciudadanos que entraron en 24h, sin ser nuevos">24h</th>
+<th title="Hilos en el foro">Hilos</th>
+<th title="Confianza">Conf</th>
+<th title="Partidos">Par</th>
+<th title="Empresas">Emp</th>
+<th title="Pols">Pols</th>
+<th title="Pols Gobierno">Pols_G</th>
+<th title="Pols cuentas">Pols_C</th>
+<th title="Pols frase+palabras">PF</th>
+<th title="Numero de transacciones">T</th>
+<th title="Porcentaje del mapa en venta">MV%</th>
+<th title="Pols de la propiedad mas barata en venta">MV</th>
+</tr>
+';
+$result = mysql_query("SELECT * FROM stats ORDER BY time DESC LIMIT 20000", $link);
+while($r = mysql_fetch_array($result)) {
+
+
+$txt .= '<tr>
+<td>'.explodear(' ', $r['time'], 0).'</td>
+<td>'.$r['pais'].'</td>
+
+<td align="right">'.$r['ciudadanos'].'</td>
+<td align="right">'.$r['nuevos'].'</td>
+<td align="right">'.$r['eliminados'].'</td>
+
+<td align="right">'.$r['24h'].'</td>
+<td align="right">'.$r['hilos_msg'].'</td>
+<td align="right">'.$r['confianza'].'</td>
+<td align="right">'.$r['partidos'].'</td>
+<td align="right">'.$r['empresas'].'</td>
+
+<td align="right">'.$r['pols'].'</td>
+<td align="right">'.$r['pols_gobierno'].'</td>
+<td align="right">'.$r['pols_cuentas'].'</td>
+<td align="right">'.$r['frase'].'</td>
+<td align="right">'.$r['transacciones'].'</td>
+<td align="right">'.$r['mapa'].'</td>
+<td align="right">'.$r['mapa_vende'].'</td>
+
+</tr>'."\n";
+
+}
+$txt .= '</table>';
+
+
+} else {
+
 
 $i = 0;
 $result = mysql_query("SELECT 
@@ -98,20 +159,20 @@ foreach ($vp['paises'] AS $pais) {
 
 
 
-$txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as)</span></h1>
+$txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as, '.round($i/365, 2).' a&ntilde;os)</span></h1>
 
 <div id="stats" style="margin-left:-10px;">
+
 
 <h2 style="margin-top:35px;">1. DEMOGRAF&Iacute;A</h2>
 <p class="amarillo">
 
 <b>1.1 <span style="color:#0000FF;">Ciudadanos</span>/<span style="color:#FF0000;">paises</span></b> (<a href="/info/censo/">Ver censo</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.gen_datos($d['ciudadanos'], false, $d['paises']).'" alt="Ciudadanos/paises" border="0" />
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['ciudadanos'], false, $d['paises']):gen_datos($d['ciudadanos'], false)).'" alt="Ciudadanos/paises" border="0" />
 
 
 <br /><b>1.2 Ciudadanos <span style="color:#0000FF;">nuevos</span>/<span style="color:#FF0000;">expirados</span></b>  (<a href="/info/censo/nuevos/">Ver nuevos</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.gen_datos($d['nuevos'], false, $d['eliminados']).'" alt="Ciudadanos nuevos/expirados" border="0" />
-
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['nuevos'], false, $d['eliminados']):gen_datos($d['nuevos'], false)).'" alt="Ciudadanos nuevos/expirados" border="0" />
 </p>
 
 
@@ -127,7 +188,7 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as)</span></h1>
 <img src="'.gen_grafico($d['partidos']).'" alt="Partidos" border="0" />
 
 <br /><b>2.4 <span style="color:#0000FF;">Empresas</span>/<span style="color:#FF0000;">transacciones</span></b> (<a href="/empresas/">Ver empresas</a> , <a href="/pols/">Ver transferencias</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.gen_datos($d['empresas'], true, $d['transacciones']).'" alt="Empresas" border="0" />
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['empresas'], true, $d['transacciones']):gen_datos($d['empresas'], true)).'" alt="Empresas" border="0" />
 
 
 <br /><b>2.5 Confianza general</b> (<a href="/info/confianza/">Ver confianza</a>)<br />
@@ -162,34 +223,35 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as)</span></h1>
 
 foreach ($vp['paises'] AS $PAIS) {
 	// GRAFICO AFILIADOS
-	$result = mysql_query("SELECT COUNT(ID) AS num, partido_afiliado,
+	if (!in_array($PAIS, $vp['paises_congelados'])) {
+		$n = 0;
+		$g_otros = 0;
+		$result = mysql_query("SELECT COUNT(ID) AS num, partido_afiliado,
 (SELECT siglas FROM ".strtolower($PAIS)."_partidos WHERE ID = users.partido_afiliado) AS siglas
 FROM users 
 WHERE estado = 'ciudadano' AND pais = '".$PAIS."'
 GROUP BY partido_afiliado
 ORDER BY num DESC", $link);
-	while($r = mysql_fetch_array($result)){
+		while($r = mysql_fetch_array($result)){
+			$n++;
+			if ($n <= 10) {
+				if ($r['partido_afiliado'] == 0) { $r['siglas'] = 'Ninguno'; }
+				$g_datos[] = $r['num'];
+				$g_siglas[] = $r['siglas'];
+			} else {
+				$g_otros += $r['num'];
+			}
+		}
 
-		if ($r['partido_afiliado'] == 0) { $r['siglas'] = 'Ninguno'; }
-
-		if (isset($g_datos)) { $g_datos .= ','; }
-		$g_datos .= $r['num'];
-
-		if (isset($g_siglas)) { $g_siglas .= '|'; }
-		$g_siglas .= $r['siglas'];
-
-		//if ($g_max > $r['num']) { $g_max = $r['num']; }
-
-	}
-
-	$txt .= '
+		$txt .= '
 <td><b>'.$PAIS.'</b><br />
-<img src="http://chart.apis.google.com/chart?cht=p&chs=350x220
-&chd=t:'.$g_datos.'
-&chl='.$g_siglas.'
+<img src="http://chart.apis.google.com/chart?cht=p&chs=420x300
+&chd=t:'.implode(',', $g_datos).','.$g_otros.'
+&chl='.implode('|', $g_siglas).'|Otros
 &chf=bg,s,FFFFDD,0" alt="Afiliados por partido" title="Afiliados por partido" />
 </td>';
-	unset($g_siglas, $g_datos);
+		unset($g_siglas, $g_datos);
+	}
 }
 
 $txt .= '
@@ -205,7 +267,7 @@ $txt .= '
 
 $txt_header .= '<style type="text/css">#stats p { margin:4px; }</style>';
 
-
+}
 
 
 

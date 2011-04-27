@@ -345,3 +345,17 @@ h1 a {
 	-webkit-border-radius: 5px;
 	padding: 5px 5px 5px 5px;
 }
+
+.code {
+    background-color:#000;
+    color: #5F5;
+    font-family:monospace;
+}
+
+.quote {
+    background-color:#FFF;
+    border: 3px ridge #555;
+    color: #555;
+    font-family:serif;
+    font-style:italic;
+}

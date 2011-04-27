@@ -6,7 +6,7 @@ pol_foros_hilos		(`ID` `sub_ID``url` `user_ID` `title` `time` `time_last` `text`
 pol_foros_msg		(`ID``hilo_ID` `user_ID` `time` `text` `cargo`)
 */
 
-function emoticonos($cadena) {
+function reemplazos($cadena) {
 	$inicio_patron = '/(\s|^)';
 	$patrones = array();
 	$patrones[0] = $inicio_patron.':\)/';
@@ -20,6 +20,10 @@ function emoticonos($cadena) {
 	$patrones[8] = $inicio_patron.':roto2:/';
 	$patrones[9] = $inicio_patron.':facepalm:/';
 	$patrones[10] = $inicio_patron.':moneda:/';
+        $patrones[11] = $inicio_patron.'\[code\]/';
+        $patrones[12] = $inicio_patron.'\[\/code\]/';
+        $patrones[13] = $inicio_patron.'\[quote\]/';
+        $patrones[14] = $inicio_patron.'\[\/quote\]/';
 	$reemplazos = array();
 	$reemplazos[0] = ' <img src="'.IMG.'smiley/sonrie.gif" border="0" alt=":)" title=":)" />';
 	$reemplazos[1] = ' <img src="'.IMG.'smiley/disgustado.gif" border="0" alt=":(" title=":(" />';
@@ -32,6 +36,10 @@ function emoticonos($cadena) {
 	$reemplazos[8] = ' <img src="'.IMG.'smiley/roto2.gif" alt=":roto2:" border="0" title=":roto2:" />';
 	$reemplazos[9] = ' <img src="'.IMG.'smiley/palm.gif" alt=":facepalm:" border="0" title=":facepalm:" />';
 	$reemplazos[10] = ' <img src="'.IMG.'m.gif" alt=":moneda:" border="0" title=":moneda:" />';
+        $reemplazos[11] = ' <div class="code">';
+        $reemplazos[12] = ' </div>';
+        $reemplazos[13] = ' <div class="code">';
+        $reemplazos[14] = ' </div>';
 	return preg_replace($patrones, $reemplazos, $cadena);
 }
 
@@ -272,7 +280,7 @@ LIMIT 1", $link);
 			} else { $editar = ''; }
 
 
-			$txt .= '<tr class="amarillo"><td align="right" valign="top">' . print_lateral($r['nick'], $r['encalidad'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['cargo'], $r['confianza']) . '</td><td valign="top" width="80%"><p style="text-align:justify;">' . $editar . emoticonos($r['text']) . '</p></td></tr>';
+			$txt .= '<tr class="amarillo"><td align="right" valign="top">' . print_lateral($r['nick'], $r['encalidad'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['cargo'], $r['confianza']) . '</td><td valign="top" width="80%"><p style="text-align:justify;">' . $editar . reemplazos($r['text']) . '</p></td></tr>';
 
 			$result2 = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
@@ -294,7 +302,7 @@ LIMIT " . $p_limit, $link);
 					$editar = boton('Papelera', '/accion.php?a=foro&b=borrar&c=mensaje&ID=' . $r2['ID'] . '/', '&iquest;Quieres enviar a la PAPELERA este MENSAJE?') . ' '; 
 				} else { $editar = ''; }
 
-				$txt .= '<tr id="m-' . $r2['ID'] . '"><td align="right" valign="top">' . print_lateral($r2['nick'], $r2['encalidad'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['cargo'], $r2['confianza']) . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $r2['ID'] . '">#</a></span>'.($r2['nick_estado']=='expulsado'?'<span style="color:red;">Expulsado.</span>':emoticonos($r2['text'])).'</p></td></tr>';
+				$txt .= '<tr id="m-' . $r2['ID'] . '"><td align="right" valign="top">' . print_lateral($r2['nick'], $r2['encalidad'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['cargo'], $r2['confianza']) . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $r2['ID'] . '">#</a></span>'.($r2['nick_estado']=='expulsado'?'<span style="color:red;">Expulsado.</span>':reemplazos($r2['text'])).'</p></td></tr>';
 			}
 			$txt .= '</table> <p>' . $p_paginas . '</p>';
 

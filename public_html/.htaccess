@@ -1,18 +1,11 @@
-#<IfModule mod_deflate.c>
-#<FilesMatch "\.(php|js|css)$">
-#SetOutputFilter DEFLATE
-#</FilesMatch>
-#</IfModule>
-
 Header unset ETag
 FileETag None
 
-
-<FilesMatch "\.(ico|jpg|jpeg|png|gif|js|css)$">
-Header set Expires "Thu, 15 Apr 2012 20:00:00 GMT"
+<FilesMatch "\.(js|css|ico|pdf|jpg|jpeg|png|gif)$">
+Header set Cache-Control "public"
+Header set Expires "Thu, 15 Apr 2020 20:00:00 GMT"
 Header unset Last-Modified
-</FilesMatch>
+</FilesMatch> 
 
 RewriteEngine on 
 RewriteRule ^(chat)(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?$ /c-$1.php?a=$3&b=$5&c=$7&d=$9
-#RewriteRule ^ajax.php(.*)$ /source/ajax.php$1

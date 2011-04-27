@@ -224,6 +224,7 @@ evento_chat('<b>[PROCESO] Calculadas las notas media.</b>');
 /*$margen_chatexpira = date('Y-m-d 20:00:00', time() - (86400 * $pol['config']['chat_diasexpira']));
 mysql_query("DELETE FROM chats WHERE pais = '".PAIS."' AND fecha_last < '".$margen_chatexpira."'", $link);
 */
+
 // ELIMINAR MENSAJES PRIVADOS
 mysql_query("DELETE FROM ".SQL_MENSAJES." WHERE time < '".$margen_15dias."'", $link);
 
@@ -267,6 +268,15 @@ while($row = mysql_fetch_array($result)) {
 	$st['eliminados']++;
 	eliminar_ciudadano($row['ID']);
 }
+
+
+// RE-CONTEO DE LOS VOTOS DE CONFIANZA (para limpar asperezas sin importancia)
+$result = mysql_query("SELECT user_ID, SUM(voto) AS voto_confianza FROM ".SQL_VOTOS." WHERE estado = 'confianza' GROUP BY user_ID", $link);
+while ($r = mysql_fetch_array($result)) { 
+	mysql_query("UPDATE users SET voto_confianza = '".$r['voto_confianza']."' WHERE ID = '".$r['user_ID']."' LIMIT 1", $link);
+}
+
+
 
 
 // IMPUESTO PATRIMONIO

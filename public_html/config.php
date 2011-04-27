@@ -10,7 +10,7 @@ if ($dev) { define('DEV', '-dev'); } else { define('DEV', ''); }
 
 // Configuracion Paises y colores
 $vp['paises_congelados'] = array('POL', 'VULCAN', 'Hispania', 'Atlantis'); // aqui los paises que pasaron a ser historia (visibles pero inactivos)
-$vp['paises'] = array('VP', 'POL', 'Hispania', 'Atlantis'); // Quitar paises congelados cuando esté listo el estado "congelado".
+$vp['paises'] = array('VP', 'POL', 'VULCAN', 'Hispania', 'Atlantis'); // Quitar paises congelados cuando esté listo el estado "congelado".
 $vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'vp'=>'#ACFA58', 'www'=>'#eeeeee');
 $vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'vp'=>'#9AFE2E', 'www'=>'grey');
 
@@ -26,6 +26,11 @@ case 'vp':
 case 'pol':
 	define('PAIS', 'POL');
 	define('SQL', 'pol_');
+	break;
+
+case 'vulcan':
+	define('PAIS', 'Vulcan');
+	define('SQL', 'vulcan_');
 	break;
 
 case 'hispania':

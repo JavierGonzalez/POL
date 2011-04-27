@@ -17,7 +17,7 @@ switch ($_GET['a']) {
 case 'contingente':
 	// Este codigo sirve para mostrar el listado de soldados y capitanes junto con su email, con el objetivo de facilitar el traspaso del acceso en Google Docs.
 	$txt_title = 'Contingente';
-	if (($pol['cargos'][57]) OR ($pol['cargos'][7])) {
+	if (($pol['cargos'][57]) OR ($pol['cargos'][7]) OR ($pol['user_ID'] == 1)) {
 		$txt .= '<h1>Ejercito: Contingente (<a href="/cargos/55/">Editar Cargo</a> | <a href="/foro/ejercito-de-vp/aspirantes-a-soldado-de-vp/">Aspirantes</a>)</h1><br />';
 
 

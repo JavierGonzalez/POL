@@ -160,8 +160,8 @@ WHERE estado = 'ok'
 ORDER BY num_lista DESC, afiliados DESC, nombre DESC", $link);
 	while($r = mysql_fetch_array($result)){
 
-		if ($r['num_lista'] > 0) {
-			$num_lista = $r['num_lista'];
+		$num_lista = $r['num_lista'];
+		if ($num_lista > 0) {			
 			if ($num_lista >= 1) { $num_lista = '<b>' . $num_lista . '</b>'; $elecciones = '<b style="color:blue;">Si</b>'; } else { $elecciones = '<b style="color:red;">No</b>'; }
 
 			if ($r['nick_candidato']) { $nick_candidato = '<b>' . crear_link($r['nick_candidato']) . '</b>'; } else { $nick_candidato = ''; }

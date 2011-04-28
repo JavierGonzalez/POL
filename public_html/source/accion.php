@@ -293,7 +293,7 @@ case 'voto':
 		if ($nick_existe == true) {
 			if ($hay_voto == true) {
 				// update
-				mysql_query("UPDATE ".SQL_VOTOS." SET voto = '".$_REQUEST['voto_confianza']."' WHERE estado = 'confianza' AND uservoto_ID = '".$pol['user_ID']."' AND user_ID = '".$_GET['ID']."' LIMIT 1", $link);
+				mysql_query("UPDATE ".SQL_VOTOS." SET voto = '".$_REQUEST['voto_confianza']."', time = '".$date."' WHERE estado = 'confianza' AND uservoto_ID = '".$pol['user_ID']."' AND user_ID = '".$_GET['ID']."' LIMIT 1", $link);
 			} else {
 				// insert
 				mysql_query("INSERT INTO ".SQL_VOTOS." (user_ID, uservoto_ID, voto, time, estado) VALUES ('".$_GET['ID']."', '".$pol['user_ID']."', '".$_REQUEST['voto_confianza']."', '".$date."', 'confianza')", $link);

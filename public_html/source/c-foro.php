@@ -21,9 +21,9 @@ function reemplazos($cadena) {
 	$patrones[9] = $inicio_patron.':facepalm:/';
 	$patrones[10] = $inicio_patron.':moneda:/';
         $patrones[11] = $inicio_patron.'\[code\]/';
-        $patrones[12] = $inicio_patron.'\[\/code\]/';
+        $patrones[12] = $inicio_patron.'\[/code\]/';
         $patrones[13] = $inicio_patron.'\[quote\]/';
-        $patrones[14] = $inicio_patron.'\[\/quote\]/';
+        $patrones[14] = $inicio_patron.'\[/quote\]/';
 	$reemplazos = array();
 	$reemplazos[0] = ' <img src="'.IMG.'smiley/sonrie.gif" border="0" alt=":)" title=":)" />';
 	$reemplazos[1] = ' <img src="'.IMG.'smiley/disgustado.gif" border="0" alt=":(" title=":(" />';
@@ -36,7 +36,7 @@ function reemplazos($cadena) {
 	$reemplazos[8] = ' <img src="'.IMG.'smiley/roto2.gif" alt=":roto2:" border="0" title=":roto2:" />';
 	$reemplazos[9] = ' <img src="'.IMG.'smiley/palm.gif" alt=":facepalm:" border="0" title=":facepalm:" />';
 	$reemplazos[10] = ' <img src="'.IMG.'m.gif" alt=":moneda:" border="0" title=":moneda:" />';
-        $reemplazos[11] = ' <div class="code">';
+        $reemplazos[11] = ' <div class="quote">';
         $reemplazos[12] = ' </div>';
         $reemplazos[13] = ' <div class="code">';
         $reemplazos[14] = ' </div>';
@@ -92,7 +92,7 @@ ORDER BY nivel DESC", $link);
 
 <p>Mensaje:<br />
 <textarea name="text" style="color: green; font-weight: bold; width: 570px; height: 250px;">' . $edit_text . '</textarea><br />
-<span style="color:grey;font-size:12px;">Etiquetas HTML permitidas: &lt;img src="URL"&gt;, &lt;b&gt;, &lt;i&gt;, &lt;s&gt;, videos incrustados, enlaces auto-linkeados.</span></p>
+<span style="color:grey;font-size:12px;">Etiquetas HTML permitidas: &lt;img src="URL"&gt;, &lt;b&gt;, &lt;i&gt;, &lt;s&gt;, videos incrustados, enlaces auto-linkeados, BBCode permitido: [code], [quote].</span></p>
 
 <p><input value="Enviar" type="submit"> En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
 </select></p>

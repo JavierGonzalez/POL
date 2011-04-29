@@ -37,6 +37,11 @@ if ($_GET['a'] == 'crear') {
 	$disabled['referendum'] = ' disabled="disabled"';
 	$disabled['parlamento'] = ' disabled="disabled"';
 
+
+	$sc = get_supervisores_del_censo();
+	if (isset($sc[$pol['user_ID']])) { 
+		$disabled['sondeo'] = '';
+	}
 	if (($pol['nivel'] >= 95)) {
 		$disabled['referendum'] = '';
 		$disabled['sondeo'] = '';
@@ -235,8 +240,8 @@ ORDER BY siglas ASC", $link);
 	$txt .= '<h1>Consultas: (Referendum, sondeos y parlamento)</h1>
 <br />';
 
-
-	if (($pol['nivel'] >= 95) OR ($pol['cargos']['41'])) { $txt .= '<p>' . boton('Crear consulta', '/referendum/crear/') . '</p>'; }
+	$sc = get_supervisores_del_censo(); 
+	if (($pol['nivel'] >= 95) OR ($pol['cargos']['41']) OR (isset($sc[$pol['user_ID']]))) { $txt .= '<p>' . boton('Crear consulta', '/referendum/crear/') . '</p>'; }
 	
 	$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 <tr>

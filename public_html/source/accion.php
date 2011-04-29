@@ -1081,7 +1081,8 @@ case 'pols':
 case 'referendum':
 
 	if ($_GET['b'] == 'crear') {
-		if (($pol['nivel'] >= 95) OR ($pol['cargos']['41'])) { 
+		$sc = get_supervisores_del_censo();
+		if (($pol['nivel'] >= 95) OR ($pol['cargos']['41']) OR (isset($sc[$pol['user_ID']]))) { 
 
 
 			for ($i=0;$i<10;$i++) {

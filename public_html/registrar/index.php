@@ -180,8 +180,8 @@ FROM ".SQL_REFERENCIAS." WHERE IP = '" . $longip . "' LIMIT 1", $link);
 									//crea el ciudadano
 
 									mysql_query("INSERT INTO ".SQL_USERS." 
-(nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, pais, pass, IP_proxy, geo, dnie_check) 
-VALUES ('" . $nick . "', '0', '" . $date . "', '" . $date . "', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '" . $afiliacion . "', '0', '" . $api_pass . "', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', 'ninguno', '" . md5($pass1) . "', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null)", $link);
+(nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, pais, pass, IP_proxy, geo, dnie_check, fecha_legal) 
+VALUES ('" . $nick . "', '0', '" . $date . "', '" . $date . "', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '" . $afiliacion . "', '0', '" . $api_pass . "', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', 'ninguno', '" . md5($pass1) . "', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null, '".$date."')", $link);
 
 
 									if ($ref) {
@@ -407,9 +407,10 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 <input type="text" name="animal" value="" autocomplete="off" maxlength="20" /><br /><br /><br /><br /></li>
 
 
-<li><input name="condiciones" value="ok" type="checkbox"' . $condiciones . ' /> <b>Acepta estas condiciones</b>:</li>
+<li><input name="condiciones" value="ok" type="checkbox"' . $condiciones . ' /> <a href="http://www.virtualpol.com/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.</li>
 </ol>
 
+<!--
 <div class="azul" style="margin-top:-10px;">
 <ul>
 <li>Comprendes que esta comunidad es <b>para todos los publicos</b>, y por tanto, no proceden contenidos violentos, para adultos o inadecuados.</li>
@@ -420,7 +421,7 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 <li>Si te conectas desde un ordenador p&uacute;blico, usa la acci&oacute;n de <b>Salir</b>, por seguridad.</li>
 </ul>
 </div>
-
+-->
 
 
 

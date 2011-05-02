@@ -26,6 +26,7 @@ if (isset($_COOKIE['teorizauser'])) {
 				$_SESSION['pol']['fecha_registro'] = $r['fecha_registro'];
 				$_SESSION['pol']['pais'] = $r['pais'];
 				$_SESSION['pol']['estado'] = $r['estado'];
+
 			}
 		}  
 	}
@@ -50,7 +51,7 @@ while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor
 if (isset($pol['user_ID'])) {
 
 	// LOAD: $pol
-	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo,
+	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, fecha_legal,
 (SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE recibe_ID = users.ID AND leido = '0') AS msg
 FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
@@ -77,6 +78,16 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 			$pol['nivel'] = 0;
 			$pol['pols'] = 0;
 		}
+
+
+		// Si no se han aceptado las nuevas condiciones obliga a aceptarlas.
+		if (($r['fecha_legal'] == '0000-00-00 00:00:00') AND ($_GET['a'] != 'aceptar-condiciones')) {
+			if ($link) { mysql_close($link); }
+			header('Location: http://www.virtualpol.com/legal');
+			exit;
+		}
+
+
 	}
 
 	// UPDATE

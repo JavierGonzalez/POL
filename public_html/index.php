@@ -43,7 +43,7 @@ foreach ($vp['paises2'] AS $pais) {
 	$pais_low = strtolower($pais);
 	
 	// ciudadanos
-	$result = mysql_query("SELECT COUNT(ID) AS num, AVG(voto_confianza) AS confianza FROM ".SQL_USERS." WHERE pais = '".$pais."' AND estado != 'expulsado'", $link);
+	$result = mysql_query("SELECT COUNT(ID) AS num, AVG(voto_confianza) AS confianza FROM users WHERE pais = '".$pais."' AND estado != 'expulsado'", $link);
 	while($r = mysql_fetch_array($result)) { $pais_pob = $r['num']; $pais_pob_num[$pais] = $r['num']; $pais_conf = $r['confianza']; }
 
 	// dias de existencia
@@ -51,7 +51,7 @@ foreach ($vp['paises2'] AS $pais) {
 	while($r = mysql_fetch_array($result)) { $pais_dias = $r['num']; }
 
 	// dinero en personal
-	$result = mysql_query("SELECT SUM(pols) AS num FROM ".SQL_USERS." WHERE pais = '".$pais."'", $link);
+	$result = mysql_query("SELECT SUM(pols) AS num FROM users WHERE pais = '".$pais."'", $link);
 	while($r = mysql_fetch_array($result)) { $pais_monedas_p = $r['num']; }
 	// dinero en cuentas
 	$result = mysql_query("SELECT SUM(pols) AS num FROM ".$pais_low."_cuentas", $link);
@@ -60,11 +60,11 @@ foreach ($vp['paises2'] AS $pais) {
 
 	// Presidente
 	$pais_presidente = '';
-	$result = mysql_query("SELECT nick FROM ".SQL_USERS." WHERE pais = '".$pais."' AND cargo = '7'", $link);
+	$result = mysql_query("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '7'", $link);
 	while($r = mysql_fetch_array($result)) { $pais_presidente = '<a href="http://'.$pais_low.'.virtualpol.com/perfil/'.strtolower($r['nick']).'/" class="nick"><b style="font-size:18px;">' . $r['nick'] . '</b></a>'; }
 
 	$pais_vice = '';
-	$result = mysql_query("SELECT nick FROM ".SQL_USERS." WHERE pais = '".$pais."' AND cargo = '19'", $link);
+	$result = mysql_query("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '19'", $link);
 	while($r = mysql_fetch_array($result)) { $pais_vice = '<a href="http://'.$pais_low.'.virtualpol.com/perfil/'.strtolower($r['nick']).'/" class="nick" style="font-size:18px;">' . $r['nick'] . '</a>'; }
 
 	// DEFCON
@@ -144,7 +144,7 @@ while($r = mysql_fetch_array($result)){
 
 }
 
-$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL_USERS." WHERE pais = 'ninguno' AND estado != 'expulsado'", $link);
+$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE pais = 'ninguno' AND estado != 'expulsado'", $link);
 while($r = mysql_fetch_array($result)){ 
 	$poblacion_num += $r['num'];
 
@@ -153,7 +153,7 @@ while($r = mysql_fetch_array($result)){
 	$pob_ninguno = $r['num'];
 
 	if ($gf['paises']) { $gf['paises'] .= '|'; }
-	$gf['paises'] .= 'Ninguno';	
+	$gf['paises'] .= 'Turistas';	
 }
 
 

@@ -28,6 +28,13 @@ OR (($pol['estado'] == 'extranjero') AND ($_GET['a'] == 'mercado'))
 switch ($_GET['a']) { // #####################################################
 
 
+case 'aceptar-condiciones':
+	mysql_query("UPDATE users SET fecha_legal = '".$date."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+	evento_chat('<b>[#] '.crear_link($pol['nick']).' ha aceptado las Condiciones de Uso de VirtualPol</b>.');
+	$refer_url = '';
+	break;
+
+
 case 'SC':
 	$sc = get_supervisores_del_censo();
 	if (($_GET['b'] == 'nota') AND (isset($sc[$pol['user_ID']])) AND ($_GET['ID'])) {

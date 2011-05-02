@@ -329,7 +329,7 @@ if (isset($pol['user_ID'])) {
 	$mtime = explode(' ', microtime()); 
 	$tiempofinal = $mtime[1] + $mtime[0]; 
 	$tiempototal = round(($tiempofinal-$tiempoinicial)*1000); 
-	echo $tiempototal.'ms';
+	echo $tiempototal.'ms <a href="http://www.virtualpol.com/legal">Legal</a>';
 } else {
 	// Enlaces hacia Teoriza, solo lo ven los no-registrados, no quitar por favor :))))
 	echo '

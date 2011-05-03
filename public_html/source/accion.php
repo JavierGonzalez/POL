@@ -30,7 +30,7 @@ switch ($_GET['a']) { // #####################################################
 
 case 'aceptar-condiciones':
 	mysql_query("UPDATE users SET fecha_legal = '".$date."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-	evento_chat('<b>[#] '.crear_link($pol['nick']).' ha aceptado las Condiciones de Uso de VirtualPol</b>.');
+	evento_chat('<b>[#] '.crear_link($pol['nick']).' ha aceptado las <a href="http://www.virtualpol.com/legal">Condiciones de Uso de VirtualPol</a></b>.');
 	$refer_url = '';
 	break;
 

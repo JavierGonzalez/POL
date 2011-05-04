@@ -32,7 +32,7 @@ case 'aceptar-condiciones':
 	$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND fecha_legal = '0000-00-00 00:00:00' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
 		mysql_query("UPDATE users SET fecha_legal = '".$date."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		evento_chat('<b>[#] '.crear_link($pol['nick']).' ha aceptado las <a href="http://www.virtualpol.com/legal">Condiciones de Uso de VirtualPol</a></b>.');
+		evento_chat('<b>[#] '.crear_link($pol['nick']).' ha aceptado las <a href="http://www'.DEV.'.'.URL.'/legal">Condiciones de Uso de VirtualPol</a></b>.');
 	}
 	$refer_url = '';
 	break;

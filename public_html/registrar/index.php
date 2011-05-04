@@ -406,7 +406,7 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 <input type="text" name="animal" value="" autocomplete="off" maxlength="20" /><br /><br /><br /><br /></li>
 
 
-<li><input name="condiciones" value="ok" type="checkbox"' . $condiciones . ' /> <a href="http://www.virtualpol.com/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.</li>
+<li><input name="condiciones" value="ok" type="checkbox"' . $condiciones . ' /> <a href="http://www'.DEV.'.'.URL.'/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.</li>
 </ol>
 
 <!--

@@ -23,7 +23,7 @@ if ($pol['user_ID']) {
 		$txt_legal_botones = '';
 	} else {
 		$txt_legal = 'Como usuario de VirtualPol debes aceptar las siguientes condiciones.<br /><br />';
-		$txt_legal_botones = '<div style="margin:30px 0 0 0;">'.boton('HE LEIDO Y ACEPTO TODAS LAS CONDICIONES.', 'http://vp'.DEV.'.'.URL.'/accion.php?a=aceptar-condiciones').'</div>';
+		$txt_legal_botones = '<div style="margin:30px 0 0 0;">'.boton('HE LEIDO Y ACEPTO TODAS LAS CONDICIONES.', 'http://'.$pol['pais'].DEV.'.'.URL.'/accion.php?a=aceptar-condiciones').'</div>';
 	}
 
 }

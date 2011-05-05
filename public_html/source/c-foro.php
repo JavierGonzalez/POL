@@ -20,10 +20,11 @@ function reemplazos($cadena) {
 	$patrones[8] = $inicio_patron.':roto2:/';
 	$patrones[9] = $inicio_patron.':facepalm:/';
 	$patrones[10] = $inicio_patron.':moneda:/';
-        $patrones[11] = $inicio_patron.'\[code\]/';
+        /* TROZO DE CODIGO DE ARZAKON QUE PETA EL FORO xD 
+		$patrones[11] = $inicio_patron.'\[code\]/';
         $patrones[12] = $inicio_patron.'\[/code\]/';
         $patrones[13] = $inicio_patron.'\[quote\]/';
-        $patrones[14] = $inicio_patron.'\[/quote\]/';
+        $patrones[14] = $inicio_patron.'\[/quote\]/';*/
 	$reemplazos = array();
 	$reemplazos[0] = ' <img src="'.IMG.'smiley/sonrie.gif" border="0" alt=":)" title=":)" />';
 	$reemplazos[1] = ' <img src="'.IMG.'smiley/disgustado.gif" border="0" alt=":(" title=":(" />';
@@ -36,10 +37,11 @@ function reemplazos($cadena) {
 	$reemplazos[8] = ' <img src="'.IMG.'smiley/roto2.gif" alt=":roto2:" border="0" title=":roto2:" />';
 	$reemplazos[9] = ' <img src="'.IMG.'smiley/palm.gif" alt=":facepalm:" border="0" title=":facepalm:" />';
 	$reemplazos[10] = ' <img src="'.IMG.'m.gif" alt=":moneda:" border="0" title=":moneda:" />';
-        $reemplazos[11] = ' <div class="quote">';
-        $reemplazos[12] = ' </div>';
-        $reemplazos[13] = ' <div class="code">';
-        $reemplazos[14] = ' </div>';
+	/* TROZO DE CODIGO DE ARZAKON QUE PETA EL FORO xD 
+	$reemplazos[11] = ' <div class="quote">';
+	$reemplazos[12] = ' </div>';
+	$reemplazos[13] = ' <div class="code">';
+	$reemplazos[14] = ' </div>';*/
 	return preg_replace($patrones, $reemplazos, $cadena);
 }
 

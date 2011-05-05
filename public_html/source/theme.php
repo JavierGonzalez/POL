@@ -146,14 +146,12 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 
 	<li class="current">
-		<a href="http://www.virtualpol.com/" title="VirtualPOL"><img src="<?=IMG?>vp-logo.png" border="0" alt="VirtualPOL" style="margin:-10px 0 -18px -14px;" /> &#9660;</a>
+		<a href="http://www.virtualpol.com/" title="VirtualPol"><img src="<?=IMG?>vp-logo.png" border="0" alt="VirtualPol" style="margin:-10px 0 -18px -14px;" /> &#9660;</a>
 			<ul>
-				<li><a href="http://vp.virtualpol.com">VP</a></li>
-				<li><a href="http://pol.virtualpol.com">POL</a></li>
-				<li><a href="http://hispania.virtualpol.com">Hispania</a></li>
-				<li><a href="http://atlantis.virtualpol.com">Atlantis</a></li>
+				<li><a href="http://vp.virtualpol.com/">Pa&iacute;s VP</a></li>
 				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
-				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo</a></li>
+				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo fuente</a></li>
+				<li><a href="https://www.ohloh.net/p/virtualpol/contributors">Desarrolladores</a></li>
 				<li><a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct">Gu&iacute;a inicial</a></li>
 			</ul>
 	</li>
@@ -208,7 +206,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 							<ul>
 								<li><a href="/log-eventos/">Log de eventos</a></li>
 								<li><a href="/mapa/">Mapa</a></li>
-								<li><a href="http://pol.virtualpol.com/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>
+								<li><a href="http://vp.virtualpol.com/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>
 							</ul>
 						</li>
 						<li><a href="/historia/">Historia</a></li>
@@ -331,10 +329,10 @@ if (isset($pol['user_ID'])) {
 	$tiempototal = round(($tiempofinal-$tiempoinicial)*1000); 
 	echo $tiempototal.'ms <a href="http://www'.DEV.'.'.URL.'/legal">Legal</a>';
 } else {
-	// Enlaces hacia Teoriza, solo lo ven los no-registrados, no quitar por favor :))))
+	// Enlaces de GONZO, solo lo ven los no-registrados, no quitar por favor :))))
 	echo '
 <a href="http://www.teoriza.com/">Teoriza</a> &middot; 
-<a href="http://www.eventuis.com/">Eventos</a> &middot; 
+<a href="http://www.eventuis.com/">eventos</a> &middot; 
 <a href="http://aziroet.com/">Blog gratis</a>
 ';
 }

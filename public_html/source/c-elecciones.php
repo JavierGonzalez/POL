@@ -559,6 +559,8 @@ ORDER BY time DESC LIMIT 1", $link);
 
 
 </td></tr><tr><td colspan="2" class="amarillo" valign="top">
+
+<!--
 <h1 style="margin-bottom:5px;">Elecciones Presidenciales (segundas vueltas)</h1>
 
 <center>
@@ -598,7 +600,7 @@ ORDER BY time DESC LIMIT 1", $link);
 
 
 </center>
-
+-->
 
 
 

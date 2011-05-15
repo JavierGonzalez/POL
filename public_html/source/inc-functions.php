@@ -1,5 +1,25 @@
 <?php
 
+
+// ### NUCLEO ACCESO 3.0
+function nucleo_acceso($tipo, $valor) {
+	global $_SESSION;
+	$rt = false;
+	switch ($tipo) {
+		case 'excluir': if (!in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $valor))) { $rt = true; } break;
+		case 'privado': if (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $valor))) { $rt = true; } break;
+		case 'nivel': if (($_SESSION['pol']['nivel'] >= $valor) AND ($_SESSION['pol']['pais'] == PAIS)) { $rt = true; } break;
+		case 'cargo': if (in_array($_SESSION['pol']['cargo'], explode(' ', $valor))) { $rt = true; } break;
+		case 'antiguedad': if (($_SESSION['pol']['fecha_registro']) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($valor*86400)))) { $rt = true; } break;
+		case 'ciudadanos_pais': if ($_SESSION['pol']['pais'] == PAIS) { $rt = true; } break;
+		case 'ciudadanos': if (isset($_SESSION['pol']['user_ID'])) { $rt = true; } break;
+		case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $rt = true; } break;
+	}
+	return $rt;
+}
+
+
+
 function ocultar_IP($IP, $tipo='IP') { 
 	// devuelve el host o IP indicado cortando alguno de sus datos, para proteger la privacidad 
 	if ($tipo == 'IP') {

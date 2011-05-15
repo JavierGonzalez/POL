@@ -18,6 +18,12 @@ while ($r = mysql_fetch_array($result)) {
 
 	foreach (array('leer','escribir') AS $a) {
 
+		$acceso[$a] = nucleo_acceso($r['acceso_'.$a], $r['acceso_cfg_'.$a]);
+
+
+/* VERSION ANTIGUA, SUSTITUIDA POR LA FUNCION POLIVALENTE nucleo_acceso($tipo, $valor) 3.0
+
+ELIMINAR ESTE CODIGO ANTIGUO CUANDO SE VERIFIQUE QUE EL NUEVO SISTEMA FUNCIONA
 
 // ### NUCLEO ACCESOS 2.0
 switch ($r['acceso_'.$a]) {
@@ -31,6 +37,7 @@ switch ($r['acceso_'.$a]) {
 	default: $acceso[$a] = false;
 }
 // ###
+*/
 
 
 	}

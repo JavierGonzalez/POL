@@ -52,6 +52,7 @@ $txt .= '
 
 <tr><td align="left" valign="top" colspan="2"><br /><p class="gris">Ej&eacute;rcito de '.PAIS.'</p></td></tr>
 
+<tr><td align="right">General</td><td valign="top"><b>' . get_cargo(58) . '</b></td></tr>
 <tr><td align="right">Capit&aacute;n</td><td valign="top">' . get_cargo(57) . '</td></tr>
 <tr><td align="right" valign="top">Soldado</td><td valign="top">' . get_cargo(55) . '</td></tr>
 </table>

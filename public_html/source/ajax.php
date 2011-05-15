@@ -17,28 +17,36 @@ e - evento
 c - print comando
 */
 
+
+
+
+// ### IMPORTANTE: MANTENER FUNCION IGUAL QUE SU COPIA IDENTICA EN inc-functions.php (duplicación por optimizacion)
+// ### NUCLEO ACCESO 3.0
+function nucleo_acceso($tipo, $valor) {
+	global $_SESSION;
+	$rt = false;
+	switch ($tipo) {
+		case 'excluir': if (!in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $valor))) { $rt = true; } break;
+		case 'privado': if (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $valor))) { $rt = true; } break;
+		case 'nivel': if (($_SESSION['pol']['nivel'] >= $valor) AND ($_SESSION['pol']['pais'] == PAIS)) { $rt = true; } break;
+		case 'cargo': if (in_array($_SESSION['pol']['cargo'], explode(' ', $valor))) { $rt = true; } break;
+		case 'antiguedad': if (($_SESSION['pol']['fecha_registro']) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($valor*86400)))) { $rt = true; } break;
+		case 'ciudadanos_pais': if ($_SESSION['pol']['pais'] == PAIS) { $rt = true; } break;
+		case 'ciudadanos': if (isset($_SESSION['pol']['user_ID'])) { $rt = true; } break;
+		case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $rt = true; } break;
+	}
+	return $rt;
+}
+// ###
+
+
 function acceso_check($chat_ID, $ac=null) {
 global $link, $_SESSION;
 if (isset($ac)) { $check = array($ac); } else { $check = array('leer','escribir'); }
 $result = mysql_query("SELECT HIGH_PRIORITY acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir, pais FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
 while ($r = mysql_fetch_array($result)) { 
 	foreach ($check AS $a) {
-
-
-// ### NUCLEO ACCESOS 2.0
-switch ($r['acceso_'.$a]) {
-	case 'excluir': if (!in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $r['acceso_cfg_'.$a]))) { $acceso[$a] = true; } break;
-	case 'privado': if (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $r['acceso_cfg_'.$a]))) { $acceso[$a] = true; } break;
-	case 'nivel': if (($_SESSION['pol']['nivel'] >= $r['acceso_cfg_'.$a]) AND ($_SESSION['pol']['pais'] == $r['pais'])) { $acceso[$a] = true; } break;
-	case 'antiguedad': if (($_SESSION['pol']['fecha_registro']) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($r['acceso_cfg_'.$a]*86400)))) { $acceso[$a] = true; } break;
-	case 'ciudadanos_pais': if ($_SESSION['pol']['pais'] == $r['pais']) { $acceso[$a] = true; } break;
-	case 'ciudadanos': if (isset($_SESSION['pol']['user_ID'])) { $acceso[$a] = true; } break;
-	case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $acceso[$a] = true; } break;
-	default: $acceso[$a] = false;
-}
-// ###
-
-
+		$acceso[$a] = nucleo_acceso($r['acceso_'.$a], $r['acceso_cfg_'.$a]);
 	}
 }
 if (isset($ac)) { return $acceso[$ac]; } else { return $acceso; }

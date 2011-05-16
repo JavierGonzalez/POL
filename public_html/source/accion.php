@@ -649,7 +649,7 @@ case 'despacho-oval':
 ($_POST['pols_solar'] >= 0) AND
 ($_POST['pols_crearchat'] >= 0) AND
 ($_POST['factor_propiedad'] <= 10) AND ($_POST['factor_propiedad'] >= 0) AND 
-($_POST['pols_mensajetodos'] >= 1000) AND 
+($_POST['pols_mensajetodos'] >= 300) AND 
 ($_POST['pols_examen'] >= 0) AND 
 ($pol['config']['pols_mensajeurgente'] >= 0) AND
 ($_POST['num_escanos'] <= 31) AND ($_POST['num_escanos'] >= 3) AND 

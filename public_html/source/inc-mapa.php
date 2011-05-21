@@ -67,23 +67,24 @@ prop = {
 function colorear(modo) {
 	for (i in prop) {
 		var prop_a = prop[i].split("|");
-		if (prop_a[0] == "v") {
-			if ((vision != "normal") && (prop_a[1] == "'.$pol['nick'].'")) {
-				var elcolor = "#FF0000"; $("#" + i).html(prop_a[2]);
-			} else {
-				if (vision != "normal") { $("#" + i).html(prop_a[2]); } else { $("#" + i).html(""); }
-				var elcolor = "#FFFF00";
-			} 
-		} else if (prop_a[0] == "e") {
-			var elcolor = "#808080";
-			$("#" + i).text(prop_a[1]).css("color", "#CCC");
-		} else {
-			if (vision == "normal") {
-				//var elcolor = "#" + prop_a[2].substring(0, 1) + prop_a[2].substring(0, 1) + prop_a[2].substring(1, 2) + prop_a[2].substring(1, 2) + prop_a[2].substring(2, 3) + prop_a[2].substring(2, 3);
-				var elcolor = "#" + prop_a[2];
-			} else { 
-				if (prop_a[1] == "'.$pol['nick'].'") { var elcolor = "#FF0000"; } else { var elcolor = "#AACC99"; } 
-			}
+		var pa1 = prop_a[1];
+		switch (prop_a[0]) {
+			case "v":
+				if ((vision != "normal") && (pa1 == "'.$pol['nick'].'")) { var elcolor = "#FF0000"; $("#" + i).html(prop_a[2]); } 
+				else {
+					if (vision != "normal") { $("#" + i).html(prop_a[2]); } else { $("#" + i).html(""); }
+					var elcolor = "#FFFF00";
+				} 
+				break;
+
+			case "e":
+				var elcolor = "#808080";
+				$("#" + i).text(pa1).css("color", "#CCC");
+				break;
+
+			default:
+				if (vision == "normal") { var elcolor = "#" + prop_a[2]; } 
+				else { if (pa1 == "'.$pol['nick'].'") { var elcolor = "#FF0000"; } else { var elcolor = "#AACC99"; } }
 		}
 		$("#" + i).css("background", elcolor);
 	}

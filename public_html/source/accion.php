@@ -270,16 +270,18 @@ case 'expulsar':
 			evento_chat('<span class="expulsado"><img src="'.IMG.'expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>');
 		}
 
-	} elseif ((isset($sc[$pol['user_ID']])) AND ($_GET['razon']) AND ($_GET['ID'] != 1)) { // El usuario 1 (GONZO) es Supervisor del Censo vitalicio, inexpulsable.
+	} elseif ((isset($sc[$pol['user_ID']])) AND ($_POST['razon']) AND ($_POST['nick'] != 'GONZO') AND ($_POST['nick'])) { 
+		// El usuario GONZO (#1) es Supervisor del Censo vitalicio, inexpulsable, por ser el Administrador.
 
-		$result = mysql_query("SELECT nick, ID FROM users 
-WHERE ID = '".$_GET['ID']."'
-AND estado != 'expulsado'
-LIMIT 1", $link);
+		if ($_POST['caso']) { $_POST['razon'] .= ' caso '.$_POST['caso']; }
+
+		$_POST['motivo'] = ereg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
+
+		$result = mysql_query("SELECT nick, ID FROM users WHERE nick = '".$_POST['nick']."' AND estado != 'expulsado' LIMIT 1", $link);
 		while ($r = mysql_fetch_array($result)) {
-			mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+			mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 			
-			mysql_query("INSERT INTO ".SQL_EXPULSIONES." (user_ID, autor, expire, razon, estado, tiempo, IP, cargo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_GET['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."')", $link);
+			mysql_query("INSERT INTO ".SQL_EXPULSIONES." (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
 
 			evento_chat('<span class="expulsado"><img src="'.IMG.'expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['nick'].'</b> ha sido expulsado de VirtualPol. Razon: <b>'.$_GET['razon'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>');
 		}

@@ -11,35 +11,13 @@ while ($r = mysql_fetch_array($result)) {
 	if ($r['pais'] != PAIS) { header('Location: http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$_GET['a'].'/'.($_GET['b']?$_GET['b'].'/':'')); exit; }
 
 
-	mysql_query("UPDATE chats SET stats_visitas = stats_visitas + 1 WHERE chat_ID = ".$r['chat_ID']." LIMIT 1", $link);
+	mysql_query("UPDATE chats SET stats_visitas = stats_visitas + 1, fecha_last = '".$date."' WHERE chat_ID = ".$r['chat_ID']." LIMIT 1", $link);
 
 	$chat_ID = $r['chat_ID'];
 	$titulo = $r['titulo'];
 
 	foreach (array('leer','escribir') AS $a) {
-
 		$acceso[$a] = nucleo_acceso($r['acceso_'.$a], $r['acceso_cfg_'.$a]);
-
-
-/* VERSION ANTIGUA, SUSTITUIDA POR LA FUNCION POLIVALENTE nucleo_acceso($tipo, $valor) 3.0
-
-ELIMINAR ESTE CODIGO ANTIGUO CUANDO SE VERIFIQUE QUE EL NUEVO SISTEMA FUNCIONA
-
-// ### NUCLEO ACCESOS 2.0
-switch ($r['acceso_'.$a]) {
-	case 'excluir': if (!in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $r['acceso_cfg_'.$a]))) { $acceso[$a] = true; } break;
-	case 'privado': if (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $r['acceso_cfg_'.$a]))) { $acceso[$a] = true; } break;
-	case 'nivel': if (($_SESSION['pol']['nivel'] >= $r['acceso_cfg_'.$a]) AND ($_SESSION['pol']['pais'] == $r['pais'])) { $acceso[$a] = true; } break;
-	case 'antiguedad': if (($_SESSION['pol']['fecha_registro']) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($r['acceso_cfg_'.$a]*86400)))) { $acceso[$a] = true; } break;
-	case 'ciudadanos_pais': if ($_SESSION['pol']['pais'] == $r['pais']) { $acceso[$a] = true; } break;
-	case 'ciudadanos': if (isset($_SESSION['pol']['user_ID'])) { $acceso[$a] = true; } break;
-	case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $acceso[$a] = true; } break;
-	default: $acceso[$a] = false;
-}
-// ###
-*/
-
-
 	}
 
 	$acceso_leer = $r['acceso_leer'];
@@ -52,7 +30,7 @@ switch ($r['acceso_'.$a]) {
 $result = mysql_query("SELECT ID, nombre FROM ".SQL."estudios WHERE asigna != '-1' ORDER BY nivel DESC", $link);
 while ($r = mysql_fetch_array($result)) {
 	if ($array_cargos) { $array_cargos .= ', '; } 
-	$array_cargos .= $r['ID'] . ':"' . $r['nombre'] . '"';
+	$array_cargos .= ''.$r['ID'].':"'.$r['nombre'].'"';
 }
 
 // SI es Policia o Comisario del pais, muestra control de kicks.

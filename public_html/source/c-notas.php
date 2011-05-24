@@ -58,8 +58,8 @@ LIMIT 50", $link);
 		
 		if ($row['avatar'] == 'true') { $avatar = '<span class="navatar">' . avatar($row['user_ID'], 40) . '</span>'; } else { $avatar = ''; }
 
-		$txt .= '<tr><td align="right"><b class="big">' . crear_link($row['nick']) . '</b><br /><acronym title="' . $row['time'] . '">' . duracion(time() - strtotime($row['time'])) . '</acronym></td><td valign="top" class="amarillo" onmouseover="show("div'.$num_id.'" onmouseout="hide("div'.$num_id.'")">>' . $avatar . $row['text'] . '</td><td width="1">' . $boton . '</td>
-                    <td><div id="div'.$num_id.'"style="display: inline; visibility: hidden"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vp.virtualpol.com/notas/" data-text="'.$row['text'].'#virtualpol.com" data-count="none" data-lang="es">
+		$txt .= '<tr><td align="right"><b class="big">' . crear_link($row['nick']) . '</b><br /><acronym title="' . $row['time'] . '">' . duracion(time() - strtotime($row['time'])) . '</acronym></td><td valign="top" class="amarillo" onmouseover="show(\'div'.$num_id.'\')" onmouseout="hide(\'div'.$num_id.')">' . $avatar . $row['text'] . '</td><td width="1">' . $boton . '</td>
+                    <td><div id="div'.$num_id.'"style="display: inline; visibility: hidden"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vp.virtualpol.com/notas/" data-text="'.$row['text'].' #virtualpol.com" data-count="none" data-lang="es">
     Tweet</a></div></td></tr>' . "\n";
                  $num_id++;
 	}

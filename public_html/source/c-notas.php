@@ -49,6 +49,7 @@ FROM ".SQL."foros_msg
 WHERE hilo_ID = '-1'
 ORDER BY time DESC
 LIMIT 50", $link);
+        $num_id=0;
 	while($row = mysql_fetch_array($result)){
 
 		if ($row['user_ID'] == $pol['user_ID']) { 
@@ -57,7 +58,10 @@ LIMIT 50", $link);
 		
 		if ($row['avatar'] == 'true') { $avatar = '<span class="navatar">' . avatar($row['user_ID'], 40) . '</span>'; } else { $avatar = ''; }
 
-		$txt .= '<tr><td align="right"><b class="big">' . crear_link($row['nick']) . '</b><br /><acronym title="' . $row['time'] . '">' . duracion(time() - strtotime($row['time'])) . '</acronym></td><td valign="top" class="amarillo">' . $avatar . $row['text'] . '</td><td width="1">' . $boton . '</td></tr>' . "\n";
+		$txt .= '<tr><td align="right"><b class="big">' . crear_link($row['nick']) . '</b><br /><acronym title="' . $row['time'] . '">' . duracion(time() - strtotime($row['time'])) . '</acronym></td><td valign="top" class="amarillo" onmouseover="show("div'.$num_id.'" onmouseout="hide("div'.$num_id.'")">>' . $avatar . $row['text'] . '</td><td width="1">' . $boton . '</td>
+                    <td><div id="div'.$num_id.'"style="display: inline; visibility: hidden"><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vp.virtualpol.com/notas/" data-text="'.$row['text'].'#virtualpol.com" data-count="none" data-lang="es">
+    Tweet</a></div></td></tr>' . "\n";
+                 $num_id++;
 	}
 
 	$txt .= '</table>';
@@ -84,7 +88,12 @@ function limitChars(textid, limit, infodiv) {
 		return true;
 	}
 }
-
+function show(id) {
+    document.getElementById(id).style.visibility = "visible";
+  }
+  function hide(id) {
+    document.getElementById(id).style.visibility = "hidden";
+  }
 
 window.onload = function(){
 	setTimeout(function(){ $("#notas_boton").removeAttr("disabled"); }, 5000);
@@ -96,6 +105,7 @@ window.onload = function(){
 
 </script>
 
+<script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
 ';
 
 

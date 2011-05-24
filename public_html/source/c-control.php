@@ -60,11 +60,11 @@ case 'supervisor-censo':
 <th>IP</th>
 </tr>';
 		$result = mysql_query("SELECT *,
-(SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE envia_ID = ".SQL_USERS.".ID) AS num_priv,
-(SELECT COUNT(*) FROM ".SQL."foros_msg WHERE user_ID = ".SQL_USERS.".ID) AS num_foro,
-(SELECT COUNT(*) FROM ".SQL."transacciones WHERE emisor_ID = ".SQL_USERS.".ID) AS num_transf, 
-(SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '" . $pol['user_ID'] . "' AND user_ID = ".SQL_USERS.".ID LIMIT 1) AS has_votado
-FROM ".SQL_USERS." 
+(SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE envia_ID = users.ID) AS num_priv,
+(SELECT COUNT(*) FROM ".SQL."foros_msg WHERE user_ID = users.ID) AS num_foro,
+(SELECT COUNT(*) FROM ".SQL."transacciones WHERE emisor_ID = users.ID) AS num_transf, 
+(SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '" . $pol['user_ID'] . "' AND user_ID = users.ID LIMIT 1) AS has_votado
+FROM users 
 ORDER BY fecha_registro DESC
 LIMIT 60", $link);
 		while($r = mysql_fetch_array($result)) {
@@ -121,7 +121,7 @@ LIMIT 60", $link);
 
 		$txt .= '<h1>1. Coincidencias de IP</h1><hr /><table border="0" cellspacing="4">';
 		$result = mysql_query("SELECT nick, IP, COUNT(*) AS num, host
-FROM ".SQL_USERS." 
+FROM users 
 GROUP BY IP HAVING COUNT(*) > 1
 ORDER BY num DESC, fecha_registro DESC", $link);
 		while($r = mysql_fetch_array($result)) {
@@ -147,7 +147,7 @@ ORDER BY num DESC, fecha_registro DESC", $link);
 
 		$txt .= '<br /><h1>2. Coincidencia de clave</h1><hr /><table border="0" cellspacing="4">';
 		$result = mysql_query("SELECT ID, IP, COUNT(*) AS num, pass
-FROM ".SQL_USERS." 
+FROM users 
 GROUP BY pass HAVING COUNT(*) > 1
 ORDER BY num DESC, fecha_registro DESC", $link);
 		while($r = mysql_fetch_array($result)) {
@@ -156,7 +156,7 @@ ORDER BY num DESC, fecha_registro DESC", $link);
 				$clones = '';
 				$nota_SC = '';
 				$result2 = mysql_query("SELECT ID, nick, pais, partido_afiliado, estado, nota_SC
-FROM ".SQL_USERS." 
+FROM users 
 WHERE pass = '" . $r['pass'] . "'", $link);
 				$clones_expulsados = true;
 				while($r2 = mysql_fetch_array($result2)) { 
@@ -177,12 +177,35 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 
 
 
+		$trazas_rep = array();
+		$txt .= '<br /><h1>3. Traza (FASE BETA)</h1><hr /><table border="0" cellspacing="4">';
+		$result = mysql_query("SELECT ID AS user_ID, nick, estado, traza FROM users WHERE traza != '' ORDER BY fecha_registro DESC", $link);
+		while($r = mysql_fetch_array($result)) {
+			$tn = 1;
+			if (!$trazas_rep[$r['user_ID']]) {
+				$trazas = explode(' ', $r['traza']);
+				$trazas_clones = '';
+				foreach ($trazas AS $unatraza) {
+					$trazas_rep[$unatraza] = true;
+					$result2 = mysql_query("SELECT nick, estado FROM users WHERE ID = '".$unatraza."'", $link);
+					while($r2 = mysql_fetch_array($result2)) {
+						$tn++;
+						$trazas_clones .= ' '.crear_link($r2['nick'], 'nick', $r2['estado']);
+					}
+				}
+				$txt .= '<tr><td>'.$tn.'</td><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b>: <b>'.$trazas_clones.'</b></td></tr>';
+			}
+		}
+		$txt .= '</table>';
 
 
-		$txt .= '<br /><h1>3. Proxys</h1><hr />
+
+
+
+		$txt .= '<br /><h1>4. Proxys</h1><hr />
 <table border="0" cellspacing="4"><tr><th></th><th colspan="2">Proxys</th><th>Hosts</th><th>Clones</th></tr>';
 		$result = mysql_query("SELECT ID, IP, nick, estado, pais, IP_proxy
-FROM ".SQL_USERS." 
+FROM users 
 WHERE IP_proxy != ''
 ORDER BY fecha_registro DESC", $link);
 		while($r = mysql_fetch_array($result)) {
@@ -208,7 +231,7 @@ ORDER BY fecha_registro DESC", $link);
 					$proxys_dns .= ocultar_IP($host, 'host').'<br />';
 
 					// clones	
-					$result2 = mysql_query("SELECT nick, estado, pais FROM ".SQL_USERS." WHERE ID != '".$r['ID']."' AND (IP = '".ip2long($IP)."' OR IP_proxy LIKE '%".$IP."%') ORDER BY fecha_registro DESC", $link);
+					$result2 = mysql_query("SELECT nick, estado, pais FROM users WHERE ID != '".$r['ID']."' AND (IP = '".ip2long($IP)."' OR IP_proxy LIKE '%".$IP."%') ORDER BY fecha_registro DESC", $link);
 					while($r2 = mysql_fetch_array($result2)) {
 						$clones_num++;
 						$clones .= crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']).' ';
@@ -233,15 +256,15 @@ ORDER BY fecha_registro DESC", $link);
 
 
 
-		$txt .= '<br /><h1>4. Referencias</h1><hr /><table border="0" cellspacing="4">';
+		$txt .= '<br /><h1>5. Referencias</h1><hr /><table border="0" cellspacing="4">';
 		$result = mysql_query("SELECT ID, nick, ref, pais, ref_num, estado, partido_afiliado
-FROM ".SQL_USERS." 
+FROM users 
 WHERE ref_num != '0' 
 ORDER BY ref_num DESC, fecha_registro DESC", $link);
 		while($r = mysql_fetch_array($result)) {
 			$clones = '';
 			$result2 = mysql_query("SELECT ID, nick, ref, pais, estado, partido_afiliado
-FROM ".SQL_USERS." 
+FROM users 
 WHERE ref = '" . $r['ID'] . "'", $link);
 			while($r2 = mysql_fetch_array($result2)) { 
 				if ($r2['nick']) { 
@@ -259,8 +282,8 @@ WHERE ref = '" . $r['ID'] . "'", $link);
 
 
 
-		$txt .= '<br /><h1>5. Emails at&iacute;picos</h1><hr /><table border="0" cellspacing="4">';
-		$result = mysql_query("SELECT email, nick, ref, ref_num, estado FROM ".SQL_USERS." ORDER BY fecha_registro DESC", $link);
+		$txt .= '<br /><h1>6. Emails at&iacute;picos</h1><hr /><table border="0" cellspacing="4">';
+		$result = mysql_query("SELECT email, nick, ref, ref_num, estado FROM users ORDER BY fecha_registro DESC", $link);
 		while($r = mysql_fetch_array($result)) {
 			$r['email'] = strtolower($r['email']);
 			$email = explode("@", $r['email']);
@@ -283,7 +306,7 @@ WHERE ref = '" . $r['ID'] . "'", $link);
 
 
 
-		$txt .= '<br /><h1>6. Referencias desde URLs</h1><hr /><table border="0" cellspacing="4">
+		$txt .= '<br /><h1>7. Referencias desde URLs</h1><hr /><table border="0" cellspacing="4">
 <tr>
 <th></th>
 <th>Ref</th>
@@ -291,7 +314,7 @@ WHERE ref = '" . $r['ID'] . "'", $link);
 <th>URL de referencia</th>
 </tr>';
 		$result = mysql_query("SELECT user_ID, COUNT(*) AS num, referer,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL_REFERENCIAS.".user_ID LIMIT 1) AS nick,
+(SELECT nick FROM users WHERE ID = ".SQL_REFERENCIAS.".user_ID LIMIT 1) AS nick,
 (SELECT COUNT(*) FROM ".SQL_REFERENCIAS." WHERE referer = ".SQL_REFERENCIAS.".referer AND new_user_ID != '0') AS num_registrados
 FROM ".SQL_REFERENCIAS." 
 GROUP BY referer HAVING COUNT(*) > 1
@@ -310,7 +333,7 @@ ORDER BY num DESC", $link);
 
 
 
-		$txt .= '<br /><h1>7. M&aacute;s votos y menos actividad</h1><hr /><table border="0" cellspacing="4">
+		$txt .= '<br /><h1>8. M&aacute;s votos y menos actividad</h1><hr /><table border="0" cellspacing="4">
 <tr>
 <th></th>
 <th><acronym title="Numero de elecciones">N</acronym></th>
@@ -322,7 +345,7 @@ ORDER BY num DESC", $link);
 <th></th>
 </tr>';
 		$result = mysql_query("SELECT nick, IP, num_elec, estado, online, visitas, pais, paginas, ((num_elec * 100) / online) AS factor, partido_afiliado 
-FROM ".SQL_USERS." WHERE num_elec > 2 AND fecha_last > '".date('Y-m-d 20:00:00', time() - 2592000)."' ORDER BY factor DESC LIMIT 20", $link);
+FROM users WHERE num_elec > 2 AND fecha_last > '".date('Y-m-d 20:00:00', time() - 2592000)."' ORDER BY factor DESC LIMIT 20", $link);
 		while($r = mysql_fetch_array($result)) {
 			if ($r['factor'] > 0.0099) {
 				$txt .= '<tr><td>' . crear_link($r['nick'], 'nick', $r['estado'], $r['pais']) . ' ' .			$siglas[$r['partido_afiliado']] . '</td><td align="right"><b>' . $r['num_elec'] . '</b></td><td>/</td><td align="right"><b>' . duracion($r['online']) . '</b></td><td><b>=</b></td><td>' . $r['factor'] . '</td><td align="right">'.$r['visitas'].'</td><td align="right">'.$r['paginas'].'</td><td>('.ocultar_IP($r['IP']).')</td></tr>';
@@ -331,17 +354,17 @@ FROM ".SQL_USERS." WHERE num_elec > 2 AND fecha_last > '".date('Y-m-d 20:00:00',
 		$txt .= '</table>';
 
 
-		$txt .= '<br /><h1>8. Navegadores</h1><hr />
+		$txt .= '<br /><h1>9. Navegadores</h1><hr />
 <table border="0" cellspacing="4">';
 		$result = mysql_query("SELECT COUNT(*) AS num, nav
-FROM ".SQL_USERS." 
+FROM users 
 GROUP BY nav HAVING COUNT(*) > 1
 ORDER BY num ASC", $link);
 		while($r = mysql_fetch_array($result)) {
 
 			$clones = '';
 			if ($r['num'] <= 8) {
-				$result2 = mysql_query("SELECT ID, nick, estado, pais FROM ".SQL_USERS." WHERE nav = '" . $r['nav'] . "' ORDER BY fecha_registro DESC", $link);
+				$result2 = mysql_query("SELECT ID, nick, estado, pais FROM users WHERE nav = '" . $r['nav'] . "' ORDER BY fecha_registro DESC", $link);
 				while($r2 = mysql_fetch_array($result2)) {
 					if ($clones) { $clones .= ' & '; }
 					$clones .= crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']);
@@ -372,11 +395,11 @@ case 'despacho-oval':
 	$txt_title = 'Control: Despacho Oval';
 	if ($pol['nivel'] >= 98) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
 
-	$result = mysql_query("SELECT (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS elnick
+	$result = mysql_query("SELECT (SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS elnick
 	 FROM ".SQL."estudios_users WHERE ID_estudio = '7' AND cargo = '1' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) { $presidente = $r['elnick']; }
 
-	$result = mysql_query("SELECT (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS elnick
+	$result = mysql_query("SELECT (SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS elnick
 	 FROM ".SQL."estudios_users WHERE ID_estudio = '19' AND cargo = '1' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) { $vicepresidente = $r['elnick']; }
 
@@ -741,10 +764,10 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 
 
 	$result = mysql_query("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
-	(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado,
-	(SELECT pais FROM ".SQL_USERS." WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado_pais,
-	(SELECT estado FROM ".SQL_USERS." WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado_estado,
-	(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL_EXPULSIONES.".autor LIMIT 1) AS nick_autor
+	(SELECT nick FROM users WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado,
+	(SELECT pais FROM users WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado_pais,
+	(SELECT estado FROM users WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado_estado,
+	(SELECT nick FROM users WHERE ID = ".SQL_EXPULSIONES.".autor LIMIT 1) AS nick_autor
 	FROM ".SQL_EXPULSIONES."
 	ORDER BY expire DESC", $link);
 	while($r = mysql_fetch_array($result)){
@@ -787,9 +810,9 @@ case 'kick':
 	if (($_GET['b'] == 'info') AND ($_GET['c'])) {
 
 		$result = mysql_query("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado,
-(SELECT estado FROM ".SQL_USERS." WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado_estado,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."ban.autor LIMIT 1) AS nick_autor
+(SELECT nick FROM users WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado,
+(SELECT estado FROM users WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado_estado,
+(SELECT nick FROM users WHERE ID = ".SQL."ban.autor LIMIT 1) AS nick_autor
 FROM ".SQL."ban
 WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){
@@ -855,9 +878,9 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 	mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '" . $date . "'", $link); 
 	$margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); //30dias
 	$result = mysql_query("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo, user_ID,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado,
-(SELECT estado FROM ".SQL_USERS." WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado_estado,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."ban.autor LIMIT 1) AS nick_autor
+(SELECT nick FROM users WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado,
+(SELECT estado FROM users WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado_estado,
+(SELECT nick FROM users WHERE ID = ".SQL."ban.autor LIMIT 1) AS nick_autor
 FROM ".SQL."ban
 WHERE expire > '" . $margen_30dias . "' AND estado != 'expulsado'
 ORDER BY expire DESC", $link);
@@ -904,7 +927,7 @@ case 'judicial':
 
 
 	$result = mysql_query("SELECT *,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."transacciones.emisor_ID LIMIT 1) AS nick
+(SELECT nick FROM users WHERE ID = ".SQL."transacciones.emisor_ID LIMIT 1) AS nick
 FROM ".SQL."transacciones
 WHERE concepto LIKE '<b>SANCION %' AND receptor_ID = '-1'
 ORDER BY time DESC", $link);

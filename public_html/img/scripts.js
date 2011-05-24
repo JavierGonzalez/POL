@@ -185,8 +185,8 @@ function print_msg(data) {
 					break;
 
 				default:
-					if (elnick) { 
-						var regexp = eval("/"+elnick+"/gi");
+					if (minick != "") { 
+						var regexp = eval("/"+minick+"/gi");
 						var txt = txt.replace(regexp, "<b style=\"color:orange;\">" + minick + "</b>"); 
 						if (txt.search(regexp) != -1) { chat_sin_leer_yo = chat_sin_leer_yo + "+"; } 
 					}
@@ -242,6 +242,7 @@ function merge_list() {
 
 
 	var list = "";
+
 	for (cargo_ID in array_cargos) {
 		if (array_list[cargo_ID] !== undefined) {
 			list += array_list[cargo_ID];

@@ -200,7 +200,7 @@ ORDER BY fecha_registro DESC", $link);
 				if (($IP_anterior != $IP) AND ($IP != '127.0.0.1') AND ($IP != '-1')) {
 					$IP_anterior = $IP;
 					
-					$host = gethostbyaddr($IP);
+					$host = @gethostbyaddr($IP);
 					if ($host == $IP) { $host = '*'; }
 					
 					$proxys_num .= '<b>'.$num++.'.</b><br />';
@@ -662,8 +662,70 @@ $txt .= '<p class="azul" style="color:grey;">Este control pertenece al President
 
 
 case 'expulsiones':
+
+if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
+
+	$txt_title = 'Control:  Expulsiones | Expulsar';
+
+
+	if (isset($sc[$pol['user_ID']])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
+	$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'expulsar.gif" alt="Expulsion" border="0" /> <a href="/control/expulsiones/">Expulsiones</a> | Expulsar</h1>
+
+<p>Esta acci&oacute;n privilegiada exclusiva de los Supervisores del Censo (SC) bloquea indefinidamente un usuario y lo pone en proceso de eliminaci&oacute;n forzada tras 10 dias, durante ese periodo de tiempo es reversible. Seg&uacute;n el <a href="http://www.virtualpol.com/legal">TOS</a> es motivo de expulsi&oacute;n <em>2.c La utilizaci&oacute;n malintencionada del privilegio de expulsi&oacute;n.</em></p>
+
+<form action="/accion.php?a=expulsar" method="post">
+
+<ol>
+<li><b>Nick:</b> el usuario a expulsar.<br />
+<input type="text" value="'.$_GET['c'].'" name="nick" size="20" maxlength="20" />
+<br /><br /></li>
+
+<li><b>Motivo de expulsi&oacute;n:</b> si son varios elegir el mas claro.<br />
+<select name="razon">
+
+<optgroup label="Usuarios">
+	<option value="Clones:">Clones:</option>
+	<option value="Registro erroneo.">Registro erroneo.</option>
+	<option value="Peticion propia.">Peticion propia.</option>
+	<option value="Test de desarrollo.">Test de desarrollo.</option>
+</optgroup>
+
+
+<optgroup label="Ataque al sistema">
+	<option value="Ataque al sistema: 2.a">2.a Uso o descubrimiento de bugs del sistema, sea cual fuere su finalidad, sin reportarlo inmediatamente u obrando de mala fe.</option>
+	<option value="Ataque al sistema: 2.b">2.b Ejecutar cualquier tipo de acci&oacute;n que busque causar un perjuicio al mismo.</option>
+	<option value="Ataque al sistema: 2.c">2.c La utilizaci&oacute;n malintencionada del privilegio de expulsi&oacute;n.</option>
+	<option value="Ataque al sistema: 2.d">2.d Faltar gravemente al respeto por lo personal a un Administrador.</option>
+</optgroup>
+
+
+<optgroup label="Ataque a la comunidad">
+	<option value="Ataque a la comunidad: 3.a">3.a Publicaci&oacute;n de contenido altamente violento, obsceno o, en todo caso, no apto para menores de edad.</option>
+	<option value="Ataque a la comunidad: 3.b">3.b Hacer apolog&iacute;a del terrorismo o ideolog&iacute;as que defiendan el uso de la violencia.</option>
+	<option value="Ataque a la comunidad: 3.c">3.c Amenazar a otros usuarios con repercusiones fuera de la comunidad.</option>
+	<option value="Ataque a la comunidad: 3.d">3.d El uso reiterado o sistem&aacute;tico de “kicks” superiores a 15 minutos sin cobertura legal dentro de la comunidad.</option>
+</optgroup>
+
+
+</select><br /><br /></li>
+
+
+<li><b>Caso <input type="text" name="caso" size="8" maxlength="20" /></b> Solo en caso de clones.<br /><br /></li>
+
+<li><b>Pruebas:</b> anotaciones o pruebas sobre la expulsion. Confidencial, solo visible por los SC.<br />
+<textarea name="motivo" cols="70" rows="6" style="color: green; font-weight: bold;"></textarea>
+<br /><br /></li>
+
+
+<li><input type="submit" value="Ejecutar EXPULSION" onclick="if (!confirm(\'&iquest;Seguro que quieres EXPULSAR a este usuario?\')) { return false; }"'.$disabled.' /></li></ol></form>	
+';
+
+
+} else {
+
+
 	$txt_title = 'Control:  Expulsiones';
-	$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'expulsar.gif" alt="Expulsado" border="0" /> Expulsiones</h1>
+	$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'expulsar.gif" alt="Expulsado" border="0" /> Expulsiones | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p>Una expulsi&oacute;n bloquea de forma perpetua a un usuario de <a href="http://www.virtualpol.com/">VirtualPol</a>. Debe usarse tan solo en casos de <b>clones</b> o <b>ataques al sistema</b>.</p>
 
@@ -678,40 +740,44 @@ case 'expulsiones':
 </tr>';
 
 
-$result = mysql_query("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado,
-(SELECT pais FROM ".SQL_USERS." WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado_pais,
-(SELECT estado FROM ".SQL_USERS." WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado_estado,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL_EXPULSIONES.".autor LIMIT 1) AS nick_autor
-FROM ".SQL_EXPULSIONES."
-ORDER BY expire DESC", $link);
-while($r = mysql_fetch_array($result)){
-	
-	if ((isset($sc[$pol['user_ID']])) AND ($r['expulsado_pais']) AND ($r['estado'] == 'expulsado')) { 
-		$expulsar = boton('Cancelar', '/accion.php?a=expulsar&b=desexpulsar&ID=' . $r['ID'], '&iquest;Seguro que quieres CANCELAR la EXPULSION del usuario: '.$r['tiempo'].'?'); 
-	} elseif ($r['estado'] == 'cancelado') { $expulsar = '<b style="font-weight:bold;">Cancelado</b>'; } else { $expulsar = ''; }
+	$result = mysql_query("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
+	(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado,
+	(SELECT pais FROM ".SQL_USERS." WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado_pais,
+	(SELECT estado FROM ".SQL_USERS." WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado_estado,
+	(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL_EXPULSIONES.".autor LIMIT 1) AS nick_autor
+	FROM ".SQL_EXPULSIONES."
+	ORDER BY expire DESC", $link);
+	while($r = mysql_fetch_array($result)){
+		
+		if ((isset($sc[$pol['user_ID']])) AND ($r['expulsado_pais']) AND ($r['estado'] == 'expulsado')) { 
+			$expulsar = boton('Cancelar', '/accion.php?a=expulsar&b=desexpulsar&ID=' . $r['ID'], '&iquest;Seguro que quieres CANCELAR la EXPULSION del usuario: '.$r['tiempo'].'?'); 
+		} elseif ($r['estado'] == 'cancelado') { $expulsar = '<b style="font-weight:bold;">Cancelado</b>'; } else { $expulsar = ''; }
 
-	$duracion = '<acronym title="' . $r['expire'] . '">' . duracion((time() + $r['tiempo']) - strtotime($r['expire'])) . '</acronym>';
+		$duracion = '<acronym title="' . $r['expire'] . '">' . duracion((time() + $r['tiempo']) - strtotime($r['expire'])) . '</acronym>';
 
-	if (!$r['expulsado_estado']) { $r['expulsado_estado'] = 'expulsado'; }
+		if (!$r['expulsado_estado']) { $r['expulsado_estado'] = 'expulsado'; }
 
-	$txt .= '<tr><td valign="top" nowrap="nowrap">';
-	
-	if ($r['estado'] == 'expulsado') {
-		$txt .= '<img src="'.IMG.'expulsar.gif" alt="Expulsado" border="0" /> ';
-	} else { $txt .= '<img src="'.IMG.'cargos/0.gif" border="0" /> '; }
+		$txt .= '<tr><td valign="top" nowrap="nowrap">';
+		
+		if ($r['estado'] == 'expulsado') {
+			$txt .= '<img src="'.IMG.'expulsar.gif" alt="Expulsado" border="0" /> ';
+		} else { $txt .= '<img src="'.IMG.'cargos/0.gif" border="0" /> '; }
 
-	$txt .= '<b>' . crear_link($r['tiempo'], 'nick', $r['expulsado_estado'], $r['expulsado_pais']) . '</b></td>
+		$txt .= '<b>' . crear_link($r['tiempo'], 'nick', $r['expulsado_estado'], $r['expulsado_pais']) . '</b></td>
 <td valign="top">'.$r['expulsado_pais'].'</td>
 <td valign="top" align="right" valign="top" nowrap="nowrap"><acronym title="' . $r['expire'] . '">' . $duracion . '</acronym></td>
 <td valign="top">'.crear_link($r['nick_autor']).'</td>
 <td valign="top"><b style="font-size:13px;">' . $r['razon'] . '</b></td>
 <td valign="top" align="center">' . $expulsar . '</td></tr>' . "\n";
 
-}
-$txt .= '</table><hr /><p>Las expulsiones son ejecutadas por los desarrolladores a cualquier usuario que no ejerzan ningun cargo en su pais.</p>
+		}
+		$txt .= '</table><hr /><p>Las expulsiones son ejecutadas por los desarrolladores a cualquier usuario que no ejerzan ningun cargo en su pais.</p>
 <p>Las expulsiones pueden ser canceladas por el <b><img src="'.IMG.'cargos/7.gif" />Presidente</b> y <b><img src="'.IMG.'cargos/9.gif" />Juez Supremo</b>, antes de que el expulsado sea eliminado (ocurre tras 10 dias inactivo).</p>';
+	}
 	break;
+
+
+
 
 
 

@@ -30,7 +30,7 @@ while($r = mysql_fetch_array($result)){
 	
 			$extras = '
 <tr>
-<td colspan="2"><input style="float:right;" value="Expulsar" onclick="if (!confirm(\'&iquest;Seguro que quieres EXPULSAR a este usuario?\')) { return false; } else { var razon = prompt(\'&iquest;Razon de expulsion?\',\'\').replace(\'&\',\'%26\'); if (razon) { window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=expulsar&ID=' . $r['ID'] . '&nick=' . $r['nick'] . '&razon=\' + razon; } }" type="button"'.$exp_disabled.' />(' . $r['ID'] . ', '.$r['email'].', '.ocultar_IP($host, 'host').', <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-20,20)).'">GeoIP</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
+<td colspan="2"><input style="float:right;" value="Expulsar" onclick="window.location.href=\'/control/expulsiones/expulsar/'.$r['nick'].'\';" type="button"'.$exp_disabled.' />(' . $r['ID'] . ', '.$r['email'].', '.ocultar_IP($host, 'host').', <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-20,20)).'">GeoIP</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
 <tr><td colspan="3" align="right">
 
 <form action="/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post">

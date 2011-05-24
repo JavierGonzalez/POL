@@ -95,10 +95,10 @@ case 'changepass':
 	$pre_login = true;
 	
 	if ($pol['user_ID']) {
-		$result = mysql_query("SELECT ID FROM ".SQL_USERS." WHERE ID = '".$pol['user_ID']."' AND pass = '$oldpass' LIMIT 1", $link);
-		while ($row = mysql_fetch_array($result)) { $userID = $row['ID']; }
+		$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND pass = '$oldpass' LIMIT 1", $link);
+		while ($r = mysql_fetch_array($result)) { $userID = $r['ID']; }
 		if (($pol['user_ID'] == $userID) AND ($newpass === $newpass2)) {
-			mysql_query("UPDATE ".SQL_USERS." SET pass = '" . $newpass . "' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+			mysql_query("UPDATE users SET pass = '" . $newpass . "' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		}
 	}
 
@@ -112,7 +112,7 @@ case 'changemail':
 	$pre_login = true;
 	
 	if ($pol['user_ID']) {
-		mysql_query("UPDATE ".SQL_USERS." SET email = '".$email."' WHERE ID = '".$pol['user_ID']."' AND fecha_registro < '".date('Y-m-d 20:00:00', time() - 864000)."' LIMIT 1", $link);
+		mysql_query("UPDATE users SET email = '".$email."' WHERE ID = '".$pol['user_ID']."' AND fecha_registro < '".date('Y-m-d 20:00:00', time() - 864000)."' LIMIT 1", $link);
 	}
 
 	header("Location: $url");
@@ -127,31 +127,69 @@ case 'login':
 
 	$link = conectar();
 
-	$result = mysql_query("SELECT ID FROM ".SQL_USERS." WHERE nick = '$user' AND pass = '$pass' LIMIT 1", $link);
-	while ($row = mysql_fetch_array($result)) { $password_check = $row['ID']; }
-	if ($password_check) {
+	$result = mysql_query("SELECT ID AS user_ID, nick FROM users WHERE nick = '".$user."' AND pass = '".$pass."' LIMIT 1", $link);
+	while ($r = mysql_fetch_array($result)) { $user_ID = $r['user_ID']; }
+
+	if ($user_ID) {
+		
 		$expire = time() + 31536000;
 		$md5_pass = md5(CLAVE.$pass);
 		setcookie('teorizauser', $user, $expire, '/', USERCOOKIE);
 		setcookie('teorizapass', $md5_pass, $expire, '/', USERCOOKIE);
-	}
-	header("Location: $url");
 
+		if (true) {
+			$traza_name = 'vpid1';
+			echo '<html>
+<header>
+<title>.</title>
+<meta http-equiv="refresh" content="4;url=http://www.virtualpol.com/">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://www.virtualpol.com/img/evercookie/swfobject-2.2.min.js"></script>
+<script type="text/javascript" src="http://www.virtualpol.com/img/evercookie/evercookie.js"></script>
+<script type="text/javascript">
+var ec = new evercookie();
+ec_url = "'.$url.'";
+ec.get("'.$traza_name.'", function(value) { 
+	if (value === undefined) {
+		//alert("NUEVO: " + value);
+		ec.set("'.$traza_name.'", "'.$user_ID.'");
+	} else if (value == '.$user_ID.') {
+		//alert("OK: " + value);
+	} else {
+		ec_url = "http://vp.virtualpol.com/accion.php?a=traza&traza=" + value; 
+		//alert("CONFLICTO: '.$user_ID.' != " + );
+		ec.set("'.$traza_name.'", "'.$user_ID.'");
+	}
+	window.location.href = ec_url;
+});
+</script>
+<style type="text/css">
+body, a { color:#FFFFFF; }
+* { display:none; }
+body { display:none; }
+</style>
+</header>
+<body>
+&nbsp;
+</body>
+</html>';
+		} else { header('Location: '.$url); } 
+	} else { header('Location: '.$url); } 
 	break;
 
-case 'logout':
 
+case 'logout':
 	setcookie('teorizauser', '', time()-3600, '/', USERCOOKIE);
 	setcookie('teorizapass', '', time()-3600, '/', USERCOOKIE);
 
 	session_start();
 	session_destroy();
 
-
 	if ($_SERVER['HTTP_REFERER']) { $url = $_SERVER['HTTP_REFERER']; }
 	else { $url = 'http://'.HOST.'/'; }
 	header("Location: $url");
 	break;
+
 
 }
  

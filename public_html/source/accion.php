@@ -63,6 +63,23 @@ case 'exencion_impuestos':
 	break;
 
 
+
+case 'traza':
+	if (($pol['user_ID']) AND ($_GET['traza']) AND ($_GET['traza'] != $pol['user_ID'])) {
+		$result = mysql_query("SELECT traza FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) {
+			if ($r['traza'] == '') { $r['traza'] = ' '; }
+			$traza_m = explode(' ', $r['traza']);
+			if (!in_array($_GET['traza'], $traza_m)) {
+				mysql_query("UPDATE users SET traza = '".$r['traza']." ".$_GET['traza']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+			}
+		}
+	}
+	break;
+
+
+
+
 case 'chat':
 
 	if (($_GET['b'] == 'solicitar') AND ($pol['pols'] >= $pol['config']['pols_crearchat']) AND ($_POST['nombre']) AND ($_POST['pais'])) {

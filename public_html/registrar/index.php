@@ -84,11 +84,8 @@ owlpic.com
 666.joliekemulder.nl
 yopmail.com
 ';
-
 	$emails_falsos = explode("\n", $emails_falsos);
-
 	$domain = explode("@", $email); $domain = strtolower($domain[1]);	
-
     if ((strlen($email) >= 6) && (substr_count($email,"@") == 1) && (substr($email,0,1) != "@") && (substr($email,strlen($email)-1,1) != "@")){
        if ((!strstr($email,"'")) && (!strstr($email,"\"")) && (!strstr($email,"\\")) && (!strstr($email,"\$")) && (!strstr($email," "))) {
           if (substr_count($email,".")>= 1){
@@ -110,28 +107,47 @@ yopmail.com
 
 function onlynumbers($string) {
 	$eregi = eregi_replace("([A-Z0-9_]+)","",$string);
-	if(empty($eregi)){
-	return true;
-	}
-	return false;
+	if (empty($eregi)) { return true; } else { return false; }
 }
+
 
 
 
 foreach ($vp['paises'] AS $pais) {
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL_USERS." WHERE estado = 'ciudadano' AND pais = '".$pais."'", $link);
-	while($row = mysql_fetch_array($result)) {
-		mysql_query("UPDATE ".strtolower($pais)."_config SET valor = '" . $row['num'] . "' WHERE dato = 'info_censo' LIMIT 1", $link);
+	$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$pais."'", $link);
+	while($r = mysql_fetch_array($result)) {
+		mysql_query("UPDATE ".strtolower($pais)."_config SET valor = '" . $r['num'] . "' WHERE dato = 'info_censo' LIMIT 1", $link);
 	}
 }
 
+
 switch ($_GET['a']) {
+
 case 'registrar': //CHECK
 	$nick = trim($_POST['nick']);
 	$email = trim($_POST['email']);
 	$url = trim($_POST['url']);
 	$pass1 = trim($_POST['pass1']);
 	$pass2 = trim($_POST['pass2']);
+
+	$nicks_prohibidos = '
+admin
+hispania
+vulcan
+pol
+atlantis
+vp
+virtualpol
+virtual
+pais
+administrador
+presidente
+teoriza
+god
+dios
+policia
+';
+	$nicks_prohibidos = explode("\n", $nicks_prohibidos);
 
 	$crono = $_POST['crono'];
 
@@ -141,24 +157,24 @@ case 'registrar': //CHECK
 		if (animal_captcha_check($_POST['animal']) == true) {
 
 			//CONTROL: solo letras y numeros en nick
-			if ((onlynumbers($nick) == true) AND ($nick != 'pol') AND ($nick != 'hispania') AND ($nick != 'atlantis') AND ($nick != 'virtualpol') AND ($nick != 'teoriza') AND ($nick != 'presidente') AND ($nick != 'god') AND ($nick != 'admin')) { 
+			if ((onlynumbers($nick) == true) AND (!in_array($nick, $nicks_prohibidos))) { 
 
 				//CONTROL: contraseñas
 				$rn = $_POST['repid'];
 				if (($pass1) && ($pass1 === $pass2)) {
 					if (comprobar_email($email) == true) {
 
-						$result = mysql_query("SELECT ID FROM ".SQL_USERS." WHERE email = '$email' LIMIT 1", $link);
-						while ($row = mysql_fetch_array($result)) { $email_existe = $row['ID'];}
+						$result = mysql_query("SELECT ID FROM users WHERE email = '$email' LIMIT 1", $link);
+						while ($r = mysql_fetch_array($result)) { $email_existe = $r['ID'];}
 
 						if (!$email_existe) { //el email esta libre
 							if ((strlen($nick) >= 3) AND (strlen($nick) <= 14)) {
 
-								$result = mysql_query("SELECT ID FROM ".SQL_USERS." WHERE nick = '$nick' LIMIT 1", $link);
-								while ($row = mysql_fetch_array($result)) { $nick_existe = $row['ID'];}
+								$result = mysql_query("SELECT ID FROM users WHERE nick = '$nick' LIMIT 1", $link);
+								while ($r = mysql_fetch_array($result)) { $nick_existe = $r['ID'];}
 
 								$result = mysql_query("SELECT tiempo FROM ".SQL_EXPULSIONES." WHERE tiempo = '".$nick."' AND estado = 'expulsado' LIMIT 1", $link);
-								while ($row = mysql_fetch_array($result)) { $nick_expulsado_existe = $row['tiempo'];}
+								while ($r = mysql_fetch_array($result)) { $nick_expulsado_existe = $r['tiempo'];}
 
 								if ((!$nick_existe) AND (!$nick_expulsado_existe)) { //si el nick esta libre
 									$longip = ip2long($_SERVER['REMOTE_ADDR']);
@@ -167,11 +183,11 @@ case 'registrar': //CHECK
 									//Si existe referencia IP
 									$afiliacion = 0;
 									$result = mysql_query("SELECT ID, user_ID,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL_REFERENCIAS.".user_ID LIMIT 1) AS nick
-FROM ".SQL_REFERENCIAS." WHERE IP = '" . $longip . "' LIMIT 1", $link);
-									while($row = mysql_fetch_array($result)){ 
-										$afiliacion = $row['user_ID'];
-										$ref = ' (ref: ' . crear_link($row['nick']) . ')';
+(SELECT nick FROM users WHERE ID = ".SQL_REFERENCIAS.".user_ID LIMIT 1) AS nick
+FROM ".SQL_REFERENCIAS." WHERE IP = '".$longip."' LIMIT 1", $link);
+									while($r = mysql_fetch_array($result)){ 
+										$afiliacion = $r['user_ID'];
+										$ref = ' (ref: ' . crear_link($r['nick']) . ')';
 									}
 									
 									// gen API pass
@@ -179,23 +195,23 @@ FROM ".SQL_REFERENCIAS." WHERE IP = '" . $longip . "' LIMIT 1", $link);
 
 									//crea el ciudadano
 
-									mysql_query("INSERT INTO ".SQL_USERS." 
+									mysql_query("INSERT INTO users 
 (nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, pais, pass, IP_proxy, geo, dnie_check, bando, nota_SC, fecha_legal) 
 VALUES ('" . $nick . "', '0', '" . $date . "', '" . $date . "', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '" . $afiliacion . "', '0', '" . $api_pass . "', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', 'ninguno', '" . md5($pass1) . "', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null, null, '', '".$date."')", $link);
 
 									if ($ref) {
-										$result = mysql_query("SELECT ID FROM ".SQL_USERS." WHERE nick = '" . $nick . "' LIMIT 1", $link);
-										while($row = mysql_fetch_array($result)){ $new_ID = $row['ID']; }
+										$result = mysql_query("SELECT ID FROM users WHERE nick = '" . $nick . "' LIMIT 1", $link);
+										while($r = mysql_fetch_array($result)){ $new_ID = $r['ID']; }
 										
 										mysql_query("UPDATE ".SQL_REFERENCIAS." SET new_user_ID = '" . $new_ID . "' WHERE IP = '" . $longip . "' LIMIT 1", $link);
 									}
 
 
 
-									$texto_email = "Hola $nick\n\n\nEste email es para crear tu usuario en VirtualPOL. Tan solo debes acceder a la siguiente direccion web, para activar tu usuario.\n\nUsuario: $nick\nContraseña: $pass1\n\n ".REGISTRAR."?a=verificar&nick=" . $nick . "&code=" . $api_pass . "\n\nEsperamos que te diviertas!\n\n\n Atentamente,\nVirtualPOL\npol@teoriza.com";
+									$texto_email = "Hola $nick\n\n\nAccede a la siguiente direccion, para activar tu usuario y entrar a VirtualPol.\n\nUsuario: $nick\nContraseña: $pass1\n\n ".REGISTRAR."?a=verificar&nick=" . $nick . "&code=" . $api_pass . "\n\nEsperamos que te diviertas!\n\n\nVirtualPol - http://www.virtualpol.com/";
 
 
-									mail($email, "[VirtualPOL] Verifica " . $nick, $texto_email, "FROM: VirtualPOL <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
+									mail($email, "[VirtualPol] Verificar " . $nick, $texto_email, "FROM: VirtualPol <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
 
 									$registro_txt .= '<p><span style="color:blue;"><b>OK</b></span>. El usuario se ha creado correctamente. Su estado actual es: <em>En espera de validaci&oacute;n</em>.</p>';
 									$registro_txt .= '<p><b>Te hemos enviado un email de verificaci&oacute;n</b>, rev&iacute;salo ahora. En el email te hemos indicado una direccion web que debes visitar para as&iacute; verificar tu usuario.</p><p class="gris">(<b>Rescata el email si est&aacute; como no deseado o spam!</b>)</p>';
@@ -208,26 +224,24 @@ VALUES ('" . $nick . "', '0', '" . $date . "', '" . $date . "', '', 'validar', '
 			} else { $pass1 = ''; $pass2 = '';  $verror .= '<p class="vmal"><b>Error 1.</b> El nick solo puede tener letras, numeros y el caracter: "_". La inicial nunca debe ser un numero.</p>';}
 		} else { $verror .= '<p class="vmal"><b>Error 5.</b> No has acertado la pregunta captcha.</p>'; }
 	} else { $verror .= '<p class="vmal"><b>Error 2.</b> Has de aceptar las condiciones.</p>'; }
-
 	break;
-	
+
+
+
 case 'verificar': //URL EMAIL
-	$nick = $_GET['nick'];
-	$result = mysql_query("SELECT ID, nick, pass FROM ".SQL_USERS." WHERE estado = 'validar' AND nick = '" . $nick . "' AND api_pass = '" . $_GET['code'] . "' LIMIT 1", $link);
-	while ($row = mysql_fetch_array($result)) { 
-		$pol['nick'] = $row['nick'];
-		$pol['user_ID'] = $row['ID'];
-		$pass = $row['pass'];
-	}
-
-	if ($pol['nick']) {
-
+	$result = mysql_query("SELECT ID, nick, pass FROM users WHERE estado = 'validar' AND nick = '".$_GET['nick']."' AND api_pass = '".$_GET['code']."' LIMIT 1", $link);
+	while ($r = mysql_fetch_array($result)) { 
+		$pol['nick'] = $r['nick'];
+		$pol['user_ID'] = $r['ID'];
 
 		$expire = time()+31536000;
-		setcookie('teorizauser', $pol['nick'], $expire, '/', USERCOOKIE);
-		setcookie('teorizapass', md5($pass), $expire, '/', USERCOOKIE);
+		setcookie('teorizauser', $r['nick'], $expire, '/', USERCOOKIE);
+		setcookie('teorizapass', md5(CLAVE.$r['pass']), $expire, '/', USERCOOKIE);
+	}
 
-		mysql_query("UPDATE ".SQL_USERS." SET estado = 'turista' WHERE estado = 'validar' AND ID = '" . $pol['user_ID'] . "' AND api_pass = '" . $_GET['code'] . "' LIMIT 1", $link);
+	if ($pol['nick'] == $_GET['nick']) {
+
+		mysql_query("UPDATE users SET estado = 'turista' WHERE estado = 'validar' AND ID = '".$pol['user_ID']."' AND api_pass = '".$_GET['code']."' LIMIT 1", $link);
 
 		$atrack = '"/atrack/registro/validado.html"'; 
 
@@ -245,13 +259,13 @@ case 'solicitar-ciudadania':
 
 	// tiene kick?
 	$result = mysql_query("SELECT ID FROM ".strtolower($_POST['pais'])."_ban WHERE estado = 'activo' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-	while ($row = mysql_fetch_array($result)) { $tiene_kick = true; }
+	while ($r = mysql_fetch_array($result)) { $tiene_kick = true; }
 
-	$result = mysql_query("SELECT pais FROM ".SQL_USERS." WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-	while ($row = mysql_fetch_array($result)) { $user_pais = $row['pais']; }
+	$result = mysql_query("SELECT pais FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+	while ($r = mysql_fetch_array($result)) { $user_pais = $r['pais']; }
 
 	if (($pol['user_ID']) AND ($tiene_kick != true) AND ($user_pais == 'ninguno') AND ($pol['estado'] == 'turista') AND (!in_array($_POST['pais'], $vp['paises_congelados']))) {
-		mysql_query("UPDATE ".SQL_USERS." SET estado = 'ciudadano', pais = '" . $_POST['pais'] . "' WHERE estado = 'turista' AND pais = 'ninguno' AND ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+		mysql_query("UPDATE users SET estado = 'ciudadano', pais = '" . $_POST['pais'] . "' WHERE estado = 'turista' AND pais = 'ninguno' AND ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	
 		include('../source/inc-functions-accion.php');
 
@@ -278,12 +292,12 @@ VALUES ('" . date('Y-m-d H:i:s') . "', '" . $pol['user_ID'] . "', '" . $pol['use
 
 
 
-if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) {
+if ($pol['estado'] == 'ciudadano') {
 
 
 	// load config full
 	$result = mysql_query("SELECT valor, dato FROM ".strtolower($pol['pais'])."_config WHERE autoload = 'no'", $link);
-	while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
+	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 	$txt_title = 'Registrar: PASO 3 (Ya eres Ciudadano!)';
@@ -327,6 +341,8 @@ $txt .= '</blockquote></div>';
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';
 	$atrack = '"/atrack/registro/solicitar.html"'; 
 
+	if (!$_GET['pais']) { $_GET['pais'] = 'VP'; }
+
 	$txt .= '<h1><span class="gris">1. Crear usuario |</span> 2. Solicitar Ciudadan&iacute;a <span class="gris">| 3. Ser Ciudadano</span></h1>
 	
 <hr /><br />
@@ -334,27 +350,28 @@ $txt .= '</blockquote></div>';
 <div class="azul">
 
 <form name="rp" action="">
-Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\''.REGISTRAR.'?pais=\' + document.forms.rp.r_p[document.forms.rp.r_p.selectedIndex].value);">
+&nbsp; <select name="r_p" onchange="window.location=(\''.REGISTRAR.'?pais=\' + document.forms.rp.r_p[document.forms.rp.r_p.selectedIndex].value);">
 ';
 	
-	$txt .= '<option value="" >Selecciona pa&iacute;s</option>';
+	$txt .= '<optgroup label="Solicitar ciudadania en:">';
 
 	foreach ($vp['paises'] as $pais) {
+		if (!in_array($pais, $vp['paises_congelados'])) {
+			// ciudadanos
+			$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE pais = '".$pais."'", $link);
+			while($r = mysql_fetch_array($result)) { $ciudadanos_num = $r['num']; }
 
-		// ciudadanos
-		$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL_USERS." WHERE pais = '".$pais."'", $link);
-		while($row = mysql_fetch_array($result)) { $ciudadanos_num = $row['num']; }
+			// pais_des
+			$result = mysql_query("SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'pais_des' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)) { $pais_des = $r['valor']; }
 
-		// pais_des
-		$result = mysql_query("SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'pais_des' LIMIT 1", $link);
-		while($row = mysql_fetch_array($result)) { $pais_des = $row['valor']; }
-
-		if ($_GET['pais'] == $pais) { $select = ' selected="selected"'; } else { $select = ''; } 
-		$txt .= '<option value="'.$pais.'"'.$select.($pais!='VP'?' disabled="disabled"':'').'>'.$pais.' - '.$ciudadanos_num.' ciudadanos - '.$pais_des.'</option>';
+			if ($_GET['pais'] == $pais) { $select = ' selected="selected"'; } else { $select = ''; } 
+			$txt .= '<option value="'.$pais.'"'.$select.'>'.$pais.': '.$pais_des.' - '.$ciudadanos_num.' ciudadanos</option>';
+		}
 	}
 
 
-	$txt .= '</select></form>';
+	$txt .= '</optgroup></select></form>';
 
 		if ($_GET['pais'] != '') {
 			$txt .= '<ul>
@@ -365,7 +382,7 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 <form action="?a=solicitar-ciudadania" method="post">
 <input name="pais" value="' . $_GET['pais'] . '" type="hidden" />
 <blockquote>
-<input value="Aceptar Ciudadania de '.$_GET['pais'].'" style="color: blue; font-size: 20px;" type="submit" onClick="javascript:pageTracker._trackPageview(\'/atrack/registro/ciudadano.html\');" /> 
+<input value="Solicitar ciudadania de '.$_GET['pais'].'" style="color: blue; font-size: 20px;" type="submit" onClick="javascript:pageTracker._trackPageview(\'/atrack/registro/ciudadano.html\');" /> 
 </blockquote>
 </form>
 
@@ -379,7 +396,6 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 } else {
 	$atrack = '"/atrack/registro/formulario.html"';
 	$txt_title = 'Registrar: PASO 1 (Crear usuario Turista)';
-	if ($_POST['condiciones'] == 'ok') { $condiciones = ' checked="checked"'; } else { $condiciones = ''; }
 	$txt .= '<h1>1. Crear usuario <span class="gris">| 2. Solicitar Ciudadan&iacute;a | 3. Ser Ciudadano</span></h1><hr />
 
 <form action="?a=registrar" method="POST">
@@ -400,28 +416,13 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 <input type="password" autocomplete="off" name="pass2" value="' . $pass2 . '" maxlength="40" style="margin-top:1px;" /><br /><br /></li>
 
 
-<img src="animal-captcha.php" alt="Animal" id="animalcaptchaimg"  onclick="document.getElementById(\'animalcaptchaimg\').src=\'animal-captcha.php?\'+Math.random();" style="float:right;margin-right:250px;cursor:pointer;" />
+<li><b>&iquest;Qu&eacute; animal es?</b> (un nombre sin espacios, nivel primaria)<br />
+<img src="animal-captcha.php" alt="Animal" id="animalcaptchaimg"  onclick="document.getElementById(\'animalcaptchaimg\').src=\'animal-captcha.php?\'+Math.random();" style="cursor:pointer;" /><br />
+<input type="text" name="animal" value="" autocomplete="off" maxlength="20" /><br /><br /></li>
 
-<li><b>&iquest;Qu&eacute; animal es?</b> &nbsp; &rarr;<br />
-<input type="text" name="animal" value="" autocomplete="off" maxlength="20" /><br /><br /><br /><br /></li>
 
-
-<li><input name="condiciones" value="ok" type="checkbox"' . $condiciones . ' /> <a href="http://www'.DEV.'.'.URL.'/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.</li>
+<li><input name="condiciones" value="ok" type="checkbox" checked="checked" /> <a href="http://www'.DEV.'.'.URL.'/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.</li>
 </ol>
-
-<!--
-<div class="azul" style="margin-top:-10px;">
-<ul>
-<li>Comprendes que esta comunidad es <b>para todos los publicos</b>, y por tanto, no proceden contenidos violentos, para adultos o inadecuados.</li>
-<li>Aceptas que tu usuario es <b>&Uacute;NICO</b>, personal e intransferible. Solo se permite uno por persona en VirtualPOL. Infringir esta norma b&aacute;sica conlleva una expulsi&oacute;n perpetua de todos los usuarios implicados, sin necesidad de juicio previo.</li>
-<li><b>Si compartes conexi&oacute;n</b> a Internet con otros usuarios de VirtualPOL, debes notificarlo a los Supervisores del Censo.</li>
-<li>Podr&aacute;s recibir algunas notificaciones v&iacute;a email (nunca spam).</li>
-<li>Tu usuario expirar&aacute; completamente si no tienes actividad de 10 dias a 90 dias, dependiendo de tu antiguedad.</li>
-<li>Si te conectas desde un ordenador p&uacute;blico, usa la acci&oacute;n de <b>Salir</b>, por seguridad.</li>
-</ul>
-</div>
--->
-
 
 
 <ol>
@@ -430,7 +431,7 @@ Solicitar Ciudadania en el Pais: <select name="r_p" onchange="window.location=(\
 </form>
 </ol>
 <hr />
-<p class="gris">VirtualPOL es la &uacute;nica comunidad auto-gestionada democr&aacute;ticamente de toda Internet. 100% sin admins, sin GODs.</p>';
+<p class="gris">VirtualPol - Plataforma auto-gestionada democr&aacute;ticamente.</p>';
 }
 
 include('../theme.php');

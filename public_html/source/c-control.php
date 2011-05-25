@@ -36,7 +36,7 @@ case 'supervisor-censo':
 		if ($_GET['b'] == 'nuevos-ciudadanos') {
 
 				$txt_title = 'Control: Supervision del Censo - Nuevos ciudadanos';
-				$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a></h1>
+				$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="'.IMG.'cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '.</b></p>'.$nomenclatura;
 
@@ -114,7 +114,7 @@ LIMIT 60", $link);
 			// principal
 
 		$txt_title = 'Control: Supervision del Censo';
-		$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a></h1>
+		$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="'.IMG.'cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 		
@@ -707,7 +707,7 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 <select name="razon">
 
 <optgroup label="Usuarios">
-	<option value="Clones:">Clones:</option>
+	<option value="Clones:" selected="selected">Clones:</option>
 	<option value="Registro erroneo.">Registro erroneo.</option>
 	<option value="Peticion propia.">Peticion propia.</option>
 	<option value="Test de desarrollo.">Test de desarrollo.</option>

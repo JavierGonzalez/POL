@@ -348,7 +348,7 @@ if (isset($pol['user_ID'])) {
 
 <div id="pnick" class="azul" style="display:none;opacity:0.9;"></div>
 
-<script type="text/javascript" src="<?=IMG?>scripts.js"></script>
+<script type="text/javascript" src="<?=IMG?>scripts2.js"></script>
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-59186-46']);

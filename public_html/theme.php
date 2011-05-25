@@ -61,7 +61,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <input name="pass" value="123" size="10" maxlength="20" onfocus="vlgn(this)" type="password" />
 <input type="submit" value="Entrar" /></form>
 </span>
-' . boton('Reg&iacute;strate!', '/registrar/') . ' | <a href="http://pol.virtualpol.com/info/recuperar-login/"><acronym title="Recuperar contrase&ntilde;a">?</acronym></a> &nbsp;';
+'.boton('Reg&iacute;strate!', '/registrar/').' | <a href="http://pol.virtualpol.com/info/recuperar-login/"><acronym title="Recuperar contrase&ntilde;a">?</acronym></a> &nbsp;';
 
 }
 ?>
@@ -69,7 +69,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 
-<td><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><b style="font-size:20px;">VirtualPol</b></a> <span style="color:grey;font-size:15px;">| La primera plataforma de auto-gesti&oacute;n democr&aacute;tica</span></span></td>
+<td><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><b style="font-size:20px;">VirtualPol</b></a> <span style="color:grey;font-size:15px;">&nbsp; La primera plataforma auto-gestionada democr&aacute;ticamente</span></span></td>
 
 <td align="right"><?=$txt_perfil?></td>
 
@@ -99,7 +99,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 </div>
 
-<script type="text/javascript" src="/img/scripts.js"></script>
+<script type="text/javascript" src="/img/scripts2.js"></script>
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-59186-46']);

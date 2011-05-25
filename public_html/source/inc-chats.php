@@ -137,12 +137,17 @@ elnick = "'.$_SESSION['pol']['nick'].'";
 minick = elnick;
 chat_ID = "'.$chat_ID.'";
 
+
 IMG = "'.IMG.'";
 
 ajax_refresh = true;
 refresh = "";
 anonimo = false;
+
+hace_kick = '.($js_kick==''?'false':'true').';
+kick_nick = "___";
 js_kick = "'.$js_kick.'";
+
 chat_delay = 4500;
 chat_delay1 = "";
 chat_delay2 = "";

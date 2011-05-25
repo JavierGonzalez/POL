@@ -236,6 +236,14 @@ function merge_list() {
 			if (idx != -1) { nick_tachado = "<strike>" + elnick + "</strike>"; } else { nick_tachado = elnick; }
 			
 			if (array_list[cargo_ID] === undefined) { array_list[cargo_ID] = ""; }
+
+			if (hace_kick) {
+				js_kick = "<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"http://www.virtualpol.com/img/kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a>";
+			} else {
+				js_kick = "";
+			}
+
+
 			array_list[cargo_ID] += "<li>" + js_kick + " <img src=\""+IMG+"cargos/" + cargo_ID + ".gif\" title=\"" + array_cargos[cargo_ID] + "\" /> <a href=\"/perfil/" + elnick  + "/\" class=\"nick\" onClick=\"return siControlPulsado(event,\'"+ elnick +"\');\">" + nick_tachado + "</a></li>\n";
 		}
 	}

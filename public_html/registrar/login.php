@@ -119,6 +119,20 @@ case 'changemail':
 	break;
 
 
+case 'traza':
+	if (($_GET['user_ID']) AND ($_GET['traza']) AND ($_GET['pass'])) {
+		$result = mysql_query("SELECT ID AS user_ID, traza FROM users WHERE ID = '".$_GET['user_ID']."' AND pass = '".$_GET['pass']."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) {
+			if ($r['traza'] == '') { $r['traza'] = ' '; }
+			$traza_m = explode(' ', $r['traza']);
+			if (!in_array($_GET['traza'], $traza_m)) {
+				mysql_query("UPDATE users SET traza = '".$r['traza']." ".$_GET['traza']."' WHERE ID = '".$r['user_ID']."' LIMIT 1", $link);
+			}
+		}
+	}
+	header("Location: http://vp.virtualpol.com/");
+	break;
+
 
 case 'login':
 	$user = strtolower(trim($_POST['user']));
@@ -133,16 +147,15 @@ case 'login':
 	if ($user_ID) {
 		
 		$expire = time() + 31536000;
-		$md5_pass = md5(CLAVE.$pass);
 		setcookie('teorizauser', $user, $expire, '/', USERCOOKIE);
-		setcookie('teorizapass', $md5_pass, $expire, '/', USERCOOKIE);
+		setcookie('teorizapass', md5(CLAVE.$pass), $expire, '/', USERCOOKIE);
 
 		if (true) {
 			$traza_name = 'vpid1';
 			echo '<html>
 <header>
-<title>.</title>
-<meta http-equiv="refresh" content="4;url=http://www.virtualpol.com/">
+<title></title>
+<meta http-equiv="refresh" content="6;url=http://www.virtualpol.com/">
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript" src="http://www.virtualpol.com/img/evercookie/swfobject-2.2.min.js"></script>
 <script type="text/javascript" src="http://www.virtualpol.com/img/evercookie/evercookie.js"></script>
@@ -151,13 +164,10 @@ var ec = new evercookie();
 ec_url = "'.$url.'";
 ec.get("'.$traza_name.'", function(value) { 
 	if (value === undefined) {
-		//alert("NUEVO: " + value);
 		ec.set("'.$traza_name.'", "'.$user_ID.'");
 	} else if (value == '.$user_ID.') {
-		//alert("OK: " + value);
 	} else {
-		ec_url = "http://vp.virtualpol.com/accion.php?a=traza&traza=" + value; 
-		//alert("CONFLICTO: '.$user_ID.' != " + );
+		ec_url = "http://www.virtualpol.com/registrar/login.php?a=traza&traza=" + value + "&user_ID='.$user_ID.'&pass='.$pass.'"; 
 		ec.set("'.$traza_name.'", "'.$user_ID.'");
 	}
 	window.location.href = ec_url;
@@ -165,8 +175,7 @@ ec.get("'.$traza_name.'", function(value) {
 </script>
 <style type="text/css">
 body, a { color:#FFFFFF; }
-* { display:none; }
-body { display:none; }
+*, body { display:none; }
 </style>
 </header>
 <body>

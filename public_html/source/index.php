@@ -15,7 +15,13 @@ ORDER BY fecha_last DESC", $link);
 
 	$result = mysql_query("SELECT siglas FROM ".SQL."partidos 
 ORDER BY fecha_creacion ASC", $link);
-	while($row = mysql_fetch_array($result)){ $li_partidos_num++; if ($li_partidos) { $li_partidos .= ', '; } $li_partidos .= crear_link($row['siglas'], 'partido'); }
+	while($row = mysql_fetch_array($result)){ 
+		$li_partidos_num++; 
+		if ($li_partidos_num <= 10) {
+			if ($li_partidos) { $li_partidos .= ', '; } 
+			$li_partidos .= crear_link($row['siglas'], 'partido');
+		}
+	}
 
 	if ($pol['config']['elecciones_estado'] == 'normal') {  
 		$li_elecciones_num = 'en ' . duracion(strtotime($pol['config']['elecciones_inicio']) - time());
@@ -30,7 +36,6 @@ ORDER BY fecha_creacion ASC", $link);
 
 		$elecciones_quedan = duracion((strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']) - time());
 		$li_elecciones_num = 'En curso';
-		$li_elecciones = '<a href="/elecciones/">Participaci&oacute;n ' . round(($num_votos * 100) / $num_votantes) . '%, queda ' .  $elecciones_quedan . '</a>';
 	}
 
 	$txt .= '<h1>Bienvenido a '.PAIS.'</h1>
@@ -52,7 +57,7 @@ ORDER BY fecha_creacion ASC", $link);
 <ul id="info">
 <li>Ciudadanos online: <b>' . $li_online_num . '<br />' . $li_online . '</b></li>
 <li>Partidos Pol&iacute;ticos: <b>' . $li_partidos_num . '<br />' . $li_partidos . '</b></li>
-<li>Elecciones Generales: <b>' . $li_elecciones_num . '<br />' . $li_elecciones . '</b></li>
+<li><a href="/elecciones/">Elecciones Generales</a> <b>' . $li_elecciones_num . '</b>.</li>
 </ul>
 
 

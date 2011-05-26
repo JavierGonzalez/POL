@@ -83,6 +83,7 @@ yopmail.com
 owlpic.com
 666.joliekemulder.nl
 yopmail.com
+klzlk.com
 ';
 	$emails_falsos = explode("\n", $emails_falsos);
 	$domain = explode("@", $email); $domain = strtolower($domain[1]);	
@@ -196,8 +197,8 @@ FROM ".SQL_REFERENCIAS." WHERE IP = '".$longip."' LIMIT 1", $link);
 									//crea el ciudadano
 
 									mysql_query("INSERT INTO users 
-(nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, pais, pass, IP_proxy, geo, dnie_check, bando, nota_SC, fecha_legal) 
-VALUES ('" . $nick . "', '0', '" . $date . "', '" . $date . "', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '" . $afiliacion . "', '0', '" . $api_pass . "', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', 'ninguno', '" . md5($pass1) . "', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null, null, '', '".$date."')", $link);
+(nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, pais, pass, host, IP_proxy, geo, dnie_check, bando, nota_SC, fecha_legal) 
+VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', 'ninguno', '".md5($pass1)."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null, null, '', '".$date."')", $link);
 
 									if ($ref) {
 										$result = mysql_query("SELECT ID FROM users WHERE nick = '" . $nick . "' LIMIT 1", $link);
@@ -231,26 +232,14 @@ VALUES ('" . $nick . "', '0', '" . $date . "', '" . $date . "', '', 'validar', '
 case 'verificar': //URL EMAIL
 	$result = mysql_query("SELECT ID, nick, pass FROM users WHERE estado = 'validar' AND nick = '".$_GET['nick']."' AND api_pass = '".$_GET['code']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
-		$pol['nick'] = $r['nick'];
-		$pol['user_ID'] = $r['ID'];
 
-		$expire = time()+31536000;
-		setcookie('teorizauser', $r['nick'], $expire, '/', USERCOOKIE);
-		setcookie('teorizapass', md5(CLAVE.$r['pass']), $expire, '/', USERCOOKIE);
+		mysql_query("UPDATE users SET estado = 'turista' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+
+		header("Location: http://www.virtualpol.com/registrar/login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=http://www.virtualpol.com/registrar/"); 
+		mysql_close($link); 
+		exit;
 	}
 
-	if ($pol['nick'] == $_GET['nick']) {
-
-		mysql_query("UPDATE users SET estado = 'turista' WHERE estado = 'validar' AND ID = '".$pol['user_ID']."' AND api_pass = '".$_GET['code']."' LIMIT 1", $link);
-
-		$atrack = '"/atrack/registro/validado.html"'; 
-
-		$registro_txt .= '<p><span style="color:blue;"><b>OK</b></span>. El usuario se ha verificado correctamente.</p>';
-		$registro_txt .= '<p>Ya eres un <span class="turista">Turista</span>, ahora el ultimo paso: '.boton('Solicitar Ciudadania','/registrar/').'</p>';
-
-	} else { 
-		$registro_txt .= '<p><b style="color:red;">ERROR</b>, el usuario no ha podido ser verificado.</p>';
-	}
 	break;
 
 

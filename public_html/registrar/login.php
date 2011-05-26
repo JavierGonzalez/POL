@@ -90,7 +90,7 @@ case 'changepass':
 	$oldpass = md5(trim($_POST['oldpass']));
 	$newpass = md5(trim($_POST['pass1']));
 	$newpass2 = md5(trim($_POST['pass2']));
-	$url = base64_decode($_POST['url']);
+	if (substr($_POST['url'], 0, 4) == 'http') { $url = $_POST['url']; } else { $url = base64_decode($_POST['url']); }
 
 	$pre_login = true;
 	
@@ -130,24 +130,31 @@ case 'traza':
 			}
 		}
 	}
-	header("Location: http://vp.virtualpol.com/");
+	header("Location: ".$_GET['url']);
 	break;
 
 
 case 'login':
-	$user = strtolower(trim($_POST['user']));
-	$pass = md5(trim($_POST['pass']));
-	$url = base64_decode($_POST['url']);
+	$nick = strtolower(trim($_REQUEST['user']));
+	if ($_REQUEST['pass_md5']) { $pass = $_REQUEST['pass_md5']; } else { $pass = md5(trim($_REQUEST['pass'])); }
+	
+	if ($_REQUEST['url_http']) { 
+		$url = $_REQUEST['url_http'];
+	} elseif ($_REQUEST['url']) { 
+		$url = base64_decode($_REQUEST['url']); 
+	} else {
+		$url = 'http://vp.virtualpol.com/'; 
+	}
 
 	$link = conectar();
 
-	$result = mysql_query("SELECT ID AS user_ID, nick FROM users WHERE nick = '".$user."' AND pass = '".$pass."' LIMIT 1", $link);
+	$result = mysql_query("SELECT ID AS user_ID, nick FROM users WHERE nick = '".$nick."' AND pass = '".$pass."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { $user_ID = $r['user_ID']; }
 
 	if ($user_ID) {
 		
 		$expire = time() + 31536000;
-		setcookie('teorizauser', $user, $expire, '/', USERCOOKIE);
+		setcookie('teorizauser', $nick, $expire, '/', USERCOOKIE);
 		setcookie('teorizapass', md5(CLAVE.$pass), $expire, '/', USERCOOKIE);
 
 		if (true) {
@@ -167,7 +174,7 @@ ec.get("'.$traza_name.'", function(value) {
 		ec.set("'.$traza_name.'", "'.$user_ID.'");
 	} else if (value == '.$user_ID.') {
 	} else {
-		ec_url = "http://www.virtualpol.com/registrar/login.php?a=traza&traza=" + value + "&user_ID='.$user_ID.'&pass='.$pass.'"; 
+		ec_url = "http://www.virtualpol.com/registrar/login.php?a=traza&traza=" + value + "&user_ID='.$user_ID.'&pass='.$pass.'&url=" + ec_url; 
 		ec.set("'.$traza_name.'", "'.$user_ID.'");
 	}
 	window.location.href = ec_url;

@@ -20,8 +20,7 @@ c - print comando
 */
 
 
-
-
+if ($_REQUEST['a'] != 'whois') {
 // ### IMPORTANTE: MANTENER FUNCION IGUAL QUE SU COPIA IDENTICA EN inc-functions.php (duplicación por optimizacion)
 // ### NUCLEO ACCESO 3.0
 function nucleo_acceso($tipo, $valor) {
@@ -40,6 +39,7 @@ function nucleo_acceso($tipo, $valor) {
 	return $rt;
 }
 // ###
+}
 
 
 function acceso_check($chat_ID, $ac=null) {

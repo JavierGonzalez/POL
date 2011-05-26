@@ -541,6 +541,7 @@ CREATE TABLE `users` (
   `dnie_check` varchar(400) default NULL,
   `bando` varchar(255) default NULL,
   `fecha_legal` datetime default NULL,
+  `traza` varchar(1900) NOT NULL,
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `nick` (`nick`),
   UNIQUE KEY `api_pass` (`api_pass`),

@@ -27,6 +27,11 @@ if (isset($_COOKIE['teorizauser'])) {
 				$_SESSION['pol']['pais'] = $r['pais'];
 				$_SESSION['pol']['estado'] = $r['estado'];
 
+				/* Fuerza traza
+				header("Location: http://www.virtualpol.com/registrar/login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']); 
+				mysql_close($link); 
+				exit;
+				*/
 			}
 		}  
 	}

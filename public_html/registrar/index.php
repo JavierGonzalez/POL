@@ -267,6 +267,10 @@ case 'solicitar-ciudadania':
 		mysql_query("INSERT INTO " . strtolower($_POST['pais']) . "_log 
 (time, user_ID, user_ID2, accion, dato) 
 VALUES ('" . date('Y-m-d H:i:s') . "', '" . $pol['user_ID'] . "', '" . $pol['user_ID'] . "', '2', '')", $link);
+
+		unset($_SESSION);
+		session_unset(); session_destroy();
+
 		header('Location: http://'.strtolower($_POST['pais']).DEV.'.virtualpol.com/');
 	
 	} else { header('Location: '.REGISTRAR); }

@@ -187,19 +187,27 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 
 
 	$trazas_rep = array();
-	$txt .= '<br /><h1>3. Traza (FASE BETA)</h1><hr /><table border="0" cellspacing="4">';
+	$txt .= '<br /><h1>3. Traza (coincidencia de dispositivo)</h1><hr /><table border="0" cellspacing="4">';
 	$result = mysql_query("SELECT ID AS user_ID, nick, estado, traza FROM users WHERE traza != '' ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$tn = 1;
-		if (!$trazas_rep[$r['user_ID']]) {
+		if (true) { // !$trazas_rep[$r['user_ID']]
 			$trazas = explode(' ', $r['traza']);
 			$trazas_clones = '';
 			foreach ($trazas AS $unatraza) {
+				$trazado = false;
 				$trazas_rep[$unatraza] = true;
-				$result2 = mysql_query("SELECT nick, estado FROM users WHERE ID = '".$unatraza."'", $link);
+				$result2 = mysql_query("SELECT nick, estado FROM users WHERE ID = '".$unatraza."' LIMIT 1", $link);
 				while($r2 = mysql_fetch_array($result2)) {
-					$tn++;
-					$trazas_clones .= ' '.crear_link($r2['nick'], 'nick', $r2['estado']);
+					$tn++; $trazas_clones .= ' '.crear_link($r2['nick'], 'nick', $r2['estado']);
+					$trazado = true;
+				}
+				if ($trazado == false) {
+					$result2 = mysql_query("SELECT tiempo AS nick FROM expulsiones WHERE user_ID = '".$unatraza."' LIMIT 1", $link);
+					while($r2 = mysql_fetch_array($result2)) {
+						$r2['estado'] = 'expulsado';
+						$tn++; $trazas_clones .= ' '.crear_link($r2['nick'], 'nick', $r2['estado']);
+					}
 				}
 			}
 			$txt .= '<tr><td>'.$tn.'</td><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b>: <b>'.$trazas_clones.'</b></td></tr>';

@@ -64,14 +64,14 @@ case 'exencion_impuestos':
 
 case 'chat':
 
-	if (($_GET['b'] == 'solicitar') AND ($pol['pols'] >= $pol['config']['pols_crearchat']) AND ($_POST['nombre']) AND ($_POST['pais'])) {
+	if (($_GET['b'] == 'solicitar') AND ($pol['pols'] >= $pol['config']['pols_crearchat']) AND ($_POST['nombre'])) {
 
 		$nombre = $_POST['nombre'];
 		$url = gen_url($nombre);
 
 
 		mysql_query("INSERT INTO chats (pais, url, titulo, user_ID, fecha_creacion, fecha_last, dias_expira) 
-VALUES ('".$_POST['pais']."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '".$date."', '".$date."', '".$pol['config']['chat_diasexpira']."')", $link);
+VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '".$date."', '".$date."', '".$pol['config']['chat_diasexpira']."')", $link);
 
 		$result = mysql_query("SELECT chat_ID FROM chats WHERE url = '".$url."' AND user_ID = '".$pol['user_ID']."' AND pais = '".$_POST['pais']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) {
@@ -253,6 +253,9 @@ LIMIT 1", $link);
 		mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '".$user_ID."'", $link);
 		mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '".$user_ID."'", $link);
 		mysql_query("DELETE FROM ".SQL."pujas WHERE user_ID = '".$user_ID."'", $link);
+
+		unset($_SESSION);
+		session_unset(); session_destroy();
 	}
 	header('Location: '.REGISTRAR);
 	exit;
@@ -1361,7 +1364,7 @@ case 'enviar-mensaje':
 				}
 			}
 			
-			$result = mysql_query("SELECT ID, pais FROM users WHERE nick IN (".$enviar_nicks.")", $link);
+			$result = mysql_query("SELECT ID, pais FROM users WHERE nick IN (".$enviar_nicks.") AND estado != 'expulsado'", $link);
 			while($r = mysql_fetch_array($result)){ 
 				mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$r['ID']."', '".$date."', '".$text."', '0', '".$_POST['calidad']."')", $link);
 				

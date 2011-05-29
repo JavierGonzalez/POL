@@ -11,17 +11,11 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
 	while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
 
-	foreach ($vp['paises'] AS $pais) { $txt_li .= '<option value="'.$pais.'"'.($pais==PAIS?' selected="selected"':'').'>'.$pais.'</option>';}
-
 	$txt .= '<h1><a href="/chats/">Chats</a>: Solicitar chat</h1>
 
 <form action="/accion.php?a=chat&b=solicitar" method="post">
 
 <ol>
-<li><b>Pais:</b><br />
-<select name="pais">' . $txt_li . '</select> (No modificable)
-<br /><br /></li>
-
 <li><b>Nombre del chat:</b><br />
 <input type="text" name="nombre" size="20" maxlength="20" /> (No modificable)
 <br /><br /></li>
@@ -145,7 +139,7 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 <th>Chat</th>
 <th style="background:#5CB3FF;">Leer</th>
 <th style="background:#F97E7B;">Escribir</th>
-<th>Stats</th>
+<th>Visitas</th>
 <th>Fundador</th>
 <th>Hace...</th>
 <th></th>
@@ -166,7 +160,7 @@ FROM chats ORDER BY estado ASC, online DESC, fecha_creacion ASC", $link);
 
 <td valign="top" style="background:#F97E7B;">'.($r['acceso_cfg_escribir']?'<acronym title="['.$r['acceso_cfg_escribir'].']">':'').ucfirst($r['acceso_escribir']).($r['acceso_cfg_escribir']?'</acronym>':'').'</td>
 
-<td valign="top" style="font-size:12px;padding:0 0 0 5px;"><b>'.$r['stats_visitas'].'</b> visitas<br /><b>'.$r['stats_msgs'].'</b> mensajes</td>
+<td valign="top" align="right" style="font-size:12px;padding:0 0 0 5px;"><b>'.$r['stats_visitas'].'</b></td>
 
 <td valign="top">'.($r['user_ID']==0?'<em>Sistema</em>':crear_link($r['fundador'])).'</td>
 <td valign="top" align="right" nowrap="nowrap">'.duracion(time() - strtotime($r['fecha_creacion'])).'</td>

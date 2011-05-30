@@ -745,6 +745,7 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 
 <optgroup label="Usuarios">
 	<option value="Clones:" selected="selected">Clones:</option>
+	<option value="Clones: 1.b">Uso de una direcci&oacute;n de email temporal o de uso no habitual.</option>
 	<option value="Registro erroneo.">Registro erroneo.</option>
 	<option value="Peticion propia.">Peticion propia.</option>
 	<option value="Test de desarrollo.">Test de desarrollo.</option>

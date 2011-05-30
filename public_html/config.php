@@ -74,6 +74,7 @@ define('SQL_REFERENCIAS', 'referencias');
 define('SQL_MENSAJES', 'mensajes');
 define('SQL_VOTOS', 'votos');
 define('SQL_EXPULSIONES', 'expulsiones');
+define('VOTO_CONFIANZA_MAX', 40); // numero maximo de votos de confianza emitidos
 
 // variables del sistema de usuarios
 define('USERCOOKIE', '.virtualpol.com');

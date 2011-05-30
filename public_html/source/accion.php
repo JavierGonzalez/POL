@@ -295,7 +295,12 @@ case 'expulsar':
 case 'voto':
 	if (($_GET['b'] == 'confianza') AND ($_GET['ID'] != $pol['user_ID']) AND (($_REQUEST['voto_confianza'] == '-1') OR ($_REQUEST['voto_confianza'] == '0') OR ($_REQUEST['voto_confianza'] == '1'))) {
 
-		// has votado ya a este usuario?
+
+		// numero de votos emitidos
+		$result = mysql_query("SELECT COUNT(*) AS num FROM ".SQL_VOTOS." WHERE uservoto_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
+		while ($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
+
+		// ha votado a este usuario?
 		$hay_voto = false;
 		$result = mysql_query("SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '".$pol['user_ID']."' AND user_ID = '".$_GET['ID']."' LIMIT 1", $link);
 		while ($r = mysql_fetch_array($result)) { $voto = $r['voto']; $hay_voto = true; }
@@ -304,7 +309,7 @@ case 'voto':
 		$result = mysql_query("SELECT ID FROM users WHERE ID = '".$_GET['ID']."'", $link);
 		while ($r = mysql_fetch_array($result)) { $nick_existe = true; }
 
-		if ($nick_existe == true) {
+		if (($nick_existe == true) AND ($num_votos <= VOTO_CONFIANZA_MAX)) {
 			if ($hay_voto == true) {
 				// update
 				mysql_query("UPDATE ".SQL_VOTOS." SET voto = '".$_REQUEST['voto_confianza']."', time = '".$date."' WHERE estado = 'confianza' AND uservoto_ID = '".$pol['user_ID']."' AND user_ID = '".$_GET['ID']."' LIMIT 1", $link);
@@ -312,14 +317,8 @@ case 'voto':
 				// insert
 				mysql_query("INSERT INTO ".SQL_VOTOS." (user_ID, uservoto_ID, voto, time, estado) VALUES ('".$_GET['ID']."', '".$pol['user_ID']."', '".$_REQUEST['voto_confianza']."', '".$date."', 'confianza')", $link);
 			}
-
-			$result = mysql_query("SELECT SUM(voto) AS voto_confianza FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND user_ID = '".$_GET['ID']."'", $link);
-			while ($r = mysql_fetch_array($result)) { 
-				mysql_query("UPDATE users SET voto_confianza = '".$r['voto_confianza']."' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
-			}
-
-			$refer_url = 'perfil/'.strtolower($_GET['nick']).'/';
 		}
+		$refer_url = 'perfil/'.strtolower($_GET['nick']).'/';
 
 	}
 	break;

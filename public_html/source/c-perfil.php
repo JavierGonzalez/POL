@@ -47,22 +47,25 @@ Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="4
 		// CONFIANZA
 		if ((($user_ID != $pol['user_ID']) AND ($pol['user_ID']) AND ($pol['estado'] != 'expulsado'))) {
 
-			$result2 = mysql_query("SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '" . $pol['user_ID'] . "' AND user_ID = '" . $user_ID . "' LIMIT 1", $link);
+			// numero de votos emitidos
+			$result2 = mysql_query("SELECT COUNT(*) AS num FROM ".SQL_VOTOS." WHERE uservoto_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
+			while ($r2 = mysql_fetch_array($result2)) { $num_votos = $r2['num']; }
+
+			$result2 = mysql_query("SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '".$pol['user_ID']."' AND user_ID = '".$user_ID."' LIMIT 1", $link);
 			while ($r2 = mysql_fetch_array($result2)) { $hay_v_c = $r2['voto']; }
 
 			$c_select = ' disabled="disabled"';
-			if ($hay_v_c == '1') { $confianza_1 = $c_select;
-			} elseif ($hay_v_c == '0') { $confianza_0 = $c_select;
-			} elseif ($hay_v_c == '-1') { $confianza_m1 = $c_select;
-			} else { $confianza_0 = $c_select; }
+			if ($hay_v_c == '1') { $confianza_1 = $c_select; } 
+			elseif ($hay_v_c == '0') { $confianza_0 = $c_select; } 
+			elseif ($hay_v_c == '-1') { $confianza_m1 = $c_select; } 
+			else { $confianza_0 = $c_select; }
+			if ($num_votos >= VOTO_CONFIANZA_MAX) { $confianza_1 = $c_select; $confianza_m1 = $c_select; }
 
-$txt .= 'Confianza: ' . confianza($r['voto_confianza']) . '
+$txt .= 'Confianza: '.confianza($r['voto_confianza']).'
 
-<input type="button" value="+" onClick="window.location.href=\'http://' . $pol['pais'] . '.virtualpol.com/accion.php?a=voto&b=confianza&ID=' . $user_ID . '&nick=' . $nick . '&voto_confianza=1\';"' . $confianza_1 . ' /><input type="button" value="0" onClick="window.location.href=\'http://' . $pol['pais'] . '.virtualpol.com/accion.php?a=voto&b=confianza&ID=' . $user_ID . '&nick=' . $nick . '&voto_confianza=0\';"' . $confianza_0 . ' /><input type="button" value="&#8211;" onClick="window.location.href=\'http://' . $pol['pais'] . '.virtualpol.com/accion.php?a=voto&b=confianza&ID=' . $user_ID . '&nick=' . $nick . '&voto_confianza=-1\';"' . $confianza_m1 . ' />
+<input type="button" value="+" onClick="window.location.href=\'http://' . $pol['pais'] . '.virtualpol.com/accion.php?a=voto&b=confianza&ID=' . $user_ID . '&nick=' . $nick . '&voto_confianza=1\';"' . $confianza_1 . ' /><input type="button" value="0" onClick="window.location.href=\'http://' . $pol['pais'] . '.virtualpol.com/accion.php?a=voto&b=confianza&ID=' . $user_ID . '&nick=' . $nick . '&voto_confianza=0\';"' . $confianza_0 . ' /><input type="button" value="&#8211;" onClick="window.location.href=\'http://' . $pol['pais'] . '.virtualpol.com/accion.php?a=voto&b=confianza&ID=' . $user_ID . '&nick=' . $nick . '&voto_confianza=-1\';"' . $confianza_m1 . ' /><br />Votos emitidos: <b'.($num_votos <= VOTO_CONFIANZA_MAX?'':' style="color:red;"').'>'.$num_votos.'</b> de '.VOTO_CONFIANZA_MAX.'.
 ';
-		} else {
-			$txt .= 'Confianza: ' . confianza($r['voto_confianza']);
-		}
+		} else { $txt .= 'Confianza: ' . confianza($r['voto_confianza']); }
 
 
 
@@ -228,12 +231,10 @@ $txt .= '
 
 <p><form action="/accion.php?a=avatar&b=desc" method="post">Espacio para lo que quieras: (<span id="desc_limit" style="color:blue;">' . $text_limit . '</span> caracteres)<br />
 <textarea name="desc" id="desc_area" style="background:#FFFFDD;border: 1px solid grey; padding:4px; color: green; font-weight: bold; width: 500px; height: 80px;">' . strip_tags($r['text'], '<b>') . '</textarea> <input value="Guardar" type="submit" />
-</form></p>
+</form></p>';
 
-
-<p><b>Votos de confianza recibida:</b> ';
-
-
+/*
+$txt .= '<p><b>Votos de confianza recibida:</b> ';
 $result2 = mysql_query("SELECT voto, time,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL_VOTOS.".uservoto_ID LIMIT 1) AS nick,
 (SELECT pais FROM ".SQL_USERS." WHERE ID = ".SQL_VOTOS.".uservoto_ID LIMIT 1) AS pais
@@ -247,9 +248,14 @@ while($r2 = mysql_fetch_array($result2)) {
 	$txt .= crear_link($r2['nick'], 'nick', null, $r2['pais']) . ', ';
 }
 
-$txt .= '</p>
+$txt .= '</p>';
+*/
 
-<p><b>Tus votos de confianza:</b> ';
+// numero de votos emitidos
+$result2 = mysql_query("SELECT COUNT(*) AS num FROM ".SQL_VOTOS." WHERE uservoto_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
+while ($r2 = mysql_fetch_array($result2)) { $num_votos = $r2['num']; }
+
+$txt .= '<p><b>Votos de confianza emitidos:</b> (<span style="font-weight:bold;">'.$num_votos.'</span> de '.VOTO_CONFIANZA_MAX.')';
 
 $voto_anterior = '';
 $result2 = mysql_query("SELECT voto, time,
@@ -265,9 +271,10 @@ while($r2 = mysql_fetch_array($result2)) {
 }
 
 
-$txt .= '</p>
+$txt .= '</p>';
 
-</div>
+
+$txt .= '</div>
 
 <br />';
 

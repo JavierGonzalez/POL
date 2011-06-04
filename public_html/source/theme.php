@@ -327,13 +327,14 @@ if (isset($pol['user_ID'])) {
 	$mtime = explode(' ', microtime()); 
 	$tiempofinal = $mtime[1] + $mtime[0]; 
 	$tiempototal = round(($tiempofinal-$tiempoinicial)*1000); 
-	echo $tiempototal.'ms <a href="http://www'.DEV.'.'.URL.'/legal">Legal</a>';
+	echo $tiempototal.'ms <a href="http://www'.DEV.'.'.URL.'/legal" title="Condiciones del Servicio">TOS</a>';
 } else {
 	// Enlaces de GONZO, solo lo ven los no-registrados, no quitar por favor :))))
 	echo '
 <a href="http://www.teoriza.com/">Teoriza</a> &middot; 
 <a href="http://www.eventuis.com/">eventos</a> &middot; 
-<a href="http://aziroet.com/">Blog gratis</a>
+<a href="http://aziroet.com/">Blog gratis</a> | 
+<a href="http://www'.DEV.'.'.URL.'/legal" title="Condiciones del Servicio">TOS</a>
 ';
 }
 ?></span>

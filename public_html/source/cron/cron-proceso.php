@@ -234,9 +234,6 @@ mysql_query("DELETE FROM ".SQL."transacciones WHERE time < '".$margen_60dias."'"
 // ELIMINAR LOG EVENTOS
 mysql_query("DELETE FROM ".SQL."log WHERE time < '".$margen_90dias."'", $link);
 
-// ELIMINAR votos resuduales
-mysql_query("DELETE FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND voto = '0'", $link);
-
 // ELIMINAR bans antiguos
 mysql_query("DELETE FROM ".SQL."ban WHERE (estado = 'inactivo' OR estado = 'cancelado') AND expire < '".$margen_60dias."'", $link);
 
@@ -278,8 +275,8 @@ mysql_query("UPDATE users SET voto_confianza = '0'", $link);
 $result = mysql_query("SELECT user_ID, SUM(voto) AS num_confianza FROM ".SQL_VOTOS." WHERE estado = 'confianza' GROUP BY user_ID", $link);
 while ($r = mysql_fetch_array($result)) { 
 	mysql_query("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['user_ID']."' LIMIT 1", $link);
-}
-
+} 
+evento_chat('<b>[PROCESO] Voto de confianza actualizado. SC:</b> '.implode(', ', get_supervisores_del_censo()).'');
 
 
 
@@ -422,7 +419,6 @@ while($row = mysql_fetch_array($result)) { $st['24h'] = $row['num']; }
 // confianza
 $result = mysql_query("SELECT SUM(voto) AS num FROM ".SQL_VOTOS." WHERE estado = 'confianza'", $link);
 while($row = mysql_fetch_array($result)) { $st['confianza'] = $row['num']; }
-
 
 
 

@@ -782,6 +782,25 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 ';
 
 
+} elseif (($_GET['b'] == 'info') AND ($_GET['c']) AND (isset($sc[$pol['user_ID']]))) {
+
+		$result = mysql_query("SELECT *,
+(SELECT nick FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado,
+(SELECT estado FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_estado,
+(SELECT nick FROM users WHERE ID = expulsiones.autor LIMIT 1) AS nick_autor
+FROM expulsiones
+WHERE ID = '".$_GET['c']."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)){
+			$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/expulsiones/">Expulsiones</a> | #'.$_GET['c'].'</h1>
+
+<p><b>'.crear_link($r['expulsado'], 'nick', $r['expulsado_estado']).'</b> fue expulsado por <b>'.crear_link($r['nick_autor']).'</b>.</p>
+
+<p>Raz&oacute;n: <b>'.$r['razon'].'</b></p>
+
+<p>Fecha: '.$r['expire'].'</p>
+
+<p>Pruebas:</p><p class="azul">'.str_replace("\n","<br />", $r['motivo']).'</p>';
+		}
 } else {
 
 
@@ -802,12 +821,12 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 
 
 	$result = mysql_query("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
-	(SELECT nick FROM users WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado,
-	(SELECT pais FROM users WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado_pais,
-	(SELECT estado FROM users WHERE ID = ".SQL_EXPULSIONES.".user_ID LIMIT 1) AS expulsado_estado,
-	(SELECT nick FROM users WHERE ID = ".SQL_EXPULSIONES.".autor LIMIT 1) AS nick_autor
-	FROM ".SQL_EXPULSIONES."
-	ORDER BY expire DESC", $link);
+(SELECT nick FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado,
+(SELECT pais FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_pais,
+(SELECT estado FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_estado,
+(SELECT nick FROM users WHERE ID = expulsiones.autor LIMIT 1) AS nick_autor
+FROM expulsiones
+ORDER BY expire DESC", $link);
 	while($r = mysql_fetch_array($result)){
 		
 		if ((isset($sc[$pol['user_ID']])) AND ($r['expulsado_pais']) AND ($r['estado'] == 'expulsado')) { 
@@ -818,18 +837,15 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 
 		if (!$r['expulsado_estado']) { $r['expulsado_estado'] = 'expulsado'; }
 
-		$txt .= '<tr><td valign="top" nowrap="nowrap">';
-		
-		if ($r['estado'] == 'expulsado') {
-			$txt .= '<img src="'.IMG.'expulsar.gif" alt="Expulsado" border="0" /> ';
-		} else { $txt .= '<img src="'.IMG.'cargos/0.gif" border="0" /> '; }
-
-		$txt .= '<b>' . crear_link($r['tiempo'], 'nick', $r['expulsado_estado'], $r['expulsado_pais']) . '</b></td>
+		$txt .= '
+<tr><td valign="top" nowrap="nowrap">'.($r['estado'] == 'expulsado'?'<img src="'.IMG.'expulsar.gif" alt="Expulsado" border="0" /> ':'<img src="'.IMG.'cargos/0.gif" border="0" /> ').'<b>' . crear_link($r['tiempo'], 'nick', $r['expulsado_estado'], $r['expulsado_pais']) . '</b></td>
 <td valign="top">'.$r['expulsado_pais'].'</td>
 <td valign="top" align="right" valign="top" nowrap="nowrap"><acronym title="' . $r['expire'] . '">' . $duracion . '</acronym></td>
 <td valign="top">'.crear_link($r['nick_autor']).'</td>
 <td valign="top"><b style="font-size:13px;">' . $r['razon'] . '</b></td>
-<td valign="top" align="center">' . $expulsar . '</td></tr>' . "\n";
+<td valign="top" align="center">' . $expulsar . '</td>
+<td>'.(isset($sc[$pol['user_ID']])&&$r['motivo']!=''?'<a href="/control/expulsiones/info/'.$r['ID'].'/">#</a>':'').'</td>
+</tr>' . "\n";
 
 		}
 		$txt .= '</table><hr /><p>Las expulsiones son ejecutadas por los desarrolladores a cualquier usuario que no ejerzan ningun cargo en su pais.</p>

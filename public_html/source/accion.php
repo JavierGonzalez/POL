@@ -200,6 +200,7 @@ case 'pass':
 			mail($email, $asunto, $mensaje, "FROM: VirtualPOL <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
 
 			mysql_query("UPDATE users SET pass = '".md5($new_pass)."' WHERE ID = '".$user_ID."' LIMIT 1", $link);
+			echo 'OK';
 		}	
 
 	}
@@ -265,15 +266,16 @@ LIMIT 1", $link);
 case 'expulsar':
 	$sc = get_supervisores_del_censo();
 	if ((isset($sc[$pol['user_ID']])) AND ($_GET['b'] == 'desexpulsar') AND ($_GET['ID'])) {
-		$result = mysql_query("SELECT ID, user_ID, tiempo  FROM ".SQL_EXPULSIONES." WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, user_ID, tiempo  FROM expulsiones WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
 		while ($r = mysql_fetch_array($result)) {
 			mysql_query("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$r['user_ID']."' LIMIT 1", $link);
-			mysql_query("UPDATE ".SQL_EXPULSIONES." SET estado = 'cancelado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+			mysql_query("UPDATE expulsiones SET estado = 'cancelado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
 			evento_chat('<span class="expulsado"><img src="'.IMG.'expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>');
 		}
 
-	} elseif ((isset($sc[$pol['user_ID']])) AND ($_POST['razon']) AND ($_POST['nick'] != 'GONZO') AND ($_POST['nick'])) { 
-		// El usuario GONZO (#1) es Supervisor del Censo vitalicio, inexpulsable, por ser el Administrador.
+	} elseif ((isset($sc[$pol['user_ID']])) AND ($_POST['razon']) AND ($_POST['nick']) AND ($_POST['nick'] != 'GONZO') AND (!in_array($_POST['nick'], $sc))) { 
+		// El usuario GONZO (#1) es Supervisor del Censo vitalicio e inexpulsable, por ser el Administrador.
+		// SC no puede expulsar a SC.
 
 		if ($_POST['caso']) { $_POST['razon'] .= ' caso '.$_POST['caso']; }
 
@@ -283,7 +285,7 @@ case 'expulsar':
 		while ($r = mysql_fetch_array($result)) {
 			mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 			
-			mysql_query("INSERT INTO ".SQL_EXPULSIONES." (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
+			mysql_query("INSERT INTO expulsiones (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
 
 			evento_chat('<span class="expulsado"><img src="'.IMG.'expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['nick'].'</b> ha sido expulsado de VirtualPol. Razon: <b>'.$_POST['razon'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>');
 		}
@@ -309,7 +311,7 @@ case 'voto':
 		$result = mysql_query("SELECT ID FROM users WHERE ID = '".$_GET['ID']."'", $link);
 		while ($r = mysql_fetch_array($result)) { $nick_existe = true; }
 
-		if (($nick_existe == true) AND ($num_votos <= VOTO_CONFIANZA_MAX)) {
+		if (($nick_existe == true) AND (($_REQUEST['voto_confianza'] == '0') OR ($num_votos < VOTO_CONFIANZA_MAX))) {
 			if ($hay_voto == true) {
 				// update
 				mysql_query("UPDATE ".SQL_VOTOS." SET voto = '".$_REQUEST['voto_confianza']."', time = '".$date."' WHERE estado = 'confianza' AND uservoto_ID = '".$pol['user_ID']."' AND user_ID = '".$_GET['ID']."' LIMIT 1", $link);

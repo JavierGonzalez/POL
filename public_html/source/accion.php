@@ -135,11 +135,13 @@ case 'vaciar_listas':
 	break;
 
 case 'historia':
+	$sc = get_supervisores_del_censo();
+
 	$_POST['hecho'] = trim($_POST['hecho']);
 	if (($_GET['b'] == 'add') AND ($_POST['hecho'] != '')) {
 		mysql_query("INSERT INTO hechos (time, nick, texto, estado, time2, pais) VALUES ('".$_POST['year']."-".$_POST['mes']."-".$_POST['dia']."', '".$pol['nick']."', '".strip_tags($_POST['hecho'],'<b>,<a>')."', 'ok', '".$date."', '".$_POST['pais']."')", $link);
 	} elseif ($_GET['b'] == 'del') {
-		mysql_query("UPDATE hechos SET estado = 'del' WHERE ID = '".$_GET['ID']."' AND (nick = '".$pol['nick']."' OR '".$pol['nivel']."' = '100') LIMIT 1", $link);
+		mysql_query("UPDATE hechos SET estado = 'del' WHERE ID = '".$_GET['ID']."' AND (nick = '".$pol['nick']."' OR '".$pol['nivel']."' = '100' OR '".$sc[$pol['user_ID']]."' != '') LIMIT 1", $link);
 	}
 
 
@@ -277,7 +279,7 @@ case 'expulsar':
 		// El usuario GONZO (#1) es Supervisor del Censo vitalicio e inexpulsable, por ser el Administrador.
 		// SC no puede expulsar a SC.
 
-		if ($_POST['caso']) { $_POST['razon'] .= ' caso '.$_POST['caso']; }
+		if ($_POST['caso']) { $_POST['razon'] .= ' caso '.ucfirst($_POST['caso']); }
 
 		$_POST['motivo'] = ereg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
 

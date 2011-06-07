@@ -2,6 +2,8 @@
 // Conecta con la base de datos, define constantes, carga el sistema de usuarios de VP, hace un par de gestiones rutinarias.
 include('inc-login.php');
 
+$txt_title = 'Autentificaci&oacute;n DNIe'; // Define el titulo de la pagina finalmente formada.
+
 // Obtiene si el usuario ya está autentificado o no.
 $dnie_autentificado = false;
 $result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND dnie = 'true'", $link);
@@ -77,7 +79,7 @@ $txt = '
 
 <p><em>Seguridad:</em> no se almacenar&aacute; ningun dato proporcionado por el DNIe u otro certificado en ninguna parte del sistema. Tan solo se almacena una miniaturizaci&oacute;n irreversible de esta informaci&oacute;n. De esta forma incluso ante el peor ataque posible (acceso a contrase&ntilde;as, claves y base de datos) no se podr&iacute;a obtener informaci&oacute;n alguna. La pasarela de autentificaci&oacute;n se conf&iacute;a totalmente a una empresa importante del sector llamada <a href="http://www.tractis.com/">Tractis</a>.</p>
 
-<p>Puedes ver el codigo fuente de <a href="http://code.google.com/p/virtualpol/source/browse/trunk/public_html/dnie.php?spec=svn572&r=572">esta aplicaci&oacute;n</a>.</p>';
+<p>Puedes ver el codigo fuente de <a href="http://code.google.com/p/virtualpol/source/browse/trunk/public_html/dnie.php">esta aplicaci&oacute;n</a>.</p>';
 
 // Carga el dise&ntilde;o completo de VirtualPol. Mucho HTML, CSS y poco m&aacute;s.
 include('theme.php');

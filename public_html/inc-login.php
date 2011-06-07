@@ -1,6 +1,8 @@
 <?php
 
-// LOGIN de www.virtualpol.com
+// ARREGLAR: este login es una copia redundante y simplificada del login principal (source/inc-login.php). Centralizar pronto.
+
+
 
 include('config.php'); // config raiz
 include('source/inc-functions.php'); // libreria de funciones basicas
@@ -20,22 +22,28 @@ if (!isset($_SESSION)) { session_start(); } // inicia sesion PHP
 
 // nucleo del sistema de usuarios, comienza la verificación
 if (isset($_COOKIE['teorizauser'])) {
-	$result = mysql_query("SELECT ID, pass, nick, estado, pols, pais, email, fecha_registro, rechazo_last FROM ".SQL_USERS." WHERE nick = '"  . trim($_COOKIE['teorizauser']) . "' LIMIT 1", $link);
-	while ($row = mysql_fetch_array($result)) { 
-		if (md5(CLAVE.$row['pass']) == $_COOKIE['teorizapass']) { // cookie pass OK
+	$result = mysql_query("SELECT ID, pass, nick, estado, pols, pais, email, fecha_registro, rechazo_last, cargo, nivel, dnie FROM users WHERE nick = '".trim($_COOKIE['teorizauser'])."' LIMIT 1", $link);
+	while ($r = mysql_fetch_array($result)) { 
+		if (md5(CLAVE.$r['pass']) == $_COOKIE['teorizapass']) { // cookie pass OK
 			$session_new = true;
-			$pol['nick'] = $row['nick'];
-			$pol['user_ID'] = $row['ID'];
-			$pol['pols'] = $row['pols'];
-			$pol['email'] = $row['email'];
-			$pol['estado'] = $row['estado'];
-			$pol['pais'] = $row['pais'];
-			$pol['rechazo_last'] = $row['rechazo_last'];
-			$pol['fecha_registro'] = $row['fecha_registro'];
+			$pol['nick'] = $r['nick'];
+			$pol['user_ID'] = $r['ID'];
+			$pol['pols'] = $r['pols'];
+			$pol['email'] = $r['email'];
+			$pol['estado'] = $r['estado'];
+			$pol['pais'] = $r['pais'];
+			$pol['rechazo_last'] = $r['rechazo_last'];
+			$pol['fecha_registro'] = $r['fecha_registro'];
 
 			// variables perdurables en la sesion, solo se guarda el nick e ID de usuario
-			$_SESSION['pol']['nick'] = $row['nick'];
-			$_SESSION['pol']['user_ID'] = $row['ID'];
+			$_SESSION['pol']['nick'] = $r['nick'];
+			$_SESSION['pol']['user_ID'] = $r['ID'];
+			$_SESSION['pol']['cargo'] = $r['cargo'];
+			$_SESSION['pol']['nivel'] = $r['nivel'];
+			$_SESSION['pol']['fecha_registro'] = $r['fecha_registro'];
+			$_SESSION['pol']['pais'] = $r['pais'];
+			$_SESSION['pol']['estado'] = $r['estado'];
+			$_SESSION['pol']['dnie'] = $r['dnie'];
 		}
 	}  
 }

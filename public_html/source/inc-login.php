@@ -1,6 +1,6 @@
 <?php
 include('../config.php');
-include('inc-functions.php');
+include(RAIZ.'source/inc-functions.php');
 
 //INIT
 $mtime = explode(' ', microtime()); 
@@ -15,7 +15,7 @@ if (isset($_COOKIE['teorizauser'])) {
 	session_start();
 	
 	if (!isset($_SESSION['pol'])) { //NO existe sesion
-		$result = mysql_query("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado FROM users WHERE nick = '" .mysql_real_escape_string($_COOKIE['teorizauser'])."' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado, dnie FROM users WHERE nick = '" .mysql_real_escape_string($_COOKIE['teorizauser'])."' LIMIT 1", $link);
 		while ($r = mysql_fetch_array($result)) {
 			if (md5(CLAVE.$r['pass']) == $_COOKIE['teorizapass']) {
 				$session_new = true;
@@ -26,6 +26,7 @@ if (isset($_COOKIE['teorizauser'])) {
 				$_SESSION['pol']['fecha_registro'] = $r['fecha_registro'];
 				$_SESSION['pol']['pais'] = $r['pais'];
 				$_SESSION['pol']['estado'] = $r['estado'];
+				$_SESSION['pol']['dnie'] = $r['dnie'];
 
 				/* Fuerza traza
 				header("Location: http://www.virtualpol.com/registrar/login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']); 

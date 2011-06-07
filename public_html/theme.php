@@ -69,7 +69,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 
-<td><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><b style="font-size:20px;">VirtualPol</b></a> <span style="color:grey;font-size:15px;">&nbsp; La primera plataforma auto-gestionada democr&aacute;ticamente</span></span></td>
+<td width="208"><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><img src="http://www.virtualpol.com/img/logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-11px 0 -9px -6px;" /></a></td><td><span style="color:grey;font-size:20x;">Plataforma democr&aacute;tica auto-gestionada</span></span></td>
 
 <td align="right"><?=$txt_perfil?></td>
 

@@ -58,6 +58,9 @@ border: 1px solid #000;
 <div id="header-in">
 
 <?php
+
+// ARREGLAR: este pedazo de trozo de codigo es un lamentable pero histórico trozo primienio. De las primeras lineas en construirse allá por el 2008. Hay que hacerlo de nuevo cuanto antes.
+
 unset($txt_header);
 if ($pol['msg'] > 0) { $num_msg = '<b style="font-size:18px;">' . $pol['msg'] . '</b>'; } else { $num_msg = $pol['msg']; }
 if ($pol['estado'] == 'ciudadano') { // ciudadano
@@ -100,40 +103,6 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 </span>
 <span class="azul"><a href="'.REGISTRAR.'"><b>Crear Ciudadano!</b></a></span> &nbsp; <a href="/info/recuperar-login/"><acronym title="Recuperar contrase&ntilde;a">?</acronym></a> &nbsp;';
 
-
-
-	// adsense
-	$ref = explode("/", $_SERVER['HTTP_REFERER']);
-	if ((false == true) && ($ref[2] != 'www.virtualpol.com') && ($ref[2] != 'meneame.net') && (!isset($adsense_exclude)) && ($_SERVER['REQUEST_URI'] != '/doc/empezar-en-pol/')) {
-		$txt = '
-<div style="float:right;"><a href="/doc/empezar-en-pol/">Ayuda? FAQ!</a></div>
-<div><table border="0" cellspacing="0" cellpadding="0" style="margin:-5px 0 4px 20px;"><tr><td>
-<script type="text/javascript"><!--
-google_ad_client = "pub-6223447893261020";
-google_ad_slot = "7807319072";
-google_ad_width = 250;
-google_ad_height = 250;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
-</td><td>
-
-<script type="text/javascript"><!--
-google_ad_client = "pub-6223447893261020";
-google_ad_slot = "7807319072";
-google_ad_width = 250;
-google_ad_height = 250;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-</td></tr></table></div>' . $txt;
-	}
-
 }
 ?>
 <div style="margin:10px 0 2px 0;">
@@ -148,7 +117,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 	<li class="current">
 		<a href="http://www.virtualpol.com/" title="VirtualPol"><img src="<?=IMG?>vp-logo.png" border="0" alt="VirtualPol" style="margin:-10px 0 -18px -14px;" /> &#9660;</a>
 			<ul>
-				<li><a href="http://vp.virtualpol.com/">Pa&iacute;s VP</a></li>
+				<li><a href="http://vp.virtualpol.com/">VP</a></li>
 				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
 				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo fuente</a></li>
 				<li><a href="https://www.ohloh.net/p/virtualpol/contributors">Desarrolladores</a></li>

@@ -8,6 +8,9 @@ $host[0] = str_replace('-dev', '', $host[0], $dev); // convierte subdominios "pa
 if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
 if ($dev) { define('DEV', '-dev'); } else { define('DEV', ''); }
 
+define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/'.(DEV=='-dev'?'devel':'real').'/');
+
+
 // Configuracion Paises y colores
 $vp['paises_congelados'] = array('POL', 'VULCAN', 'Hispania', 'Atlantis'); // aqui los paises que pasaron a ser historia (visibles pero inactivos)
 $vp['paises'] = array('VP', 'POL', 'VULCAN', 'Hispania', 'Atlantis'); // Quitar paises congelados cuando esté listo el estado "congelado".
@@ -52,15 +55,6 @@ default:
 
 define('COLOR_BG', $vp['bg'][PAIS]);
 define('COLOR_BG2', $vp['bg2'][PAIS]);
-
-// variables del sistema
-if (DEV == '-dev') {
-	// Version DEV
-	define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/devel/');
-} else {
-	// version REAL (www.virtualpol.com)
-	define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/real/');
-}
 
 define('HOST', $_SERVER['HTTP_HOST']);
 define('VERSION', '1.0 Beta');

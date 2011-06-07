@@ -10,6 +10,7 @@ function nucleo_acceso($tipo, $valor) {
 		case 'privado': if (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $valor))) { $rt = true; } break;
 		case 'nivel': if (($_SESSION['pol']['nivel'] >= $valor) AND ($_SESSION['pol']['pais'] == PAIS)) { $rt = true; } break;
 		case 'cargo': if (in_array($_SESSION['pol']['cargo'], explode(' ', $valor))) { $rt = true; } break;
+		case 'autentificado': if ($_SESSION['pol']['dnie'] == 'true') { $rt = true; } break;
 		case 'antiguedad': if (($_SESSION['pol']['fecha_registro']) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($valor*86400)))) { $rt = true; } break;
 		case 'ciudadanos_pais': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $rt = true; } break;
 		case 'ciudadanos': if ((isset($_SESSION['pol']['user_ID'])) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $rt = true; } break;

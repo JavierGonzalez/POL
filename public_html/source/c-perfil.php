@@ -199,15 +199,12 @@ $txt .= '
 <p>Referencia: <input style="background:#FFFFDD;border: 1px solid grey;" type="text" size="35" value="http://'.HOST.'/r/' . strtolower($nick) . '/" readonly="readonly" /><br />
 (Ganar&aacute;s <b>' . pols($pols_afiliacion) . ' '.MONEDA.'</b> por cada nuevo Ciudadano autentico que se registre por este enlace y cumpla el minimo tiempo online en sus 30 primeros dias)</p>
 
-<p>Clave API: <input class="api_box" type="text" size="12" value="' . $r['api_pass'] . '" readonly="readonly" /> ' . boton('Generar clave', '/accion.php?a=api&b=gen_pass', '&iquest;Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua no funcionar&aacute;.') . '<br />(Esta clave equivale a tu contrase&ntilde;a, mantenla en secreto. M&aacute;s info: <a href="http://www.virtualpol.com/api.php">API</a>)</p>
+<!--<p>Clave API: <input class="api_box" type="text" size="12" value="' . $r['api_pass'] . '" readonly="readonly" /> ' . boton('Generar clave', '/accion.php?a=api&b=gen_pass', '&iquest;Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua no funcionar&aacute;.') . ' (Equivale a tu contrase&ntilde;a, mantenla en secreto. M&aacute;s info: <a href="http://www.virtualpol.com/api.php">API</a>)</p>-->
 
-<p>' . boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel') . '</p>';
+<p>'.boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel').' 
+'.boton('Autentificar con DNIe', 'http://www.virtualpol.com/dnie.php').' 
+'.($pol['pais']!='ninguno'?boton('Rechazar Ciudadania', REGISTRAR).' ':'').'</p>
 
-			if ($pol['pais'] != 'ninguno') {
-				$txt .= '<p>' . boton('Ir a Rechazar Ciudadania', REGISTRAR) . '</p>';
-			}
-
-			$txt .= '
 <p><form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">Avatar: <input name="avatar" type="file" /><input type="submit" value="Cambiar Avatar" /> | ' . boton('Borrar Avatar', '/accion.php?a=avatar&b=borrar') . ' (jpg, max 1mb)</form></p>
 
 <p>

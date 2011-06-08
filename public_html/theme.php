@@ -18,7 +18,7 @@ if ($txt_title) { $txt_title .= ' | VirtualPol'; } else { $txt_title = 'VirtualP
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="language" content="es_ES" />
 <meta name="description" content="<?=$txt_description?>" />
-<link href="/img/style-home.css" rel="stylesheet" type="text/css" />
+<link href="<?=IMG?>style-home.css" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="/favicon.ico" />
 
 <script type="text/javascript">
@@ -29,7 +29,7 @@ window.google_analytics_uacct = "UA-59186-46";
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 
 <style type="text/css">
-body { background: <?=COLOR_BG?> url('/img/vp.gif') repeat fixed top left; }
+body { background: <?=COLOR_BG?> url('<?=IMG?>vp.gif') repeat fixed top left; }
 div#footer, div.column, div.content, div#header {
 border: 1px solid #cccccc;
 border-width: 0 2px 2px 0;
@@ -69,7 +69,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 
-<td width="208"><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><img src="http://www.virtualpol.com/img/logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-11px 0 -9px -6px;" /></a></td><td><span style="color:grey;font-size:20x;">Plataforma democr&aacute;tica auto-gestionada</span></span></td>
+<td width="208"><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><img src="<?=IMG?>logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-11px 0 -9px -6px;" /></a></td><td><span style="color:grey;font-size:20x;">Plataforma democr&aacute;tica auto-gestionada</span></span></td>
 
 <td align="right"><?=$txt_perfil?></td>
 
@@ -99,7 +99,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 </div>
 
-<script type="text/javascript" src="/img/scripts2.js"></script>
+<script type="text/javascript" src="<?=IMG?>scripts2.js"></script>
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-59186-46']);

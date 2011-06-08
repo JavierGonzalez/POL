@@ -38,6 +38,7 @@ $(document).ready(function(){
 	$("ul.sfn-menu").superfish(); 
 }); 
 defcon = <?=$pol['config']['defcon']?>;
+IMG = "<?=IMG?>";
 window.google_analytics_uacct = "UA-59186-46";
 </script>
 

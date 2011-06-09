@@ -59,7 +59,7 @@ ORDER BY nick ASC", $link);
 <th><acronym title="Salario por dia trabajado">Salario</acronym></th>
 <th>Cargos</th>
 <th colspan="2">Asigna</th>
-
+<th>ID</th>
 </tr>';
 
 	$cargos = cargos();
@@ -106,7 +106,8 @@ ORDER BY nick ASC", $link);
 <td valign="top" nowrap="nowrap">' . $ico . '<b>' . $r['nombre'] . '</b></td>
 <td align="right" valign="top">' . pols($r['salario']) . '</td>
 <td valign="top">' . $num . ' <b>' . $c_nicks . '</b></td><td valign="top" nowrap="nowrap">' . $asignado_por . '</td>
-<td valign="top">' . $p_edit . '</td></tr>';
+<td valign="top">' . $p_edit . '</td>
+<td valign="top" align="right" style="color:grey;">'.$r['ID'].'</td></tr>';
 	}
 	$txt .= '</table>';
 

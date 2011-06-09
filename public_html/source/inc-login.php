@@ -15,7 +15,7 @@ if (isset($_COOKIE['teorizauser'])) {
 	session_start();
 	
 	if (!isset($_SESSION['pol'])) { //NO existe sesion
-		$result = mysql_query("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado, dnie FROM users WHERE nick = '" .mysql_real_escape_string($_COOKIE['teorizauser'])."' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado, dnie, voto_confianza FROM users WHERE nick = '" .mysql_real_escape_string($_COOKIE['teorizauser'])."' LIMIT 1", $link);
 		while ($r = mysql_fetch_array($result)) {
 			if (md5(CLAVE.$r['pass']) == $_COOKIE['teorizapass']) {
 				$session_new = true;
@@ -27,12 +27,8 @@ if (isset($_COOKIE['teorizauser'])) {
 				$_SESSION['pol']['pais'] = $r['pais'];
 				$_SESSION['pol']['estado'] = $r['estado'];
 				$_SESSION['pol']['dnie'] = $r['dnie'];
+				$_SESSION['pol']['confianza'] = $r['voto_confianza'];
 
-				/* Fuerza traza
-				header("Location: http://www.virtualpol.com/registrar/login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']); 
-				mysql_close($link); 
-				exit;
-				*/
 			}
 		}  
 	}
@@ -42,9 +38,7 @@ if (isset($_COOKIE['teorizauser'])) {
 
 	// Control del tiempo para responder un examen. Puesto aquí para que sirva también para eliminar $_SESION['examen'] si se empieza un examen y no se reciben las respuestas. 
 	if (isset($_SESSION['examen'])) {
-		if (($_SESSION['examen']['tiempo'] + 10) <= time()) {
-			unset($_SESSION['examen']);
-		} 
+		if (($_SESSION['examen']['tiempo'] + 10) <= time()) { unset($_SESSION['examen']); } 
 	}
 }
 
@@ -74,9 +68,6 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 		$fecha_init = $r['fecha_init'];
 		$fecha_last = $r['fecha_last'];
 
-		$_SESSION['pol']['cargo'] = $r['cargo'];
-		$_SESSION['pol']['nivel'] = $r['nivel'];
-
 		if (($r['pais'] != PAIS) AND ($pol['estado'] == 'ciudadano')) { 
 			// es extranjero
 			$pol['estado'] = 'extranjero';
@@ -85,14 +76,12 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 			$pol['pols'] = 0;
 		}
 
-
 		// Si no se han aceptado las nuevas condiciones obliga a aceptarlas.
 		if (($r['fecha_legal'] == '0000-00-00 00:00:00') AND ($_GET['a'] != 'aceptar-condiciones')) {
 			if ($link) { mysql_close($link); }
 			header('Location: http://www'.DEV.'.'.URL.'/legal');
 			exit;
 		}
-
 
 	}
 
@@ -111,19 +100,17 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 
 
 	// EXPULSADO?
-	$result = mysql_query("SELECT expire FROM ".SQL."ban WHERE estado = 'activo' AND (user_ID = '" . $pol['user_ID'] . "' OR (IP != '0' AND IP = '" . $IP . "')) LIMIT 1", $link);
+	$result = mysql_query("SELECT expire FROM ".SQL."ban WHERE estado = 'activo' AND (user_ID = '".$pol['user_ID']."' OR (IP != '0' AND IP = '" . $IP . "')) LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){ 
 		if ($r['expire'] < $date) { // DESBANEAR!
-			mysql_query("UPDATE LOW_PRIORITY ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '" . $date . "'", $link); 
+			mysql_query("UPDATE LOW_PRIORITY ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '".$date."'", $link); 
 		} else { // BANEADO 
 			$pol['estado'] = 'kickeado';
 		}
 	}
 
-	switch ($pol['estado']) {
-		case 'expulsado': unset($_SESSION['pol']['nick']); break;
-	}
+	if ($pol['estado'] == 'expulsado') {  session_unset(); session_destroy(); }
 }
-unset($fecha_init, $fecha_last);
 
+unset($fecha_init, $fecha_last);
 ?>

@@ -74,6 +74,8 @@ function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 </select></li>' . "\n";
 					break;
 
+
+
 			}
 		}
 	}
@@ -97,8 +99,11 @@ case 'crear-documento':
 	$txt .= '<p>Formulario para crear un nuevo documento en '.PAIS.'.</p>';
 
 	$pol_form = array(
-	array('type'=>'select_nivel'),
 	array('type'=>'select_cat'),
+	array('type'=>'hidden', 'name'=>'acceso_leer', 'value'=>'anonimos'),
+	array('type'=>'hidden', 'name'=>'acceso_escribir', 'value'=>'privado'),
+	array('type'=>'hidden', 'name'=>'acceso_cfg_leer', 'value'=>''),
+	array('type'=>'hidden', 'name'=>'acceso_cfg_escribir', 'value'=>strtolower($pol['nick'])),
 	array('type'=>'text', 'name'=>'title', 'size'=>'60', 'maxlegth'=>'200', 'nombre'=>'T&iacute;tulo', 'desc'=>'Frase &uacute;nica a modo de titular del documento.'),
 	array('type'=>'textrico', 'name'=>'text', 'size'=>'10', 'nombre'=>'Documento'),
 	);

@@ -1,13 +1,13 @@
 <?php
 session_start(); 
-if ((isset($_COOKIE['teorizauser'])) AND (!isset($_SESSION['pol']['user_ID']))) { include('inc-login.php'); } // No hay login, hace login
+if ((isset($_COOKIE['teorizauser'])) AND (!isset($_SESSION['pol']['user_ID']))) { include('inc-login.php'); } // Si no hay login, hace login basico
 else { include('../config-pwd.php'); $link = @conectar(); } // Conecta MySQL solo
 header('connection: close');
 header('Content-Type: text/plain');
 
 $host = explode('.', $_SERVER['HTTP_HOST']);
 define('pais', str_replace('-dev', '', $host[0], $dev));
-define('PAIS', strtoupper(pais)); // POSIBLE ERROR FUTURO: si se crea un pais con minusculas en el nombre esto corrompera el nucleo de acceso
+define('PAIS', strtoupper(pais)); // ARREGLAR: si se crea un pais con minusculas en el nombre esto corrompera el nucleo de acceso
 
 define('SQL', strtolower(pais).'_');
 
@@ -21,14 +21,15 @@ c - print comando
 
 
 if ($_REQUEST['a'] != 'whois') {
-// ### IMPORTANTE: MANTENER FUNCION IGUAL QUE SU COPIA IDENTICA EN inc-functions.php (duplicación por optimizacion)
+// ### IMPORTANTE: MANTENER FUNCION IGUAL QUE SU COPIA IDENTICA EN inc-functions.php (duplicación por optimizacion (para evitar cargar archivo de funciones))
 // ### NUCLEO ACCESO 3.0
-function nucleo_acceso($tipo, $valor) {
+function nucleo_acceso($tipo, $valor='') {
 	global $_SESSION;
 	$rt = false;
 	switch ($tipo) {
 		case 'excluir': if (!in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $valor))) { $rt = true; } break;
 		case 'privado': if (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $valor))) { $rt = true; } break;
+		case 'confianza': if ($_SESSION['pol']['confianza'] >= $valor) { $rt = true; } break;
 		case 'nivel': if (($_SESSION['pol']['nivel'] >= $valor) AND ($_SESSION['pol']['pais'] == PAIS)) { $rt = true; } break;
 		case 'cargo': if (in_array($_SESSION['pol']['cargo'], explode(' ', $valor))) { $rt = true; } break;
 		case 'autentificado': if ($_SESSION['pol']['dnie'] == 'true') { $rt = true; } break;
@@ -36,6 +37,8 @@ function nucleo_acceso($tipo, $valor) {
 		case 'ciudadanos_pais': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $rt = true; } break;
 		case 'ciudadanos': if ((isset($_SESSION['pol']['user_ID'])) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $rt = true; } break;
 		case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $rt = true; } break;
+		
+		case 'print': return array('privado'=>'Ciudadano1 C2 C3 ...', 'excluir'=>'Ciudadano1 C2 C3 ...', 'confianza'=>'0', 'cargo'=>'cargo_ID1 cID2 cID3 ...', 'nivel'=>'1', 'antiguedad'=>'365', 'autentificado'=>'', 'ciudadanos_pais'=>'', 'ciudadanos'=>'', 'anonimos'=>''); exit;
 	}
 	return $rt;
 }
@@ -44,15 +47,13 @@ function nucleo_acceso($tipo, $valor) {
 
 
 function acceso_check($chat_ID, $ac=null) {
-global $link, $_SESSION;
-if (isset($ac)) { $check = array($ac); } else { $check = array('leer','escribir'); }
-$result = mysql_query("SELECT HIGH_PRIORITY acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir, pais FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
-while ($r = mysql_fetch_array($result)) { 
-	foreach ($check AS $a) {
-		$acceso[$a] = nucleo_acceso($r['acceso_'.$a], $r['acceso_cfg_'.$a]);
+	global $link, $_SESSION;
+	if (isset($ac)) { $check = array($ac); } else { $check = array('leer','escribir'); }
+	$result = mysql_query("SELECT HIGH_PRIORITY acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir, pais FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
+	while ($r = mysql_fetch_array($result)) { 
+		foreach ($check AS $a) { $acceso[$a] = nucleo_acceso($r['acceso_'.$a], $r['acceso_cfg_'.$a]); }
 	}
-}
-if (isset($ac)) { return $acceso[$ac]; } else { return $acceso; }
+	if (isset($ac)) { return $acceso[$ac]; } else { return $acceso; }
 }
 
 

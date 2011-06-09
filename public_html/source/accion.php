@@ -1095,62 +1095,68 @@ case 'pols':
 	break;
 
 
-case 'referendum':
+case 'votacion':
 
 	if ($_GET['b'] == 'crear') {
 		$sc = get_supervisores_del_censo();
 		if (($pol['nivel'] >= 95) OR ($pol['cargos']['41']) OR (isset($sc[$pol['user_ID']]))) { 
 
+			if ($_POST['tipo'] == 'parlamento') { $_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22'; }
 
-			for ($i=0;$i<10;$i++) {
-				if ($_POST['respuesta'.$i]) { $respuestas .= trim($_POST['respuesta'.$i]).'|'; }
-			}
+			for ($i=0;$i<10;$i++) { if ($_POST['respuesta'.$i]) { $respuestas .= trim($_POST['respuesta'.$i]).'|'; } }
 
 			$time_expire = date('Y-m-d H:i:s', time() + $_POST['time_expire']);
 			$_POST['pregunta'] = strip_tags($_POST['pregunta']);
 			$_POST['descripcion'] = gen_text($_POST['descripcion'], 'plain');
-			mysql_query("INSERT INTO ".SQL."ref (pregunta, descripcion, respuestas, time, time_expire, user_ID, estado, tipo) VALUES ('".$_POST['pregunta']."', '".$_POST['descripcion']."', '".$respuestas."', '".$date."', '".$time_expire."', '".$pol['user_ID']."', 'ok', '".$_POST['tipo']."')", $link);
+			
+			mysql_query("INSERT INTO votacion (pais, pregunta, descripcion, respuestas, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar) VALUES ('".PAIS."', '".$_POST['pregunta']."', '".$_POST['descripcion']."', '".$respuestas."', '".$date."', '".$time_expire."', '".$pol['user_ID']."', 'ok', '".$_POST['tipo']."', '".$_POST['acceso_votar']."', '".$_POST['acceso_cfg_votar']."')", $link);
 
-			$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."ref WHERE user_ID = '".$pol['user_ID']."' ORDER BY ID DESC LIMIT 1", $link);
+			$result = mysql_query("SELECT ID FROM votacion WHERE user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' ORDER BY ID DESC LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $ref_ID = $r['ID']; }
-			evento_chat('<b>['.strtoupper($_POST['tipo']).']</b> Creado por '.$pol['nick'].': <a href="/referendum/'.$ref_ID.'/"><b>'.$_POST['pregunta'].'</b></a> <span style="color:grey;">('.duracion($_POST['time_expire']).')</span>');
+
+			evento_chat('<b>['.strtoupper($_POST['tipo']).']</b> Creado por '.$pol['nick'].': <a href="/votacion/'.$ref_ID.'/"><b>'.$_POST['pregunta'].'</b></a> <span style="color:grey;">('.duracion($_POST['time_expire']).')</span>');
 		}
 	} elseif (($_GET['b'] == 'votar') AND ($_POST['voto'] != null) AND ($_POST['ref_ID'])) { 
 
-			//2008-11-21 22:00:00
-			$result = mysql_unbuffered_query("SELECT fecha_registro FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+
+			$result = mysql_query("SELECT fecha_registro FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $fecha_registro = $r['fecha_registro']; }
 
-			$result = mysql_unbuffered_query("SELECT tipo, pregunta, estado FROM ".SQL."ref WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
-			while($r = mysql_fetch_array($result)){ $tipo = $r['tipo']; $pregunta = $r['pregunta']; $estado = $r['estado']; }
+			$result = mysql_query("SELECT pais, tipo, pregunta, estado, acceso_votar, acceso_cfg_votar FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)){ $tipo = $r['tipo']; $pregunta = $r['pregunta']; $estado = $r['estado']; $pais = $r['pais']; $acceso_votar = $r['acceso_votar']; $acceso_cfg_votar = $r['acceso_cfg_votar']; }
 
-			$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."estudios_users WHERE user_ID = '".$pol['user_ID']."' AND cargo = '1' AND ID_estudio = '6' LIMIT 1", $link);
+			$result = mysql_query("SELECT ID FROM ".SQL."estudios_users WHERE user_ID = '".$pol['user_ID']."' AND cargo = '1' AND ID_estudio = '6' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $es_diputado = true; }
 
-			if (($estado == 'ok') AND (($tipo == 'sondeo') OR ($tipo == 'referendum') OR (($tipo == 'parlamento') AND ($es_diputado)))) {
-				$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."ref_votos WHERE user_ID = '".$pol['user_ID']."' AND ref_ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
+			if (($estado == 'ok') AND ($pais == PAIS) AND (($tipo == 'sondeo') OR ($tipo == 'referendum') OR ($tipo == 'parlamento')) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar))) {
+				$result = mysql_query("SELECT ID FROM votacion_votos WHERE user_ID = '".$pol['user_ID']."' AND ref_ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $ha_votado = true; }
 				if ((!$ha_votado) AND (strtotime($fecha_registro) < (time() - 86400))) {
-					mysql_query("INSERT INTO ".SQL."ref_votos (user_ID, ref_ID, voto) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."')", $link);
-					mysql_query("UPDATE ".SQL."ref SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
+					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."')", $link);
+					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 
-					evento_chat('<b>['.strtoupper($tipo).']</b> Voto de  '.$pol['nick'].' en: <a href="/referendum/'.$_POST['ref_ID'].'/">'.$pregunta.'</a>');
+					evento_chat('<b>['.strtoupper($tipo).']</b> Voto de  '.$pol['nick'].' en: <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a>');
 				}
 			}
 
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['ID'])) { 
-		mysql_query("DELETE FROM ".SQL."ref WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		mysql_query("DELETE FROM ".SQL."ref_votos WHERE ref_ID = '".$_GET['ID']."'", $link);
+		mysql_query("DELETE FROM votacion WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
+		mysql_query("DELETE FROM votacion_votos WHERE ref_ID = '".$_GET['ID']."'", $link);
 	}
 
 	// actualizar info en theme
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."ref WHERE estado = 'ok'", $link);
+	$result = mysql_query("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
 	while($r = mysql_fetch_array($result)) {
 		mysql_query("UPDATE ".SQL."config SET valor = '".$r['num']."' WHERE dato = 'info_consultas' LIMIT 1", $link);
 	}
 
-	$refer_url = 'referendum/';
+	$refer_url = 'votacion/';
 	break;
+
+
+
+
+
 
 
 case 'foro':

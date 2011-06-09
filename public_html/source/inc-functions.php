@@ -2,12 +2,13 @@
 
 
 // ### NUCLEO ACCESO 3.0
-function nucleo_acceso($tipo, $valor) {
+function nucleo_acceso($tipo, $valor='') {
 	global $_SESSION;
 	$rt = false;
 	switch ($tipo) {
 		case 'excluir': if (!in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $valor))) { $rt = true; } break;
 		case 'privado': if (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', $valor))) { $rt = true; } break;
+		case 'confianza': if ($_SESSION['pol']['confianza'] >= $valor) { $rt = true; } break;
 		case 'nivel': if (($_SESSION['pol']['nivel'] >= $valor) AND ($_SESSION['pol']['pais'] == PAIS)) { $rt = true; } break;
 		case 'cargo': if (in_array($_SESSION['pol']['cargo'], explode(' ', $valor))) { $rt = true; } break;
 		case 'autentificado': if ($_SESSION['pol']['dnie'] == 'true') { $rt = true; } break;
@@ -15,6 +16,8 @@ function nucleo_acceso($tipo, $valor) {
 		case 'ciudadanos_pais': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $rt = true; } break;
 		case 'ciudadanos': if ((isset($_SESSION['pol']['user_ID'])) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $rt = true; } break;
 		case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $rt = true; } break;
+		
+		case 'print': return array('privado'=>'Ciudadano1 C2 C3 ...', 'excluir'=>'Ciudadano1 C2 C3 ...', 'confianza'=>'0', 'cargo'=>'cargo_ID1 cID2 cID3 ...', 'nivel'=>'1', 'antiguedad'=>'365', 'autentificado'=>'', 'ciudadanos_pais'=>'', 'ciudadanos'=>'', 'anonimos'=>''); exit;
 	}
 	return $rt;
 }

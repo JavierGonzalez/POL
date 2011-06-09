@@ -69,11 +69,11 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 	while ($r = mysql_fetch_array($result)) { 
 
 		$txt_title = 'Chat: '.$r['titulo'].' | Opciones';
-		$acceso_tipos = array('privado'=>'Ciudadano1 C2 C3 ...', 'excluir'=>'Ciudadano1 C2 C3 ...', 'nivel'=>'1', 'antiguedad'=>'365', 'autentificado'=>'', 'ciudadanos_pais'=>'', 'ciudadanos'=>'', 'anonimos'=>'');
-		foreach ($acceso_tipos AS $at => $at_var) { 
+
+		foreach (nucleo_acceso('print') AS $at => $at_var) { 
 			$txt_li['leer'] .= '<input type="radio" name="acceso_leer" value="'.$at.'"'.($at==$r['acceso_leer']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_leer_var\').val(\''.$at_var.'\');" /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
 		}
-		foreach ($acceso_tipos AS $at => $at_var) { 
+		foreach (nucleo_acceso('print') AS $at => $at_var) { 
 			$txt_li['escribir'] .= '<input type="radio" name="acceso_escribir" value="'.$at.'"'.($at==$r['acceso_escribir']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_escribir_var\').val(\''.$at_var.'\');" /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
 		}
 
@@ -160,7 +160,7 @@ FROM chats ORDER BY estado ASC, online DESC, fecha_creacion ASC", $link);
 
 <td valign="top" style="background:#F97E7B;">'.($r['acceso_cfg_escribir']?'<acronym title="['.$r['acceso_cfg_escribir'].']">':'').ucfirst($r['acceso_escribir']).($r['acceso_cfg_escribir']?'</acronym>':'').'</td>
 
-<td valign="top" align="right" style="font-size:12px;padding:0 0 0 5px;"><b>'.$r['stats_visitas'].'</b></td>
+<td valign="top" align="right">'.$r['stats_visitas'].'</td>
 
 <td valign="top">'.($r['user_ID']==0?'<em>Sistema</em>':crear_link($r['fundador'])).'</td>
 <td valign="top" align="right" nowrap="nowrap">'.duracion(time() - strtotime($r['fecha_creacion'])).'</td>

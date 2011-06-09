@@ -7,7 +7,7 @@ function gen_grafico($datos, $fecha='', $cero=false) {
 	 
 
 	if ($cero) { $datos = strtr(chart_data($datos), 'A', '_'); } else { $datos = chart_data($datos); }
-	return 'http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|___|'.$dato_last.'&chd=s:'.$datos.'&chf=bg,s,FFFFDD,0&chco=0066FF&chm=B,FFFFFF,0,0,0';
+	return 'http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|___|'.$dato_last.'&chd=s:'.$datos.'&chf=bg,s,ffffff01|c,s,ffffff01&chco=0066FF&chm=B,FFFFFF,0,0,0';
 }
 
 function gen_datos($datos, $cero=false, $datos2=false) {
@@ -168,11 +168,11 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as, '.round($i/365, 2).
 <p class="amarillo">
 
 <b>1.1 <span style="color:#0000FF;">Ciudadanos</span>/<span style="color:#FF0000;">paises</span></b> (<a href="/info/censo/">Ver censo</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['ciudadanos'], false, $d['paises']):gen_datos($d['ciudadanos'], false)).'" alt="Ciudadanos/paises" border="0" />
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['ciudadanos'], false, $d['paises']):gen_datos($d['ciudadanos'], false)).'" alt="Ciudadanos/paises" border="0" />
 
 
 <br /><b>1.2 Ciudadanos <span style="color:#0000FF;">nuevos</span>/<span style="color:#FF0000;">expirados</span></b>  (<a href="/info/censo/nuevos/">Ver nuevos</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['nuevos'], false, $d['eliminados']):gen_datos($d['nuevos'], false)).'" alt="Ciudadanos nuevos/expirados" border="0" />
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['nuevos'], false, $d['eliminados']):gen_datos($d['nuevos'], false)).'" alt="Ciudadanos nuevos/expirados" border="0" />
 </p>
 
 
@@ -188,7 +188,7 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as, '.round($i/365, 2).
 <img src="'.gen_grafico($d['partidos']).'" alt="Partidos" border="0" />
 
 <br /><b>2.4 <span style="color:#0000FF;">Empresas</span>/<span style="color:#FF0000;">transacciones</span></b> (<a href="/empresas/">Ver empresas</a> , <a href="/pols/">Ver transferencias</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,FFFFDD,0&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['empresas'], true, $d['transacciones']):gen_datos($d['empresas'], true)).'" alt="Empresas" border="0" />
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['empresas'], true, $d['transacciones']):gen_datos($d['empresas'], true)).'" alt="Empresas" border="0" />
 
 
 <br /><b>2.5 Confianza general</b> (<a href="/info/confianza/">Ver confianza</a>)<br />
@@ -248,7 +248,7 @@ ORDER BY num DESC", $link);
 <img src="http://chart.apis.google.com/chart?cht=p&chs=420x300
 &chd=t:'.implode(',', $g_datos).','.$g_otros.'
 &chl='.implode('|', $g_siglas).'|Otros
-&chf=bg,s,FFFFDD,0" alt="Afiliados por partido" title="Afiliados por partido" />
+&chf=bg,s,ffffff01|c,s,ffffff01" alt="Afiliados por partido" title="Afiliados por partido" />
 </td>';
 		unset($g_siglas, $g_datos);
 	}

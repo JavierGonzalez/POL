@@ -73,7 +73,13 @@ if ($_GET['a']) {
 		// CAT
 		$txt .= '<div class="amarillo"><b style="font-size:20px;padding:15px;color:green;">' . $r['nombre'] . '</b></div>';
 		
-		$txt .= '<table border="0" cellspacing="2" cellpadding="0" class="pol_table" width="100%">';
+		$txt .= '<table border="0" cellspacing="0" cellpadding="4" class="pol_table" width="100%">
+<tr>
+<th></th>
+<th>Lectura</th>
+<th>Escritura</th>
+<th align="right">Edici&oacute;n</th>
+</tr>';
 		
 		$result2 = mysql_query("SELECT title, url, time, estado, time_last, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir
 FROM docs
@@ -89,7 +95,6 @@ ORDER BY title ASC", $link);
 <td valign="top" style="background:#F97E7B;">'.($r2['acceso_cfg_escribir']?'<acronym title="['.$r2['acceso_cfg_escribir'].']">':'').ucfirst($r2['acceso_escribir']).($r2['acceso_cfg_escribir']?'</acronym>':'').'</td>
 
 <td align="right">' . str_replace(' ', '&nbsp;', duracion(time() - strtotime($r2['time_last']))) . '</td>
-<td>'.explodear(' ', $r2['time'], 0).'</td>
 </tr>'."\n";
 
 		}

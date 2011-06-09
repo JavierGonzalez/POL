@@ -368,7 +368,7 @@ ORDER BY time DESC LIMIT 1", $link);
 
 
 	$txt .= '<center>
-<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato . '&chs=362x220&chl=' . $chart_nom . '&chf=bg,s,FFFFDD,0&chp=3.14" alt="Escrutinio Presidenciales" />
+<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato . '&chs=362x220&chl=' . $chart_nom . '&chf=bg,s,ffffff01|c,s,ffffff01&chp=3.14" alt="Escrutinio Presidenciales" />
 
 <table border="0" class="pol_table">
 <tr>
@@ -543,7 +543,7 @@ ORDER BY time DESC LIMIT 1", $link);
 	}
 
 	if ($pol['config']['elecciones'] == 'parl') {
-		$txt .= '<center><img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato . '&chs=362x220&chl=' . $chart_nom . '&chf=bg,s,FFFFDD,0&chp=3.14" alt="Escrutinio Parlamentarias" />';
+		$txt .= '<center><img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato . '&chs=362x220&chl=' . $chart_nom . '&chf=bg,s,ffffff01|c,s,ffffff01&chp=3.14" alt="Escrutinio Parlamentarias" />';
 	} else {
 		$txt .= '<center>';
 		//<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato_escaños . ',' . $chart_dato . '&chs=362x220&chl=|' . $chart_nom . '&chco=FFFFDD,FF8000&chf=bg,s,FFFFDD,0" alt="Esca&ntilde;os Parlamentarias" />
@@ -573,7 +573,7 @@ ORDER BY time DESC LIMIT 1", $link);
 &chdl=' . $g_eh_datos . '
 &chma=42
 &chco=000080,ff0000,1e90ff,688e23,d87093,800080,b22222,696969,ff1493,ff8c00,006400,b8860b,008b8b,8a2be2,ff00ff
-&chf=bg,s,FFFFDD,0
+&chf=bg,s,ffffff01|c,s,ffffff01
 &chxl=0:|0|' . ($votos_max_pres / 2) . '|' . $votos_max_pres . '|1:|' . $historial_tipo_pres . '" alt="Historico de Elecciones Presidenciales"  />
 
 
@@ -595,7 +595,7 @@ ORDER BY time DESC LIMIT 1", $link);
 &chdl=' . $g_parl_datos . '
 &chma=42
 &chco=000080,ff0000,1e90ff,688e23,d87093,800080,b22222,696969,ff1493,ff8c00,006400,b8860b,008b8b,8a2be2,ff00ff
-&chf=bg,s,FFFFDD,0
+&chf=bg,s,ffffff01|c,s,ffffff01
 &chxl=0:|0|' . ($votos_max_parl / 2) . '|' . $votos_max_parl . '|1:|' . $historial_tipo_parl . '" alt="Historico de Elecciones Parlamentarias"  />
 
 
@@ -609,7 +609,7 @@ ORDER BY time DESC LIMIT 1", $link);
 <h1 style="margin-bottom:5px;">Participaci&oacute;n</h1>
 <center>
 
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=740x250&chls=3,1,0|3,1,0&chxt=y,r,x&chxl=0:|Votos|' . round($historial_v_max / 2) . '|' . $historial_v_max . '|1:|Participacion|50%|100%|2:|' . $historial_tipo . '&chds=0,' . $historial_v_max . ',0,100&chd=t:' . $historial_v . '|' . $historial_p . '&chf=bg,s,FFFFDD,0&chco=0066FF,FF0000&chm=B,FFFFFF,0,0,0&chxs=0,0066FF,14|1,FF0000,14" alt="Historial de participacion"  /></center>
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=740x250&chls=3,1,0|3,1,0&chxt=y,r,x&chxl=0:|Votos|' . round($historial_v_max / 2) . '|' . $historial_v_max . '|1:|Participacion|50%|100%|2:|' . $historial_tipo . '&chds=0,' . $historial_v_max . ',0,100&chd=t:' . $historial_v . '|' . $historial_p . '&chf=bg,s,ffffff01|c,s,ffffff01&chco=0066FF,FF0000&chm=B,FFFFFF,0,0,0&chxs=0,0066FF,14|1,FF0000,14" alt="Historial de participacion"  /></center>
 
 </td></tr>';
 	

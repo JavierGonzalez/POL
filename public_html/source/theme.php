@@ -198,7 +198,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 							<li><a href="/control/expulsiones/">Expulsiones</a></li>
 							<li><a href="/control/judicial/">Judicial</a></li>
 							<li><a href="/mapa/propiedades/">Propiedades del Estado</a></li>
-							<li><a href="/referendum/crear/">Sondeos</a></li>
+							<li><a href="/votacion/crear/">Votaciones</a></li>
 						</ul>
 					</li>
 
@@ -213,7 +213,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 
 
-					<li><a href="/referendum/">Consultas <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
+					<li><a href="/votacion/">Votaciones <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
 					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
 				</ul>
 			</li>
@@ -237,7 +237,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 				</ul>
 			</li>			<?php } ?><?php if ($pol['config']['info_consultas'] > 0) { ?>
 			<li>
-				<a href="/referendum/">Consultas (<?=$pol['config']['info_consultas']?>)</a>
+				<a href="/votacion/">Votaciones (<?=$pol['config']['info_consultas']?>)</a>
 			</li><?php } ?>
 			
 		</ul></dd></dl>

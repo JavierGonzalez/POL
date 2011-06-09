@@ -145,7 +145,7 @@ FROM ".SQL."config WHERE dato = 'pols_fraseedit' LIMIT 1", $link);
 <table border="0" cellspacing="2" cellpadding="0" class="pol_table">
 
 <tr>
-<td colspan="4" align="center"><img src="http://chart.apis.google.com/chart?cht=lc&chs=360x100&chxt=y&chxl=0:|0|' . round($dgrafico_max_1 / 2) . '|' . $dgrafico_max_1 . '&chd=s:' . chart_data($dgrafico[1]) . '&chco=0066FF&chm=B,FFFFDD,0,0,0" /></td>
+<td colspan="4" align="center"><img src="http://chart.apis.google.com/chart?cht=lc&chs=360x100&chxt=y&chxl=0:|0|' . round($dgrafico_max_1 / 2) . '|' . $dgrafico_max_1 . '&chd=s:' . chart_data($dgrafico[1]) . '&chco=0066FF&chm=B,FFFFDD,0,0,0&chf=bg,s,ffffff01|c,s,ffffff01" /></td>
 </tr>';
 
 	$ganador = 'ok';
@@ -190,7 +190,7 @@ LIMIT 10", $link);
 <table border="0" cellspacing="2" cellpadding="0" class="pol_table">
 
 <tr>
-<td colspan="4" align="center"><img src="http://chart.apis.google.com/chart?cht=lc&chs=360x100&chxt=y&chxl=0:|0|' . round($dgrafico_max_2 / 2) . '|' . $dgrafico_max_2 . '&chd=s:' . chart_data($dgrafico[2]) . '&chco=0066FF&chm=B,FFFFDD,0,0,0" /></td>
+<td colspan="4" align="center"><img src="http://chart.apis.google.com/chart?cht=lc&chs=360x100&chxt=y&chxl=0:|0|' . round($dgrafico_max_2 / 2) . '|' . $dgrafico_max_2 . '&chd=s:' . chart_data($dgrafico[2]) . '&chco=0066FF&chm=B,FFFFDD,0,0,0&chf=bg,s,ffffff01|c,s,ffffff01" /></td>
 </tr>';
 
 	$gan = 0;

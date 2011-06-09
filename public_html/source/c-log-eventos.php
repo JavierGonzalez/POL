@@ -5,12 +5,12 @@ function dato_nombre($dato, $tipo) {
 	global $link;
 	switch ($tipo) {
 		case 'documento': $table = 'docs'; $result = 'url'; break;
-		case 'partido': $table = 'partidos'; $result = 'siglas'; break;
-		case 'cargo': $table = 'estudios'; $result = 'nombre'; break;
-		case 'kick': $table = 'ban'; $result = 'expire'; break;
-		case 'empresa': $table = 'empresas'; $result = 'nombre'; break;
+		case 'partido': $table = SQL.'partidos'; $result = 'siglas'; break;
+		case 'cargo': $table = SQL.'estudios'; $result = 'nombre'; break;
+		case 'kick': $table = SQL.'ban'; $result = 'expire'; break;
+		case 'empresa': $table = SQL.'empresas'; $result = 'nombre'; break;
 	}
-	$result2 = mysql_query("SELECT " . $result . " FROM ".SQL."" . $table . " WHERE ID = '" . $dato . "' LIMIT 1", $link);
+	$result2 = mysql_query("SELECT " . $result . " FROM " . $table . " WHERE ID = '" . $dato . "' LIMIT 1", $link);
 	while($r2 = mysql_fetch_array($result2)){ return $r2[$result]; }
 }
 
@@ -18,7 +18,7 @@ function dato_nombre($dato, $tipo) {
 //if (!$_GET['a']) {
 
 if ($_GET['b']) { 
-	$result2 = mysql_query("SELECT ID FROM ".SQL_USERS." WHERE nick = '" . $_GET['b'] . "' LIMIT 1", $link);
+	$result2 = mysql_query("SELECT ID FROM users WHERE nick = '" . $_GET['b'] . "' LIMIT 1", $link);
 	while($r2 = mysql_fetch_array($result2)){ $filtro_ID = 'WHERE user_ID = \'' . $r['ID'] . '\''; }
 }
 
@@ -39,8 +39,8 @@ if ($_GET['b']) {
 
 	$result = mysql_query("SELECT 
 time, accion, user_ID, user_ID2, dato,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."log.user_ID LIMIT 1) AS nick,
-(SELECT nick FROM ".SQL_USERS." WHERE ".SQL."log.user_ID2 != '0' AND ID = ".SQL."log.user_ID2 LIMIT 1) AS nick2
+(SELECT nick FROM users WHERE ID = ".SQL."log.user_ID LIMIT 1) AS nick,
+(SELECT nick FROM users WHERE ".SQL."log.user_ID2 != '0' AND ID = ".SQL."log.user_ID2 LIMIT 1) AS nick2
 FROM ".SQL."log " . $filtro_ID . "
 ORDER BY time DESC
 LIMIT " . $p_limit, $link);

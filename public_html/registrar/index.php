@@ -198,7 +198,7 @@ FROM ".SQL_REFERENCIAS." WHERE IP = '".$longip."' LIMIT 1", $link);
 
 									mysql_query("INSERT INTO users 
 (nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, pais, pass, host, IP_proxy, geo, dnie_check, bando, nota_SC, fecha_legal) 
-VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', 'ninguno', '".md5($pass1)."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null, null, '', '".$date."')", $link);
+VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', 'ninguno', '".md5($pass1)."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null, null, '".($_POST['nick_clon']==''||strtolower($_POST['nick_clon'])=='no'?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')", $link);
 
 									if ($ref) {
 										$result = mysql_query("SELECT ID FROM users WHERE nick = '" . $nick . "' LIMIT 1", $link);
@@ -401,30 +401,28 @@ $txt .= '</blockquote></div>';
 <li><b>Nick</b>: ser&aacute; tu identidad.<br />
 <input type="text" name="nick" value="' . $nick . '" size="10" maxlength="14" /><br /><br /></li>
 
-<li><b>Email</b>: debe funcionar bien, te enviar&eacute;mos un email para verificarlo.<br />
+<li><b>Email</b>: recibir&aacute;s un email de verificaci&oacute;n.<br />
 <input type="text" name="email" value="' . $email . '" size="30" maxlength="50" /><br /><br /></li>
 
-<li><b>Contrase&ntilde;a</b>: elije una contrase&ntilde;a que no olvides.<br />
+<li><b>Contrase&ntilde;a</b>:<br />
 <input type="password" autocomplete="off" name="pass1" value="' . $pass1 . '" maxlength="40" /><br />
 <input type="password" autocomplete="off" name="pass2" value="' . $pass2 . '" maxlength="40" style="margin-top:1px;" /><br /><br /></li>
 
 
-<li><b>&iquest;Qu&eacute; animal es?</b> (un nombre sin espacios, nivel primaria)<br />
+<li><b>&iquest;Qu&eacute; animal es?</b> (un nombre y sin espacios, nivel primaria)<br />
 <img src="animal-captcha.php" alt="Animal" id="animalcaptchaimg"  onclick="document.getElementById(\'animalcaptchaimg\').src=\'animal-captcha.php?\'+Math.random();" style="cursor:pointer;" /><br />
 <input type="text" name="animal" value="" autocomplete="off" maxlength="20" /><br /><br /></li>
 
 
-<li><input name="condiciones" value="ok" type="checkbox" checked="checked" /> <a href="http://www'.DEV.'.'.URL.'/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.</li>
-</ol>
+<li><b>&iquest;Compartes conexi&oacute;n a Internet con otro usuario de VirtualPol?</b><br /> 
+<input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (indica su nick, opcional)<br /><br /></li>
 
+<li><input name="condiciones" value="ok" type="checkbox" checked="checked" /> <a href="http://www'.DEV.'.'.URL.'/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.<br /><br /></li>
 
-<ol>
-
-<li value="6"><input type="submit" value="Crear usuario" style="height:40px;font-size:22px;" /></li>
+<li><input type="submit" value="Crear usuario" style="height:40px;font-size:22px;" /></li>
 </form>
 </ol>
-<hr />
-<p class="gris">VirtualPol - Plataforma auto-gestionada democr&aacute;ticamente.</p>';
+<br />';
 }
 
 include('../theme.php');

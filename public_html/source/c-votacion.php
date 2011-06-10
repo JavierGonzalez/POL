@@ -10,8 +10,9 @@ while($r = mysql_fetch_array($result)){
 
 	include_once('inc-functions-accion.php');
 
-	evento_chat('<b>[' . strtoupper($r['tipo']) . ']</b> Finalizado, resultados: <a href="/votacion/' . $r['ID'] . '/"><b>' . $r['pregunta'] . '</b></a> <span style="color:grey;">(votos: ' . $r['num'] . ')</span>');
-	mysql_query("UPDATE votacion SET estado = 'end' WHERE ID = '" . $r['ID'] . "' LIMIT 1", $link);
+	evento_chat('<b>['.strtoupper($r['tipo']).']</b> Finalizado, resultados: <a href="/votacion/'.$r['ID'].'/"><b>'.$r['pregunta'].'</b></a> <span style="color:grey;">(votos: <b>'.$r['num'].'</b>)</span>');
+
+	mysql_query("UPDATE votacion SET estado = 'end' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
 	// actualizar info en theme
 	$result2 = mysql_query("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."'", $link);

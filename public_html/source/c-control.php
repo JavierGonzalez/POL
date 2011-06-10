@@ -30,8 +30,7 @@ if (isset($sc[$pol['user_ID']])) {
 	}
 
 	foreach ($sc AS $user_ID => $nick) {
-		if ($supervisores) { $supervisores .= ', '; }
-		$supervisores .= crear_link($nick); 
+		$supervisores .= ' '.crear_link($nick); 
 	}
 
 	// nomenclatura
@@ -191,25 +190,26 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 	$result = mysql_query("SELECT ID AS user_ID, nick, estado, traza FROM users WHERE traza != '' ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$tn = 1;
-		if (true) { // !$trazas_rep[$r['user_ID']]
-			$trazas = explode(' ', $r['traza']);
-			$trazas_clones = '';
-			foreach ($trazas AS $unatraza) {
-				$trazado = false;
-				$trazas_rep[$unatraza] = true;
-				$result2 = mysql_query("SELECT nick, estado FROM users WHERE ID = '".$unatraza."' LIMIT 1", $link);
+		$trazas = explode(' ', $r['traza']);
+		$trazas_clones = '';
+		if ($r['estado'] == 'expulsado') { $mostrar = false; } else { $mostrar = true; }
+		foreach ($trazas AS $unatraza) {
+			$trazado = false;
+			$result2 = mysql_query("SELECT nick, estado FROM users WHERE ID = '".$unatraza."' LIMIT 1", $link);
+			while($r2 = mysql_fetch_array($result2)) {
+				$tn++; $trazas_clones .= ' '.crear_link($r2['nick'], 'nick', $r2['estado']);
+				$trazado = true;
+				if ($r2['estado'] != 'expulsado') { $mostrar = true; }
+			}
+			if ($trazado == false) {
+				$result2 = mysql_query("SELECT tiempo AS nick FROM expulsiones WHERE user_ID = '".$unatraza."' LIMIT 1", $link);
 				while($r2 = mysql_fetch_array($result2)) {
+					$r2['estado'] = 'expulsado';
 					$tn++; $trazas_clones .= ' '.crear_link($r2['nick'], 'nick', $r2['estado']);
-					$trazado = true;
-				}
-				if ($trazado == false) {
-					$result2 = mysql_query("SELECT tiempo AS nick FROM expulsiones WHERE user_ID = '".$unatraza."' LIMIT 1", $link);
-					while($r2 = mysql_fetch_array($result2)) {
-						$r2['estado'] = 'expulsado';
-						$tn++; $trazas_clones .= ' '.crear_link($r2['nick'], 'nick', $r2['estado']);
-					}
 				}
 			}
+		}
+		if ($mostrar == true) {
 			$txt .= '<tr><td>'.$tn.'</td><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b>: <b>'.$trazas_clones.'</b></td></tr>';
 		}
 	}

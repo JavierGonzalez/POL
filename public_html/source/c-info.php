@@ -95,9 +95,9 @@ $txt .= '<p>' . $p_paginas . ' &nbsp; <a href="/info/censo/">Ciudadanos</a>: <b>
 <th></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/nombre/">Nick</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/afiliacion/">Afil</a></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/confianza/"><acronym title="Confianza">Conf</acronym></a></th>
+<th style="padding:8px;" class="azul"><a href="/info/censo/confianza/">Confianza</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/online/">Online</a></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/' . $old . '/">Antiguedad</a></th>
+<th style="padding:8px;" class="azul"><a href="/info/censo/' . $old . '/">Antig&uuml;edad</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/elec/"><acronym title="Elecciones en las que ha participado">Elec</acronym></a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/refs/"><acronym title="Numero de referencias">Ref</acronym></a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/nota/">Nota</a></th>

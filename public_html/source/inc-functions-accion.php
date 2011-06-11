@@ -5,7 +5,7 @@ function editor_enriquecido($name, $txt='') {
 <script type="text/javascript">
 document.domain = "virtualpol.com";
 </script>
-<script type="text/javascript" src="'.IMG.'tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="http://www.virtualpol.com/img/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 
 tinyMCE.init({

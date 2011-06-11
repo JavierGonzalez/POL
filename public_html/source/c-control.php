@@ -77,6 +77,12 @@ ORDER BY fecha_registro DESC
 LIMIT 60", $link);
 	while($r = mysql_fetch_array($result)) {
 		$dia_registro = date('j', strtotime($r['fecha_registro']));
+		
+		$razon = '';
+		if ($r['estado'] == 'expulsado') {
+			$result2 = mysql_query("SELECT razon FROM ".SQL_EXPULSIONES." WHERE user_ID = '".$r['ID']."' LIMIT 1", $link);
+			while ($r2 = mysql_fetch_array($result2)) { $razon = '<b style="color:red;">'.$r2['razon'].'</b> '; }
+		}
 
 
 		if ($r['online'] > 60) { $online = duracion($r['online']); } else { $online = ''; }
@@ -95,11 +101,11 @@ LIMIT 60", $link);
 		} else { $td_bg = ''; }
 
 		if ($r['has_votado']) { $has_votado = ' (' . confianza($r['has_votado']) . ')'; } else { $has_votado = ''; }
-		//$r['email'] = explodear("@", $r['email'], 1);
+
 		
 		$txt .= '<tr' . $td_bg . '>
+<td align="right"><b>' . $dia_registro . '</b></td>
 <td style="background:'.$vp['bg'][$r['pais']].';"><b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
-<td align="right">' . $dia_registro . '</td>
 <td align="right" nowrap="nowrap">' . duracion(time() - strtotime($r['fecha_registro'])) . '</td>
 <td align="right" nowrap="nowrap">' . $online . '</td>
 <td align="right" nowrap="nowrap">' . duracion(time() - strtotime($r['fecha_last'])) . '</td>
@@ -111,8 +117,10 @@ LIMIT 60", $link);
 <td align="right">' . $r['num_foro'] . '</td>
 <td align="right">' . $r['num_priv'] . '</td>
 <td align="right">' . $r['num_transf'] . '</td>
-<td align="right">' . $r['email'] . '</td>
-<td align="right" nowrap="nowrap">'.ocultar_IP($r['host'], 'host').'</td><td>'.ocultar_IP($r['IP']).'</td>
+<td align="right" style="font-size:10px;">' . $r['email'] . '</td>
+<td align="right" nowrap="nowrap" style="font-size:10px;">'.ocultar_IP($r['host'], 'host').'</td>
+<td style="font-size:10px;">'.ocultar_IP($r['IP']).'</td>
+<td nowrap="nowrap" style="font-size:10px;">'.$razon.$r['nota_SC'].'</td>
 </tr>';
 		$dia_registro_last = $dia_registro;
 	}

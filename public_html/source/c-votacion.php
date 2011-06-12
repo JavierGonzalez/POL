@@ -64,14 +64,18 @@ PARLAMENTO SOLO 22 y 6
 	$txt .= '<h1><a href="/votacion/">Votaci&oacute;n</a>: Crear</h1>
 <form action="/accion.php?a=votacion&b=crear" method="post">
 
-<p><b>Tipo</b>: 
+
+<table width="570"><tr><td valign="top">
+
+
+<p class="azul"><b>Tipo</b>: 
 <select name="tipo">
 <option value="sondeo"'.$disabled['sondeo'].' onclick="$(\'#acceso_votar_div\').show();">SONDEO</option>
 <option value="referendum"'.$disabled['referendum'].' onclick="$(\'#acceso_votar_div\').show();">REFERENDUM</option>
 <option value="parlamento"'.$disabled['parlamento'].' onclick="$(\'#acceso_votar_div\').hide();">PARLAMENTO</option>
-</select></p>
+</select><br /><br />
 
-<p><b>Duraci&oacute;n</b>: 
+<b>Duraci&oacute;n</b>: 
 <select name="time_expire">
 <option value="300">5 minutos</option>
 <option value="600">10 minutos</option>
@@ -81,7 +85,8 @@ PARLAMENTO SOLO 22 y 6
 <option value="172800">2 d&iacute;as</option>
 <option value="259200">3 d&iacute;as</option>
 <option value="345600">4 d&iacute;as</option>
-</select></p>';
+</select></p>
+';
 
 
 		$r['acceso_votar'] = 'ciudadanos_pais';
@@ -92,20 +97,23 @@ PARLAMENTO SOLO 22 y 6
 		}
 
 
-		$txt .= '<p id="acceso_votar_div"><b>Acceso para votar:</b><br />
+		$txt .= '</td><td valign="top" align="right">
+		
+<p id="acceso_votar_div" class="azul"><b>Acceso para votar:</b><br />
 '.$txt_li['votar'].' <input type="text" name="acceso_cfg_votar" size="18" maxlength="500" id="acceso_cfg_votar_var" value="'.$r['acceso_cfg_votar'].'" /></p>
 
+</td></tr></table>
 
 <p><b>Pregunta</b>: 
 <input type="text" name="pregunta" size="57" maxlength="70" /></p>
 
-<p><b>Descripci&oacute;n</b>:<br />
+<p><b>Descripci&oacute;n</b>: (siempre visible)<br />
 <textarea name="descripcion" style="color: green; font-weight: bold; width: 570px; height: 250px;"></textarea></p>
 
 <p><b>Respuestas</b>:
 <ol>
-<li><input type="text" name="respuesta0" size="22" maxlength="30" /></li>
-<li><input type="text" name="respuesta1" size="22" maxlength="30" /></li>
+<li><input type="text" name="respuesta0" size="22" maxlength="30" value="SI" /></li>
+<li><input type="text" name="respuesta1" size="22" maxlength="30" value="NO" /></li>
 <li><input type="text" name="respuesta2" size="22" maxlength="30" /></li>
 <li><input type="text" name="respuesta3" size="22" maxlength="30" /></li>
 <li><input type="text" name="respuesta4" size="22" maxlength="30" /></li>
@@ -114,9 +122,11 @@ PARLAMENTO SOLO 22 y 6
 <li><input type="text" name="respuesta7" size="22" maxlength="30" /></li>
 <li><input type="text" name="respuesta8" size="22" maxlength="30" /></li>
 <li><input type="text" name="respuesta9" size="22" maxlength="30" /></li>
-<li><input type="text" name="respuesta10" size="22" maxlength="30" /></li>
-<li><input type="text" name="respuesta11" size="22" maxlength="30" /></li>
-</ol></p>
+</ol>
+<ul style="margin-top:-16px;">
+<li><input type="text" name="respuesta10" size="22" maxlength="30" value="En Blanco" readonly="readonly" style="color:grey;" /></li>
+<li><input type="text" name="respuesta11" size="22" maxlength="30" value="Votacion Invalida" readonly="readonly" style="color:grey;" /></li>
+</ul></p>
 
 <p><input type="submit" value="Crear votaci&oacute;n" /> &nbsp; <a href="/votacion/"><b>Ver votaciones</b></a></p>';
 
@@ -157,45 +167,50 @@ LIMIT 1", $link);
 
 <p style="text-align:right;">Acceso: <acronym title="'.$r['acceso_cfg_votar'].'"><b>'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</b></acronym>. Creador <b>' . $r['nick'] . '</b>, a fecha <em>' . $r['time'] . '</em>, duraci&oacute;n <b>'.$duracion.'</b>.</p>';
 
-		if ($time_expire < time()) { //ha terminado 
-			if (($r['estado'] == 'ok') AND ($time_expire < time())) { 
-				include_once('inc-functions-accion.php');
-				evento_chat('<b>[' . strtoupper($r['tipo']) . ']</b> Finalizado, resultados: <a href="/votacion/' . $r['ID'] . '/"><b>' . $r['pregunta'] . '</b></a> <span style="color:grey;">(votos: ' . $r['num'] . ')</span>');
-			}
+		if ($time_expire < time()) { // VOTACION TERMINADA, IMPRIMIR RESULTADOS 
 
-			$txt .= '
-
-<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
-			
-<h2>Escrutinio:</h2>
-<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
-<tr>
-<th>Respuestas &nbsp;</th>
-<th>Votos</th>
-<th></th>
-</tr>';
-
-
+			$txt_escrutinio = '';
+			$conteo_votos = 0;
+			$invalido = false;
 			$result2 = mysql_query("SELECT COUNT(user_ID) as num, voto
 FROM votacion_votos
 WHERE ref_ID = '" . $r['ID'] . "'
 GROUP BY voto", $link);
 			while($r2 = mysql_fetch_array($result2)) {
-				$txt .= '<tr><td>' . $respuestas[$r2['voto']] . '</td><td align="right"><b>' . $r2['num'] . '</b></td><td align="right">' . round(($r2['num'] * 100) / $r['num']) . '%</td></tr>';
+				$txt_escrutinio .= '<tr><td>' . $respuestas[$r2['voto']] . '</td><td align="right"><b>' . $r2['num'] . '</b></td><td align="right">' . round(($r2['num'] * 100) / $r['num']) . '%</td></tr>';
 
 				$escaños_total = $escaños_total + $r2['num'];
 				if ($chart_dato) { $chart_dato .= ','; } $chart_dato .= $r2['num'];
+				
+
+
 				if ($chart_nom) { $chart_nom .= '|'; } $chart_nom .= $respuestas[$r2['voto']];
 
+				
+				if (($respuestas[$r2['voto']] == 'Votacion Invalida') AND ($r2['num'] >= $conteo_votos)) { 
+					$invalido = true; 
+					$votos_invalido = $r2['num']; 
+				} 
+				$conteo_votos += $r2['num'];
 			}
-			$txt .= '</table></td><td valign="top">';
 
-			if ($r['tipo'] == 'parlamento') {
-				$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $escaños_total . ',' . $chart_dato . '&chs=450x300&chl=|' . $chart_nom . '&chco=FFFFFF,FF8000&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />';
-			} else {
-				$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato . '&chs=440x200&chl=' . $chart_nom . '&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />';
-			}	
-			$txt .= '</td></tr></table>';
+
+
+			$txt .= '
+<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
+			
+<h2>Escrutinio:</h2>
+'.($invalido==false?'<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
+<tr>
+<th>Respuestas &nbsp;</th>
+<th>Votos</th>
+<th></th>
+</tr>'.$txt_escrutinio.'</table>':'<b style="color:red;">Votacion Invalida.<br /><br />Invalidado por '.$votos_invalido.' votos, de un total de '.$conteo_votos.' votos.</b>').'</td><td valign="top">
+
+
+'.($invalido==false?($r['tipo']=='parlamento'?'<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $escaños_total . ',' . $chart_dato . '&chs=450x300&chl=|' . $chart_nom . '&chco=FFFFFF,FF8000&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />':'<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato . '&chs=440x200&chl=' . $chart_nom . '&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />'):'').'
+
+</td></tr></table>';
 
 
 
@@ -275,15 +290,12 @@ ORDER BY estado ASC, time_expire DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		if ($r['estado'] == 'ok') { 
 			$time_expire = strtotime($r['time_expire']);
-
 			$estado =  '<span style="color:blue;">' . duracion($time_expire - time()) . '</span>'; 
 		} else { $estado = '<span style="color:grey;">Finalizado</span>'; }
 
 		if ((!$r['ha_votado']) AND ($r['estado'] == 'ok') AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']))) { 
 			$votar = boton('Votar', '/votacion/' . $r['ID'] . '/');
-		} else { 
-			$votar = '';
-		}
+		} else { $votar = ''; }
 
 		if ($r['user_ID'] == $pol['user_ID']) {
 			$boton = boton('X', '/accion.php?a=votacion&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres CANCELAR y ELIMINAR esta votacion?');

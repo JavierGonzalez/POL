@@ -1103,7 +1103,7 @@ case 'votacion':
 
 			if ($_POST['tipo'] == 'parlamento') { $_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22'; }
 
-			for ($i=0;$i<10;$i++) { if ($_POST['respuesta'.$i]) { $respuestas .= trim($_POST['respuesta'.$i]).'|'; } }
+			for ($i=0;$i<12;$i++) { if (trim($_POST['respuesta'.$i]) != '') { $respuestas .= trim($_POST['respuesta'.$i]).'|'; } }
 
 			$time_expire = date('Y-m-d H:i:s', time() + $_POST['time_expire']);
 			$_POST['pregunta'] = strip_tags($_POST['pregunta']);

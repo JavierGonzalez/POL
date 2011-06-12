@@ -1662,6 +1662,13 @@ case 'editar-documento':
 		$result = mysql_query("SELECT ID, acceso_escribir, acceso_cfg_escribir FROM docs WHERE url = '".$_POST['url']."' AND pais = '".PAIS."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
+
+				if (nucleo_acceso($_POST['acceso_escribir'], $_POST['acceso_cfg_escribir']) == false) { 
+					// Si no tienes el acceso de escribir... se queda como esta.
+					$_POST['acceso_escribir'] = $r['acceso_escribir']; 
+					$_POST['acceso_cfg_escribir'] = $r['acceso_cfg_escribir']; 
+				}
+
 				mysql_query("UPDATE docs SET cat_ID = '".$_POST['cat']."', text = '".$text."', title = '".$_POST['titulo']."', time_last = '".$date."', acceso_leer = '".$_POST['acceso_leer']."', acceso_escribir = '".$_POST['acceso_escribir']."', acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 				evento_log(7, $r['ID']);
 			}

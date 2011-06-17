@@ -208,7 +208,7 @@ GROUP BY voto", $link);
 </tr>'.$txt_escrutinio.'</table>':'<b style="color:red;">Votacion Invalida.<br /><br />Invalidado por '.$votos_invalido.' votos, de un total de '.$conteo_votos.' votos.</b>').'</td><td valign="top">
 
 
-'.($invalido==false?($r['tipo']=='parlamento'?'<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $escaños_total . ',' . $chart_dato . '&chs=450x300&chl=|' . $chart_nom . '&chco=FFFFFF,FF8000&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />':'<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato . '&chs=440x200&chl=' . $chart_nom . '&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />'):'').'
+'.($invalido==false?($r['tipo']=='parlamento'?'<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $escaños_total . ',' . $chart_dato . '&chs=450x300&chl=|' . $chart_nom . '&chco=ffffff01,FF8000&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />':'<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato . '&chs=440x200&chl=' . $chart_nom . '&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />'):'').'
 
 </td></tr></table>';
 

@@ -1142,6 +1142,8 @@ case 'votacion':
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['ID'])) { 
 		mysql_query("DELETE FROM votacion WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
 		mysql_query("DELETE FROM votacion_votos WHERE ref_ID = '".$_GET['ID']."'", $link);
+	} elseif (($_GET['b'] == 'concluir') AND ($_GET['ID'])) { 
+		mysql_query("UPDATE votacion SET time_expire = '".$date."' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
 	}
 
 	// actualizar info en theme

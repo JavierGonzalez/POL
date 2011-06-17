@@ -266,11 +266,11 @@ ORDER BY siglas ASC", $link);
 	while($r = mysql_fetch_array($result)){ $es_diputado = true; }
 
 	$txt_title = 'Votaci&oacute;n: sondeos, referendums, votaciones del parlamento';
-	$txt .= '<h1>Votaci&oacute;n: (Referendum, sondeos y parlamento)</h1>
-<br />';
+	$txt .= '<h1>Votaci&oacute;n: (Referendum, sondeos y parlamento)</h1>';
 
 	$sc = get_supervisores_del_censo(); 
-	if (($pol['nivel'] >= 95) OR ($pol['cargos']['41']) OR (isset($sc[$pol['user_ID']]))) { $txt .= '<p>' . boton('Crear consulta', '/votacion/crear/') . '</p>'; }
+
+	if (($pol['nivel'] >= 95) OR ($pol['cargos']['41']) OR (isset($sc[$pol['user_ID']]))) { $txt .= '<p>'.boton('Crear consulta', '/votacion/crear/').'</p>'; }
 	
 	$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 <tr>
@@ -298,7 +298,11 @@ ORDER BY estado ASC, time_expire DESC", $link);
 		} else { $votar = ''; }
 
 		if ($r['user_ID'] == $pol['user_ID']) {
-			$boton = boton('X', '/accion.php?a=votacion&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres CANCELAR y ELIMINAR esta votacion?');
+			$boton = '';
+			if ($r['estado'] == 'ok') {
+				$boton .= boton('Finalizar', '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '&iquest;Seguro que quieres FINALIZAR esta votacion?').' ';
+			}
+			$boton .= boton('X', '/accion.php?a=votacion&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres CANCELAR y ELIMINAR esta votacion?');
 		} else { $boton = ''; }
 
 		$txt .= '<tr>

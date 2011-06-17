@@ -174,6 +174,12 @@ LIMIT 1", $link);
 					}
 					break;
 
+				case 'autentificado': 
+					if ($_SESSION['pol']['dnie'] == 'true') {
+						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> est&aacute; correctamente <a href="http://www.virtualpol.com/dnie.php">autentificado</a>.'; 
+					}
+					break;
+
 				case 'servidor':  
 					if ($msg_rest == 'cs') {
 						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> Servidor de Counter-Strike: <span class="gris">' . $_SERVER['REMOTE_ADDR'] . ':27015</span>';

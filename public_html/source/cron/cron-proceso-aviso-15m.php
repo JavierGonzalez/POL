@@ -11,7 +11,9 @@ $link = conectar();
 
 
 foreach ($vp['paises'] AS $pais) {
-	evento_chat('<b>[PROCESO] Quedan <span style="color:#666;">15 minutos</span>...</b>', '0', 0, false, 'e', $pais);
+	if (!in_array($pais, $vp['paises_congelados'])) {
+		evento_chat('<b>[PROCESO] Quedan <span style="color:#666;">15 minutos</span>...</b>', '0', 0, false, 'e', $pais);
+	}
 }
 
 mysql_close($link);

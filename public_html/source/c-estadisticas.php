@@ -105,6 +105,7 @@ SUM(mapa_vende) AS mapa_vende,
 SUM(eliminados) AS eliminados,
 COUNT(pais) AS paises,
 SUM(24h) AS 24h,
+SUM(autentificados) AS autentificados,
 time
 FROM stats
 ".(in_array($_GET['a'], $vp['paises'])?'WHERE pais = \''.$_GET['a'].'\' ':'')."
@@ -139,6 +140,7 @@ while($r = mysql_fetch_array($result)) {
 	$d['mapa_vende'][$i] = $r['mapa_vende'];
 	$d['eliminados'][$i] = $r['eliminados'];
 	$d['24h'][$i] = $r['24h'];
+	$d['autentificados'][$i] = $r['autentificados'];
 	
 	++$i;
 }
@@ -193,7 +195,11 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as, '.round($i/365, 2).
 
 <br /><b>2.5 Confianza general</b> (<a href="/info/confianza/">Ver confianza</a>)<br />
 <img src="'.gen_grafico($d['confianza'], '', true).'" alt="Confianza" border="0" />
+
+<br /><b>2.6 Autentificados</b> (<a href="http://www.virtualpol.com/dnie.php">Autentificaci&oacute;n</a>)<br />
+<img src="'.gen_grafico($d['autentificados']).'" alt="autentificacion" border="0" />
 </p>
+
 
 <h2 style="margin-top:35px;">3. ECONOM&Iacute;A</h2>
 <p class="amarillo"><b>3.1 '.MONEDA.' en total</b> (<a href="/doc/economia/">Ver circulo del dinero</a>)</b><br />

@@ -48,10 +48,18 @@ Esta linea final no supone ninguna información en claro.
 		if ($dnie_clon == true) { 
 			// Persona ya identificada con otro usuario. No realiza la autentificacion. 
 			$txt .= 'Ya estas autentificado con otro usuario. Envia un email a desarrollo@virtualpol.com explicando la situacion. Gracias.';
+
 		} else {
 			// Autentificacion correcta. DNIe inedito. Procede a guardar el HASH de la info extraida del DNIe (miniaturización irreversible) en base de datos.
 			mysql_query("UPDATE users SET dnie = 'true', dnie_check = '".$dnie_check."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-			$txt .= 'La autentificaci&oacute;n ha sido realizada correctamente.';
+
+			// Carga funciones extra para ejecutar evento_chat() que envia un mensaje en el chat principal.
+			include('source/inc-functions-accion.php'); // functions extra
+			evento_chat('<b>[#] '.crear_link($pol['nick']).' se ha <a href="http://www.virtualpol.com/dnie.php">autentificado</a> correctamente.</b>');
+
+			header('Location: http://www.virtualpol.com/dnie.php');
+			mysql_close($link);
+			exit;
 		}
 
 	} else { 

@@ -14,7 +14,7 @@ function get_cargo($cargo_ID, $salto=', ', $reicon=false) {
 	$limit = '';
 	if ($num != false) { $limit = ' LIMIT ' . $num; }
 	$result = mysql_query("SELECT 
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick
+(SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick
 FROM ".SQL."estudios_users WHERE ID_estudio = '" . $cargo_ID . "' AND cargo = '1'" . $limit);
 	while ($row = mysql_fetch_array($result)) {
 		if ($html) { $html .= $salto; if ($reicon) { $html .= '<img src="'.IMG.'cargos/' . $cargo_ID . '.gif" /> '; } }
@@ -82,7 +82,14 @@ $txt .= '
 </table>
 </center>
 
-</td></tr>
+</td></tr>';
+
+
+
+
+if (ECONOMIA) {
+
+$txt .= '
 <tr><td colspan="4"></td></tr>
 <tr><td class="amarillo" valign="top" colspan="2" width="50%"><h1>Econom&iacute;a</h1>
 <p class="gris">Los m&aacute;s ricos</p>
@@ -90,11 +97,9 @@ $txt .= '
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td><ol>';
 
-
-
 $result = mysql_query("SELECT nick, cargo,
-(pols + IFNULL((SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = ".SQL_USERS.".ID GROUP BY user_ID),0)) AS pols_total
-FROM ".SQL_USERS."
+(pols + IFNULL((SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = users.ID GROUP BY user_ID),0)) AS pols_total
+FROM users
 WHERE pais = '".PAIS."'
 ORDER BY pols_total DESC 
 LIMIT 15");
@@ -132,8 +137,8 @@ $txt .= '</ol></td></tr></table>
 
 $first = '';
 $result = mysql_query("SELECT SUM(superficie) AS superficie,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS nick,
-(SELECT cargo FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS cargo
+(SELECT nick FROM users WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS nick,
+(SELECT cargo FROM users WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS cargo
 FROM ".SQL."mapa
 WHERE estado != 'e'
 GROUP BY user_ID
@@ -151,7 +156,11 @@ while ($row = mysql_fetch_array($result)) {
 }
 
 
-$txt .= '</ol></td></tr></table></div>';
+$txt .= '</ol></td></tr>';
+
+}
+
+$txt .= '</table></div>';
 
 $txt_header .= '
 <style type="text/css">

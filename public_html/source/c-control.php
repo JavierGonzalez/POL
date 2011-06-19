@@ -436,8 +436,8 @@ ORDER BY num ASC", $link);
 
 
 
-case 'despacho-oval':
-	$txt_title = 'Control: Despacho Oval';
+case 'gobierno':
+	$txt_title = 'Control: Gobierno';
 	if ($pol['nivel'] >= 98) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
 
 	$result = mysql_query("SELECT (SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS elnick
@@ -454,10 +454,10 @@ case 'despacho-oval':
 
 	if ($_GET['b'] == 'foro') {
 
-		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/despacho-oval/">Despacho Oval</a> | Control Foro</h1>
+		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/gobierno/">Gobierno</a> | Control Foro</h1>
 		
 <br />
-<form action="/accion.php?a=despacho-oval&b=subforo" method="post">
+<form action="/accion.php?a=gobierno&b=subforo" method="post">
 
 <table border="0" cellspacing="3" cellpadding="0" class="pol_table">
 <tr>
@@ -488,7 +488,7 @@ FROM ".SQL."foros WHERE estado = 'ok'
 ORDER BY time ASC", $link);
 	while($r = mysql_fetch_array($result)){
 
-		if ($r['num_hilos'] == 0) { $del = '<input style="margin-bottom:-16px;" type="button" value="Eliminar" onClick="window.location.href=\'/accion.php?a=despacho-oval&b=eliminarsubforo&ID=' . $r['ID'] . '/\';">';
+		if ($r['num_hilos'] == 0) { $del = '<input style="margin-bottom:-16px;" type="button" value="Eliminar" onClick="window.location.href=\'/accion.php?a=gobierno&b=eliminarsubforo&ID=' . $r['ID'] . '/\';">';
 		} else { $del = ''; }
 
 		$txt .= '<tr>
@@ -519,7 +519,7 @@ ORDER BY time ASC", $link);
 
 <br />
 
-<form action="/accion.php?a=despacho-oval&b=crearsubforo" method="post">
+<form action="/accion.php?a=gobierno&b=crearsubforo" method="post">
 <table border="0" cellspacing="3" cellpadding="0" class="pol_table">
 <tr>
 <td class="amarillo"colspan="7"><b class="big">Crear nuevo foro</b></td>
@@ -556,10 +556,10 @@ function change_bg(img) {
 
 
 
-	$txt .= '<h1><a href="/control/">Control</a>: Despacho Oval | <a href="/control/despacho-oval/foro/">Control Foro</a></h1>
+	$txt .= '<h1><a href="/control/">Control</a>: Gobierno | <a href="/control/gobierno/foro/">Control Foro</a></h1>
 
 <br />
-<form action="/accion.php?a=despacho-oval&b=config" method="post">
+<form action="/accion.php?a=gobierno&b=config" method="post">
 
 <table border="0" cellspacing="3" cellpadding="0" class="pol_table"><tr><td valign="top">
 
@@ -1028,20 +1028,20 @@ $txt .= '</table><br />
 
 <table border="0" cellspacing="6">
 
-<tr><td nowrap="nowrap"><a class="abig" href="/control/despacho-oval/"><b>Despacho Oval</b></a></td>
+<tr><td nowrap="nowrap"><a class="abig" href="/control/gobierno/"><b>Gobierno</b></a></td>
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/7.gif" title="Presidente" /> <img src="'.IMG.'cargos/19.gif" title="Vicepresidente" /></td>
-<td>El m&aacute;ximo poder ejecutivo.</td></tr>
+<td>Panel de configuraci&oacute;n principal.</td></tr>
 
 <tr>
 <td nowrap="nowrap"><img src="'.IMG.'kick.gif" alt="Kick" border="0" /> <a class="abig" href="/control/kick/"><b>Kicks</b></a></td>
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/13.gif" title="Comisario de Policia" /> <img src="'.IMG.'cargos/12.gif" title="Policia" /></td>
-<td>F&eacute;rreo control de control de acceso temporal.</td>
+<td>Control de bloqueo temporal del acceso.</td>
 </tr>
 
 <tr>
 <td nowrap="nowrap"><img src="'.IMG.'expulsar.gif" alt="Expulsado" border="0" /> <a class="abig" href="/control/expulsiones/"><b>Expulsiones</b></a></td>
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/21.gif" title="Supervisor del Censo" /></td>
-<td>Expulsiones permanentes de VirtualPol. Zona com&uacute;n entre Paises.</td>
+<td>Expulsiones permanentes por incumplimiento del <a href="http://www.virtualpol.com/">TOS</a>.</td>
 </tr>
 
 <tr>';
@@ -1053,17 +1053,16 @@ if (isset($sc[$pol['user_ID']])) {
 	$txt .= '<td nowrap="nowrap"><b class="abig gris">Supervisi&oacute;n del Censo</b></td>';
 }
 
-foreach ($sc AS $user_ID => $nick) {
-	if ($supervisores) { $supervisores .= ', '; }
-	$supervisores .= crear_link($nick); 
-}
+foreach ($sc AS $user_ID => $nick) { $supervisores .= crear_link($nick).' '; }
 
 $txt .= '
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/21.gif" title="Supervisor del Censo" /></td>
-<td>Informaci&oacute;n sobre el censo. Reservado a: <b>'.$supervisores.'</b></td></tr>
+<td>Informaci&oacute;n sobre el censo y control de clones.<br />
+Supervisores del Censo: <b>'.$supervisores.'</b> (los 5 ciudadanos con m&aacute; votos de confianza)</td></tr>';
 
+if (ECONOMIA) {
 
-
+$txt .= '
 <tr><td nowrap="nowrap"><a class="abig" href="/control/judicial/"><b>Judicial</b></a></td>
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/9.gif" title="Judicial" /></td>
 <td>El panel judicial que permite efectuar sanciones.</td></tr>
@@ -1071,8 +1070,11 @@ $txt .= '
 
 <tr><td nowrap="nowrap"><a class="abig" href="/mapa/propiedades/"><b>Propiedades del Estado</b></a></td>
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/40.gif" title="Arquitecto" /></td>
-<td>El Arquitecto tiene el control de las propiedades del Estado.</td></tr>
+<td>El Arquitecto tiene el control de las propiedades del Estado.</td></tr>';
 
+}
+
+$txt .= '
 <tr><td nowrap="nowrap"><a class="abig" href="/referendum/crear/"><b>Sondeos</b></a></td>
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/41.gif" title="Consultor" /></td>
 <td>El Consultor puede hacer sondeos de petici&oacute;n popular.</td></tr>

@@ -47,7 +47,6 @@ border-width: 0 2px 2px 0;
 <?php
 unset($txt_header);
 if ($pol['nick']) {
-	// <span class="azul">' . boton('Solicitar Ciudadania', '/form/solicitar-ciudadania/') . '</span>
 	$txt_perfil = '<b><a href="http://' . strtolower($pol['pais']) . '.virtualpol.com/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . '</a></b> | <b class="' . $pol['estado'] . '">' . ucfirst($pol['estado']) . '</b> de <b>' . $pol['pais'] . '</b> | <a href="/registrar/login.php?a=logout">Salir</a>';
 } else { // sin identificar, sin login
 	$txt_perfil = '
@@ -92,9 +91,9 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <div class="clear"></div>
 
 
-<center style="margin:5px 0 -2px 0;"><span class="azul" style="padding:6px;color:grey;opacity:0.8;"><a href="http://www.virtualpol.com/"><b>VirtualPol</b></a> | Paises: 
-<?php $n = 0; foreach ($vp['paises'] AS $pais) { if (!in_array($pais, $vp['paises_congelados'])) { if ($n++ != 0) { echo ' &amp; '; } echo '<a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a>'; } } ?>
- | <a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a> | Simulador Politico Espa&ntilde;ol | <a href="http://www.teoriza.com/">Blogs Teoriza</a>
+<center style="margin:5px 0 -2px 0;"><span class="azul" style="padding:6px;color:grey;opacity:0.8;"><a href="http://www.virtualpol.com/"><b>VirtualPol</b></a> | Plataformas: 
+<?php foreach ($vp['paises'] AS $pais) { if (!in_array($pais, $vp['paises_congelados'])) { echo '<a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a> '; } } ?>
+ | <a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a> | <a href="http://www.teoriza.com/">Blogs Teoriza</a> | <a href="http://www.teoriza.com/legal"><b>TOS</b></a>
 </span></center>
 
 </div>

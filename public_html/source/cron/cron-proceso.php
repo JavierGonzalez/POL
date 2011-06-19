@@ -46,6 +46,8 @@ while($r = mysql_fetch_array($result)){
 evento_chat('<b>[PROCESO]</b> Expirados <b>'.$examenes_exp_num.'</b> examenes.');
 
 
+if (ECONOMIA) {
+
 // REFERENCIAS 
 $result = mysql_query("SELECT ID, user_ID, new_user_ID,
 (SELECT nick FROM users WHERE ID = ".SQL_REFERENCIAS.".user_ID LIMIT 1) AS nick,
@@ -129,7 +131,6 @@ if ($pols_gobierno - $gasto_total != $pols_gobierno2) {
 	evento_chat('<b>[PROCESO] Correcci&oacute;n efectuada.</b> Descontado el gasto en INEMPOL. El error era de <em>'. pols($pols_gobierno2 - $pols_gobierno + $gasto_total).' '.MONEDA.'</em>');
 }
 
-//sleep(1);
 
 
 // SUBASTA: LA FRASE
@@ -212,71 +213,8 @@ if ($p['pols_total'] >= $p['pols']) {
 evento_chat('<b>[PROCESO] Coste de propiedades efectuado,</b> recaudado: '.pols($recaudado_propiedades).' '.MONEDA);
 
 
-// NOTAS MEDIA
-$result = mysql_query("SELECT user_ID, AVG(nota) AS media FROM ".SQL."estudios_users GROUP BY user_ID", $link);
-while($r = mysql_fetch_array($result)){ 
-	if ($r['media']) { mysql_query("UPDATE users SET nota = '".$r['media']."' WHERE ID = '".round($r['user_ID'], 1)."' LIMIT 1", $link); }
-}
-evento_chat('<b>[PROCESO] Calculadas las notas media.</b>');
 
 
-// ELIMINAR CHAT INACTIVOS TRAS N DIAS
-/*$margen_chatexpira = date('Y-m-d 20:00:00', time() - (86400 * $pol['config']['chat_diasexpira']));
-mysql_query("DELETE FROM chats WHERE pais = '".PAIS."' AND fecha_last < '".$margen_chatexpira."'", $link);
-*/
-
-// ELIMINAR MENSAJES PRIVADOS
-mysql_query("DELETE FROM ".SQL_MENSAJES." WHERE time < '".$margen_15dias."'", $link);
-
-// ELIMINAR TRANSACCIONES ANTIGUAS
-mysql_query("DELETE FROM ".SQL."transacciones WHERE time < '".$margen_60dias."'", $link);
-
-// ELIMINAR LOG EVENTOS
-mysql_query("DELETE FROM ".SQL."log WHERE time < '".$margen_90dias."'", $link);
-
-// ELIMINAR bans antiguos
-mysql_query("DELETE FROM ".SQL."ban WHERE (estado = 'inactivo' OR estado = 'cancelado') AND expire < '".$margen_60dias."'", $link);
-
-// ELIMINAR hilos BASURA
-mysql_query("DELETE FROM ".SQL."foros_hilos WHERE estado = 'borrado' AND time_last < '".$margen_10dias."'", $link);
-
-// ELIMINAR mensajes BASURA
-mysql_query("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '".$margen_10dias."'", $link);
-
-// ELIMINAR examenes antiguos
-//mysql_query("DELETE FROM ".SQL."estudios_users WHERE cargo = '0' AND time < '".$margen_60dias."'", $link);
-
-// ELIMINAR USUARIOS
-/* periodos:
-	< 30d	- 10 dias
-30d < 90d	- 30 dias 
-90d >		- 60 dias
-*/
-$st['eliminados'] = 0;
-$result = mysql_query("SELECT ID, nick, fecha_registro, fecha_last FROM users
-WHERE 
-((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".$margen_90dias."' AND fecha_last <= '".$margen_60dias."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_90dias."' AND fecha_registro <= '".$margen_30dias."' AND fecha_last <= '".$margen_30dias."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_30dias."' AND fecha_last <= '".$margen_10dias."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".$margen_10dias."') OR
-(estado = 'validar' AND fecha_last <= '".$margen_10dias."')
-", $link);
-while($r = mysql_fetch_array($result)) {
-	$st['eliminados']++;
-	eliminar_ciudadano($r['ID']);
-}
-
-
-
-// ACTUALIZACION DEL VOTO CONFIANZA
-mysql_query("DELETE FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND voto = '0'", $link);
-mysql_query("DELETE FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND time < '".$margen_60dias."'", $link);
-mysql_query("UPDATE users SET voto_confianza = '0'", $link);
-$result = mysql_query("SELECT user_ID, SUM(voto) AS num_confianza FROM ".SQL_VOTOS." WHERE estado = 'confianza' GROUP BY user_ID", $link);
-while ($r = mysql_fetch_array($result)) { 
-	mysql_query("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['user_ID']."' LIMIT 1", $link);
-} 
-evento_chat('<b>[PROCESO] Voto de confianza actualizado. SC:</b> '.implode(', ', get_supervisores_del_censo()).'');
 
 
 
@@ -355,6 +293,80 @@ if ($pol['config']['impuestos_empresa'] > 0) {
 	}
 	evento_chat('<b>[PROCESO] IMPUESTO EMPRESAS '.date('Y-m-d').'</b>, recaudado: '.pols($recaudacion_empresas).' '.MONEDA);
 }
+
+
+
+} // FIN if (ECONOMIA) {
+
+
+
+
+// NOTAS MEDIA
+$result = mysql_query("SELECT user_ID, AVG(nota) AS media FROM ".SQL."estudios_users GROUP BY user_ID", $link);
+while($r = mysql_fetch_array($result)){ 
+	if ($r['media']) { mysql_query("UPDATE users SET nota = '".$r['media']."' WHERE ID = '".round($r['user_ID'], 1)."' LIMIT 1", $link); }
+}
+evento_chat('<b>[PROCESO] Calculadas las notas media.</b>');
+
+
+// ELIMINAR CHAT INACTIVOS TRAS N DIAS
+/*$margen_chatexpira = date('Y-m-d 20:00:00', time() - (86400 * $pol['config']['chat_diasexpira']));
+mysql_query("DELETE FROM chats WHERE pais = '".PAIS."' AND fecha_last < '".$margen_chatexpira."'", $link);
+*/
+
+// ELIMINAR MENSAJES PRIVADOS
+mysql_query("DELETE FROM ".SQL_MENSAJES." WHERE time < '".$margen_15dias."'", $link);
+
+// ELIMINAR TRANSACCIONES ANTIGUAS
+mysql_query("DELETE FROM ".SQL."transacciones WHERE time < '".$margen_60dias."'", $link);
+
+// ELIMINAR LOG EVENTOS
+mysql_query("DELETE FROM ".SQL."log WHERE time < '".$margen_90dias."'", $link);
+
+// ELIMINAR bans antiguos
+mysql_query("DELETE FROM ".SQL."ban WHERE (estado = 'inactivo' OR estado = 'cancelado') AND expire < '".$margen_60dias."'", $link);
+
+// ELIMINAR hilos BASURA
+mysql_query("DELETE FROM ".SQL."foros_hilos WHERE estado = 'borrado' AND time_last < '".$margen_10dias."'", $link);
+
+// ELIMINAR mensajes BASURA
+mysql_query("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '".$margen_10dias."'", $link);
+
+// ELIMINAR examenes antiguos
+//mysql_query("DELETE FROM ".SQL."estudios_users WHERE cargo = '0' AND time < '".$margen_60dias."'", $link);
+
+// ELIMINAR USUARIOS
+/* periodos:
+	< 30d	- 10 dias
+30d < 90d	- 30 dias 
+90d >		- 60 dias
+*/
+$st['eliminados'] = 0;
+$result = mysql_query("SELECT ID, nick, fecha_registro, fecha_last FROM users
+WHERE 
+((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".$margen_90dias."' AND fecha_last <= '".$margen_60dias."') OR
+((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_90dias."' AND fecha_registro <= '".$margen_30dias."' AND fecha_last <= '".$margen_30dias."') OR
+((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_30dias."' AND fecha_last <= '".$margen_10dias."') OR
+((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".$margen_10dias."') OR
+(estado = 'validar' AND fecha_last <= '".$margen_10dias."')
+", $link);
+while($r = mysql_fetch_array($result)) {
+	$st['eliminados']++;
+	eliminar_ciudadano($r['ID']);
+}
+
+
+
+// ACTUALIZACION DEL VOTO CONFIANZA
+mysql_query("DELETE FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND voto = '0'", $link);
+mysql_query("DELETE FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND time < '".$margen_60dias."'", $link);
+mysql_query("UPDATE users SET voto_confianza = '0'", $link);
+$result = mysql_query("SELECT user_ID, SUM(voto) AS num_confianza FROM ".SQL_VOTOS." WHERE estado = 'confianza' GROUP BY user_ID", $link);
+while ($r = mysql_fetch_array($result)) { 
+	mysql_query("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['user_ID']."' LIMIT 1", $link);
+} 
+evento_chat('<b>[PROCESO] Voto de confianza actualizado. SC:</b> '.implode(', ', get_supervisores_del_censo()).'');
+
 
 
 

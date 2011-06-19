@@ -126,7 +126,7 @@ case 'vaciar_listas':
 		$elecciones_frecuencia_dias = ceil($pol['config']['elecciones_frecuencia'] / 86400);
 		if (($elecciones_dias_quedan > 5) AND ($elecciones_dias_quedan < $elecciones_frecuencia_dias)) {
 			mysql_query("DELETE FROM ".SQL."partidos_listas", $link);
-			evento_chat('<b>[GOBIERNO]</b> Se han vaciado las listas electorales ('.crear_link($pol['nick']).', <a href="/control/despacho-oval/">Despacho Oval</a>)');
+			evento_chat('<b>[GOBIERNO]</b> Se han vaciado las listas electorales ('.crear_link($pol['nick']).', <a href="/control/gobierno/">Gobierno</a>)');
 		}
 	}
 
@@ -643,7 +643,7 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargo
 	break;
 
 
-case 'despacho-oval':
+case 'gobierno':
 	if (
 ($_GET['b'] == 'config') AND 
 ($pol['nivel'] >= 98) AND  
@@ -725,7 +725,7 @@ foreach ($_POST AS $dato => $valor) {
 				$valor = intval($valor)/60; 
 				$pol['config'][$dato] = $pol['config'][$dato]/60;
 			}
-			evento_chat('<b>[GOBIERNO]</b> Configuraci&oacute;n ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/despacho-oval/">Despacho Oval</a>)'); 
+			evento_chat('<b>[GOBIERNO]</b> Configuraci&oacute;n ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/gobierno/">Gobierno</a>)'); 
 		}
 	
 	}
@@ -737,12 +737,12 @@ foreach ($_POST AS $dato => $valor) {
 	while($r = mysql_fetch_array($result)){
 		$salario = $_POST['salario_'.$r['ID']];
 		if (($salario >= 0) AND ($salario <= 1000)) {
-			if ($salario != $r['salario']) { evento_chat('<b>[GOBIERNO]</b> El salario de <img src="'.IMG.'cargos/'.$r['ID'].'.gif" /><b>'.$r['nombre'].'</b> se ha cambiado de '.pols($r['salario']).' '.MONEDA.' a '.pols($salario).' '.MONEDA.' ('.crear_link($pol['nick']).', <a href="/control/despacho-oval/">Despacho Oval</a>)');  }
+			if ($salario != $r['salario']) { evento_chat('<b>[GOBIERNO]</b> El salario de <img src="'.IMG.'cargos/'.$r['ID'].'.gif" /><b>'.$r['nombre'].'</b> se ha cambiado de '.pols($r['salario']).' '.MONEDA.' a '.pols($salario).' '.MONEDA.' ('.crear_link($pol['nick']).', <a href="/control/gobierno/">Gobierno</a>)');  }
 			mysql_query("UPDATE ".SQL."estudios SET salario = '".$salario."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 		}
 	}
 
-	$refer_url = 'control/despacho-oval/';
+	$refer_url = 'control/gobierno/';
 
 	// FORO
 	} elseif (($_GET['b'] == 'subforo') AND ($pol['nivel'] >= 98)) {
@@ -754,19 +754,19 @@ foreach ($_POST AS $dato => $valor) {
 			mysql_query("UPDATE ".SQL."foros SET descripcion = '".$_POST[$subforo_ID.'_descripcion']."', acceso = '".$_POST[$subforo_ID.'_acceso']."', acceso_msg = '".$_POST[$subforo_ID.'_acceso_msg']."', time = '".$_POST[$subforo_ID.'_time']."' WHERE ID = '".$subforo_ID."' LIMIT 1", $link);
 		}
 
-		$refer_url = 'control/despacho-oval/foro/';
+		$refer_url = 'control/gobierno/foro/';
 	} elseif (($_GET['b'] == 'crearsubforo') AND ($pol['nivel'] >= 98)) {
 
 		mysql_query("INSERT INTO ".SQL."foros (url, title, descripcion, acceso, time, estado, acceso_msg) 
 VALUES ('".gen_url($_POST['nombre'])."', '".$_POST['nombre']."', '', '1', '10', 'ok', '0')", $link);
 
-		$refer_url = 'control/despacho-oval/foro/';
+		$refer_url = 'control/gobierno/foro/';
 
 	} elseif (($_GET['b'] == 'eliminarsubforo') AND ($pol['nivel'] >= 98) AND ($_GET['ID'])) {
 
 		mysql_query("UPDATE ".SQL."foros SET estado = 'eliminado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
 
-		$refer_url = 'control/despacho-oval/foro/';
+		$refer_url = 'control/gobierno/foro/';
 	}
 
 	break;

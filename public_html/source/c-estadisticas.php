@@ -198,9 +198,10 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as, '.round($i/365, 2).
 
 <br /><b>2.6 Autentificados</b> (<a href="http://www.virtualpol.com/dnie.php">Autentificaci&oacute;n</a>)<br />
 <img src="'.gen_grafico($d['autentificados']).'" alt="autentificacion" border="0" />
-</p>
+</p>';
 
-
+if (ECONOMIA) {
+$txt .= '
 <h2 style="margin-top:35px;">3. ECONOM&Iacute;A</h2>
 <p class="amarillo"><b>3.1 '.MONEDA.' en total</b> (<a href="/doc/economia/">Ver circulo del dinero</a>)</b><br />
 <img src="'.gen_grafico($d['pols_total'], '', true).'" alt="'.MONEDA_NOMBRE.' en total" border="0" />
@@ -220,9 +221,10 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as, '.round($i/365, 2).
 <br /><b>3.6 Mapa: porcentaje de ocupaci&oacute;n</b> (<a href="/">Ver Mapa</a>)<br />
 <img src="'.gen_grafico($d['mapa']).'" alt="Porcentaje de ocupacion" border="0" />
 
-</p>
+</p>';
+}
 
-
+$txt .= '
 <h2 style="margin-top:35px;">4. POL&Iacute;TICA</h2>
 <div class="amarillo">
 <p><b>4.1 Afiliados</b></p><div style="background:FFFFDD;"><table border="0"><tr>';

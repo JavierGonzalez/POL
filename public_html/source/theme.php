@@ -80,7 +80,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 		}
 	}
 	if ($pol['cargo']) { $cargo_icono = ' <img src="'.IMG.'cargos/' . $pol['cargo'] . '.gif" border="0" />'; } else { $cargo_icono = ''; }
-	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a> | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a> | <a href="/msg/" title="Mensajes">(' . $num_msg . ') <img src="'.IMG.'email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a> | <a href="/foro/mis-respuestas/" title="Respuestas a tus mensajes en el foro">Resp</a> |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';} elseif ($pol['estado'] == 'extranjero') { // extranjero
+	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a>'.(ECONOMIA?' | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a>':'').' | <a href="/msg/" title="Mensajes">(' . $num_msg . ') <img src="'.IMG.'email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a> | <a href="/foro/mis-respuestas/" title="Respuestas a tus mensajes en el foro">Resp</a> |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';} elseif ($pol['estado'] == 'extranjero') { // extranjero
 	$txt_perfil = '<a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <img src="'.IMG.'cargos/99.gif" style="margin-bottom:-2px;" border="0" /> (<b class="extranjero">Extranjero</b>) |  <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes">(' . $num_msg . ') <img src="'.IMG.'email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a> | <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'turista') { // TURISTA
 	$txt_perfil = $pol['nick'] . ' (<b class="turista">Turista</b>) ' . $pol['tiempo_ciudadanizacion'] . ' | ' . boton('Solicitar Ciudadania', 'http://www.virtualpol.com/registrar/') . ' | <a href="/accion.php?a=logout">Salir</a>';
@@ -175,7 +175,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 						<li><a href="#"><span style="float:right;">&#9658;</span>M&aacute;s</a>
 							<ul>
 								<li><a href="/log-eventos/">Log de eventos</a></li>
-								<li><a href="/mapa/">Mapa</a></li>
+								<?=(ECONOMIA?'<li><a href="/mapa/">Mapa</a></li>':'')?>
 								<li><a href="http://vp.virtualpol.com/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>
 							</ul>
 						</li>
@@ -186,37 +186,23 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 			<li>
 				<a href="#">Pol&iacute;tica</a>
 				<ul>
-					<li>
-						<a href="/doc/boletin-oficial-de-<?=strtolower(PAIS)?>/">BO<?=substr(PAIS,0,1)?></a>
-					</li>
 					<li><a href="/cargos/">Cargos</a></li>
 					<li><a href="/partidos/">Partidos <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
 					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Control</b></a>
 						<ul>
-							<li><a href="/control/despacho-oval/">Despacho Oval</a></li>
+							<li><a href="/control/gobierno/">Gobierno</a></li>
 							<li><a href="/control/kick/">Kicks</a></li>
 							<li><a href="/control/expulsiones/">Expulsiones</a></li>
-							<li><a href="/control/judicial/">Judicial</a></li>
-							<li><a href="/mapa/propiedades/">Propiedades del Estado</a></li>
+							<?=(ECONOMIA?'<li><a href="/control/judicial/">Judicial</a></li><li><a href="/mapa/propiedades/">Propiedades del Estado</a></li>':'')?>
 							<li><a href="/votacion/crear/">Votaciones</a></li>
 						</ul>
 					</li>
-
-
-
-
-
-
-
-
-
-
-
 
 					<li><a href="/votacion/">Votaciones <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
 					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
 				</ul>
 			</li>
+			<?php if (ECONOMIA) { ?>
 			<li>
 				<a href="#">Econom&iacute;a</a>
 				<ul>
@@ -225,15 +211,14 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 					<li><a href="/pols/cuentas/1/">Cuenta <em>Gobierno</em></a></li>
 					<li><a href="/subasta/">Subastas</a></li>
 				</ul>
-			</li><?php if ($pol['estado'] == 'ciudadano') { ?>
+			</li>
+			<?php } if ($pol['estado'] == 'ciudadano') { ?>
 			<li>
 				<a href="#"><?=$pol['nick']?></a>
 				<ul>
-					<li><a href="/perfil/<?=$nick_lower?>/">Perfil</a></li>
-					<li><a href="/pols/">Dinero</a></li>
+					<li><a href="/perfil/<?=$pol['nick']?>/">Perfil</a></li>
 					<li><a href="/examenes/">Ex&aacute;menes</a></li>
-					<li><a href="/mapa/propiedades/">Parcelas</a></li>
-					<li><a href="http://aziroet.com/blog/aziroet-quiere-ser-la-plataforma-web-de-tu-blog.php">Crear Blog</a></li>
+					<?=(ECONOMIA?'<li><a href="/pols/">Dinero</a></li><li><a href="/mapa/propiedades/">Parcelas</a></li><li><a href="http://aziroet.com/blog/aziroet-quiere-ser-la-plataforma-web-de-tu-blog.php">Crear Blog</a></li>':'')?>
 				</ul>
 			</li>			<?php } ?><?php if ($pol['config']['info_consultas'] > 0) { ?>
 			<li>
@@ -242,28 +227,35 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 			
 		</ul></dd></dl>
 
-<hr style="margin:5px 20px -5px -5px;color:#FF6;" />
 
-<div id="palabras"><b>
 <?php
-foreach(explode(";", $pol['config']['palabras']) as $t) {
-	$t = explode(":", $t);
-	if ($t[0] == $pol['user_ID']) { $edit = ' <a href="/subasta/editar/" class="gris">#</a>'; } else { $edit = ''; }
-	if ($t[1]) { 
-		echo '<a href="http://' . $t[1] . '">' . $t[2] . '</a>' . $edit . "<br />\n";
-	} else {
-		echo '</b>' . $t[2] . '<b>' . $edit . "<br />\n";
+
+if (ECONOMIA) {
+
+	echo '<hr style="margin:5px 20px -5px -5px;color:#FF6;" />
+
+<div id="palabras"><b>';
+
+	foreach(explode(";", $pol['config']['palabras']) as $t) {
+		$t = explode(":", $t);
+		if ($t[0] == $pol['user_ID']) { $edit = ' <a href="/subasta/editar/" class="gris">#</a>'; } else { $edit = ''; }
+		if ($t[1]) { 
+			echo '<a href="http://' . $t[1] . '">' . $t[2] . '</a>' . $edit . "<br />\n";
+		} else {
+			echo '</b>' . $t[2] . '<b>' . $edit . "<br />\n";
+		}
 	}
-}
 
 
-echo '</b><a href="/mapa/" class="gris" style="float:right;margin:0 11px 0 0;">Mapa</a><a href="/subasta/" class="gris" style="margin:0 0 0 -3px;">Subasta</a>';
+	echo '</b><a href="/mapa/" class="gris" style="float:right;margin:0 11px 0 0;">Mapa</a><a href="/subasta/" class="gris" style="margin:0 0 0 -3px;">Subasta</a>';
 
 
-if (!isset($cuadrado_size)) {
-	$cuadrado_size = 10;
-	include('inc-mapa.php');
-	echo '<div style="margin:0 0 0 -4px;">'.$txt_mapa.'</div>';
+	if (!isset($cuadrado_size)) {
+		$cuadrado_size = 10;
+		include('inc-mapa.php');
+		echo '<div style="margin:0 0 0 -4px;">'.$txt_mapa.'</div>';
+	}
+	echo '</div>';
 }
 ?>
 
@@ -271,7 +263,7 @@ if (!isset($cuadrado_size)) {
 
 
 
-</div>
+
 </div>
 </div>
 <div class="content">
@@ -310,8 +302,14 @@ if (isset($pol['user_ID'])) {
 ?></span>
 <b><?=PAIS?></b> <span style="font-size:11px;">DEFCON <b><?=$pol['config']['defcon']?></b></span>
 
-<span class="amarillo" id="pols_frase"><b><?=$pol['config']['pols_frase']?></b>
-<?php if ($pol['config']['pols_fraseedit'] == $pol['user_ID']) { echo ' <a href="/subasta/editar/" class="gris">#</a>'; } ?></span>
+<?php
+if (ECONOMIA) {
+	echo '<span class="amarillo" id="pols_frase"><b>'.$pol['config']['pols_frase'].'</b>';
+	if ($pol['config']['pols_fraseedit'] == $pol['user_ID']) { echo ' <a href="/subasta/editar/" class="gris">#</a>'; }
+}
+?>
+</span>
+
 </div>
 </div>
 </div>

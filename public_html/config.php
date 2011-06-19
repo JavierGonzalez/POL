@@ -1,63 +1,36 @@
 <?php
-// Dominio
 define('URL', 'virtualpol.com');
+define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/'.(DEV=='-dev'?'devel':'real').'/');
 
 // INICIALIZACION
 $host = explode('.', $_SERVER['HTTP_HOST']); // obtiene $host[0] que es el subdominio
-$host[0] = str_replace('-dev', '', $host[0], $dev); // convierte subdominios "pais-dev" en "pais" para que funcione la version dev
+$host[0] = str_replace('-dev', '', $host[0]); // convierte subdominios "pais-dev" en "pais" para que funcione la version dev
 if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
-if ($dev) { define('DEV', '-dev'); } else { define('DEV', ''); }
 
-define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/'.(DEV=='-dev'?'devel':'real').'/');
+// Passwords y claves
+include(RAIZ.'config-pwd.php');
 
+// PAISES
+$vp['paises'] = array('VP', '15M'); // ACTIVOS
+$vp['paises_congelados'] = array('POL', 'VULCAN', 'Hispania', 'Atlantis'); // INACTIVOS
 
-// Configuracion Paises y colores
-$vp['paises_congelados'] = array('POL', 'VULCAN', 'Hispania', 'Atlantis'); // PAISES INACTIVOS
-$vp['paises'] = array('VP', '15M'); // PAISES ACTIVOS.
-
+// COLORES
 $vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'vp'=>'#ACFA58', 'www'=>'#eeeeee');
 $vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'vp'=>'#9AFE2E', 'www'=>'grey');
 
-
 // Configuracion por pais
 switch ($host[0]) { 
-
-case 'vp':
-	define('PAIS', 'VP');
-	define('SQL', 'vp_');
-	break;
-
-
-case '15m':
-	define('PAIS', '15M');
-	define('SQL', '15m_');
-	break;
-
-case 'pol':
-	define('PAIS', 'POL');
-	define('SQL', 'pol_');
-	break;
-
-case 'vulcan':
-	define('PAIS', 'Vulcan');
-	define('SQL', 'vulcan_');
-	break;
-
-case 'hispania':
-	define('PAIS', 'Hispania');
-	define('SQL', 'hispania_');
-	break;
-
-case 'atlantis':
-	define('PAIS', 'Atlantis');
-	define('SQL', 'atlantis_');
-	break;
-
-default:
-	define('PAIS', 'POL');
-	define('SQL', 'pol_');
-	break;
+	case 'vp': define('PAIS', 'VP'); break;
+	case '15m': define('PAIS', '15M'); break;
+	case 'pol': define('PAIS', 'POL'); break;
+	case 'vulcan': define('PAIS', 'Vulcan'); break;
+	case 'hispania': define('PAIS', 'Hispania'); break;
+	case 'atlantis': define('PAIS', 'Atlantis'); break;
+	default: define('PAIS', 'VP'); break;
 }
+
+if (PAIS == '15M') { define('ECONOMIA', false); } else { define('ECONOMIA', true); }
+define('SQL', strtolower(PAIS).'_');
 
 define('COLOR_BG', $vp['bg'][PAIS]);
 define('COLOR_BG2', $vp['bg2'][PAIS]);
@@ -76,14 +49,10 @@ define('SQL_VOTOS', 'votos');
 define('SQL_EXPULSIONES', 'expulsiones');
 define('VOTO_CONFIANZA_MAX', 40); // numero maximo de votos de confianza emitidos
 
-// variables del sistema de usuarios
+// Variables del sistema de usuarios
 define('USERCOOKIE', '.virtualpol.com');
 define('REGISTRAR', 'http://www'.DEV.'.virtualpol.com/registrar/');
 
-// mapa (provisional)
-$columnas = 14;
-$filas = 18;
-
-// funciones con passwords importantes
-include(RAIZ.'config-pwd.php');
+// MAPA
+$columnas = 14; $filas = 18;
 ?>

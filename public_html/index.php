@@ -31,8 +31,8 @@ if (!$pol['nick']) {
 
 $txt .= '<center>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr>
-<th colspan="2"></th>
+<tr style="color:grey;">
+<th colspan="2" align="left">Plataforma</th>
 <th>Poblaci&oacute;n</th>
 <th>Antig&uuml;edad</th>
 <th>Gobierno</th>
@@ -81,17 +81,19 @@ foreach ($vp['paises'] AS $pais) {
 
 
 	$txt .= '<tr style="background:'.$vp['bg'][$pais].';">
-<td><a href="http://' . $pais_low . '.virtualpol.com/"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.'" /></a></td>
+<td><a href="http://'.$pais_low.'.virtualpol.com/"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.'" /></a></td>
 
-<td><a href="http://' . $pais_low . '.virtualpol.com/"><b style="font-size:24px;">' . $pais . '</b></a><br /><em style="color:#999;">'.$pais_config['pais_des'].'</em></td>
+<td><a href="http://'.$pais_low.'.virtualpol.com/"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
 
 <td align="right"><b style="font-size:20px;">' . $pais_pob . '</b></td>
 <td nowrap="nowrap" align="right"><b>' . $pais_dias . '</b> d&iacute;as</td>
 <td nowrap="nowrap"><img src="'.IMG.'cargos/7.gif" alt="Presidente de '.$pais.'" title="Presidente de '.$pais.'" /> '.$pais_presidente.'<br /><img src="'.IMG.'cargos/19.gif" alt="Vicepresidente de '.$pais.'" title="Vicepresidente de '.$pais.'" /> '.$pais_vice.'</td>
 
-<td style="font-size:13px;"><a href="http://'.$pais_low.'.virtualpol.com/poderes/">Poderes</a><br />
+<td style="font-size:13px;">
+<a href="http://'.$pais_low.'.virtualpol.com/elecciones/">Elecciones</a><br />
 <a href="http://'.$pais_low.'.virtualpol.com/foro/">Foro</a><br />
-<a href="http://'.$pais_low.'.virtualpol.com/chats/">Chats</a></td>
+<a href="http://'.$pais_low.'.virtualpol.com/chats/">Chats</a>
+</td>
 
 </tr>';
 

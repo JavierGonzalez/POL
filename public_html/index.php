@@ -12,14 +12,14 @@ if (isset($pol['user_ID'])) {
 
 <p>VirtualPol es una <b>plataforma democr&aacute;tica de Internet</b> donde los usuarios se auto-gestionan a s&iacute; mismos. Hasta ahora el &uacute;nico m&eacute;todo de administrar una comunidad en Internet era mediante una estructura rigida y autoritaria.</p>
 
-     <p><b>VirtualPol es una revoluci&oacute;n</b>, con la <b>Democracia</b> como pilar fundamental. Las Elecciones estan automatizadas, por lo tanto no existe ning&uacute;n usuario privilegiado. No hay intervenci&oacute;n del admin, a no ser que una situación determinada dada en un momento determinado no pueda ser arreglada por la ciudadanía. Esto es un avance hist&oacute;rico en las comunidades de Internet. Todos los ciudadanos est&aacute;n en absoluta igualdad. Con las mismas oportunidades para el liderazgo o el fracaso en la b&uacute;squeda del Poder y la auto-gesti&oacute;n. En esta etapa estamos todos juntos en un &uacute;nico pa&iacute;s llamado VP. <a href="http://vp.virtualpol.com/historia/">Historia de VirtualPol</a>.</p>';
+     <p><b>VirtualPol es una revoluci&oacute;n</b>, con la <b>Democracia</b> como pilar fundamental. Las Elecciones estan automatizadas, por lo tanto no existe ning&uacute;n usuario privilegiado. No hay intervenci&oacute;n del admin, a no ser que una situación determinada dada en un momento determinado no pueda ser arreglada por la ciudadanía. Esto es un avance hist&oacute;rico en las comunidades de Internet. Todos los ciudadanos est&aacute;n en absoluta igualdad. Con las mismas oportunidades para el liderazgo o el fracaso en la b&uacute;squeda del Poder y la auto-gesti&oacute;n. <a href="http://vp.virtualpol.com/historia/">Historia de VirtualPol</a>.</p>';
 } else {
 
 	$txt .= '<h1>Bienvenido a VirtualPol - Simulador Politico</h1>
 
 <p><span style="float:right;margin-left:10px;"><iframe src="http://docs.google.com/present/embed?id=ddfcnxdb_15fqwwcpct&interval=30" frameborder="0" width="410" height="342"></iframe></span>VirtualPol es una <b>plataforma democr&aacute;tica de Internet</b> donde los usuarios se auto-gestionan a s&iacute; mismos. Hasta ahora el &uacute;nico m&eacute;todo de administrar una comunidad en Internet era mediante una estructura rigida y autoritaria.</p>
 
-     <p><b>VirtualPol es una revoluci&oacute;n</b>, con la <b>Democracia</b> como pilar fundamental. Las Elecciones estan automatizadas, por lo tanto no existe ning&uacute;n usuario privilegiado. No hay intervenci&oacute;n del admin, a no ser que una situación determinada dada en un momento determinado no pueda ser arreglada por la ciudadanía. Esto es un avance hist&oacute;rico en las comunidades de Internet. Todos los ciudadanos est&aacute;n en absoluta igualdad. Con las mismas oportunidades para el liderazgo o el fracaso en la b&uacute;squeda del Poder y la auto-gesti&oacute;n. En esta etapa estamos todos juntos en un &uacute;nico pa&iacute;s llamado VP. <a href="http://vp.virtualpol.com/historia/">Historia de VirtualPol</a>.</p>';
+     <p><b>VirtualPol es una revoluci&oacute;n</b>, con la <b>Democracia</b> como pilar fundamental. Las Elecciones estan automatizadas, por lo tanto no existe ning&uacute;n usuario privilegiado. No hay intervenci&oacute;n del admin, a no ser que una situación determinada dada en un momento determinado no pueda ser arreglada por la ciudadanía. Esto es un avance hist&oacute;rico en las comunidades de Internet. Todos los ciudadanos est&aacute;n en absoluta igualdad. Con las mismas oportunidades para el liderazgo o el fracaso en la b&uacute;squeda del Poder y la auto-gesti&oacute;n. <a href="http://vp.virtualpol.com/historia/">Historia de VirtualPol</a>.</p>';
 
 }
 if (!$pol['nick']) {
@@ -38,8 +38,8 @@ $txt .= '<center>
 <th>Gobierno</th>
 <th colspan="3" align="center">Informaci&oacute;n</th>
 </tr>';
-$vp['paises2'] = array('VP'); // cambiar cuando se cambie en el config
-foreach ($vp['paises2'] AS $pais) {
+
+foreach ($vp['paises'] AS $pais) {
 	$pais_low = strtolower($pais);
 	
 	// ciudadanos
@@ -81,7 +81,7 @@ foreach ($vp['paises2'] AS $pais) {
 
 
 	$txt .= '<tr style="background:'.$vp['bg'][$pais].';">
-<td><a href="http://' . $pais_low . '.virtualpol.com/"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.' - Simulador Politico" /></a></td>
+<td><a href="http://' . $pais_low . '.virtualpol.com/"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.'" /></a></td>
 
 <td><a href="http://' . $pais_low . '.virtualpol.com/"><b style="font-size:24px;">' . $pais . '</b></a><br /><em style="color:#999;">'.$pais_config['pais_des'].'</em></td>
 

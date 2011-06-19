@@ -173,7 +173,7 @@ LIMIT 1", $link);
 		
 			pols_transferir($_POST['pols'], $r['ID'], '-1', '<b>SANCION ('.$pol['nick'].')&rsaquo;</b> '.strip_tags($_POST['concepto']));
 
-			evento_chat('<b>[SANCION] '.crear_link($r['nick']).' ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial/">Ver sanciones</a>)</b>');
+			evento_chat('<b>[SANCION] '.crear_link($r['nick']).'</b> ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial/">Ver sanciones</a>)');
 		}
 
 	}

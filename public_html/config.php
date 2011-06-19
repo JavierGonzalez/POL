@@ -12,8 +12,8 @@ define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/'.(DEV=='-dev'?'devel':'
 
 
 // Configuracion Paises y colores
-$vp['paises_congelados'] = array('POL', 'VULCAN', 'Hispania', 'Atlantis'); // aqui los paises que pasaron a ser historia (visibles pero inactivos)
-$vp['paises'] = array('VP', 'POL', 'VULCAN', 'Hispania', 'Atlantis'); // Quitar paises congelados cuando esté listo el estado "congelado".
+$vp['paises_congelados'] = array('POL', 'VULCAN', 'Hispania', 'Atlantis'); // PAISES INACTIVOS
+$vp['paises'] = array('VP', '15M'); // PAISES ACTIVOS.
 
 $vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'vp'=>'#ACFA58', 'www'=>'#eeeeee');
 $vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'vp'=>'#9AFE2E', 'www'=>'grey');
@@ -25,6 +25,12 @@ switch ($host[0]) {
 case 'vp':
 	define('PAIS', 'VP');
 	define('SQL', 'vp_');
+	break;
+
+
+case '15m':
+	define('PAIS', '15M');
+	define('SQL', '15m_');
 	break;
 
 case 'pol':

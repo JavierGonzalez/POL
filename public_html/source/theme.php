@@ -111,7 +111,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
 				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo fuente</a></li>
 				<li><a href="https://www.ohloh.net/p/virtualpol/contributors">Desarrollo</a></li>
-				<li><a href="http://www.virtualpol.com/manual">Manual de VirtualPol</a></li>
+				<li><a href="http://www.virtualpol.com/manual">Manual de ayuda</a></li>
 			</ul>
 	</li>
 </ul>

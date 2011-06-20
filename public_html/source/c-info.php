@@ -17,8 +17,8 @@ FROM users
 WHERE estado = 'ciudadano' AND avatar = 'true'
 ORDER BY online DESC
 LIMIT 300", $link);
-	while($row = mysql_fetch_array($result)) { 
-		$txt .= '<img src="'.IMG.'a/'.$row['ID'].'.jpg" alt="'.$row['nick'].'" title="'.$row['nick'].'" />'; 
+	while($r = mysql_fetch_array($result)) { 
+		$txt .= '<img src="'.IMG.'a/'.$r['ID'].'.jpg" alt="'.$r['nick'].'" title="'.$r['nick'].'" />'; 
 	}
 
 	break;
@@ -34,7 +34,7 @@ case 'censo':
 
 	// num ciudadanos activos (los que entraron en las ultimas 24h sin ser nuevos ciudadanos)
 	$margen_24h = date('Y-m-d H:i:s', time() - 86400);	// 24 h
-	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link));
+	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'ciudadano' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link));
 	$censo_activos = $result[0];
 
 
@@ -99,7 +99,6 @@ $txt .= '<p>' . $p_paginas . ' &nbsp; <a href="/info/censo/">Ciudadanos</a>: <b>
 <th style="padding:8px;" class="azul"><a href="/info/censo/online/">Online</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/' . $old . '/">Antig&uuml;edad</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/elec/"><acronym title="Elecciones en las que ha participado">Elec</acronym></a></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/refs/"><acronym title="Numero de referencias">Ref</acronym></a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/nota/">Nota</a></th>
 <th style="padding:8px;" class="azul" colspan="2"><a href="/info/censo/">&Uacute;ltimo&nbsp;acceso&darr;</a></th>
 </tr>';
@@ -114,7 +113,6 @@ $txt .= '<p>' . $p_paginas . ' &nbsp; <a href="/info/censo/">Ciudadanos</a>: <b>
 		case 'online': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY online DESC'; break;
 		case 'nota': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY nota DESC'; break;
 		case 'riqueza': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY pols DESC, fecha_registro ASC'; break;
-		case 'refs': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY ref_num DESC, fecha_registro ASC'; break;
 		case 'afiliacion': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY partido_afiliado DESC, fecha_registro ASC'; break;
 		case 'confianza': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY voto_confianza DESC, fecha_registro ASC'; break;
 		
@@ -131,39 +129,30 @@ $txt .= '<p>' . $p_paginas . ' &nbsp; <a href="/info/censo/">Ciudadanos</a>: <b>
 
 	$sc = get_supervisores_del_censo();
 
-	$result = mysql_query("SELECT *,
+	$result = mysql_query("SELECT ID, nick, estado, pais, nivel, online, ref, ref_num, num_elec, voto_confianza, fecha_registro, nota, fecha_last, cargo, avatar,
 (SELECT siglas FROM ".SQL."partidos WHERE users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas" . $sql_extra . "
 FROM users " . $order_by . " LIMIT " . $p_limit, $link);
-	while($row = mysql_fetch_array($result)){
-		$txt .= mysql_error($link);
-		$veterano = '';		
-		if ($row['nivel'] == 120) { $row['nivel'] = 1; }
-		if ($row['online'] != 0) { $online = duracion($row['online']); } else { $online = ''; }
-		if ($row['ref'] != 0) {
-			$result2 = mysql_query("SELECT nick FROM users WHERE ID = '" . $row['ref'] . "' LIMIT 1", $link);
-			while($row2 = mysql_fetch_array($result2)){ $veterano = '(Ref: ' . crear_link($row2['nick']) . ')'; }
-		}
-		if ($row['avatar'] == 'true') { $avatar = avatar($row['ID'], 40) . ' '; } else { $avatar = ''; }
-		if ($row['siglas']) { $partido = '<a href="/partidos/' . strtolower($row['siglas']) . '/">' . $row['siglas'] . '</a>'; } else { $partido = ''; }
-		if ($row['ref_num'] == 0) { $row['ref_num'] = ''; }
-		if ($row['num_elec'] == 0) { $row['num_elec'] = ''; }
+	while($r = mysql_fetch_array($result)){
+		if ($r['online'] != 0) { $online = duracion($r['online']); } else { $online = ''; }
+		if ($r['avatar'] == 'true') { $avatar = avatar($r['ID'], 40) . ' '; } else { $avatar = ''; }
+		if ($r['siglas']) { $partido = '<a href="/partidos/' . strtolower($r['siglas']) . '/">' . $r['siglas'] . '</a>'; } else { $partido = ''; }
+		if ($r['ref_num'] == 0) { $r['ref_num'] = ''; }
+		if ($r['num_elec'] == 0) { $r['num_elec'] = ''; }
 
-		if ($row['has_votado']) { $has_votado = ' (' . confianza($row['has_votado']) . ')'; } else { $has_votado = ''; }
+		if ($r['has_votado']) { $has_votado = ' (' . confianza($r['has_votado']) . ')'; } else { $has_votado = ''; }
 		$txt .= '
 <tr>
 <td align="right" class="gris">' . $orden++ . '</td>
-<td align="right">' . $row['nivel'] . '</td>
+<td align="right">' . $r['nivel'] . '</td>
 <td>' . $avatar . '</td>
-<td'.(isset($sc[$row['ID']])?' style="background:#FFA07A;"><span style="float:right;color:red;">SC</span>':'>').'<img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick'], 'nick', $row['estado']) . '</b></td>
+<td'.(isset($sc[$r['ID']])?' style="background:#FFA07A;"><span style="float:right;color:red;">SC</span>':'>').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
 <td>' . $partido . '</td>
-<td>' . confianza($row['voto_confianza']) . $has_votado .'</td>
+<td>' . confianza($r['voto_confianza']) . $has_votado .'</td>
 <td align="right" nowrap="nowrap">' . $online . '</td>
-<td>' . explodear(' ', $row['fecha_registro'], 0) . '</td>
-<td align="right">' . $row['num_elec'] . '</td>
-<td align="right">' . $row['ref_num'] . '</td>
-<td class="gris" align="right">' . $row['nota'] . '</td>
-<td align="right" nowrap="nowrap">' . duracion(time() - strtotime($row['fecha_last'])) . '</td>
-<td nowrap="nowrap">' . $veterano . '</td>
+<td>' . explodear(' ', $r['fecha_registro'], 0) . '</td>
+<td align="right">' . $r['num_elec'] . '</td>
+<td class="gris" align="right">' . $r['nota'] . '</td>
+<td align="right" nowrap="nowrap">' . duracion(time() - strtotime($r['fecha_last'])) . '</td>
 </tr>' . "\n";
 	}
 	$txt .= '</table><p>' . $p_paginas . '</p>';
@@ -228,7 +217,7 @@ $result = mysql_query("SELECT SUM(pols + IFNULL((SELECT SUM(pols) FROM ".strtolo
 (SELECT AVG(salario) FROM ".strtolower($pais)."_estudios) AS salario_medio
 FROM users
 WHERE pais = '".$pais."'");
-	while($row = mysql_fetch_array($result)) {
+	while($r = mysql_fetch_array($result)) {
 
 
 		$result2 = mysql_query("SELECT nick, pais,
@@ -237,41 +226,41 @@ FROM users
 WHERE pais = '".$pais."'
 ORDER BY pols_total DESC 
 LIMIT 25", $link);
-		while ($row2 = mysql_fetch_array($result2)) {
-			$ricos[$row2['nick'].':'.$row2['pais']] = $row2['pols_total'];
+		while ($r2 = mysql_fetch_array($result2)) {
+			$ricos[$r2['nick'].':'.$r2['pais']] = $r2['pols_total'];
 		}
 
 
 
-		$total += $row['pols_ciudadanos'] + $row['pols_gobierno'];
+		$total += $r['pols_ciudadanos'] + $r['pols_gobierno'];
 
-		$total_pais[$pais] = $row['pols_ciudadanos']+$row['pols_gobierno'];
+		$total_pais[$pais] = $r['pols_ciudadanos']+$r['pols_gobierno'];
 
 		$txt .= '<tr>
 <td style="background:'.$vp['bg'][$pais].';"><a href="http://'.strtolower($pais).'.virtualpol.com/"><b>'.$pais.'</b></a></td>
-<td align="right"><b>'.$row['num_ciudadanos'].'</b></td>
-<td align="right">'.pols($row['pols_negativo']).'</td>
+<td align="right"><b>'.$r['num_ciudadanos'].'</b></td>
+<td align="right">'.pols($r['pols_negativo']).'</td>
 
-<td align="right" style="color:red;"><b>'.$row['arancel_salida'].'%</b></td>';
+<td align="right" style="color:red;"><b>'.$r['arancel_salida'].'%</b></td>';
 
 
-if ($row['impuestos'] > 0) {
-	$txt .= '<td><b>'.$row['impuestos'].'%</b></td><td align="right">'.pols($row['impuestos_minimo']).'</td>';
+if ($r['impuestos'] > 0) {
+	$txt .= '<td><b>'.$r['impuestos'].'%</b></td><td align="right">'.pols($r['impuestos_minimo']).'</td>';
 } else {
 	$txt .= '<td colspan="2">Sin impuestos</td>';
 }
 
 
-$txt .= '<td align="right">'.pols($row['inem']).'</td>
+$txt .= '<td align="right">'.pols($r['inem']).'</td>
 
-<td align="right">'.pols($row['salario_medio']).'</td>
-<td align="right">'.pols(round($row['pols_ciudadanos']/$row['num_ciudadanos'])).'</td>
+<td align="right">'.pols($r['salario_medio']).'</td>
+<td align="right">'.pols(round($r['pols_ciudadanos']/$r['num_ciudadanos'])).'</td>
 
-<td align="right">'.pols($row['pols_ciudadanos']).'</td>
+<td align="right">'.pols($r['pols_ciudadanos']).'</td>
 <td>+</td>
-<td align="right">'.pols($row['pols_gobierno']).'</td>
+<td align="right">'.pols($r['pols_gobierno']).'</td>
 <td>=</td>
-<td align="right">'.pols($row['pols_ciudadanos']+$row['pols_gobierno']).'</td>
+<td align="right">'.pols($r['pols_ciudadanos']+$r['pols_gobierno']).'</td>
 </tr>';
 
 	}
@@ -280,10 +269,10 @@ $txt .= '<td align="right">'.pols($row['inem']).'</td>
 	// GEN GRAFICO VISITAS
 	$n = 0;
 	$result = mysql_query("SELECT pols, pols_cuentas FROM stats WHERE pais = '".$pais."' ORDER BY time DESC LIMIT 9", $link);
-	while($row = mysql_fetch_array($result)){
+	while($r = mysql_fetch_array($result)){
 		if ($gph[$pais]) { $gph[$pais] = ',' . $gph[$pais]; }
-		$gph_maxx[$n] += $row['pols'] + $row['pols_cuentas'];
-		$gph[$pais] = $row['pols'] + $row['pols_cuentas'] . $gph[$pais];
+		$gph_maxx[$n] += $r['pols'] + $r['pols_cuentas'];
+		$gph[$pais] = $r['pols'] + $r['pols_cuentas'] . $gph[$pais];
 		if ($gph_maxx[$n] > $gph_max) {
 			$gph_max = $gph_maxx[$n];
 		}
@@ -294,8 +283,8 @@ $txt .= '<td align="right">'.pols($row['inem']).'</td>
 
 
 	$result = mysql_query("SELECT SUM(pols) AS pols_total FROM users WHERE pais = 'ninguno'");
-	while($row = mysql_fetch_array($result)) {
-		$pols_turistas = $row['pols_total'];
+	while($r = mysql_fetch_array($result)) {
+		$pols_turistas = $r['pols_total'];
 	}
 
 	$total_moneda = $total+$pols_turistas;
@@ -344,8 +333,8 @@ $txt .= '</ol>
 <h2>Deudores:</h2><ol>';
 
 $result = mysql_query("SELECT pols, pais, nick FROM users WHERE pols < 0 ORDER BY pols ASC");
-while($row = mysql_fetch_array($result)) {
-	$txt .= '<li>'.pols($row['pols']).' '.MONEDA.' <b class="big">'.crear_link($row['nick'], 'nick', 'ciudadano', $row['pais']).'</b></li>';
+while($r = mysql_fetch_array($result)) {
+	$txt .= '<li>'.pols($r['pols']).' '.MONEDA.' <b class="big">'.crear_link($r['nick'], 'nick', 'ciudadano', $r['pais']).'</b></li>';
 }
 
 $txt .= '</ol>

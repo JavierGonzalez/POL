@@ -59,7 +59,7 @@ function shuffle_assoc_OLD(&$array) {
 
 // carga config
 $result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
-while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
+while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 $pol['cargos'] = cargos();
 
@@ -72,9 +72,9 @@ if (($_GET['a'] == 'editar') AND ((($pol['cargos'][35]) OR ($pol['cargos'][34]))
 FROM ".SQL."examenes
 WHERE ID = '" . $_GET['b'] . "'
 LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)){
+	while($r = mysql_fetch_array($result)){
 
-		$txt .= '<h1>Editar examen: ' . $row['titulo'] . ' (<a href="/examenes/">Ver examenes</a>)</h1>
+		$txt .= '<h1>Editar examen: ' . $r['titulo'] . ' (<a href="/examenes/">Ver examenes</a>)</h1>
 
 
 <hr />
@@ -106,50 +106,50 @@ LIMIT 1", $link);
 FROM ".SQL."examenes_preg
 WHERE examen_ID = '" . $_GET['b'] . "'
 ORDER BY time DESC", $link);
-		while($row2 = mysql_fetch_array($result2)){
+		while($r2 = mysql_fetch_array($result2)){
 			$respuestas = '';
-			$res = explode("|", $row2['respuestas']);
+			$res = explode("|", $r2['respuestas']);
 			foreach($res as $ID => $respuesta) {
 				$respuestas .= '<option value="' . $ID . '">' . $respuesta . '</option>';
 			}
 
 
-			if (($pol['cargos'][35]) OR (($pol['cargos'][34]) AND ($row2['user_ID'] == $pol['user_ID']))) { $boton = boton('x', '/accion.php?a=examenes&b=eliminar-pregunta&ID=' . $row2['ID'] . '&re_ID=' . $row['ID'], '&iquest;Seguro que quieres ELIMINAR esta pregunta y sus respuestas?'); } else { $boton = ''; }
+			if (($pol['cargos'][35]) OR (($pol['cargos'][34]) AND ($r2['user_ID'] == $pol['user_ID']))) { $boton = boton('x', '/accion.php?a=examenes&b=eliminar-pregunta&ID=' . $r2['ID'] . '&re_ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta pregunta y sus respuestas?'); } else { $boton = ''; }
 
-			$txt .= '<li>' . crear_link($row2['nick']) . ': <b>&iquest;' . $row2['pregunta'] . '?</b> &nbsp; (' . $row2['tiempo'] . ' seg) &nbsp; <select name="p"><option value=""></option>' . $respuestas . '</select> ' . $boton . '</li>';
+			$txt .= '<li>' . crear_link($r2['nick']) . ': <b>&iquest;' . $r2['pregunta'] . '?</b> &nbsp; (' . $r2['tiempo'] . ' seg) &nbsp; <select name="p"><option value=""></option>' . $respuestas . '</select> ' . $boton . '</li>';
 		}
 	
 	
 		$txt .= '</ol>';
 
 		if ($_GET['b'] != 0) {
-			if (substr($row['cargo_ID'], 0, 1) != '-') { $readonly = ' readonly="readonly"'; } else { $readonly = ''; }
+			if (substr($r['cargo_ID'], 0, 1) != '-') { $readonly = ' readonly="readonly"'; } else { $readonly = ''; }
 			$txt .= '<hr />
 <h2>Editar examen:</h2>
-<form action="/accion.php?a=examenes&b=editar-examen&ID=' . $row['ID'] . '" method="post">
+<form action="/accion.php?a=examenes&b=editar-examen&ID=' . $r['ID'] . '" method="post">
 <ol>
 
-<li><b>Titulo del examen:</b> <input type="text" name="titulo" size="15" maxlength="30" value="' . $row['titulo'] . '"' . $readonly . ' /></li>
+<li><b>Titulo del examen:</b> <input type="text" name="titulo" size="15" maxlength="30" value="' . $r['titulo'] . '"' . $readonly . ' /></li>
 
 <li><b>Temario:</b> descripci&oacute;n breve y precisa de los temas abarcados<br />
-<textarea name="descripcion" style="color: green; font-weight: bold; width: 570px; height: 100px;">' . strip_tags($row['descripcion']) . '</textarea></li>
+<textarea name="descripcion" style="color: green; font-weight: bold; width: 570px; height: 100px;">' . strip_tags($r['descripcion']) . '</textarea></li>
 
-<li><b>Nota para aprobar:</b> <input type="text" name="nota" size="3" maxlength="4" value="' . $row['nota'] . '" style="text-align:right;" /></li>
+<li><b>Nota para aprobar:</b> <input type="text" name="nota" size="3" maxlength="4" value="' . $r['nota'] . '" style="text-align:right;" /></li>
 
-<li><b>Extensi&oacute;n:</b> <input type="text" name="num_preguntas" size="3" maxlength="4" value="' . $row['num_preguntas'] . '" style="text-align:right;" /> preguntas</li>
+<li><b>Extensi&oacute;n:</b> <input type="text" name="num_preguntas" size="3" maxlength="4" value="' . $r['num_preguntas'] . '" style="text-align:right;" /> preguntas</li>
 
 <li>' . boton_cargo('Editar examen', false, 35) . '</li>
 
 </ol>
 </form>';
-			if (($pol['cargos'][35]) AND ($row['cargo_ID'] < 0))  {
+			if (($pol['cargos'][35]) AND ($r['cargo_ID'] < 0))  {
 				$result3 = mysql_query("SELECT (SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas
 FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
-				while($row3 = mysql_fetch_array($result3)){ 
-					if ($row3['num_depreguntas'] == 0) {
+				while($r3 = mysql_fetch_array($result3)){ 
+					if ($r3['num_depreguntas'] == 0) {
 						$txt .='<hr />
 <form action="/accion.php?a=examenes&b=eliminar-examen" method="post">
-<input type="hidden" name="ID" value="' . $row['ID'] . '" /> 
+<input type="hidden" name="ID" value="' . $r['ID'] . '" /> 
 <input type="submit" value="Eliminar examen"/>
 </form>';
 					}
@@ -171,7 +171,7 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
 
 	// load config full
 	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
-	while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
+	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 	$txt_title = 'Mis examenes';
 	$txt .= '<h1><a href="/examenes/">Examenes</a>: Mis examenes</h1>
@@ -195,16 +195,16 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
 FROM ".SQL."estudios_users
 WHERE user_ID = '" . $pol['user_ID'] . "'
 ORDER BY estado ASC, nota DESC", $link);
-	while($row = mysql_fetch_array($result)){
-		if ($row['estado'] == 'ok') { $sello = '<img src="'.IMG.'estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = ''; }
-		if ($row['cargo'] == 1) { $cargo = '(Cargo ejercido)'; } else { $cargo = ''; }
-		if (($row['ID_estudio'] <= 0) AND (time()-strtotime($row['time']) > $pol['config']['examen_repe']*6)) {
-			$caducar_examen = ' <form action="/accion.php?a=examenes&b=caducar_examen&ID='.$row['ID'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="X"  onclick="if (!confirm(\'&iquest;Seguro que quieres que CADUQUE el examen de ' . $row['nombre_examen'] . '?\')) { return false; }"/></form>';
+	while($r = mysql_fetch_array($result)){
+		if ($r['estado'] == 'ok') { $sello = '<img src="'.IMG.'estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = ''; }
+		if ($r['cargo'] == 1) { $cargo = '(Cargo ejercido)'; } else { $cargo = ''; }
+		if (($r['ID_estudio'] <= 0) AND (time()-strtotime($r['time']) > $pol['config']['examen_repe']*6)) {
+			$caducar_examen = ' <form action="/accion.php?a=examenes&b=caducar_examen&ID='.$r['ID'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="X"  onclick="if (!confirm(\'&iquest;Seguro que quieres que CADUQUE el examen de ' . $r['nombre_examen'] . '?\')) { return false; }"/></form>';
 		}
 		else {
 			$caducar_examen = '';
 		}
-		$txt .= '<tr><td>' . $sello . '</td><td align="right"><b style="color:grey;">' . $row['nota'] . '</b></td><td><a href="/examenes/' . $row['examen_ID'] . '/"><b>' . $row['nombre_examen'] . '</b></a></td><td>' . $cargo . '</td><td align="right"><acronym title="' . $row['time'] . '">' . duracion(time() - strtotime($row['time'])) .  '</acronym></td><td><b>'. $caducar_examen .'</b></td></tr>';
+		$txt .= '<tr><td>' . $sello . '</td><td align="right"><b style="color:grey;">' . $r['nota'] . '</b></td><td><a href="/examenes/' . $r['examen_ID'] . '/"><b>' . $r['nombre_examen'] . '</b></a></td><td>' . $cargo . '</td><td align="right"><acronym title="' . $r['time'] . '">' . duracion(time() - strtotime($r['time'])) .  '</acronym></td><td><b>'. $caducar_examen .'</b></td></tr>';
 	}
 
 	$txt .= '</table><p style="color:red;">Tiempo de expiraci&oacute;n: <b>'.duracion($pol['config']['examenes_exp']).'</b></p>';
@@ -224,7 +224,7 @@ ORDER BY estado ASC, nota DESC", $link);
 </ol>
 
 </form>';
-} elseif (($_GET['a'] == 'examen') AND ($_GET['b']) AND ($_GET['b'] != 0) AND (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador'))) { 
+} elseif (($_GET['a'] == 'examen') AND ($_GET['b']) AND ($_GET['b'] != 0) AND ($pol['estado'] == 'ciudadano')) { 
 														// HACER EXAMEN
 
 	$result = mysql_query("SELECT ID, titulo, user_ID, time, cargo_ID, nota, num_preguntas,
@@ -234,33 +234,33 @@ ORDER BY estado ASC, nota DESC", $link);
 FROM ".SQL."examenes
 WHERE ID = '" . $_GET['b'] . "'
 LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)){
+	while($r = mysql_fetch_array($result)){
 
 
-		$preguntas_disponibles = $row['num_preguntas_especificas'] + $row['num_preguntas_generales'];
-		$margen_ultimoexamen = strtotime($row['fecha_ultimoexamen']) + $pol['config']['examen_repe'];
-		if (((!$row['fecha_ultimoexamen']) OR ($margen_ultimoexamen < time())) AND ($row['num_preguntas_especificas'] >= 5) AND ($preguntas_disponibles >= $row['num_preguntas']) AND ($pol['pols'] >= $pol['config']['pols_examen'])) {
+		$preguntas_disponibles = $r['num_preguntas_especificas'] + $r['num_preguntas_generales'];
+		$margen_ultimoexamen = strtotime($r['fecha_ultimoexamen']) + $pol['config']['examen_repe'];
+		if (((!$r['fecha_ultimoexamen']) OR ($margen_ultimoexamen < time())) AND ($pol['pols'] >= $pol['config']['pols_examen'])) {
 
 			// marca examen como hecho	
-			if ($row['fecha_ultimoexamen']) {
+			if ($r['fecha_ultimoexamen']) {
 				//update 
-				mysql_query("UPDATE ".SQL."estudios_users SET time = '" . $date . "', nota = 0.0, estado = 'examen' WHERE ID_estudio = '" . $row['cargo_ID'] . "' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+				mysql_query("UPDATE ".SQL."estudios_users SET time = '" . $date . "', nota = 0.0, estado = 'examen' WHERE ID_estudio = '" . $r['cargo_ID'] . "' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 			} else {
 				//insert
 				mysql_query("INSERT INTO ".SQL."estudios_users 
 (ID_estudio, user_ID, time, estado, nota) 
-VALUES ('" . $row['cargo_ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', 'examen', '0.0')", $link);
+VALUES ('" . $r['cargo_ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', 'examen', '0.0')", $link);
 			}	
 
 			// Cobrar examen
 			if ($pol['config']['pols_examen'] != '0') {
 				include('inc-functions-accion.php');
-				pols_transferir($pol['config']['pols_examen'], $pol['user_ID'], '-1', 'Examen: ' . $row['titulo']);
+				pols_transferir($pol['config']['pols_examen'], $pol['user_ID'], '-1', 'Examen: ' . $r['titulo']);
 			}
 
 
 			// EMPIEZA EXAMEN
-			$txt .= '<h1>Examen: ' . $row['titulo'] . '</h1>
+			$txt .= '<h1>Examen: ' . $r['titulo'] . '</h1>
 
 <p>Tienes <b><span class="seg"></span></b> segundos.</p>
 
@@ -284,11 +284,11 @@ VALUES ('" . $row['cargo_ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', 
 			$result2 = mysql_query("SELECT ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo
 FROM ".SQL."examenes_preg
 WHERE examen_ID = '" . $_GET['b'] . "' OR examen_ID = 0
-ORDER BY examen_ID DESC, RAND() LIMIT " . $row['num_preguntas'], $link);
-			while($row2 = mysql_fetch_array($result2)){
+ORDER BY examen_ID DESC, RAND() LIMIT " . $r['num_preguntas'], $link);
+			while($r2 = mysql_fetch_array($result2)){
 				$respuestas = '';
 				$res2 = '';
-				$res = explode("|", $row2['respuestas']);
+				$res = explode("|", $r2['respuestas']);
 				
 				$res2['a'] = $res[0];
 				$respuestas_correctas[] = md5($res[0]);
@@ -299,12 +299,12 @@ ORDER BY examen_ID DESC, RAND() LIMIT " . $row['num_preguntas'], $link);
 				$res2 = shuffle_assoc($res2);
 
 
-				$tiempo += $row2['tiempo'];
+				$tiempo += $r2['tiempo'];
 				foreach($res2 as $ID => $respuesta) {
-					$respuestas .= '<input type="radio" name="respuesta' . $row2['ID'] . '" value="' . md5($respuesta) . '" />' . $respuesta . '<br />';
+					$respuestas .= '<input type="radio" name="respuesta' . $r2['ID'] . '" value="' . md5($respuesta) . '" />' . $respuesta . '<br />';
 				}
-				if ($pregs) { $pregs .= '|'; } $pregs .= $row2['ID'];
-				$txt .= '<li><b>&iquest;' . $row2['pregunta'] . '?</b><br />' . $respuestas . '</li>';
+				if ($pregs) { $pregs .= '|'; } $pregs .= $r2['ID'];
+				$txt .= '<li><b>&iquest;' . $r2['pregunta'] . '?</b><br />' . $respuestas . '</li>';
 			}
 			$tiempo += 10;
 			$limite_tiempo = time() + $tiempo;
@@ -359,7 +359,7 @@ window.onload = function(){
 }
 </script>';
 
-		} else { header('Location: http://'.HOST.'/examenes/' . $row['ID'] . '/'); exit; }
+		} else { header('Location: http://'.HOST.'/examenes/' . $r['ID'] . '/'); exit; }
 	}
 
 
@@ -374,29 +374,29 @@ window.onload = function(){
 FROM ".SQL."examenes
 WHERE ID = '" . $_GET['a'] . "'
 LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)){
+	while($r = mysql_fetch_array($result)){
 
-		$txt_title = 'Examen de ' . $row['titulo'];
-		$txt .= '<h1>' . $row['titulo'] . ' (<a href="/examenes/">Ver examenes</a>)</h1>
+		$txt_title = 'Examen de ' . $r['titulo'];
+		$txt .= '<h1>' . $r['titulo'] . ' (<a href="/examenes/">Ver examenes</a>)</h1>
 <table border="0" width="100%"><tr><td valign="top" width="60%">
 
-<p class="amarillo"><b>Temario:</b><br />' . $row['descripcion'] . '</p>
+<p class="amarillo"><b>Temario:</b><br />' . $r['descripcion'] . '</p>
 
-<p>Nota minima para aprobar: <b class="gris">' . $row['nota'] . '</b>. Examen tipo test, tiempo limitado, <b>' . $row['num_preguntas'] . '</b> preguntas de entre <b>' . $row['num_preguntas_especificas'] . '</b> en total.</p>
+<p>Nota minima para aprobar: <b class="gris">' . $r['nota'] . '</b>. Examen tipo test, tiempo limitado, <b>' . $r['num_preguntas'] . '</b> preguntas de entre <b>' . $r['num_preguntas_especificas'] . '</b> en total.</p>
 
 <p>No podr&aacute;s repetir este examen hasta <b>' . duracion($pol['config']['examen_repe']) . '</b> despu&eacute;s.</p>';
 
-		if ($row['cargo_ID'] == 0) {
+		if ($r['cargo_ID'] == 0) {
 			$txt .= '<p>Examen sin vinculaci&oacute;n con cargo.</p>';
 		} else {
-			$result2 = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '" . $row['cargo_ID'] . "' LIMIT 1", $link);
-			while($row2 = mysql_fetch_array($result2)){ $txt .= '<p>Examen vinculado al cargo: <a href="/cargos/">' . $row2['nombre'] . '</a>.</p>'; }
+			$result2 = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '" . $r['cargo_ID'] . "' LIMIT 1", $link);
+			while($r2 = mysql_fetch_array($result2)){ $txt .= '<p>Examen vinculado al cargo: <a href="/cargos/">' . $r2['nombre'] . '</a>.</p>'; }
 			
 		}
 
-		$margen_ultimoexamen = strtotime($row['fecha_ultimoexamen']) + $pol['config']['examen_repe'];
-		if ((!$row['fecha_ultimoexamen']) OR ($margen_ultimoexamen < time())) {
-			$txt .= '<p>' . boton('HACER EXAMEN', '/examenes/examen/' . $row['ID'] . '/', '&iquest;Est&aacute;s preparado para EXAMINARTE?\n\nSolo podr&aacute;s intentarlo UNA VEZ cada ' . duracion($pol['config']['examen_repe']) . '.\n\nSi ejerces el cargo y suspendes lo perder&aacute;s!', false, $pol['config']['pols_examen']) . '</p>';
+		$margen_ultimoexamen = strtotime($r['fecha_ultimoexamen']) + $pol['config']['examen_repe'];
+		if ((!$r['fecha_ultimoexamen']) OR ($margen_ultimoexamen < time())) {
+			$txt .= '<p>' . boton('HACER EXAMEN', '/examenes/examen/' . $r['ID'] . '/', '&iquest;Est&aacute;s preparado para EXAMINARTE?\n\nSolo podr&aacute;s intentarlo UNA VEZ cada ' . duracion($pol['config']['examen_repe']) . '.\n\nSi ejerces el cargo y suspendes lo perder&aacute;s!', false, $pol['config']['pols_examen']) . '</p>';
 		} else {
 			$txt .= '<p><b class="amarillo">No puedes repetir el examen hasta dentro de ' . duracion($margen_ultimoexamen - time()) . '</b></p>';
 		}
@@ -406,12 +406,12 @@ LIMIT 1", $link);
 		$result2 = mysql_query("SELECT nota, user_ID, cargo, estado,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick,
 (SELECT fecha_registro FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS fecha_registro
-FROM ".SQL."estudios_users WHERE ID_estudio = '" . $row['cargo_ID'] . "' AND nota != '' ORDER BY nota DESC, cargo DESC, fecha_registro ASC LIMIT 100", $link);
+FROM ".SQL."estudios_users WHERE ID_estudio = '" . $r['cargo_ID'] . "' AND nota != '' ORDER BY nota DESC, cargo DESC, fecha_registro ASC LIMIT 100", $link);
 		$txt .= mysql_error($link);
-		while($row2 = mysql_fetch_array($result2)){ 
-			if ($row2['cargo'] == 1) { $cargo = '<img src="'.IMG.'cargos/'.$row['cargo_ID'].'.gif" />'; } else { $cargo = ''; }
-			if ($row2['estado'] == 'ok') { $sello = '<img src="'.IMG.'estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = '<span style="margin-left:21px;"></span>'; }
-			$txt .= '<li><b class="gris">' . $sello . ' ' . $row2['nota'] . ' ' . $cargo . crear_link($row2['nick']) . '</b></li>';
+		while($r2 = mysql_fetch_array($result2)){ 
+			if ($r2['cargo'] == 1) { $cargo = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" />'; } else { $cargo = ''; }
+			if ($r2['estado'] == 'ok') { $sello = '<img src="'.IMG.'estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = '<span style="margin-left:21px;"></span>'; }
+			$txt .= '<li><b class="gris">' . $sello . ' ' . $r2['nota'] . ' ' . $cargo . crear_link($r2['nick']) . '</b></li>';
 		}
 
 		$txt .= '</ol></td></tr></table>';
@@ -427,8 +427,8 @@ FROM ".SQL."estudios_users WHERE ID_estudio = '" . $row['cargo_ID'] . "' AND not
 
 
 	$result = mysql_query("SELECT examen_ID FROM ".SQL."examenes_preg", $link);
-	while($row = mysql_fetch_array($result)){ 
-		 if ($row['examen_ID'] == 0) { $num_generales++; } else { $num_especificas++; }
+	while($r = mysql_fetch_array($result)){ 
+		 if ($r['examen_ID'] == 0) { $num_generales++; } else { $num_especificas++; }
 	}
 	
 	if (($pol['cargos'][35]) OR ($pol['cargos'][34])) { $boton = boton('Editar', '/examenes/editar/', 'm'); } 
@@ -456,34 +456,30 @@ $txt .= '
 FROM ".SQL."examenes
 WHERE ID != 0
 ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
-	while($row = mysql_fetch_array($result)){
+	while($r = mysql_fetch_array($result)){
 
-		if (substr($row['cargo_ID'], 0, 1) != '-') {
-			$result2 = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '" . $row['cargo_ID'] . "' LIMIT 1", $link);
-			while($row2 = mysql_fetch_array($result2)){ $cargo = '<img src="'.IMG.'cargos/' . $row['cargo_ID'] . '.gif" title="' . $row2['nombre'] . '" />'; }
+		if (substr($r['cargo_ID'], 0, 1) != '-') {
+			$result2 = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '" . $r['cargo_ID'] . "' LIMIT 1", $link);
+			while($r2 = mysql_fetch_array($result2)){ $cargo = '<img src="'.IMG.'cargos/' . $r['cargo_ID'] . '.gif" title="' . $r2['nombre'] . '" />'; }
 		} else { $cargo = ''; }
 
-		if (($pol['cargos'][35]) OR ($pol['cargos'][34])) { $boton = boton('Editar', '/examenes/editar/' . $row['ID'] . '/', 'm'); } 
+		if (($pol['cargos'][35]) OR ($pol['cargos'][34])) { $boton = boton('Editar', '/examenes/editar/' . $r['ID'] . '/', 'm'); } 
 		else { $boton = ''; }
 
-		if ($row['aprobados'] > 0) {
-			$aprobados = round(($row['aprobados'] * 100) / $row['examinados']) . '%';	
+		if ($r['aprobados'] > 0) {
+			$aprobados = round(($r['aprobados'] * 100) / $r['examinados']) . '%';	
 		} else { $aprobados = '0%'; }
 
-		$num_preguntas_disponibles = $num_generales + $row['num_preguntas_especificas'];
-		if (($row['num_preguntas_especificas'] >= 5) AND ($num_preguntas_disponibles >= $row['num_preguntas'])) {
-			$url = '<a href="/examenes/' . $row['ID'] . '/"><b>' . $row['titulo'] . '</b></a>';
-		} else {
-			$url = '<b>' . $row['titulo'] . '</b>';
-			$aprobados = '';
-		}
+
+
+		$url = '<a href="/examenes/' . $r['ID'] . '/"><b>' . $r['titulo'] . '</b></a>';
 
 
 		$txt .= '<tr>
-<td valign="top">' . $row['num_preguntas'] . ' de ' . $row['num_preguntas_especificas'] . '</td>
-<td valign="top"><b style="color:grey;">' . $row['nota'] . '</b></td>
+<td valign="top">' . $r['num_preguntas'] . ' de ' . $r['num_preguntas_especificas'] . '</td>
+<td valign="top"><b style="color:grey;">' . $r['nota'] . '</b></td>
 <td valign="top" align="right">' . $aprobados . '</td>
-<td valign="top" align="right">' . $row['aprobados'] . '</td>
+<td valign="top" align="right">' . $r['aprobados'] . '</td>
 <td valign="top">' . $cargo . '</td>
 <td valign="top">' . $url . '</td>
 <td valign="top">' . $boton . '</td>

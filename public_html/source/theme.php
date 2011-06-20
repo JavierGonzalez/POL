@@ -1,23 +1,13 @@
 <?php 
-if (!$txt) { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
-if ($_SERVER['HTTP_HOST'] == 'ninguno.virtualpol.com') { header('Location: http://www.virtualpol.com/'); exit; }
+if ((!$txt) OR ($_SERVER['HTTP_HOST'] == 'ninguno.virtualpol.com')) { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
 $kw = '';
 
 if ($txt_title) { 
 	$txt_title .= ' | '.PAIS.' | VirtualPol'; 
-} else { 
-	//home
-	
-	if (!$pol['user_ID']) {
-		if (PAIS == 'Hispania') { $kw = 'Simulador Politico Espa&ntilde;ol '; }
-	}
-	if ($pol['config']['pais_des']) {
-		$txt_title =  $pol['config']['pais_des'].' de '.PAIS.' '.$kw.'| Comunidad VirtualPol';
-	} else {
-		$txt_title =  PAIS.' '.$kw.'| Comunidad VirtualPol';
-	}
+} else { 	//home
+	$txt_title = ($pol['config']['pais_des']?$pol['config']['pais_des'].' de '.PAIS.' '.$kw.'| Comunidad VirtualPol':PAIS.' '.$kw.'| Comunidad VirtualPol');
 }
-if (!$txt_description) { $txt_description = $txt_title . ' - ' . $kw . PAIS.' | VirtualPol'; }
+if (!$txt_description) { $txt_description = $txt_title.' - '.$kw.PAIS.' | VirtualPol'; }
 
 if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\''.IMG.'bg/'.$pol['config']['bg'].'\') repeat fixed top left'; } else { $body_bg = COLOR_BG; }
 ?>
@@ -111,27 +101,22 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <tr>
 
 
-<td>
+<td nowrap="nowrap">
 <ul class="sfn-menu">
-
-
 	<li class="current">
-		<a href="http://www.virtualpol.com/" title="VirtualPol"><img src="<?=IMG?>vp-logo.png" border="0" alt="VirtualPol" style="margin:-10px 0 -18px -14px;" /> &#9660;</a>
+		<a href="http://www.virtualpol.com/" title="VirtualPol">&#9660; <img src="<?=IMG?>virtualpol-logo-cuadrado-40.gif" border="0" alt="VirtualPol" style="margin:-15px 0;" /></a>
 			<ul>
 				<li><a href="http://vp.virtualpol.com/">VP</a></li>
+				<li><a href="http://15m.virtualpol.com/">15M</a></li>
 				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
 				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo fuente</a></li>
-				<li><a href="https://www.ohloh.net/p/virtualpol/contributors">Desarrolladores</a></li>
-				<li><a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct">Gu&iacute;a inicial</a></li>
+				<li><a href="https://www.ohloh.net/p/virtualpol/contributors">Desarrollo</a></li>
+				<li><a href="http://www.virtualpol.com/manual">Manual de VirtualPol</a></li>
 			</ul>
 	</li>
-
-
-	
-
-
-
 </ul>
+
+<a href="/" title="Bandera de <?=PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" border="0" alt="Bandera de <?=PAIS?>" style="margin:-6px 0 2px 0;" /></a>
 </td>
 
 <td align="right" nowrap="nowrap"><?=$txt_perfil?></td>
@@ -172,32 +157,25 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 						<li><a href="/info/censo/">Censo <span class="md">(<?=$pol['config']['info_censo']?>)</span></a></li>
 						<li><a href="/poderes/">Poderes</a></li>
 						<li><a href="/doc/">Documentos <span class="md">(<?=$pol['config']['info_documentos']?>)</span></a></li>
-						<li><a href="#"><span style="float:right;">&#9658;</span>M&aacute;s</a>
-							<ul>
-								<li><a href="/log-eventos/">Log de eventos</a></li>
-								<?=(ECONOMIA?'<li><a href="/mapa/">Mapa</a></li>':'')?>
-								<li><a href="http://vp.virtualpol.com/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>
-							</ul>
-						</li>
 						<li><a href="/historia/">Historia</a></li>
+						<li><a href="http://vp.virtualpol.com/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>
 						<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
+						<li><a href="/log-eventos/">Log de eventos</a></li>
 					</ul>
 			</li>
 			<li>
 				<a href="#">Pol&iacute;tica</a>
 				<ul>
-					<li><a href="/cargos/">Cargos</a></li>
-					<li><a href="/partidos/">Partidos <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
 					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Control</b></a>
 						<ul>
 							<li><a href="/control/gobierno/">Gobierno</a></li>
 							<li><a href="/control/kick/">Kicks</a></li>
 							<li><a href="/control/expulsiones/">Expulsiones</a></li>
-							<?=(ECONOMIA?'<li><a href="/control/judicial/">Judicial</a></li><li><a href="/mapa/propiedades/">Propiedades del Estado</a></li>':'')?>
-							<li><a href="/votacion/crear/">Votaciones</a></li>
+							<?=(ECONOMIA?'<li><a href="/control/judicial/">Judicial</a></li>':'')?>
 						</ul>
 					</li>
-
+					<li><a href="/cargos/">Cargos</a></li>
+					<li><a href="/partidos/">Partidos <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
 					<li><a href="/votacion/">Votaciones <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
 					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
 				</ul>
@@ -210,6 +188,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 					<li><a href="/pols/cuentas/">Cuentas</a></li>
 					<li><a href="/pols/cuentas/1/">Cuenta <em>Gobierno</em></a></li>
 					<li><a href="/subasta/">Subastas</a></li>
+					<li><a href="/mapa/">Mapa</a></li>
 				</ul>
 			</li>
 			<?php } if ($pol['estado'] == 'ciudadano') { ?>

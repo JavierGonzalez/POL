@@ -258,7 +258,7 @@ case 'solicitar-ciudadania':
 	
 		include('../source/inc-functions-accion.php');
 
-		if ($pol['pols'] > 0) {
+		if (($pol['pols'] > 0) AND ($_POST['pais'] != '15M')) {
 			$trae = ' (Trayendo consigo: '.pols($pol['pols']).' '.MONEDA.')';
 		} else { $trae = ''; }
 
@@ -369,7 +369,7 @@ $txt .= '</blockquote></div>';
 		if ($_GET['pais'] != '') {
 			$txt .= '<ul>
 <li><b>Aceptas ser Ciudadano de <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/">'.$_GET['pais'].'</a></b>, con tus derechos y obligaciones.</li>
-<li><b>Aceptas <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/doc/">La Constituci&oacute;n</a> y las <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/doc/">Leyes</a> de '.$_GET['pais'].'</b>.</li></ul>
+<li><b>Aceptas las <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/doc/">leyes o normas </a> de '.$_GET['pais'].'</b>.</li></ul>
 
 <div class="pol_form">
 <form action="?a=solicitar-ciudadania" method="post">

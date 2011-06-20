@@ -1058,7 +1058,7 @@ foreach ($sc AS $user_ID => $nick) { $supervisores .= crear_link($nick).' '; }
 $txt .= '
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/21.gif" title="Supervisor del Censo" /></td>
 <td>Informaci&oacute;n sobre el censo y control de clones.<br />
-Supervisores del Censo: <b>'.$supervisores.'</b> (los 5 ciudadanos con m&aacute; votos de confianza)</td></tr>';
+Supervisores del Censo: <b>'.$supervisores.'</b> (los 7 ciudadanos con m&aacute;s votos de confianza)</td></tr>';
 
 if (ECONOMIA) {
 

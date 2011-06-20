@@ -41,7 +41,7 @@ function foro_enviar($subforo, $hilo=null, $edit=null) {
 	$referer = explode('/', $_SERVER['HTTP_REFERER'], 4); 
 	$referer = '/'.$referer[3];
 
-	if (($pol['estado'] == 'ciudadano') OR (($pol['config']['frontera_con_'.$pol['pais']] == 'abierta') AND ($pol['estado'] == 'extranjero'))) {
+	if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'extranjero')) {
 		if ($edit) { //editar
 			$return_url = 'foro/';
 			if ($hilo) { //msg
@@ -112,13 +112,7 @@ ORDER BY nivel DESC", $link);
 		}
 		return $html;
 	} else {
-		
-		if ($pol['estado'] == 'extranjero') {
-			return '<p class="azul"><b>La frontera con '.$pol['pais'].' est&aacute; cerrada, no puedes participar.</a></b></p>'; 
-		} else {
-			return '<p class="azul"><b>Debes ser Ciudadano para participar, <a href="'.REGISTRAR.'">reg&iacute;strate aqu&iacute;!</a></b></p>'; 
-		}
-
+		return '<p class="azul"><b>Debes ser Ciudadano para participar, <a href="'.REGISTRAR.'">reg&iacute;strate aqu&iacute;!</a></b></p>';
 	}
 }
 

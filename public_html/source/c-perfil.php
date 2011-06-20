@@ -4,10 +4,10 @@ include('inc-login.php');
 $sc = get_supervisores_del_censo();
 
 $result = mysql_query("SELECT *, 
-(SELECT siglas FROM ".SQL."partidos WHERE ID = ".SQL_USERS.".partido_afiliado LIMIT 1) AS partido,
-(SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = ".SQL_USERS.".ID LIMIT 1) AS num_hilos,
-(SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = ".SQL_USERS.".ID LIMIT 1) AS num_msg
-FROM ".SQL_USERS." 
+(SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS partido,
+(SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
+(SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
+FROM users 
 WHERE nick = '" . $_GET['a'] . "'
 LIMIT 1", $link);
 while($r = mysql_fetch_array($result)){
@@ -72,7 +72,7 @@ $txt .= 'Confianza: '.confianza($r['voto_confianza']).'
 
 
 
-$txt .= '</td></tr>'.$extras.'</table><div id="info">';
+		$txt .= '</td></tr>'.$extras.'</table><div id="info">';
 
 		$cargos_num = 0;
 		$estudios_num = 0;
@@ -85,27 +85,7 @@ ORDER BY cargo DESC, estado ASC, nota DESC", $link);
 			if ($r2['cargo'] == 1) { 
 				$dimitir = ' <span class="gris"> (Cargo Ejercido)</span>';
 				if ($r['ID'] == $pol['user_ID']) {
-					
-					if ($r2['ID_estudio'] == '666666') {
-
-						$result3 = mysql_query("SELECT user_ID, nota, ID_estudio,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick,
-(SELECT fecha_last FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS fecha_last
-FROM ".SQL."estudios_users
-WHERE ID_estudio = '6' AND estado = 'ok' AND cargo = '0'
-ORDER BY nick ASC", $link);
-						while($r3 = mysql_fetch_array($result3)) {
-							if (strtotime($r3['fecha_last']) > (time() - 259200)) {
-								$diputados .= '<option value="' . $r3['user_ID'] . '">' . $r3['nota'] . ' ' . $r3['nick'] . '</option>';
-							}
-						}
-
-						$estudios .= '<form action="/accion.php?a=cargo&b=ceder&ID=' . $r2['ID_estudio'] . '" method="post">';
-						$dimitir .= '<select name="user_ID"><option value=""></option>' . $diputados . '</select><input type="submit" value="Ceder" onclick="if (!confirm(\'&iquest;Seguro que quieres CEDER de este cargo?\')) { return false; }"></form>'; 
-					} else {
-						$dimitir .= ' <form action="/accion.php?a=cargo&b=dimitir&ID='.$r2['ID_estudio'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="Dimitir"  onclick="if (!confirm(\'&iquest;Seguro que quieres DIMITIR del cargo de ' . $r2['nombre'] . '?\')) { return false; }"/></form>';
-					}
-					
+					$dimitir .= '</td><td><form action="/accion.php?a=cargo&b=dimitir&ID='.$r2['ID_estudio'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="Dimitir"  onclick="if (!confirm(\'&iquest;Seguro que quieres DIMITIR del cargo de ' . $r2['nombre'] . '?\')) { return false; }"/></form>';
 				}
 			}
 			$estudios_num++;
@@ -120,7 +100,7 @@ ORDER BY nick ASC", $link);
 <td>' . $cargo_img . '</td>
 <td><b>' . $r2['nombre'] . '</b></td>
 <td style="color:#999;" align="right"><acronym title="'.$r2['time'].'">'.duracion(time()-strtotime($r2['time'])).'</acronym></td>
-<td><b>' . $dimitir . '</b></td>
+<td nowrap="nowrap"><b>' . $dimitir . '</b></td>
 </tr>';
 
 			$dimitir = '';
@@ -136,18 +116,14 @@ ORDER BY nick ASC", $link);
 			$text_limit = 1200 - strlen(strip_tags($r['text']));
 			$txt .= '<div class="azul">';
 
-
-
+if (ECONOMIA) {
+			
 $result2 = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE dato = 'impuestos' OR dato = 'impuestos_minimo'", $link);
 while($r2 = mysql_fetch_array($result2)){ $pol['config'][$r2['dato']] = $r2['valor']; }
 
-
-
 $patrimonio = $r['pols'];
 $patrimonio_libre_impuestos = 0;
-$txt .= '
-
-<b>Tu Economia (<a href="/info/economia/">Economia Global</a>)</b>
+$txt .= '<b>Tu Economia (<a href="/info/economia/">Economia Global</a>)</b>
 <table border="0">
 
 <tr>
@@ -183,7 +159,6 @@ if ($patrimonio_con_impuestos >= $pol['config']['impuestos_minimo']) {
 	$impuestos = '<em style="#AAA">Sin impuestos.</em>';
 }
 
-
 $txt .= '
 <tr><td></td><td><hr style="border:1px solid #AAA; margin:-3px; padding:0;" /></td><td></td></tr>
 
@@ -197,11 +172,12 @@ $txt .= '
 <br />
 
 <p>Referencia: <input style="background:#FFFFDD;border: 1px solid grey;" type="text" size="35" value="http://'.HOST.'/r/' . strtolower($nick) . '/" readonly="readonly" /><br />
-(Ganar&aacute;s <b>' . pols($pols_afiliacion) . ' '.MONEDA.'</b> por cada nuevo Ciudadano autentico que se registre por este enlace y cumpla el minimo tiempo online en sus 30 primeros dias)</p>
+(Ganar&aacute;s <b>' . pols($pols_afiliacion) . ' '.MONEDA.'</b> por cada nuevo Ciudadano autentico que se registre por este enlace y cumpla el minimo tiempo online en sus 30 primeros dias)</p>';
 
-<!--<p>Clave API: <input class="api_box" type="text" size="12" value="' . $r['api_pass'] . '" readonly="readonly" /> ' . boton('Generar clave', '/accion.php?a=api&b=gen_pass', '&iquest;Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua no funcionar&aacute;.') . ' (Equivale a tu contrase&ntilde;a, mantenla en secreto. M&aacute;s info: <a href="http://www.virtualpol.com/api.php">API</a>)</p>-->
+} // fin ECONOMIA
 
-<p>'.boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel').' 
+// <p>Clave API: <input class="api_box" type="text" size="12" value="' . $r['api_pass'] . '" readonly="readonly" /> ' . boton('Generar clave', '/accion.php?a=api&b=gen_pass', '&iquest;Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua no funcionar&aacute;.') . ' (Equivale a tu contrase&ntilde;a, mantenla en secreto. M&aacute;s info: <a href="http://www.virtualpol.com/api.php">API</a>)</p>
+$txt .= '<p>'.boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel').' 
 '.boton('Autentificar con DNIe', 'http://www.virtualpol.com/dnie.php').' 
 '.($pol['pais']!='ninguno'?boton('Rechazar Ciudadania', REGISTRAR).' ':'').'</p>
 
@@ -233,8 +209,8 @@ $txt .= '
 /*
 $txt .= '<p><b>Votos de confianza recibida:</b> ';
 $result2 = mysql_query("SELECT voto, time,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL_VOTOS.".uservoto_ID LIMIT 1) AS nick,
-(SELECT pais FROM ".SQL_USERS." WHERE ID = ".SQL_VOTOS.".uservoto_ID LIMIT 1) AS pais
+(SELECT nick FROM users WHERE ID = ".SQL_VOTOS.".uservoto_ID LIMIT 1) AS nick,
+(SELECT pais FROM users WHERE ID = ".SQL_VOTOS.".uservoto_ID LIMIT 1) AS pais
 FROM ".SQL_VOTOS."
 WHERE estado = 'confianza' AND user_ID = '" . $user_ID . "' AND voto != 0
 ORDER BY voto DESC, time ASC", $link);
@@ -256,8 +232,8 @@ $txt .= '<p><b>Votos de confianza emitidos:</b> (<span style="font-weight:bold;"
 
 $voto_anterior = '';
 $result2 = mysql_query("SELECT voto, time,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL_VOTOS.".user_ID LIMIT 1) AS nick,
-(SELECT pais FROM ".SQL_USERS." WHERE ID = ".SQL_VOTOS.".user_ID LIMIT 1) AS pais
+(SELECT nick FROM users WHERE ID = ".SQL_VOTOS.".user_ID LIMIT 1) AS nick,
+(SELECT pais FROM users WHERE ID = ".SQL_VOTOS.".user_ID LIMIT 1) AS pais
 FROM ".SQL_VOTOS."
 WHERE estado = 'confianza' AND uservoto_ID = '" . $user_ID . "' AND voto != 0
 ORDER BY voto DESC, time ASC", $link);
@@ -281,7 +257,7 @@ $txt .= '</div>
 		if ($r['text']) { $txt .= '<div class="amarillo">' . $r['text'] . '</div>'; }
 
 		if ($r['ref_num'] != 0) {
-			$result = mysql_query("SELECT IP, nick, pais, online FROM ".SQL_USERS." WHERE ref = '" . $r['ID'] . "' ORDER BY fecha_last DESC", $link);
+			$result = mysql_query("SELECT IP, nick, pais, online FROM users WHERE ref = '" . $r['ID'] . "' ORDER BY fecha_last DESC", $link);
 			while($r2 = mysql_fetch_array($result)) {
 				$refs .= crear_link($r2['nick']) . ' </b>('.duracion($r2['online']).')<b><br />' . "\n";
 			}
@@ -308,7 +284,6 @@ $txt .= '</div>
 <p>Foro: <b><acronym title="hilos+mensajes">' . $r['num_hilos'] . '+' . $r['num_msg'] . '</acronym></b></p>
 <p>Referencias: <b>' . $r['ref_num'] . '</b><br /><b>' . $refs . '</b></p>
 <p>Afiliado a: <b>' . crear_link($r['partido'], 'partido') . '</b></p>
-<p>Bando: <b>' . $r['bando'] . '</b></p>
 <p>Ultimo acceso: <acronym title="' . $r['fecha_last'] . '"><b>' . duracion(time() - strtotime($r['fecha_last'])) . '</b></acronym><br />';
 
 

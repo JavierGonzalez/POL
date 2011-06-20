@@ -11,4 +11,4 @@ RewriteEngine on
 RewriteRule ^(chat)(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?$ /c-$1.php?a=$3&b=$5&c=$7&d=$9
 
 
-RewriteRule ^legal$ /legal.php [L]
+RewriteRule ^(legal|manual)$ /$1.php [L]

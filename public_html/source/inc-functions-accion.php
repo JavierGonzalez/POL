@@ -38,7 +38,12 @@ function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', 
 	global $pol, $link, $vp;
 	if ($secret) { $nick = '_'; } else { $nick = $pol['nick']; }
 	if (!$pais) { $pais = PAIS; }
-	$chat_ID = 4;
+	
+	switch (PAIS) {
+		case 'VP': $chat_ID = 4; break;
+		case '15M': $chat_ID = 5; break;
+		default: $chat_ID = 4;
+	}
 
 	mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('".$chat_ID."', '".$nick."', '".$msg."', '0', '".$user_ID."', '".$tipo."')", $link);
 

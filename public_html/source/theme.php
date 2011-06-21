@@ -106,8 +106,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 	<li class="current">
 		<a href="http://www.virtualpol.com/" title="VirtualPol">&#9660; <img src="<?=IMG?>virtualpol-logo-cuadrado-40.gif" border="0" alt="VirtualPol" style="margin:-15px 0;" /></a>
 			<ul>
-				<li><a href="http://vp.virtualpol.com/">VP</a></li>
-				<li><a href="http://15m.virtualpol.com/">15M</a></li>
+<?php foreach ($vp['paises'] AS $pais) { if ($pais != PAIS) { echo '<li><a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a></li>'; } } ?>
 				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
 				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo fuente</a></li>
 				<li><a href="https://www.ohloh.net/p/virtualpol/contributors">Desarrollo</a></li>
@@ -155,16 +154,16 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 				<a href="#">Informaci&oacute;n</a>
 					<ul>
 						<li><a href="/info/censo/">Censo <span class="md">(<?=$pol['config']['info_censo']?>)</span></a></li>
-						<li><a href="/poderes/">Poderes</a></li>
+						<?=(ECONOMIA?'<li><a href="/poderes/">Poderes</a></li>':'')?>
 						<li><a href="/doc/">Documentos <span class="md">(<?=$pol['config']['info_documentos']?>)</span></a></li>
 						<li><a href="/historia/">Historia</a></li>
-						<li><a href="http://vp.virtualpol.com/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>
+						<li><a href="/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>
 						<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
 						<li><a href="/log-eventos/">Log de eventos</a></li>
 					</ul>
 			</li>
 			<li>
-				<a href="#">Pol&iacute;tica</a>
+				<a href="#">Gesti&oacute;n</a>
 				<ul>
 					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Control</b></a>
 						<ul>
@@ -175,7 +174,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 						</ul>
 					</li>
 					<li><a href="/cargos/">Cargos</a></li>
-					<li><a href="/partidos/">Partidos <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
+					<li><a href="/partidos/"><?=NOM_PARTIDOS?> <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
 					<li><a href="/votacion/">Votaciones <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
 					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
 				</ul>
@@ -208,34 +207,26 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 
 <?php
+echo '<hr style="margin:5px 20px -5px -5px;color:#FF6;" />
+
+<div id="palabras">';
+
+foreach(explode(";", $pol['config']['palabras']) as $t) {
+	$t = explode(":", $t);
+	if ($t[0] == $pol['user_ID']) { $edit = ' <a href="/subasta/editar/" class="gris">#</a>'; } else { $edit = ''; }
+	if ($t[1]) { echo '<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>'.$edit."<br />\n"; } 
+	else { echo $t[2].$edit."<br />\n"; }
+}
 
 if (ECONOMIA) {
-
-	echo '<hr style="margin:5px 20px -5px -5px;color:#FF6;" />
-
-<div id="palabras"><b>';
-
-	foreach(explode(";", $pol['config']['palabras']) as $t) {
-		$t = explode(":", $t);
-		if ($t[0] == $pol['user_ID']) { $edit = ' <a href="/subasta/editar/" class="gris">#</a>'; } else { $edit = ''; }
-		if ($t[1]) { 
-			echo '<a href="http://' . $t[1] . '">' . $t[2] . '</a>' . $edit . "<br />\n";
-		} else {
-			echo '</b>' . $t[2] . '<b>' . $edit . "<br />\n";
-		}
-	}
-
-
-	echo '</b><a href="/mapa/" class="gris" style="float:right;margin:0 11px 0 0;">Mapa</a><a href="/subasta/" class="gris" style="margin:0 0 0 -3px;">Subasta</a>';
-
-
+	echo '<a href="/mapa/" class="gris" style="float:right;margin:0 11px 0 0;">Mapa</a><a href="/subasta/" class="gris" style="margin:0 0 0 -3px;">Subasta</a>';
 	if (!isset($cuadrado_size)) {
 		$cuadrado_size = 10;
 		include('inc-mapa.php');
 		echo '<div style="margin:0 0 0 -4px;">'.$txt_mapa.'</div>';
 	}
-	echo '</div>';
 }
+echo '</div>';
 ?>
 
 
@@ -268,14 +259,14 @@ if (isset($pol['user_ID'])) {
 	$mtime = explode(' ', microtime()); 
 	$tiempofinal = $mtime[1] + $mtime[0]; 
 	$tiempototal = round(($tiempofinal-$tiempoinicial)*1000); 
-	echo $tiempototal.'ms <a href="http://www'.DEV.'.'.URL.'/legal" title="Condiciones del Servicio">TOS</a>';
+	echo $tiempototal.'ms <a href="http://www'.DEV.'.'.URL.'/legal" title="Condiciones del Servicio">TOS</a> | <a href="http://www.virtualpol.com/manual"><b>Ayuda</b></a>';
 } else {
 	// Enlaces de GONZO, solo lo ven los no-registrados, no quitar por favor :))))
 	echo '
 <a href="http://www.teoriza.com/">Teoriza</a> &middot; 
 <a href="http://www.eventuis.com/">eventos</a> &middot; 
 <a href="http://aziroet.com/">Blog gratis</a> | 
-<a href="http://www'.DEV.'.'.URL.'/legal" title="Condiciones del Servicio">TOS</a>
+<a href="http://www'.DEV.'.'.URL.'/legal" title="Condiciones del Servicio">TOS</a> | <a href="http://www.virtualpol.com/manual"><b>Ayuda</b></a>
 ';
 }
 ?></span>

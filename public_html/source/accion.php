@@ -289,7 +289,7 @@ case 'expulsar':
 			
 			mysql_query("INSERT INTO expulsiones (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
 
-			evento_chat('<span class="expulsado"><img src="'.IMG.'expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['nick'].'</b> ha sido expulsado de VirtualPol. Razon: <b>'.$_POST['razon'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>');
+			evento_chat('<span class="expulsado"><img src="'.IMG.'expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['nick'].'</b> ha sido expulsado de VirtualPol. Razon: <b>'.$_POST['razon'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
 		}
 	}
 	$refer_url = 'control/expulsiones/';
@@ -403,7 +403,7 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 			$num_preguntas = $r['num_preguntas'];
 		}
 
-		if (($num_depreguntas >= 5) AND ($examen_ID) AND isset($_SESSION['examen'])) {
+		if (($examen_ID) AND isset($_SESSION['examen'])) {
 			if ($examen_ID == $_SESSION['examen']['ID']) {
 				$respuestas_correctas = $_SESSION['examen']['respuestas'];
 				$nota['ok'] = 0;
@@ -417,8 +417,7 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 				}
 				if ($indice == $num_preguntas) {
 					$nota['nota'] = number_format(round(($nota['ok'] / $num_preguntas) * 10, 1), 1, '.', '');
-				}
-				else {
+				} else {
 					$nota['nota'] = 0;
 				}
 				if ($nota['nota'] >= $nota_aprobado) { $estado = ", estado = 'ok'"; } else { $estado = ", estado = 'examen'"; }
@@ -1131,7 +1130,7 @@ case 'votacion':
 			if (($estado == 'ok') AND ($pais == PAIS) AND (($tipo == 'sondeo') OR ($tipo == 'referendum') OR ($tipo == 'parlamento')) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar))) {
 				$result = mysql_query("SELECT ID FROM votacion_votos WHERE user_ID = '".$pol['user_ID']."' AND ref_ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $ha_votado = true; }
-				if ((!$ha_votado) AND (strtotime($fecha_registro) < (time() - 86400))) {
+				if ((!$ha_votado) AND (strtotime($fecha_registro) < time())) {
 					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."')", $link);
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 

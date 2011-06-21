@@ -1,7 +1,7 @@
 <?php 
 include('inc-login.php');
 
-if ($pol['user_ID']) {
+if (($pol['user_ID']) AND ($pol['pais'] == PAIS)) {
 
 if ($_GET['a'] == 'mensajes-enviados') {
 
@@ -188,6 +188,9 @@ LIMIT 100", $link);
 
 }
 
+} else if ($pol['user_ID']) {
+	header('Location: http://'.strtolower($pol['pais']).'.virtualpol.com/msg/'.($_GET['a']?$_GET['a'].'/':''));
+	exit;
 }
 
 //THEME

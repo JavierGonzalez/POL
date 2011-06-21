@@ -51,7 +51,7 @@ while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor
 if (isset($pol['user_ID'])) {
 
 	// LOAD: $pol
-	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, fecha_legal,
+	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, fecha_legal, dnie,
 (SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE recibe_ID = users.ID AND leido = '0') AS msg
 FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
@@ -67,6 +67,12 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 		$pol['cargo'] = $r['cargo'];
 		$fecha_init = $r['fecha_init'];
 		$fecha_last = $r['fecha_last'];
+
+		$_SESSION['pol']['cargo'] = $r['cargo'];
+		$_SESSION['pol']['nivel'] = $r['nivel'];
+		$_SESSION['pol']['pais'] = $r['pais'];
+		$_SESSION['pol']['estado'] = $r['estado'];
+		$_SESSION['pol']['dnie'] = $r['dnie'];
 
 		if (($r['pais'] != PAIS) AND ($pol['estado'] == 'ciudadano')) { 
 			// es extranjero

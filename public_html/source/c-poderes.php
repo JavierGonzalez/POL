@@ -43,9 +43,6 @@ $txt .= '
 <tr><td align="right"><b>Presidente</b></td><td valign="top"><b>' . get_cargo(7) . '</b></td></tr>
 <tr><td align="right">Vicepesidente</td><td valign="top">' . get_cargo(19) . '</td></tr>
 <tr><td align="right" valign="top">Ministro</td><td valign="top">' . get_cargo(16) . '</td></tr>
-<!--<tr><td align="right" valign="top">Embajador</td><td valign="top">' . get_cargo(42) . '</td></tr>-->
-<!--<tr><td align="right" valign="top">Secretario de Estado</td><td valign="top">' . get_cargo(27) . '</td></tr>-->
-<!--<tr><td align="right" valign="top">Jefe Prensa</td><td valign="top">' . get_cargo(26) . '</td></tr>-->
 <tr><td align="right" valign="top">Comisario</td><td valign="top">' . get_cargo(13) . '</td></tr>
 <tr><td align="right" valign="top">Polic&iacute;a</td><td valign="top">' . get_cargo(12) . '</td></tr>
 

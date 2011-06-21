@@ -437,7 +437,7 @@ ORDER BY num ASC", $link);
 
 
 case 'gobierno':
-	$txt_title = 'Control: Gobierno';
+	$txt_title = 'Control: Control';
 	if ($pol['nivel'] >= 98) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
 
 	$result = mysql_query("SELECT (SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS elnick
@@ -454,7 +454,7 @@ case 'gobierno':
 
 	if ($_GET['b'] == 'foro') {
 
-		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/gobierno/">Gobierno</a> | Control Foro</h1>
+		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/gobierno/">Control</a> | Control Foro</h1>
 		
 <br />
 <form action="/accion.php?a=gobierno&b=subforo" method="post">
@@ -556,7 +556,7 @@ function change_bg(img) {
 
 
 
-	$txt .= '<h1><a href="/control/">Control</a>: Gobierno | <a href="/control/gobierno/foro/">Control Foro</a></h1>
+	$txt .= '<h1><a href="/control/">Control</a>: Control | <a href="/control/gobierno/foro/">Control Foro</a></h1>
 
 <br />
 <form action="/accion.php?a=gobierno&b=config" method="post">
@@ -565,10 +565,8 @@ function change_bg(img) {
 
 <table border="0" cellspacing="3" cellpadding="0" class="pol_table">
 
-<tr><td colspan="2" class="amarillo"><b class="big">Control Ejecutivo</b></td></tr>
 
-
-<tr><td align="right">Descripcion Pais:</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'"'.$dis.' /></td></tr>
+<tr><td align="right">Descripcion:</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'"'.$dis.' /></td></tr>
 <tr><td align="right">DEFCON:</td><td>' . $defcon . '</td></tr>
 <tr><td align="right">Referencia tras:</td><td><input style="text-align:right;" type="text" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '"'.$dis.' /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td></tr>
 <tr><td align="right">Esca&ntilde;os:</td><td><input style="text-align:right;" type="text" name="num_escanos" size="3" maxlength="10" value="' . $pol['config']['num_escanos'] . '"'.$dis.' /> Diputados</td></tr>';
@@ -579,7 +577,7 @@ $sel_exp = '';
 $sel_exp[$pol['config']['examenes_exp']] = ' selected="selected"';
 
 $txt .= '
-<tr><td align="right" valign="top"><acronym title="Mensaje del Gobierno">Mensaje Gobierno</acronym>:</td><td align="right">
+<tr><td align="right" valign="top"><acronym title="Mensaje Global">Mensaje Global</acronym>:</td><td align="right">
 <input type="text" name="palabra_gob0" size="24" maxlength="200" value="' . $palabra_gob[0] . '"'.$dis.' /><br />
 http://<input type="text" name="palabra_gob1" size="19" maxlength="200" value="' . $palabra_gob[1] . '"'.$dis.' /></td></tr>
 
@@ -1028,7 +1026,7 @@ $txt .= '</table><br />
 
 <table border="0" cellspacing="6">
 
-<tr><td nowrap="nowrap"><a class="abig" href="/control/gobierno/"><b>Gobierno</b></a></td>
+<tr><td nowrap="nowrap"><a class="abig" href="/control/gobierno/"><b>Control</b></a></td>
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/7.gif" title="Presidente" /> <img src="'.IMG.'cargos/19.gif" title="Vicepresidente" /></td>
 <td>Panel de configuraci&oacute;n principal.</td></tr>
 

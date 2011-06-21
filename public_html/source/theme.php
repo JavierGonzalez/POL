@@ -157,7 +157,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 						<?=(ECONOMIA?'<li><a href="/poderes/">Poderes</a></li>':'')?>
 						<li><a href="/doc/">Documentos <span class="md">(<?=$pol['config']['info_documentos']?>)</span></a></li>
 						<li><a href="/historia/">Historia</a></li>
-						<li><a href="/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>
+						<?=(ECONOMIA?'<li><a href="/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>':'')?>
 						<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
 						<li><a href="/log-eventos/">Log de eventos</a></li>
 					</ul>
@@ -167,7 +167,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 				<ul>
 					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Control</b></a>
 						<ul>
-							<li><a href="/control/gobierno/">Gobierno</a></li>
+							<li><a href="/control/gobierno/">Control</a></li>
 							<li><a href="/control/kick/">Kicks</a></li>
 							<li><a href="/control/expulsiones/">Expulsiones</a></li>
 							<?=(ECONOMIA?'<li><a href="/control/judicial/">Judicial</a></li>':'')?>

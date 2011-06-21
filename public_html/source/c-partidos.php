@@ -50,19 +50,19 @@ ORDER BY nick DESC", $link);
 			if (($candidatos_num >= $pol['config']['num_escanos']) OR ($ciudadanos_num == 0)) { $disabled = ' disabled="disabled"'; } else { $disabled = ''; }
 
 			include('inc-functions-accion.php');
-			$txt .= '<h1><img src="'.IMG.'doc-edit.gif" alt="Editar" /> <a href="/partidos/">Partidos</a>: ' . $r['siglas'] . ' (' . $r['nombre'] . ')</h1>
+			$txt .= '<h1><img src="'.IMG.'doc-edit.gif" alt="Editar" /> <a href="/partidos/">'.NOM_PARTIDOS.'</a>: ' . $r['siglas'] . ' (' . $r['nombre'] . ')</h1>
 <ul id="partido">
 
-<li><form action="/accion.php?a=partido-lista&b=add&ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos . '</select> <input type="submit" value="A&ntilde;adir a la lista"' . $disabled . ' /> (afiliados a tu partido y con estudio de Diputado)</form><br /></li>
+<li><form action="/accion.php?a=partido-lista&b=add&ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos . '</select> <input type="submit" value="A&ntilde;adir a la lista"' . $disabled . ' /> (afiliados a tu '.NOM_PARTIDOS.')</form><br /></li>
 
-<li><b>Lista:</b> Candidatos a Diputados (' . $candidatos_num . ' de un m&aacute;ximo de '.$pol['config']['num_escanos'].' candidatos)
+<li><b>Lista:</b> Candidatos (' . $candidatos_num . ' de un m&aacute;ximo de '.$pol['config']['num_escanos'].' candidatos)
 <ol>
 ' . $li_listas . '
 </ol><br />
 </li>
 
 
-<li>Introducci&oacute;n, descripci&oacute;n e ideario del partido:
+<li>Introducci&oacute;n, descripci&oacute;n:
 <form action="/accion.php?a=partido-lista&b=edit&ID=' . $r['ID'] . '" method="post">
 ' . editor_enriquecido('text', $text) . '
 <input type="submit" value="Guardar" /><br /><br /></form></li>
@@ -71,7 +71,7 @@ ORDER BY nick DESC", $link);
 <li><form action="/accion.php?a=partido-lista&b=del-afiliado&ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos_full . '</select> <input type="submit" value="Desafiliar" /></form><br /></li>
 
 
-<li><form action="/accion.php?a=partido-lista&b=ceder-presidencia&ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos_full . '</select> <input type="submit" value="Ceder Presidencia" onClick="if (!confirm(\'&iquest;Estas convencido de que quieres CEDER tu cargo de Presidente de ' . $r['siglas'] . ' para siempre?\')) { return false; }" /> (Ceder&aacute;s el control total del partido a este ciudadano)</form></li>
+<li><form action="/accion.php?a=partido-lista&b=ceder-presidencia&ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos_full . '</select> <input type="submit" value="Ceder Presidencia" onClick="if (!confirm(\'&iquest;Estas convencido de que quieres CEDER tu cargo de Presidente de ' . $r['siglas'] . ' para siempre?\')) { return false; }" /> (Ceder&aacute;s el control total a este ciudadano)</form></li>
 </ul>';
 
 
@@ -107,14 +107,14 @@ ORDER BY fecha_registro ASC", $link);
 
 			$txt_title = $r['siglas'] . ' - ' . $r['nombre'];
 
-			$txt .= '<h1><a href="/partidos/">Partidos</a>: ' . $r['siglas'] . ' | ' . $r['nombre'] . '</h1>
+			$txt .= '<h1><a href="/partidos/">'.NOM_PARTIDOS.'</a>: ' . $r['siglas'] . ' | ' . $r['nombre'] . '</h1>
 
 <p>' . $r['descripcion'] . '</p>
 
 <ul id="partido">
 <li>Presidente de ' . $r['siglas'] . ': <b>' . crear_link($r['nick_presidente']) . '</b><br /><br /></li>
 <li>Afiliados: <b>' . $num_afiliados . '</b>' . $afiliados . '<br /><br /></li>
-<li>Lista: <b>' . $num_listas . ' (Candidatos a Diputados)</b>
+<li>Lista: <b>' . $num_listas . ' (Candidatos)</b>
 <ol>
 ' . $li_listas . '</ol></li>
 </ul>';
@@ -123,9 +123,9 @@ ORDER BY fecha_registro ASC", $link);
 		$siglas_lower = strtolower($r['siglas']);
 		$txt .= '<hr style="width:100%;" />';
 		if (($r['ID_presidente'] == $pol['user_ID']) AND (!$_GET['b'])) { //PARA PRESIDENTE
-			$txt .= '<span><form><input type="button" value="Editar" onClick="window.location.href=\'/partidos/' . $siglas_lower . '/editar/\';" /> <a href="/partidos/"><b>Ver todos los partidos</b></a></form></span>';
-		} elseif ($_GET['b']) { $txt .= '<span style="float:right;"><form><input type="button" value="Eliminar" onClick="if (!confirm(\'&iquest;Estas convencido de que quieres ELIMINAR para siempre tu partido?\')) { return false; } else { window.location.href=\'/accion.php?a=eliminar-partido&siglas=' . $r['siglas'] . '\'; }"></form></span><span><a href="/partidos/' . $siglas_lower . '/"><b>Volver a tu partido</b></a></span>';
-		} else { $txt .= '<span>' . boton('Afiliarse', '/form/afiliarse/' . $siglas_lower . '/') . ' <a href="/partidos/"><b>Ver todos los partidos</b></a></span>'; }
+			$txt .= '<span><form><input type="button" value="Editar" onClick="window.location.href=\'/partidos/' . $siglas_lower . '/editar/\';" /> <a href="/partidos/"><b>Ver '.strtolower(NOM_PARTIDOS).'</b></a></form></span>';
+		} elseif ($_GET['b']) { $txt .= '<span style="float:right;"><form><input type="button" value="Eliminar" onClick="if (!confirm(\'&iquest;Estas convencido de que quieres ELIMINAR para siempre?\')) { return false; } else { window.location.href=\'/accion.php?a=eliminar-partido&siglas=' . $r['siglas'] . '\'; }"></form></span><span><a href="/partidos/' . $siglas_lower . '/"><b>Volver</b></a></span>';
+		} else { $txt .= '<span>' . boton('Afiliarse', '/form/afiliarse/' . $siglas_lower . '/') . ' <a href="/partidos/"><b>Ver todos</b></a></span>'; }
 
 
 	} if (!$txt) { /*404*/ }
@@ -134,7 +134,7 @@ ORDER BY fecha_registro ASC", $link);
 	$txt_header .= '<style type="text/css">#partido li { margin-top:5px; }</style>';
 } else {
 
-	$txt .= '<h1>Partidos:</h1>
+	$txt .= '<h1>'.NOM_PARTIDOS.':</h1>
 <br />
 <table border="0" class="pol_table">
 <tr>
@@ -171,12 +171,12 @@ ORDER BY num_lista DESC, afiliados DESC, nombre DESC", $link);
 			$txt_otros .= '<span title="'.$r['afiliados'].' afiliados / '.strip_tags($num_lista).' candidatos">'.crear_link($r['siglas'], 'partido').'</span> ';
 		}
 	}
-	$txt .= '</table><p style="width:700px;">Partidos que no participan en las proximas elecciones:<br />
+	$txt .= '</table><p style="width:700px;">'.NOM_PARTIDOS.' que no participan en las proximas elecciones:<br />
 '.$txt_otros.'</p>';
 
-	$txt .= '<p>* Para que un partido pueda participar en las Elecciones ha de tener al menos un candidato en su lista. Para poder a&ntilde;adir candidatos en la lista, se ha de ser el Presidente del partido, el candidato ha de estar afiliado y con el examen de Diputado aprobado.</p>
-<p>' . boton('Crear Partido', '/form/crear-partido/', false, false, $pol['config']['pols_partido']) . '</p>';
-	$txt_title = 'Partidos Pol&iacute;ticos';
+	$txt .= '<p>* Para poder participar en las Elecciones ha de tener al menos un candidato en su lista. Para poder a&ntilde;adir candidatos en la lista, se ha de ser el Presidente, el candidato ha de estar afiliado y con el examen de Diputado aprobado.</p>
+<p>' . boton('Crear '.NOM_PARTIDOS, '/form/crear-partido/', false, false, $pol['config']['pols_partido']) . '</p>';
+	$txt_title = NOM_PARTIDOS;
 }
 
 

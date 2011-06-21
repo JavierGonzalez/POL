@@ -685,11 +685,11 @@ ORDER BY salario DESC", $link);
 
 </td></tr></table>
 
-<table border="0" cellspacing="3" cellpadding="0" class="pol_table">
+<!--<table border="0" cellspacing="3" cellpadding="0" class="pol_table">
 
 <tr><td colspan="2" class="amarillo"><b class="big">Emoticonos</b></td></tr>
 <tr><td><a href="'.IMG.'smiley/roto2.gif"><p>roto2</p></a></td><td><input type="checkbox" value="roto2" /></td>
-</table>
+</table>-->
 
 
 

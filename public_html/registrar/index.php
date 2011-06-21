@@ -349,18 +349,16 @@ $txt .= '</blockquote></div>';
 	$txt .= '<optgroup label="Solicitar ciudadania en:">';
 
 	foreach ($vp['paises'] as $pais) {
-		if (!in_array($pais, $vp['paises_congelados'])) {
-			// ciudadanos
-			$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE pais = '".$pais."'", $link);
-			while($r = mysql_fetch_array($result)) { $ciudadanos_num = $r['num']; }
+		// ciudadanos
+		$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE pais = '".$pais."'", $link);
+		while($r = mysql_fetch_array($result)) { $ciudadanos_num = $r['num']; }
 
-			// pais_des
-			$result = mysql_query("SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'pais_des' LIMIT 1", $link);
-			while($r = mysql_fetch_array($result)) { $pais_des = $r['valor']; }
+		// pais_des
+		$result = mysql_query("SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'pais_des' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) { $pais_des = $r['valor']; }
 
-			if ($_GET['pais'] == $pais) { $select = ' selected="selected"'; } else { $select = ''; } 
-			$txt .= '<option value="'.$pais.'"'.$select.'>'.$pais.': '.$pais_des.' - '.$ciudadanos_num.' ciudadanos</option>';
-		}
+		if ($_GET['pais'] == $pais) { $select = ' selected="selected"'; } else { $select = ''; } 
+		$txt .= '<option value="'.$pais.'"'.$select.'>'.$pais.': '.$pais_des.' - '.$ciudadanos_num.' ciudadanos</option>';
 	}
 
 
@@ -415,7 +413,7 @@ $txt .= '</blockquote></div>';
 
 
 <li><b>&iquest;Compartes conexi&oacute;n a Internet con otro usuario de VirtualPol?</b><br /> 
-<input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (indica su nick, opcional)<br /><br /></li>
+<input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (opcional, en caso afirmativo indica el nick)<br /><br /></li>
 
 <li><input name="condiciones" value="ok" type="checkbox" checked="checked" /> <a href="http://www'.DEV.'.'.URL.'/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.<br /><br /></li>
 

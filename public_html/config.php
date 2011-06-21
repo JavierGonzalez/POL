@@ -11,7 +11,7 @@ if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header
 include(RAIZ.'config-pwd.php');
 
 // PAISES
-$vp['paises'] = array('VP', '15M'); // ACTIVOS
+$vp['paises'] = array('15M', 'VP'); // ACTIVOS
 $vp['paises_congelados'] = array('POL', 'VULCAN', 'Hispania', 'Atlantis'); // INACTIVOS
 
 // COLORES
@@ -29,7 +29,14 @@ switch ($host[0]) {
 	default: define('PAIS', 'VP'); break;
 }
 
-if (PAIS == '15M') { define('ECONOMIA', false); } else { define('ECONOMIA', true); }
+if (PAIS == '15M') { 
+	define('ECONOMIA', false);
+	define('NOM_PARTIDOS','Comisiones');
+} else { 
+	define('ECONOMIA', true); 
+	define('NOM_PARTIDOS','Partidos');
+}
+
 define('SQL', strtolower(PAIS).'_');
 
 define('COLOR_BG', $vp['bg'][PAIS]);

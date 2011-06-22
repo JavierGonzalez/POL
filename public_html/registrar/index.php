@@ -334,8 +334,6 @@ $txt .= '</blockquote></div>';
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';
 	$atrack = '"/atrack/registro/solicitar.html"'; 
 
-	if (!$_GET['pais']) { $_GET['pais'] = 'VP'; }
-
 	$txt .= '<h1><span class="gris">1. Crear usuario |</span> 2. Solicitar Ciudadan&iacute;a <span class="gris">| 3. Ser Ciudadano</span></h1>
 	
 <hr /><br />

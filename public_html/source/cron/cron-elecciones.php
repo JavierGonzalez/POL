@@ -71,7 +71,7 @@ ORDER BY ID ASC LIMIT 1", $link);
 
 	// envia emails
 	$asunto = '['.PAIS.'] Comienza la Segunda Vuelta de las Elecciones Presidenciales de '.PAIS.'';
-	$mensaje = 'Estimados ciudadanos y ciudadanas de VirtualPol,<br /><br />Acaban de comenzar la Segunda Vuelta de las Elecciones Presidenciales, en las que tienes el derecho y deber de participar. Su participacion es vital para que '.PAIS.' avance.<br /><br /><a href="http://'.strtolower(PAIS).'.virtualpol.com/"><b>http://'.PAIS.'.virtualpol.com/</b></a><br /><br />VirtualPol, Comunidad virtual democratica<br />';
+	$mensaje = 'Estimados ciudadanos y ciudadanas de VirtualPol,<br /><br />Acaban de comenzar la Segunda Vuelta de las Elecciones Presidenciales, en las que tienes el derecho y deber de participar. Su participacion es vital para que '.PAIS.' avance.<br /><br /><a href="http://'.strtolower(PAIS).'.virtualpol.com/"><b>http://'.PAIS.'.virtualpol.com/</b></a><br /><br />VirtualPol, plataforma democratica auto-gestionada<br />';
 	$result = mysql_query("SELECT email FROM ".SQL_USERS." WHERE pais = '".PAIS."' AND estado != 'expulsado'", $link);
 	while($row = mysql_fetch_array($result)){ enviar_email(null, $asunto, $mensaje, $row['email']); }
 }
@@ -113,7 +113,7 @@ if (($pol['config']['elecciones_estado'] == 'normal') AND (time() >= ($eleccione
 
 	// envia emails
 	$asunto = '['.PAIS.'] Comienzan las ' . $empiezan_elecciones . ' de '.PAIS.'';
-	$mensaje = 'Estimados ciudadanos y ciudadanas de '.PAIS.',<br /><br />Acaban de comenzar las ' . $empiezan_elecciones . ', en las que tienes el derecho y deber de participar. Su voto es vital para la democracia de '.PAIS.'.<br /><br />Todo el pueblo ha trabajado mucho logrando un gran avance y muchas mejoras. Gracias a todos vosotros el pueblo crece dia a dia.<br /><br /><a href="http://'.strtolower(PAIS).'.virtualpol.com/"><b>http://'.PAIS.'.virtualpol.com/</b></a><br /><br />VirtualPol, la comunidad virtual democratica';
+	$mensaje = 'Estimados ciudadanos y ciudadanas de '.PAIS.',<br /><br />Acaban de comenzar las ' . $empiezan_elecciones . ', en las que tienes el derecho y deber de participar. Su voto es vital para la democracia de '.PAIS.'.<br /><br /><a href="http://'.strtolower(PAIS).'.virtualpol.com/"><b>http://'.PAIS.'.virtualpol.com/</b></a><br /><br />VirtualPol, plataforma democratica auto-gestionada';
 
 	$result = mysql_query("SELECT email FROM ".SQL_USERS." WHERE pais = '".PAIS."'", $link);
 	while($row = mysql_fetch_array($result)){ enviar_email(null, $asunto, $mensaje, $row['email']); }

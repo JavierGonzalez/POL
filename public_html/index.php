@@ -120,7 +120,7 @@ $txt .= '
 <td style="border-bottom:1px solid grey;" colspan="10"></td>
 </tr>
 <tr>
-<td colspan="2"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chs=210x90&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto del censo entre Paises" /></td>
+<td colspan="2"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chs=220x100&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto del censo entre Plataformas" /></td>
 
 <td align="right" valign="top"><b style="font-size:20px;">' . $poblacion_num . '</b></td>
 <td colspan="2" valign="top"><b style="font-size:20px;">Ciudadanos</b></td>

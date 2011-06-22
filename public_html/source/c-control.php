@@ -35,7 +35,7 @@ if (isset($sc[$pol['user_ID']])) {
 
 	// nomenclatura
 	foreach ($vp['paises'] AS $pais) { $paises .= ' <span style="background:'.$vp['bg'][$pais].';">'.$pais.'</span>'; }
-	$nomenclatura = '<span style="float:right;"><!--Paises:'.$paises.' |--> Estados: <b class="ciudadano">Ciudadano</b> <b class="turista">Turista</b> <b class="validar">Validar</b> <b class="expulsado">Expulsado</b></span>';
+	$nomenclatura = '<span style="float:right;">Plataformas:'.$paises.' | Estados: <b class="ciudadano">Ciudadano</b> <b class="turista">Turista</b> <b class="validar">Validar</b> <b class="expulsado">Expulsado</b></span>';
 
 	// siglas partidos
 	$result = mysql_query("SELECT ID, siglas FROM ".SQL."partidos", $link);
@@ -737,7 +737,7 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 	if (isset($sc[$pol['user_ID']])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
 	$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'expulsar.gif" alt="Expulsion" border="0" /> <a href="/control/expulsiones/">Expulsiones</a> | Expulsar</h1>
 
-<p>Esta acci&oacute;n privilegiada exclusiva de los Supervisores del Censo (SC) bloquea indefinidamente un usuario y lo pone en proceso de eliminaci&oacute;n forzada tras 10 dias, durante ese periodo de tiempo es reversible. Seg&uacute;n el <a href="http://www.virtualpol.com/legal">TOS</a> es motivo de expulsi&oacute;n <em>2.c La utilizaci&oacute;n malintencionada del privilegio de expulsi&oacute;n.</em></p>
+<p>Esta acci&oacute;n es efectuada por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminaci&oacute;n forzada tras 10 dias, pasado ese periodo de tiempo es irreversible. Seg&uacute;n el <a href="http://www.virtualpol.com/legal">TOS</a> es motivo de expulsi&oacute;n <em>2.c La utilizaci&oacute;n malintencionada del privilegio de expulsi&oacute;n.</em></p>
 
 <form action="/accion.php?a=expulsar" method="post">
 
@@ -813,7 +813,7 @@ WHERE ID = '".$_GET['c']."' LIMIT 1", $link);
 	$txt_title = 'Control:  Expulsiones';
 	$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'expulsar.gif" alt="Expulsado" border="0" /> Expulsiones | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p>Una expulsi&oacute;n bloquea de forma perpetua a un usuario de <a href="http://www.virtualpol.com/">VirtualPol</a>. Debe usarse tan solo en casos de <b>clones</b> o <b>ataques al sistema</b>.</p>
+<p>Una expulsi&oacute;n bloquea de forma perpetua a un usuario de <a href="http://www.virtualpol.com/">VirtualPol</a>. Esta responsabilidad est&aacute; a cargo de los Supervisores del Censo (son los 7 m&aacute;s votados de confianza, con m&aacute;s de 365 dias de veteran&iacute;a). Son elegidos mediante democracia directa. Las expulsiones siguen las reglas del <a href="http://www.virtualpol.com/legal">TOS</a>.</p>
 
 <table border="0" cellspacing="1" cellpadding="" class="pol_table">
 <tr>

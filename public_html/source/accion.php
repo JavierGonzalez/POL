@@ -236,7 +236,10 @@ LIMIT 1", $link);
 		$pols = $pols - $pols_arancel;
 
 		evento_log(13); // rechazo de ciudadania
-		evento_chat('<b>[#] '.crear_link($nick).' rechaza la Ciudadania</b> de '.PAIS.' (llevandose consigo: '.pols($pols).' '.MONEDA.')');
+		if (($pol['pols'] > 0) AND (PAIS != '15M')) {
+			$consigo = ' (llevandose consigo: '.pols($pols).' '.MONEDA.')';
+		}
+		evento_chat('<b>[#] '.crear_link($nick).' rechaza la Ciudadania</b> de '.PAIS.$consigo);
 		
 		
 
@@ -272,7 +275,7 @@ case 'expulsar':
 		while ($r = mysql_fetch_array($result)) {
 			mysql_query("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$r['user_ID']."' LIMIT 1", $link);
 			mysql_query("UPDATE expulsiones SET estado = 'cancelado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
-			evento_chat('<span class="expulsado"><img src="'.IMG.'expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>');
+			evento_chat('<span class="expulsado"><img src="'.IMG.'expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
 		}
 
 	} elseif ((isset($sc[$pol['user_ID']])) AND ($_POST['razon']) AND ($_POST['nick']) AND ($_POST['nick'] != 'GONZO') AND (!in_array($_POST['nick'], $sc))) { 

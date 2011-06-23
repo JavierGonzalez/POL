@@ -25,7 +25,7 @@ FROM ".SQL."partidos_listas
 WHERE ID_partido = '" . $r['ID'] . "'
 ORDER BY ID ASC", $link);
 			while($r2 = mysql_fetch_array($result2)){ 
-				if (!$li_listas) {  $li_presi = ' &larr; Candidato a Presidente'; } else { $li_presi = ''; }
+				if ((!$li_listas) AND (ECONOMIA)) {  $li_presi = ' &larr; Candidato a Presidente'; } else { $li_presi = ''; }
 				$li_listas .= '<li><form action="/accion.php?a=partido-lista&b=del&ID=' . $r['ID'] . '" method="post"><input type="hidden" name="user_ID" value="' . $r2['user_ID'] . '"  /><input style="height:26px;" type="submit" value="X" /> <img src="'.IMG.'cargos/'.$r2['cargo'].'.gif" /><b>' . crear_link($r2['nick']) . ' ' . confianza($r2['confianza']) . '</b> ' . $li_presi . '</form></li>' . "\n"; 
 				$candidatos_num++;
 			}
@@ -89,7 +89,7 @@ WHERE ID_partido = '" . $r['ID'] . "'
 ORDER BY ID ASC", $link);
 			while($r2 = mysql_fetch_array($result2)){ 
 				$li_presi = '';
-				if (!$li_listas) {  $li_presi = ' &larr; Candidato a Presidente'; }
+				if ((!$li_listas) AND (ECONOMIA)) {  $li_presi = ' &larr; Candidato a Presidente'; }
 				if ($r['ID_presidente'] == $r2['user_ID']) {  $li_presi .= ' &larr; Presidente de ' . $r['siglas']; }
 				$li_listas .= '<li><b>' . crear_link($r2['nick']) . '</b> (' . confianza($r2['confianza']) . ', ' . duracion(time() - strtotime($r2['fecha_last'])) . ')' . $li_presi . '</li>' . "\n";
 				$num_listas++;
@@ -112,7 +112,7 @@ ORDER BY fecha_registro ASC", $link);
 <p>' . $r['descripcion'] . '</p>
 
 <ul id="partido">
-<li>Presidente de ' . $r['siglas'] . ': <b>' . crear_link($r['nick_presidente']) . '</b><br /><br /></li>
+'.(ECONOMIA?'<li>Presidente de ' . $r['siglas'] . ': <b>' . crear_link($r['nick_presidente']) . '</b><br /><br /></li>':'').'
 <li>Afiliados: <b>' . $num_afiliados . '</b>' . $afiliados . '<br /><br /></li>
 <li>Lista: <b>' . $num_listas . ' (Candidatos)</b>
 <ol>

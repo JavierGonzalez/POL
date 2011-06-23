@@ -186,7 +186,7 @@ $txt .= '<p>'.boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel').
 <p>
 <form action="/accion.php?a=afiliarse" method="post">
 
-Partido afiliado: <select name="partido"><option value="0">Ninguno</option>';
+Afiliaci&oacute;n: <select name="partido"><option value="0">Ninguno</option>';
 
 
 $result2 = mysql_query("SELECT ID, siglas FROM ".SQL."partidos ORDER BY siglas ASC", $link);

@@ -334,6 +334,8 @@ $txt .= '</blockquote></div>';
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';
 	$atrack = '"/atrack/registro/solicitar.html"'; 
 
+	if (!$_GET['pais']) { $_GET['pais'] = $vp['paises'][0]; }
+
 	$txt .= '<h1><span class="gris">1. Crear usuario |</span> 2. Solicitar Ciudadan&iacute;a <span class="gris">| 3. Ser Ciudadano</span></h1>
 	
 <hr /><br />
@@ -365,13 +367,12 @@ $txt .= '</blockquote></div>';
 		if ($_GET['pais'] != '') {
 			$txt .= '<ul>
 <li><b>Aceptas ser Ciudadano de <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/">'.$_GET['pais'].'</a></b>, con tus derechos y obligaciones.</li>
-<li><b>Aceptas las <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/doc/">leyes o normas </a> de '.$_GET['pais'].'</b>.</li></ul>
 
 <div class="pol_form">
 <form action="?a=solicitar-ciudadania" method="post">
 <input name="pais" value="' . $_GET['pais'] . '" type="hidden" />
 <blockquote>
-<input value="Solicitar ciudadania de '.$_GET['pais'].'" style="color: blue; font-size: 20px;" type="submit" onClick="javascript:pageTracker._trackPageview(\'/atrack/registro/ciudadano.html\');" /> 
+<input value="Entrar en '.$_GET['pais'].'" style="color: blue; font-size: 20px;" type="submit" onClick="javascript:pageTracker._trackPageview(\'/atrack/registro/ciudadano.html\');" /> 
 </blockquote>
 </form>
 

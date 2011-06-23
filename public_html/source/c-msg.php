@@ -154,7 +154,7 @@ function click_form(tipo) {
 <th colspan="2"><span style="float:right;">De &nbsp; &nbsp;</span>
 <button onClick="window.location.href=\'/accion.php?a=mensaje-leido&ID=all\';" style="color:#666;" />Todo leido</button>
 </th>
-<th width="100%">Mensaje</th>
+<th>Mensaje</th>
 <th></th>
 </tr>';
 

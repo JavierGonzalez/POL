@@ -47,7 +47,7 @@ ORDER BY nick DESC", $link);
 
 			$text = $r['descripcion'];
 
-			if (($candidatos_num >= $pol['config']['num_escanos']) OR ($ciudadanos_num == 0)) { $disabled = ' disabled="disabled"'; } else { $disabled = ''; }
+			if ($ciudadanos_num == 0) { $disabled = ' disabled="disabled"'; } else { $disabled = ''; }
 
 			include('inc-functions-accion.php');
 			$txt .= '<h1><img src="'.IMG.'doc-edit.gif" alt="Editar" /> <a href="/partidos/">'.NOM_PARTIDOS.'</a>: ' . $r['siglas'] . ' (' . $r['nombre'] . ')</h1>

@@ -50,6 +50,7 @@ if ($pol['nick']) {
 	$txt_perfil = '<b><a href="http://' . strtolower($pol['pais']) . '.virtualpol.com/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . '</a></b> | <b class="' . $pol['estado'] . '">' . ucfirst($pol['estado']) . '</b> de <b>' . $pol['pais'] . '</b> | <a href="/registrar/login.php?a=logout">Salir</a>';
 } else { // sin identificar, sin login
 	$txt_perfil = '
+<script type="text/javascript" src="'.IMG.'md5.js"></script> 
 <script type="text/javascript">
 function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "123")) { objeto.value = ""; } }
 </script>
@@ -57,8 +58,8 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <form action="'.REGISTRAR.'login.php?a=login" method="post">
 <input name="url" value="' . base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) . '" type="hidden" />
 <input name="user" value="Usuario" size="8" maxlength="20" onfocus="vlgn(this)" type="text" />
-<input name="pass" value="123" size="10" maxlength="20" onfocus="vlgn(this)" type="password" />
-<input type="submit" value="Entrar" /></form>
+<input id="login_pass" name="pass" value="123" size="10" maxlength="200" onfocus="vlgn(this)" type="password" />
+<input type="submit" value="Entrar" onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" /></form>
 </span>
 '.boton('Reg&iacute;strate!', '/registrar/').' | <a href="http://pol.virtualpol.com/info/recuperar-login/"><acronym title="Recuperar contrase&ntilde;a">?</acronym></a> &nbsp;';
 

@@ -1753,13 +1753,9 @@ VALUES ('".$pol['user_ID']."', '".$date."', '".strtoupper($_POST['siglas'])."', 
 
 
 if ($_GET['a'] == 'logout') {
-	if (($_SESSION) AND (substr($_SESSION['pol']['nick'], 0, 1) != '-')) { 
-		unset($_SESSION);
-		session_unset(); session_destroy();
-	}
-
+	if ($_SESSION) { unset($_SESSION); session_unset(); session_destroy(); }
 	header('Location: '.REGISTRAR.'login.php?a=logout');
-	exit;
+	mysql_close($link); exit;
 }
 
 if ($link) { mysql_close($link); }

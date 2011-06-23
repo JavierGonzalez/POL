@@ -69,7 +69,7 @@ $txt .= '</h1>
 <li style="margin-top:380px;color:#AAA;"><b>
 '.($acceso['leer']?'
 <img src="'.IMG.'logo-virtualpol-40original.gif" alt="VirtualPOL" border="0" height="40" /><br />
-'.$titulo.', Gobierno de '.PAIS.'<br />
+'.$titulo.'. Plataforma '.PAIS.'<br />
 Acceso leer: '.$acceso_leer.($acceso_cfg_leer?' [<em>'.$acceso_cfg_leer.'</em>]':'').'<br />
 Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_escribir.'</em>]':'').'<br />
 <span style="float:right;">'.date('Y-m-d H:i:s').' &nbsp;</span>Nick: '.($pol['nick']?$pol['nick']:'Anonimo').'<br />

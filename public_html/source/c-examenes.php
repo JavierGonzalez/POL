@@ -471,8 +471,12 @@ ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 		} else { $aprobados = '0%'; }
 
 
+		if ($r['num_preguntas'] > 0) {
+			$url = '<a href="/examenes/' . $r['ID'] . '/"><b>' . $r['titulo'] . '</b></a>';
+		} else {
+			$url = '<b>' . $r['titulo'] . '</b>';
+		}
 
-		$url = '<a href="/examenes/' . $r['ID'] . '/"><b>' . $r['titulo'] . '</b></a>';
 
 
 		$txt .= '<tr>

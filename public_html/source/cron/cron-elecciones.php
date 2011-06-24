@@ -1,5 +1,10 @@
 <?php
 
+/* ALERTA CODIGO ANTIGUO. Lleva funcionando sin fallar 3 años 
+(pros: funciona, contra: es codigo malo y antiguo)
+*/
+
+
 $root_dir = '/var/www/vhosts/virtualpol.com/httpdocs/real/';
 
 
@@ -86,7 +91,9 @@ if (($pol['config']['elecciones_estado'] == 'normal') AND (time() >= ($eleccione
 
 	// tipo elecciones
 	$elec_now = substr($pol['config']['elecciones'], 1);
-	if ($elec_now == 'pres') {
+	if (ECONOMIA == false) {
+		$empiezan_elecciones = 'Elecciones';
+	} else if ($elec_now == 'pres') {
 		$empiezan_elecciones = 'Elecciones Presidenciales (primera vuelta)';
 	} elseif ($elec_now == 'parl') {
 		$empiezan_elecciones = 'Elecciones Legislativas';
@@ -222,7 +229,7 @@ FROM ".SQL_USERS." WHERE ID = '" . $diputado_ID . "' LIMIT 1", $link);
 
 		mysql_query("UPDATE ".SQL."elec SET escrutinio = '" . $escrutinio . "|0:I:0' ORDER BY time DESC LIMIT 1", $link);
 
-		evento_chat('<b>[ELECCIONES] <a href="/elecciones/">Elecciones Legislativas FINALIZADAS</a> VIVA '.PAIS.'!</b>');
+		evento_chat('<b>[ELECCIONES] <a href="/elecciones/">Elecciones FINALIZADAS</a></b>');
 	}
 
 	// tiempo next elecciones

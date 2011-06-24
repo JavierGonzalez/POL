@@ -26,7 +26,7 @@ pol_elec (ID, time, tipo, num_votantes, escrutinio)
 
 // LOAD CONFIG
 $result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
-while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
+while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 // TEST
 
@@ -62,12 +62,12 @@ if ($_GET['a'] == 'votar') {
 			$fecha_24_antes = date('Y-m-d H:i:00', strtotime($pol['config']['elecciones_inicio']) - $pol['config']['elecciones_antiguedad']);
 
 			//fecha registro?
-			$result = mysql_query("SELECT fecha_registro FROM ".SQL_USERS." WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-			while($row = mysql_fetch_array($result)){ $fecha_registro = $row['fecha_registro']; }
+			$result = mysql_query("SELECT fecha_registro FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)){ $fecha_registro = $r['fecha_registro']; }
 
 			//ha votado?
 			$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-			while($row = mysql_fetch_array($result)){ $ha_votado = $row['ID']; }
+			while($r = mysql_fetch_array($result)){ $ha_votado = $r['ID']; }
 
 			if ($fecha_registro >= $fecha_24_antes) {
 				$txt .= '<p class="amarillo" style="color:red;">No puedes ejercer el voto por falta de antiguedad, podr&aacute;s en las pr&oacute;ximas elecciones!</p>';
@@ -84,9 +84,9 @@ if ($_GET['a'] == 'votar') {
 
 				if ($pol['config']['elecciones'] == 'pres2') {
 					$result3 = mysql_query("SELECT escrutinio FROM ".SQL."elec ORDER BY time DESC LIMIT 1", $link);
-					while($row3 = mysql_fetch_array($result3)){ 
+					while($r3 = mysql_fetch_array($result3)){ 
 						// formato: candidato1|candidato1#escrutinio
-						$candidatos_1v = explode("#", $row3['escrutinio']);
+						$candidatos_1v = explode("#", $r3['escrutinio']);
 						$candidatos_1v = explode("|", $candidatos_1v[0]); 
 					}
 					foreach($candidatos_1v as $ID => $ID_partido) { $candidatos_1vuelta[$ID_partido] = true; }
@@ -98,22 +98,22 @@ FROM ".SQL."partidos
 WHERE estado = 'ok' 
 AND fecha_creacion < '" . $fecha_24_antes . "'
 ORDER BY RAND()", $link);
-				while($row = mysql_fetch_array($result)){
-					if ($row['num_lista'] >= 1) {
+				while($r = mysql_fetch_array($result)){
+					if ($r['num_lista'] >= 1) {
 
 						$result2 = mysql_query("SELECT user_ID,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick
+(SELECT nick FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick
 FROM ".SQL."partidos_listas 
-WHERE ID_partido = '" . $row['ID'] . "' 
+WHERE ID_partido = '" . $r['ID'] . "' 
 ORDER BY ID ASC
 LIMIT 1", $link);
-						while($row2 = mysql_fetch_array($result2)){ $nick = $row2['nick']; }
+						while($r2 = mysql_fetch_array($result2)){ $nick = $r2['nick']; }
 						if ($pol['config']['elecciones'] == 'pres2') {
-							if ($candidatos_1vuelta[$row['ID']] == true) { 
-								$partidos .= '<option value="' . $row['ID'] . '">' . $nick . ' (' . $row['siglas'] . ')</option>'; 
+							if ($candidatos_1vuelta[$r['ID']] == true) { 
+								$partidos .= '<option value="' . $r['ID'] . '">' . $nick . ' (' . $r['siglas'] . ')</option>'; 
 							}
 						} else {
-							$partidos .= '<option value="' . $row['ID'] . '">' . $nick . ' (' . $row['siglas'] . ')</option>';
+							$partidos .= '<option value="' . $r['ID'] . '">' . $nick . ' (' . $r['siglas'] . ')</option>';
 						}
 
 					}
@@ -138,12 +138,12 @@ LIMIT 1", $link);
 			$fecha_24_antes = date('Y-m-d H:i:00', strtotime($pol['config']['elecciones_inicio']) - $pol['config']['elecciones_antiguedad']);
 
 			//fecha registro?
-			$result = mysql_query("SELECT fecha_registro FROM ".SQL_USERS." WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-			while($row = mysql_fetch_array($result)){ $fecha_registro = $row['fecha_registro']; }
+			$result = mysql_query("SELECT fecha_registro FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)){ $fecha_registro = $r['fecha_registro']; }
 
 			//ha votado?
 			$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-			while($row = mysql_fetch_array($result)){ $ha_votado = $row['ID']; }
+			while($r = mysql_fetch_array($result)){ $ha_votado = $r['ID']; }
 
 			if ($fecha_registro >= $fecha_24_antes) {
 				$txt .= '<p class="amarillo" style="color:red;">No puedes ejercer el voto por falta de antiguedad, podr&aacute;s en las pr&oacute;ximas elecciones!</p>';
@@ -170,22 +170,22 @@ LIMIT 1", $link);
 <tr><td colspan="6" align="center"><b style="font-size:18px;"><span style="font-size:22px;" id="votos_num">' . $votos_num . '</span> votos en Blanco</b></td></tr>';
 
 				$result = mysql_query("SELECT ID, siglas FROM ".SQL."partidos", $link);
-				while($row = mysql_fetch_array($result)){
-					$partidos[$row['ID']] = $row['siglas'];
+				while($r = mysql_fetch_array($result)){
+					$partidos[$r['ID']] = $r['siglas'];
 				}
 
 				$result = mysql_query("SELECT user_ID,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick,
-(SELECT estado FROM ".SQL_USERS." WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS estado,
-(SELECT partido_afiliado FROM ".SQL_USERS." WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS partido_afiliado,
-(SELECT voto_confianza FROM ".SQL_USERS." WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS confianza
+(SELECT nick FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick,
+(SELECT estado FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS estado,
+(SELECT partido_afiliado FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS partido_afiliado,
+(SELECT voto_confianza FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS confianza
 FROM ".SQL."partidos_listas  
 ORDER BY RAND()", $link);
-				while($row = mysql_fetch_array($result)){ 
-					if (($row['estado'] == 'ciudadano') AND ($partidos[$row['partido_afiliado']])) {
+				while($r = mysql_fetch_array($result)){ 
+					if (($r['estado'] == 'ciudadano') AND ($partidos[$r['partido_afiliado']])) {
 						if ($lat != true) { $txt .= '<tr>'; }
 
-						$txt .= '<td><input class="diputado" name="' . $row['user_ID'] . '" value="1" type="checkbox" /> <b style="font-size:18px;">' . crear_link($row['nick']) . '</b></td><td>' . crear_link($partidos[$row['partido_afiliado']], 'partido') . '</td><td align="right">' . confianza($row['confianza']) . '</td>';
+						$txt .= '<td><input class="diputado" name="' . $r['user_ID'] . '" value="1" type="checkbox" /> <b style="font-size:18px;">' . crear_link($r['nick']) . '</b></td><td>' . crear_link($partidos[$r['partido_afiliado']], 'partido') . '</td><td align="right">'.(ECONOMIA?confianza($r['confianza']):'').'</td>';
 
 						if ($lat != true) { $txt .= '<td width="90"></td>'; $lat = true; } 
 						else { $txt .= '</tr>'; $lat = false; }
@@ -312,21 +312,21 @@ if ($_GET['a'] == 'votar') {
 FROM ".SQL."elec 
 WHERE tipo = 'pres'
 ORDER BY time DESC LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)){
-		$votos_total = $row['num_votos'];
+	while($r = mysql_fetch_array($result)){
+		$votos_total = $r['num_votos'];
 
-		$txt .= '<p style="text-align:center;margin-top:8px;"><b>' . $votos_total . '</b> votos de <em>' . $row['num_votantes'] . '</em>, participaci&oacute;n: <b>' . number_format(($votos_total * 100) / $row['num_votantes'], 1, ',', '') . '%</b></p>';
+		$txt .= '<p style="text-align:center;margin-top:8px;"><b>' . $votos_total . '</b> votos de <em>' . $r['num_votantes'] . '</em>, participaci&oacute;n: <b>' . number_format(($votos_total * 100) / $r['num_votantes'], 1, ',', '') . '%</b></p>';
 
 
 		// formato: candidato1|candidato1#escrutinio
-		if ($row['escrutinio']) {
+		if ($r['escrutinio']) {
 			if ($pol['config']['elecciones'] == 'pres2') { 
-				$row['escrutinio'] = explodear("#", $row['escrutinio'], 1); 
+				$r['escrutinio'] = explodear("#", $r['escrutinio'], 1); 
 				$tabla .= '<tr><td colspan="4" align="center"><b>Escrutinio de la Primera Vuelta:</b></td></tr>';
 			}
 
 			// genera escrutinio en tabla
-			$m = explode("|", $row['escrutinio']);
+			$m = explode("|", $r['escrutinio']);
 			$votos_total = 0;
 			foreach($m as $t) {
 				$t = explode(":", $t);
@@ -353,13 +353,13 @@ ORDER BY time DESC LIMIT 1", $link);
 		if (substr($pol['config']['elecciones'], 0, 4) == 'pres') {
 
 			// presenta grafico participacion
-			$p = round(($row['num_votos'] * 100) / $row['num_votantes']);
+			$p = round(($r['num_votos'] * 100) / $r['num_votantes']);
 			$chart_dato = $p . ',' . (100 - $p);
 			$chart_nom = 'Participacion|Abstencion';
 
 			// boton votar
 			$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-			while($row = mysql_fetch_array($result)){ $havotado = $row['ID']; }
+			while($r = mysql_fetch_array($result)){ $havotado = $r['ID']; }
 			if ((!$havotado) AND ($pol['user_ID'])) { $boton = '<br />' . boton('VOTAR', '/elecciones/votar/'); }
 			
 			$tabla = '<tr><td colspan="4" style="color:grey;" align="center">Elecciones en curso...' . $boton . '</td></tr>' . $tabla;
@@ -394,13 +394,13 @@ ORDER BY time DESC LIMIT 1", $link);
 FROM ".SQL."elec 
 WHERE tipo = 'parl'
 ORDER BY time DESC LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)){
-		$votos_total = $row['num_votos'];
+	while($r = mysql_fetch_array($result)){
+		$votos_total = $r['num_votos'];
 
-		$txt .= '<p style="text-align:center;margin-top:8px;"><b>' . $votos_total . '</b> votos de <em>' . $row['num_votantes'] . '</em>, participaci&oacute;n: <b>' . number_format(($votos_total * 100) / $row['num_votantes'], 1, ',', '') . '%</b></p>';
+		$txt .= '<p style="text-align:center;margin-top:8px;"><b>' . $votos_total . '</b> votos de <em>' . $r['num_votantes'] . '</em>, participaci&oacute;n: <b>' . number_format(($votos_total * 100) / $r['num_votantes'], 1, ',', '') . '%</b></p>';
 		
 		if ($pol['config']['elecciones'] != 'parl') {
-			$m = explode("|", $row['escrutinio']);
+			$m = explode("|", $r['escrutinio']);
 
 			$votos_total = 0;
 			foreach($m as $t) {
@@ -420,10 +420,10 @@ ORDER BY time DESC LIMIT 1", $link);
 					// ejerce diputado?
 					$cargo = '';
 					$nestado = '';
-					$result = mysql_query("SELECT ID, estado, (SELECT cargo FROM ".SQL."estudios_users WHERE user_ID = ".SQL_USERS.".ID AND ID_estudio = '6' LIMIT 1) AS cargo FROM ".SQL_USERS." WHERE nick = '" . $t[2] . "' AND pais = '".PAIS."' LIMIT 1", $link);
-					while($row = mysql_fetch_array($result)){ 
-						if ($row['estado'] == 'ciudadano') { $cargo = $row['cargo']; } 
-						$nestado = $row['estado']; 
+					$result = mysql_query("SELECT ID, estado, (SELECT cargo FROM ".SQL."estudios_users WHERE user_ID = users.ID AND ID_estudio = '6' LIMIT 1) AS cargo FROM users WHERE nick = '" . $t[2] . "' AND pais = '".PAIS."' LIMIT 1", $link);
+					while($r = mysql_fetch_array($result)){ 
+						if ($r['estado'] == 'ciudadano') { $cargo = $r['cargo']; } 
+						$nestado = $r['estado']; 
 					}
 
 					if ($t[1]) {
@@ -442,13 +442,13 @@ ORDER BY time DESC LIMIT 1", $link);
 			// EN CURSO
 
 			// EN CURSO
-			$p = round(($votos_total * 100) / $row['num_votantes']);
+			$p = round(($votos_total * 100) / $r['num_votantes']);
 			$chart_dato = $p . ',' . (100 - $p);
 			$chart_nom = 'Participacion|Abstencion';
 
 			$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-			while($row = mysql_fetch_array($result)){ 
-				$havotado = $row['ID'];
+			while($r = mysql_fetch_array($result)){ 
+				$havotado = $r['ID'];
 			}
 			if ((!$havotado) AND ($pol['user_ID'])) {
 				 $boton = '<br />' . boton('VOTAR', '/elecciones/votar/');
@@ -463,21 +463,21 @@ ORDER BY time DESC LIMIT 1", $link);
 
 	$historial_p = '';
 	$result = mysql_query("SELECT time, num_votantes, num_votos, tipo, escrutinio FROM ".SQL."elec ORDER BY time ASC", $link);
-	while($row = mysql_fetch_array($result)){
+	while($r = mysql_fetch_array($result)){
 		if ($historial_p) { $historial_p .= ','; }
 		if ($historial_v) { $historial_v .= ','; }
 		if ($historial_tipo) { $historial_tipo .= '|'; }
-		$historial_tipo .= $row['tipo'];
-		$historial_p .= round(($row['num_votos'] * 100) / $row['num_votantes']);
-		$historial_v .= $row['num_votos'];
-		if ($row['num_votos'] > $historial_v_max) { $historial_v_max = $row['num_votos']; }
+		$historial_tipo .= $r['tipo'];
+		$historial_p .= round(($r['num_votos'] * 100) / $r['num_votantes']);
+		$historial_v .= $r['num_votos'];
+		if ($r['num_votos'] > $historial_v_max) { $historial_v_max = $r['num_votos']; }
 
 		// genera datos grafico
-		if (($row['escrutinio']) AND ($row['tipo'] == 'pres')) {
+		if (($r['escrutinio']) AND ($r['tipo'] == 'pres')) {
 			if ($historial_tipo_pres) { $historial_tipo_pres .= '|'; }
-			$historial_tipo_pres .= $row['tipo'];
-			$fecha = strtotime($row['time']);
-			$e = explode("|", $row['escrutinio']);
+			$historial_tipo_pres .= $r['tipo'];
+			$fecha = strtotime($r['time']);
+			$e = explode("|", $r['escrutinio']);
 			foreach($e as $p) {
 				$pp = explode(":", $p);
 				if (($pp[1] != 'I') AND ($pp[1] != 'B') AND ($pp[1])) {
@@ -486,12 +486,12 @@ ORDER BY time DESC LIMIT 1", $link);
 					if ($votos_max_pres < $pp[0]) { $votos_max_pres = $pp[0]; }
 				}
 			}
-		} elseif (($row['escrutinio']) AND ($row['tipo'] == 'parl')) {
+		} elseif (($r['escrutinio']) AND ($r['tipo'] == 'parl')) {
 			if ($historial_tipo_parl) { $historial_tipo_parl .= '|'; }
-			$historial_tipo_parl .= $row['tipo'];
+			$historial_tipo_parl .= $r['tipo'];
 					
-			$fecha = strtotime($row['time']);
-			$e = explode("|", $row['escrutinio']);
+			$fecha = strtotime($r['time']);
+			$e = explode("|", $r['escrutinio']);
 			foreach($e as $p) {
 				$pp = explode(":", $p);
 				if (($pp[1] != 'I') AND ($pp[1] != 'B') AND ($pp[1])) {

@@ -107,7 +107,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 	<li class="current">
 		<a href="http://www.virtualpol.com/" title="VirtualPol">&#9660; <img src="<?=IMG?>virtualpol-logo-cuadrado-40.gif" border="0" alt="VirtualPol" style="margin:-15px 0;" /></a>
 			<ul>
-<?php foreach ($vp['paises'] AS $pais) { if ($pais != PAIS) { echo '<li><a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a></li>'; } } ?>
+<?php foreach ($vp['paises'] AS $pais) { if ($pais != PAIS) { echo '<li><a href="http://'.strtolower($pais).'.virtualpol.com/">Plataforma '.$pais.'</a></li>'; } } ?>
 				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
 				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo fuente</a></li>
 				<li><a href="https://www.ohloh.net/p/virtualpol/contributors">Desarrollo</a></li>

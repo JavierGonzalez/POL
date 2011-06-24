@@ -76,9 +76,9 @@ if ($_GET['a'] == 'votar') {
 			} else {
 				$txt .= '
 <ul>
-<li>Debes ejercer tu derecho a voto, como buen Ciudadano de '.PAIS.'.</li>
-<li>El voto ser&aacute; siempre libre, anonimo y unipersonal.</li>
-<li>Puedes ver las <a href="/partidos/"><b>listas</b>, <b>candidatos</b> y <b>programas pol&iacute;ticos</b> aqu&iacute;</a>.</li>
+<li>Debes ejercer tu derecho a voto, como Ciudadano de '.PAIS.'.</li>
+<li>El voto es siempre libre, anonimo y unipersonal.</li>
+'.(ECONOMIA?'<li>Puedes ver las <a href="/partidos/"><b>listas</b>, <b>candidatos</b> y <b>programas pol&iacute;ticos</b> aqu&iacute;</a>.</li>':'').'
 </ul>';
 
 
@@ -153,10 +153,10 @@ LIMIT 1", $link);
 				$votos_num = $pol['config']['num_escanos'];
 				$txt .= '
 <ul>
-<li>Debes ejercer tu derecho a voto, como buen Ciudadano de '.PAIS.'.</li>
-<li>El voto ser&aacute; siempre libre, anonimo y unipersonal.</li>
-<li>Puedes ver las <a href="/partidos/"><b>listas</b>, <b>candidatos</b> y <b>programas pol&iacute;ticos</b> aqu&iacute;</a>.</li>
-<li>Puedes conceder hasta <b>'.$pol['config']['num_escanos'].' votos</b> a tus candidatos a Diputado favoritos. Puedes dejar los votos que quieras en Blanco.</li>
+<li>Debes ejercer tu derecho a voto, como ciudadano de '.PAIS.'.</li>
+<li>El voto es siempre libre, anonimo y unipersonal.</li>
+'.(ECONOMIA?'<li>Puedes ver las <a href="/partidos/"><b>listas</b>, <b>candidatos</b> y <b>programas pol&iacute;ticos</b> aqu&iacute;</a>.</li>':'').'
+<li>Puedes conceder hasta <b>'.$pol['config']['num_escanos'].' votos</b> a tus candidatos favoritos. Puedes dejar los votos que quieras en Blanco.</li>
 </ul>
 
 

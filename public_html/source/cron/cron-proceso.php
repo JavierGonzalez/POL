@@ -335,15 +335,17 @@ mysql_query("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '
 // ELIMINAR examenes antiguos
 //mysql_query("DELETE FROM ".SQL."estudios_users WHERE cargo = '0' AND time < '".$margen_60dias."'", $link);
 
+
 // ELIMINAR USUARIOS
 /* periodos:
 	< 30d	- 10 dias
 30d < 90d	- 30 dias 
 90d >		- 60 dias
+Autentificados NO expiran.
 */
 $st['eliminados'] = 0;
 $result = mysql_query("SELECT ID, nick, fecha_registro, fecha_last FROM users
-WHERE 
+WHERE dnie = 'false' AND 
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".$margen_90dias."' AND fecha_last <= '".$margen_60dias."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_90dias."' AND fecha_registro <= '".$margen_30dias."' AND fecha_last <= '".$margen_30dias."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_30dias."' AND fecha_last <= '".$margen_10dias."') OR

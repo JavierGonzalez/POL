@@ -91,7 +91,7 @@ ORDER BY ID ASC", $link);
 				$li_presi = '';
 				if ((!$li_listas) AND (ECONOMIA)) {  $li_presi = ' &larr; Candidato a Presidente'; }
 				if ($r['ID_presidente'] == $r2['user_ID']) {  $li_presi .= ' &larr; Presidente de ' . $r['siglas']; }
-				$li_listas .= '<li><b>' . crear_link($r2['nick']) . '</b> (' . confianza($r2['confianza']) . ', ' . duracion(time() - strtotime($r2['fecha_last'])) . ')' . $li_presi . '</li>' . "\n";
+				$li_listas .= '<li><b>' . crear_link($r2['nick']) . '</b> ('.(ECONOMIA?confianza($r2['confianza']).', ':'').duracion(time() - strtotime($r2['fecha_last'])) . ')' . $li_presi . '</li>' . "\n";
 				$num_listas++;
 			}
 

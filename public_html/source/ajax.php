@@ -8,7 +8,6 @@ header('Content-Type: text/plain');
 $host = explode('.', $_SERVER['HTTP_HOST']);
 define('pais', str_replace('-dev', '', $host[0], $dev));
 define('PAIS', strtoupper(pais)); // ARREGLAR: si se crea un pais con minusculas en el nombre esto corrompera el nucleo de acceso
-
 define('SQL', strtolower(pais).'_');
 
 /*

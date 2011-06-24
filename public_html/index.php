@@ -35,8 +35,8 @@ $txt .= '<center>
 <th colspan="2" align="left">Plataforma</th>
 <th>Poblaci&oacute;n</th>
 <th>Antig&uuml;edad</th>
-<th>Gobierno</th>
-<th colspan="3" align="center">Informaci&oacute;n</th>
+<th>Informaci&oacute;n</th>
+<th></th>
 </tr>';
 
 foreach ($vp['paises'] AS $pais) {
@@ -81,19 +81,22 @@ foreach ($vp['paises'] AS $pais) {
 
 
 	$txt .= '<tr style="background:'.$vp['bg'][$pais].';">
-<td><a href="http://'.$pais_low.'.virtualpol.com/"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.'" /></a></td>
+<td><a href="http://'.$pais_low.'.virtualpol.com/"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.'" width="60" height="40" /></a></td>
 
 <td><a href="http://'.$pais_low.'.virtualpol.com/"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
 
 <td align="right"><b style="font-size:20px;">' . $pais_pob . '</b></td>
 <td nowrap="nowrap" align="right"><b>' . $pais_dias . '</b> d&iacute;as</td>
-<td nowrap="nowrap"><img src="'.IMG.'cargos/7.gif" alt="Presidente de '.$pais.'" title="Presidente de '.$pais.'" /> '.$pais_presidente.'<br /><img src="'.IMG.'cargos/19.gif" alt="Vicepresidente de '.$pais.'" title="Vicepresidente de '.$pais.'" /> '.$pais_vice.'</td>
 
 <td style="font-size:13px;">
 <a href="http://'.$pais_low.'.virtualpol.com/elecciones/">Elecciones</a><br />
 <a href="http://'.$pais_low.'.virtualpol.com/foro/">Foro</a><br />
 <a href="http://'.$pais_low.'.virtualpol.com/chats/">Chats</a>
 </td>
+
+<td nowrap="nowrap">'.($pais=='15M'?'':'<img src="'.IMG.'cargos/7.gif" alt="Presidente de '.$pais.'" title="Presidente de '.$pais.'" width="16" height="16" /> '.$pais_presidente.'<br /><img src="'.IMG.'cargos/19.gif" alt="Vicepresidente de '.$pais.'" title="Vicepresidente de '.$pais.'" width="16" height="16" /> '.$pais_vice.'').'</td>
+
+
 
 </tr>';
 

@@ -20,6 +20,8 @@ function reemplazos($cadena) {
 	$patrones[8] = $inicio_patron.':roto2:/';
 	$patrones[9] = $inicio_patron.':facepalm:/';
 	$patrones[10] = $inicio_patron.':moneda:/';
+	$patrones[11] = $inicio_patron.'\[quote\]/';
+	$patrones[12] = $inicio_patron.'\[\/quote\]/';
 	$reemplazos = array();
 	$reemplazos[0] = ' <img src="'.IMG.'smiley/sonrie.gif" border="0" alt=":)" title=":)" />';
 	$reemplazos[1] = ' <img src="'.IMG.'smiley/disgustado.gif" border="0" alt=":(" title=":(" />';
@@ -32,6 +34,8 @@ function reemplazos($cadena) {
 	$reemplazos[8] = ' <img src="'.IMG.'smiley/roto2.gif" alt=":roto2:" border="0" title=":roto2:" />';
 	$reemplazos[9] = ' <img src="'.IMG.'smiley/palm.gif" alt=":facepalm:" border="0" title=":facepalm:" />';
 	$reemplazos[10] = ' <img src="'.IMG.'m.gif" alt=":moneda:" border="0" title=":moneda:" />';
+	$reemplazos[11] = ' <blockquote><div class="quote">';
+	$reemplazos[12] = ' </div></blockquote>';
 	return preg_replace($patrones, $reemplazos, $cadena);
 }
 

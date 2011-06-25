@@ -155,7 +155,6 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 				<a href="#">Informaci&oacute;n</a>
 					<ul>
 						<li><a href="/info/censo/">Censo <span class="md">(<?=$pol['config']['info_censo']?>)</span></a></li>
-						<?=(ECONOMIA?'<li><a href="/poderes/">Poderes</a></li>':'')?>
 						<li><a href="/doc/">Documentos <span class="md">(<?=$pol['config']['info_documentos']?>)</span></a></li>
 						<li><a href="/historia/">Historia</a></li>
 						<?=(ECONOMIA?'<li><a href="/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>':'')?>
@@ -164,7 +163,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 					</ul>
 			</li>
 			<li>
-				<a href="#">Gesti&oacute;n</a>
+				<a href="#">Democracia</a>
 				<ul>
 					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Control</b></a>
 						<ul>
@@ -174,10 +173,11 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 							<?=(ECONOMIA?'<li><a href="/control/judicial/">Judicial</a></li>':'')?>
 						</ul>
 					</li>
+					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
+					<li><a href="/votacion/">Votaciones <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
 					<li><a href="/cargos/">Cargos</a></li>
 					<li><a href="/partidos/"><?=NOM_PARTIDOS?> <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
-					<li><a href="/votacion/">Votaciones <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
-					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
+					<?=(ECONOMIA?'<li><a href="/poderes/">Poderes</a></li>':'')?>
 				</ul>
 			</li>
 			<?php if (ECONOMIA) { ?>
@@ -260,17 +260,18 @@ if (isset($pol['user_ID'])) {
 	$mtime = explode(' ', microtime()); 
 	$tiempofinal = $mtime[1] + $mtime[0]; 
 	$tiempototal = round(($tiempofinal-$tiempoinicial)*1000); 
-	echo $tiempototal.'ms <a href="http://www'.DEV.'.'.URL.'/legal" title="Condiciones del Servicio">TOS</a> | <a href="http://www.virtualpol.com/manual"><b>Ayuda</b></a>';
+	echo ($pol['user_ID']==1?$tiempototal.'ms ':'');
 } else {
 	// Enlaces de GONZO, solo lo ven los no-registrados, no quitar por favor :))))
 	echo '
 <a href="http://www.teoriza.com/">Teoriza</a> &middot; 
-<a href="http://www.eventuis.com/">eventos</a> &middot; 
-<a href="http://aziroet.com/">Blog gratis</a> | 
-<a href="http://www'.DEV.'.'.URL.'/legal" title="Condiciones del Servicio">TOS</a> | <a href="http://www.virtualpol.com/manual"><b>Ayuda</b></a>
+<a href="http://www.eventuis.com/">eventos</a>
 ';
 }
-?></span>
+?> | 
+<a href="http://www'.DEV.'.'.URL.'/legal" title="Condiciones del Servicio">TOS</a> | 
+<a href="http://www.virtualpol.com/manual"><b>Ayuda</b></a> &nbsp; 
+&nbsp; 2008-2011 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b></span>
 <b><?=PAIS?></b> <span style="font-size:11px;">DEFCON <b><?=$pol['config']['defcon']?></b></span>
 
 <?php

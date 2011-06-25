@@ -11,17 +11,21 @@ if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header
 include(RAIZ.'config-pwd.php');
 
 // PAISES
-$vp['paises'] = array('15M', 'VP'); // ACTIVOS
+$vp['paises'] = array('15M', '15MBCN', 'VP'); // ACTIVOS
 $vp['paises_congelados'] = array('POL', 'VULCAN', 'Hispania', 'Atlantis'); // INACTIVOS
 
 // COLORES #ACFA58 #9AFE2E
-$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'www'=>'#eeeeee');
-$vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'VP'=>'#71D8FF', '15M' => '#FFFF64', 'www'=>'grey');
+$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', '15MBCN'=>'#95DB95', 'www'=>'#eeeeee');
+$vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'VP'=>'#71D8FF', '15M' => '#FFFF64', '15MBCN'=>'#95DB95', 'www'=>'grey');
+
+$vp['paises_chat'] = array('VP'=>4, '15M'=>5, '15MBCN'=>6, ''=>4);
 
 // Configuracion por pais
 switch ($host[0]) { 
-	case 'vp': define('PAIS', 'VP'); break;
 	case '15m': define('PAIS', '15M'); break;
+	case '15mbcn': define('PAIS', '15MBCN'); break;
+	case 'vp': define('PAIS', 'VP'); break;
+
 	case 'pol': define('PAIS', 'POL'); break;
 	case 'vulcan': define('PAIS', 'Vulcan'); break;
 	case 'hispania': define('PAIS', 'Hispania'); break;
@@ -29,12 +33,12 @@ switch ($host[0]) {
 	default: define('PAIS', 'VP'); break;
 }
 
-if (PAIS == '15M') { 
+if (PAIS == 'VP') {	
+	define('ECONOMIA', true); 
+	define('NOM_PARTIDOS','Partidos'); 
+} else { 
 	define('ECONOMIA', false);
 	define('NOM_PARTIDOS','Comisiones');
-} else { 
-	define('ECONOMIA', true); 
-	define('NOM_PARTIDOS','Partidos');
 }
 
 define('SQL', strtolower(PAIS).'_');

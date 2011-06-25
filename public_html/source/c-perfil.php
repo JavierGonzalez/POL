@@ -113,7 +113,7 @@ ORDER BY cargo DESC, estado ASC, nota DESC", $link);
 			$result2 = mysql_query("SELECT valor FROM ".SQL."config WHERE dato = 'pols_afiliacion' LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)){ if ($r2['pols'] >= $pols) { $pols_afiliacion = $r2['valor']; } }
 
-			$text_limit = 1200 - strlen(strip_tags($r['text']));
+			$text_limit = 1600 - strlen(strip_tags($r['text']));
 			$txt .= '<div class="azul">';
 
 if (ECONOMIA) {
@@ -385,7 +385,7 @@ function limitChars(textid, limit, infodiv) {
 
 window.onload = function(){
 	$("#desc_area").keyup(function(){
-		limitChars("desc_area", 900, "desc_limit");
+		limitChars("desc_area", 1300, "desc_limit");
 	})
 }
 </script>

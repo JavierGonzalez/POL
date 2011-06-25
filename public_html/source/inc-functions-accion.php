@@ -42,6 +42,7 @@ function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', 
 	switch ($pais) {
 		case 'VP': $chat_ID = 4; break;
 		case '15M': $chat_ID = 5; break;
+		case '15MBCN': $chat_ID = 6; break;
 		default: $chat_ID = 4;
 	}
 

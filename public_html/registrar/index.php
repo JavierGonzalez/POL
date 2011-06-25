@@ -258,7 +258,7 @@ case 'solicitar-ciudadania':
 	
 		include('../source/inc-functions-accion.php');
 
-		if (($pol['pols'] > 0) AND ($_POST['pais'] != '15M')) {
+		if (($pol['pols'] > 0) AND ($_POST['pais'] != '15M') AND ($_POST['pais'] != '15MBCN')) {
 			$trae = ' (Trayendo consigo: '.pols($pol['pols']).' '.MONEDA.')';
 		} else { $trae = ''; }
 

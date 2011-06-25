@@ -253,7 +253,7 @@ ORDER BY num DESC", $link);
 
 		$txt .= '
 <td><b>'.$PAIS.'</b><br />
-<img src="http://chart.apis.google.com/chart?cht=p&chs=420x300
+<img src="http://chart.apis.google.com/chart?cht=p&chs=420x300&chds=a
 &chd=t:'.implode(',', $g_datos).','.$g_otros.'
 &chl='.implode('|', $g_siglas).'|Otros
 &chf=bg,s,ffffff01|c,s,ffffff01" alt="Afiliados por partido" title="Afiliados por partido" />

@@ -412,7 +412,7 @@ $txt .= '</blockquote></div>';
 
 
 <li><b>&iquest;Compartes conexi&oacute;n a Internet con otro usuario de VirtualPol?</b><br /> 
-<input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (opcional, en caso afirmativo indica el nick)<br /><br /></li>
+<input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (dejar en blanco en caso negativo)<br /><br /></li>
 
 <li><input name="condiciones" value="ok" type="checkbox" checked="checked" /> <a href="http://www'.DEV.'.'.URL.'/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.<br /><br /></li>
 

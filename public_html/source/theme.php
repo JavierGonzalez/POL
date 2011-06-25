@@ -269,7 +269,7 @@ if (isset($pol['user_ID'])) {
 ';
 }
 ?> | 
-<?php echo '<a href="http://www'.DEV.'.'.URL.'/legal" title="Condiciones del Servicio">TOS</a>'; ?> | 
+<a href="http://www.virtualpol.com/legal" title="Condiciones del Servicio">TOS</a> | 
 <a href="http://www.virtualpol.com/manual"><b>Ayuda</b></a> &nbsp; 
 &nbsp; 2008-2011 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b></span>
 <b><?=PAIS?></b> <span style="font-size:11px;">DEFCON <b><?=$pol['config']['defcon']?></b></span>

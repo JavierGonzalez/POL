@@ -15,8 +15,8 @@ $ac_dir = 'animal/';		// images directory of animals or things
 $width = 120;
 $jpg_quality = 65; 			// final jpg quality (90 hight, 60 low), recomended: 65
 $ac_num = 1;				// number of animals/objects (1 insecure, 2 default, 4 max recomended)
-$bg_trans = rand(30,35);	// transparency of background image, recomended: rand(30,36)
-$rand_resize = 18;			// Random background margin to move and stretch
+$bg_trans = rand(15,25);	// transparency of background image, recomended: rand(30,36)
+$rand_resize = 10;			// Random background margin to move and stretch
 
 
 

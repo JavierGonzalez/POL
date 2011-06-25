@@ -388,7 +388,7 @@ case 'examenes':
 		mysql_query("DELETE FROM ".SQL."examenes_preg WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 		$refer_url = 'examenes/editar/' . $_GET['re_ID'] . '/';
 
-	} elseif (($_GET['b'] == 'editar-examen') AND ($_GET['ID'] != null) AND ($pol['cargos'][35]) AND ($_POST['titulo']) AND ($_POST['descripcion']) AND ($_POST['nota']) AND ($_POST['num_preguntas'])) {
+	} elseif (($_GET['b'] == 'editar-examen') AND ($_GET['ID'] != null) AND ($pol['cargos'][35]) AND ($_POST['titulo']) AND ($_POST['descripcion']) AND ($_POST['nota'] >= 0) AND ($_POST['num_preguntas'] >= 0)) {
 		$_POST['descripcion'] = gen_text($_POST['descripcion'], 'plain');
 		mysql_query("UPDATE ".SQL."examenes SET titulo = '".$_POST['titulo']."', descripcion = '".$_POST['descripcion'] . "', nota = '".$_POST['nota']."', num_preguntas = '".$_POST['num_preguntas']."' WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 		$refer_url = 'examenes/editar/' . $_GET['ID'] . '/';

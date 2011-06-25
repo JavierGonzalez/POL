@@ -227,7 +227,7 @@ window.onload = function(){
 		} else	if ($pol['config']['elecciones_estado'] == 'normal') { 
 			$txt .= '<p class="amarillo">Lo siento, a&uacute;n no puedes ejercer el derecho a voto.</p>';
 		}
-	} else { $txt .= '<p class="amarillo">Solo los Ciudadanos tienen derecho a voto.</p>'; }
+	} else { $txt .= '<p class="amarillo">Solo los Ciudadanos de '.PAIS.' tienen derecho a voto en estas Elecciones.</p>'; }
 
 
 

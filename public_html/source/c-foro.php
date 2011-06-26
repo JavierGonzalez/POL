@@ -22,6 +22,7 @@ function reemplazos($cadena) {
 	$patrones[10] = $inicio_patron.':moneda:/';
 	$patrones[11] = $inicio_patron.'\[quote\]/';
 	$patrones[12] = $inicio_patron.'\[\/quote\]/';
+	$patrones[13] = $inicio_patron.'\[quote=(.*?)\]/';
 	$reemplazos = array();
 	$reemplazos[0] = ' <img src="'.IMG.'smiley/sonrie.gif" border="0" alt=":)" title=":)" />';
 	$reemplazos[1] = ' <img src="'.IMG.'smiley/disgustado.gif" border="0" alt=":(" title=":(" />';
@@ -36,6 +37,7 @@ function reemplazos($cadena) {
 	$reemplazos[10] = ' <img src="'.IMG.'m.gif" alt=":moneda:" border="0" title=":moneda:" />';
 	$reemplazos[11] = ' <blockquote><div class="quote">';
 	$reemplazos[12] = ' </div></blockquote>';
+	$reemplazos[13] = ' <blockquote><div class="quote"><cite>\2 escribió:</cite>';
 	return preg_replace($patrones, $reemplazos, $cadena);
 }
 

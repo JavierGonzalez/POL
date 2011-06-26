@@ -7,7 +7,7 @@ pol_foros_msg		(`ID``hilo_ID` `user_ID` `time` `text` `cargo`)
 */
 
 function reemplazos($cadena) {
-	$inicio_patron = '/(\s|^)';
+	$inicio_patron = '/\s?';
 	$patrones = array();
 	$patrones[0] = $inicio_patron.':\)/';
 	$patrones[1] = $inicio_patron.':\(/';
@@ -37,7 +37,7 @@ function reemplazos($cadena) {
 	$reemplazos[10] = ' <img src="'.IMG.'m.gif" alt=":moneda:" border="0" title=":moneda:" />';
 	$reemplazos[11] = ' <blockquote><div class="quote">';
 	$reemplazos[12] = ' </div></blockquote>';
-	$reemplazos[13] = ' <blockquote><div class="quote"><cite>\2 escribió:</cite>';
+	$reemplazos[13] = ' <blockquote><div class="quote"><cite>\1 escribió:</cite>';
 	return preg_replace($patrones, $reemplazos, $cadena);
 }
 

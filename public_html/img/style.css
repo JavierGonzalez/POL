@@ -354,7 +354,8 @@ h1 a {
 
 .quote {
 	background-color: #FFF8E0;
-	border: 1px solid #333;
+	border: #000000 solid thin;
+	border-radius: 12px; 
 	font-family:serif;
 	font-style:italic;
 	padding: 6px;

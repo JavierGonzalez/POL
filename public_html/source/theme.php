@@ -162,7 +162,28 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 						<li><a href="/log-eventos/">Log de eventos</a></li>
 					</ul>
 			</li>
+			if ($pol['pais'] == "VP"){ ?>
 			<li>
+				<a href="#">Pol&iacute;tica</a>
+				<ul>
+					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Control</b></a>
+						<ul>
+							<li><a href="/control/gobierno/">Despacho Oval</a></li>
+							<li><a href="/control/kick/">Kicks</a></li>
+							<li><a href="/control/expulsiones/">Expulsiones</a></li>
+							<?=(ECONOMIA?'<li><a href="/control/judicial/">Judicial</a></li>':'')?>
+						</ul>
+					</li>
+					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
+					<li><a href="/votacion/">Votaciones <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
+					<li><a href="/cargos/">Cargos</a></li>
+					<li><a href="/partidos/"><?=NOM_PARTIDOS?> <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
+					<?=(ECONOMIA?'<li><a href="/poderes/">Poderes</a></li>':'')?>
+				</ul>
+			</li>
+<?php	}
+	else{ ?>
+		<li>
 				<a href="#">Democracia</a>
 				<ul>
 					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Control</b></a>
@@ -180,6 +201,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 					<?=(ECONOMIA?'<li><a href="/poderes/">Poderes</a></li>':'')?>
 				</ul>
 			</li>
+<?php	} ?>
 			<?php if (ECONOMIA) { ?>
 			<li>
 				<a href="#">Econom&iacute;a</a>

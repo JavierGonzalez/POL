@@ -41,7 +41,7 @@ function reemplazos($cadena) {
 	return preg_replace($patrones, $reemplazos, $cadena);
 }
 
-function foro_enviar($subforo, $hilo=null, $edit=null) {
+function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 	global $pol, $link, $return_url;
 
 	$referer = explode('/', $_SERVER['HTTP_REFERER'], 4); 
@@ -58,6 +58,29 @@ function foro_enviar($subforo, $hilo=null, $edit=null) {
 				while($r = mysql_fetch_array($result)){ $edit_title = $r['title']; $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
 			}
 			$edit_text = strip_tags($edit_text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>,<iframe>");
+		}
+		if ($citar != null) { //citar
+			if ($citar>0) { //msg
+				$result = mysql_query("SELECT text, user_ID FROM ".SQL."foros_msg WHERE ID = '" . $citar . "' AND estado = 'ok'  LIMIT 1", $link);
+				while($r = mysql_fetch_array($result)){ 
+					$edit_text = $r['text']; 
+					$user_ID = $r['user_ID'];
+				}
+			} 
+			else {
+				$result = mysql_query("SELECT text, user_ID FROM ".SQL."foros_hilos WHERE ID = '" . abs($citar) . "' AND estado = 'ok' LIMIT 1", $link);
+				while($r = mysql_fetch_array($result)){ 
+					$edit_text = $r['text']; 
+					$user_ID = $r['user_ID'];
+				}
+			}
+			$result = mysql_query("SELECT nick FROM users WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)){ 
+				$edit_text = '[quote='.$r['nick'].']'.$edit_text.'[/quote]'; 
+			}
+			
+			$edit_text = strip_tags($edit_text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>,<iframe>");
+			
 		}
 
 		if ($pol['nivel'] > 1) {
@@ -250,7 +273,7 @@ LIMIT 1", $link);
 
 
 			// acceso
-			if ($pol['nivel'] >= $r['acceso_msg']) { $crear_hilo = '#enviar'; } else { $crear_hilo = ''; }
+			if ($pol['nivel'] >= $r['acceso_msg']) { $crear_hilo = '#enviar'; $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/-'.$r['ID'].'#enviar').'</div>'; } else { $crear_hilo = ''; }
 
 
 
@@ -272,7 +295,7 @@ LIMIT 1", $link);
 			} else { $editar = ''; }
 
 
-			$txt .= '<tr class="amarillo"><td align="right" valign="top">' . print_lateral($r['nick'], $r['encalidad'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['cargo'], $r['confianza']) . '</td><td valign="top" width="80%"><p style="text-align:justify;">' . $editar . reemplazos($r['text']) . '</p></td></tr>';
+			$txt .= '<tr class="amarillo"><td align="right" valign="top">' . print_lateral($r['nick'], $r['encalidad'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['cargo'], $r['confianza']) . '</td><td valign="top" width="80%"><p style="text-align:justify;">' . $citar . $editar . reemplazos($r['text']) . '</p></td></tr>';
 
 			$result2 = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo,
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
@@ -293,12 +316,15 @@ LIMIT " . $p_limit, $link);
 					// policia borra
 					$editar = boton('Papelera', '/accion.php?a=foro&b=borrar&c=mensaje&ID=' . $r2['ID'] . '/', '&iquest;Quieres enviar a la PAPELERA este MENSAJE?') . ' '; 
 				} else { $editar = ''; }
+				if ($citar) {
+ 					 $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/'.$r2['ID'].'#enviar').'</div>'; 
+				}
 
-				$txt .= '<tr id="m-' . $r2['ID'] . '"><td align="right" valign="top">' . print_lateral($r2['nick'], $r2['encalidad'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['cargo'], $r2['confianza']) . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $r2['ID'] . '">#</a></span>'.($r2['nick_estado']=='expulsado'?'<span style="color:red;">Expulsado.</span>':reemplazos($r2['text'])).'</p></td></tr>';
+				$txt .= '<tr id="m-' . $r2['ID'] . '"><td align="right" valign="top">' . print_lateral($r2['nick'], $r2['encalidad'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['cargo'], $r2['confianza']) . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $r2['ID'] . '">#</a></span>'.($r2['nick_estado']=='expulsado'?'<span style="color:red;">Expulsado.</span>':$citar.reemplazos($r2['text'])).'</p></td></tr>';
 			}
 			$txt .= '</table> <p>' . $p_paginas . '</p>';
 
-			if ($pol['nivel'] >= $r['acceso_msg']) { $txt .= foro_enviar($r['sub_ID'], $r['ID']); }
+			if ($pol['nivel'] >= $r['acceso_msg']) { $txt .= foro_enviar($r['sub_ID'], $r['ID'], null, $_GET['d']); }
 
 			if (!$pol['user_ID']) { $txt .= '<p class="azul"><b>Para poder participar en esta conversacion has de <a href="'.REGISTRAR.'">solicitar la Ciudadania en '.PAIS.'</a></b></p>'; }
 			

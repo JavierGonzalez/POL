@@ -236,7 +236,6 @@ WHERE ID = '" . $_GET['b'] . "'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
-
 		$preguntas_disponibles = $r['num_preguntas_especificas'] + $r['num_preguntas_generales'];
 		$margen_ultimoexamen = strtotime($r['fecha_ultimoexamen']) + $pol['config']['examen_repe'];
 		if (((!$r['fecha_ultimoexamen']) OR ($margen_ultimoexamen < time())) AND ($pol['pols'] >= $pol['config']['pols_examen'])) {
@@ -471,7 +470,7 @@ ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 		} else { $aprobados = '0%'; }
 
 
-		if ($r['num_preguntas'] > 0) {
+		if (($r['num_preguntas']+$num_generales) > 0) {
 			$url = '<a href="/examenes/' . $r['ID'] . '/"><b>' . $r['titulo'] . '</b></a>';
 		} else {
 			$url = '<b>' . $r['titulo'] . '</b>';

@@ -1098,10 +1098,10 @@ case 'pols':
 
 
 case 'votacion':
-
+	$votaciones_tipo = array('referendum', 'parlamento', 'sondeo');
 	if ($_GET['b'] == 'crear') {
 		$sc = get_supervisores_del_censo();
-		if (($pol['nivel'] >= 95) OR ($pol['cargos']['41']) OR (isset($sc[$pol['user_ID']]))) { 
+		if (($pol['nivel'] >= 90) OR ($pol['cargos']['41']) OR (isset($sc[$pol['user_ID']]))) { 
 
 			if ($_POST['tipo'] == 'parlamento') { $_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22'; }
 
@@ -1130,16 +1130,20 @@ case 'votacion':
 			$result = mysql_query("SELECT ID FROM ".SQL."estudios_users WHERE user_ID = '".$pol['user_ID']."' AND cargo = '1' AND ID_estudio = '6' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $es_diputado = true; }
 
-			if (($estado == 'ok') AND ($pais == PAIS) AND (($tipo == 'sondeo') OR ($tipo == 'referendum') OR ($tipo == 'parlamento')) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar))) {
+			if (($estado == 'ok') AND (in_array($tipo, $votaciones_tipo)) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar))) {
 				$result = mysql_query("SELECT ID FROM votacion_votos WHERE user_ID = '".$pol['user_ID']."' AND ref_ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $ha_votado = true; }
+
+
 				if ((!$ha_votado) AND (strtotime($fecha_registro) < time())) {
 					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."')", $link);
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 
-					evento_chat('<b>['.strtoupper($tipo).']</b> Voto de  '.$pol['nick'].' en: <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a>');
+					evento_chat('<b>['.strtoupper($tipo).']</b> Voto de  '.$pol['nick'].' en: <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a>', '0', '', false, 'e', $pais);
 				}
 			}
+
+			header('Location: http://'.strtolower($pais).'.virtualpol.com/votacion/'.$_POST['ref_ID'].'/'); mysql_close($link); exit;
 
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['ID'])) { 
 		mysql_query("DELETE FROM votacion WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);

@@ -44,7 +44,7 @@ if (isset($sc[$pol['user_ID']])) {
 	if ($_GET['b'] == 'nuevos-ciudadanos') {
 
 			$txt_title = 'Control: Supervision del Censo - Nuevos ciudadanos';
-			$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+			$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Factores secundarios</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="'.IMG.'cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '.</b></p>'.$nomenclatura;
 
@@ -126,11 +126,159 @@ LIMIT 60", $link);
 	}
 	$txt .= '</table>';
 
+
+
+
+} else if ($_GET['b'] == 'factores-secundarios') {
+
+	$txt_title = 'Control: Supervision del Censo | factores secundarios';
+	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Factores secundarios | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+
+<p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="'.IMG.'cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+
+
+	$txt .= '<br /><h1>5. Referencias</h1><hr /><table border="0" cellspacing="4">';
+	$result = mysql_query("SELECT ID, nick, ref, pais, ref_num, estado, partido_afiliado
+FROM users 
+WHERE ref_num != '0' 
+ORDER BY ref_num DESC, fecha_registro DESC", $link);
+	while($r = mysql_fetch_array($result)) {
+		$clones = '';
+		$result2 = mysql_query("SELECT ID, nick, ref, pais, estado, partido_afiliado
+FROM users 
+WHERE ref = '" . $r['ID'] . "'", $link);
+		while($r2 = mysql_fetch_array($result2)) { 
+			if ($r2['nick']) { 
+				if ($clones) { $clones .= ' & '; }
+				$clones .= crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']) . '</b> ' . $siglas[$r2['partido_afiliado']] . '<b>';
+			} 
+		}
+		$txt .= '<tr><td><b>' . crear_link($r['nick'], 'nick', $r['estado'], $r['pais']) . '</b> ' . $siglas[$r['partido_afiliado']] . '</td><td align="right"></td><td><b>' . $r['ref_num'] . '</b></td><td>(<b>' . $clones . '</b>)</td></tr>';
+	}
+	$txt .= '</table>';
+
+
+	$emails_atipicos = array(
+'gmail.com',
+'googlemail.com',
+'hotmail.com',
+'hotmail.es',
+'live.com',
+'live.com.ar',
+'live.com.mx',
+'msn.com',
+'msn.es',
+'ono.com',
+'ozu.es',
+'rocketmail.com',
+'telefonica.net',
+'terra.es',
+'vodafone.es',
+'yahoo.com',
+'yahoo.com.ar',
+'yahoo.com.ve',
+'yahoo.com.mx',
+'yahoo.es',
+);
+
+
+	$txt .= '<br /><h1>6. Emails at&iacute;picos</h1><hr /><table border="0" cellspacing="4">';
+	$result = mysql_query("SELECT email, nick, ref, ref_num, estado FROM users ORDER BY fecha_registro DESC", $link);
+	while($r = mysql_fetch_array($result)) {
+
+		$r['email'] = strtolower($r['email']);
+		$email = explode("@", $r['email']);
+
+		if (!in_array($email[1], $emails_atipicos)) {
+			$clones = '';
+			$r['email'] = explodear("@", $r['email'], 1); 
+			$txt .= '<tr><td>' . crear_link($r['nick'], 'nick', $r['estado']) . '</td><td>*@<b>'.$r['email'].'</b></td></tr>';
+		}
+	}
+	$txt .= '</table>';
+
+
+	$txt .= '<br /><h1>7. Referencias desde URLs</h1><hr /><table border="0" cellspacing="4">
+<tr>
+<th></th>
+<th>Ref</th>
+<th>Nuevos</th>
+<th>URL de referencia</th>
+</tr>';
+	$result = mysql_query("SELECT user_ID, COUNT(*) AS num, referer,
+(SELECT nick FROM users WHERE ID = ".SQL_REFERENCIAS.".user_ID LIMIT 1) AS nick,
+(SELECT COUNT(*) FROM ".SQL_REFERENCIAS." WHERE referer = ".SQL_REFERENCIAS.".referer AND new_user_ID != '0') AS num_registrados
+FROM ".SQL_REFERENCIAS." 
+GROUP BY referer HAVING COUNT(*) > 1
+ORDER BY num DESC", $link);
+	while($r = mysql_fetch_array($result)) {
+
+		$result2 = mysql_query("SELECT COUNT(*) AS num_registrados FROM ".SQL_REFERENCIAS." WHERE referer = '" . $r['referer'] . "' AND new_user_ID != '0'", $link);
+		while($r2 = mysql_fetch_array($result2)) {
+			if ($r2['num_registrados'] != 0) { $num_registrados = '+' . $r2['num_registrados']; } else { $num_registrados = ''; }
+		}
+		if ($r['referer'] == '') { $r['referer'] = '#referencia-directa'; $r['nick'] = '&nbsp;'; }
+
+		$txt .= '<tr><td><b>' . crear_link($r['nick']) . '</b></td><td align="right"><b>' . $r['num'] . '</b></td><td align="right">' . $num_registrados . '</td><td><a href="' . $r['referer'] . '">' . $r['referer'] . '</a></td></tr>';
+	}
+	$txt .= '</table>';
+
+
+
+	$txt .= '<br /><h1>8. M&aacute;s votos y menos actividad</h1><hr /><table border="0" cellspacing="4">
+<tr>
+<th></th>
+<th><acronym title="Numero de elecciones">N</acronym></th>
+<th></th>
+<th>Online</th>
+<th colspan="2"></th>
+<th>V</th>
+<th>PV</th>
+<th></th>
+</tr>';
+	$result = mysql_query("SELECT nick, IP, num_elec, estado, online, visitas, pais, paginas, ((num_elec * 100) / online) AS factor, partido_afiliado 
+FROM users WHERE num_elec > 2 AND fecha_last > '".date('Y-m-d 20:00:00', time() - 2592000)."' ORDER BY factor DESC LIMIT 20", $link);
+	while($r = mysql_fetch_array($result)) {
+		if ($r['factor'] > 0.0099) {
+			$txt .= '<tr><td>' . crear_link($r['nick'], 'nick', $r['estado'], $r['pais']) . ' ' .			$siglas[$r['partido_afiliado']] . '</td><td align="right"><b>' . $r['num_elec'] . '</b></td><td>/</td><td align="right"><b>' . duracion($r['online']) . '</b></td><td><b>=</b></td><td>' . $r['factor'] . '</td><td align="right">'.$r['visitas'].'</td><td align="right">'.$r['paginas'].'</td><td>('.ocultar_IP($r['IP']).')</td></tr>';
+		}
+	}
+	$txt .= '</table>';
+
+
+	$txt .= '<br /><h1>9. Navegadores</h1><hr />
+<table border="0" cellspacing="4">';
+	$result = mysql_query("SELECT COUNT(*) AS num, nav
+FROM users 
+GROUP BY nav HAVING COUNT(*) > 1
+ORDER BY num ASC", $link);
+	while($r = mysql_fetch_array($result)) {
+
+		$clones = '';
+		if ($r['num'] <= 8) {
+			$result2 = mysql_query("SELECT ID, nick, estado, pais FROM users WHERE nav = '" . $r['nav'] . "' ORDER BY fecha_registro DESC", $link);
+			while($r2 = mysql_fetch_array($result2)) {
+				if ($clones) { $clones .= ' & '; }
+				$clones .= crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']);
+			}
+		} else { $clones = '</b>(navegador muy comun)<b>'; }
+
+
+
+		$txt .= '<tr><td align="right"><b>' . $r['num'] . '</b></td><td><b>' . $clones . '</b></td><td style="font-size:9px;">' . $r['nav'] . '</td></tr>';
+	}
+	$txt .= '</table>';
+
+
+
+
+
+
 	} else {
 		// principal
 
 	$txt_title = 'Control: Supervision del Censo';
-	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Factores secundarios</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="'.IMG.'cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 	
@@ -280,149 +428,6 @@ ORDER BY fecha_registro DESC", $link);
 
 	}
 	$txt .= '</table>';
-
-
-
-
-	$txt .= '<br /><h1>5. Referencias</h1><hr /><table border="0" cellspacing="4">';
-	$result = mysql_query("SELECT ID, nick, ref, pais, ref_num, estado, partido_afiliado
-FROM users 
-WHERE ref_num != '0' 
-ORDER BY ref_num DESC, fecha_registro DESC", $link);
-	while($r = mysql_fetch_array($result)) {
-		$clones = '';
-		$result2 = mysql_query("SELECT ID, nick, ref, pais, estado, partido_afiliado
-FROM users 
-WHERE ref = '" . $r['ID'] . "'", $link);
-		while($r2 = mysql_fetch_array($result2)) { 
-			if ($r2['nick']) { 
-				if ($clones) { $clones .= ' & '; }
-				$clones .= crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']) . '</b> ' . $siglas[$r2['partido_afiliado']] . '<b>';
-			} 
-		}
-		$txt .= '<tr><td><b>' . crear_link($r['nick'], 'nick', $r['estado'], $r['pais']) . '</b> ' . $siglas[$r['partido_afiliado']] . '</td><td align="right"></td><td><b>' . $r['ref_num'] . '</b></td><td>(<b>' . $clones . '</b>)</td></tr>';
-	}
-	$txt .= '</table>';
-
-
-
-
-
-	$emails_atipicos = array(
-'gmail.com',
-'googlemail.com',
-'hotmail.com',
-'hotmail.es',
-'live.com',
-'live.com.ar',
-'live.com.mx',
-'msn.com',
-'msn.es',
-'ono.com',
-'ozu.es',
-'rocketmail.com',
-'telefonica.net',
-'terra.es',
-'vodafone.es',
-'yahoo.com',
-'yahoo.com.ar',
-'yahoo.com.ve',
-'yahoo.com.mx',
-'yahoo.es',
-);
-
-
-	$txt .= '<br /><h1>6. Emails at&iacute;picos</h1><hr /><table border="0" cellspacing="4">';
-	$result = mysql_query("SELECT email, nick, ref, ref_num, estado FROM users ORDER BY fecha_registro DESC", $link);
-	while($r = mysql_fetch_array($result)) {
-
-		$r['email'] = strtolower($r['email']);
-		$email = explode("@", $r['email']);
-
-		if (!in_array($email[1], $emails_atipicos)) {
-			$clones = '';
-			$r['email'] = explodear("@", $r['email'], 1); 
-			$txt .= '<tr><td>' . crear_link($r['nick'], 'nick', $r['estado']) . '</td><td>*@<b>'.$r['email'].'</b></td></tr>';
-		}
-	}
-	$txt .= '</table>';
-
-
-
-
-
-	$txt .= '<br /><h1>7. Referencias desde URLs</h1><hr /><table border="0" cellspacing="4">
-<tr>
-<th></th>
-<th>Ref</th>
-<th>Nuevos</th>
-<th>URL de referencia</th>
-</tr>';
-	$result = mysql_query("SELECT user_ID, COUNT(*) AS num, referer,
-(SELECT nick FROM users WHERE ID = ".SQL_REFERENCIAS.".user_ID LIMIT 1) AS nick,
-(SELECT COUNT(*) FROM ".SQL_REFERENCIAS." WHERE referer = ".SQL_REFERENCIAS.".referer AND new_user_ID != '0') AS num_registrados
-FROM ".SQL_REFERENCIAS." 
-GROUP BY referer HAVING COUNT(*) > 1
-ORDER BY num DESC", $link);
-	while($r = mysql_fetch_array($result)) {
-
-		$result2 = mysql_query("SELECT COUNT(*) AS num_registrados FROM ".SQL_REFERENCIAS." WHERE referer = '" . $r['referer'] . "' AND new_user_ID != '0'", $link);
-		while($r2 = mysql_fetch_array($result2)) {
-			if ($r2['num_registrados'] != 0) { $num_registrados = '+' . $r2['num_registrados']; } else { $num_registrados = ''; }
-		}
-		if ($r['referer'] == '') { $r['referer'] = '#referencia-directa'; $r['nick'] = '&nbsp;'; }
-
-		$txt .= '<tr><td><b>' . crear_link($r['nick']) . '</b></td><td align="right"><b>' . $r['num'] . '</b></td><td align="right">' . $num_registrados . '</td><td><a href="' . $r['referer'] . '">' . $r['referer'] . '</a></td></tr>';
-	}
-	$txt .= '</table>';
-
-
-
-	$txt .= '<br /><h1>8. M&aacute;s votos y menos actividad</h1><hr /><table border="0" cellspacing="4">
-<tr>
-<th></th>
-<th><acronym title="Numero de elecciones">N</acronym></th>
-<th></th>
-<th>Online</th>
-<th colspan="2"></th>
-<th>V</th>
-<th>PV</th>
-<th></th>
-</tr>';
-	$result = mysql_query("SELECT nick, IP, num_elec, estado, online, visitas, pais, paginas, ((num_elec * 100) / online) AS factor, partido_afiliado 
-FROM users WHERE num_elec > 2 AND fecha_last > '".date('Y-m-d 20:00:00', time() - 2592000)."' ORDER BY factor DESC LIMIT 20", $link);
-	while($r = mysql_fetch_array($result)) {
-		if ($r['factor'] > 0.0099) {
-			$txt .= '<tr><td>' . crear_link($r['nick'], 'nick', $r['estado'], $r['pais']) . ' ' .			$siglas[$r['partido_afiliado']] . '</td><td align="right"><b>' . $r['num_elec'] . '</b></td><td>/</td><td align="right"><b>' . duracion($r['online']) . '</b></td><td><b>=</b></td><td>' . $r['factor'] . '</td><td align="right">'.$r['visitas'].'</td><td align="right">'.$r['paginas'].'</td><td>('.ocultar_IP($r['IP']).')</td></tr>';
-		}
-	}
-	$txt .= '</table>';
-
-
-	$txt .= '<br /><h1>9. Navegadores</h1><hr />
-<table border="0" cellspacing="4">';
-	$result = mysql_query("SELECT COUNT(*) AS num, nav
-FROM users 
-GROUP BY nav HAVING COUNT(*) > 1
-ORDER BY num ASC", $link);
-	while($r = mysql_fetch_array($result)) {
-
-		$clones = '';
-		if ($r['num'] <= 8) {
-			$result2 = mysql_query("SELECT ID, nick, estado, pais FROM users WHERE nav = '" . $r['nav'] . "' ORDER BY fecha_registro DESC", $link);
-			while($r2 = mysql_fetch_array($result2)) {
-				if ($clones) { $clones .= ' & '; }
-				$clones .= crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']);
-			}
-		} else { $clones = '</b>(navegador muy comun)<b>'; }
-
-
-
-		$txt .= '<tr><td align="right"><b>' . $r['num'] . '</b></td><td><b>' . $clones . '</b></td><td style="font-size:9px;">' . $r['nav'] . '</td></tr>';
-	}
-	$txt .= '</table>';
-
-
 
 
 	}

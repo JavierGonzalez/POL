@@ -185,7 +185,7 @@ if ($_GET['a'] == 'editar') {
 	while($r = mysql_fetch_array($result)) { $sub[$r['ID']] = $r['url']; }
 
 	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
+(SELECT nick FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
 (SELECT nombre FROM ".SQL."estudios WHERE ID = ".SQL."foros_msg.cargo LIMIT 1) AS encalidad,
 (SELECT url FROM ".SQL."foros_hilos WHERE ID = ".SQL."foros_msg.hilo_ID LIMIT 1) AS hilo_url,
 (SELECT title FROM ".SQL."foros_hilos WHERE ID = ".SQL."foros_msg.hilo_ID LIMIT 1) AS hilo_titulo,
@@ -227,7 +227,7 @@ LIMIT 50", $link);
 	}
 
 	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
+(SELECT nick FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
 (SELECT nombre FROM ".SQL."estudios WHERE ID = ".SQL."foros_msg.cargo LIMIT 1) AS encalidad,
 (SELECT url FROM ".SQL."foros_hilos WHERE ID = ".SQL."foros_msg.hilo_ID LIMIT 1) AS hilo_url,
 (SELECT title FROM ".SQL."foros_hilos WHERE ID = ".SQL."foros_msg.hilo_ID LIMIT 1) AS hilo_titulo,
@@ -249,13 +249,13 @@ LIMIT 25", $link);
 } elseif ($_GET['b']) {			//foro/subforo/hilo-prueba/
 
 	$result = mysql_query("SELECT ID, sub_ID, user_ID, url, title, time, time_last, text, cargo, num, 
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
-(SELECT estado FROM ".SQL_USERS." WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS estado,
-(SELECT avatar FROM ".SQL_USERS." WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS avatar,
-(SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = ".SQL_USERS.".partido_afiliado LIMIT 1) FROM ".SQL_USERS." WHERE ID = ".SQL."foros_hilos.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
+(SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
+(SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS estado,
+(SELECT avatar FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS avatar,
+(SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) FROM users WHERE ID = ".SQL."foros_hilos.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
 (SELECT nombre FROM ".SQL."estudios WHERE ID = ".SQL."foros_hilos.cargo LIMIT 1) AS encalidad,
 (SELECT acceso_msg FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS acceso_msg,
-(SELECT voto_confianza FROM ".SQL_USERS." WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS confianza
+(SELECT voto_confianza FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS confianza
 FROM ".SQL."foros_hilos
 WHERE url = '" . $_GET['b'] . "' AND estado = 'ok'
 LIMIT 1", $link);
@@ -298,12 +298,12 @@ LIMIT 1", $link);
 			$txt .= '<tr class="amarillo"><td align="right" valign="top">' . print_lateral($r['nick'], $r['encalidad'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['cargo'], $r['confianza']) . '</td><td valign="top" width="80%"><p style="text-align:justify;">' . $citar . $editar . reemplazos($r['text']) . '</p></td></tr>';
 
 			$result2 = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
-(SELECT estado FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick_estado,
-(SELECT avatar FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS avatar,
-(SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = ".SQL_USERS.".partido_afiliado LIMIT 1) FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
+(SELECT nick FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
+(SELECT estado FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick_estado,
+(SELECT avatar FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS avatar,
+(SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) FROM users WHERE ID = ".SQL."foros_msg.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
 (SELECT nombre FROM ".SQL."estudios WHERE ID = ".SQL."foros_msg.cargo LIMIT 1) AS encalidad,
-(SELECT voto_confianza FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS confianza
+(SELECT voto_confianza FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS confianza
 FROM ".SQL."foros_msg
 WHERE hilo_ID = '" . $r['ID'] . "' AND estado = 'ok'
 ORDER BY time ASC
@@ -350,9 +350,9 @@ LIMIT " . $p_limit, $link);
 
 
 	$result = mysql_query("SELECT ID, sub_ID, user_ID, url, title, time, time_last, text, cargo, num, 
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
-(SELECT avatar FROM ".SQL_USERS." WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS avatar,
-(SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = ".SQL_USERS.".partido_afiliado LIMIT 1) FROM ".SQL_USERS." WHERE ID = ".SQL."foros_hilos.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
+(SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
+(SELECT avatar FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS avatar,
+(SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) FROM users WHERE ID = ".SQL."foros_hilos.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
 (SELECT nombre FROM ".SQL."estudios WHERE ID = ".SQL."foros_hilos.cargo LIMIT 1) AS encalidad
 FROM ".SQL."foros_hilos
 WHERE estado = 'borrado'
@@ -368,9 +368,9 @@ $txt .= '<tr><td><br /></td></tr><tr class="azul"><td colspan="4"><h2 style="col
 
 
 	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, time2, text, cargo, 
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
-(SELECT avatar FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS avatar,
-(SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = ".SQL_USERS.".partido_afiliado LIMIT 1) FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
+(SELECT nick FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
+(SELECT avatar FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS avatar,
+(SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) FROM users WHERE ID = ".SQL."foros_msg.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
 (SELECT nombre FROM ".SQL."estudios WHERE ID = ".SQL."foros_msg.cargo LIMIT 1) AS encalidad
 FROM ".SQL."foros_msg
 WHERE estado = 'borrado'
@@ -414,8 +414,8 @@ LIMIT 1", $link);
 <th></th>
 </tr>';
 		$result2 = mysql_query("SELECT ID, url, user_ID, title, time, time_last, cargo, num, sub_ID,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
-(SELECT estado FROM ".SQL_USERS." WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS estado
+(SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
+(SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS estado
 FROM ".SQL."foros_hilos
 WHERE sub_ID = '" . $r['ID'] . "' AND estado = 'ok'
 ORDER BY time_last DESC
@@ -469,8 +469,8 @@ ORDER BY time ASC", $link);
 		else { $num_limit = 4; }
 
 		$result2 = mysql_query("SELECT ID, url, user_ID, title, time, time_last, cargo, num,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
-(SELECT estado FROM ".SQL_USERS." WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS estado
+(SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
+(SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS estado
 FROM ".SQL."foros_hilos
 WHERE sub_ID = '" . $r['ID'] . "' AND estado = 'ok'
 ORDER BY time_last DESC

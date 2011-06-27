@@ -43,7 +43,7 @@ if ($_GET['a'] == 'crear') {
 	if (isset($sc[$pol['user_ID']])) { 
 		$disabled['sondeo'] = '';
 	}
-	if (($pol['nivel'] >= 95)) {
+	if (($pol['nivel'] >= 90)) {
 		$disabled['referendum'] = '';
 		$disabled['sondeo'] = '';
 	}
@@ -154,14 +154,14 @@ LIMIT 1", $link);
 		$duracion = duracion($time_expire - $time_creacion);
 		$respuestas = explode("|", $r['respuestas']);
 		$respuestas_num = count($respuestas) - 1;
-		$txt_title = 'Consulta: ' . strtoupper($r['tipo']) . ' | ' . $r['pregunta'];
+		$txt_title = 'Votacion: ' . strtoupper($r['tipo']) . ' | ' . $r['pregunta'];
 
 		if ($r['estado'] == 'ok') { 
 			$tiempo_queda =  ' | <span style="color:blue;">Queda ' . duracion($time_expire - time()) . '</span>'; 
 		} else { $tiempo_queda =  ' | <span style="color:grey;">Finalizado</span>'; }
 
 
-		$txt .= '<h1><a href="/votacion/">Consultas</a>: ' . strtoupper($r['tipo']) . ' | ' . $r['pregunta'] . $tiempo_queda . '</h1>
+		$txt .= '<h1><a href="/votacion/">Votaciones</a>: ' . strtoupper($r['tipo']) . ' | ' . $r['pregunta'] . $tiempo_queda . '</h1>
 
 <br /><div class="amarillo"><p>' . $r['descripcion'] . '</p></div>
 
@@ -217,7 +217,7 @@ GROUP BY voto", $link);
 		} else {
 			if ((!$r['ha_votado']) AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']))) {
 				for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { $votos .= '<option value="' . $i . '">' . $respuestas[$i] . '</option>'; } }
-				$txt .= '<form action="/accion.php?a=votacion&b=votar" method="post">
+				$txt .= '<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=votacion&b=votar" method="post">
 <input type="hidden" name="ref_ID" value="' . $r['ID'] . '"  />
 <p><select name="voto">
 <option value="">&darr;</option>
@@ -270,7 +270,7 @@ ORDER BY siglas ASC", $link);
 
 	$sc = get_supervisores_del_censo(); 
 
-	if (($pol['nivel'] >= 95) OR ($pol['cargos']['41']) OR (isset($sc[$pol['user_ID']]))) { $txt .= '<p>'.boton('Crear consulta', '/votacion/crear/').'</p>'; }
+	if (($pol['nivel'] >= 90) OR ($pol['cargos']['41']) OR (isset($sc[$pol['user_ID']]))) { $txt .= '<p>'.boton('Crear votacion', '/votacion/crear/').'</p>'; }
 	
 	$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 <tr>

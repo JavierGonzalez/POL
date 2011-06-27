@@ -181,8 +181,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 					<?=(ECONOMIA?'<li><a href="/poderes/">Poderes</a></li>':'')?>
 				</ul>
 			</li>
-<?php	}
-	else{ ?>
+<?php	} else{ ?>
 		<li>
 				<a href="#">Democracia</a>
 				<ul>

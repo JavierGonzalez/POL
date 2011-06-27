@@ -60,7 +60,7 @@ function cargo_add($cargo_ID, $user_ID) {
 	$result = mysql_query("SELECT nivel FROM ".SQL."estudios WHERE ID = '" . $cargo_ID . "' LIMIT 1", $link);
 	while($row = mysql_fetch_array($result)){
 		mysql_query("UPDATE ".SQL."estudios_users SET cargo = '1' WHERE ID_estudio = '" . $cargo_ID . "' AND user_ID = '" . $user_ID . "' AND estado = 'ok' LIMIT 1", $link);
-		mysql_query("UPDATE ".SQL_USERS." SET nivel = '" . $row['nivel'] . "', cargo = '" . $cargo_ID . "' WHERE ID = '" . $user_ID . "' AND nivel < '" . $row['nivel'] . "' LIMIT 1", $link);
+		mysql_query("UPDATE users SET nivel = '" . $row['nivel'] . "', cargo = '" . $cargo_ID . "' WHERE ID = '" . $user_ID . "' AND nivel < '" . $row['nivel'] . "' LIMIT 1", $link);
 		evento_log(11, $cargo_ID, $user_ID);
 	}
 }
@@ -79,7 +79,7 @@ ORDER BY nivel DESC
 LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ $user_nivel_max = $row['nivel']; $user_nivel_sql = ", cargo = '" . $row['ID_estudio'] . "'"; }
 		if (!$user_nivel_max) { $user_nivel_max = 1; $user_nivel_sql = ", cargo = ''"; }
-		mysql_query("UPDATE ".SQL_USERS." SET nivel = '" . $user_nivel_max . "'" . $user_nivel_sql . " WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
+		mysql_query("UPDATE users SET nivel = '" . $user_nivel_max . "'" . $user_nivel_sql . " WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
 	}
 }
 
@@ -89,7 +89,7 @@ function enviar_email($user_ID, $asunto, $mensaje, $email='') {
 
 	if (($user_ID) AND ($email == '')) {
 		global $link;
-		$result = mysql_unbuffered_query("SELECT email FROM ".SQL_USERS." WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
+		$result = mysql_unbuffered_query("SELECT email FROM users WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ $email = $row['email']; }
 	}
 	mail($email, $asunto, $mensaje, $cabeceras);
@@ -107,7 +107,7 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais='') {
 
 		//quitar
 		if ($emisor_ID > 0) {
-			mysql_query("UPDATE ".SQL_USERS." SET pols = pols - " . $pols . " WHERE ID = '" . $emisor_ID . "' AND pais = '".$pais."' LIMIT 1", $link);
+			mysql_query("UPDATE users SET pols = pols - " . $pols . " WHERE ID = '" . $emisor_ID . "' AND pais = '".$pais."' LIMIT 1", $link);
 		} else {
 
 			if ($pol['nick']) { $concepto = '<b>'.$pol['nick'].'&rsaquo;</b> '.$concepto; }
@@ -117,7 +117,7 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais='') {
 
 		//ingresar
 		if ($receptor_ID > 0) {
-			mysql_query("UPDATE ".SQL_USERS." SET pols = pols + " . $pols . " WHERE ID = '" . $receptor_ID . "' AND pais = '".$pais."' LIMIT 1", $link);
+			mysql_query("UPDATE users SET pols = pols + " . $pols . " WHERE ID = '" . $receptor_ID . "' AND pais = '".$pais."' LIMIT 1", $link);
 		} else {
 			mysql_query("UPDATE ".$sql."cuentas SET pols = pols + " . $pols . " WHERE ID = '" . substr($receptor_ID, 1) . "' LIMIT 1", $link);
 		}
@@ -133,7 +133,7 @@ function eliminar_ciudadano($ID) {
 	$user_ID = false;
 	$result3 = mysql_query("SELECT IP, pols, nick, ID, ref, estado,
 (SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = '" . $ID . "') AS pols_cuentas 
-FROM ".SQL_USERS." 
+FROM users 
 WHERE ID = '" . $ID . "' 
 LIMIT 1", $link);
 	while($row3 = mysql_fetch_array($result3)) {
@@ -149,10 +149,10 @@ LIMIT 1", $link);
 		pols_transferir($pols, $user_ID, '-1', '&dagger; Defuncion: <em>' . $nick . '</em>');
 
 		if ($ref != '0') { 
-			mysql_query("UPDATE ".SQL_USERS." SET ref_num = ref_num - 1 WHERE ID = '" . $ref . "' LIMIT 1", $link);
+			mysql_query("UPDATE users SET ref_num = ref_num - 1 WHERE ID = '" . $ref . "' LIMIT 1", $link);
 			mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE IP = '" . $IP . "' OR user_ID = '" . $ref . "'", $link); 
 		}
-		mysql_query("DELETE FROM ".SQL_USERS." WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
+		mysql_query("DELETE FROM users WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
 		mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE user_ID = '" . $user_ID . "'", $link);
 		mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '" . $user_ID . "'", $link);
 		mysql_query("DELETE FROM ".SQL."partidos WHERE ID_presidente = '" . $user_ID . "'", $link);

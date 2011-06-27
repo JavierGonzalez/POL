@@ -46,7 +46,7 @@ if (isset($sc[$pol['user_ID']])) {
 			$txt_title = 'Control: Supervision del Censo - Nuevos ciudadanos';
 			$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Factores secundarios</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="'.IMG.'cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '.</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;">Toda esta informaci&oacute;n es <b>CONFIDENCIAL</b>. Supervisores del Censo: <b>' . $supervisores . '.</b></p>'.$nomenclatura;
 
 			$txt .= '<h1>1. Actividad de nuevos Ciudadanos (ultimos 60)</h1><hr />
 <table border="0" cellspacing="0" cellpadding="2">
@@ -62,7 +62,6 @@ if (isset($sc[$pol['user_ID']])) {
 <th align="right"><acronym title="Paginas vistas">PV</acronym></th>
 <th align="right"><acronym title="Mensajes en foro">F</acronym></th>
 <th align="right"><acronym title="Mensajes privados enviados">P</acronym></th>
-<th align="right"><acronym title="Transferencias de moneda saliente">T</acronym></th>
 <th align="right">Email</th>
 <th></th>
 <th>IP</th>
@@ -70,7 +69,6 @@ if (isset($sc[$pol['user_ID']])) {
 	$result = mysql_query("SELECT *,
 (SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE envia_ID = users.ID) AS num_priv,
 (SELECT COUNT(*) FROM ".SQL."foros_msg WHERE user_ID = users.ID) AS num_foro,
-(SELECT COUNT(*) FROM ".SQL."transacciones WHERE emisor_ID = users.ID) AS num_transf, 
 (SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '" . $pol['user_ID'] . "' AND user_ID = users.ID LIMIT 1) AS has_votado
 FROM users 
 ORDER BY fecha_registro DESC
@@ -116,7 +114,6 @@ LIMIT 60", $link);
 <td align="right">' . $r['paginas'] . '</td>
 <td align="right">' . $r['num_foro'] . '</td>
 <td align="right">' . $r['num_priv'] . '</td>
-<td align="right">' . $r['num_transf'] . '</td>
 <td align="right" style="font-size:10px;">' . $r['email'] . '</td>
 <td align="right" nowrap="nowrap" style="font-size:10px;">'.ocultar_IP($r['host'], 'host').'</td>
 <td style="font-size:10px;">'.ocultar_IP($r['IP']).'</td>
@@ -134,7 +131,7 @@ LIMIT 60", $link);
 	$txt_title = 'Control: Supervision del Censo | factores secundarios';
 	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Factores secundarios | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="'.IMG.'cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;">Toda esta informaci&oacute;n es <b>CONFIDENCIAL</b>. Supervisores del Censo: <b>' . $supervisores . '.</b></p>'.$nomenclatura;
 
 
 	$txt .= '<br /><h1>5. Referencias</h1><hr /><table border="0" cellspacing="4">';
@@ -158,7 +155,8 @@ WHERE ref = '" . $r['ID'] . "'", $link);
 	$txt .= '</table>';
 
 
-	$emails_atipicos = array(
+	$emails_whitelist = array(
+'correo.ugr.es',
 'gmail.com',
 'googlemail.com',
 'hotmail.com',
@@ -166,19 +164,22 @@ WHERE ref = '" . $r['ID'] . "'", $link);
 'live.com',
 'live.com.ar',
 'live.com.mx',
+'movistar.es',
 'msn.com',
 'msn.es',
 'ono.com',
 'ozu.es',
 'rocketmail.com',
+'telefonica.es',
 'telefonica.net',
 'terra.es',
 'vodafone.es',
 'yahoo.com',
 'yahoo.com.ar',
-'yahoo.com.ve',
 'yahoo.com.mx',
+'yahoo.com.ve',
 'yahoo.es',
+'ymail.com',
 );
 
 
@@ -189,7 +190,7 @@ WHERE ref = '" . $r['ID'] . "'", $link);
 		$r['email'] = strtolower($r['email']);
 		$email = explode("@", $r['email']);
 
-		if (!in_array($email[1], $emails_atipicos)) {
+		if (!in_array($email[1], $emails_whitelist)) {
 			$clones = '';
 			$r['email'] = explodear("@", $r['email'], 1); 
 			$txt .= '<tr><td>' . crear_link($r['nick'], 'nick', $r['estado']) . '</td><td>*@<b>'.$r['email'].'</b></td></tr>';
@@ -272,15 +273,12 @@ ORDER BY num ASC", $link);
 
 
 
-
-
-	} else {
-		// principal
+	} else { // principal
 
 	$txt_title = 'Control: Supervision del Censo';
 	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Factores secundarios</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p class="amarillo" style="color:red;">La informaci&oacute;n y los mecanismos de esta p&aacute;gina son <b>confidenciales</b>. <img src="'.IMG.'cargos/21.gif" /> Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;">Toda esta informaci&oacute;n es <b>CONFIDENCIAL</b>. Supervisores del Censo: <b>' . $supervisores . '.</b></p>'.$nomenclatura;
 	
 
 	$txt .= '<h1>1. Coincidencias de IP</h1><hr /><table border="0" cellspacing="4">';
@@ -289,19 +287,18 @@ FROM users
 GROUP BY IP HAVING COUNT(*) > 1
 ORDER BY num DESC, fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
-		$clones = '';
+		$clones = array();
 		$nota_SC = '';
 		$desarrollador = false;
 		$clones_expulsados = true;
 		$result2 = mysql_query("SELECT ID, nick, estado, pais, partido_afiliado, nota_SC FROM users WHERE IP = '" . $r['IP'] . "' ORDER BY fecha_registro DESC", $link);
 		while($r2 = mysql_fetch_array($result2)) {
 			$nota_SC .= $r2['nota_SC'].' ';
-			if ($clones) { $clones .= ' & '; }
 			if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
-			$clones .= '<b>'.crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']) . '</b> ' . $siglas[$r2['partido_afiliado']];
+			$clones[] = '<b>'.crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']) . '</b> ' . $siglas[$r2['partido_afiliado']];
 		}
 		if ((!$desarrollador) AND (!$clones_expulsados)) {
-			$txt .= '<tr><td>' . $r['num'] . '</td><td>' . $clones . '</td><td align="right" nowrap="nowrap">'.ocultar_IP($r['host'], 'host').'</td><td>'.ocultar_IP($r['IP']).'</td><td><em>'.$nota_SC.'</em></td></tr>';
+			$txt .= '<tr><td>' . $r['num'] . '</td><td>'.implode(' & ', $clones).'</td><td align="right" nowrap="nowrap">'.ocultar_IP($r['host'], 'host').'</td><td>'.ocultar_IP($r['IP']).'</td><td><em>'.$nota_SC.'</em></td></tr>';
 		}
 	}
 	$txt .= '</table>';
@@ -317,7 +314,7 @@ ORDER BY num DESC, fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		if (($r['pass'] != 'mmm') OR ($r['pass'] != 'e10adc3949ba59abbe56e057f20f883e')) {
 
-			$clones = '';
+			$clones = array();
 			$nota_SC = '';
 			$result2 = mysql_query("SELECT ID, nick, pais, partido_afiliado, estado, nota_SC
 FROM users 
@@ -327,12 +324,11 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 				if ($r2['nick']) {
 					$nota_SC .= $r2['nota_SC'].' ';
 					if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
-					if ($clones) { $clones .= ' & '; }
-					$clones .= crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']) . '</b> ' . $siglas[$r2['partido_afiliado']] . '<b>';
+					$clones[] = crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']) . '</b> ' . $siglas[$r2['partido_afiliado']] . '<b>';
 				} 
 			}
 			if (!$clones_expulsados) {
-				$txt .= '<tr><td>' . $r['num'] . '</td><td><b>' . $clones . '</b></td><td><em>'.$nota_SC.'</em></td></tr>';
+				$txt .= '<tr><td>' . $r['num'] . '</td><td><b>'.implode(' & ', $clones).'</b></td><td><em>'.$nota_SC.'</em></td></tr>';
 			}
 		}
 	}
@@ -347,13 +343,13 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 	while($r = mysql_fetch_array($result)) {
 		$tn = 1;
 		$trazas = explode(' ', $r['traza']);
-		$trazas_clones = '';
+		$trazas_clones = array();
 		if ($r['estado'] == 'expulsado') { $mostrar = false; } else { $mostrar = true; }
 		foreach ($trazas AS $unatraza) {
 			$trazado = false;
 			$result2 = mysql_query("SELECT nick, estado FROM users WHERE ID = '".$unatraza."' LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)) {
-				$tn++; $trazas_clones .= ' '.crear_link($r2['nick'], 'nick', $r2['estado']);
+				$tn++; $trazas_clones[] = crear_link($r2['nick'], 'nick', $r2['estado']);
 				$trazado = true;
 				if ($r2['estado'] != 'expulsado') { $mostrar = true; }
 			}
@@ -361,12 +357,12 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 				$result2 = mysql_query("SELECT tiempo AS nick FROM expulsiones WHERE user_ID = '".$unatraza."' LIMIT 1", $link);
 				while($r2 = mysql_fetch_array($result2)) {
 					$r2['estado'] = 'expulsado';
-					$tn++; $trazas_clones .= ' '.crear_link($r2['nick'], 'nick', $r2['estado']);
+					$tn++; $trazas_clones[] = crear_link($r2['nick'], 'nick', $r2['estado']);
 				}
 			}
 		}
 		if ($mostrar == true) {
-			$txt .= '<tr><td>'.$tn.'</td><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b>: <b>'.$trazas_clones.'</b></td></tr>';
+			$txt .= '<tr><td>'.$tn.'</td><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b>: <b>'.implode(' & ', $trazas_clones).'</b></td></tr>';
 		}
 	}
 	$txt .= '</table>';

@@ -40,6 +40,7 @@ anal.la
 bang.la
 bisex.la
 bitch.la
+klzlk.com
 bizarre.la
 buff.la
 cumshot.la
@@ -338,15 +339,14 @@ $txt .= '</blockquote></div>';
 
 	$txt .= '<h1><span class="gris">1. Crear usuario |</span> 2. Solicitar Ciudadan&iacute;a <span class="gris">| 3. Ser Ciudadano</span></h1>
 	
-<hr /><br />
+<hr /><br />';
 
-<div class="azul">
 
-<form name="rp" action="">
-&nbsp; <select name="r_p" onchange="window.location=(\''.REGISTRAR.'?pais=\' + document.forms.rp.r_p[document.forms.rp.r_p.selectedIndex].value);">
-';
-	
-	$txt .= '<optgroup label="Solicitar ciudadania en:">';
+	$txt .= '
+<blockquote class="azul" style="width:600px;">
+<form action="?a=solicitar-ciudadania" method="post">
+<b>Plataformas:</b><br />
+<table border="0" cellspacing="4">';
 
 	foreach ($vp['paises'] as $pais) {
 		// ciudadanos
@@ -357,28 +357,21 @@ $txt .= '</blockquote></div>';
 		$result = mysql_query("SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'pais_des' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) { $pais_des = $r['valor']; }
 
-		if ($_GET['pais'] == $pais) { $select = ' selected="selected"'; } else { $select = ''; } 
-		$txt .= '<option value="'.$pais.'"'.$select.'>'.$pais.': '.$pais_des.' - '.$ciudadanos_num.' ciudadanos</option>';
+		$txt .= ($pais=='VP'?'<tr><td>&nbsp;</td></tr>':'').'
+<tr style="font-size:19px;">
+<td align="right"><a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a></td>
+<td><input type="radio" name="pais" id="pr_'.$pais.'" value="'.$pais.'"'.($pais=='15M'?' checked="checked"':'').' /></td>
+<td><b>'.$pais_des.'</b></td>
+<td align="right">'.$ciudadanos_num.' ciudadanos</td>
+</tr>';
 	}
 
 
-	$txt .= '</optgroup></select></form>';
+	$txt .= '</table>
+<input value="Solicitar Ciudadania" style="color:blue;font-size:20px;margin:30px 0 0 0;" type="submit" onClick="javascript:pageTracker._trackPageview(\'/atrack/registro/ciudadano.html\');" /> 
 
-		if ($_GET['pais'] != '') {
-			$txt .= '<ul>
-<li><b>Aceptas ser Ciudadano de <a href="http://'.strtolower($_GET['pais']).DEV.'.virtualpol.com/">'.$_GET['pais'].'</a></b>, con tus derechos y obligaciones.</li>
-
-<div class="pol_form">
-<form action="?a=solicitar-ciudadania" method="post">
-<input name="pais" value="' . $_GET['pais'] . '" type="hidden" />
-<blockquote>
-<input value="Entrar en '.$_GET['pais'].'" style="color: blue; font-size: 20px;" type="submit" onClick="javascript:pageTracker._trackPageview(\'/atrack/registro/ciudadano.html\');" /> 
-</blockquote>
 </form>
-
-</div>';
-	}
-	$txt .= '</div>';
+</blockquote>';
 
 } elseif ($registro_txt) {
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';

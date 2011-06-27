@@ -265,12 +265,14 @@ $txt .= '</div>
 
 		$nota = $r['nota'];
 
-		// empresas y partidos
-		$empresas_num = 0;
-		$result = mysql_query("SELECT nombre, url, cat_ID, (SELECT url FROM ".SQL."cat WHERE ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_url FROM ".SQL."empresas WHERE user_ID = '" . $r['ID'] . "' ORDER BY time DESC", $link);
-		while($r2 = mysql_fetch_array($result)) {
-			$empresas_num++;
-			$empresas .= '<a href="/empresas/'.$r2['cat_url'].'/'.$r2['url'].'/">' . $r2['nombre'] . '</a><br />' . "\n";
+		if (ECONOMIA) { 
+			// empresas y partidos
+			$empresas_num = 0;
+			$result = mysql_query("SELECT nombre, url, cat_ID, (SELECT url FROM ".SQL."cat WHERE ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_url FROM ".SQL."empresas WHERE user_ID = '" . $r['ID'] . "' ORDER BY time DESC", $link);
+			while($r2 = mysql_fetch_array($result)) {
+				$empresas_num++;
+				$empresas .= '<a href="/empresas/'.$r2['cat_url'].'/'.$r2['url'].'/">' . $r2['nombre'] . '</a><br />' . "\n";
+			}
 		}
 
 		$txt .= '<table border="0" cellspacing="8"><tr><td valign="top" width="220">
@@ -279,15 +281,15 @@ $txt .= '</div>
 <p>Tiempo online: <b><acronym title="' . $r['online'] . '">' . duracion($r['online']) . '</acronym></b></p>
 <p>Elecciones: <b>' . $r['num_elec'] . '</b></p>
 
-<p>Empresas: <b>' . $empresas_num . '</b><br /><b>' . $empresas . '</b></p>
+'.(ECONOMIA?'<p>Empresas: <b>' . $empresas_num . '</b><br /><b>' . $empresas . '</b></p>':'').'
 
 <p>Foro: <b><acronym title="hilos+mensajes">' . $r['num_hilos'] . '+' . $r['num_msg'] . '</acronym></b></p>
-<p>Referencias: <b>' . $r['ref_num'] . '</b><br /><b>' . $refs . '</b></p>
+<!--<p>Referencias: <b>' . $r['ref_num'] . '</b><br /><b>' . $refs . '</b></p>-->
 <p>Afiliado a: <b>' . crear_link($r['partido'], 'partido') . '</b></p>
 <p>Ultimo acceso: <acronym title="' . $r['fecha_last'] . '"><b>' . duracion(time() - strtotime($r['fecha_last'])) . '</b></acronym><br />';
 
 
-$txt .= 'Nacido hace: <b><acronym title="' . $r['fecha_registro'] . '">'.round((time() - strtotime($r['fecha_registro'])) / 60 / 60 / 24).' dias</acronym></b><br />
+$txt .= 'Registrado hace: <b><acronym title="' . $r['fecha_registro'] . '">'.round((time() - strtotime($r['fecha_registro'])) / 60 / 60 / 24).' dias</acronym></b><br />
 ';
 
 

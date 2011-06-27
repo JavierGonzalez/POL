@@ -353,7 +353,7 @@ h1 a {
 }
 
 .quote {
-	background-color: #FFF8E0;
+	background: url(bg75.png) repeat;
 	border: #000000 solid thin;
 	border-radius: 12px; 
 	font-family:serif;

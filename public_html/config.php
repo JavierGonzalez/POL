@@ -11,19 +11,20 @@ if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header
 include(RAIZ.'config-pwd.php');
 
 // PAISES
-$vp['paises'] = array('15M', '15MBCN', 'VP'); // ACTIVOS
+$vp['paises'] = array('15M', '15MBCN', '15MMAD', 'VP'); // ACTIVOS
 $vp['paises_congelados'] = array('POL', 'VULCAN', 'Hispania', 'Atlantis'); // INACTIVOS
 
 // COLORES #ACFA58 #9AFE2E
-$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', '15MBCN'=>'#95DB95', 'www'=>'#eeeeee');
-$vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'VP'=>'#71D8FF', '15M' => '#FFFF64', '15MBCN'=>'#95DB95', 'www'=>'grey');
+$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', '15MBCN'=>'#95DB95', '15MMAD'=>'#F8DCBE', 'www'=>'#eeeeee');
+$vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'VP'=>'#71D8FF', '15M' => '#FFFF64', '15MBCN'=>'#95DB95', '15MMAD'=>'#F8DCBE', 'www'=>'grey');
 
-$vp['paises_chat'] = array('VP'=>4, '15M'=>5, '15MBCN'=>6, ''=>4);
+$vp['paises_chat'] = array('VP'=>4, '15M'=>5, '15MBCN'=>6, '15MBCN'=>7, ''=>4);
 
 // Configuracion por pais
 switch ($host[0]) { 
 	case '15m': define('PAIS', '15M'); break;
 	case '15mbcn': define('PAIS', '15MBCN'); break;
+	case '15mmad': define('PAIS', '15MMAD'); break;
 	case 'vp': define('PAIS', 'VP'); break;
 
 	case 'pol': define('PAIS', 'POL'); break;

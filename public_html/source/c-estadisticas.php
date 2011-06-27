@@ -203,7 +203,7 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as, '.round($i/365, 2).
 if (ECONOMIA) {
 $txt .= '
 <h2 style="margin-top:35px;">3. ECONOM&Iacute;A</h2>
-<p class="amarillo"><b>3.1 '.MONEDA.' en total</b> (<a href="/doc/economia/">Ver circulo del dinero</a>)</b><br />
+<p class="amarillo"><b>3.1 '.MONEDA.' en total</b> </b><br />
 <img src="'.gen_grafico($d['pols_total'], '', true).'" alt="'.MONEDA_NOMBRE.' en total" border="0" />
 
 <br /><b>3.2 '.MONEDA.' de Ciudadanos</b> (<a href="/info/censo/riqueza/">Ver los m&aacute;s ricos</a>)<br />
@@ -212,13 +212,13 @@ $txt .= '
 <br /><b>3.3 '.MONEDA.' en Cuentas personales</b> (<a href="/pols/cuentas/">Ver cuentas</a>)<br />
 <img src="'.gen_grafico($d['pols_cuentas'], '', true).'" alt="'.MONEDA_NOMBRE.' en cuentas" border="0" />
 
-<br /><b>3.4 '.MONEDA.' del Gobierno</b> (Ver cuentas: <a href="/pols/cuentas/1/">Gobierno</a> y <a href="/pols/cuentas/2/">Tesoro Publico</a>)<br />
+<br /><b>3.4 '.MONEDA.' del Gobierno</b> (Ver cuenta del <a href="/pols/cuentas/1/">Gobierno</a>)<br />
 <img src="'.gen_grafico($d['pols_gobierno']).'" alt="'.MONEDA_NOMBRE.' Cuenta Gobierno" border="0" />
 
 <br /><b>3.5 Subastas</b> (Referencia econ&oacute;mica)<br />
 <img src="'.gen_grafico($d['frase'], '', true).'" alt="Subasta: la frase" border="0" />
 
-<br /><b>3.6 Mapa: porcentaje de ocupaci&oacute;n</b> (<a href="/">Ver Mapa</a>)<br />
+<br /><b>3.6 Mapa: porcentaje de ocupaci&oacute;n</b> (<a href="/mapa/">Ver Mapa</a>)<br />
 <img src="'.gen_grafico($d['mapa']).'" alt="Porcentaje de ocupacion" border="0" />
 
 </p>';

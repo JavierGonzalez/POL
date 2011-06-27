@@ -162,7 +162,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 						<li><a href="/log-eventos/">Log de eventos</a></li>
 					</ul>
 			</li>
-		<?php	if ($pol['pais'] == "VP"){ ?>
+		<?php if (ECONOMIA) { ?>
 			<li>
 				<a href="#">Pol&iacute;tica</a>
 				<ul>

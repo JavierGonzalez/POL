@@ -1,11 +1,11 @@
 <?php
 define('URL', 'virtualpol.com');
-define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/'.(DEV=='-dev'?'devel':'real').'/');
+define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/real/');
 
 // INICIALIZACION
 $host = explode('.', $_SERVER['HTTP_HOST']); // obtiene $host[0] que es el subdominio
 $host[0] = str_replace('-dev', '', $host[0]); // convierte subdominios "pais-dev" en "pais" para que funcione la version dev
-if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
+//if ($host[1] != 'virtualpol') { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
 
 // Passwords y claves
 include(RAIZ.'config-pwd.php');
@@ -49,7 +49,14 @@ define('COLOR_BG2', $vp['bg2'][PAIS]);
 
 define('HOST', $_SERVER['HTTP_HOST']);
 define('VERSION', '1.0 Beta');
-define('IMG', 'http://vp.cdn.teoriza.com/'); // http://www.virtualpol.com/img/ - http://vp.cdn.teoriza.com/
+
+define('SSL_URL', 'https://virtualpol.com/'); // http://www.virtualpol.com/ - https://virtualpol.com/
+if ($_SERVER['HTTPS']) {
+	define('IMG', 'https://virtualpol.com/img/');
+} else {
+	define('IMG', 'http://vp.cdn.teoriza.com/'); // http://www.virtualpol.com/img/ - http://vp.cdn.teoriza.com/
+}
+define('REGISTRAR', 'https://virtualpol.com/registrar/');
 
 define('MONEDA', '<img src="'.IMG.'m.gif" border="0" />');
 define('MONEDA_NOMBRE', 'monedas');
@@ -63,7 +70,7 @@ define('VOTO_CONFIANZA_MAX', 40); // numero maximo de votos de confianza emitido
 
 // Variables del sistema de usuarios
 define('USERCOOKIE', '.virtualpol.com');
-define('REGISTRAR', 'http://www'.DEV.'.virtualpol.com/registrar/');
+
 
 // MAPA
 $columnas = 14; $filas = 18;

@@ -26,7 +26,7 @@ menu_ID = 0;
 defcon = 5;
 window.google_analytics_uacct = "UA-59186-46";
 </script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="<?=($_SERVER['HTTPS']?'https':'http')?>://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 
 <style type="text/css">
 body { background: <?=COLOR_BG?> url('<?=IMG?>vp.gif') repeat fixed top left; }
@@ -47,7 +47,7 @@ border-width: 0 2px 2px 0;
 <?php
 unset($txt_header);
 if ($pol['nick']) {
-	$txt_perfil = '<b><a href="http://' . strtolower($pol['pais']) . '.virtualpol.com/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . '</a></b> | <b class="' . $pol['estado'] . '">' . ucfirst($pol['estado']) . '</b> de <b>' . $pol['pais'] . '</b> | <a href="/registrar/login.php?a=logout">Salir</a>';
+	$txt_perfil = '<b><a href="http://' . strtolower($pol['pais']) . '.virtualpol.com/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . '</a></b> | <b class="' . $pol['estado'] . '">' . ucfirst($pol['estado']) . '</b> de <b>' . $pol['pais'] . '</b> | <a href="'.REGISTRAR.'login.php?a=logout">Salir</a>';
 } else { // sin identificar, sin login
 	$txt_perfil = '
 <script type="text/javascript" src="'.IMG.'md5.js"></script> 
@@ -61,7 +61,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <input id="login_pass" name="pass" value="123" size="10" maxlength="200" onfocus="vlgn(this)" type="password" />
 <input type="submit" value="Entrar" onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" /></form>
 </span>
-'.boton('Reg&iacute;strate!', '/registrar/').' | <a href="http://pol.virtualpol.com/info/recuperar-login/"><acronym title="Recuperar contrase&ntilde;a">?</acronym></a> &nbsp;';
+'.boton('Reg&iacute;strate!', '/registrar/').' | <a href="http://vp.virtualpol.com/info/recuperar-login/"><acronym title="Recuperar contrase&ntilde;a">?</acronym></a> &nbsp;';
 
 }
 ?>
@@ -69,7 +69,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 
-<td width="208"><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><img src="<?=IMG?>logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-11px 0 -9px -6px;" /></a></td><td><span style="color:grey;font-size:20x;">Plataforma democr&aacute;tica auto-gestionada</span></span></td>
+<td width="208"><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><img src="<?=IMG?>logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-11px 0 -9px -6px;" border="0" /></a></td><td><span style="color:grey;font-size:20x;">Plataforma democr&aacute;tica auto-gestionada</span></span></td>
 
 <td align="right"><?=$txt_perfil?></td>
 

@@ -236,7 +236,7 @@ case 'verificar': //URL EMAIL
 
 		mysql_query("UPDATE users SET estado = 'turista' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
-		header("Location: http://www.virtualpol.com/registrar/login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=http://www.virtualpol.com/registrar/"); 
+		header("Location: ".REGISTRAR."login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=".REGISTRAR); 
 		mysql_close($link); 
 		exit;
 	}
@@ -407,7 +407,7 @@ $txt .= '</blockquote></div>';
 <li><b>&iquest;Compartes conexi&oacute;n a Internet con otro usuario de VirtualPol?</b><br /> 
 <input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (dejar en blanco en caso negativo)<br /><br /></li>
 
-<li><input name="condiciones" value="ok" type="checkbox" checked="checked" /> <a href="http://www'.DEV.'.'.URL.'/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.<br /><br /></li>
+<li><input name="condiciones" value="ok" type="checkbox" /> <a href="http://www'.DEV.'.'.URL.'/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.<br /><br /></li>
 
 <li><input type="submit" value="Crear usuario" style="height:40px;font-size:22px;" onclick="$(\'#pass1\').val(hex_md5($(\'#pass1\').val()));$(\'#pass2\').val(hex_md5($(\'#pass2\').val()));" /></li>
 </form>

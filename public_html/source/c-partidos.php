@@ -145,12 +145,12 @@ ORDER BY fecha_registro ASC", $link);
 <th><acronym title="Candidato a Presidente de '.PAIS.'">Candidato</acronym></th>
 <th>Antig&uuml;edad</th>
 <th><acronym title="Participaci&oacute;n en Elecciones">Elec *</acronym></th>
+<th>ID</th>
 </tr>';
 
 
 
-	$result = mysql_query("SELECT 
-ID, siglas, nombre, fecha_creacion, ID_presidente,
+	$result = mysql_query("SELECT ID, siglas, nombre, fecha_creacion, ID_presidente,
 (SELECT nick FROM users WHERE ID = ".SQL."partidos.ID_presidente LIMIT 1) AS nick_presidente, 
 (SELECT (SELECT nick FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick FROM ".SQL."partidos_listas WHERE ID_partido = ".SQL."partidos.ID ORDER BY ID ASC LIMIT 1) AS nick_candidato, 
 (SELECT COUNT(ID) FROM users WHERE partido_afiliado = ".SQL."partidos.ID AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS afiliados, 
@@ -166,7 +166,7 @@ ORDER BY num_lista DESC, afiliados DESC, nombre DESC", $link);
 
 			if ($r['nick_candidato']) { $nick_candidato = '<b>' . crear_link($r['nick_candidato']) . '</b>'; } else { $nick_candidato = ''; }
 
-			$txt .= '<tr><td align="right" valign="top"><b style="font-size:20px;">' . crear_link($r['siglas'], 'partido') . '</b></td><td>' . $r['nombre'] . '</td><td><b>' . $r['afiliados'] . '</b>/' . $num_lista . '</td><td>' . crear_link($r['nick_presidente']) . '</td><td>' . $nick_candidato . '</td><td align="right">' . duracion(time() - strtotime($r['fecha_creacion'])) . '</td><td>' . $elecciones . '</td></tr>' . "\n";
+			$txt .= '<tr><td align="right" valign="top"><b style="font-size:20px;">' . crear_link($r['siglas'], 'partido') . '</b></td><td>' . $r['nombre'] . '</td><td><b>' . $r['afiliados'] . '</b>/' . $num_lista . '</td><td>' . crear_link($r['nick_presidente']) . '</td><td>' . $nick_candidato . '</td><td align="right">' . duracion(time() - strtotime($r['fecha_creacion'])) . '</td><td>' . $elecciones . '</td><td align="right">'.$r['ID'].'</td></tr>' . "\n";
 		} else {
 			$txt_otros .= '<span title="'.$r['afiliados'].' afiliados / '.strip_tags($num_lista).' candidatos">'.crear_link($r['siglas'], 'partido').'</span> ';
 		}

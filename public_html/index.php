@@ -39,6 +39,9 @@ $txt .= '<center>
 <th></th>
 </tr>';
 
+$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE dnie = 'true'", $link);
+while($r = mysql_fetch_array($result)) { $autentificados = $r['num']; }
+
 foreach ($vp['paises'] AS $pais) {
 	$pais_low = strtolower($pais);
 	
@@ -61,7 +64,7 @@ foreach ($vp['paises'] AS $pais) {
 	while($r = mysql_fetch_array($result)) { $pais_vice = '<a href="http://'.$pais_low.'.virtualpol.com/perfil/'.strtolower($r['nick']).'/" class="nick" style="font-size:18px;">' . $r['nick'] . '</a>'; }
 
 	// DEFCON
-	$result = mysql_query("SELECT valor, dato FROM ".$pais_low."_config WHERE dato = 'defcon' OR dato LIKE 'frontera%' OR dato = 'arancel_salida' OR dato = 'pais_des'", $link);
+	$result = mysql_query("SELECT valor, dato FROM ".$pais_low."_config WHERE dato = 'pais_des'", $link);
 	while($r = mysql_fetch_array($result)) { $pais_config[$r['dato']] = $r['valor']; }
 
 
@@ -118,27 +121,26 @@ while($r = mysql_fetch_array($result)){
 }
 
 
-$txt .= '
-<tr>
-<td style="border-bottom:1px solid grey;" colspan="10"></td>
-</tr>
-<tr>
-<td colspan="2"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=220x100&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto del censo entre Plataformas" /></td>
+$txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="10"></td></tr>
 
+<tr>
+<td colspan="2" rowspan="2"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=225x110&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto del censo entre Plataformas" width="225" height="110" /></td>
 <td align="right" valign="top"><b style="font-size:20px;">' . $poblacion_num . '</b></td>
 <td colspan="2" valign="top"><b style="font-size:20px;">Ciudadanos</b></td>
-
-<td colspan="3" align="right">
-
-</td>
+<td colspan="3" align="right"></td>
 </tr>
+
+<tr>
+<td align="right" valign="top"><b style="font-size:16px;">'.$autentificados.'</b></td>
+<td colspan="2" valign="top"><em>Autentificados</em></td>
+<td colspan="3" align="right"></td>
+</tr>
+
 </table>
 </center>';
 
 
-if (!$pol['nick']) {
-	$txt .= '<h1>Simulador Pol&iacute;tico Espa&ntilde;ol | Ciudadanos online:</h1>';
-}
+if (!$pol['nick']) { $txt .= '<h1>Simulador Pol&iacute;tico Espa&ntilde;ol | Ciudadanos online:</h1>'; }
 
 
 $time_pre = date('Y-m-d H:i:00', time() - 3600); // 1 hora

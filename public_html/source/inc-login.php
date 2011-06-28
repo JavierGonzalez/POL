@@ -21,14 +21,8 @@ if (isset($_COOKIE['teorizauser'])) {
 				$session_new = true;
 				$_SESSION['pol']['nick'] = $r['nick'];
 				$_SESSION['pol']['user_ID'] = $r['ID'];
-				$_SESSION['pol']['cargo'] = $r['cargo'];
-				$_SESSION['pol']['nivel'] = $r['nivel'];
 				$_SESSION['pol']['fecha_registro'] = $r['fecha_registro'];
-				$_SESSION['pol']['pais'] = $r['pais'];
-				$_SESSION['pol']['estado'] = $r['estado'];
-				$_SESSION['pol']['dnie'] = $r['dnie'];
 				$_SESSION['pol']['confianza'] = $r['voto_confianza'];
-
 			}
 		}  
 	}
@@ -73,6 +67,7 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 		$_SESSION['pol']['pais'] = $r['pais'];
 		$_SESSION['pol']['estado'] = $r['estado'];
 		$_SESSION['pol']['dnie'] = $r['dnie'];
+		$_SESSION['pol']['partido_afiliado'] = $r['partido_afiliado'];
 
 		if (($r['pais'] != PAIS) AND ($pol['estado'] == 'ciudadano')) { 
 			// es extranjero

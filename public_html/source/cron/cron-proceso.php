@@ -435,8 +435,8 @@ $result = mysql_query("SELECT SUM(voto) AS num FROM ".SQL_VOTOS." WHERE estado =
 while($r = mysql_fetch_array($result)) { $st['confianza'] = $r['num']; }
 
 // autentificados
-$result = mysql_query("SELECT COUNT(*) AS num FROM users WHERE dnie = 'true'", $link);
-while($r = mysql_fetch_array($result)) { $st['confianza'] = $r['num']; }
+$result = mysql_query("SELECT COUNT(*) AS num FROM users WHERE dnie = 'true' AND pais = '".PAIS."'", $link);
+while($r = mysql_fetch_array($result)) { $st['autentificados'] = $r['num']; }
 
 
 // STATS GUARDADO DIARIO

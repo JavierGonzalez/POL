@@ -6,18 +6,18 @@ function nucleo_acceso($tipo, $valor='') {
 	global $_SESSION;
 	$rt = false;
 	switch ($tipo) {
+		case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $rt = true; } break;
+		case 'ciudadanos_global': if ((isset($_SESSION['pol']['user_ID'])) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $rt = true; } break;
+		case 'ciudadanos': if (($_SESSION['pol']['estado'] == 'ciudadano') && (($_SESSION['pol']['pais'] == PAIS) || (in_array($_SESSION['pol']['pais'], explode(' ', $valor))))) { $rt = true; } break;
 		case 'excluir': if (!in_array(strtolower($_SESSION['pol']['nick']), explode(' ', strtolower($valor)))) { $rt = true; } break;
 		case 'privado': if (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', strtolower($valor)))) { $rt = true; } break;
+		case 'afiliado': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['partido_afiliado'] == $valor)) { $rt = true; } break;
 		case 'confianza': if ($_SESSION['pol']['confianza'] >= $valor) { $rt = true; } break;
 		case 'nivel': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['nivel'] >= $valor)) { $rt = true; } break;
 		case 'cargo': if (($_SESSION['pol']['pais'] == PAIS) AND (in_array($_SESSION['pol']['cargo'], explode(' ', $valor)))) { $rt = true; } break;
 		case 'autentificados': if ($_SESSION['pol']['dnie'] == 'true') { $rt = true; } break;
 		case 'antiguedad': if (($_SESSION['pol']['fecha_registro']) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($valor*86400)))) { $rt = true; } break;
-		case 'ciudadanos': if (($_SESSION['pol']['estado'] == 'ciudadano') && (($_SESSION['pol']['pais'] == PAIS) || (in_array($_SESSION['pol']['pais'], explode(' ', $valor))))) { $rt = true; } break;
-		case 'ciudadanos_global': if ((isset($_SESSION['pol']['user_ID'])) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $rt = true; } break;
-		case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $rt = true; } break;
-		
-		case 'print': return array('privado'=>'Ciudadano1 C2 C3 ...', 'excluir'=>'Ciudadano1 C2 C3 ...', 'confianza'=>'0', 'cargo'=>'cargo_ID1 cID2 cID3 ...', 'nivel'=>'1', 'antiguedad'=>'365', 'autentificados'=>'', 'ciudadanos'=>'', 'ciudadanos_global'=>'', 'anonimos'=>''); exit;
+		case 'print': return array('privado'=>'Ciudadano1 C2 C3 ...', 'excluir'=>'Ciudadano1 C2 C3 ...', 'afiliado'=>'partido_ID', 'confianza'=>'0', 'cargo'=>'cargo_ID1 cID2 cID3 ...', 'nivel'=>'1', 'antiguedad'=>'365', 'autentificados'=>'', 'ciudadanos'=>'', 'ciudadanos_global'=>'', 'anonimos'=>''); exit;
 	}
 	return $rt;
 }

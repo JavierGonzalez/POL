@@ -46,7 +46,7 @@ if (isset($sc[$pol['user_ID']])) {
 			$txt_title = 'Control: Supervision del Censo - Nuevos ciudadanos';
 			$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Factores secundarios</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p class="amarillo" style="color:red;">Toda esta informaci&oacute;n es <b>CONFIDENCIAL</b>. Supervisores del Censo: <b>' . $supervisores . '.</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;">Toda esta informaci&oacute;n es <b>CONFIDENCIAL</b>. Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
 			$txt .= '<h1>1. Actividad de nuevos Ciudadanos (ultimos 60)</h1><hr />
 <table border="0" cellspacing="0" cellpadding="2">
@@ -131,7 +131,7 @@ LIMIT 60", $link);
 	$txt_title = 'Control: Supervision del Censo | factores secundarios';
 	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Factores secundarios | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p class="amarillo" style="color:red;">Toda esta informaci&oacute;n es <b>CONFIDENCIAL</b>. Supervisores del Censo: <b>' . $supervisores . '.</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;">Toda esta informaci&oacute;n es <b>CONFIDENCIAL</b>. Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
 
 	$txt .= '<br /><h1>5. Referencias</h1><hr /><table border="0" cellspacing="4">';
@@ -278,7 +278,7 @@ ORDER BY num ASC", $link);
 	$txt_title = 'Control: Supervision del Censo';
 	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Factores secundarios</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p class="amarillo" style="color:red;">Toda esta informaci&oacute;n es <b>CONFIDENCIAL</b>. Supervisores del Censo: <b>' . $supervisores . '.</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;">Toda esta informaci&oacute;n es <b>CONFIDENCIAL</b>. Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 	
 
 	$txt .= '<h1>1. Coincidencias de IP</h1><hr /><table border="0" cellspacing="4">';

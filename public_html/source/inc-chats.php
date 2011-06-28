@@ -66,7 +66,7 @@ $txt .= '</h1>
 <div id="vpc_fondo">
 <div id="vpc">
 <ul id="vpc_ul">
-<li style="margin-top:380px;color:#AAA;"><b>
+<li style="margin-top:280px;color:#AAA;"><b>
 '.($acceso['leer']?'
 <img src="'.IMG.'logo-virtualpol-40original.gif" alt="VirtualPOL" border="0" height="40" /><br />
 '.$titulo.'. Plataforma '.PAIS.'<br />

@@ -234,6 +234,8 @@ foreach ($vp['paises'] AS $PAIS) {
 	if (!in_array($PAIS, $vp['paises_congelados'])) {
 		$n = 0;
 		$g_otros = 0;
+		$g_datos = array();
+		$g_siglas = array();
 		$result = mysql_query("SELECT COUNT(ID) AS num, partido_afiliado,
 (SELECT siglas FROM ".strtolower($PAIS)."_partidos WHERE ID = users.partido_afiliado) AS siglas
 FROM users 
@@ -253,7 +255,7 @@ ORDER BY num DESC", $link);
 
 		$txt .= '
 <td><b>'.$PAIS.'</b><br />
-<img src="http://chart.apis.google.com/chart?cht=p&chs=420x300&chds=a
+<img src="http://chart.apis.google.com/chart?cht=p&chs=200x100&chds=a
 &chd=t:'.implode(',', $g_datos).','.$g_otros.'
 &chl='.implode('|', $g_siglas).'|Otros
 &chf=bg,s,ffffff01|c,s,ffffff01" alt="Afiliados por partido" title="Afiliados por partido" />

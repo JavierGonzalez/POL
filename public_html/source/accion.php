@@ -215,7 +215,7 @@ case 'rechazar-ciudadania':
 	
 	$user_ID = false;
 	$result3 = mysql_query("SELECT IP, pols, nick, ID, ref, estado,
-(SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = '".$pol['user_ID']."') AS pols_cuentas 
+".(ECONOMIA?"(SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = '".$pol['user_ID']."')":"estado")." AS pols_cuentas 
 FROM users 
 WHERE ID = '".$pol['user_ID']."' AND estado = 'ciudadano' AND pais = '".PAIS."'
 LIMIT 1", $link);
@@ -236,15 +236,21 @@ LIMIT 1", $link);
 		$pols = $pols - $pols_arancel;
 
 		evento_log(13); // rechazo de ciudadania
-		if (($pol['pols'] > 0) AND (PAIS != '15M')) {
+		if (($pol['pols'] > 0) AND (PAIS == 'VP')) {
 			$consigo = ' (llevandose consigo: '.pols($pols).' '.MONEDA.')';
 		}
 		evento_chat('<b>[#] '.crear_link($nick).' rechaza la Ciudadania</b> de '.PAIS.$consigo);
 		
 		
-
-		pols_transferir($pols_arancel, $user_ID, '-1', 'Arancel de salida (rechazo de ciudadania) '.$pol['config']['arancel_salida'].'%');
-
+		if (ECONOMIA) {
+			pols_transferir($pols_arancel, $user_ID, '-1', 'Arancel de salida (rechazo de ciudadania) '.$pol['config']['arancel_salida'].'%');
+			mysql_query("DELETE FROM ".SQL."empresas WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM ".SQL."estudios_users WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM ".SQL."mercado WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM ".SQL."pujas WHERE user_ID = '".$user_ID."'", $link);
+		}
 		mysql_query("UPDATE users SET estado = 'turista', pais = 'ninguno', nivel = '1', cargo = '0', nota = '0.0', pols = '".$pols."', rechazo_last = '".$date."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		
 		if ($pol['config']['elecciones_estado'] == 'elecciones') { 
@@ -253,12 +259,6 @@ LIMIT 1", $link);
 		
 		mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '".$user_ID."'", $link);
 		mysql_query("DELETE FROM ".SQL."partidos WHERE ID_presidente = '".$user_ID."'", $link);
-		mysql_query("DELETE FROM ".SQL."empresas WHERE user_ID = '".$user_ID."'", $link);
-		mysql_query("DELETE FROM ".SQL."mercado WHERE user_ID = '".$user_ID."'", $link);
-		mysql_query("DELETE FROM ".SQL."estudios_users WHERE user_ID = '".$user_ID."'", $link);
-		mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '".$user_ID."'", $link);
-		mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '".$user_ID."'", $link);
-		mysql_query("DELETE FROM ".SQL."pujas WHERE user_ID = '".$user_ID."'", $link);
 
 		unset($_SESSION);
 		session_unset(); session_destroy();
@@ -1136,7 +1136,7 @@ case 'votacion':
 
 
 				if ((!$ha_votado) AND (strtotime($fecha_registro) < time())) {
-					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."')", $link);
+					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto, validez) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."')", $link);
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 
 					evento_chat('<b>['.strtoupper($tipo).']</b> Voto de  '.$pol['nick'].' en: <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a>', '0', '', false, 'e', $pais);
@@ -1146,8 +1146,11 @@ case 'votacion':
 			header('Location: http://'.strtolower($pais).'.virtualpol.com/votacion/'.$_POST['ref_ID'].'/'); mysql_close($link); exit;
 
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['ID'])) { 
-		mysql_query("DELETE FROM votacion WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
-		mysql_query("DELETE FROM votacion_votos WHERE ref_ID = '".$_GET['ID']."'", $link);
+		$result = mysql_query("SELECT ID FROM votacion WHERE estado = 'ok' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) {
+			mysql_query("DELETE FROM votacion WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+			mysql_query("DELETE FROM votacion_votos WHERE ref_ID = '".$_GET['ID']."'", $link);
+		}
 	} elseif (($_GET['b'] == 'concluir') AND ($_GET['ID'])) { 
 		mysql_query("UPDATE votacion SET time_expire = '".$date."' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
 	}

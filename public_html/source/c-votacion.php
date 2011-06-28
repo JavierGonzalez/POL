@@ -86,21 +86,22 @@ PARLAMENTO SOLO 22 y 6
 <option value="259200">3 d&iacute;as</option>
 <option value="345600">4 d&iacute;as</option>
 </select></p>
+
 ';
 
 
-		$r['acceso_votar'] = 'ciudadanos_pais';
+		$r['acceso_votar'] = 'ciudadanos';
 		$tipos_array = nucleo_acceso('print');
 		unset($tipos_array['anonimos']);
 		foreach ($tipos_array AS $at => $at_var) {
-			$txt_li['votar'] .= '<input type="radio" name="acceso_votar" value="'.$at.'"'.($at==$r['acceso_votar']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_votar_var\').val(\''.$at_var.'\');" /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
+			$txt_li['votar'] .= '<option value="'.$at.'"'.($at==$r['acceso_votar']?' selected="selected"':'').' onchange="$(\'#acceso_cfg_votar_var\').val(\''.$at_var.'\');">'.ucfirst(str_replace("_", " ", $at)).'</option>';
 		}
 
 
 		$txt .= '</td><td valign="top" align="right">
 		
 <p id="acceso_votar_div" class="azul"><b>Acceso para votar:</b><br />
-'.$txt_li['votar'].' <input type="text" name="acceso_cfg_votar" size="18" maxlength="500" id="acceso_cfg_votar_var" value="'.$r['acceso_cfg_votar'].'" /></p>
+<select name="acceso_votar">'.$txt_li['votar'].'</select><br /><input type="text" name="acceso_cfg_votar" size="18" maxlength="500" id="acceso_cfg_votar_var" value="'.$r['acceso_cfg_votar'].'" /></p>
 
 </td></tr></table>
 
@@ -124,11 +125,10 @@ PARLAMENTO SOLO 22 y 6
 <li><input type="text" name="respuesta9" size="22" maxlength="30" /></li>
 </ol>
 <ul style="margin-top:-16px;">
-<li><input type="text" name="respuesta10" size="22" maxlength="30" value="En Blanco" readonly="readonly" style="color:grey;" /></li>
-<li><input type="text" name="respuesta11" size="22" maxlength="30" value="Votacion Invalida" readonly="readonly" style="color:grey;" /></li>
+<li><input type="text" name="respuesta10" size="22" value="En Blanco" readonly="readonly" style="color:grey;" /></li>
 </ul></p>
 
-<p><input type="submit" value="Crear votaci&oacute;n" /> &nbsp; <a href="/votacion/"><b>Ver votaciones</b></a></p>';
+<p><input type="submit" value="Iniciar votaci&oacute;n" /> &nbsp; <a href="/votacion/"><b>Ver votaciones</b></a></p>';
 
 
 
@@ -170,60 +170,76 @@ LIMIT 1", $link);
 		if ($time_expire < time()) { // VOTACION TERMINADA, IMPRIMIR RESULTADOS 
 
 			$txt_escrutinio = '';
-			$conteo_votos = 0;
-			$invalido = false;
-			$result2 = mysql_query("SELECT COUNT(user_ID) as num, voto
+			$chart_dato = array();
+			$chart_nom = array();
+			$result2 = mysql_query("SELECT COUNT(user_ID) as num, voto, validez
 FROM votacion_votos
 WHERE ref_ID = '" . $r['ID'] . "'
 GROUP BY voto", $link);
 			while($r2 = mysql_fetch_array($result2)) {
 				$txt_escrutinio .= '<tr><td>' . $respuestas[$r2['voto']] . '</td><td align="right"><b>' . $r2['num'] . '</b></td><td align="right">' . round(($r2['num'] * 100) / $r['num']) . '%</td></tr>';
 
-				$escaños_total = $escaños_total + $r2['num'];
-				if ($chart_dato) { $chart_dato .= ','; } $chart_dato .= $r2['num'];
-				
-
-
-				if ($chart_nom) { $chart_nom .= '|'; } $chart_nom .= $respuestas[$r2['voto']];
-
-				
-				if (($respuestas[$r2['voto']] == 'Votacion Invalida') AND ($r2['num'] >= $conteo_votos)) { 
-					$invalido = true; 
-					$votos_invalido = $r2['num']; 
-				} 
-				$conteo_votos += $r2['num'];
+				$escanos_total = $escanos_total + $r2['num'];
+				$chart_dato[] = $r2['num'];
+				$chart_nom[] = $respuestas[$r2['voto']];
 			}
 
+			$validez_voto['true'] = 0; $validez_voto['false'] = 0;
+			$result2 = mysql_query("SELECT validez, COUNT(user_ID) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' GROUP BY validez", $link);
+			while($r2 = mysql_fetch_array($result2)) {
+				$validez_voto[$r2['validez']] = $r2['num'];
+			}
 
+			if ($validez_voto['true'] > $validez_voto['false']) { $validez = true; } else { $validez = false; }
+			
 
 			$txt .= '
 <table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
-			
-<h2>Escrutinio:</h2>
-'.($invalido==false?'<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
+'.($validez==true?'<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 <tr>
 <th>Respuestas &nbsp;</th>
 <th>Votos</th>
 <th></th>
-</tr>'.$txt_escrutinio.'</table>':'<b style="color:red;">Votacion Invalida.<br /><br />Invalidado por '.$votos_invalido.' votos, de un total de '.$conteo_votos.' votos.</b>').'</td><td valign="top">
+</tr>'.$txt_escrutinio.'</table>':'<b style="color:red;">Votacion Invalida.</b>&nbsp;&nbsp;&nbsp;').'</td><td valign="top">';
 
+if ($validez==true) {
+	if ($r['tipo']=='parlamento') {
+		$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:' . $escanos_total . ',' . implode(',', $chart_dato) . '&chs=450x300&chl=|' . implode('|', $chart_nom) . '&chco=ffffff01,FF8000&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />';
+	} else {
+		$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . implode(',', $chart_dato) . '&chs=440x200&chds=a&chl=' . implode('|', $chart_nom) . '&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />';
+	}
+}
 
-'.($invalido==false?($r['tipo']=='parlamento'?'<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:' . $escaños_total . ',' . $chart_dato . '&chs=450x300&chl=|' . $chart_nom . '&chco=ffffff01,FF8000&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />':'<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato . '&chs=440x200&chds=a&chl=' . $chart_nom . '&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />'):'').'
+$txt .= '
+</td>
+<td valign="top">Validez:<br />
+<img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$validez_voto['true'].','.$validez_voto['false'].'&chs=210x130&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000" alt="Validez" /></td>
 
-</td></tr></table>';
+</tr></table>';
 
 
 
 		} else {
 			if ((!$r['ha_votado']) AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']))) {
-				for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { $votos .= '<option value="' . $i . '">' . $respuestas[$i] . '</option>'; } }
+				for ($i=0;$i<$respuestas_num;$i++) { 
+					if ($respuestas[$i]) { 
+						$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
+					} 
+				}
 				$txt .= '<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=votacion&b=votar" method="post">
 <input type="hidden" name="ref_ID" value="' . $r['ID'] . '"  />
-<p><select name="voto">
-<option value="">&darr;</option>
-' . $votos . '
+<p><select name="voto" style="font-size:22px;">
+'.$votos.'
 </select>
-<input type="submit" value="Votar" /></p>';
+<input type="submit" value="Votar" style="font-size:22px;" /></p>
+
+<p>
+<input type="radio" name="validez" value="true" checked="checked" /> Votaci&oacute;n correcta.<br />
+<input type="radio" name="validez" value="false" /> Votaci&oacute;n nula (inv&aacute;lida, inapropiada o tendenciosa).<br />
+</p>
+
+
+</form>';
 			} elseif ($r['ha_votado']) {
 				$txt .= 'Tu voto ha sido recogido correctamente.';
 			} else {
@@ -297,13 +313,13 @@ ORDER BY estado ASC, time_expire DESC", $link);
 			$votar = boton('Votar', '/votacion/' . $r['ID'] . '/');
 		} else { $votar = ''; }
 
+		$boton = '';
 		if ($r['user_ID'] == $pol['user_ID']) {
-			$boton = '';
 			if ($r['estado'] == 'ok') {
 				$boton .= boton('Finalizar', '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '&iquest;Seguro que quieres FINALIZAR esta votacion?').' ';
+				$boton .= boton('X', '/accion.php?a=votacion&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta votacion?');
 			}
-			$boton .= boton('X', '/accion.php?a=votacion&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres CANCELAR y ELIMINAR esta votacion?');
-		} else { $boton = ''; }
+		}
 
 		$txt .= '<tr>
 <td>' . ucfirst($r['tipo']) . '</td>
@@ -311,7 +327,7 @@ ORDER BY estado ASC, time_expire DESC", $link);
 <td><a href="/votacion/' . $r['ID'] . '/"><b>' . $r['pregunta'] . '</b></a></td>
 <td>' . crear_link($r['nick']) . '</td>
 <td><b>' . $estado . '</b></td>
-<td>' . $votar . $boton . '</td>
+<td nowrap="nowrap">'.$votar.$boton.'</td>
 <td></td>
 </tr>';
 	}

@@ -19,7 +19,7 @@ case 'recuperar-pass':
 	$txt .= '
 <li class="azul">
 <form action="'.REGISTRAR.'login.php?a=changemail" method="POST">
-<input type="hidden" name="url" value="' . base64_encode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']) . '" />
+<input type="hidden" name="url" value="' . base64_encode(REGISTRAR.'login.php?a=panel') . '" />
 <table border="0" cellpadding="2" cellspacing="0">
 <tr>
 <td align="center" valign="top">Nick: <input type="text" size="10" name="nick" value="" maxlength="20" /></td>
@@ -52,7 +52,7 @@ case 'panel':
 		//changepass
 		$txt .= '<li class="azul"><b>Cambio de contrase&ntilde;a:</b><br />
 <form action="'.REGISTRAR.'login.php?a=changepass" method="POST">
-<input type="hidden" name="url" value="' . base64_encode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']) . '" />
+<input type="hidden" name="url" value="' . base64_encode(REGISTRAR.'login.php?a=panel') . '" />
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td align="center" valign="top">Contrase&ntilde;a actual:<br /><input type="password" name="oldpass" value="" maxlength="30" /></td>
@@ -66,7 +66,7 @@ case 'panel':
 
 <li class="azul"><b>Cambio de email:</b><br />
 <form action="'.REGISTRAR.'login.php?a=changemail" method="POST">
-<input type="hidden" name="url" value="' . base64_encode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']) . '" />
+<input type="hidden" name="url" value="' . base64_encode(REGISTRAR.'login.php?a=panel') . '" />
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td align="center" valign="top">Email: <input type="text" size="30" name="email" value="'.$pol['email'].'" maxlength="100" /></td>

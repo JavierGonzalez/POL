@@ -14,9 +14,7 @@ if ((isset($pol['user_ID'])) AND ($dnie_autentificado == false)) {
 	
 	// Plugin de Tractis para PHP. Software Libre. Fuente: https://github.com/tractis/tractis_identity_verifications_for_php
 	require('img/tractis_identity/tractis_identity.php');
-
-	// POR ARREGLAR: lo ideal es que la URL de VirtualPol a la que tractis envia la información sea mediante HTTPS seguro. Estudiar y arreglar cuanto antes.
-	$tractis_identity = new tractis_identity(CLAVE_API_TRACTIS, 'http://www.virtualpol.com/dnie.php', 'false', 'http://www.virtualpol.com/img/tractis_identity/images/trac_but_bg_lrg_b_es.png');
+	$tractis_identity = new tractis_identity(CLAVE_API_TRACTIS, SSL_URL.'dnie.php', 'false', IMG.'tractis_identity/images/trac_but_bg_lrg_b_es.png');
 
 	// Trata la redireccion desde Tractis tras una autentificacion correcta.
 	if ($data = $tractis_identity->check_auth()) { 
@@ -55,9 +53,9 @@ Esta linea final no supone ninguna información en claro.
 
 			// Carga funciones extra para ejecutar evento_chat() que envia un mensaje en el chat principal.
 			include('source/inc-functions-accion.php'); // functions extra
-			evento_chat('<b>[#] '.crear_link($pol['nick']).' se ha <a href="http://www.virtualpol.com/dnie.php">autentificado</a> correctamente.</b>');
+			evento_chat('<b>[#] '.crear_link($pol['nick']).' se ha <a href="'.SSL_URL.'dnie.php">autentificado</a> correctamente.</b>');
 
-			header('Location: http://www.virtualpol.com/dnie.php');
+			header('Location: '.SSL_URL.'dnie.php');
 			mysql_close($link);
 			exit;
 		}

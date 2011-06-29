@@ -1410,7 +1410,7 @@ case 'enviar-mensaje':
 
 			foreach ($sc AS $user_ID => $nick) {
 				if ($user_ID != $pol['user_ID']) {
-					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$user_ID."', '".$date."', '<b>Mensaje multiple: Supervisor del Censo</b><br />".$text."', '0', '".$_POST['calidad']."')", $link);
+					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$user_ID."', '".$date."', '<b>Mensaje multiple: Supervisor del Censo</b><br />".$text."', '0', '".$_POST['calidad']."', 'SC')", $link);
 					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).DEV.'.'.URL.'/msg/"><b>Leer!</b></a>)', $user_ID, -1, false, 'p');
 				}
 			}
@@ -1426,7 +1426,7 @@ case 'enviar-mensaje':
 			}
 			while($r = mysql_fetch_array($result)){ 
 				if ($r['user_ID'] != $pol['user_ID']) {
-					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: ".$cargo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."')", $link);
+					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: ".$cargo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
 					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).DEV.'.'.URL.'/msg/"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
 				}
 			}

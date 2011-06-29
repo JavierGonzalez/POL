@@ -26,10 +26,10 @@ FROM ".SQL_MENSAJES."
 WHERE envia_ID = '" . $pol['user_ID'] . "'
 ORDER BY time DESC
 LIMIT 50", $link);
-	while($row = mysql_fetch_array($result)){
+	while($r = mysql_fetch_array($result)){
 
 
-		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>' . crear_link($row['nick_envia']) . '</b><br /><b>' . str_replace(' ', '&nbsp;', $row['cargo']) . '</b><acronym title="' . $row['time'] . '" style="font-size:12px;">' . duracion(time() - strtotime($row['time'])) . '</acronym></td><td valign="top">' . $row['text'] . '<hr /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($row['nick_envia']) . '/') . '</td><td valign="top">' . boton('X', '/accion.php?a=borrar-mensaje&ID=' . $row['ID']) . '</td></tr>' . "\n";
+		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>' . crear_link($r['nick_envia']) . '</b><br /><b>' . str_replace(' ', '&nbsp;', $r['cargo']) . '</b><acronym title="' . $r['time'] . '" style="font-size:12px;">' . duracion(time() - strtotime($r['time'])) . '</acronym></td><td valign="top">' . $r['text'] . '<hr /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($r['nick_envia']) . '/') . '</td><td valign="top">' . boton('X', '/accion.php?a=borrar-mensaje&ID=' . $r['ID']) . '</td></tr>' . "\n";
 	}
 
 	$txt .= '</table><p><b>(*)</b> <em>Esta p&aacute;gina est&aacute; en versi&oacute;n ALPHA, el motivo es que cabe la "extra&ntilde;a" posibilidad de que falten algunos mensajes. Esto suceder&aacute; cuando el RECEPTOR elimine tu mensaje enviado (ya que el mensaje se borra de la base de datos). Puede resultar incoherente la ausencia de algun mensaje enviado.</em></p>';
@@ -42,22 +42,26 @@ LIMIT 50", $link);
 
 	// load config
 	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
-	while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
+	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 	$txt_title = 'Enviar mensaje';
-	if ($_GET['a'] != 'enviar') { $pre_nick = strtolower($_GET['a']); }
+	if ($_GET['a'] == 'cargos') {
+		$pre_cargo = $_GET['b'];
+	} else if ($_GET['a'] != 'enviar') { 
+		$pre_nick = strtolower($_GET['a']); 
+	}
 
 	$result = mysql_query("SELECT ID, nombre,
 (SELECT COUNT(ID) FROM ".SQL."estudios_users WHERE cargo = '1' AND ID_estudio = ".SQL."estudios.ID LIMIT 1) AS cargos_num
 FROM ".SQL."estudios
 WHERE asigna != '-1'
 ORDER BY nivel DESC", $link);
-	while($row = mysql_fetch_array($result)){
-		if ($row['cargos_num'] > 0) {
-			$select_todoscargos .= '<option value="' . $row['ID'] . '">' . $row['cargos_num'] . ' &nbsp; ' . $row['nombre'] . '</option>';
+	while($r = mysql_fetch_array($result)){
+		if ($r['cargos_num'] > 0) {
+			$select_todoscargos .= '<option value="' . $r['ID'] . '"'.($pre_cargo==$r['ID']?' selected="selected"':'').'>' . $r['cargos_num'] . ' &nbsp; ' . $r['nombre'] . '</option>';
 		}
 	}
-	$select_todoscargos .= '<option value="SC">&nbsp; &nbsp; Supervisores del Censo</option>';
+	$select_todoscargos .= '<option value="SC"'.($pre_cargo=='SC'?' selected="selected"':'').'>&nbsp; &nbsp; Supervisores del Censo</option>';
 
 	//tus cargos
 	$result = mysql_query("SELECT ID_estudio, 
@@ -66,8 +70,8 @@ FROM ".SQL."estudios_users
 WHERE cargo = '1'
 AND user_ID = '" . $pol['user_ID'] . "'
 ORDER BY nombre ASC", $link);
-	while($row = mysql_fetch_array($result)){
-		$select_cargos .= '<option value="' . $row['ID_estudio'] . '">' . $row['nombre'] . '</option>';
+	while($r = mysql_fetch_array($result)){
+		$select_cargos .= '<option value="' . $r['ID_estudio'] . '">' . $r['nombre'] . '</option>';
 	}
 
 
@@ -118,17 +122,17 @@ function click_form(tipo) {
 
 <form action="/accion.php?a=enviar-mensaje" method="post">
 
-<p><b>Destinatario:</b><table border="0" style="margin-top:-15px;">
+<p><b>Destino:</b><table border="0" style="margin-top:-15px;">
 <tr onclick="click_form(\'ciudadano\');">
-<td><input id="radio_ciudadano" type="radio" name="para" value="ciudadano" checked="checked" />Ciudadano:</td>
+<td><input id="radio_ciudadano" type="radio" name="para" value="ciudadano"'.(!$pre_cargo?' checked="checked"':'').' />Ciudadano:</td>
 <td><input id="ciudadano" tabindex="1" type="text" name="nick" value="' . $pre_nick . '" style="font-size:17px;" /> (Puedes indicar hasta 9 ciudadanos separados por espacios)</td>
 </tr>
 <tr onclick="click_form(\'cargos\');">
-<td><input id="radio_cargos" type="radio" name="para" value="cargo" />Cargos:</td>
+<td><input id="radio_cargos" type="radio" name="para" value="cargo"'.($pre_cargo?' checked="checked"':'').' />Cargos:</td>
 <td><select name="cargo_ID" style="color:green;font-weight:bold;font-size:17px;"><option name="" value=""></option>' . $select_todoscargos . '</select> (env&iacute;o m&uacute;ltiple, cuidado)</td>
 </tr>
 <tr>
-<td colspan="2"><input id="radio_todos" type="radio" name="para" value="todos"' . $disabled_todos . ' onclick="click_form(\'todos\');" />Mensaje Global a todos los Ciudadanos (' . $pol['config']['info_censo'] . '). ' . pols($pol['config']['pols_mensajetodos']) . ' '.MONEDA.'.</td>
+'.(ECONOMIA?'<td colspan="2"><input id="radio_todos" type="radio" name="para" value="todos"' . $disabled_todos . ' onclick="click_form(\'todos\');" />Mensaje Global a todos los Ciudadanos (' . $pol['config']['info_censo'] . '). ' . pols($pol['config']['pols_mensajetodos']) . ' '.MONEDA.'.</td>':'').'
 </tr>
 </table>
 </p>
@@ -136,10 +140,10 @@ function click_form(tipo) {
 <p><b>Mensaje:</b><br />
 <textarea tabindex="2" name="text" style="color:green;font-weight:bold;width:550px;height:200px;"></textarea></p>
 
-<p><input type="checkbox" name="urgente" value="1" id="urgente" /> Env&iacute;o certificado urgente. (el receptor recibir&aacute; un email) ' . pols($pol['config']['pols_mensajeurgente']) . ' '.MONEDA.'.</p>
+<p><input type="checkbox" name="urgente" value="1" id="urgente" /> Env&iacute;o urgente. (el receptor recibir&aacute; un email) ' . pols($pol['config']['pols_mensajeurgente']) . ' '.MONEDA.'.</p>
 
 
-<p><input type="submit" value="Enviar" /> En calidad de: <select name="calidad" style="color:green;font-weight:bold;font-size:17px;"><option value="0">Ciudadano</option>' . $select_cargos . '</select></form></p>';
+<p><input type="submit" value="Enviar" style="font-size:24px;" /> En calidad de: <select name="calidad" style="color:green;font-weight:bold;font-size:17px;"><option value="0">Ciudadano</option>' . $select_cargos . '</select></form></p>';
 
 
 
@@ -159,16 +163,16 @@ function click_form(tipo) {
 </tr>';
 
 	$result = mysql_query("SELECT 
-ID, envia_ID, recibe_ID, time, text, leido, cargo,
+ID, envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo,
 (SELECT nick FROM ".SQL_USERS." WHERE ".SQL_USERS.".ID = envia_ID LIMIT 1) AS nick_envia,
 (SELECT nombre FROM ".SQL."estudios WHERE ".SQL."estudios.ID = cargo LIMIT 1) AS cargo_nom
 FROM ".SQL_MENSAJES."
 WHERE recibe_ID = '" . $pol['user_ID'] . "'
 ORDER BY leido ASC, time DESC
 LIMIT 100", $link);
-	while($row = mysql_fetch_array($result)){
-		if ($row['leido'] == 0) {
-			$boton = '<input type="checkbox" name="option2" onClick="window.location.href=\'/accion.php?a=mensaje-leido&ID=' . $row['ID'] . '\';"  checked />';
+	while($r = mysql_fetch_array($result)){
+		if ($r['leido'] == 0) {
+			$boton = '<input type="checkbox" name="option2" onClick="window.location.href=\'/accion.php?a=mensaje-leido&ID=' . $r['ID'] . '\';"  checked />';
 			$fondo = ' style="background:#FFFFCC;"';
 			
 		} else {
@@ -177,9 +181,9 @@ LIMIT 100", $link);
 		}
 
 
-		if ($row['cargo'] != '0') { $cargo = ' <img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" title="' . $row['cargo_nom'] . '" />'; } else { $cargo = ''; }
+		if ($r['cargo'] != '0') { $cargo = ' <img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" title="' . $r['cargo_nom'] . '" />'; } else { $cargo = ''; }
 
-		$txt .= '<tr' . $fondo . '><td valign="top">' . $boton . '</td><td valign="top" align="right" nowrap="nowrap"><b>' . crear_link($row['nick_envia']) . '</b>' . $cargo . '<br /><acronym title="' . $row['time'] . '" style="font-size:12px;">' . duracion(time() - strtotime($row['time'])) . '</acronym></td><td valign="top">' . $row['text'] . '<hr /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($row['nick_envia']) . '/') . '</td><td valign="top">' . boton('X', '/accion.php?a=borrar-mensaje&ID=' . $row['ID']) . '</td></tr>' . "\n";
+		$txt .= '<tr' . $fondo . '><td valign="top">' . $boton . '</td><td valign="top" align="right" nowrap="nowrap"><b>' . crear_link($r['nick_envia']) . '</b>' . $cargo . '<br /><acronym title="' . $r['time'] . '" style="font-size:12px;">' . duracion(time() - strtotime($r['time'])) . '</acronym></td><td valign="top">' . $r['text'] . '<hr /></td><td valign="top">' . boton('Responder', ($r['recibe_masivo']==''?'/msg/' . strtolower($r['nick_envia']).'/':'/msg/cargos/'.$r['recibe_masivo'].'/')) . '</td><td valign="top">' . boton('X', '/accion.php?a=borrar-mensaje&ID=' . $r['ID']) . '</td></tr>' . "\n";
 	}
 
 	if (!$boton) { $txt .= '<tr><td colspan="5"><b>No tienes ning&uacute;n mensaje.</b></td></tr>'; }

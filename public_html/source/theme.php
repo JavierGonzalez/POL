@@ -218,6 +218,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 				<ul>
 					<li><a href="/perfil/<?=$pol['nick']?>/">Perfil</a></li>
 					<li><a href="/examenes/">Ex&aacute;menes</a></li>
+					<li><a href="/foro/mis-respuestas/">Respuestas</a></li>
 					<?=(ECONOMIA?'<li><a href="/pols/">Dinero</a></li><li><a href="/mapa/propiedades/">Parcelas</a></li><li><a href="http://aziroet.com/blog/aziroet-quiere-ser-la-plataforma-web-de-tu-blog.php">Crear Blog</a></li>':'')?>
 				</ul>
 			</li>			<?php } ?><?php if ($pol['config']['info_consultas'] > 0) { ?>

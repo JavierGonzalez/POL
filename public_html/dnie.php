@@ -2,6 +2,8 @@
 // Conecta con la base de datos, define constantes, carga el sistema de usuarios de VP, hace un par de gestiones rutinarias.
 include('inc-login.php');
 
+if (!$_SERVER['HTTPS']) { header('Location: '.SSL_URL.'dnie.php'); } // Fuerza el uso de una conexion segura entre navegador y servidor. (https SSL)
+
 $txt_title = 'Autentificaci&oacute;n DNIe'; // Define el titulo de la pagina finalmente formada.
 
 // Obtiene si el usuario ya está autentificado o no.

@@ -163,9 +163,9 @@ case 'login':
 <header>
 <title></title>
 <meta http-equiv="refresh" content="6;url=http://www.virtualpol.com/">
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://www.virtualpol.com/img/evercookie/swfobject-2.2.min.js"></script>
-<script type="text/javascript" src="http://www.virtualpol.com/img/evercookie/evercookie.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="'.IMG.'evercookie/swfobject-2.2.min.js"></script>
+<script type="text/javascript" src="'.IMG.'evercookie/evercookie.js"></script>
 <script type="text/javascript">
 var ec = new evercookie();
 ec_url = "'.$url.'";
@@ -174,7 +174,7 @@ ec.get("'.$traza_name.'", function(value) {
 		ec.set("'.$traza_name.'", "'.$user_ID.'");
 	} else if (value == '.$user_ID.') {
 	} else {
-		ec_url = "http://www.virtualpol.com/registrar/login.php?a=traza&traza=" + value + "&user_ID='.$user_ID.'&pass='.$pass.'&url=" + ec_url; 
+		ec_url = "'.REGISTRAR.'login.php?a=traza&traza=" + value + "&user_ID='.$user_ID.'&pass='.$pass.'&url=" + ec_url; 
 		ec.set("'.$traza_name.'", "'.$user_ID.'");
 	}
 	window.location.href = ec_url;

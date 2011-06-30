@@ -34,7 +34,7 @@ while ($r = mysql_fetch_array($result)) {
 }
 
 // SI es Policia o Comisario del pais, muestra control de kicks.
-if ((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($pol['pais'] == PAIS)) {
+if ((nucleo_acceso($vp['acceso']['kick'][0], $vp['acceso']['kick'][1])) AND ($pol['pais'] == PAIS)) {
 	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"'.IMG.'kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a> ';
 } else { $js_kick = ''; }
 

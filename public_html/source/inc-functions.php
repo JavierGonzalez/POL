@@ -64,7 +64,9 @@ function duracion($t) {
 function crear_link($a, $tipo='nick', $estado='', $pais='') {
 	switch ($tipo) {
 		case 'nick': 
-			if ($a) { 
+			if ($a == 'VirtualPol') {
+				return 'VirtualPol';
+			} else if ($a) { 
 				$bg = '';
 				if ($pais) {
 					global $vp;
@@ -84,7 +86,8 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 	}
 }
 
-function explodear($patron, $string, $num) { $expl = explode($patron, $string); return $expl[$num]; }
+function explodear($pat, $str, $num) { $exp = explode($pat, $str); return $exp[$num]; }
+function implodear($pat, $str, $num) { $exp = implode($pat, $str); return $exp[$num]; }
 
 function boton($value, $url='', $confirm=false, $m='', $pols='') {
 	if ($pols != '') {

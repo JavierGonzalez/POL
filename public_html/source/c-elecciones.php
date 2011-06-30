@@ -238,10 +238,12 @@ window.onload = function(){
 	$txt .= '
 <div id="elec">
 
+<h1>Elecciones</h1>
+
 <table border="0" width="100%" cellspacing="8">
 <tr><td colspan="2" class="amarillo" valign="top">
 
-<h1>Elecciones de '.PAIS.' &rarr;</h1>
+<h2>Calendario</h2>
 
 <table border="0" width="100%" height="50" cellpadding="2" cellspacing="0">
 <tr>';
@@ -271,19 +273,19 @@ window.onload = function(){
 	$hoy = date('j');
 	for ($i=1;$i<=28;$i++) {
 		$dia = date('j', $next_inicio + (86400 * $i));
-		if ($dia == $hoy) { $dia = '<b style="font-size:22px;">' . $dia . '</b>';  }
+		if ($dia == $hoy) { $dia = '<b style="font-size:20px;color:#333;">&rarr;<br />' . $dia . '</b>';  }
 		if (($i == 13) OR ($i == 14)) { $dia = '<span style="color:red;">' . $dia . '</span>'; }
 		if (($i == 27) OR ($i == 28)) { $dia = '<span style="color:blue;">' . $dia . '</span>'; }
-		$txt .= '<td align="center" class="dia" valign="bottom">' . $dia . '</td>';
+		$txt .= '<td align="center" class="dia" valign="bottom" style="font-size:16px;color:#999;">' . $dia . '</td>';
 	}
 
 	$txt .= '
 </tr>
 
 <tr>
-<td colspan="12" style="background:#D2D2D2;" width="41%" height="30" title="Periodo normal"></td>
+<td colspan="12" style="background:#D2D2D2;font-size:26px;" width="41%" height="30" title="Periodo normal" align="center">&rarr; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &rarr;</td>
 <td colspan="2" style="background:red;color:white;" align="center" width="9%" title="Elecciones Presidenciales"><b>Pres</b></td>
-<td colspan="12" style="background:#D2D2D2;" width="41%" title="Periodo normal"></td>
+<td colspan="12" style="background:#D2D2D2;font-size:26px;" width="41%" title="Periodo normal" align="center">&rarr; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &rarr;</td>
 <td colspan="2" style="background:blue;color:white;" align="center" width="9%" title="Elecciones al Parlamento"><b>Parl</b></td>
 </tr>
 
@@ -301,8 +303,7 @@ if ($_GET['a'] == 'votar') {
 
 	$txt .= '
 <tr><td class="amarillo" width="50%" valign="top">
-<span style="float:right;color:red;">' . $queda['pres'] . '</span>
-<h1 style="color:red;">Presidenciales</h1>';
+<h1 style="color:red;">Presidenciales en '.$queda['pres'].'</h1>';
 
 	$tabla = '';
 	$chart_dato = '';
@@ -381,8 +382,7 @@ ORDER BY time DESC LIMIT 1", $link);
 </center>
 
 </td><td class="amarillo" width="50%" valign="top">
-<span style="float:right;color:blue;">' . $queda['parl'] . '</span>
-<h1 style="color:blue;">Parlamentarias</h1>';
+<h1 style="color:blue;">Parlamentarias en '.$queda['parl'].'</h1>';
 
 
 

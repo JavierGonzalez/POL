@@ -20,6 +20,15 @@ $vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999
 
 $vp['paises_chat'] = array('VP'=>4, '15M'=>5, '15MBCN'=>6, '15MBCN'=>7, ''=>4);
 
+// Configuracion estatica de accesos
+$vp['acceso'] = array(
+'sondeo'=>'cargo|41 6 16 22 19 7',
+'referendum'=>'nivel|95',
+'parlamento'=>'cargo|6 22',
+'destituir'=>'nivel|85',
+'otorgar'=>'nivel|85',
+);
+
 // Configuracion por pais
 switch ($host[0]) { 
 	case '15m': define('PAIS', '15M'); break;

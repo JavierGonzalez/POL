@@ -23,6 +23,8 @@ function reemplazos($cadena) {
 	$patrones[11] = $inicio_patron.'\[quote\]/';
 	$patrones[12] = $inicio_patron.'\[\/quote\]/';
 	$patrones[13] = $inicio_patron.'\[quote=(.*?)\]/';
+        $patrones[14] = $inicio_patron.'\[policia\]/';
+        $patrones[15] = $inicio_patron.'\[\/policia\]/';
 	$reemplazos = array();
 	$reemplazos[0] = ' <img src="'.IMG.'smiley/sonrie.gif" border="0" alt=":)" title=":)" />';
 	$reemplazos[1] = ' <img src="'.IMG.'smiley/disgustado.gif" border="0" alt=":(" title=":(" />';
@@ -38,6 +40,8 @@ function reemplazos($cadena) {
 	$reemplazos[11] = ' <blockquote><div class="quote">';
 	$reemplazos[12] = ' </div></blockquote>';
 	$reemplazos[13] = ' <blockquote><div class="quote"><cite>\1 escribió:</cite>';
+        $reemplazos[14] = ' <span style="color:blue;">';
+	$reemplazos[15] = ' <b>(Aviso Oficial)</b></span>';
 	return preg_replace($patrones, $reemplazos, $cadena);
 }
 

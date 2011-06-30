@@ -1102,9 +1102,8 @@ case 'votacion':
 	if (($_GET['b'] == 'crear') AND (in_array($_POST['tipo'], $votaciones_tipo))) {
 		
 		$sc = get_supervisores_del_censo();
-		$a = explode('|', $vp['acceso'][$_POST['tipo']]);
 
-		if ((nucleo_acceso($a[0], $a[1])) OR (($_POST['tipo'] == 'sondeo') AND (isset($sc[$pol['user_ID']])))) { 
+		if ((nucleo_acceso($vp['acceso'][$_POST['tipo']][0], $vp['acceso'][$_POST['tipo']][1])) OR (($_POST['tipo'] == 'sondeo') AND (isset($sc[$pol['user_ID']])))) { 
 
 
 			for ($i=0;$i<12;$i++) { if (trim($_POST['respuesta'.$i]) != '') { $respuestas .= trim($_POST['respuesta'.$i]).'|'; } }
@@ -1134,6 +1133,7 @@ case 'votacion':
 						$_POST['pregunta'] = '&iquest;Apruebas '.strtoupper($_POST['tipo']).' el cargo '.$cargo_nombre.' al ciudadano '.$_POST['nick'].'?';
 						$_POST['descripcion'] = '&iquest;Estas a favor de <b>'.ucfirst($_POST['tipo']).'</b> el cargo <b>'.$cargo_nombre.'</b> al ciudadano <b>'.crear_link($_POST['nick']).'</b>?<br /><br /><b>Al finalizar esta votaci&oacute;n, si el resultado es favorable se ejecutar&aacute; la acci&oacute;n autom&aacute;ticamente.</b>';
 						$respuestas = 'SI|NO|En Blanco|';
+						if ($_POST['cargo'] == 22) { $_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22'; }	
 					} else { exit; }
 					break;
 			}
@@ -1239,7 +1239,7 @@ case 'foro':
 	}
 
 
-	if (($_GET['b'] == 'borrar') AND ($_GET['ID']) AND ($_GET['c']) AND (($pol['cargo'] == 12) OR ($pol['cargo'] == 13))) {
+	if (($_GET['b'] == 'borrar') AND ($_GET['ID']) AND ($_GET['c']) AND (nucleo_acceso($vp['acceso']['foro_borrar'][0], $vp['acceso']['foro_borrar'][1]))) {
 
 		if ($_GET['c'] == 'hilo') {
 			mysql_query("UPDATE ".SQL."foros_hilos SET estado = 'borrado', time_last = '".$date."' WHERE ID = '".$_GET['ID']."' AND estado = 'ok' LIMIT 1", $link);
@@ -1248,7 +1248,7 @@ case 'foro':
 		}
 		$refer_url = 'foro/papelera/';
 
-	} elseif (($_GET['b'] == 'restaurar') AND ($_GET['ID']) AND ($_GET['c']) AND (($pol['cargo'] == 12) OR ($pol['cargo'] == 13))) {
+	} elseif (($_GET['b'] == 'restaurar') AND ($_GET['ID']) AND ($_GET['c']) AND (nucleo_acceso($vp['acceso']['foro_borrar'][0], $vp['acceso']['foro_borrar'][1]))) {
 
 		if ($_GET['c'] == 'hilo') {
 			mysql_query("UPDATE ".SQL."foros_hilos SET estado = 'ok' WHERE ID = '".$_GET['ID']."' AND estado = 'borrado' LIMIT 1", $link);
@@ -1313,7 +1313,7 @@ case 'kick':
 			$kick_id = $r['ID']; 
 		}
 	
-		if (($es_policiaexpulsador) OR ($pol['cargos'][13]) OR ($pol['cargos'][9])) {
+		if (($es_policiaexpulsador) OR (nucleo_acceso($vp['acceso']['kick_quitar'][0], $vp['acceso']['kick_quitar'][1]))) {
 			mysql_query("UPDATE ".SQL."ban SET estado = 'cancelado' WHERE estado = 'activo' AND ID = '".$_GET['ID']."' LIMIT 1", $link); 
 			if (mysql_affected_rows()==1) {
 				$result = mysql_query("SELECT nick FROM users WHERE ID = '".$kickeado_id."' LIMIT 1", $link);
@@ -1350,7 +1350,7 @@ case 'kick':
 		$_POST['motivo'] = ereg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
 
 		if (
-(($pol['cargos'][12]) OR ($pol['cargos'][13]) OR ($pol['cargos'][22])) AND 
+(nucleo_acceso($vp['acceso']['kick'][0], $vp['acceso']['kick'][1])) AND 
 ($kick_user_ID >= 0) AND 
 ($user_kicked != true) AND 
 ((($kick_cargo != 7) AND ($kick_cargo != 13)) OR ($kick_pais != PAIS)) AND

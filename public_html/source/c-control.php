@@ -887,7 +887,7 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 
 	} elseif ($_GET['b']) {
 		if ($_GET['b'] == 'expulsar') { $_GET['b'] = ''; }
-		if (($pol['cargos'][12]) OR ($pol['cargos'][13]) OR ($pol['cargos'][22])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
+		if (nucleo_acceso($vp['acceso']['kick'][0], $vp['acceso']['kick'][1])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
 		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/kick/">Kicks</a> | <img src="'.IMG.'kick.gif" alt="Kick" border="0" /> Kickear</h1><p>Esta acci&oacute;n privilegiada bloquea totalmente las acciones de un Ciudadano y los que comparten su IP.</p>
 
 <form action="/accion.php?a=kick" method="post">
@@ -946,7 +946,7 @@ FROM ".SQL."ban
 WHERE expire > '" . $margen_30dias . "' AND estado != 'expulsado'
 ORDER BY expire DESC", $link);
 	while($r = mysql_fetch_array($result)){
-		if ((($r['autor'] == $pol['user_ID']) OR ($pol['cargos'][13]) OR ($pol['cargos'][9])) AND ($r['estado'] == 'activo')) { $expulsar = boton('X', '/accion.php?a=kick&b=quitar&ID=' . $r['ID'], '&iquest;Seguro que quieres hacer INACTIVO este kick?'); } else { $expulsar = ''; }
+		if ((($r['autor'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['kick_quitar'][0], $vp['acceso']['kick_quitar'][1]))) AND ($r['estado'] == 'activo')) { $expulsar = boton('X', '/accion.php?a=kick&b=quitar&ID=' . $r['ID'], '&iquest;Seguro que quieres hacer INACTIVO este kick?'); } else { $expulsar = ''; }
 
 		$duracion = '<acronym title="' . $r['expire'] . '">' . duracion((time() + $r['tiempo']) - strtotime($r['expire'])) . '</acronym>';
 		if ($r['estado'] == 'activo') {

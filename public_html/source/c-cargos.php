@@ -93,7 +93,7 @@ ORDER BY nick ASC", $link);
 
 
 		switch ($r['asigna']) {
-			case -3: case -2: $asignado_por = '<acronym title="Consulta Ejecutiva (proximamente)"><b>C. Ejecutiva</b></acronym>'; break;
+			case -2: $asignado_por = '<acronym title="Votacion Ejecutiva"><b>Votaci&oacute;n</b></acronym>'; break;
 			case 0: $asignado_por = '<acronym title="Elecciones Generales"><b>Elecciones</b></acronym>'; break;
 			default: $asignado_por = '<img src="'.IMG.'cargos/'.$r['asigna'].'.gif" title="" />'; break;
 		}

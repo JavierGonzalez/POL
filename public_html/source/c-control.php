@@ -438,8 +438,8 @@ ORDER BY fecha_registro DESC", $link);
 
 
 case 'gobierno':
-	$txt_title = 'Control: Control';
-	if ($pol['nivel'] >= 98) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
+	$txt_title = 'Control: Gobierno';
+	if (nucleo_acceso($vp['acceso']['control_gobierno'][0], $vp['acceso']['control_gobierno'][1])) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
 
 	$result = mysql_query("SELECT (SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS elnick
 	 FROM ".SQL."estudios_users WHERE ID_estudio = '7' AND cargo = '1' LIMIT 1", $link);
@@ -455,7 +455,7 @@ case 'gobierno':
 
 	if ($_GET['b'] == 'foro') {
 
-		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/gobierno/">Control</a> | Control Foro</h1>
+		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/gobierno/">Gobierno</a> | Control Foro</h1>
 		
 <br />
 <form action="/accion.php?a=gobierno&b=subforo" method="post">
@@ -557,7 +557,7 @@ function change_bg(img) {
 
 
 
-	$txt .= '<h1><a href="/control/">Control</a>: Control | <a href="/control/gobierno/foro/">Control Foro</a></h1>
+	$txt .= '<h1><a href="/control/">Control</a>: Gobieno | <a href="/control/gobierno/foro/">Control Foro</a></h1>
 
 <br />
 <form action="/accion.php?a=gobierno&b=config" method="post">
@@ -719,8 +719,6 @@ $txt .= '
 ';
 
 }
-
-$txt .= '<p class="azul" style="color:grey;">Este control pertenece al Presidente <img src="'.IMG.'cargos/7.gif" /><b>' . crear_link($presidente) . '</b> y Vicepresidente <img src="'.IMG.'cargos/19.gif" /><b>' . crear_link($vicepresidente) . '</b>.</p>';
 	break;
 
 
@@ -882,8 +880,6 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 
 <p>Pruebas:</p><p class="azul">'.str_replace("\n","<br />", $r['motivo']).'</p>';
 		}
-
-
 
 	} elseif ($_GET['b']) {
 		if ($_GET['b'] == 'expulsar') { $_GET['b'] = ''; }

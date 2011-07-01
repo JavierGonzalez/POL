@@ -121,7 +121,7 @@ LIMIT 1", $link);
 
 case 'vaciar_listas':
 
-	if (($pol['nivel'] >= 98) AND ($_POST['pais'] == PAIS)) {
+	if (nucleo_acceso($vp['acceso']['control_gobierno'][0], $vp['acceso']['control_gobierno'][1])) {
 		$elecciones_dias_quedan = ceil((strtotime($pol['config']['elecciones_inicio']) - time()) / 86400);
 		$elecciones_frecuencia_dias = ceil($pol['config']['elecciones_frecuencia'] / 86400);
 		if (($elecciones_dias_quedan > 5) AND ($elecciones_dias_quedan < $elecciones_frecuencia_dias)) {
@@ -164,7 +164,7 @@ case 'geolocalizacion':
 
 case 'sancion':
 
-	if (($pol['cargo'] == 9) AND ($_POST['pols'] <= 5000) AND ($_POST['pols'] > 0)) {
+	if ((nucleo_acceso($vp['acceso']['control_sancion'][0], $vp['acceso']['control_sancion'][1])) AND ($_POST['pols'] <= 5000) AND ($_POST['pols'] > 0)) {
 
 		$result = mysql_query("SELECT ID, nick FROM users 
 WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' AND pais = '".PAIS."'
@@ -648,7 +648,7 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargo
 case 'gobierno':
 	if (
 ($_GET['b'] == 'config') AND 
-($pol['nivel'] >= 98) AND  
+(nucleo_acceso($vp['acceso']['control_gobierno'][0], $vp['acceso']['control_gobierno'][1])) AND  
 ($_POST['online_ref'] >= 60) AND
 ($_POST['pols_inem'] >= 0) AND ($_POST['pols_inem'] <= 500) AND
 ($_POST['pols_afiliacion'] >= 0) AND ($_POST['pols_afiliacion'] <= 2000) AND
@@ -747,7 +747,7 @@ foreach ($_POST AS $dato => $valor) {
 	$refer_url = 'control/gobierno/';
 
 	// FORO
-	} elseif (($_GET['b'] == 'subforo') AND ($pol['nivel'] >= 98)) {
+	} elseif (($_GET['b'] == 'subforo') AND (nucleo_acceso($vp['acceso']['control_gobierno'][0], $vp['acceso']['control_gobierno'][1]))) {
 
 		$subforos = explode('.', $_POST['subforos']);
 

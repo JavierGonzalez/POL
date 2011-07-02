@@ -20,20 +20,6 @@ $vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999
 
 $vp['paises_chat'] = array('VP'=>4, '15M'=>5, '15MBCN'=>6, '15MBCN'=>7, ''=>4);
 
-// Configuracion estatica de accesos
-$vp['acceso'] = array(
-'sondeo'=>array('cargo', '41 6 16 22 19 7'),
-'referendum'=>array('nivel', '95'),
-'parlamento'=>array('cargo', '6 22'),
-'destituir'=>array('nivel', '85'),
-'otorgar'=>array('nivel', '85'),
-'kick'=>array('cargo', '12 13'),
-'kick_quitar'=>array('cargo', '9 13'),
-'foro_borrar'=>array('cargo', '12 13'),
-'control_gobierno'=>array('cargo', '7 19'),
-'control_sancion'=>array('cargo', '9'),
-);
-
 // Configuracion por pais
 switch ($host[0]) { 
 	case '15m': define('PAIS', '15M'); break;
@@ -48,13 +34,42 @@ switch ($host[0]) {
 	default: define('PAIS', 'VP'); break;
 }
 
-if (PAIS == 'VP') {	
+// CONFIGURACION ESPECIFICA DE PLATAFORMAS
+if (PAIS == 'VP') {
 	define('ECONOMIA', true); 
 	define('NOM_PARTIDOS','Partidos'); 
-} else { 
+	
+	$vp['acceso'] = array(
+'sondeo'=>array('cargo', '41 6 16 22 19 7'),
+'referendum'=>array('nivel', '95'),
+'parlamento'=>array('cargo', '6 22'),
+'destituir'=>array('nivel', '95'),
+'otorgar'=>array('nivel', '95'),
+'kick'=>array('cargo', '12 13'),
+'kick_quitar'=>array('cargo', '9 13'),
+'foro_borrar'=>array('cargo', '12 13'),
+'control_gobierno'=>array('cargo', '7 19'),
+'control_sancion'=>array('cargo', '9'),
+);
+
+} else {
 	define('ECONOMIA', false);
 	define('NOM_PARTIDOS','Comisiones');
+	
+	$vp['acceso'] = array(
+'sondeo'=>array('cargo', '41 6 16 22 19 7'),
+'referendum'=>array('nivel', '95'),
+'parlamento'=>array('cargo', '6 22'),
+'destituir'=>array('nivel', '85'),
+'otorgar'=>array('nivel', '85'),
+'kick'=>array('cargo', '12 13'),
+'kick_quitar'=>array('cargo', '9 13'),
+'foro_borrar'=>array('cargo', '12 13'),
+'control_gobierno'=>array('cargo', '7 19'),
+'control_sancion'=>array('cargo', '9'),
+);
 }
+
 
 define('SQL', strtolower(PAIS).'_');
 

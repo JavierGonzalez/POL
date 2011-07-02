@@ -41,6 +41,16 @@ border: 1px solid #000;
 
 <?=$txt_header?>
 <link rel="shortcut icon" href="/favicon.ico" /> 
+
+
+
+
+
+
+<!-- Añade esta etiqueta en la cabecera o delante de la etiqueta body. -->
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+  {lang: 'es'}
+</script>
 </head>
 
 <body class="fullwidth">
@@ -284,7 +294,7 @@ if (isset($pol['user_ID'])) {
 <a href="http://www.eventuis.com/">eventos</a>
 ';
 }
-?> | 
+?> | <g:plusone size="medium" href="http://www.virtualpol.com/"></g:plusone> | 
 <a href="http://www.virtualpol.com/legal" title="Condiciones del Servicio">TOS</a> | 
 <a href="http://www.virtualpol.com/manual"><b>Ayuda</b></a> &nbsp; 
 &nbsp; 2008-2011 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b></span>

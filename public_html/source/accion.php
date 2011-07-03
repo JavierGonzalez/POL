@@ -752,19 +752,18 @@ foreach ($_POST AS $dato => $valor) {
 		$subforos = explode('.', $_POST['subforos']);
 
 		foreach ($subforos AS $subforo_ID) {
-			
-			mysql_query("UPDATE ".SQL."foros SET descripcion = '".$_POST[$subforo_ID.'_descripcion']."', acceso = '".$_POST[$subforo_ID.'_acceso']."', acceso_msg = '".$_POST[$subforo_ID.'_acceso_msg']."', time = '".$_POST[$subforo_ID.'_time']."' WHERE ID = '".$subforo_ID."' LIMIT 1", $link);
+			mysql_query("UPDATE ".SQL."foros SET descripcion = '".$_POST[$subforo_ID.'_descripcion']."', time = '".$_POST[$subforo_ID.'_time']."', acceso_leer = '".$_POST[$subforo_ID.'_acceso_leer']."', acceso_escribir = '".$_POST[$subforo_ID.'_acceso_escribir']."', acceso_cfg_leer = '".$_POST[$subforo_ID.'_acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST[$subforo_ID.'_acceso_cfg_escribir']."' WHERE ID = '".$subforo_ID."' LIMIT 1", $link);
 		}
 
 		$refer_url = 'control/gobierno/foro/';
-	} elseif (($_GET['b'] == 'crearsubforo') AND ($pol['nivel'] >= 98)) {
+	} elseif (($_GET['b'] == 'crearsubforo') AND (nucleo_acceso($vp['acceso']['control_gobierno'][0], $vp['acceso']['control_gobierno'][1]))) {
 
 		mysql_query("INSERT INTO ".SQL."foros (url, title, descripcion, acceso, time, estado, acceso_msg) 
 VALUES ('".gen_url($_POST['nombre'])."', '".$_POST['nombre']."', '', '1', '10', 'ok', '0')", $link);
 
 		$refer_url = 'control/gobierno/foro/';
 
-	} elseif (($_GET['b'] == 'eliminarsubforo') AND ($pol['nivel'] >= 98) AND ($_GET['ID'])) {
+	} elseif (($_GET['b'] == 'eliminarsubforo') AND (nucleo_acceso($vp['acceso']['control_gobierno'][0], $vp['acceso']['control_gobierno'][1])) AND ($_GET['ID'])) {
 
 		mysql_query("UPDATE ".SQL."foros SET estado = 'eliminado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
 
@@ -1156,12 +1155,14 @@ case 'votacion':
 			$result = mysql_query("SELECT pais, tipo, pregunta, estado, acceso_votar, acceso_cfg_votar, num FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $tipo = $r['tipo']; $pregunta = $r['pregunta']; $estado = $r['estado']; $pais = $r['pais']; $acceso_votar = $r['acceso_votar']; $acceso_cfg_votar = $r['acceso_cfg_votar']; $num = $r['num']; $num++; }
 
-			if (($estado == 'ok') AND (in_array($tipo, $votaciones_tipo)) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar))) {
-				$result = mysql_query("SELECT ID FROM votacion_votos WHERE user_ID = '".$pol['user_ID']."' AND ref_ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
+			if (($estado == 'ok') AND (in_array($tipo, $votaciones_tipo)) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar)) AND (strtotime($fecha_registro) < time())) {
+				$ha_votado = false;
+				$result = mysql_query("SELECT ID FROM votacion_votos WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $ha_votado = true; }
 
-
-				if ((!$ha_votado) AND (strtotime($fecha_registro) < time())) {
+				if ($ha_votado) { // MODIFICAR VOTO
+					mysql_query("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".($_POST['validez']=='true'?'true':'false')."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+				} else { // INSERTAR VOTO
 					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto, validez) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."')", $link);
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 
@@ -1199,44 +1200,51 @@ case 'votacion':
 case 'foro':
 	// añadir, editar
 	if ((strlen($_POST['text']) > 1) AND ($_POST['subforo'])) {
-		$text = gen_text(trim($_POST['text']), 'plain');
-		$time = $date;
-		if (($_GET['b'] == 'hilo') AND ($_POST['title'])) {
-			$title = strip_tags($_POST['title']);
-			$url = gen_url($title);
-			$exito = mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
-			if (!$exito) {
-				if (strlen($url) > 69) {
-					 $url = substr($url, 0, 69);	
+
+		$acceso = false;
+		$result = mysql_query("SELECT acceso_escribir, acceso_cfg_escribir FROM ".SQL."foros WHERE ID = '".$_POST['subforo']."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) { $acceso = nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']); }
+
+		if ($acceso) {
+
+			$text = gen_text(trim($_POST['text']), 'plain');
+			$time = $date;
+			if (($_GET['b'] == 'hilo') AND ($_POST['title'])) {
+				$title = strip_tags($_POST['title']);
+				$url = gen_url($title);
+				$exito = mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
+				if (!$exito) {
+					if (strlen($url) > 69) {
+						 $url = substr($url, 0, 69);	
+					}
+					$url = $url.'-'.date('dmyHi');
+					mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
 				}
-				$url = $url.'-'.date('dmyHi');
-				mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
-			}
 
-			evento_chat('<b>[FORO]</b> Nuevo hilo de '.$pol['nick'].': <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a>');
+				evento_chat('<b>[FORO]</b> Nuevo hilo de '.$pol['nick'].': <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a>');
 
-		} elseif ($_GET['b'] == 'reply') {
-			
-			if ($_POST['hilo'] != -1) {
-				mysql_query("UPDATE ".SQL."foros_hilos SET time_last = '".$time."' WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
+			} elseif ($_GET['b'] == 'reply') {
 				
-				$result = mysql_unbuffered_query("SELECT title, num FROM ".SQL."foros_hilos WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
-				while($r = mysql_fetch_array($result)) { $title = $r['title']; }
-				evento_chat('<b>[FORO]</b> Nuevo mensaje de '.$pol['nick'].': <a href="/'.$_POST['return_url'].'">'.$title.'</a>');
-			} else {
-				//$text = strip_tags($text);
+				if ($_POST['hilo'] != -1) {
+					mysql_query("UPDATE ".SQL."foros_hilos SET time_last = '".$time."' WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
+					
+					$result = mysql_unbuffered_query("SELECT title, num FROM ".SQL."foros_hilos WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
+					while($r = mysql_fetch_array($result)) { $title = $r['title']; }
+					evento_chat('<b>[FORO]</b> Nuevo mensaje de '.$pol['nick'].': <a href="/'.$_POST['return_url'].'">'.$title.'</a>');
+				} else {
+					//$text = strip_tags($text);
+				}
+				
+				mysql_query("INSERT INTO ".SQL."foros_msg (hilo_ID, user_ID, time, text, cargo) VALUES ('".$_POST['hilo']."', '".$pol['user_ID']."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
 			}
-			
-			mysql_query("INSERT INTO ".SQL."foros_msg (hilo_ID, user_ID, time, text, cargo) VALUES ('".$_POST['hilo']."', '".$pol['user_ID']."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
-		}
 
-		if ($_POST['hilo']) {
-			$msg_num = 0;
-			$result = mysql_query("SELECT COUNT(*) AS num FROM ".SQL."foros_msg WHERE hilo_ID = '".$_POST['hilo']."' AND estado = 'ok'", $link);
-			while($r = mysql_fetch_array($result)) { $msg_num = $r['num']; }
-			mysql_query("UPDATE ".SQL."foros_hilos SET num = '".$msg_num."' WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
+			if ($_POST['hilo']) {
+				$msg_num = 0;
+				$result = mysql_query("SELECT COUNT(*) AS num FROM ".SQL."foros_msg WHERE hilo_ID = '".$_POST['hilo']."' AND estado = 'ok'", $link);
+				while($r = mysql_fetch_array($result)) { $msg_num = $r['num']; }
+				mysql_query("UPDATE ".SQL."foros_hilos SET num = '".$msg_num."' WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
+			}
 		}
-
 
 		$refer_url = $_POST['return_url'];
 	}
@@ -1262,10 +1270,10 @@ case 'foro':
 
 
 	} elseif (($_GET['b'] == 'eliminarhilo') AND ($_GET['ID'])) {
-		$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."foros_hilos WHERE ID = '".$_GET['ID']."' AND ('1' = '".$pol['user_ID']."' OR user_ID = '".$pol['user_ID']."') LIMIT 1", $link);
+		$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."foros_hilos WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ $es_ok = true; }
 		if ($es_ok) {
-			mysql_query("DELETE FROM ".SQL."foros_hilos WHERE ID = '".$_GET['ID']."' AND ('1' = '".$pol['user_ID']."' OR user_ID = '".$pol['user_ID']."') LIMIT 1", $link);
+			mysql_query("DELETE FROM ".SQL."foros_hilos WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 			mysql_query("DELETE FROM ".SQL."foros_msg WHERE hilo_ID = '".$_GET['ID']."'", $link);
 		}
 		$refer_url = 'foro/';

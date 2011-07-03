@@ -460,25 +460,20 @@ case 'gobierno':
 <br />
 <form action="/accion.php?a=gobierno&b=subforo" method="post">
 
-<table border="0" cellspacing="3" cellpadding="0" class="pol_table">
-<tr>
-<td class="amarillo"colspan="8"><b class="big">Control de foros</b></td>
-</tr>
+<table border="0" cellspacing="0" cellpadding="4" class="pol_table">
 
 <tr>
-<th colspan="3"></th>
-<th colspan="2" align="center">Nivel acceso *</th>
-<th colspan="2" align="center">Info</th>
+<th colspan="2"></th>
+<th colspan="2" align="center">Acceso</th>
+<th colspan="2"></th>
 </tr>
 
 <tr>
 <th>Orden</th>
-<th>Subforo</th>
-<th>Descripcion</th>
-<th align="center"><acronym title="Nivel minimo para crear hilos">Hilos</acronym></th>
-<th align="center"><acronym title="Nivel minimo para crear mensajes">Mensajes</acronym></th>
-<th align="center">Hilos</th>
-<th align="center">Mensajes</th>
+<th>Foro/Descripcion</th>
+<th style="background:#5CB3FF;">Leer</th>
+<th style="background:#F97E7B;">Escribir</th>
+<th></th>
 <th></th>
 </tr>';
 	$subforos = '';
@@ -492,14 +487,32 @@ ORDER BY time ASC", $link);
 		if ($r['num_hilos'] == 0) { $del = '<input style="margin-bottom:-16px;" type="button" value="Eliminar" onClick="window.location.href=\'/accion.php?a=gobierno&b=eliminarsubforo&ID=' . $r['ID'] . '/\';">';
 		} else { $del = ''; }
 
+
+
+		$txt_li['leer'] = ''; $txt_li['escribir'] = '';
+		foreach (nucleo_acceso('print') AS $at => $at_var) { 
+			$txt_li['leer'] .= '<option value="'.$at.'"'.($at==$r['acceso_leer']?' selected="selected"':'').'>'.ucfirst(str_replace("_", " ", $at)).'</option>';
+		}
+		foreach (nucleo_acceso('print') AS $at => $at_var) { 
+			$txt_li['escribir'] .= '<option value="'.$at.'"'.($at==$r['acceso_escribir']?' selected="selected"':'').($at=='anonimos'?' disabled="disabled"':'').'>'.ucfirst(str_replace("_", " ", $at)).'</option>';
+		}
+
+
 		$txt .= '<tr>
 <td align="right"><input type="text" style="text-align:right;" name="'.$r['ID'].'_time" size="1" maxlength="3" value="'.$r['time'].'" /></td>
-<td><a href="/foro/'.$r['url'].'/"><b>'.$r['title'].'</b></a></td>
-<td><input type="text" name="'.$r['ID'].'_descripcion" size="30" maxlength="100" value="'.$r['descripcion'].'" /></td>
-<td align="right"><input type="text" name="'.$r['ID'].'_acceso" style="text-align:right;" size="2" maxlength="3" value="'.$r['acceso'].'" /></td>
-<td align="right"><input type="text" style="text-align:right;" name="'.$r['ID'].'_acceso_msg" size="2" maxlength="3" value="'.$r['acceso_msg'].'" /></td>
-<td align="right" style="color:#999;">'.number_format($r['num_hilos'], 0, ',', '.').'</td>
-<td align="right" style="color:#999;">'.number_format($r['num_msg'], 0, ',', '.').'</td>
+<td><a href="/foro/'.$r['url'].'/"><b>'.$r['title'].'</b></a><br />
+<input type="text" name="'.$r['ID'].'_descripcion" size="25" maxlength="100" value="'.$r['descripcion'].'" /></td>
+
+
+<td style="background:#5CB3FF;"><b><select name="'.$r['ID'].'_acceso_leer">'.$txt_li['leer'].'</select><br />
+<input type="text" name="'.$r['ID'].'_acceso_cfg_leer" size="16" maxlength="900" value="'.$r['acceso_cfg_leer'].'" /></td>
+
+<td style="background:#F97E7B;"><b><select name="'.$r['ID'].'_acceso_escribir">'.$txt_li['escribir'].'</select><br />
+<input type="text" name="'.$r['ID'].'_acceso_cfg_escribir" size="16" maxlength="900" value="'.$r['acceso_cfg_escribir'].'" /></td>
+
+
+<td align="right" style="color:#999;">'.number_format($r['num_hilos'], 0, ',', '.').' hilos<br />
+'.number_format($r['num_msg'], 0, ',', '.').' mensajes</td>
 <td>'.$del.'</td>
 </tr>'."\n";
 
@@ -510,10 +523,7 @@ ORDER BY time ASC", $link);
 		$txt .= '
 <input name="subforos" value="'.$subforos.'" type="hidden" />
 <tr>
-<td align="center" colspan="8"><input value="Guardar cambios" style="font-size:18px;" type="submit"'.$dis.' /></td>
-</tr>
-<tr>
-<td colspan="8">* Los Extranjeros tienen nivel <b>0</b>, los Ciudadanos sin cargo nivel <b>1</b> y el nivel asciende en adelante segun los cargos ejercidos hasta el nivel <b>100</b> que es el Presidente.</td>
+<td align="center" colspan="8"><input value="Guardar cambios" style="font-size:22px;" type="submit"'.$dis.' /></td>
 </tr>
 </table>
 </form>

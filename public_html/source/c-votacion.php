@@ -38,7 +38,7 @@ while($r = mysql_fetch_array($result)){
 		}
 	}
 	
-
+	mysql_query("UPDATE votacion_votos SET user_ID = '0' WHERE ref_ID = '".$r['ID']."'", $link); // Elimina la relacion entre USUARIO y VOTO una vez finaliza. Por privacidad.
 
 	// actualizar info en theme
 	$result2 = mysql_query("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
@@ -182,7 +182,9 @@ $txt .= '
 
 	$result = mysql_query("SELECT *,
 (SELECT nick FROM users WHERE ID = votacion.user_ID LIMIT 1) AS nick, 
-(SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS ha_votado
+(SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado,
+(SELECT voto FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado,
+(SELECT validez FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado_validez
 FROM votacion
 WHERE ID = '".$_GET['a']."' AND pais = '".PAIS."'
 LIMIT 1", $link);
@@ -219,7 +221,7 @@ Duraci&oacute;n <b>'.$duracion.'</b>. Fin: <em>' . $r['time_expire'] . '</em>
 			$txt_escrutinio = '';
 			$chart_dato = array();
 			$chart_nom = array();
-			$result2 = mysql_query("SELECT COUNT(user_ID) as num, voto, validez
+			$result2 = mysql_query("SELECT COUNT(ID) as num, voto, validez
 FROM votacion_votos
 WHERE ref_ID = '" . $r['ID'] . "'
 GROUP BY voto", $link);
@@ -232,7 +234,7 @@ GROUP BY voto", $link);
 			}
 
 			$validez_voto['true'] = 0; $validez_voto['false'] = 0;
-			$result2 = mysql_query("SELECT validez, COUNT(user_ID) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' GROUP BY validez", $link);
+			$result2 = mysql_query("SELECT validez, COUNT(ID) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' GROUP BY validez", $link);
 			while($r2 = mysql_fetch_array($result2)) {
 				$validez_voto[$r2['validez']] = $r2['num'];
 			}
@@ -268,12 +270,19 @@ M&iacute;nimo para nulidad: <b>'.$nulo_limite.'</b> (50%).</td>
 
 
 		} else {
-			if ((!$r['ha_votado']) AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']))) {
-				for ($i=0;$i<$respuestas_num;$i++) { 
-					if ($respuestas[$i]) { 
-						$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
-					} 
+			if (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])) {
+
+				if ($r['ha_votado']) {
+					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
+							$votos .= '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
+					} }
+					$txt .= 'Tu voto (<em>'.$respuestas[$r['que_ha_votado']].'</em>) ha sido recogido <b style="color:#2E64FE;">correctamente</b>.<br />';
+				} else {
+					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
+							$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
+					} }
 				}
+
 				$txt .= '<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=votacion&b=votar" method="post">
 <input type="hidden" name="ref_ID" value="' . $r['ID'] . '"  />
 <p><select name="voto" style="font-size:22px;">
@@ -282,14 +291,12 @@ M&iacute;nimo para nulidad: <b>'.$nulo_limite.'</b> (50%).</td>
 <input type="submit" value="Votar" style="font-size:22px;" /></p>
 
 <p>
-<input type="radio" name="validez" value="true" checked="checked" /> Votaci&oacute;n correcta.<br />
-<input type="radio" name="validez" value="false" /> Votaci&oacute;n nula (inv&aacute;lida, inapropiada o tendenciosa).<br />
+<input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votaci&oacute;n correcta.<br />
+<input type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> Votaci&oacute;n nula (inv&aacute;lida, inapropiada o tendenciosa).<br />
 </p>
 
-
 </form>';
-			} elseif ($r['ha_votado']) {
-				$txt .= 'Tu voto ha sido recogido correctamente.<br /><br />';
+
 			} else {
 				$txt .= '<b style="color:red;">No tienes acceso para votar.</b>';
 			}

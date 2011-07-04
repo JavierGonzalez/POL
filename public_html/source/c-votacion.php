@@ -270,25 +270,24 @@ M&iacute;nimo para nulidad: <b>'.$nulo_limite.'</b> (50%).</td>
 
 
 		} else {
-			if (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])) {
 
-				if ($r['ha_votado']) {
-					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
-							$votos .= '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
-					} }
-					$txt .= 'Tu voto (<em>'.$respuestas[$r['que_ha_votado']].'</em>) ha sido recogido <b style="color:#2E64FE;">correctamente</b>.<br />';
-				} else {
-					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
-							$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
-					} }
-				}
+			if ($r['ha_votado']) {
+				for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
+						$votos .= '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
+				} }
+				$txt .= 'Tu voto (<em>'.$respuestas[$r['que_ha_votado']].'</em>) ha sido recogido <b style="color:#2E64FE;">correctamente</b>.<br />';
+			} else {
+				for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
+						$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
+				} }
+			}
 
 				$txt .= '<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=votacion&b=votar" method="post">
 <input type="hidden" name="ref_ID" value="' . $r['ID'] . '"  />
 <p><select name="voto" style="font-size:22px;">
 '.$votos.'
 </select>
-<input type="submit" value="Votar" style="font-size:22px;" /></p>
+<input type="submit" value="Votar" style="font-size:22px;"'.(nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])?'':' disabled="disabled"').' />'.(nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])?'':' &nbsp; <b style="color:red;">No tienes acceso para votar.</b>').'</p>
 
 <p>
 <input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votaci&oacute;n correcta.<br />
@@ -297,9 +296,7 @@ M&iacute;nimo para nulidad: <b>'.$nulo_limite.'</b> (50%).</td>
 
 </form>';
 
-			} else {
-				$txt .= '<b style="color:red;">No tienes acceso para votar.</b>';
-			}
+
 		}
 
 		if ($r['tipo'] == 'parlamento') {

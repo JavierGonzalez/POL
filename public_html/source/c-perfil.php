@@ -310,7 +310,7 @@ if ($time_registro <= $margen_90dias) {
 } else  {
 	$tiempo_inactividad = 864000; // tras 10 dias
 }
-$txt .= 'Expira '.($r['dnie']=='true'?'<b>Nunca</b> (por ser usuario Autentificado)':'<b>tras '.round($tiempo_inactividad / 60 / 60 / 24).' dias</b> inactivo').'.
+$txt .= 'Expira '.($r['dnie']=='true'?'<b>Nunca</b> (Autentificado)':'<b>tras '.round($tiempo_inactividad / 60 / 60 / 24).' dias</b> inactivo').'
 
 
 </p></td><td valign="top">

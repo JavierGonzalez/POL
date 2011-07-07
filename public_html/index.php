@@ -2,7 +2,7 @@
 include('inc-login.php');
 $adsense_exclude = true;
 
-$txt_title = 'VirtualPol | Simulador Pol&iacute;tico Espa&ntilde;ol | Juego online de democracia politica | simuladores Espa&ntilde;a, Latinoamerica';
+$txt_title = 'VirtualPol | Plataforma democratica | Simulador Pol&iacute;tico Espa&ntilde;ol | democracia online politica | simuladores Espa&ntilde;a';
 
 $txt_description = 'La Primera y Unica Plataforma de Auto-gestion y Democracia. Simulador Politico Espa&ntilde;ol, Juego online, experimento social, el mejor simulador de politica de Espa&ntilde;a. Simuladores geo-politica POL Hispania Atlantis. El mejor simulador politico.'; 
 

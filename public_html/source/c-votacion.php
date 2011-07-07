@@ -38,7 +38,10 @@ while($r = mysql_fetch_array($result)){
 		}
 	}
 	
-	mysql_query("UPDATE votacion_votos SET user_ID = '0' WHERE ref_ID = '".$r['ID']."'", $link); // Elimina la relacion entre USUARIO y VOTO una vez finaliza. Por privacidad.
+	if ($r['tipo'] != 'parlamento') {
+		mysql_query("UPDATE votacion_votos SET user_ID = '0' WHERE ref_ID = '".$r['ID']."'", $link); 
+		// Elimina la relacion entre USUARIO y VOTO una vez finaliza. Por privacidad.
+	}
 
 	// actualizar info en theme
 	$result2 = mysql_query("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
@@ -203,17 +206,19 @@ LIMIT 1", $link);
 		$txt_title = 'Votacion: ' . strtoupper($r['tipo']) . ' | ' . $r['pregunta'];
 
 		if ($r['estado'] == 'ok') { 
-			$tiempo_queda =  ' | <span style="color:blue;">Queda ' . duracion($time_expire - time()) . '</span>'; 
-		} else { $tiempo_queda =  ' | <span style="color:grey;">Finalizado</span>'; }
+			$tiempo_queda =  '<span style="color:blue;">Quedan <span class="timer" value="'.$time_expire.'"></span>.</span>'; 
+		} else { $tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; }
 
 
-		$txt .= '<h1><a href="/votacion/">Votaciones</a>: ' . strtoupper($r['tipo']) . ' | ' . $r['pregunta'] . $tiempo_queda . '</h1>
+		$txt .= '<h1><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).' | '.$tiempo_queda.'</h1>
+<br />
+<h2>'.$r['pregunta'].'</h2>
 
 <div class="amarillo" style="margin:15px 0 15px 0;"><p>' . $r['descripcion'] . '</p></div>
 
 <span style="float:right;text-align:right;">
 Acceso: <acronym title="'.$r['acceso_cfg_votar'].'"><b>'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</b></acronym>. Creador <b>' . crear_link($r['nick']) . '</b>. Inicio: <em>' . $r['time'] . '</em><br />
-Duraci&oacute;n <b>'.$duracion.'</b>. Fin: <em>' . $r['time_expire'] . '</em>
+Duraci&oacute;n <b>'.$duracion.'</b>.'.($r['votos_expire']!=0?' Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.':'').' Fin: <em>' . $r['time_expire'] . '</em>
 </span>';
 
 		if ($r['estado'] == 'end') { // VOTACION TERMINADA, IMPRIMIR RESULTADOS 
@@ -248,23 +253,23 @@ GROUP BY voto", $link);
 '.($validez==true?'<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 <tr>
 <th>Escrutinio</th>
-<th>Votos</th>
+<th>Votos ('.$r['num'].')</th>
 <th></th>
 </tr>'.$txt_escrutinio.'</table>':'').'</td><td valign="top">';
 
-if ($validez==true) {
-	if ($r['tipo']=='parlamento') {
-		$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:' . $escanos_total . ',' . implode(',', $chart_dato) . '&chs=450x300&chl=|' . implode('|', $chart_nom) . '&chco=ffffff01,FF8000&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />';
-	} else {
-		$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . implode(',', $chart_dato) . '&chs=430x200&chds=a&chl=' . implode('|', $chart_nom) . '&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />';
-	}
-}
+			if ($validez==true) {
+				if ($r['tipo']=='parlamento') {
+					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:' . $escanos_total . ',' . implode(',', $chart_dato) . '&chs=450x300&chl=|' . implode('|', $chart_nom) . '&chco=ffffff01,FF8000&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />';
+				} else {
+					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . implode(',', $chart_dato) . '&chs=430x200&chds=a&chl=' . implode('|', $chart_nom) . '&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />';
+				}
+			}
 
-$txt .= '
+			$txt .= '
 </td>
 <td valign="top" style="color:#888;">Validez: '.($validez?'<b style="color:#2E64FE;">OK</b>':'<b style="color:#FF0000;">NULO</b>').'<br />
-<img title="Votos de validez: '.$validez_voto['true'].' OK, '.$validez_voto['false'].' NULO" src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$validez_voto['true'].','.$validez_voto['false'].'&chs=210x130&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /><br />
-M&iacute;nimo para nulidad: <b>'.$nulo_limite.'</b> (50%).</td>
+<img title="Votos de validez: '.$validez_voto['true'].' OK, '.$validez_voto['false'].' NULO" src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$validez_voto['true'].','.$validez_voto['false'].'&chs=210x130&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" />
+<!--<br /> M&iacute;nimo para nulidad: <b>'.$nulo_limite.'</b> (50%).--></td>
 
 </tr></table>';
 
@@ -275,7 +280,7 @@ M&iacute;nimo para nulidad: <b>'.$nulo_limite.'</b> (50%).</td>
 				for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
 						$votos .= '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
 				} }
-				$txt .= 'Tu voto (<em>'.$respuestas[$r['que_ha_votado']].'</em>) ha sido recogido <b style="color:#2E64FE;">correctamente</b>.<br />';
+				$txt .= 'Tu voto (<em>'.$respuestas[$r['que_ha_votado']].'</em>) ha sido recogido <b>correctamente</b>.<br />';
 			} else {
 				for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
 						$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
@@ -287,7 +292,8 @@ M&iacute;nimo para nulidad: <b>'.$nulo_limite.'</b> (50%).</td>
 <p><select name="voto" style="font-size:22px;">
 '.$votos.'
 </select>
-<input type="submit" value="Votar" style="font-size:22px;"'.(nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])?'':' disabled="disabled"').' />'.(nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])?'':' &nbsp; <b style="color:red;">No tienes acceso para votar.</b>').'</p>
+<input type="submit" value="Votar" style="font-size:22px;"'.(nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])?'':' disabled="disabled"').' /> <span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span> 
+'.(nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])?'':' &nbsp; <b style="color:red;">No tienes acceso para votar.</b>').'</p>
 
 <p>
 <input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votaci&oacute;n correcta.<br />
@@ -315,7 +321,6 @@ M&iacute;nimo para nulidad: <b>'.$nulo_limite.'</b> (50%).</td>
 FROM ".SQL."estudios_users
 WHERE cargo = '1' AND ID_estudio = '6'
 ORDER BY siglas ASC", $link);
-			$txt .= mysql_error($link);
 			while($r2 = mysql_fetch_array($result2)) {
 				if ($r2['ha_votado'] != null) { $ha_votado = ' style="background:blue;"';
 				} else { $ha_votado = ' style="background:red;"'; }
@@ -354,7 +359,7 @@ ORDER BY estado ASC, time_expire DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		if ($r['estado'] == 'ok') { 
 			$time_expire = strtotime($r['time_expire']);
-			$estado =  '<span style="color:blue;">' . duracion($time_expire - time()) . '</span>'; 
+			$estado =  '<span style="color:blue;"><span class="timer" value="'.$time_expire.'"></span></span>'; 
 		} else { $estado = '<span style="color:grey;">Finalizado</span>'; }
 
 		if ((!$r['ha_votado']) AND ($r['estado'] == 'ok') AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']))) { 

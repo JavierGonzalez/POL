@@ -152,7 +152,7 @@ FROM users " . $order_by . " LIMIT " . $p_limit, $link);
 <td>' . explodear(' ', $r['fecha_registro'], 0) . '</td>
 <td align="right">' . $r['num_elec'] . '</td>
 <td class="gris" align="right">' . $r['nota'] . '</td>
-<td align="right" nowrap="nowrap">' . duracion(time() - strtotime($r['fecha_last'])) . '</td>
+<td align="right" nowrap="nowrap" class="timer" value="'.strtotime($r['fecha_last']).'"></td>
 </tr>' . "\n";
 	}
 	$txt .= '</table><p>' . $p_paginas . '</p>';

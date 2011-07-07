@@ -23,8 +23,8 @@ function reemplazos($cadena) {
 	$patrones[11] = $inicio_patron.'\[quote\]/';
 	$patrones[12] = $inicio_patron.'\[\/quote\]/';
 	$patrones[13] = $inicio_patron.'\[quote=(.*?)\]/';
-        //$patrones[14] = $inicio_patron.'\[policia\]/';
-        //$patrones[15] = $inicio_patron.'\[\/policia\]/';
+	//$patrones[14] = $inicio_patron.'\[policia\]/';
+	//$patrones[15] = $inicio_patron.'\[\/policia\]/';
 	$reemplazos = array();
 	$reemplazos[0] = ' <img src="'.IMG.'smiley/sonrie.gif" border="0" alt=":)" title=":)" />';
 	$reemplazos[1] = ' <img src="'.IMG.'smiley/disgustado.gif" border="0" alt=":(" title=":(" />';
@@ -40,7 +40,7 @@ function reemplazos($cadena) {
 	$reemplazos[11] = ' <blockquote><div class="quote">';
 	$reemplazos[12] = ' </div></blockquote>';
 	$reemplazos[13] = ' <blockquote><div class="quote"><cite>\1 escribió:</cite>';
-        //$reemplazos[14] = ' <span style="color:blue;">';
+	//$reemplazos[14] = ' <span style="color:blue;">';
 	//$reemplazos[15] = ' <b>(Aviso Oficial)</b></span>';
 	return preg_replace($patrones, $reemplazos, $cadena);
 }
@@ -119,7 +119,7 @@ ORDER BY nivel DESC", $link);
 <textarea name="text" style="color: green; font-weight: bold; width: 570px; height: 250px;">' . $edit_text . '</textarea><br />
 <span style="color:grey;font-size:12px;">Etiquetas HTML permitidas: &lt;img src="URL"&gt;, &lt;b&gt;, &lt;i&gt;, &lt;s&gt;, videos incrustados, enlaces auto-linkeados, BBCode permitido: [code], [quote].</span></p>
 
-<p><input value="Enviar" type="submit"> En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
+<p><input value="Enviar" type="submit" style="font-size:22px;" /> En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
 </select></p>
 
 </div>';
@@ -137,7 +137,7 @@ ORDER BY nivel DESC", $link);
 <textarea name="text" style="color: green; font-weight: bold; width: 570px; height: 250px;">' . $edit_text . '</textarea><br />
 <span style="color:grey;font-size:12px;">Etiquetas HTML permitidas: &lt;img src="URL"&gt;, &lt;b&gt;, &lt;i&gt;, &lt;s&gt;, videos incrustados, enlaces auto-linkeados.</span></p>
 
-<p><input value="Enviar" type="submit"> En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
+<p><input value="Enviar" type="submit" style="font-size:22px;" /> En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
 </select></p>
 
 </form>
@@ -156,7 +156,7 @@ function print_lateral($nick, $cargo, $time, $siglas='', $user_ID='', $avatar=''
 	if ($cargo_ID) { $extra .= ' <img src="'.IMG.'cargos/' . $cargo_ID . '.gif" title="' . $cargo . '" />'; }
 	if ($confianza != '') { $extra .= ' ' . confianza($confianza) . ' '; }
 	
-	return $avatar . '<b>' . crear_link($nick) . $extra . '</b><br /><span class="min"><acronym title="' . $time . '">' . duracion(time() - strtotime($time)) .  '</acronym> ' . $siglas . '</span><br /><br />';
+	return $avatar . '<b>' . crear_link($nick) . $extra . '</b><br /><span class="min"><acronym title="' . $time . '"><span class="timer" value="'.strtotime($time).'"></span></acronym> ' . $siglas . '</span><br /><br />';
 }
 
 
@@ -289,7 +289,7 @@ LIMIT 1", $link);
 
 				$txt .= '<h1><a href="/foro/">Foro</a>: <a href="/foro/' . $_GET['a'] . '/">' . ucfirst($_GET['a']) . '</a> | <a href="/' . $return_url . '">' . $r['title'] . '</a></h1>
 
-<p style="margin-bottom:4px;">' .  $p_paginas . ' &nbsp; ' . boton('Responder', $crear_hilo) . ' &nbsp; <b>' . $r['num'] . '</b> mensajes en este hilo creado hace <acronym title="' . $r['time'] . '">' . duracion(time() - strtotime($r['time'])) . '</acronym>.</p>
+<p style="margin-bottom:4px;">' .  $p_paginas . ' &nbsp; ' . boton('Responder', $crear_hilo) . ' &nbsp; <b>' . $r['num'] . '</b> mensajes en este hilo creado hace <acronym title="' . $r['time'] . '"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym>.</p>
 
 
 
@@ -370,7 +370,7 @@ ORDER BY time_last DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		if (nucleo_acceso($vp['acceso']['foro_borrar'][0], $vp['acceso']['foro_borrar'][1])) { $boton = boton('Restaurar', '/accion.php?a=foro&b=restaurar&c=hilo&ID=' . $r['ID'], '&iquest;Quieres RESTAURAR este HILO y sus MENSAJES?'); } else { $boton = boton('Restaurar'); }
 
-		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['encalidad'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['cargo']) . '</td><td valign="top"><p class="pforo"><b style="color:blue;">' . $r['title'] . '</b><br />' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time_last'] . '">' . duracion(time() - strtotime($r['time_last'])) . '</acronym></td><td valign="top">' . $boton . '</td></tr>';
+		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['encalidad'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['cargo']) . '</td><td valign="top"><p class="pforo"><b style="color:blue;">' . $r['title'] . '</b><br />' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time_last'] . '"><span class="timer" value="'.strtotime($r['time_last']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
 	}
 
 $txt .= '<tr><td><br /></td></tr><tr class="azul"><td colspan="4"><h2 style="color:red;font-size:22px;padding:8px;">Mensajes</h2></tr>';
@@ -388,7 +388,7 @@ ORDER BY time2 DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		if (nucleo_acceso($vp['acceso']['foro_borrar'][0], $vp['acceso']['foro_borrar'][1])) { $boton = boton('Restaurar', '/accion.php?a=foro&b=restaurar&c=mensaje&ID=' . $r['ID'], '&iquest;Quieres RESTAURAR este MENSAJE?'); } else { $boton = boton('Restaurar'); }
 
-		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['encalidad'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['cargo']) . '</td><td valign="top"><p class="pforo">' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time2'] . '">' . duracion(time() - strtotime($r['time2'])) . '</acronym></td><td valign="top">' . $boton . '</td></tr>';
+		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['encalidad'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['cargo']) . '</td><td valign="top"><p class="pforo">' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time2'] . '"><span class="timer" value="'.strtotime($r['time2']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
 	}
 
 
@@ -439,7 +439,7 @@ ORDER BY time2 DESC", $link);
 					if (strtotime($r2['time']) > (time() - 86400)) { $titulo = $titulo . ' <sup style="font-size:9px;color:red;">Nuevo!</sup>'; }
 
 					if (($pol['user_ID'] == $r2['user_ID']) AND ($pol['nivel'] >= $r['acceso'])) { $editar = ' ' . boton('X', '/accion.php?a=foro&b=eliminarhilo&ID=' . $r2['ID'], '&iquest;Est&aacute;s seguro de querer ELIMINAR este HILO?'); } else { $editar = ''; }
-					$txt .= '<tr><td align="right">' . crear_link($r2['nick']) . '</td><td align="right"><b>' . $r2['num'] . '</b></td><td>' . $titulo . '</td><td align="right">' . duracion(time() - strtotime($r2['time'])) . '</td><td>' . $editar . '</td></tr>';
+					$txt .= '<tr><td align="right">' . crear_link($r2['nick']) . '</td><td align="right"><b>' . $r2['num'] . '</b></td><td>' . $titulo . '</td><td align="right"><span class="timer" value="'.strtotime($r2['time']).'"></span></td><td>' . $editar . '</td></tr>';
 				}
 			}
 			$txt .= '</table><br />';
@@ -492,7 +492,7 @@ LIMIT " . $num_limit, $link);
 					$hilo_url[$r2['ID']] = '<a href="/foro/' . $r['url'] . '/' . $r2['url'] . '/">' . $r2['title'] . '</a>';
 					if (strtotime($r2['time']) < (time() - 432000)) { $titulo = $hilo_url[$r2['ID']]; } else { $titulo = '<b>' . $hilo_url[$r2['ID']] . '</b>'; }
 					if (strtotime($r2['time']) > (time() - 86400)) { $titulo = $titulo . ' <sup style="font-size:9px;color:red;">Nuevo!</sup>'; }
-					$txt .= '<tr><td align="right" valign="top">' . crear_link($r2['nick']) . '</td><td valign="top" align="right"><b>' . $r2['num'] . '</b></td><td colspan="2">' . $titulo . '</td><td align="right" valign="top">' . duracion(time() - strtotime($r2['time'])) . '</td></tr>';
+					$txt .= '<tr><td align="right" valign="top">' . crear_link($r2['nick']) . '</td><td valign="top" align="right"><b>' . $r2['num'] . '</b></td><td colspan="2">' . $titulo . '</td><td align="right" valign="top"><span class="timer" value="'.strtotime($r2['time']).'"></span></td></tr>';
 				}
 			}
 			$txt .= '<tr><td colspan="4">&nbsp;</td></tr>';

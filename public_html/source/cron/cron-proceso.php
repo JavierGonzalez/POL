@@ -388,12 +388,15 @@ $result = mysql_query("SELECT SUM(pols) AS num FROM users WHERE pais = '".PAIS."
 while($r = mysql_fetch_array($result)) { $st['pols'] = $r['num']; }
 
 // pols_cuentas
-$result = mysql_query("SELECT SUM(pols) AS num FROM ".SQL."cuentas", $link);
-while($r = mysql_fetch_array($result)) { $st['pols_cuentas'] = $r['num']; }
+if (ECONOMIA) {
+	$result = mysql_query("SELECT SUM(pols) AS num FROM ".SQL."cuentas", $link);
+	while($r = mysql_fetch_array($result)) { $st['pols_cuentas'] = $r['num']; }
 
-// transacciones
-$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."transacciones WHERE time > '".$margen_24h."'", $link);
-while($r = mysql_fetch_array($result)) { $st['transacciones'] = $r['num']; }
+	// transacciones
+
+	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."transacciones WHERE time > '".$margen_24h."'", $link);
+	while($r = mysql_fetch_array($result)) { $st['transacciones'] = $r['num']; }
+} else { $st['transacciones'] = 0; $st['pols_cuentas'] = 0; }
 
 // hilos+msg
 $result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."foros_hilos WHERE time > '".$margen_24h."'", $link);
@@ -402,29 +405,35 @@ $result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."foros_msg WHERE time 
 while($r = mysql_fetch_array($result)) { $st['hilos_msg'] = $st['hilos_msg'] + $r['num']; }
 
 // pols_gobierno
-$result = mysql_query("SELECT SUM(pols) AS num FROM ".SQL."cuentas WHERE ID = '1' OR ID = '2'", $link);
-while($r = mysql_fetch_array($result)) { $st['pols_gobierno'] = $r['num']; }
+if (ECONOMIA) {
+	$result = mysql_query("SELECT SUM(pols) AS num FROM ".SQL."cuentas WHERE ID = '1' OR ID = '2'", $link);
+	while($r = mysql_fetch_array($result)) { $st['pols_gobierno'] = $r['num']; }
+} else { $st['pols_gobierno'] = 0; }
 
 // partidos
 $result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."partidos WHERE estado = 'ok'", $link);
 while($r = mysql_fetch_array($result)) { $st['partidos'] = $r['num']; }
 
 // empresas
-$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."empresas", $link);
-while($r = mysql_fetch_array($result)) { $st['empresas'] = $r['num']; }
+if (ECONOMIA) {
+	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."empresas", $link);
+	while($r = mysql_fetch_array($result)) { $st['empresas'] = $r['num']; }
 
-// mapa (desde el 2011/04/07 guarda el porcentaje en venta.
-$superficie_total = $columnas * $filas;
-$result = mysql_query("SELECT superficie, estado FROM ".SQL."mapa", $link);
-while($r = mysql_fetch_array($result)) { 
-	$sup_total += $r['superficie']; 
-	if ($r['estado'] == 'v') { $sup_vende += $r['superficie']; }
-}
-$st['mapa'] = round(($sup_vende * 100) / $superficie_total);
 
-// mapa_vende: el precio de venta más bajo de una propiedad
-$result = mysql_query("SELECT pols FROM ".SQL."mapa WHERE estado = 'v' ORDER BY pols ASC LIMIT 1", $link);
-while($r = mysql_fetch_array($result)) { $st['mapa_vende'] = $r['pols']; }
+	// mapa (desde el 2011/04/07 guarda el porcentaje en venta.
+	$superficie_total = $columnas * $filas;
+	$result = mysql_query("SELECT superficie, estado FROM ".SQL."mapa", $link);
+	while($r = mysql_fetch_array($result)) { 
+		$sup_total += $r['superficie']; 
+		if ($r['estado'] == 'v') { $sup_vende += $r['superficie']; }
+	}
+	$st['mapa'] = round(($sup_vende * 100) / $superficie_total);
+
+	// mapa_vende: el precio de venta más bajo de una propiedad
+	$result = mysql_query("SELECT pols FROM ".SQL."mapa WHERE estado = 'v' ORDER BY pols ASC LIMIT 1", $link);
+	while($r = mysql_fetch_array($result)) { $st['mapa_vende'] = $r['pols']; }
+} else { $st['empresas'] = 0; $st['mapa'] = 0; $st['mapa_vende'] = 0; }
+
 
 // 24h: ciudadanos que entraron en 24h (CONDICION NUEVA: y que no sean ciudadanos nuevos).
 $result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link);

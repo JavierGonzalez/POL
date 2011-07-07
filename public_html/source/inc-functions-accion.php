@@ -153,8 +153,8 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais='') {
 function eliminar_ciudadano($ID) {
 	global $link, $pol;
 	$user_ID = false;
-	$result3 = mysql_query("SELECT IP, pols, nick, ID, ref, estado,
-(SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = '" . $ID . "') AS pols_cuentas 
+	$result3 = mysql_query("SELECT IP, pols, nick, ID, ref, estado".(ECONOMIA?",
+(SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = '" . $ID . "') AS pols_cuentas":"")." 
 FROM users 
 WHERE ID = '" . $ID . "' 
 LIMIT 1", $link);
@@ -168,25 +168,29 @@ LIMIT 1", $link);
 	}
 
 	if ($user_ID) { // ELIMINAR CIUDADANO
-		pols_transferir($pols, $user_ID, '-1', '&dagger; Defuncion: <em>' . $nick . '</em>');
+		if (ECONOMIA) { pols_transferir($pols, $user_ID, '-1', '&dagger; Defuncion: <em>' . $nick . '</em>'); }
 
-		if ($ref != '0') { 
+		if ((ECONOMIA) AND ($ref != '0')) { 
 			mysql_query("UPDATE users SET ref_num = ref_num - 1 WHERE ID = '" . $ref . "' LIMIT 1", $link);
 			mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE IP = '" . $IP . "' OR user_ID = '" . $ref . "'", $link); 
 		}
 		mysql_query("DELETE FROM users WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
-		mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE user_ID = '" . $user_ID . "'", $link);
 		mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '" . $user_ID . "'", $link);
 		mysql_query("DELETE FROM ".SQL."partidos WHERE ID_presidente = '" . $user_ID . "'", $link);
-		mysql_query("DELETE FROM ".SQL."empresas WHERE user_ID = '" . $user_ID . "'", $link);
-		mysql_query("DELETE FROM ".SQL."mercado WHERE user_ID = '" . $user_ID . "'", $link);
 		mysql_query("DELETE FROM ".SQL_MENSAJES." WHERE recibe_ID = '" . $user_ID . "'", $link);
 		mysql_query("DELETE FROM ".SQL."estudios_users WHERE user_ID = '" . $user_ID . "'", $link);
-		mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '" . $user_ID . "'", $link);
 		mysql_query("DELETE FROM ".SQL."ban WHERE user_ID = '" . $user_ID . "'", $link);
-		mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '" . $user_ID . "'", $link);
 		mysql_query("DELETE FROM ".SQL_VOTOS." WHERE user_ID = '" . $user_ID . "' OR uservoto_ID = '" . $user_ID . "'", $link);
 		mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '" . $user_ID . "' AND hilo_ID = '-1'", $link);
+
+
+		if (ECONOMIA) {
+			mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE user_ID = '" . $user_ID . "'", $link);
+			mysql_query("DELETE FROM ".SQL."empresas WHERE user_ID = '" . $user_ID . "'", $link);
+			mysql_query("DELETE FROM ".SQL."mercado WHERE user_ID = '" . $user_ID . "'", $link);
+			mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '" . $user_ID . "'", $link);
+			mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '" . $user_ID . "'", $link);
+		}
 
 		$img_root = RAIZ.'/img/a/' . $user_ID;
 		if (file_exists($img_root . '.jpg')) {

@@ -13,6 +13,10 @@ $("#pnick").html(wc + "<b style=\"color:grey;\">" + wnick + " (<span class=\"" +
 }
 
 $(document).ready(function(){
+
+search_timers();
+setInterval("search_timers()", 1000);
+
 $(".bred").css("background-image", "url(" + IMG + "alerta_roja.gif)");
 $(".bred").click(function(){
 	var bg = $(this).css("background-image");
@@ -34,6 +38,56 @@ $(".nick").mouseover(function(){
 $(document).mousemove(function(e){ $("#pnick").css({top: e.pageY + "px", left: e.pageX + 15 + "px"}); 
 });
 });
+
+
+
+
+
+
+function search_timers() {
+	var ts = the_time();
+	$(".timer").each(function (i) {
+		var cuando = $(this).attr("value");
+		$(this).text(hace(cuando, ts, 1, false));
+	});
+
+}
+
+function the_time() {
+	var GMT = 2;
+	var now = new Date();
+	var offset = Math.round((now.getTimezoneOffset() + (60 * GMT)) * 60);
+	return Math.round((new Date().getTime() / 1000) + offset);
+}
+
+function hace(cuando, ts, num, pre) {
+	tiempo = (cuando - ts);
+	if (pre) { if (tiempo >= 0) { pre = "En"; } else { pre = "Hace"; } }
+	tiempo = Math.abs(tiempo);
+	
+	var periods_sec = new Array(2419200, 86400, 3600, 60, 1);
+	var periods_txt = new Array("meses", "dias", "horas", "minutos", "segundos");
+
+	if (pre) { var duracion = pre + " "; } else { var duracion = ""; }
+
+	tiempo_cont = tiempo;
+	nm = 0;
+	for (n in periods_sec) {
+		sec = periods_sec[n];
+		if ((nm < num) && ((tiempo_cont >= (sec*2)) || (n == 4))) {
+			period = Math.floor(tiempo_cont / sec);
+			duracion += period + " " + periods_txt[n];
+			if ((num != 1) && (n != 4)) { if (n != 3) { duracion += ", "; } else { duracion += " y "; } }
+			tiempo_cont = tiempo_cont - (period * sec);
+			nm++;
+		}
+	}
+	
+	return duracion;
+}
+
+
+
 
 
 

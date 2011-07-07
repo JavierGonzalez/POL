@@ -99,7 +99,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 </div>
 
-<script type="text/javascript" src="<?=IMG?>scripts2.js"></script>
+<script type="text/javascript" src="<?=IMG?>scripts.js?v=20"></script>
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-59186-46']);

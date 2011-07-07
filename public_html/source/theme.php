@@ -69,14 +69,14 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 	
 	$elecciones = '';
 	if ($pol['config']['elecciones_estado'] == 'normal') {  
-		$elecciones_quedan = duracion(strtotime($pol['config']['elecciones_inicio']) - time());
-		$elecciones = ' <a href="/elecciones/">Elecciones en <b style="font-size:18px;">' . $elecciones_quedan . '</b></a> |'; 
+		//$elecciones_quedan = duracion(strtotime($pol['config']['elecciones_inicio']) - time());
+		$elecciones = ' <a href="/elecciones/">Elecciones en <b style="font-size:18px;"><span class="timer" value="'.strtotime($pol['config']['elecciones_inicio']).'"></span></b></a> |'; 
 	} elseif ($pol['config']['elecciones_estado'] == 'elecciones') {  
 		$elecciones_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']) - time();
 		switch ($pol['config']['elecciones']) {
-			case 'pres1': $elecciones = ' <a href="/elecciones/" style="color:red;"><b>1&ordf; Vuelta en curso</b>, queda <b style="font-size:18px;">' .  duracion($elecciones_quedan - 86400) . '</b></a> |';  break;
-			case 'pres2': $elecciones = ' <a href="/elecciones/" style="color:red;"><b>2&ordf; Vuelta en curso</b>, queda <b style="font-size:18px;">' .  duracion($elecciones_quedan) . '</b></a> |'; break;
-			case 'parl': $elecciones = ' <a href="/elecciones/" style="color:blue;"><b>Elecciones en curso</b>, queda <b style="font-size:18px;">' .  duracion($elecciones_quedan) . '</b></a> |';  break;
+			case 'pres1': $elecciones = ' <a href="/elecciones/" style="color:red;"><b>1&ordf; Vuelta en curso</b>, queda <b style="font-size:18px;"><span class="timer" value="'.($elecciones_quedan - 86400).'"></span></b></a> |';  break;
+			case 'pres2': $elecciones = ' <a href="/elecciones/" style="color:red;"><b>2&ordf; Vuelta en curso</b>, queda <b style="font-size:18px;"><span class="timer" value="'.$elecciones_quedan.'"></span></b></a> |'; break;
+			case 'parl': $elecciones = ' <a href="/elecciones/" style="color:blue;"><b>Elecciones en curso</b>, queda <b style="font-size:18px;"><span class="timer" value="'.$elecciones_quedan.'"></span></b></a> |';  break;
 		}
 	}
 	if ($pol['cargo']) { $cargo_icono = ' <img src="'.IMG.'cargos/' . $pol['cargo'] . '.gif" border="0" />'; } else { $cargo_icono = ''; }
@@ -315,7 +315,7 @@ if (ECONOMIA) {
 
 <div id="pnick" class="azul" style="display:none;opacity:0.9;"></div>
 
-<script type="text/javascript" src="<?=IMG?>scripts2.js"></script>
+<script type="text/javascript" src="<?=IMG?>scripts.js?v=20"></script>
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-59186-46']);

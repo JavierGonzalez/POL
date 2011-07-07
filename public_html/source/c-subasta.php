@@ -66,45 +66,9 @@ Ceder al Ciudadano: <input type="text" name="nick" size="14" maxlength="20" valu
 
 	$txt_header .= '
 <script type="text/javascript">
-
 window.onload = function(){ 
 	setTimeout(function(){ $(".pujar").removeAttr("disabled"); }, 2000); 
-	setTimeout("MostrarHora24()",2000);
 }
-
-
-var RelojID24 = null
-var RelojEjecutandose24 = false
-
-function MostrarHora24 () {
-	var ahora = new Date()
-	var horas = ahora.getHours()
-	var minutos = ahora.getMinutes()
-	var segundos = ahora.getSeconds()
-	var ValorHora
-
-	if (horas < 10)
-	     	ValorHora = "0" + horas
-	else
-		ValorHora = "" + horas
-	if (minutos < 10)
-		ValorHora += ":0" + minutos
-	else
-		ValorHora += ":" + minutos
-	if (segundos < 10)
-		ValorHora += ":0" + segundos
-	else
-		ValorHora += ":" + segundos
-
-
-	$("#horaactual").html(ValorHora);
-
-	RelojID24 = setTimeout("MostrarHora24()",1000);
-	RelojEjecutandose24 = true;
-}
-
-
-
 </script>';
 
 	// datos graficos
@@ -135,7 +99,7 @@ FROM ".SQL."config WHERE dato = 'pols_fraseedit' LIMIT 1", $link);
 
 
 
-	$txt .= '<h1>Subastas (<a href="/subasta/">Actualizar</a>) <span class="gris">' . $queda . ' | <span id="horaactual">' . date('G:i:s') . '</span></span></h1>
+	$txt .= '<h1>Subastas (<a href="/subasta/">Actualizar</a>) <span class="gris">Proceso en <span class="timer" value="'.strtotime(date('Y-m-d 20:00:00')).'"></span></span></h1>
 
 <br />
 
@@ -167,7 +131,7 @@ LIMIT 10", $link);
 			$bold = ' style="font-weight:bold;"'; 
 			$ganador = '<b>(Ganador)</b>'; 
 		} else { $ganador = false; $bold = ''; }
-		$txt .= '<tr><td align="right"><b style="font-size:20px;">' . pols($row['pols']) . '</b></td><td' . $bold . '>' . crear_link($row['nick']) . '</td><td' . $bold . '>' . duracion(time() - strtotime($row['time'])) . '</td><td>' . $ganador . '</td></tr>';
+		$txt .= '<tr><td align="right"><b style="font-size:20px;">' . pols($row['pols']) . '</b></td><td' . $bold . '>' . crear_link($row['nick']) . '</td><td' . $bold . '><span class="timer" value="'.strtotime($row['time']).'"></span></td><td>' . $ganador . '</td></tr>';
 	}
 
 
@@ -214,7 +178,7 @@ LIMIT 10", $link);
 </tr>';
 		}
 		if ($gan <= $pol['config']['palabras_num']) { $bold = ' style="font-weight:bold;"'; $ganador = '<b>(Ganador)</b>'; } else { $bold = ''; $ganador = false; }
-		$txt .= '<tr><td align="right"><b style="font-size:20px;">' . pols($row['los_pols']) . '</b></td><td' . $bold . '>' . crear_link($row['nick']) . '</td><td' . $bold . '>' . duracion(time() - strtotime($row['time'])) . '</td><td>' . $ganador . '</td></tr>';
+		$txt .= '<tr><td align="right"><b style="font-size:20px;">' . pols($row['los_pols']) . '</b></td><td' . $bold . '>' . crear_link($row['nick']) . '</td><td' . $bold . '><span class="timer" value="'.strtotime($row['time']).'"></span></td><td>' . $ganador . '</td></tr>';
 	}
 
 

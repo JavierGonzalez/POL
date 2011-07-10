@@ -23,6 +23,10 @@ function nucleo_acceso($tipo, $valor='') {
 }
 
 
+function timer($t, $es_time=false) {
+	if ($es_time == true) { return '<span class="timer" value="'.$t.'"></span>'; } 
+	else { return '<span class="timer" value="'.strtotime($t).'"></span>'; } 
+}
 
 function ocultar_IP($IP, $tipo='IP') { 
 	// devuelve el host o IP indicado cortando alguno de sus datos, para proteger la privacidad 

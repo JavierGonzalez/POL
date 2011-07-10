@@ -94,7 +94,7 @@ ORDER BY title ASC", $link);
 
 <td valign="top" style="background:#F97E7B;">'.($r2['acceso_cfg_escribir']?'<acronym title="['.$r2['acceso_cfg_escribir'].']">':'').ucfirst($r2['acceso_escribir']).($r2['acceso_cfg_escribir']?'</acronym>':'').'</td>
 
-<td align="right">' . str_replace(' ', '&nbsp;', duracion(time() - strtotime($r2['time_last']))) . '</td>
+<td align="right" nowrap="nowrap"><span class="timer" value="'.strtotime($r2['time_last']).'"></span></td>
 </tr>'."\n";
 
 		}

@@ -20,7 +20,7 @@ if ($_GET['a'] == 'mensajes-enviados') {
 
 	$result = mysql_query("SELECT 
 ID, envia_ID, recibe_ID, time, text,
-(SELECT nick FROM ".SQL_USERS." WHERE ".SQL_USERS.".ID = recibe_ID LIMIT 1) AS nick_envia,
+(SELECT nick FROM users WHERE users.ID = recibe_ID LIMIT 1) AS nick_envia,
 (SELECT nombre FROM ".SQL."estudios WHERE ".SQL."estudios.ID = cargo LIMIT 1) AS cargo
 FROM ".SQL_MENSAJES."
 WHERE envia_ID = '" . $pol['user_ID'] . "'
@@ -29,7 +29,7 @@ LIMIT 50", $link);
 	while($r = mysql_fetch_array($result)){
 
 
-		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>' . crear_link($r['nick_envia']) . '</b><br /><b>' . str_replace(' ', '&nbsp;', $r['cargo']) . '</b><acronym title="' . $r['time'] . '" style="font-size:12px;">' . duracion(time() - strtotime($r['time'])) . '</acronym></td><td valign="top">' . $r['text'] . '<hr /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($r['nick_envia']) . '/') . '</td><td valign="top">' . boton('X', '/accion.php?a=borrar-mensaje&ID=' . $r['ID']) . '</td></tr>' . "\n";
+		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>' . crear_link($r['nick_envia']) . '</b><br /><b>' . str_replace(' ', '&nbsp;', $r['cargo']) . '</b><acronym title="' . $r['time'] . '" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top">' . $r['text'] . '<hr /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($r['nick_envia']) . '/') . '</td><td valign="top">' . boton('X', '/accion.php?a=borrar-mensaje&ID=' . $r['ID']) . '</td></tr>' . "\n";
 	}
 
 	$txt .= '</table><p><b>(*)</b> <em>Esta p&aacute;gina est&aacute; en versi&oacute;n ALPHA, el motivo es que cabe la "extra&ntilde;a" posibilidad de que falten algunos mensajes. Esto suceder&aacute; cuando el RECEPTOR elimine tu mensaje enviado (ya que el mensaje se borra de la base de datos). Puede resultar incoherente la ausencia de algun mensaje enviado.</em></p>';
@@ -164,7 +164,7 @@ function click_form(tipo) {
 
 	$result = mysql_query("SELECT 
 ID, envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo,
-(SELECT nick FROM ".SQL_USERS." WHERE ".SQL_USERS.".ID = envia_ID LIMIT 1) AS nick_envia,
+(SELECT nick FROM users WHERE users.ID = envia_ID LIMIT 1) AS nick_envia,
 (SELECT nombre FROM ".SQL."estudios WHERE ".SQL."estudios.ID = cargo LIMIT 1) AS cargo_nom
 FROM ".SQL_MENSAJES."
 WHERE recibe_ID = '" . $pol['user_ID'] . "'
@@ -183,7 +183,7 @@ LIMIT 100", $link);
 
 		if ($r['cargo'] != '0') { $cargo = ' <img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" title="' . $r['cargo_nom'] . '" />'; } else { $cargo = ''; }
 
-		$txt .= '<tr' . $fondo . '><td valign="top">' . $boton . '</td><td valign="top" align="right" nowrap="nowrap"><b>' . crear_link($r['nick_envia']) . '</b>' . $cargo . '<br /><acronym title="' . $r['time'] . '" style="font-size:12px;">' . duracion(time() - strtotime($r['time'])) . '</acronym></td><td valign="top">' . $r['text'] . '<hr /></td><td valign="top">' . boton('Responder', ($r['recibe_masivo']==''?'/msg/' . strtolower($r['nick_envia']).'/':'/msg/cargos/'.$r['recibe_masivo'].'/')) . '</td><td valign="top">' . boton('X', '/accion.php?a=borrar-mensaje&ID=' . $r['ID']) . '</td></tr>' . "\n";
+		$txt .= '<tr' . $fondo . '><td valign="top">' . $boton . '</td><td valign="top" align="right" nowrap="nowrap"><b>' . crear_link($r['nick_envia']) . '</b>' . $cargo . '<br /><acronym title="' . $r['time'] . '" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top">' . $r['text'] . '<hr /></td><td valign="top">' . boton('Responder', ($r['recibe_masivo']==''?'/msg/' . strtolower($r['nick_envia']).'/':'/msg/cargos/'.$r['recibe_masivo'].'/')) . '</td><td valign="top">' . boton('X', '/accion.php?a=borrar-mensaje&ID=' . $r['ID']) . '</td></tr>' . "\n";
 	}
 
 	if (!$boton) { $txt .= '<tr><td colspan="5"><b>No tienes ning&uacute;n mensaje.</b></td></tr>'; }

@@ -270,6 +270,7 @@ $txt .= '
 </div>
 </div>
 
+<p><a href="/estadisticas/full/">Ver datos en bruto</a></p>
 
 </div>
 

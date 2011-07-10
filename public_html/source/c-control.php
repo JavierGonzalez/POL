@@ -104,9 +104,9 @@ LIMIT 60", $link);
 		$txt .= '<tr' . $td_bg . '>
 <td align="right"><b>' . $dia_registro . '</b></td>
 <td style="background:'.$vp['bg'][$r['pais']].';"><b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
-<td align="right" nowrap="nowrap">' . duracion(time() - strtotime($r['fecha_registro'])) . '</td>
+<td align="right" nowrap="nowrap">'.timer($r['fecha_registro']).'</td>
 <td align="right" nowrap="nowrap">' . $online . '</td>
-<td align="right" nowrap="nowrap">' . duracion(time() - strtotime($r['fecha_last'])) . '</td>
+<td align="right" nowrap="nowrap">'.timer($r['fecha_last']) . '</td>
 <td>' . $siglas[$r['partido_afiliado']] . '</td>
 <td align="right"><b>' . $r['num_elec'] . '</b></td>
 <td nowrap="nowrap"><b>' . confianza($r['voto_confianza']) . '</b>' . $has_votado . '</td>
@@ -848,14 +848,12 @@ ORDER BY expire DESC", $link);
 			$expulsar = boton('Cancelar', '/accion.php?a=expulsar&b=desexpulsar&ID=' . $r['ID'], '&iquest;Seguro que quieres CANCELAR la EXPULSION del usuario: '.$r['tiempo'].'?'); 
 		} elseif ($r['estado'] == 'cancelado') { $expulsar = '<b style="font-weight:bold;">Cancelado</b>'; } else { $expulsar = ''; }
 
-		$duracion = '<acronym title="' . $r['expire'] . '">' . duracion((time() + $r['tiempo']) - strtotime($r['expire'])) . '</acronym>';
-
 		if (!$r['expulsado_estado']) { $r['expulsado_estado'] = 'expulsado'; }
 
 		$txt .= '
 <tr><td valign="top" nowrap="nowrap">'.($r['estado'] == 'expulsado'?'<img src="'.IMG.'expulsar.gif" alt="Expulsado" border="0" /> ':'<img src="'.IMG.'cargos/0.gif" border="0" /> ').'<b>' . crear_link($r['tiempo'], 'nick', $r['expulsado_estado'], $r['expulsado_pais']) . '</b></td>
 <td valign="top">'.$r['expulsado_pais'].'</td>
-<td valign="top" align="right" valign="top" nowrap="nowrap"><acronym title="' . $r['expire'] . '">' . $duracion . '</acronym></td>
+<td valign="top" align="right" valign="top" nowrap="nowrap"><acronym title="' . $r['expire'] . '">'.timer($r['expire']).'</acronym></td>
 <td valign="top">'.crear_link($r['nick_autor']).'</td>
 <td valign="top"><b style="font-size:13px;">' . $r['razon'] . '</b></td>
 <td valign="top" align="center">' . $expulsar . '</td>
@@ -955,6 +953,7 @@ ORDER BY expire DESC", $link);
 		if ((($r['autor'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['kick_quitar'][0], $vp['acceso']['kick_quitar'][1]))) AND ($r['estado'] == 'activo')) { $expulsar = boton('X', '/accion.php?a=kick&b=quitar&ID=' . $r['ID'], '&iquest;Seguro que quieres hacer INACTIVO este kick?'); } else { $expulsar = ''; }
 
 		$duracion = '<acronym title="' . $r['expire'] . '">' . duracion((time() + $r['tiempo']) - strtotime($r['expire'])) . '</acronym>';
+
 		if ($r['estado'] == 'activo') {
 			$estado = '<span style="color:red;">Activo</span>';
 		} elseif ($r['estado'] == 'cancelado') {
@@ -965,7 +964,7 @@ ORDER BY expire DESC", $link);
 		if (!$r['expulsado_estado']) { $r['expulsado_estado'] = 'expulsado'; }
 
 		if ($r['motivo']) { $motivo = '<a href="/control/kick/info/'.$r['ID'].'/">#</a>'; } else { $motivo = ''; }
-		$txt .= '<tr><td valign="top"><img src="'.IMG.'kick.gif" alt="Kick" border="0" /></td><td valign="top"><b>' . $estado . '</b></td><td valign="top"><b>'.($r['user_ID'] == 0?'Anonimo':crear_link($r['expulsado'], 'nick', $r['expulsado_estado'])).'</b></td><td valign="top" nowrap="nowrap"><img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" border="0" /> ' . crear_link($r['nick_autor']) . '</td><td align="right" valign="top" nowrap="nowrap"><acronym title="' . $r['expire'] . '">' . $duracion . '</acronym></td><td align="right" valign="top" nowrap="nowrap">' . duracion($r['tiempo']+1) . '</td><td><b style="font-size:13px;">' . $r['razon'] . '</b></td><td>' . $expulsar . '</td><td>'.$motivo.'</td></tr>' . "\n";
+		$txt .= '<tr><td valign="top"><img src="'.IMG.'kick.gif" alt="Kick" border="0" /></td><td valign="top"><b>' . $estado . '</b></td><td valign="top"><b>'.($r['user_ID'] == 0?'Anonimo':crear_link($r['expulsado'], 'nick', $r['expulsado_estado'])).'</b></td><td valign="top" nowrap="nowrap"><img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" border="0" /> ' . crear_link($r['nick_autor']) . '</td><td align="right" valign="top" nowrap="nowrap"><acronym title="' . $r['expire'] . '">'.timer($r['expire']).'</acronym></td><td align="right" valign="top" nowrap="nowrap">' . duracion($r['tiempo']+1) . '</td><td><b style="font-size:13px;">' . $r['razon'] . '</b></td><td>' . $expulsar . '</td><td>'.$motivo.'</td></tr>' . "\n";
 	}
 	$txt .= '</table><p>Los kicks solo pueden ser revocadas por un Comisario de Policia, un Juez Supremo o el Polic&iacute;a autor de la expulsi&oacute;n.</p>';
 
@@ -999,7 +998,7 @@ FROM ".SQL."transacciones
 WHERE concepto LIKE '<b>SANCION %' AND receptor_ID = '-1'
 ORDER BY time DESC", $link);
 	while($r = mysql_fetch_array($result)){
-		$txt .= '<tr><td>'.pols('-'.$r['pols']).' '.MONEDA.'</td><td><b>'.crear_link($r['nick']).'</b></td><td><acronym title="'.$r['time'].'">' . duracion(time() - strtotime($r['time'])) . '</acronym></td><td>'.$r['concepto'].'</td></tr>' . "\n";
+		$txt .= '<tr><td>'.pols('-'.$r['pols']).' '.MONEDA.'</td><td><b>'.crear_link($r['nick']).'</b></td><td><acronym title="'.$r['time'].'">'.timer($r['time']).'</acronym></td><td>'.$r['concepto'].'</td></tr>' . "\n";
 	}
 
 

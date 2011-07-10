@@ -204,7 +204,7 @@ $txt .= '<br /><table border="0" cellspacing="0" cellpadding="2">
 
 </tr>';
 
-foreach ($vp['paises'] AS $pais) {
+foreach ($vp['paises_economia'] AS $pais) {
 
 $result = mysql_query("SELECT SUM(pols + IFNULL((SELECT SUM(pols) FROM ".strtolower($pais)."_cuentas WHERE user_ID = users.ID GROUP BY user_ID),0)) AS pols_ciudadanos,
 (SELECT COUNT(ID) FROM users WHERE pais = '".$pais."' AND estado = 'ciudadano') AS num_ciudadanos,

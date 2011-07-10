@@ -14,6 +14,8 @@ include(RAIZ.'config-pwd.php');
 $vp['paises'] = array('15M', '15MBCN', '15MMAD', 'VP'); // ACTIVOS
 $vp['paises_congelados'] = array('POL', '15MBCN', '15MMAD', 'VULCAN', 'Hispania', 'Atlantis'); // INACTIVOS
 
+$vp['paises_economia'] = array('VP'); // Paises con economia
+
 // COLORES #ACFA58 #9AFE2E
 $vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', '15MBCN'=>'#95DB95', '15MMAD'=>'#F8DCBE', 'www'=>'#eeeeee');
 $vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'VP'=>'#71D8FF', '15M' => '#FFFF64', '15MBCN'=>'#95DB95', '15MMAD'=>'#F8DCBE', 'www'=>'grey');
@@ -83,7 +85,7 @@ define('SSL_URL', 'https://virtualpol.com/'); // SSL_URL = http://www.virtualpol
 if ($_SERVER['HTTPS']) {
 	define('IMG', 'https://virtualpol.com/img/');
 } else {
-	define('IMG', 'http://vp.cdn.teoriza.com/'); // IMG = http://www.virtualpol.com/img/ | http://vp.cdn.teoriza.com/
+	define('IMG', 'http://www.virtualpol.com/img/'); // IMG = http://www.virtualpol.com/img/ | http://vp.cdn.teoriza.com/
 }
 define('REGISTRAR', 'https://virtualpol.com/registrar/');
 

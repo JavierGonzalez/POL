@@ -18,6 +18,9 @@ if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\''.IMG.'bg/'.$pol['config
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="language" content="es_ES" />
 <meta name="description" content="<?=$txt_description?>" />
+
+<script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+
 <link href="<?=IMG?>style.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" media="screen" href="<?=IMG?>superfish.css" /> 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
@@ -34,17 +37,30 @@ window.google_analytics_uacct = "UA-59186-46";
 
 <style type="text/css">
 body { background: <?=$body_bg?>; }
-div#footer, div.column, div.content, div#header {
-border: 1px solid #000;
-}
+div#footer, div.column, div.content, div#header {border: 1px solid #000;}
+
+
+.sf-menu li, .sf-menu a, .sf-menu a:visited  { color:#555; text-shadow:1px 1px 4px #FFF; }
+.md { color:#666; }
+
+#menu-1, #menu-1 li { background:#FF6262; }
+#menu-1:hover, #menu-1 li:hover { background:#FF9900; }
+
+#menu-2, #menu-2 li { background:#00CC00; }
+#menu-2:hover, #menu-2 li:hover { background:#FF9900; }
+
+#menu-3, #menu-3 li { background:#119AFF; }
+#menu-3:hover, #menu-3 li:hover { background:#FF9900; }
+
+#menu-4, #menu-4 li { background:#FFFF51; }
+#menu-4:hover, #menu-4 li:hover { background:#FF9900; }
+
+#menu-5, #menu-5 li { background:#FFA722; }
+#menu-5:hover, #menu-5 li:hover { background:#FF9900; }
 </style>
 
 <?=$txt_header?>
 <link rel="shortcut icon" href="/favicon.ico" /> 
-
-
-
-
 
 
 <!-- Añade esta etiqueta en la cabecera o delante de la etiqueta body. -->
@@ -72,11 +88,11 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 		//$elecciones_quedan = duracion(strtotime($pol['config']['elecciones_inicio']) - time());
 		$elecciones = ' <a href="/elecciones/">Elecciones en <b style="font-size:18px;"><span class="timer" value="'.strtotime($pol['config']['elecciones_inicio']).'"></span></b></a> |'; 
 	} elseif ($pol['config']['elecciones_estado'] == 'elecciones') {  
-		$elecciones_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']) - time();
+		$elecciones_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']);
 		switch ($pol['config']['elecciones']) {
-			case 'pres1': $elecciones = ' <a href="/elecciones/" style="color:red;"><b>1&ordf; Vuelta en curso</b>, queda <b style="font-size:18px;"><span class="timer" value="'.($elecciones_quedan - 86400).'"></span></b></a> |';  break;
-			case 'pres2': $elecciones = ' <a href="/elecciones/" style="color:red;"><b>2&ordf; Vuelta en curso</b>, queda <b style="font-size:18px;"><span class="timer" value="'.$elecciones_quedan.'"></span></b></a> |'; break;
-			case 'parl': $elecciones = ' <a href="/elecciones/" style="color:blue;"><b>Elecciones en curso</b>, queda <b style="font-size:18px;"><span class="timer" value="'.$elecciones_quedan.'"></span></b></a> |';  break;
+			case 'pres1': $elecciones = ' <a href="/elecciones/" style="color:red;"><b>1&ordf; Vuelta en curso</b>, queda <b style="font-size:18px;">'.timer(($elecciones_quedan - 86400), true).'</b></a> |';  break;
+			case 'pres2': $elecciones = ' <a href="/elecciones/" style="color:red;"><b>2&ordf; Vuelta en curso</b>, queda <b style="font-size:18px;">'.timer($elecciones_quedan, true).'</b></a> |'; break;
+			case 'parl': $elecciones = ' <a href="/elecciones/" style="color:blue;"><b>Elecciones en curso</b>, queda <b style="font-size:18px;">'.timer($elecciones_quedan, true).'</b></a> |';  break;
 		}
 	}
 	if ($pol['cargo']) { $cargo_icono = ' <img src="'.IMG.'cargos/' . $pol['cargo'] . '.gif" border="0" />'; } else { $cargo_icono = ''; }
@@ -118,10 +134,6 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 		<a href="http://www.virtualpol.com/" title="VirtualPol">&#9660; <img src="<?=IMG?>virtualpol-logo-cuadrado-40.gif" border="0" alt="VirtualPol" style="margin:-15px 0;" /></a>
 			<ul>
 <?php foreach ($vp['paises'] AS $pais) { if ($pais != PAIS) { echo '<li><a href="http://'.strtolower($pais).'.virtualpol.com/">Plataforma '.$pais.'</a></li>'; } } ?>
-				<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
-				<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo fuente</a></li>
-				<li><a href="https://www.ohloh.net/p/virtualpol/contributors">Desarrollo</a></li>
-				<li><a href="http://www.virtualpol.com/manual">Manual de ayuda</a></li>
 			</ul>
 	</li>
 </ul>
@@ -129,15 +141,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <a href="/" title="Bandera de <?=PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" border="0" alt="Bandera de <?=PAIS?>" style="margin:-6px 0 2px 0;" /></a>
 </td>
 
-<td align="right" nowrap="nowrap"><?=$txt_perfil?></td>
-
-<td align="right" width="180"><form action="/buscar/" id="cse-search-box">
-<input type="hidden" name="cx" value="000141954329957006250:h-_yuvq_rwk" />
-<input type="hidden" name="cof" value="FORID:9" />
-<input type="hidden" name="ie" value="UTF-8" />
-<input type="text" name="q" size="3" />
-<input type="submit" name="sa" value="Buscar" />
-</form></td>
+<td align="right" nowrap="nowrap" style="padding:0 0 6px 0;"><?=$txt_perfil?></td>
 
 </tr>
 </table>
@@ -153,88 +157,86 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 <dl id="menu">
 <ul class="sf-menu sf-vertical">
-			<li class="current">
+			<li id="menu-1">
 				<a href="/">Comunicaci&oacute;n</a>
 				<ul>
 					<li><a href="/chats/">Chats</a></li>
 					<li><a href="/foro/">Foro</a></li>
 					<li><a href="/notas/">Notas</a></li>
+					<li><a href="/msg/">Mensajes Privados</a></li>
 				</ul>
 			</li>
-			<li>
+
+			<li id="menu-2">
 				<a href="#">Informaci&oacute;n</a>
 					<ul>
 						<li><a href="/info/censo/">Censo <span class="md">(<?=$pol['config']['info_censo']?>)</span></a></li>
 						<li><a href="/doc/">Documentos <span class="md">(<?=$pol['config']['info_documentos']?>)</span></a></li>
-						<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
-						<?=(ECONOMIA?'<li><a href="/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>':'')?>
-						<li><a href="/log-eventos/">Log de eventos</a></li>
-						<li><a href="/historia/">Historia</a></li>
+						
+						<li><a href="#"><span style="float:right;">&#9658;</span><b>M&aacute;s info</b></a>
+							<ul>
+								<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
+								<li><a href="/buscar/">Buscador</a></li>
+								<li><a href="/historia/">Historia</a></li>
+								<?=(ECONOMIA?'<li><a href="/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>':'')?>
+								<li><a href="/log-eventos/">Log de eventos</a></li>
+							</ul>
+						</li>
+
+						<li><a href="#"><span style="float:right;">&#9658;</span><b>Sobre VirtualPol</b></a>
+							<ul>
+								<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
+								<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo fuente</a></li>
+								<li><a href="https://www.ohloh.net/p/virtualpol/contributors">Info desarrollo</a></li>
+								<li><a href="http://www.virtualpol.com/legal">TOS</a></li>
+							</ul>
+						</li>
+
+						<li><a href="http://www.virtualpol.com/manual">Ayuda</a></li>
 					</ul>
 			</li>
-			<li>
+
+			<li id="menu-3">
 				<a href="#">Democracia</a>
 				<ul>
-<?php if (ECONOMIA) { ?>
-					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Control</b></a>
+					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Gesti&oacute;n</b></a>
 						<ul>
-							<li><a href="/control/gobierno/">Despacho Oval</a></li>
+							<li><a href="/control/gobierno/">Gobierno</a></li>
+							<?=(ECONOMIA?'<li><a href="/doc/boletin-oficial-de-vp/">BOE</a></li>':'')?>
 							<li><a href="/control/kick/">Kicks</a></li>
 							<li><a href="/control/expulsiones/">Expulsiones</a></li>
-							<li><a href="/control/judicial/">Judicial</a></li>
+							<li><a href="/cargos/">Cargos</a></li>
+							<li><a href="/examenes/">Ex&aacute;menes</a></li>
+							<?=(ECONOMIA?'<li><a href="/poderes/">Poderes</a></li><li><a href="/control/judicial/">Judicial</a></li>':'')?>
 						</ul>
 					</li>
+					
+					<li><a href="/partidos/"><?=NOM_PARTIDOS?> <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
 					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
 					<li><a href="/votacion/">Votaciones <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
-					<li><a href="/cargos/">Cargos</a></li>
-					<li><a href="/partidos/"><?=NOM_PARTIDOS?> <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
-					<li><a href="/poderes/">Poderes</a></li>
-<?php } else { ?>
-					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Control</b></a>
-						<ul>
-							<li><a href="/control/gobierno/">Control</a></li>
-							<li><a href="/control/kick/">Kicks</a></li>
-							<li><a href="/control/expulsiones/">Expulsiones</a></li>
-						</ul>
-					</li>
-					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
-					<li><a href="/votacion/">Votaciones <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
-					<li><a href="/cargos/">Cargos</a></li>
-					<li><a href="/partidos/"><?=NOM_PARTIDOS?> <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
-<?php } ?>
+					
 				</ul>
 			</li>
 
 <?php if (ECONOMIA) { ?>
-			<li>
+			<li id="menu-4">
 				<a href="#">Econom&iacute;a</a>
 				<ul>
 					<li><a href="/empresas/"><b>Empresas</b></a></li>
 					<li><a href="/pols/cuentas/">Cuentas</a></li>
-					<li><a href="/pols/cuentas/1/">Cuenta <em>Gobierno</em></a></li>
 					<li><a href="/subasta/">Subastas</a></li>
 					<li><a href="/mapa/">Mapa</a></li>
+					<li><a href="/info/economia/">Econom&iacute;a Global</a></li>
 				</ul>
 			</li>
-			<?php } if ($pol['estado'] == 'ciudadano') { ?>
-			<li>
-				<a href="#"><?=$pol['nick']?></a>
-				<ul>
-					<li><a href="/perfil/<?=$pol['nick']?>/">Perfil</a></li>
-					<li><a href="/examenes/">Ex&aacute;menes</a></li>
-					<li><a href="/foro/mis-respuestas/">Respuestas</a></li>
-					<?=(ECONOMIA?'<li><a href="/pols/">Dinero</a></li><li><a href="/mapa/propiedades/">Parcelas</a></li><li><a href="http://aziroet.com/blog/aziroet-quiere-ser-la-plataforma-web-de-tu-blog.php">Crear Blog</a></li>':'')?>
-				</ul>
-			</li>			<?php } ?><?php if ($pol['config']['info_consultas'] > 0) { ?>
-			<li>
-				<a href="/votacion/">Votaciones (<?=$pol['config']['info_consultas']?>)</a>
-			</li><?php } ?>
-			
-		</ul></dd></dl>
 
+<?php }
 
-<?php
-echo '<hr style="margin:5px 20px -5px -5px;color:#FF6;" />
+if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5"><a href="/votacion/">Votaciones ('.$pol['config']['info_consultas'].')</a></li>'; }
+
+echo '</ul></dd></dl>
+
+<hr style="margin:5px 20px -5px -5px;color:#FF6;" />
 
 <div id="palabras">';
 
@@ -328,6 +330,25 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 })();
 </script>
 
+<script type="text/javascript">
+var _sf_async_config={uid:26055,domain:"virtualpol.com"};
+(function(){
+  function loadChartbeat() {
+    window._sf_endpt=(new Date()).getTime();
+    var e = document.createElement('script');
+    e.setAttribute('language', 'javascript');
+    e.setAttribute('type', 'text/javascript');
+    e.setAttribute('src',
+       (("https:" == document.location.protocol) ? "https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" : "http://static.chartbeat.com/") +
+       "js/chartbeat.js");
+    document.body.appendChild(e);
+  }
+  var oldonload = window.onload;
+  window.onload = (typeof window.onload != 'function') ?
+     loadChartbeat : function() { oldonload(); loadChartbeat(); };
+})();
+
+</script>
 
 </body>
 </html>

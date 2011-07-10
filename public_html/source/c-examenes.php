@@ -278,7 +278,7 @@ VALUES ('" . $r['cargo_ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', 'e
 
 
 			// ".SQL."examenes_preg 	(ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo)
-			$tiempo = 0;
+			$examen_tiempo = 0;
 			$respuestas_correctas = array();
 			$result2 = mysql_query("SELECT ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo
 FROM ".SQL."examenes_preg
@@ -298,15 +298,15 @@ ORDER BY examen_ID DESC, RAND() LIMIT " . $r['num_preguntas'], $link);
 				$res2 = shuffle_assoc($res2);
 
 
-				$tiempo += $r2['tiempo'];
+				$examen_tiempo += $r2['tiempo'];
 				foreach($res2 as $ID => $respuesta) {
 					$respuestas .= '<input type="radio" name="respuesta' . $r2['ID'] . '" value="' . md5($respuesta) . '" />' . $respuesta . '<br />';
 				}
 				if ($pregs) { $pregs .= '|'; } $pregs .= $r2['ID'];
 				$txt .= '<li><b>&iquest;' . $r2['pregunta'] . '?</b><br />' . $respuestas . '</li>';
 			}
-			$tiempo += 10;
-			$limite_tiempo = time() + $tiempo;
+			$examen_tiempo += 10;
+			$limite_tiempo = time() + $examen_tiempo;
 			$_SESSION['examen']['respuestas'] = $respuestas_correctas;
 			$_SESSION['examen']['tiempo'] = $limite_tiempo;
 			$_SESSION['examen']['ID'] = $_GET['b'];
@@ -338,23 +338,23 @@ ORDER BY examen_ID DESC, RAND() LIMIT " . $r['num_preguntas'], $link);
 </style>
 
 <script type="text/javascript">
-tiempo = parseInt("' . $tiempo . '");
-tiempo_total = parseInt("' . $tiempo . '");
+examen_tiempo = parseInt("' . $examen_tiempo . '");
+examen_tiempo_total = parseInt("' . $examen_tiempo . '");
 
 function time_refresh() {
-	if (tiempo > 0) {
-		$(".seg").html(tiempo);
-		tiempo = tiempo - 1;
-		refresh = setTimeout(time_refresh, 1000);
-		var t = parseInt(tiempo_total) - parseInt(tiempo);	
-		var porcentaje_mas = Math.floor((t * parseInt($("#latabla").height())) / parseInt(tiempo_total));
+	if (examen_tiempo > 0) {
+		$(".seg").html(examen_tiempo);
+		examen_tiempo = examen_tiempo - 1;
+		examen_refresh = setTimeout(time_refresh, 1000);
+		var t = parseInt(examen_tiempo_total) - parseInt(examen_tiempo);	
+		var porcentaje_mas = Math.floor((t * parseInt($("#latabla").height())) / parseInt(examen_tiempo_total));
 		$("#t_mas").attr("height", porcentaje_mas);
 	} else { $("#elexamen").submit(); }
 }
 
 window.onload = function(){
-	$(".seg").html(tiempo);
-	refresh = setTimeout(time_refresh, 1000);
+	$(".seg").html(examen_tiempo);
+	examen_refresh = setTimeout(time_refresh, 1000);
 }
 </script>';
 

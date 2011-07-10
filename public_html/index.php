@@ -32,7 +32,7 @@ if (!$pol['nick']) {
 $txt .= '<center>
 <table border="0" cellpadding="5" cellspacing="0">
 <tr style="color:grey;">
-<th colspan="2" align="left">Plataforma</th>
+<th colspan="2" align="left">Plataformas</th>
 <th>Poblaci&oacute;n</th>
 <th>Antig&uuml;edad</th>
 <th>Informaci&oacute;n</th>

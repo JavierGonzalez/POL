@@ -11,6 +11,26 @@ $root_dir = '/var/www/vhosts/virtualpol.com/httpdocs/real/';
 // arranque manual
 if (!$pol['config']['elecciones']) {
 	exit;
+
+	include($root_dir.'config.php');
+	include($root_dir.'source/inc-functions.php');
+	include($root_dir.'source/inc-functions-accion.php');
+	$link = conectar();
+
+	// TIME MARGEN
+	$date			= date('Y-m-d 20:00:00'); 					// ahora
+	$margen_24h		= date('Y-m-d 20:00:00', time() - 86400);	// 24 h
+	$margen_2dias	= date('Y-m-d 20:00:00', time() - 172800);	// 2 dias
+	$margen_5dias	= date('Y-m-d 20:00:00', time() - 432000);	// 5 dias
+	$margen_10dias	= date('Y-m-d 20:00:00', time() - 864000);	// 10 dias
+	$margen_15dias	= date('Y-m-d 20:00:00', time() - 1296000); // 15 dias
+	$margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); // 30 dias
+	$margen_60dias	= date('Y-m-d 20:00:00', time() - 5184000); // 60 dias
+	$margen_90dias	= date('Y-m-d 20:00:00', time() - 7776000); // 90 dias
+
+	// LOAD CONFIG $pol['config'][]
+	$result = mysql_query("SELECT valor, dato FROM ".SQL."config", $link);
+	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 }
 
 /*

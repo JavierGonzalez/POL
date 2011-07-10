@@ -174,7 +174,7 @@ LIMIT 1", $link);
 					break;
 
 				case 'autentificado': 
-					if ($_SESSION['pol']['dnie'] == 'true') {
+					if (nucleo_acceso('autentificados')) {
 						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> est&aacute; correctamente <a href="http://www.virtualpol.com/dnie.php">autentificado</a>.'; 
 					}
 					break;
@@ -194,7 +194,7 @@ LIMIT 1", $link);
 				case 'ayuda': $elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> ofrece ayuda: <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="http://www.virtualpol.com/manual" target="_blank">Manual de ayuda</a>.</a>'; break;
 
 				case 'policia':
-				if ((($_SESSION['pol']['cargo'] == 13) OR ($_SESSION['pol']['cargo'] == 12)) AND (strtolower($_SESSION['pol']['pais']) == pais))  {
+					if (nucleo_acceso('cargo', '13 12'))  {
 						$elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>';
 						$tipo = 'm';
 					}
@@ -213,7 +213,7 @@ LIMIT 1", $link);
 					break;
 					
 				case 'parlamento':
-					if (($_SESSION['pol']['cargo'] == 22) AND (strtolower($_SESSION['pol']['pais']) == pais)) {
+					if (nucleo_acceso('cargo', '22')) {
 						$elmsg = '<span style="color:blue;">'.$msg_rest.' <b>(Aviso Oficial- Presidente del Parlamento)</b></span>';
 						$tipo = 'm';
 					}

@@ -98,8 +98,7 @@ font-size: 16px;
 .sf-menu li li li {
 background: #FFFFDD;
 }
-.sf-menu li:hover, .sf-menu li.sfHover,
-.sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
+.sf-menu li:hover, .sf-menu li.sfHover {
 background: #FF9900;
 outline:		0;
 }
@@ -130,9 +129,10 @@ background-position: -10px 0; /* arrow hovers for modern browsers*/
 
 
 /*** adding sf-vertical in addition to sf-menu creates a vertical menu ***/
-.sf-vertical, .sf-vertical li {
-width:	145px;
-}
+.sf-vertical, .sf-vertical li { width: 145px; }
+
+.sf-vertical li li { width:	155px; }
+
 /* this lacks ul at the start of the selector, so the styles from the main CSS file override it where needed */
 .sf-vertical li:hover ul,
 .sf-vertical li.sfHover ul {
@@ -140,6 +140,7 @@ left:	146px; /* match ul width */
 top:	0;
 }
 
+.sf-vertical li:hover ul ul, .sf-vertical li.sfHover ul ul { left: 156px; }
 /*** alter arrow directions ***/
 .sf-vertical .sf-sub-indicator { background-position: -10px 0; } /* IE6 gets solid image only */
 .sf-vertical a > .sf-sub-indicator { background-position: 0 0; } /* use translucent arrow for modern browsers*/
@@ -175,7 +176,7 @@ line-height:	1.0;
 margin-top:10px;
 position:		absolute;
 top:			-999em;
-width:			10em; /* left offset of submenus need to match (see below) */
+width:			180px; /* left offset of submenus need to match (see below) */
 }
 
 .sfn-menu ul li {
@@ -256,8 +257,7 @@ border-radius: 6px;
 -webkit-border-radius: 6px;
 
 }
-.sfn-menu li:hover, .sfn-menu li.sfHover,
-.sfn-menu a:focus, .sfn-menu a:hover, .sfn-menu a:active {
+.sfn-menu li:hover, .sfn-menu li.sfHover {
 background: #FF9900;
 outline:		0;
 }

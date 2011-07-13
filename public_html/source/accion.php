@@ -193,7 +193,7 @@ case 'pass':
 		}
 
 		if ($user_ID) {
-			$new_pass = $nick.rand(1000,9999);
+			$new_pass = $nick.rand(10000,99999);
 
 			$asunto = '[VirtualPol] Contraseña reseteada del usuario: '.$nick;
 
@@ -1150,8 +1150,8 @@ case 'votacion':
 	} elseif (($_GET['b'] == 'votar') AND ($_POST['voto'] != null) AND ($_POST['ref_ID'])) { 
 
 
-			$result = mysql_query("SELECT pais, tipo, pregunta, estado, acceso_votar, acceso_cfg_votar, num FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
-			while($r = mysql_fetch_array($result)){ $tipo = $r['tipo']; $pregunta = $r['pregunta']; $estado = $r['estado']; $pais = $r['pais']; $acceso_votar = $r['acceso_votar']; $acceso_cfg_votar = $r['acceso_cfg_votar']; $num = $r['num']; $num++; }
+			$result = mysql_query("SELECT pais, tipo, pregunta, estado, acceso_votar, acceso_cfg_votar, num, votos_expire FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)){ $tipo = $r['tipo']; $pregunta = $r['pregunta']; $estado = $r['estado']; $pais = $r['pais']; $acceso_votar = $r['acceso_votar']; $acceso_cfg_votar = $r['acceso_cfg_votar']; $num = $r['num']; $votos_expire = $r['votos_expire']; $num++; }
 
 			if (($estado == 'ok') AND (in_array($tipo, $votaciones_tipo)) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar))) {
 				$ha_votado = false;
@@ -1164,7 +1164,7 @@ case 'votacion':
 					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto, validez) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."')", $link);
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 
-					evento_chat('<b>['.strtoupper($tipo).']</b> Voto de  '.$pol['nick'].' en: <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(votos <b>'.$num.'</b>)</span>', '0', '', false, 'e', $pais);
+					evento_chat('<b>['.strtoupper($tipo).']</b> Voto de  '.$pol['nick'].' en: <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(votos <b>'.$num.'</b>'.($votos_expire>0?' de '.$votos_expire:'').')</span>', '0', '', false, 'e', $pais);
 				}
 			}
 
@@ -1740,9 +1740,6 @@ VALUES ('".PAIS."', '".$url."', '".$_POST['title']."', '".$text."', '".$date."',
 
 
 
-
-
-
 case 'afiliarse':
 	if (($pol['config']['elecciones_estado'] != 'elecciones')) {
 		mysql_query("UPDATE users SET partido_afiliado = '".$_POST['partido']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
@@ -1785,6 +1782,7 @@ VALUES ('".$pol['user_ID']."', '".$date."', '".strtoupper($_POST['siglas'])."', 
 	$refer_url = 'partidos/';
 	break;
 }
+
 }
 
 

@@ -293,7 +293,7 @@ GROUP BY voto", $link);
 '.$votos.'
 </select>
 <input type="submit" value="Votar" style="font-size:22px;"'.(nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])?'':' disabled="disabled"').' /> <span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span> 
-'.(nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])?'':' &nbsp; <b style="color:red;">No tienes acceso para votar.</b>').'</p>
+'.(nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])?'':'<br /><b style="color:red;">No tienes acceso para votar.</b>').'</p>
 
 <p>
 <input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votaci&oacute;n correcta.<br />

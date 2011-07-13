@@ -30,7 +30,7 @@ while($r = mysql_fetch_array($result)){
 	
 			$extras = '
 <tr>
-<td colspan="2"><input style="float:right;" value="Expulsar" onclick="window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/control/expulsiones/expulsar/'.$r['nick'].'\';" type="button"'.$exp_disabled.' />(' . $r['ID'] . ', '.$r['email'].', '.ocultar_IP($host, 'host').', <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-20,20)).'">GeoIP</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
+<td colspan="2"><input style="float:right;" value="Expulsar" onclick="window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/control/expulsiones/expulsar/'.$r['nick'].'\';" type="button"'.$exp_disabled.' />(' . $r['ID'] . ', <span title="'.$r['avatar_localdir'].'">'.$r['email'].'</span>, '.ocultar_IP($host, 'host').', <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-20,20)).'">GeoIP</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
 <tr><td colspan="3" align="right">
 
 <form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post">
@@ -40,8 +40,8 @@ Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="4
 
 </td></tr>';
 		} else { $extras = ''; }
-
-		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="2">'.$p_avatar.''.($r['dnie']=='true'?'<br /><img src="'.IMG.'autentificacion.png" border="0" style="margin-top:6px;" />':'').'</td><td nowrap="nowrap"><h1><span class="amarillo"><img src="'.IMG.'cargos/'.$r['cargo'].'.gif" alt="Cargo" style="margin-bottom:0;" border="0" /> ' . $nick . ' &nbsp; <span style="color:grey;"><span class="' . $r['estado'] . '">' . ucfirst($r['estado']) . '</span> de ' . $r['pais'] . '</span></span></h1></td><td nowrap="nowrap">';
+		
+		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="3" width="120" height="120" valign="top" align="center">'.($r['avatar']=='true'?'<img src="'.IMG.'a/' . $r['ID'] . '.jpg" alt="'.$nick.'" />':'').($r['dnie']=='true'?'<br /><img src="'.IMG.'autentificacion.png" border="0" style="margin-top:6px;" />':'').'</td><td nowrap="nowrap"><h1><span class="amarillo"><img src="'.IMG.'cargos/'.$r['cargo'].'.gif" alt="Cargo" style="margin-bottom:0;" border="0" /> ' . $nick . ' &nbsp; <span style="color:grey;"><span class="' . $r['estado'] . '">' . ucfirst($r['estado']) . '</span> de ' . $r['pais'] . '</span></span></h1></td><td nowrap="nowrap">';
 
 
 		// CONFIANZA

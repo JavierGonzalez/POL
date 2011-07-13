@@ -5,7 +5,7 @@ $kw = '';
 if ($txt_title) { 
 	$txt_title .= ' | '.PAIS.' | VirtualPol'; 
 } else { 	//home
-	$txt_title = ($pol['config']['pais_des']?$pol['config']['pais_des'].' de '.PAIS.' '.$kw.'| Comunidad VirtualPol':PAIS.' '.$kw.'| Comunidad VirtualPol');
+	$txt_title = ($pol['config']['pais_des']?$pol['config']['pais_des'].' de '.PAIS.' '.$kw.'| VirtualPol':PAIS.' '.$kw.'| VirtualPol');
 }
 if (!$txt_description) { $txt_description = $txt_title.' - '.$kw.PAIS.' | VirtualPol'; }
 
@@ -29,6 +29,15 @@ if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\''.IMG.'bg/'.$pol['config
 <script type="text/javascript">
 $(document).ready(function(){ 
 	$("ul.sfn-menu").superfish(); 
+	$(".ayuda").hover(
+		function () {
+			var txt = $(this).attr("value");
+			$(this).append("<span class=\"ayudap\">" + txt + "</span>");
+		}, 
+		function () {
+			$(".ayudap").remove();
+		}
+	);
 }); 
 defcon = <?=$pol['config']['defcon']?>;
 IMG = "<?=IMG?>";
@@ -41,29 +50,31 @@ div#footer, div.column, div.content, div#header {border: 1px solid #000;}
 
 
 .sf-menu li, .sf-menu a, .sf-menu a:visited  { color:#555; text-shadow:1px 1px 4px #FFF; }
-.md { color:#666; }
+.md { color:#777; }
+
 
 #menu-1, #menu-1 li { background:#FF6262; }
-#menu-1:hover, #menu-1 li:hover { background:#FF9900; }
+#menu-1:hover, #menu-1 li:hover { background:#FFB1B1; }
 
-#menu-2, #menu-2 li { background:#00CC00; }
-#menu-2:hover, #menu-2 li:hover { background:#FF9900; }
+#menu-2, #menu-2 li { background:#00DF00; }
+#menu-2:hover, #menu-2 li:hover { background:#80EF80; }
 
-#menu-3, #menu-3 li { background:#119AFF; }
-#menu-3:hover, #menu-3 li:hover { background:#FF9900; }
+#menu-3, #menu-3 li { background:#66BEFF; }
+#menu-3:hover, #menu-3 li:hover { background:#B3DFFF; }
 
 #menu-4, #menu-4 li { background:#FFFF51; }
-#menu-4:hover, #menu-4 li:hover { background:#FF9900; }
+#menu-4:hover, #menu-4 li:hover { background:#FFFFA8; }
 
-#menu-5, #menu-5 li { background:#FFA722; }
-#menu-5:hover, #menu-5 li:hover { background:#FF9900; }
+#menu-5, #menu-5 li { background:#FF9900; }
+#menu-5:hover, #menu-5 li:hover { background:#FFD391; }
+
 </style>
+
 
 <?=$txt_header?>
 <link rel="shortcut icon" href="/favicon.ico" /> 
 
 
-<!-- Añade esta etiqueta en la cabecera o delante de la etiqueta body. -->
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js">
   {lang: 'es'}
 </script>
@@ -129,12 +140,17 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 
 <td nowrap="nowrap">
+
 <ul class="sfn-menu">
 	<li class="current">
+		
+		<!--<a href="http://www.virtualpol.com/" title="VirtualPol"><img src="<?=IMG?>logo-virtualpol-1.gif" border="0" alt="VirtualPol" style="margin:-15px 0;" /></a>-->
+
 		<a href="http://www.virtualpol.com/" title="VirtualPol">&#9660; <img src="<?=IMG?>virtualpol-logo-cuadrado-40.gif" border="0" alt="VirtualPol" style="margin:-15px 0;" /></a>
-			<ul>
+
+		<ul>
 <?php foreach ($vp['paises'] AS $pais) { if ($pais != PAIS) { echo '<li><a href="http://'.strtolower($pais).'.virtualpol.com/">Plataforma '.$pais.'</a></li>'; } } ?>
-			</ul>
+		</ul>
 	</li>
 </ul>
 
@@ -161,7 +177,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 				<a href="/">Comunicaci&oacute;n</a>
 				<ul>
 					<li><a href="/chats/">Chats</a></li>
-					<li><a href="/foro/">Foro</a></li>
+					<li><a href="/foro/">Foros</a></li>
 					<li><a href="/notas/">Notas</a></li>
 					<li><a href="/msg/">Mensajes Privados</a></li>
 				</ul>
@@ -171,28 +187,32 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 				<a href="#">Informaci&oacute;n</a>
 					<ul>
 						<li><a href="/info/censo/">Censo <span class="md">(<?=$pol['config']['info_censo']?>)</span></a></li>
+
 						<li><a href="/doc/">Documentos <span class="md">(<?=$pol['config']['info_documentos']?>)</span></a></li>
-						
-						<li><a href="#"><span style="float:right;">&#9658;</span><b>M&aacute;s info</b></a>
+
+						<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Registros</b></a>
 							<ul>
 								<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
-								<li><a href="/buscar/">Buscador</a></li>
-								<li><a href="/historia/">Historia</a></li>
-								<?=(ECONOMIA?'<li><a href="/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>':'')?>
+								<li><a href="http://chartbeat.com/dashboard2/?url=virtualpol.com&k=ecc15496e00f415838f6912422024d06" target="_blank" title="Estadisticas Instantaneas">Estad&iacute;sticas Instan</a></li>
+								<!--<li><a href="/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>-->
 								<li><a href="/log-eventos/">Log de eventos</a></li>
 							</ul>
 						</li>
 
-						<li><a href="#"><span style="float:right;">&#9658;</span><b>Sobre VirtualPol</b></a>
+
+						<li><a href="/buscar/">Buscador</a></li>
+
+						<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Sobre VirtualPol</b></a>
 							<ul>
-								<li><a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a></li>
-								<li><a href="http://code.google.com/p/virtualpol/">C&oacute;digo fuente</a></li>
-								<li><a href="https://www.ohloh.net/p/virtualpol/contributors">Info desarrollo</a></li>
-								<li><a href="http://www.virtualpol.com/legal">TOS</a></li>
+								<li><a href="/historia/">Hechos hist&oacute;ricos</a></li>
+								<li><a href="http://desarrollo.virtualpol.com/" target="_blank">Blog Desarrollo</a></li>
+								<li><a href="http://code.google.com/p/virtualpol/" target="_blank">C&oacute;digo fuente</a></li>
+								<li><a href="https://www.ohloh.net/p/virtualpol/contributors" target="_blank">Info desarrollo</a></li>
+								<li><a href="http://www.virtualpol.com/legal" target="_blank" title="Condiciones de Uso de VirtualPol">TOS</a></li>
 							</ul>
 						</li>
 
-						<li><a href="http://www.virtualpol.com/manual">Ayuda</a></li>
+						<li><a href="http://www.virtualpol.com/manual" target="_blank">Ayuda</a></li>
 					</ul>
 			</li>
 
@@ -207,7 +227,8 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 							<li><a href="/control/expulsiones/">Expulsiones</a></li>
 							<li><a href="/cargos/">Cargos</a></li>
 							<li><a href="/examenes/">Ex&aacute;menes</a></li>
-							<?=(ECONOMIA?'<li><a href="/poderes/">Poderes</a></li><li><a href="/control/judicial/">Judicial</a></li>':'')?>
+							<li><a href="https://virtualpol.com/dnie.php">Autentificaci&oacute;n</a></li>
+							<?=(ECONOMIA?'<li><a href="/poderes/">Poderes</a></li><li><a href="/control/judicial/">Sanciones</a></li>':'')?>
 						</ul>
 					</li>
 					
@@ -222,6 +243,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 			<li id="menu-4">
 				<a href="#">Econom&iacute;a</a>
 				<ul>
+					<?=($pol['pais']==PAIS?'<li><a href="/pols/"><b>Tus monedas</b></a></li>':'')?>
 					<li><a href="/empresas/"><b>Empresas</b></a></li>
 					<li><a href="/pols/cuentas/">Cuentas</a></li>
 					<li><a href="/subasta/">Subastas</a></li>
@@ -229,10 +251,9 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 					<li><a href="/info/economia/">Econom&iacute;a Global</a></li>
 				</ul>
 			</li>
-
 <?php }
 
-if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5"><a href="/votacion/">Votaciones ('.$pol['config']['info_consultas'].')</a></li>'; }
+if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5" style="margin:8px 0 0 0;"><a href="/votacion/">Votaciones ('.$pol['config']['info_consultas'].')</a></li>'; }
 
 echo '</ul></dd></dl>
 
@@ -297,9 +318,9 @@ if (isset($pol['user_ID'])) {
 ';
 }
 ?> | <g:plusone size="medium" href="http://www.virtualpol.com/"></g:plusone> | 
-<a href="http://www.virtualpol.com/legal" title="Condiciones del Servicio">TOS</a> | 
-<a href="http://www.virtualpol.com/manual"><b>Ayuda</b></a> &nbsp; 
-&nbsp; 2008-2011 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b></span>
+<a href="http://www.virtualpol.com/legal" title="Condiciones del Servicio" target="_blank">TOS</a> | 
+<a href="http://www.virtualpol.com/manual" target="_blank"><b>Ayuda</b></a> &nbsp; 
+&nbsp; 2008-2011 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b> <sub>Beta</sub></span>
 <b><?=PAIS?></b> <span style="font-size:11px;">DEFCON <b><?=$pol['config']['defcon']?></b></span>
 
 <?php

@@ -375,3 +375,34 @@ blockquote cite {
 .citar input {
 	font-size: 0.7em;
 }
+
+
+
+
+.ayuda {
+display:inline-block;
+cursor:help;
+background-image:url('help.gif');
+width:22px;
+height:22px;
+}
+
+.ayudap {
+margin:-10px 0 0 -90px;
+position:absolute;
+background:#FFFF64;
+font-size:16px;
+text-align:justify;
+color:#666;
+border:2px solid #FFFFFF;
+cursor:help;
+max-width:300px;
+min-height:40px;
+padding:6px 8px;
+z-index:10;
+}
+.ayudap {
+border-radius:6px;
+-moz-border-radius:6px;
+-webkit-border-radius:6px;
+}

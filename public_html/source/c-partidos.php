@@ -26,7 +26,7 @@ WHERE ID_partido = '" . $r['ID'] . "'
 ORDER BY ID ASC", $link);
 			while($r2 = mysql_fetch_array($result2)){ 
 				if ((!$li_listas) AND (ECONOMIA)) {  $li_presi = ' &larr; Candidato a Presidente'; } else { $li_presi = ''; }
-				$li_listas .= '<li><form action="/accion.php?a=partido-lista&b=del&ID=' . $r['ID'] . '" method="post"><input type="hidden" name="user_ID" value="' . $r2['user_ID'] . '"  /><input style="height:26px;" type="submit" value="X" /> <img src="'.IMG.'cargos/'.$r2['cargo'].'.gif" /><b>' . crear_link($r2['nick']) . ' ' . confianza($r2['confianza']) . '</b> ' . $li_presi . '</form></li>' . "\n"; 
+				$li_listas .= '<li><form action="/accion.php?a=partido-lista&b=del&ID=' . $r['ID'] . '" method="post"><input type="hidden" name="user_ID" value="' . $r2['user_ID'] . '"  /><input style="height:26px;" type="submit" value="X" /> <img src="'.IMG.'cargos/'.$r2['cargo'].'.gif" /><b>' . crear_link($r2['nick']) . '</b> ' . $li_presi . '</form></li>' . "\n"; 
 				$candidatos_num++;
 			}
 
@@ -55,7 +55,7 @@ ORDER BY nick DESC", $link);
 
 <li><form action="/accion.php?a=partido-lista&b=add&ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos . '</select> <input type="submit" value="A&ntilde;adir a la lista"' . $disabled . ' /> (afiliados a tu '.NOM_PARTIDOS.')</form><br /></li>
 
-<li><b>Lista:</b> Candidatos (' . $candidatos_num . ' de un m&aacute;ximo de '.$pol['config']['num_escanos'].' candidatos)
+<li><b>Lista:</b> Candidatos (' . $candidatos_num . ')
 <ol>
 ' . $li_listas . '
 </ol><br />

@@ -85,7 +85,7 @@ define('SSL_URL', 'https://virtualpol.com/'); // SSL_URL = http://www.virtualpol
 if ($_SERVER['HTTPS']) {
 	define('IMG', 'https://virtualpol.com/img/');
 } else {
-	define('IMG', 'http://www.virtualpol.com/img/'); // IMG = http://www.virtualpol.com/img/ | http://vp.cdn.teoriza.com/
+	define('IMG', 'http://vp.cdn.teoriza.com/'); // IMG = http://www.virtualpol.com/img/ | http://vp.cdn.teoriza.com/
 }
 define('REGISTRAR', 'https://virtualpol.com/registrar/');
 

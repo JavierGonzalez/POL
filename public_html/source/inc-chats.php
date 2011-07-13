@@ -68,7 +68,7 @@ $txt .= '</h1>
 <ul id="vpc_ul">
 <li style="margin-top:280px;color:#AAA;"><b>
 '.($acceso['leer']?'
-<img src="'.IMG.'logo-virtualpol-40original.gif" alt="VirtualPOL" border="0" height="40" /><br />
+<img src="'.IMG.'logo-virtualpol-1.gif" alt="VirtualPol" border="0" /><br />
 '.$titulo.'. Plataforma '.PAIS.'<br />
 Acceso leer: '.$acceso_leer.($acceso_cfg_leer?' [<em>'.$acceso_cfg_leer.'</em>]':'').'<br />
 Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_escribir.'</em>]':'').'<br />

@@ -60,7 +60,7 @@ if ($_GET['a'] == 'crear') {
 	$txt_title = 'Crear votacion';
 
 	foreach ($votaciones_tipo AS $tipo) {
-		if (!nucleo_acceso($vp['acceso'][$tipo][0], $vp['acceso'][$tipo][1])) { $disabled[$tipo] = ' disabled="disabled"'; }
+		if (!nucleo_acceso($vp['acceso'][$tipo])) { $disabled[$tipo] = ' disabled="disabled"'; }
 	}
 
 	// SI el usuario es SC puee hacer sondeos tambien.

@@ -298,7 +298,7 @@ LIMIT 1", $link);
 				if (($pol['user_ID'] == $r['user_ID']) AND ($subforo != 'notaria')) { 
 					// es tu post
 					$editar = '<span style="float:right;">' . boton('Editar', '/foro/editar/' . $r['ID'] . '/') . '</span>'; 
-				} elseif (nucleo_acceso($vp['acceso']['foro_borrar'][0], $vp['acceso']['foro_borrar'][1])) { 
+				} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
 					// policia borra
 					$editar = '<span style="float:right;">' . boton('Papelera', '/accion.php?a=foro&b=borrar&c=hilo&ID=' . $r['ID'] . '/', '&iquest;Quieres enviar a la PAPELERA este HILO y sus MENSAJES?') . '</span>'; 
 				} else { $editar = ''; }
@@ -321,7 +321,7 @@ LIMIT " . $p_limit, $link);
 
 					if (($pol['user_ID'] == $r2['user_ID']) AND ($subforo != 'notaria') AND (strtotime($r2['time']) > (time() - 3600))) { 
 						$editar = boton('Editar', '/foro/editar/' . $r2['hilo_ID'] . '/' . $r2['ID'] . '/') . boton('X', '/accion.php?a=foro&b=eliminarreply&ID=' . $r2['ID'] . '&hilo_ID=' . $r2['hilo_ID'], '&iquest;Est&aacute;s seguro de querer ELIMINAR tu MENSAJE?') . ' '; 
-					} elseif (nucleo_acceso($vp['acceso']['foro_borrar'][0], $vp['acceso']['foro_borrar'][1])) { 
+					} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
 						// policia borra
 						$editar = boton('Papelera', '/accion.php?a=foro&b=borrar&c=mensaje&ID=' . $r2['ID'] . '/', '&iquest;Quieres enviar a la PAPELERA este MENSAJE?') . ' '; 
 					} else { $editar = ''; }
@@ -368,7 +368,7 @@ FROM ".SQL."foros_hilos
 WHERE estado = 'borrado'
 ORDER BY time_last DESC", $link);
 	while($r = mysql_fetch_array($result)) {
-		if (nucleo_acceso($vp['acceso']['foro_borrar'][0], $vp['acceso']['foro_borrar'][1])) { $boton = boton('Restaurar', '/accion.php?a=foro&b=restaurar&c=hilo&ID=' . $r['ID'], '&iquest;Quieres RESTAURAR este HILO y sus MENSAJES?'); } else { $boton = boton('Restaurar'); }
+		if (nucleo_acceso($vp['acceso']['foro_borrar'])) { $boton = boton('Restaurar', '/accion.php?a=foro&b=restaurar&c=hilo&ID=' . $r['ID'], '&iquest;Quieres RESTAURAR este HILO y sus MENSAJES?'); } else { $boton = boton('Restaurar'); }
 
 		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['encalidad'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['cargo']) . '</td><td valign="top"><p class="pforo"><b style="color:blue;">' . $r['title'] . '</b><br />' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time_last'] . '"><span class="timer" value="'.strtotime($r['time_last']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
 	}
@@ -386,7 +386,7 @@ FROM ".SQL."foros_msg
 WHERE estado = 'borrado'
 ORDER BY time2 DESC", $link);
 	while($r = mysql_fetch_array($result)) {
-		if (nucleo_acceso($vp['acceso']['foro_borrar'][0], $vp['acceso']['foro_borrar'][1])) { $boton = boton('Restaurar', '/accion.php?a=foro&b=restaurar&c=mensaje&ID=' . $r['ID'], '&iquest;Quieres RESTAURAR este MENSAJE?'); } else { $boton = boton('Restaurar'); }
+		if (nucleo_acceso($vp['acceso']['foro_borrar'])) { $boton = boton('Restaurar', '/accion.php?a=foro&b=restaurar&c=mensaje&ID=' . $r['ID'], '&iquest;Quieres RESTAURAR este MENSAJE?'); } else { $boton = boton('Restaurar'); }
 
 		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['encalidad'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['cargo']) . '</td><td valign="top"><p class="pforo">' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time2'] . '"><span class="timer" value="'.strtotime($r['time2']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
 	}

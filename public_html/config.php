@@ -11,7 +11,7 @@ $host[0] = str_replace('-dev', '', $host[0]); // convierte subdominios "pais-dev
 include(RAIZ.'config-pwd.php');
 
 // PAISES
-$vp['paises'] = array('15M', '15MBCN', '15MMAD', 'VP'); // ACTIVOS
+$vp['paises'] = array('15M', 'VP'); // ACTIVOS
 $vp['paises_congelados'] = array('POL', '15MBCN', '15MMAD', 'VULCAN', 'Hispania', 'Atlantis'); // INACTIVOS
 
 $vp['paises_economia'] = array('VP'); // Paises con economia
@@ -52,6 +52,8 @@ if (PAIS == 'VP') {
 'foro_borrar'=>array('cargo', '12 13'),
 'control_gobierno'=>array('cargo', '7 19'),
 'control_sancion'=>array('cargo', '9'),
+'examenes_decano'=>array('cargo', '35'),
+'examenes_profesor'=>array('cargo', '34'),
 );
 
 } else {
@@ -69,6 +71,8 @@ if (PAIS == 'VP') {
 'foro_borrar'=>array('cargo', '12 13'),
 'control_gobierno'=>array('cargo', '7 19'),
 'control_sancion'=>array('cargo', '9'),
+'examenes_decano'=>array('cargo', '35'),
+'examenes_profesor'=>array('cargo', '34'),
 );
 }
 

@@ -18,7 +18,7 @@ while($r = mysql_fetch_array($result)){
 	} elseif ($user_ID) { //nick existe
 
 		$nick = $r['nick'];
-		if ($r['avatar'] == 'true') { $p_avatar = '<img src="'.IMG.'a/' . $r['ID'] . '.jpg" alt="'.$nick.'" />'; }
+		if ($r['avatar'] == 'true') { $p_avatar = '<span width="120" height="120"><img src="'.IMG.'a/' . $r['ID'] . '.jpg" alt="'.$nick.'" /></span>'; }
 
 		$extras = '';
 		if (isset($sc[$pol['user_ID']])) {
@@ -41,7 +41,7 @@ Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="4
 </td></tr>';
 		} else { $extras = ''; }
 		
-		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="3" width="120" height="120" valign="top" align="center">'.($r['avatar']=='true'?'<img src="'.IMG.'a/' . $r['ID'] . '.jpg" alt="'.$nick.'" />':'').($r['dnie']=='true'?'<br /><img src="'.IMG.'autentificacion.png" border="0" style="margin-top:6px;" />':'').'</td><td nowrap="nowrap"><h1><span class="amarillo"><img src="'.IMG.'cargos/'.$r['cargo'].'.gif" alt="Cargo" style="margin-bottom:0;" border="0" /> ' . $nick . ' &nbsp; <span style="color:grey;"><span class="' . $r['estado'] . '">' . ucfirst($r['estado']) . '</span> de ' . $r['pais'] . '</span></span></h1></td><td nowrap="nowrap">';
+		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="3" valign="top" align="center">'.($r['avatar']=='true'?'<img src="'.IMG.'a/' . $r['ID'] . '.jpg" alt="'.$nick.'" />':'').($r['dnie']=='true'?'<br /><img src="'.IMG.'autentificacion.png" border="0" style="margin-top:6px;" />':'').'</td><td nowrap="nowrap"><h1><span class="amarillo"><img src="'.IMG.'cargos/'.$r['cargo'].'.gif" alt="Cargo" style="margin-bottom:0;" border="0" /> ' . $nick . ' &nbsp; <span style="color:grey;"><span class="' . $r['estado'] . '">' . ucfirst($r['estado']) . '</span> de ' . $r['pais'] . '</span></span></h1></td><td nowrap="nowrap">';
 
 
 		// CONFIANZA

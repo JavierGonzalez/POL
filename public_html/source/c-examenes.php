@@ -17,16 +17,19 @@ pol_estudios_users 	(ID, ID_estudio, user_ID, time, estado, cargo, nota)
 $pol['config']['examen_repe']
 */
 
+
 function boton_cargo($value, $url, $cargo) {
 	//boton_cargo('Crear examen', '/examenes/crear/', '7', $pol['cargos'])
 	$text = '';
 	if ($url) { $val = ' type="button" onclick="window.location.href=\'' . $url . '\';"'; } 
 	else { $val = ' type="submit"'; }
 	if ($cargo) {
-		global $pol;		
-		if (($cargo == 35) AND ($pol['cargos'][35])) {
-		} elseif (($cargo == 34) AND (($pol['cargos'][34]) OR ($pol['cargos'][35]))) {
-		} else { $val .= ' disabled="disabled"'; }
+		global $pol, $vp;
+		
+		if (($cargo == 35) AND (nucleo_acceso($vp['acceso']['examenes_decano']))) { } 
+		elseif (($cargo == 34) AND ((nucleo_acceso($vp['acceso']['examenes_profesor'])) OR (nucleo_acceso($vp['acceso']['examenes_decano'])))) { } 
+		else { $val .= ' disabled="disabled"'; }
+
 		if ($cargo == 35) { $text = 'Decano'; }
 		elseif ($cargo == 34) { $text = 'Profesor'; }
 	}
@@ -64,7 +67,7 @@ while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor
 $pol['cargos'] = cargos();
 
 // INIT
-if (($_GET['a'] == 'editar') AND ((($pol['cargos'][35]) OR ($pol['cargos'][34])) AND ($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador'))) { 		// EDITAR
+if (($_GET['a'] == 'editar') AND (((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) AND ($pol['estado'] == 'ciudadano'))) { 		// EDITAR
 
 	if (!$_GET['b']) { $_GET['b'] = 0; }
 
@@ -114,7 +117,7 @@ ORDER BY time DESC", $link);
 			}
 
 
-			if (($pol['cargos'][35]) OR (($pol['cargos'][34]) AND ($r2['user_ID'] == $pol['user_ID']))) { $boton = boton('x', '/accion.php?a=examenes&b=eliminar-pregunta&ID=' . $r2['ID'] . '&re_ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta pregunta y sus respuestas?'); } else { $boton = ''; }
+			if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR ((nucleo_acceso($vp['acceso']['examenes_profesor'])) AND ($r2['user_ID'] == $pol['user_ID']))) { $boton = boton('x', '/accion.php?a=examenes&b=eliminar-pregunta&ID=' . $r2['ID'] . '&re_ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta pregunta y sus respuestas?'); } else { $boton = ''; }
 
 			$txt .= '<li>' . crear_link($r2['nick']) . ': <b>&iquest;' . $r2['pregunta'] . '?</b> &nbsp; (' . $r2['tiempo'] . ' seg) &nbsp; <select name="p"><option value=""></option>' . $respuestas . '</select> ' . $boton . '</li>';
 		}
@@ -142,7 +145,7 @@ ORDER BY time DESC", $link);
 
 </ol>
 </form>';
-			if (($pol['cargos'][35]) AND ($r['cargo_ID'] < 0))  {
+			if ((nucleo_acceso($vp['acceso']['examenes_decano'])) AND ($r['cargo_ID'] < 0))  {
 				$result3 = mysql_query("SELECT (SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas
 FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
 				while($r3 = mysql_fetch_array($result3)){ 
@@ -166,8 +169,7 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
 ';
 	}
 
-} elseif (($_GET['a'] == 'mis-examenes') AND (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 
-'desarrollador'))) { 	// MIS EXAMENES
+} elseif (($_GET['a'] == 'mis-examenes') AND ($pol['estado'] == 'ciudadano')) { 	// MIS EXAMENES
 
 	// load config full
 	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
@@ -430,7 +432,7 @@ FROM ".SQL."estudios_users WHERE ID_estudio = '" . $r['cargo_ID'] . "' AND nota 
 		 if ($r['examen_ID'] == 0) { $num_generales++; } else { $num_especificas++; }
 	}
 	
-	if (($pol['cargos'][35]) OR ($pol['cargos'][34])) { $boton = boton('Editar', '/examenes/editar/', 'm'); } 
+	if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) { $boton = boton('Editar', '/examenes/editar/', 'm'); } 
 	$txt .= '<p><b class="big">' . ($num_generales + $num_especificas) . '</b> preguntas: <b>' . $num_especificas . '</b> especificas + <b>' . $num_generales . '</b> generales ' . $boton . '</p>'; 
 	$boton = '';
 
@@ -462,7 +464,7 @@ ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 			while($r2 = mysql_fetch_array($result2)){ $cargo = '<img src="'.IMG.'cargos/' . $r['cargo_ID'] . '.gif" title="' . $r2['nombre'] . '" />'; }
 		} else { $cargo = ''; }
 
-		if (($pol['cargos'][35]) OR ($pol['cargos'][34])) { $boton = boton('Editar', '/examenes/editar/' . $r['ID'] . '/', 'm'); } 
+		if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) { $boton = boton('Editar', '/examenes/editar/' . $r['ID'] . '/', 'm'); } 
 		else { $boton = ''; }
 
 		if ($r['aprobados'] > 0) {
@@ -491,7 +493,7 @@ ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 
 	$txt .= '</table>';
 
-	if ($pol['cargos'][35]) {
+	if (nucleo_acceso($vp['acceso']['examenes_decano'])) {
 		$txt .= '<p>' . boton_cargo('Crear examen', '/examenes/crear/', 35) . '</p>';
 	}
 

@@ -5,6 +5,7 @@
 function nucleo_acceso($tipo, $valor='') {
 	global $_SESSION;
 	$rt = false;
+	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
 	switch ($tipo) {
 		case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $rt = true; } break;
 		case 'ciudadanos_global': if ((isset($_SESSION['pol']['user_ID'])) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $rt = true; } break;

@@ -78,7 +78,7 @@ if ($_GET['a'] == 'votar') {
 <ul>
 <li>Debes ejercer tu derecho a voto, como Ciudadano de '.PAIS.'.</li>
 <li>El voto es siempre libre, anonimo y unipersonal.</li>
-'.(ECONOMIA?'<li>Puedes ver las <a href="/partidos/"><b>listas</b>, <b>candidatos</b> y <b>programas pol&iacute;ticos</b> aqu&iacute;</a>.</li>':'').'
+'.(ECONOMIA?'<li>Puedes ver las <a href="/partidos/"><b>listas</b> y <b>candidatos</b> aqu&iacute;</a>.</li>':'').'
 </ul>';
 
 
@@ -155,7 +155,7 @@ LIMIT 1", $link);
 <ul>
 <li>Debes ejercer tu derecho a voto, como ciudadano de '.PAIS.'.</li>
 <li>El voto es siempre libre, anonimo y unipersonal.</li>
-'.(ECONOMIA?'<li>Puedes ver las <a href="/partidos/"><b>listas</b>, <b>candidatos</b> y <b>programas pol&iacute;ticos</b> aqu&iacute;</a>.</li>':'').'
+'.(ECONOMIA?'<li>Puedes ver las <a href="/partidos/"><b>listas</b> y <b>candidatos</b> aqu&iacute;</a>.</li>':'').'
 <li>Puedes conceder hasta <b>'.$pol['config']['num_escanos'].' votos</b> a tus candidatos favoritos. Puedes dejar los votos que quieras en Blanco.</li>
 </ul>
 
@@ -374,7 +374,7 @@ ORDER BY time DESC LIMIT 1", $link);
 <table border="0" class="pol_table">
 <tr>
 <th align="left">Candidato</th>
-<th align="left">Partido</th>
+<th align="left">'.NOM_PARTIDOS.'</th>
 <th colspan="2" align="left">Votos</th>
 </tr>
 ' . $tabla . '
@@ -550,7 +550,7 @@ ORDER BY time DESC LIMIT 1", $link);
 	}
 	$txt .= '<table border="0" class="pol_table">
 <tr>
-<th align="left" colspan="2">Partido</th>
+<th align="left" colspan="2">'.NOM_PARTIDOS.'</th>
 <th colspan="2" align="left">Votos</th>
 </tr>
 ' . $tabla . '

@@ -121,7 +121,7 @@ LIMIT 1", $link);
 
 case 'vaciar_listas':
 
-	if (nucleo_acceso($vp['acceso']['control_gobierno'][0], $vp['acceso']['control_gobierno'][1])) {
+	if (nucleo_acceso($vp['acceso']['control_gobierno'])) {
 		$elecciones_dias_quedan = ceil((strtotime($pol['config']['elecciones_inicio']) - time()) / 86400);
 		$elecciones_frecuencia_dias = ceil($pol['config']['elecciones_frecuencia'] / 86400);
 		if (($elecciones_dias_quedan > 5) AND ($elecciones_dias_quedan < $elecciones_frecuencia_dias)) {
@@ -164,7 +164,7 @@ case 'geolocalizacion':
 
 case 'sancion':
 
-	if ((nucleo_acceso($vp['acceso']['control_sancion'][0], $vp['acceso']['control_sancion'][1])) AND ($_POST['pols'] <= 5000) AND ($_POST['pols'] > 0)) {
+	if ((nucleo_acceso($vp['acceso']['control_sancion'])) AND ($_POST['pols'] <= 5000) AND ($_POST['pols'] > 0)) {
 
 		$result = mysql_query("SELECT ID, nick FROM users 
 WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' AND pais = '".PAIS."'
@@ -363,15 +363,14 @@ case 'avatar':
 
 
 case 'examenes':
-
-	if (($_GET['b'] == 'crear') AND ($_POST['titulo']) AND ($pol['cargos'][35])) {
+	if (($_GET['b'] == 'crear') AND ($_POST['titulo']) AND (nucleo_acceso($vp['acceso']['examenes_decano']))) {
 		$_POST['titulo'] = gen_title($_POST['titulo']);
 		mysql_query("INSERT INTO ".SQL."examenes (titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas) VALUES ('" . $_POST['titulo'] . "', 'Editar...', '" . $pol['user_ID'] . "', '" . $date . "', '" . $_POST['cargo_ID'] . "', '5.0', 10)", $link);
 		$new_ID = mysql_insert_id($link);
 		mysql_query("UPDATE ".SQL."examenes SET cargo_ID = '-" . $new_ID . "' WHERE ID = '" . $new_ID . "' LIMIT 1", $link);
 		$refer_url = 'examenes/';
 
-	} elseif (($_GET['b'] == 'nueva-pregunta') AND ($_GET['ID'] != null) AND (($pol['cargos'][35]) OR ($pol['cargos'][34])) AND ($_POST['pregunta']) AND ($_POST['respuesta0'] != null) AND ($_POST['respuesta1'] != null) AND ($_POST['tiempo'])) {
+	} elseif (($_GET['b'] == 'nueva-pregunta') AND ($_GET['ID'] != null) AND ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) AND ($_POST['pregunta']) AND ($_POST['respuesta0'] != null) AND ($_POST['respuesta1'] != null) AND ($_POST['tiempo'])) {
 		for ($i=0;$i<10;$i++) { 
 			if ($_POST['respuesta' . $i]) { 
 				if ($respuestas) { $respuestas .= '|'; }
@@ -381,14 +380,13 @@ case 'examenes':
 		$pregunta = ucfirst($_POST['pregunta']);
 		mysql_query("INSERT INTO ".SQL."examenes_preg (examen_ID, user_ID, time, pregunta, respuestas, tiempo) VALUES ('" . $_GET['ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', '" . $pregunta . "', '" . $respuestas . "', " . $_POST['tiempo'] . ")", $link);
 		
-		//evento_chat('<b>[EXAMEN]</b> Nueva pregunta. <a href="/examenes/editar/' . $_GET['ID'] . '/">Editar examen</a>. (' . crear_link($pol['nick']) . ')', 0, 6);
 		$refer_url = 'examenes/editar/' . $_GET['ID'] . '/';
 
-	} elseif (($_GET['b'] == 'eliminar-pregunta') AND ($_GET['ID'] != null) AND (($pol['cargos'][35]) OR ($pol['cargos'][34]))) {
+	} elseif (($_GET['b'] == 'eliminar-pregunta') AND ($_GET['ID'] != null) AND ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor'])))) {
 		mysql_query("DELETE FROM ".SQL."examenes_preg WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 		$refer_url = 'examenes/editar/' . $_GET['re_ID'] . '/';
 
-	} elseif (($_GET['b'] == 'editar-examen') AND ($_GET['ID'] != null) AND ($pol['cargos'][35]) AND ($_POST['titulo']) AND ($_POST['descripcion']) AND ($_POST['nota'] >= 0) AND ($_POST['num_preguntas'] >= 0)) {
+	} elseif (($_GET['b'] == 'editar-examen') AND ($_GET['ID'] != null) AND (nucleo_acceso($vp['acceso']['examenes_decano'])) AND ($_POST['titulo']) AND ($_POST['descripcion']) AND ($_POST['nota'] >= 0) AND ($_POST['num_preguntas'] >= 0)) {
 		$_POST['descripcion'] = gen_text($_POST['descripcion'], 'plain');
 		mysql_query("UPDATE ".SQL."examenes SET titulo = '".$_POST['titulo']."', descripcion = '".$_POST['descripcion'] . "', nota = '".$_POST['nota']."', num_preguntas = '".$_POST['num_preguntas']."' WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 		$refer_url = 'examenes/editar/' . $_GET['ID'] . '/';
@@ -436,7 +434,7 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 			}
 			unset($_SESSION['examen']);
 		}
-	} elseif (($_GET['b'] == 'eliminar-examen') AND ($_POST['ID'] != null) AND ($pol['cargos'][35])) { 
+	} elseif (($_GET['b'] == 'eliminar-examen') AND ($_POST['ID'] != null) AND (nucleo_acceso($vp['acceso']['examenes_decano']))) { 
 		$result = mysql_query("SELECT cargo_ID,
 (SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas
 FROM ".SQL."examenes WHERE ID = '" . $_POST['ID'] . "' LIMIT 1", $link);
@@ -648,7 +646,7 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargo
 case 'gobierno':
 	if (
 ($_GET['b'] == 'config') AND 
-(nucleo_acceso($vp['acceso']['control_gobierno'][0], $vp['acceso']['control_gobierno'][1])) AND  
+(nucleo_acceso($vp['acceso']['control_gobierno'])) AND  
 ($_POST['online_ref'] >= 60) AND
 ($_POST['pols_inem'] >= 0) AND ($_POST['pols_inem'] <= 500) AND
 ($_POST['pols_afiliacion'] >= 0) AND ($_POST['pols_afiliacion'] <= 2000) AND
@@ -747,7 +745,7 @@ foreach ($_POST AS $dato => $valor) {
 	$refer_url = 'control/gobierno/';
 
 	// FORO
-	} elseif (($_GET['b'] == 'subforo') AND (nucleo_acceso($vp['acceso']['control_gobierno'][0], $vp['acceso']['control_gobierno'][1]))) {
+	} elseif (($_GET['b'] == 'subforo') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 
 		$subforos = explode('.', $_POST['subforos']);
 
@@ -756,14 +754,14 @@ foreach ($_POST AS $dato => $valor) {
 		}
 
 		$refer_url = 'control/gobierno/foro/';
-	} elseif (($_GET['b'] == 'crearsubforo') AND (nucleo_acceso($vp['acceso']['control_gobierno'][0], $vp['acceso']['control_gobierno'][1]))) {
+	} elseif (($_GET['b'] == 'crearsubforo') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 
 		mysql_query("INSERT INTO ".SQL."foros (url, title, descripcion, acceso, time, estado, acceso_msg) 
 VALUES ('".gen_url($_POST['nombre'])."', '".$_POST['nombre']."', '', '1', '10', 'ok', '0')", $link);
 
 		$refer_url = 'control/gobierno/foro/';
 
-	} elseif (($_GET['b'] == 'eliminarsubforo') AND (nucleo_acceso($vp['acceso']['control_gobierno'][0], $vp['acceso']['control_gobierno'][1])) AND ($_GET['ID'])) {
+	} elseif (($_GET['b'] == 'eliminarsubforo') AND (nucleo_acceso($vp['acceso']['control_gobierno'])) AND ($_GET['ID'])) {
 
 		mysql_query("UPDATE ".SQL."foros SET estado = 'eliminado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
 
@@ -1102,7 +1100,7 @@ case 'votacion':
 		
 		$sc = get_supervisores_del_censo();
 
-		if ((nucleo_acceso($vp['acceso'][$_POST['tipo']][0], $vp['acceso'][$_POST['tipo']][1])) OR (($_POST['tipo'] == 'sondeo') AND (isset($sc[$pol['user_ID']])))) { 
+		if ((nucleo_acceso($vp['acceso'][$_POST['tipo']])) OR (($_POST['tipo'] == 'sondeo') AND (isset($sc[$pol['user_ID']])))) { 
 
 			if ($_POST['votos_expire'] > 0) { } else { $_POST['votos_expire'] = 0; }
 
@@ -1248,7 +1246,7 @@ case 'foro':
 	}
 
 
-	if (($_GET['b'] == 'borrar') AND ($_GET['ID']) AND ($_GET['c']) AND (nucleo_acceso($vp['acceso']['foro_borrar'][0], $vp['acceso']['foro_borrar'][1]))) {
+	if (($_GET['b'] == 'borrar') AND ($_GET['ID']) AND ($_GET['c']) AND (nucleo_acceso($vp['acceso']['foro_borrar']))) {
 
 		if ($_GET['c'] == 'hilo') {
 			mysql_query("UPDATE ".SQL."foros_hilos SET estado = 'borrado', time_last = '".$date."' WHERE ID = '".$_GET['ID']."' AND estado = 'ok' LIMIT 1", $link);
@@ -1257,7 +1255,7 @@ case 'foro':
 		}
 		$refer_url = 'foro/papelera/';
 
-	} elseif (($_GET['b'] == 'restaurar') AND ($_GET['ID']) AND ($_GET['c']) AND (nucleo_acceso($vp['acceso']['foro_borrar'][0], $vp['acceso']['foro_borrar'][1]))) {
+	} elseif (($_GET['b'] == 'restaurar') AND ($_GET['ID']) AND ($_GET['c']) AND (nucleo_acceso($vp['acceso']['foro_borrar']))) {
 
 		if ($_GET['c'] == 'hilo') {
 			mysql_query("UPDATE ".SQL."foros_hilos SET estado = 'ok' WHERE ID = '".$_GET['ID']."' AND estado = 'borrado' LIMIT 1", $link);
@@ -1322,7 +1320,7 @@ case 'kick':
 			$kick_id = $r['ID']; 
 		}
 	
-		if (($es_policiaexpulsador) OR (nucleo_acceso($vp['acceso']['kick_quitar'][0], $vp['acceso']['kick_quitar'][1]))) {
+		if (($es_policiaexpulsador) OR (nucleo_acceso($vp['acceso']['kick_quitar']))) {
 			mysql_query("UPDATE ".SQL."ban SET estado = 'cancelado' WHERE estado = 'activo' AND ID = '".$_GET['ID']."' LIMIT 1", $link); 
 			if (mysql_affected_rows()==1) {
 				$result = mysql_query("SELECT nick FROM users WHERE ID = '".$kickeado_id."' LIMIT 1", $link);
@@ -1359,7 +1357,7 @@ case 'kick':
 		$_POST['motivo'] = ereg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
 
 		if (
-(nucleo_acceso($vp['acceso']['kick'][0], $vp['acceso']['kick'][1])) AND 
+(nucleo_acceso($vp['acceso']['kick'])) AND 
 ($kick_user_ID >= 0) AND 
 ($user_kicked != true) AND 
 ((($kick_cargo != 7) AND ($kick_cargo != 13)) OR ($kick_pais != PAIS)) AND

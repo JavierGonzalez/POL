@@ -74,7 +74,7 @@ include('inc-chats.php');
 
 
 
-if ($pol['config']['palabra_gob'] != ':') {
+if (($pol['config']['palabra_gob'] != ':') AND ($pol['config']['palabra_gob'] != '')) {
 	$palabra_gob = explode(':', $pol['config']['palabra_gob']);
 	$txt .= '<div style="margin:10px 0 0 0;"><div class="azul"><b><a href="http://'.$palabra_gob[1].'">'.$palabra_gob[0].'</a></b></div></div>';
 }

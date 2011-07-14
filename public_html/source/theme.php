@@ -75,9 +75,6 @@ div#footer, div.column, div.content, div#header {border: 1px solid #000;}
 <link rel="shortcut icon" href="/favicon.ico" /> 
 
 
-<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
-  {lang: 'es'}
-</script>
 </head>
 
 <body class="fullwidth">
@@ -312,12 +309,9 @@ if (isset($pol['user_ID'])) {
 	echo ($pol['user_ID']==1?$tiempototal.'ms ':'');
 } else {
 	// Enlaces de GONZO, solo lo ven los no-registrados, no quitar por favor :))))
-	echo '
-<a href="http://www.teoriza.com/">Teoriza</a> &middot; 
-<a href="http://www.eventuis.com/">eventos</a>
-';
+	// echo '<a href="http://www.teoriza.com/">Teoriza</a> &middot; <a href="http://www.eventuis.com/">eventos</a>';
 }
-?> | <g:plusone size="medium" href="http://www.virtualpol.com/"></g:plusone> | 
+?> | 
 <a href="http://www.virtualpol.com/legal" title="Condiciones del Servicio" target="_blank">TOS</a> | 
 <a href="http://www.virtualpol.com/manual" target="_blank"><b>Ayuda</b></a> &nbsp; 
 &nbsp; 2008-2011 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b> <sub>Beta</sub></span>

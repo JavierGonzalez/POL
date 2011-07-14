@@ -97,7 +97,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 <center style="margin:5px 0 -2px 0;"><span class="azul" style="padding:6px;color:grey;opacity:0.8;"><a href="http://www.virtualpol.com/"><b>VirtualPol</b></a> | Plataformas: 
 <?php foreach ($vp['paises'] AS $pais) { if (!in_array($pais, $vp['paises_congelados'])) { echo '<a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a> '; } } ?>
- | <a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a> | <a href="http://www.teoriza.com/">Blogs Teoriza</a> | <a href="http://www.virtualpol.com/legal"><b>TOS</b></a>
+ | <a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a> | <!--<a href="http://www.teoriza.com/">Blogs Teoriza</a> |--> <a href="http://www.virtualpol.com/legal"><b>TOS</b></a>
 </span></center>
 
 </div>

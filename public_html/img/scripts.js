@@ -1,63 +1,65 @@
-/* POL js */
+/* VirtualPol js */
+
+
+// VARIABLES
 pnick = "";
 whois_cache = new Array();
 
-function print_whois(whois, wnick) {
-var w = whois.split(":");
-if (!whois) { $("#pnick").html("&dagger;"); } else {
-if (w[6] == 1) { var wa = "<img src=\"" + IMG + "a/" + w[0] + ".jpg\" style=\"float:right;margin:0 -6px 0 0;\" />"; } else { var wa = ""; }
-if (w[11] != 0) { var wc = "<img src=\"" + IMG + "cargos/" + w[11] + ".gif\" width=\"16\" /> "; } else { var wc = ""; }
-if (w[9] == "expulsado") { var exp = "<br /><b style=\"color:red;\">" + w[12] + "</b>"; } else { var exp = ""; }
-$("#pnick").html(wc + "<b style=\"color:grey;\">" + wnick + " (<span class=\"" + w[9] + "\">" + w[9].substr(0,1).toUpperCase() + w[9].substr(1,w[9].length) + "</span> de " + w[10] + ")</b>" + exp + "<br />" + wa + "Nivel: <b>" + w[3] + "</b><br />Nota: <b>" + w[4] + "</b><br />Partido: <b>" + w[7] + "</b><br />Foro: <b>" + w[8] + "</b><br /><br />Online: <b>" + w[5] + "</b><br />Ultimo acceso: <b>" + w[2] + "</b><br />Registrado hace: <b>" + w[1] + "</b>").css("display","inline");
-}
-}
 
+// ON LOAD
 $(document).ready(function(){
 
-search_timers();
-setInterval("search_timers()", 1000);
+	search_timers();
+	setInterval("search_timers()", 1000);
 
-$(".bred").css("background-image", "url(" + IMG + "alerta_roja.gif)");
-$(".bred").click(function(){
-	var bg = $(this).css("background-image");
-	if (bg != "none") { $(this).css("background-image", "none"); return false; }
+	$("ul.sfn-menu").superfish(); 
+
+	$("dt a").click(function(){
+		$("dd:visible").slideUp("normal");
+		$(this).parent().next().slideDown("normal");
+		return false;
+	});
+
+	$("#pnick").css("display","none").css("position","absolute");
+
+	$(".nick").mouseover(function(){
+		var wnick = $(this).text();
+		if (!whois_cache[wnick]) { pnick = setTimeout(function(){ $.post("/ajax.php", { a: "whois", nick: wnick }, function(data){ $("#pnick").css("display","none"); whois_cache[wnick] = data; print_whois(data, wnick); }); }, 500);
+		} else { print_whois(whois_cache[wnick], wnick); }
+	}).mouseout(function(){ clearTimeout(pnick); pnick = ""; $("#pnick").css("display","none"); });
+	$(document).mousemove(function(e){ $("#pnick").css({top: e.pageY + "px", left: e.pageX + 15 + "px"}); });
+
+	$(".ayuda").hover(
+		function () {
+			var txt = $(this).attr("value");
+			$(this).append("<span class=\"ayudap\">" + txt + "</span>");
+		}, 
+		function () {
+			$(".ayudap").remove();
+		}
+	);
+
 });
 
-$("dt a").click(function(){
-	$("dd:visible").slideUp("normal");
-	$(this).parent().next().slideDown("normal");
-	return false;
-});
-$("#pnick").css("display","none").css("position","absolute");
 
-$(".nick").mouseover(function(){
-	var wnick = $(this).text();
-	if (!whois_cache[wnick]) { pnick = setTimeout(function(){ $.post("/ajax.php", { a: "whois", nick: wnick }, function(data){ $("#pnick").css("display","none"); whois_cache[wnick] = data; print_whois(data, wnick); }); }, 500);
-	} else { print_whois(whois_cache[wnick], wnick); }
-}).mouseout(function(){ clearTimeout(pnick); pnick = ""; $("#pnick").css("display","none"); });
-$(document).mousemove(function(e){ $("#pnick").css({top: e.pageY + "px", left: e.pageX + 15 + "px"}); 
-});
-});
-
-
-
-
+// FUNCIONES
+function print_whois(whois, wnick) {
+	var w = whois.split(":");
+	if (!whois) { $("#pnick").html("&dagger;"); } else {
+	if (w[6] == 1) { var wa = "<img src=\"" + IMG + "a/" + w[0] + ".jpg\" style=\"float:right;margin:0 -6px 0 0;\" />"; } else { var wa = ""; }
+	if (w[11] != 0) { var wc = "<img src=\"" + IMG + "cargos/" + w[11] + ".gif\" width=\"16\" /> "; } else { var wc = ""; }
+	if (w[9] == "expulsado") { var exp = "<br /><b style=\"color:red;\">" + w[12] + "</b>"; } else { var exp = ""; }
+		$("#pnick").html(wc + "<b style=\"color:grey;\">" + wnick + " (<span class=\"" + w[9] + "\">" + w[9].substr(0,1).toUpperCase() + w[9].substr(1,w[9].length) + "</span> de " + w[10] + ")</b>" + exp + "<br />" + wa + "Nivel: <b>" + w[3] + "</b><br />Nota: <b>" + w[4] + "</b><br />Partido: <b>" + w[7] + "</b><br />Foro: <b>" + w[8] + "</b><br /><br />Online: <b>" + w[5] + "</b><br />Ultimo acceso: <b>" + w[2] + "</b><br />Registrado hace: <b>" + w[1] + "</b>").css("display","inline");
+	}
+}
 
 
 function search_timers() {
-	var ts = the_time();
+	var ts = Math.round((new Date()).getTime() / 1000);
 	$(".timer").each(function (i) {
 		var cuando = $(this).attr("value");
 		$(this).text(hace(cuando, ts, 1, false));
 	});
-
-}
-
-function the_time() {
-	var GMT = 2;
-	var now = new Date();
-	var offset = Math.round((now.getTimezoneOffset() + (60 * GMT)) * 60);
-	return Math.round((new Date().getTime() / 1000) + offset);
 }
 
 function hace(cuando, ts, num, pre) {
@@ -82,7 +84,6 @@ function hace(cuando, ts, num, pre) {
 			nm++;
 		}
 	}
-	
 	return duracion;
 }
 
@@ -91,8 +92,7 @@ function hace(cuando, ts, num, pre) {
 
 
 
-
-// FUNCIONES CHAT
+// FUNCIONES CHAT START
 
 function scroll_abajo() {
 	if (chat_scroll <= document.getElementById("vpc").scrollTop) {
@@ -102,20 +102,16 @@ function scroll_abajo() {
 }
 
 function siControlPulsado(event, nick){
-	if (event.ctrlKey==1){
-		toggle_ignorados(nick);
-		return false;
-	}
+	if (event.ctrlKey==1) { toggle_ignorados(nick); return false; }
 }
 
 function toggle_ignorados(nick) {
 	var idx = array_ignorados.indexOf(nick);
-	if(idx != -1) {
+	if (idx != -1) {
 		array_ignorados.splice(idx, 1);
 		$("."+nick).show();
 		scroll_abajo();
-	}
-	else {
+	} else {
 		array_ignorados.push(nick); 
 		$("."+nick).hide();
 	}
@@ -195,10 +191,7 @@ function chat_query_ajax() {
 	}
 }
 
-function refresh_sin_leer() {
-	document.title = chat_sin_leer_yo + chat_sin_leer + " - " + titulo_html;
-}
-
+function refresh_sin_leer() { document.title = chat_sin_leer_yo + chat_sin_leer + " - " + titulo_html; }
 
 function print_msg(data) {
 	if (ajax_refresh) {
@@ -215,7 +208,6 @@ function print_msg(data) {
 			var m_tipo = mli[1];
 			var m_time = mli[2];
 			var m_nick = mli[3];
-
 
 			if (chat_time == m_time) { m_time = "<span style=\"color:white;\">" + m_time + "</span>"; } else { chat_time = m_time; }
 
@@ -298,18 +290,14 @@ function merge_list() {
 				js_kick = "";
 			}
 
-
 			array_list[cargo_ID] += "<li>" + js_kick + " <img src=\""+IMG+"cargos/" + cargo_ID + ".gif\" title=\"" + array_cargos[cargo_ID] + "\" /> <a href=\"/perfil/" + elnick  + "/\" class=\"nick\" onClick=\"return siControlPulsado(event,\'"+ elnick +"\');\">" + nick_tachado + "</a></li>\n";
 		}
 	}
 
-
 	var list = "";
 
 	for (cargo_ID in array_cargos) {
-		if (array_list[cargo_ID] !== undefined) {
-			list += array_list[cargo_ID];
-		}
+		if (array_list[cargo_ID] !== undefined) { list += array_list[cargo_ID]; }
 	}
 
 	$("#chat_list").html(list);
@@ -347,9 +335,7 @@ function enviarmsg() {
 	return false;
 }
 
-function change_delay(delay) {
-	chat_delay = parseInt(delay) * parseInt(1000); 
-}
+function change_delay(delay) { chat_delay = parseInt(delay) * parseInt(1000); }
 
 function delays() {
 	if (chat_delay1) { clearTimeout(chat_delay1); } chat_delay1 = setTimeout("change_delay(6)", 25000);
@@ -372,9 +358,7 @@ function chat_enabled() {
 	delays();
 }
 
-function auto_priv(nick) {
-	$("#vpc_msg").attr("value","/msg " + nick + " ").css("background", "#FF7777").css("color", "#952500").focus();
-}
+function auto_priv(nick) { $("#vpc_msg").attr("value","/msg " + nick + " ").css("background", "#FF7777").css("color", "#952500").focus(); }
 
 function emoticono(m) {
 	m = m.replace(/(\s|^):\)/gi, " <img src=\""+IMG+"smiley/sonrie.gif\" border=\"0\" alt=\":)\" title=\":)\" />");
@@ -388,7 +372,8 @@ function emoticono(m) {
 	m = m.replace(/(\s|^):roto2:/gi, " <img src=\""+IMG+"smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" />");
 	m = m.replace(/(\s|^):facepalm:/gi, " <img src=\""+IMG+"smiley/palm.gif\" alt=\":facepalm:\" border=\"0\" title=\":facepalm:\" />");
 	m = m.replace(/(\s|^):moneda:/gi, " <img src=\""+IMG+"m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" />");
+	m = m.replace(/(\s|^):troll:/gi, " <img src=\""+IMG+"smiley/troll.gif\" alt=\":troll:\" border=\"0\" title=\":troll:\" />");
 	return m;
 }
 
-// FUNCIONES CHAT FIN
+// ### FUNCIONES CHAT END

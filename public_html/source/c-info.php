@@ -26,15 +26,11 @@ LIMIT 300", $link);
 case 'censo':
 	$num_element_pag = $pol['config']['info_censo'];
 
-
-	// num turistas
-	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'turista'", $link));
-	$censo_turistas = $result[0];
-
-
 	// num ciudadanos activos (los que entraron en las ultimas 24h sin ser nuevos ciudadanos)
 	$margen_24h = date('Y-m-d H:i:s', time() - 86400);	// 24 h
 	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'ciudadano' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link));
+	$censo_activos_vp = $result[0];
+	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link));
 	$censo_activos = $result[0];
 
 
@@ -81,11 +77,13 @@ case 'censo':
 		$busqueda = '';
 	}
 
-$txt .= '<p>' . $p_paginas . ' &nbsp; <a href="/info/censo/">Ciudadanos</a>: <b>' . $pol['config']['info_censo'] . '</b> | <acronym title="Ciudadanos que entraron en las ultimas 24h sin ser nuevos.">Activos:</acronym> <b>'.$censo_activos.'</b> | <a href="/info/censo/turistas/" class="turista">Turistas</a>: <b>' . $censo_turistas . '</b>'.(ECONOMIA?' | <a href="/control/expulsiones/" class="expulsado">Expulsados</a>: <b>' . $censo_expulsados . '</b> | <a href="/info/censo/riqueza/">Ricos</a>':'').' &nbsp; 
-
+$txt .= '
+<div style="float:right;">
 <input name="qcmq" size="10" value="'.$busqueda.'" type="text" id="cmq">
 <input value="Buscar en perfil" type="submit" onclick="var cmq = $(\'#cmq\').attr(\'value\'); window.location.href=\'/info/censo/busqueda/\'+cmq+\'/\'; return false;">
+</div>
 
+<p>' . $p_paginas . ' &nbsp; &nbsp; <a href="/info/censo/">Ciudadanos</a>: <b>' . $pol['config']['info_censo'] . '</b> (activos <b>'.$censo_activos.'</b>,  global <b>'.$censo_activos_vp.'</b>)'.(ECONOMIA?' | <a href="/control/expulsiones/" class="expulsado">Expulsados</a>: <b>' . $censo_expulsados . '</b> | <a href="/info/censo/riqueza/">Ricos</a>':'').' &nbsp; 
 </p>
 
 <table border="0" cellspacing="2" cellpadding="0" class="pol_table">
@@ -145,7 +143,7 @@ FROM users " . $order_by . " LIMIT " . $p_limit, $link);
 <td align="right" class="gris">' . $orden++ . '</td>
 <td align="right">' . $r['nivel'] . '</td>
 <td>' . $avatar . '</td>
-<td'.(isset($sc[$r['ID']])?' style="background:#FFA07A;"><span style="float:right;color:red;">SC</span>':'>').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
+<td>'.(isset($sc[$r['ID']])?'<span style="float:right;color:red;margin-left:5px;">SC</span>':'').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
 <td>' . $partido . '</td>
 <td>' . confianza($r['voto_confianza']) . $has_votado .'</td>
 <td align="right" nowrap="nowrap">' . $online . '</td>

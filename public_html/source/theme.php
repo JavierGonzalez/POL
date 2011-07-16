@@ -27,18 +27,6 @@ if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\''.IMG.'bg/'.$pol['config
 <script type="text/javascript" src="<?=IMG?>superfish.js"></script> 
 
 <script type="text/javascript">
-$(document).ready(function(){ 
-	$("ul.sfn-menu").superfish(); 
-	$(".ayuda").hover(
-		function () {
-			var txt = $(this).attr("value");
-			$(this).append("<span class=\"ayudap\">" + txt + "</span>");
-		}, 
-		function () {
-			$(".ayudap").remove();
-		}
-	);
-}); 
 defcon = <?=$pol['config']['defcon']?>;
 IMG = "<?=IMG?>";
 window.google_analytics_uacct = "UA-59186-46";
@@ -46,28 +34,8 @@ window.google_analytics_uacct = "UA-59186-46";
 
 <style type="text/css">
 body { background: <?=$body_bg?>; }
-div#footer, div.column, div.content, div#header {border: 1px solid #000;}
-
-
 .sf-menu li, .sf-menu a, .sf-menu a:visited  { color:#555; text-shadow:1px 1px 4px #FFF; }
-.md { color:#777; }
-
-
-#menu-1, #menu-1 li { background:#FF6262; }
-#menu-1:hover, #menu-1 li:hover { background:#FFB1B1; }
-
-#menu-2, #menu-2 li { background:#00DF00; }
-#menu-2:hover, #menu-2 li:hover { background:#80EF80; }
-
-#menu-3, #menu-3 li { background:#66BEFF; }
-#menu-3:hover, #menu-3 li:hover { background:#B3DFFF; }
-
-#menu-4, #menu-4 li { background:#FFFF51; }
-#menu-4:hover, #menu-4 li:hover { background:#FFFFA8; }
-
-#menu-5, #menu-5 li { background:#FF9900; }
-#menu-5:hover, #menu-5 li:hover { background:#FFD391; }
-
+.md { color:#888; float:right; font-size:14px; }
 </style>
 
 
@@ -84,7 +52,7 @@ div#footer, div.column, div.content, div#header {border: 1px solid #000;}
 
 <?php
 
-// ARREGLAR: este pedazo de trozo de codigo es un lamentable pero histórico trozo primienio. De las primeras lineas en construirse allá por el 2008. Hay que hacerlo de nuevo cuanto antes.
+// ARREGLAR: este pedazo de trozo de codigo es un lamentable pero histórico trozo primigenio. De las primeras lineas en construirse allá por el 2008. Hay que hacerlo de nuevo.
 
 unset($txt_header);
 if ($pol['msg'] > 0) { $num_msg = '<b style="font-size:18px;">' . $pol['msg'] . '</b>'; } else { $num_msg = $pol['msg']; }
@@ -145,9 +113,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 		<a href="http://www.virtualpol.com/" title="VirtualPol">&#9660; <img src="<?=IMG?>virtualpol-logo-cuadrado-40.gif" border="0" alt="VirtualPol" style="margin:-15px 0;" /></a>
 
-		<ul>
-<?php foreach ($vp['paises'] AS $pais) { if ($pais != PAIS) { echo '<li><a href="http://'.strtolower($pais).'.virtualpol.com/">Plataforma '.$pais.'</a></li>'; } } ?>
-		</ul>
+		<ul><?php foreach ($vp['paises'] AS $pais) { if ($pais != PAIS) { echo '<li><a href="http://'.strtolower($pais).'.virtualpol.com/">Plataforma '.$pais.'</a></li>'; } } ?></ul>
 	</li>
 </ul>
 
@@ -183,9 +149,9 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 			<li id="menu-2">
 				<a href="#">Informaci&oacute;n</a>
 					<ul>
-						<li><a href="/info/censo/">Censo <span class="md">(<?=$pol['config']['info_censo']?>)</span></a></li>
+						<li><a href="/info/censo/">Censo <span class="md"><?=$pol['config']['info_censo']?></span></a></li>
 
-						<li><a href="/doc/">Documentos <span class="md">(<?=$pol['config']['info_documentos']?>)</span></a></li>
+						<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
 
 						<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Registros</b></a>
 							<ul>
@@ -229,9 +195,9 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 						</ul>
 					</li>
 					
-					<li><a href="/partidos/"><?=NOM_PARTIDOS?> <span class="md">(<?=$pol['config']['info_partidos']?>)</span></a></li>
+					<li><a href="/partidos/"><?=NOM_PARTIDOS?> <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
 					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
-					<li><a href="/votacion/">Votaciones <span class="md">(<?=$pol['config']['info_consultas']?>)</span></a></li>
+					<li><a href="/votacion/">Votaciones <span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
 					
 				</ul>
 			</li>

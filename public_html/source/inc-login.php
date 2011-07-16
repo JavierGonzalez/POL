@@ -45,7 +45,7 @@ while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor
 if (isset($pol['user_ID'])) {
 
 	// LOAD: $pol
-	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, fecha_legal, dnie,
+	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, fecha_legal, dnie, IP,
 (SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE recibe_ID = users.ID AND leido = '0') AS msg
 FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
@@ -59,8 +59,10 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 		$pol['msg'] = $r['msg'];
 		$pol['online'] = $r['online'];
 		$pol['cargo'] = $r['cargo'];
+		$pol['IP'] = $r['IP'];
 		$fecha_init = $r['fecha_init'];
 		$fecha_last = $r['fecha_last'];
+		
 
 		$_SESSION['pol']['cargo'] = $r['cargo'];
 		$_SESSION['pol']['nivel'] = $r['nivel'];
@@ -79,24 +81,24 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 
 		// Si no se han aceptado las nuevas condiciones obliga a aceptarlas.
 		if (($r['fecha_legal'] == '0000-00-00 00:00:00') AND ($_GET['a'] != 'aceptar-condiciones')) {
-			if ($link) { mysql_close($link); }
 			header('Location: http://www'.DEV.'.'.URL.'/legal');
-			exit;
+			if ($link) { mysql_close($link); } exit;
 		}
 
 	}
 
 	// UPDATE
 	if ($pol['estado'] != 'expulsado') { // No esta expulsado
-		if ($session_new) {
-			// START SESSION
-			$update = ", visitas = visitas + 1, nav = '" . $_SERVER['HTTP_USER_AGENT'] . "', fecha_init = '" . $date . "', IP = '" . $IP . "', host = '".gethostbyaddr(long2ip($IP))."'";
-			if ($_SERVER['HTTP_X_FORWARDED_FOR']) { $update .= ", IP_proxy = '".$_SERVER['HTTP_X_FORWARDED_FOR']."'"; }
-			if ($fecha_init != '0000-00-00 00:00:00') { 
-				$update .= ", online = online + " . (strtotime($fecha_last) - strtotime($fecha_init)); 
+		if ($session_new) { // START SESSION
+			$update = ", visitas = visitas + 1, nav = '".$_SERVER['HTTP_USER_AGENT']."', fecha_init = '".$date."'";
+			if ($pol['IP'] != $IP) { 
+				$host = gethostbyaddr(long2ip($IP)); if ($host == '') { $host = long2ip($IP); }
+				$update .= ", IP = '".$IP."', host = '".$host."', hosts = CONCAT(hosts,'|".$host."')";
+				if ($_SERVER['HTTP_X_FORWARDED_FOR']) { $update .= ", IP_proxy = '".$_SERVER['HTTP_X_FORWARDED_FOR']."'"; }
 			}
+			if ($fecha_init != '0000-00-00 00:00:00') { $update .= ", online = online + " . (strtotime($fecha_last) - strtotime($fecha_init)); }
 		}
-		mysql_query("UPDATE LOW_PRIORITY users SET paginas = paginas + 1, fecha_last = '" . $date . "'" . $update . " WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+		mysql_query("UPDATE LOW_PRIORITY users SET paginas = paginas + 1, fecha_last = '".$date."'".$update." WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	} else { $pol = null; session_unset(); session_destroy(); } // impide el acceso a expulsados
 
 

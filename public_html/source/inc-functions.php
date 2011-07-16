@@ -91,6 +91,8 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 	}
 }
 
+function num($num, $dec=0) { return number_format(round($num, $dec), $dec, ',', '.'); }
+
 function explodear($pat, $str, $num) { $exp = explode($pat, $str); return $exp[$num]; }
 function implodear($pat, $str, $num) { $exp = implode($pat, $str); return $exp[$num]; }
 

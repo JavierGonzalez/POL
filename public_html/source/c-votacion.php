@@ -67,7 +67,7 @@ if ($_GET['a'] == 'crear') {
 	$sc = get_supervisores_del_censo();
 	if (isset($sc[$pol['user_ID']])) { $disabled['sondeo'] = ''; }
 
-	$result = mysql_query("SELECT ID FROM votacion WHERE (tipo = 'destituir' OR tipo = 'otorgar') AND estado = 'ok' LIMIT 1", $link);
+	$result = mysql_query("SELECT ID FROM votacion WHERE (tipo = 'destituir' OR tipo = 'otorgar') AND estado = 'ok' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) { 
 		$disabled['destituir'] = ' disabled="disabled"'; 
 		$disabled['otorgar'] = ' disabled="disabled"';
@@ -210,11 +210,12 @@ LIMIT 1", $link);
 		} else { $tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; }
 
 
-		$txt .= '<h1><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).' | '.$tiempo_queda.'</h1>
-<br />
-<h2>'.$r['pregunta'].'</h2>
+		$txt .= '<h1><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).' | '.$r['num'].' votos | '.$tiempo_queda.'</h1>
 
-<div class="amarillo" style="margin:15px 0 15px 0;"><p>' . $r['descripcion'] . '</p></div>
+<div class="amarillo" style="margin:20px 0 15px 0;padding:20px 10px 0 10px;">
+<h1>'.$r['pregunta'].'</h1>
+<p>' . $r['descripcion'] . '</p>
+</div>
 
 <span style="float:right;text-align:right;">
 Acceso: <acronym title="'.$r['acceso_cfg_votar'].'"><b>'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</b></acronym>. Creador <b>' . crear_link($r['nick']) . '</b>. Inicio: <em>' . $r['time'] . '</em><br />
@@ -231,7 +232,7 @@ FROM votacion_votos
 WHERE ref_ID = '" . $r['ID'] . "'
 GROUP BY voto", $link);
 			while($r2 = mysql_fetch_array($result2)) {
-				$txt_escrutinio .= '<tr><td nowrap="nowrap">' . $respuestas[$r2['voto']] . '</td><td align="right"><b>' . $r2['num'] . '</b></td><td align="right">' . round(($r2['num'] * 100) / $r['num'], 1) . '%</td></tr>';
+				$txt_escrutinio .= '<tr><td nowrap="nowrap">' . $respuestas[$r2['voto']] . '</td><td align="right"><b>' . $r2['num'] . '</b></td><td align="right">' . num(($r2['num'] * 100) / $r['num'], 1) . '%</td></tr>';
 
 				$escanos_total = $escanos_total + $r2['num'];
 				$chart_dato[] = $r2['num'];
@@ -253,15 +254,15 @@ GROUP BY voto", $link);
 '.($validez==true?'<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 <tr>
 <th>Escrutinio</th>
-<th>Votos ('.$r['num'].')</th>
+<th>Votos</th>
 <th></th>
 </tr>'.$txt_escrutinio.'</table>':'').'</td><td valign="top">';
 
 			if ($validez==true) {
 				if ($r['tipo']=='parlamento') {
-					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:' . $escanos_total . ',' . implode(',', $chart_dato) . '&chs=450x300&chl=|' . implode('|', $chart_nom) . '&chco=ffffff01,FF8000&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />';
+					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:' . $escanos_total . ',' . implode(',', $chart_dato) . '&chs=450x300&chl=|' . implode('|', $chart_nom) . '&chco=ffffff01,FF8000&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="450" height="300" />';
 				} else {
-					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . implode(',', $chart_dato) . '&chs=430x200&chds=a&chl=' . implode('|', $chart_nom) . '&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" />';
+					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . implode(',', $chart_dato) . '&chs=430x200&chds=a&chl=' . implode('|', $chart_nom) . '&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="430" height="200" />';
 				}
 			}
 
@@ -286,14 +287,13 @@ GROUP BY voto", $link);
 						$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
 				} }
 			}
-
-				$txt .= '<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=votacion&b=votar" method="post">
+			$tiene_acceso_votar = nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']);
+			$txt .= '<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=votacion&b=votar" method="post">
 <input type="hidden" name="ref_ID" value="' . $r['ID'] . '"  />
 <p><select name="voto" style="font-size:22px;">
 '.$votos.'
 </select>
-<input type="submit" value="Votar" style="font-size:22px;"'.(nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])?'':' disabled="disabled"').' /> <span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span> 
-'.(nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])?'':'<br /><b style="color:red;">No tienes acceso para votar.</b>').'</p>
+<input type="submit" value="Votar" style="font-size:22px;"'.($tiene_acceso_votar?'':' disabled="disabled"').' /> '.($tiene_acceso_votar?'<span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span>':'<span style="color:red;">No tienes acceso para votar.</span>').'</p>
 
 <p>
 <input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votaci&oacute;n correcta.<br />

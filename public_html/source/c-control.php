@@ -44,7 +44,7 @@ if (isset($sc[$pol['user_ID']])) {
 	if ($_GET['b'] == 'nuevos-ciudadanos') {
 
 			$txt_title = 'Control: Supervision del Censo - Nuevos ciudadanos';
-			$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Factores secundarios</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+			$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b>. Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
@@ -128,8 +128,8 @@ LIMIT 60", $link);
 
 } else if ($_GET['b'] == 'factores-secundarios') {
 
-	$txt_title = 'Control: Supervision del Censo | factores secundarios';
-	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Factores secundarios | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt_title = 'Control: Supervision del Censo | Extras';
+	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Extras | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b>. Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
@@ -150,7 +150,7 @@ WHERE ref = '" . $r['ID'] . "'", $link);
 				$clones .= crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']) . '</b> ' . $siglas[$r2['partido_afiliado']] . '<b>';
 			} 
 		}
-		$txt .= '<tr><td><b>' . crear_link($r['nick'], 'nick', $r['estado'], $r['pais']) . '</b> ' . $siglas[$r['partido_afiliado']] . '</td><td align="right"></td><td><b>' . $r['ref_num'] . '</b></td><td>(<b>' . $clones . '</b>)</td></tr>';
+		if ($clones != '') { $txt .= '<tr><td><b>' . crear_link($r['nick'], 'nick', $r['estado'], $r['pais']) . '</b> ' . $siglas[$r['partido_afiliado']] . '</td><td align="right"></td><td><b>' . $r['ref_num'] . '</b></td><td>(<b>' . $clones . '</b>)</td></tr>'; }
 	}
 	$txt .= '</table>';
 
@@ -164,6 +164,7 @@ WHERE ref = '" . $r['ID'] . "'", $link);
 'live.com',
 'live.com.ar',
 'live.com.mx',
+'live.cl',
 'movistar.es',
 'msn.com',
 'msn.es',
@@ -180,6 +181,7 @@ WHERE ref = '" . $r['ID'] . "'", $link);
 'yahoo.com.ve',
 'yahoo.es',
 'ymail.com',
+'eresmas.com',
 );
 
 
@@ -256,7 +258,7 @@ ORDER BY num ASC", $link);
 	while($r = mysql_fetch_array($result)) {
 
 		$clones = '';
-		if ($r['num'] <= 8) {
+		if ($r['num'] <= 10) {
 			$result2 = mysql_query("SELECT ID, nick, estado, pais FROM users WHERE nav = '" . $r['nav'] . "' ORDER BY fecha_registro DESC", $link);
 			while($r2 = mysql_fetch_array($result2)) {
 				if ($clones) { $clones .= ' & '; }
@@ -265,18 +267,15 @@ ORDER BY num ASC", $link);
 		} else { $clones = '</b>(navegador muy comun)<b>'; }
 
 
-
 		$txt .= '<tr><td align="right"><b>' . $r['num'] . '</b></td><td><b>' . $clones . '</b></td><td style="font-size:9px;">' . $r['nav'] . '</td></tr>';
 	}
 	$txt .= '</table>';
 
 
-
-
 	} else { // principal
 
 	$txt_title = 'Control: Supervision del Censo';
-	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Factores secundarios</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b>. Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 	
@@ -371,14 +370,22 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 
 
 
-	$txt .= '<br /><h1>4. Proxys</h1><hr />
-<table border="0" cellspacing="4"><tr><th></th><th colspan="3"><span style="float:right;">Hosts</span>Saltos de proxys</th></tr>';
+	$txt .= '<br /><h1>4. Ocultaci&oacute;n de conexi&oacute;n (proxys, TOR...)</h1><hr /><table border="0" cellspacing="4">';
+	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%proxy%');
+	$sql_anon = '';
+	foreach ($array_searchtor AS $filtro) { if ($sql_anon != '') { $sql_anon .= ' OR ';  } $sql_anon .= "host LIKE '".$filtro."'"; }
+	$result = mysql_query("SELECT nick, estado, host, IP, nav FROM users WHERE ".$sql_anon." ORDER BY fecha_registro DESC", $link);
+	while($r = mysql_fetch_array($result)) {
+		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td></tr>';
+	}
+	$txt .= '</table>';
+
+	$txt .= '<table border="0" cellspacing="4">';
 	$result = mysql_query("SELECT ID, IP, nick, estado, pais, IP_proxy
 FROM users 
 WHERE IP_proxy != ''
 ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
-
 		$proxys = '';
 		$proxys_dns = '';
 		$IP_anterior = '';
@@ -413,6 +420,7 @@ ORDER BY fecha_registro DESC", $link);
 		}
 
 		if ($clones_num > 0) {
+			if ($proxy_first != true) { $txt .= '<tr><th></th><th colspan="3"><span style="float:right;">Hosts</span>Saltos de proxys</th></tr>'; $proxy_first = true; }
 			$txt .= '<tr>
 <td valign="top"><b>' . crear_link($r['nick'], 'nick', $r['estado'], $r['pais']) . '</b></td>
 <td valign="top">' . $proxys_num . '<hr /></td>
@@ -424,6 +432,13 @@ ORDER BY fecha_registro DESC", $link);
 
 	}
 	$txt .= '</table>';
+
+
+
+
+
+
+
 
 
 	}
@@ -629,9 +644,10 @@ closedir($directorio);
 $txt .= '</select>
 </tr>
 
-</td></tr>
+</td></tr></table>
 
 
+<table border="0"'.(ECONOMIA?'':' style="display:none;"').'>
 
 <tr><td colspan="2"></td></tr>
 
@@ -674,7 +690,7 @@ $sel[$pol['config']['frontera']] = ' selected="selected"';
 </td><td valign="top">
 
 
-<table border="0" cellspacing="3" cellpadding="0" class="pol_table">
+<table border="0" cellspacing="3" cellpadding="0" class="pol_table"'.(ECONOMIA?'':' style="display:none;"').'>
 
 <tr><td colspan="2" class="amarillo"><b class="big">Salarios</b></td></tr>';
 

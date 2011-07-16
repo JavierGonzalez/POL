@@ -453,7 +453,7 @@ ORDER BY time2 DESC", $link);
 	$adsense_exclude = true;
 
 	$txt_title = 'Foro';
-	$txt .= '<div style="float:right;color:green;"><b>[<a href="/control/gobierno/foro/">Opciones</a>]</b></div>
+	$txt .= '<div style="float:right;color:green;">[<a href="/control/gobierno/foro/">Configuraci&oacute;n foro</a>]</div>
 <h1><b>Foro</b>: <a href="/foro/ultima-actividad/">Ultima actividad</a> | <a href="/foro/mis-respuestas/">Mis respuestas</a></h1>
 <br />
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">';

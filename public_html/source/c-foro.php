@@ -23,6 +23,7 @@ function reemplazos($cadena) {
 	$patrones[11] = $inicio_patron.'\[quote\]/';
 	$patrones[12] = $inicio_patron.'\[\/quote\]/';
 	$patrones[13] = $inicio_patron.'\[quote=(.*?)\]/';
+        $patrones[14] = $inicio_patron.':troll:/';
 	//$patrones[14] = $inicio_patron.'\[policia\]/';
 	//$patrones[15] = $inicio_patron.'\[\/policia\]/';
 	$reemplazos = array();
@@ -40,6 +41,7 @@ function reemplazos($cadena) {
 	$reemplazos[11] = ' <blockquote><div class="quote">';
 	$reemplazos[12] = ' </div></blockquote>';
 	$reemplazos[13] = ' <blockquote><div class="quote"><cite>\1 escribió:</cite>';
+        $reemplazos[14] = ' <img src="'.IMG.'smiley/troll.gif" border="0" alt="troll" title="troll" />';
 	//$reemplazos[14] = ' <span style="color:blue;">';
 	//$reemplazos[15] = ' <b>(Aviso Oficial)</b></span>';
 	return preg_replace($patrones, $reemplazos, $cadena);
@@ -80,7 +82,7 @@ function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 			}
 			$result = mysql_query("SELECT nick FROM users WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ 
-				$edit_text = '[quote='.$r['nick'].']'.$edit_text.'[/quote]'; 
+				$edit_text = '[quote='.$r['nick'].'] '.$edit_text.' [/quote]'; 
 			}
 			
 			$edit_text = strip_tags($edit_text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>,<iframe>");

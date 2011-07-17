@@ -271,4 +271,8 @@ function imageCompression($imgfile='',$thumbsize=0,$savePath=NULL,$format) {
     }
 }
 
+function filtro_sql($a) {
+	return mysql_real_escape_string($a);
+}
+
 ?>

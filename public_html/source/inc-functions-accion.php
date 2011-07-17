@@ -256,16 +256,19 @@ function imageCompression($imgfile='',$thumbsize=0,$savePath=NULL,$format) {
 	if ($format == 'gif') {
 		$source = imagecreatefromgif($imgfile);
 	} elseif ($format == 'png') {
+                imagealphablending($thumb, false);
+                imagesavealpha($thumb, true);
 		$source = imagecreatefrompng($imgfile);
 	} else {
 		$source = imagecreatefromjpeg($imgfile); 
 	}
     imagecopyresampled($thumb,$source,0,0,0,0,$newwidth,$newheight,$width,$height);
-    imagejpeg($thumb,$savePath,70);
-}
-
-function filtro_sql($a) {
-	return mysql_real_escape_string($a);
+    if ($format == 'png') {
+       imagepng($thumb,$savePath,7);
+    }
+    else {
+       imagejpeg($thumb,$savePath,70);
+    }
 }
 
 ?>

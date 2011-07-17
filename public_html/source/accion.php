@@ -336,9 +336,9 @@ case 'avatar':
 	if ($_GET['b'] == 'upload') {
 		$nom_file = $pol['user_ID'].'.jpg';
 		$img_name = $_FILES['avatar']['name'];
-		$img_type = $_FILES['avatar']['type'];
+	        $img_type = str_replace('image/', '', $_FILES['avatar']['type']);
 		$img_size = $_FILES['avatar']['size'];
-		if ((strpos($img_type, 'gif') || (strpos($img_type, 'jpeg')) || (strpos($img_type, 'png'))) && ($img_size < 1000000)) {
+	        if ((($img_type == 'gif') || ($img_type == 'jpeg') || ($img_type == 'png')) && ($img_size < 1000000)) {
 			move_uploaded_file($_FILES['avatar']['tmp_name'], $img_root . $nom_file);
 		} 
 		if (file_exists($img_root . $nom_file)) {

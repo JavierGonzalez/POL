@@ -342,9 +342,9 @@ case 'avatar':
 			move_uploaded_file($_FILES['avatar']['tmp_name'], $img_root . $nom_file);
 		} 
 		if (file_exists($img_root . $nom_file)) {
-			imageCompression($img_root . $nom_file, 120, $img_root . $nom_file, 'jpg');
-			imageCompression($img_root . $nom_file, 80, $img_root . $pol['user_ID'].'_80.jpg', 'jpg');
-			imageCompression($img_root . $nom_file, 40, $img_root . $pol['user_ID'].'_40.jpg', 'jpg');
+			imageCompression($img_root . $nom_file, 120, $img_root . $nom_file, $img_type);
+			imageCompression($img_root . $nom_file, 80, $img_root . $pol['user_ID'].'_80.jpg', $img_type);
+			imageCompression($img_root . $nom_file, 40, $img_root . $pol['user_ID'].'_40.jpg', $img_type);
 
 			mysql_query("UPDATE users SET avatar_localdir = '".$_FILES['avatar']['name']."', avatar = 'true' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		}

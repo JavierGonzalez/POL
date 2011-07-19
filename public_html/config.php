@@ -77,6 +77,15 @@ if (PAIS == 'VP') {
 }
 
 
+define('SSL_URL', 'https://virtualpol.com/'); // SSL_URL = http://www.virtualpol.com/ | https://virtualpol.com/
+if ($_SERVER['HTTPS']) {
+	define('IMG', 'https://virtualpol.com/img/');
+} else {
+	define('IMG', 'http://vp.cdn.teoriza.com/'); // IMG = http://www.virtualpol.com/img/ | http://vp.cdn.teoriza.com/
+}
+define('REGISTRAR', 'https://virtualpol.com/registrar/');
+
+
 define('SQL', strtolower(PAIS).'_');
 
 define('COLOR_BG', $vp['bg'][PAIS]);
@@ -84,15 +93,6 @@ define('COLOR_BG2', $vp['bg2'][PAIS]);
 
 define('HOST', $_SERVER['HTTP_HOST']);
 define('VERSION', '1.0 Beta');
-
-define('SSL_URL', 'https://virtualpol.com/'); // SSL_URL = http://www.virtualpol.com/ | https://virtualpol.com/
-if ($_SERVER['HTTPS']) {
-	define('IMG', 'https://virtualpol.com/img/');
-} else {
-	define('IMG', 'http://www.virtualpol.com/img/'); // IMG = http://www.virtualpol.com/img/ | http://vp.cdn.teoriza.com/
-}
-define('REGISTRAR', 'https://virtualpol.com/registrar/');
-
 define('MONEDA', '<img src="'.IMG.'m.gif" border="0" />');
 define('MONEDA_NOMBRE', 'monedas');
 // variables de tablas SQL

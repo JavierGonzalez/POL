@@ -23,7 +23,8 @@ if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\''.IMG.'bg/'.$pol['config
 
 <link href="<?=IMG?>style.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" media="screen" href="<?=IMG?>superfish.css" /> 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script type="text/javascript" src="<?=IMG?>superfish.js"></script> 
 
 <script type="text/javascript">
@@ -141,7 +142,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 				<ul>
 					<li><a href="/chats/">Chats</a></li>
 					<li><a href="/foro/">Foros</a></li>
-					<li><a href="/notas/">Notas</a></li>
+					<?=(ECONOMIA?'<li><a href="/notas/">Notas</a></li>':'')?>
 					<li><a href="/msg/">Mensajes Privados</a></li>
 				</ul>
 			</li>
@@ -167,7 +168,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 						<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Sobre VirtualPol</b></a>
 							<ul>
-								<li><a href="/historia/">Hechos hist&oacute;ricos</a></li>
+								<?=(ECONOMIA?'<li><a href="/historia/">Hechos hist&oacute;ricos</a></li>':'')?>
 								<li><a href="http://desarrollo.virtualpol.com/" target="_blank">Blog Desarrollo</a></li>
 								<li><a href="http://code.google.com/p/virtualpol/" target="_blank">C&oacute;digo fuente</a></li>
 								<li><a href="https://www.ohloh.net/p/virtualpol/contributors" target="_blank">Info desarrollo</a></li>

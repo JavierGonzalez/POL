@@ -338,8 +338,8 @@ ORDER BY siglas ASC", $link);
 	$result = mysql_query("SELECT ID FROM ".SQL."estudios_users WHERE user_ID = '" . $pol['user_ID'] . "' AND cargo = '1' AND ID_estudio = '6' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){ $es_diputado = true; }
 
-	$txt_title = 'Votaciones: sondeos, referendums, parlamento';
-	$txt .= '<h1>Votaciones: (Referendum, sondeos, parlamento, etc) &nbsp; &nbsp; '.boton('Crear votacion', '/votacion/crear/').'</h1>
+	$txt_title = 'Sistema de Votaciones';
+	$txt .= '<h1>Votaciones: &nbsp; &nbsp; '.boton('Crear votacion', '/votacion/crear/').'</h1>
 
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 <tr>

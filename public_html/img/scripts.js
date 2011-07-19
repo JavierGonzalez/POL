@@ -12,7 +12,7 @@ $(document).ready(function(){
 	search_timers();
 	setInterval("search_timers()", 1000);
 
-	$("ul.sfn-menu").superfish(); 
+	$("ul.sfn-menu, ul.sf-menu").superfish(); 
 
 	$("dt a").click(function(){
 		$("dd:visible").slideUp("normal");

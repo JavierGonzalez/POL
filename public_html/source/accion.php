@@ -1126,11 +1126,12 @@ case 'votacion':
 					while($r = mysql_fetch_array($result)){ $cargo_user_ID = $r['ID']; $_POST['nick'] = $r['nick']; }
 
 					if (($cargo_nombre) AND ($cargo_user_ID)) { // fuerza configuracion
-						$_POST['time_expire'] = 86400; 
+						$_POST['time_expire'] = 86400;
+						if ($_POST['cargo'] == 7) { $_POST['time_expire'] = (86400*2); }
 						$_POST['acceso_votar'] = 'ciudadanos'; $_POST['acceso_cfg_votar'] = '';
 						$ejecutar = $_POST['cargo'].'|'.$cargo_user_ID;
 						$_POST['pregunta'] = '&iquest;Apruebas '.strtoupper($_POST['tipo']).' el cargo '.$cargo_nombre.' al ciudadano '.$_POST['nick'].'?';
-						$_POST['descripcion'] = '&iquest;Estas a favor de <b>'.ucfirst($_POST['tipo']).'</b> el cargo <b>'.$cargo_nombre.'</b> al ciudadano <b>'.crear_link($_POST['nick']).'</b>?<br /><br /><b>Al finalizar esta votaci&oacute;n, si el resultado es favorable se ejecutar&aacute; la acci&oacute;n autom&aacute;ticamente.</b>';
+						$_POST['descripcion'] = '&iquest;Estas a favor de <b>'.ucfirst($_POST['tipo']).'</b> el cargo <b>'.$cargo_nombre.'</b> al ciudadano <b>'.crear_link($_POST['nick']).'</b>?<br /><br />Al finalizar esta votaci&oacute;n, si el resultado mayor es a favor, se ejecutar&aacute; la acci&oacute;n autom&aacute;ticamente.';
 						$respuestas = 'SI|NO|En Blanco|';
 						$_POST['votos_expire'] = 0;
 						if ($_POST['cargo'] == 22) { $_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22'; $_POST['votos_expire'] = $pol['config']['num_escanos']; }	

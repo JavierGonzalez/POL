@@ -373,7 +373,7 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 	$txt .= '<br /><h1>4. Ocultaci&oacute;n de conexi&oacute;n (proxys, TOR...)</h1><hr /><table border="0" cellspacing="4">';
 	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%proxy%');
 	$sql_anon = '';
-	foreach ($array_searchtor AS $filtro) { if ($sql_anon != '') { $sql_anon .= ' OR ';  } $sql_anon .= "host LIKE '".$filtro."'"; }
+	foreach ($array_searchtor AS $filtro) { if ($sql_anon != '') { $sql_anon .= ' OR ';  } $sql_anon .= "hosts LIKE '".$filtro."'"; }
 	$result = mysql_query("SELECT nick, estado, host, IP, nav FROM users WHERE ".$sql_anon." ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td></tr>';
@@ -774,14 +774,17 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 <li><b>Motivo de expulsi&oacute;n:</b> si son varios elegir el mas claro.<br />
 <select name="razon">
 
-<optgroup label="Usuarios">
-	<option value="Clones:" selected="selected">Clones:</option>
-	<option value="Clones: 1.b">Uso de una direcci&oacute;n de email temporal o de uso no habitual.</option>
+<optgroup label="Clones">
+	<option value="Clones: 1.a" selected="selected">1.a Clones:</option>
+	<option value="Clones: 1.b">1.b Uso de una direcci&oacute;n de email temporal o de uso no habitual.</option>
+	<option value="Clones: 1.c">1.c Uso de cualquier m&eacute;todo cuyo fin sea ocultar la conexi&oacute;n a Internet.</option>
+</optgroup>
+
+<optgroup label="Mantenimiento">
 	<option value="Registro erroneo.">Registro erroneo.</option>
 	<option value="Peticion propia.">Peticion propia.</option>
 	<option value="Test de desarrollo.">Test de desarrollo.</option>
 </optgroup>
-
 
 <optgroup label="Ataque al sistema">
 	<option value="Ataque al sistema: 2.a">2.a Uso o descubrimiento de bugs del sistema, sea cual fuere su finalidad, sin reportarlo inmediatamente u obrando de mala fe.</option>

@@ -30,11 +30,11 @@ while ($r = mysql_fetch_array($result)) {
 $result = mysql_query("SELECT ID, nombre FROM ".SQL."estudios WHERE asigna != '-1' ORDER BY nivel DESC", $link);
 while ($r = mysql_fetch_array($result)) {
 	if ($array_cargos) { $array_cargos .= ', '; } 
-	$array_cargos .= ''.$r['ID'].':"'.$r['nombre'].'"';
+	$array_cargos .= $r['ID'].':"'.$r['nombre'].'"';
 }
 
-// SI es Policia o Comisario del pais, muestra control de kicks.
-if ((nucleo_acceso($vp['acceso']['kick'][0], $vp['acceso']['kick'][1])) AND ($pol['pais'] == PAIS)) {
+// Muestra control de kicks.
+if ((nucleo_acceso($vp['acceso']['kick'])) AND ($pol['pais'] == PAIS)) {
 	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"'.IMG.'kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a> ';
 } else { $js_kick = ''; }
 
@@ -198,8 +198,9 @@ if ($externo) {
 	echo '
 <html>
 <body>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://www.virtualpol.com/img/scripts.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript" src="'.IMG.'scripts.js"></script>
+<script type="text/javascript">IMG = "'.IMG.'";</script>
 '.$txt_header.$txt.'
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -213,13 +214,7 @@ pageTracker._trackPageview();
 } catch(err) {}
 </script>
 </body></html>';
-	if ($link) { mysql_error($link); }
-	exit;
+	if ($link) { mysql_error($link); } exit;
 }
 
-
 ?>
-
-
-
-

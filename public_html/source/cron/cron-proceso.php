@@ -43,7 +43,7 @@ while($r = mysql_fetch_array($result)){
 	$examenes_exp_num++;
 	mysql_query("DELETE FROM ".SQL."estudios_users WHERE ID = '".$r['ID']."'", $link);
 }
-evento_chat('<b>[PROCESO]</b> Expirados <b>'.$examenes_exp_num.'</b> examenes.');
+//evento_chat('<b>[PROCESO]</b> Expirados <b>'.$examenes_exp_num.'</b> examenes.');
 
 
 if (ECONOMIA) {
@@ -306,7 +306,7 @@ $result = mysql_query("SELECT user_ID, AVG(nota) AS media FROM ".SQL."estudios_u
 while($r = mysql_fetch_array($result)){ 
 	if ($r['media']) { mysql_query("UPDATE users SET nota = '".$r['media']."' WHERE ID = '".round($r['user_ID'], 1)."' LIMIT 1", $link); }
 }
-evento_chat('<b>[PROCESO] Calculadas las notas media.</b>');
+//evento_chat('<b>[PROCESO] Calculadas las notas media.</b>');
 
 
 // ELIMINAR CHAT INACTIVOS TRAS N DIAS
@@ -367,7 +367,7 @@ $result = mysql_query("SELECT user_ID, SUM(voto) AS num_confianza FROM ".SQL_VOT
 while ($r = mysql_fetch_array($result)) { 
 	mysql_query("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['user_ID']."' LIMIT 1", $link);
 } 
-evento_chat('<b>[PROCESO] Voto de confianza actualizado. SC:</b> '.implode(', ', get_supervisores_del_censo()).'');
+evento_chat('<b>[PROCESO] Supervisores del Censo:</b> '.implode(' ', get_supervisores_del_censo()));
 
 
 

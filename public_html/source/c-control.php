@@ -782,7 +782,6 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 
 <optgroup label="Mantenimiento">
 	<option value="Registro erroneo.">Registro erroneo.</option>
-	<option value="Peticion propia.">Peticion propia.</option>
 	<option value="Test de desarrollo.">Test de desarrollo.</option>
 </optgroup>
 

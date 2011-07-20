@@ -192,6 +192,7 @@ FROM votacion
 WHERE ID = '".$_GET['a']."' AND pais = '".PAIS."'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
+		$votos_total = $r['num'];
 
 		if ($r['tipo'] == 'parlamento') {
 			$result2 = mysql_unbuffered_query("SELECT ID FROM ".SQL."estudios_users WHERE user_ID = '" . $pol['user_ID'] . "' AND cargo = '1' AND ID_estudio = '6' LIMIT 1", $link);
@@ -210,7 +211,7 @@ LIMIT 1", $link);
 		} else { $tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; }
 
 
-		$txt .= '<h1><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).' | '.$r['num'].' votos | '.$tiempo_queda.'</h1>
+		$txt .= '<h1><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).' | '.$votos_total.' votos | '.$tiempo_queda.'</h1>
 
 <div class="amarillo" style="margin:20px 0 15px 0;padding:20px 10px 0 10px;">
 <h1>'.$r['pregunta'].'</h1>
@@ -224,54 +225,47 @@ Duraci&oacute;n <b>'.$duracion.'</b>.'.($r['votos_expire']!=0?' Finaliza tras  <
 
 		if ($r['estado'] == 'end') { // VOTACION TERMINADA, IMPRIMIR RESULTADOS 
 
-			$txt_escrutinio = '';
-			$chart_dato = array();
-			$chart_nom = array();
-			$result2 = mysql_query("SELECT COUNT(ID) as num, voto, validez
-FROM votacion_votos
-WHERE ref_ID = '" . $r['ID'] . "'
-GROUP BY voto", $link);
+			// Conteo/Proceso de votos (ESCRUTINIO)
+			$escrutinio['votos'] = array(0,0,0,0,0,0,0,0,0,0,0,0);
+			$escrutinio['votos_autentificados'] = 0;
+			$escrutinio['votos_total'] = 0;
+			$escrutinio['validez']['true'] = 0; $escrutinio['validez']['false'] = 0;
+			$result2 = mysql_query("SELECT voto, validez, autentificado FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
 			while($r2 = mysql_fetch_array($result2)) {
-				$txt_escrutinio .= '<tr><td nowrap="nowrap">' . $respuestas[$r2['voto']] . '</td><td align="right"><b>' . $r2['num'] . '</b></td><td align="right">' . num(($r2['num'] * 100) / $r['num'], 1) . '%</td></tr>';
-
-				$escanos_total = $escanos_total + $r2['num'];
-				$chart_dato[] = $r2['num'];
-				$chart_nom[] = $respuestas[$r2['voto']];
+				$escrutinio['votos'][$r2['voto']]++;
+				$escrutinio['validez'][$r2['validez']]++;
+				if ($r2['autentificado'] == 'true') { $escrutinio['votos_autentificados']++; }
 			}
 
-			$validez_voto['true'] = 0; $validez_voto['false'] = 0;
-			$result2 = mysql_query("SELECT validez, COUNT(ID) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' GROUP BY validez", $link);
-			while($r2 = mysql_fetch_array($result2)) {
-				$validez_voto[$r2['validez']] = $r2['num'];
-			}
+			// Determina validez (por mayoria simple)
+			$nulo_limite = ceil(($votos_total)/2);
+			if ($escrutinio['validez']['false'] >= $nulo_limite) { $validez = false; } else { $validez = true; }
 
-			// Determinar validez: mayoria simple = votacion nula.
-			$nulo_limite = ceil(($validez_voto['true']+$validez_voto['false'])/2);
-			if ($validez_voto['false'] >= $nulo_limite) { $validez = false; } else { $validez = true; }
-			
-
-			$txt .= '<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
-'.($validez==true?'<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
-<tr>
-<th>Escrutinio</th>
-<th>Votos</th>
-<th></th>
-</tr>'.$txt_escrutinio.'</table>':'').'</td><td valign="top">';
-
+			// Imprime escrutinio en texto.
+			$txt .= '<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">';
 			if ($validez==true) {
-				if ($r['tipo']=='parlamento') {
-					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:' . $escanos_total . ',' . implode(',', $chart_dato) . '&chs=450x300&chl=|' . implode('|', $chart_nom) . '&chco=ffffff01,FF8000&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="450" height="300" />';
-				} else {
-					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . implode(',', $chart_dato) . '&chs=430x200&chds=a&chl=' . implode('|', $chart_nom) . '&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="430" height="200" />';
+				$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th>Escrutinio</th><th>Votos</th><th></th></tr>';
+				foreach ($escrutinio['votos'] AS $voto => $num) { 
+					if ($respuestas[$voto]) {
+						$txt .= '<tr><td nowrap="nowrap">'.$respuestas[$voto].'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.num(($num * 100) / $votos_total, 1).'%</td></tr>';
+						$respuestas_array[$voto] = $respuestas[$voto];
+					} else { unset($escrutinio['votos'][$voto]);  }
 				}
+				$txt .= '</table>';
+			}
+			$txt .= '</td><td valign="top">';
+
+			// Imprime escrutinio en grafico.
+			if ($validez == true) {
+				$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:'.implode(',', $escrutinio['votos']).'&chs=430x200&chl='.implode('|', $respuestas_array).'&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="430" height="200" />';
 			}
 
-			$txt .= '
-</td>
-<td valign="top" style="color:#888;">Validez: '.($validez?'<b style="color:#2E64FE;">OK</b>':'<b style="color:#FF0000;">NULO</b>').'<br />
-<img title="Votos de validez: '.$validez_voto['true'].' OK, '.$validez_voto['false'].' NULO" src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$validez_voto['true'].','.$validez_voto['false'].'&chs=210x130&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" />
-<!--<br /> M&iacute;nimo para nulidad: <b>'.$nulo_limite.'</b> (50%).--></td>
-
+			// Imprime datos de legitimidad y validez
+			$txt .= '</td>
+<td valign="top" style="color:#888;"><br />
+Legitimidad: <b>'.$votos_total.'</b> votos, <b>'.$escrutinio['votos_autentificados'].'</b> autentificados.<br />
+Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b> '.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>NULO</b> '.$porcentaje_validez.'%</span>').'<br />
+<img title="Votos de validez: '.$escrutinio['validez']['true'].' OK, '.$escrutinio['validez']['false'].' NULO" src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$escrutinio['validez']['true'].','.$escrutinio['validez']['false'].'&chs=210x130&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>
 </tr></table>';
 
 
@@ -279,17 +273,17 @@ GROUP BY voto", $link);
 
 			if ($r['ha_votado']) {
 				for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
-						$votos .= '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
+						$votos .= '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
 				} }
 				$txt .= 'Tu voto (<em>'.$respuestas[$r['que_ha_votado']].'</em>) ha sido recogido <b>correctamente</b>.<br />';
 			} else {
 				for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
-						$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>' . $respuestas[$i] . '</option>'; 
+						$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
 				} }
 			}
 			$tiene_acceso_votar = nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']);
 			$txt .= '<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=votacion&b=votar" method="post">
-<input type="hidden" name="ref_ID" value="' . $r['ID'] . '"  />
+<input type="hidden" name="ref_ID" value="'.$r['ID'].'"  />
 <p><select name="voto" style="font-size:22px;">
 '.$votos.'
 </select>
@@ -301,23 +295,15 @@ GROUP BY voto", $link);
 </p>
 
 </form>';
-
-
 		}
 
+		// Añade tabla de escrutinio publico si es votacion tipo parlamento.
 		if ($r['tipo'] == 'parlamento') {
-			$txt .= '
-<table border="0" cellpadding="0" cellspacing="3" class="pol_table">
-<tr>
-<th>Diputado</th>
-<th></th>
-<th colspan="2">Voto</th>
-</tr>';
-
+			$txt .= '<table border="0" cellpadding="0" cellspacing="3" class="pol_table"><tr><th>Diputado</th><th></th><th colspan="2">Voto</th></tr>';
 			$result2 = mysql_query("SELECT user_ID,
 (SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick,
 (SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS siglas,
-(SELECT voto FROM votacion_votos WHERE ref_ID = '" . $r['ID'] . "' AND user_ID = ".SQL."estudios_users.user_ID LIMIT 1) AS ha_votado
+(SELECT voto FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = ".SQL."estudios_users.user_ID LIMIT 1) AS ha_votado
 FROM ".SQL."estudios_users
 WHERE cargo = '1' AND ID_estudio = '6'
 ORDER BY siglas ASC", $link);
@@ -327,9 +313,7 @@ ORDER BY siglas ASC", $link);
 				$txt .= '<tr><td><img src="'.IMG.'cargos/6.gif" /> <b>' . crear_link($r2['nick']) . '</b></td><td><b>' . crear_link($r2['siglas'], 'partido') . '</b></td><td' . $ha_votado . '></td><td><b>' . $respuestas[$r2['ha_votado']]  . '</b></td></tr>';
 			}
 			$txt .= '</table>';
-
 		}
-
 
 	}
 

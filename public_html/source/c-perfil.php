@@ -89,7 +89,7 @@ ORDER BY cargo DESC, estado ASC, nota DESC", $link);
 			if ($r2['cargo'] == 1) { 
 				$dimitir = ' <span class="gris"> (Cargo Ejercido)</span>';
 				if ($r['ID'] == $pol['user_ID']) {
-					$dimitir .= '</td><td><form action="/accion.php?a=cargo&b=dimitir&ID='.$r2['ID_estudio'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="Dimitir"  onclick="if (!confirm(\'&iquest;Seguro que quieres DIMITIR del cargo de ' . $r2['nombre'] . '?\')) { return false; }"/></form>';
+					$dimitir .= '</td><td><form action="/accion.php?a=cargo&b=dimitir&ID='.$r2['ID_estudio'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="Dimitir"  onclick="if (!confirm(\'&iquest;Seguro que quieres DIMITIR del cargo de ' . $r2['nombre'] . '?\')) { return false; }" /></form>';
 				}
 			}
 			$estudios_num++;

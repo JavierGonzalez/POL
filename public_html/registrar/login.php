@@ -43,7 +43,6 @@ case 'recuperar-pass':
 
 
 case 'panel':
-	// CAMBIAR PASS...
 	
 	if ($pol['user_ID']) {
 
@@ -71,6 +70,16 @@ case 'panel':
 <tr>
 <td align="center" valign="top">Email: <input type="text" size="30" name="email" value="'.$pol['email'].'" maxlength="100" /></td>
 <td align="center" valign="top"><input type="submit" value="Cambiar email" style="font-weight:bold;font-size:15px;color:green;" />
+</td></tr></table></form></li>
+
+<br />
+
+<li class="azul"><b>Borrar usuario y datos personales:</b><br />
+<form action="'.REGISTRAR.'login.php?a=borrar-usuario" method="POST">
+<input type="hidden" name="nick" value="'.$pol['nick'].'" />
+<table border="0" cellpadding="2" cellspacing="0" width="100%">
+<tr>
+<td align="center" valign="top"><input type="submit" value="Eliminar usuario definitivamente" style="font-weight:bold;font-size:16px;color:red;" onclick="if ((confirm(\'&iquest;Estas seguro de querer ELIMINAR PERMANENTEMENTE tu usuario y todos los datos asociados?\')) && (confirm(\'&iquest;De verdad estas seguro? Esta accion es irreversible.\')) && (confirm(\'Si aceptas, tu usuario sera eliminado junto con todos sus datos personales. &iquest;Estas de acuerdo?\'))) {} else { return false; }" />
 </td></tr></table></form></li>';
 
 		$txt .= '</ul>';
@@ -85,6 +94,12 @@ case 'panel':
 	$txt_title = 'Panel de Usuarios :: Blogs Teoriza';
 	include('../theme.php');
 	break;
+
+
+
+
+
+// ACCIONES /login.php?a=...
 
 case 'changepass':
 	$oldpass = md5(trim($_POST['oldpass']));
@@ -118,6 +133,11 @@ case 'changemail':
 	header("Location: $url");
 	break;
 
+
+case 'borrar-usuario':
+	if ($_POST['nick'] == $pol['nick']) { mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link); }
+	header("Location: http://www.virtualpol.com");
+	break;
 
 case 'traza':
 	if (($_GET['user_ID']) AND ($_GET['traza']) AND ($_GET['pass'])) {

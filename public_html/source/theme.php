@@ -217,7 +217,15 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 			</li>
 <?php }
 
-if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5" style="margin:8px 0 0 0;"><a href="/votacion/">Votaciones ('.$pol['config']['info_consultas'].')</a></li>'; }
+if (ECONOMIA) {
+	if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5" class="menu-5" style="margin:10px 0 0 1px;"><a href="/votacion/">Votaciones! <span class="md" style="font-size:19px;">'.$pol['config']['info_consultas'].'</span></a></li>'; }
+} else {
+	echo '<li id="menu-5" class="menu-5" style="margin:10px 0 1px 1px;"><a href="/foro/propuestas/">Propuestas</a></li>';
+	if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:20px;">'.$pol['config']['info_consultas'].'</span></a></li>'; }
+	echo '<li id="menu-5" class="menu-5"><a href="/foro/acuerdos/">Acuerdos</a></li>';
+}
+
+
 
 echo '</ul></dd></dl>
 
@@ -299,7 +307,7 @@ if (ECONOMIA) {
 
 <div id="pnick" class="azul" style="display:none;opacity:0.9;"></div>
 
-<script type="text/javascript" src="<?=IMG?>scripts.js?v=20"></script>
+<script type="text/javascript" src="<?=IMG?>scripts.js?v=21"></script>
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-59186-46']);

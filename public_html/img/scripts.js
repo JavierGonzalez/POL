@@ -9,8 +9,7 @@ whois_cache = new Array();
 // ON LOAD
 $(document).ready(function(){
 
-	search_timers();
-	setInterval("search_timers()", 1000);
+
 
 	$("ul.sfn-menu, ul.sf-menu").superfish(); 
 
@@ -20,7 +19,12 @@ $(document).ready(function(){
 		return false;
 	});
 
+	search_timers();
+	setInterval("search_timers()", 1000);
+
 	$("#pnick").css("display","none").css("position","absolute");
+
+	$(".rich").each(function (i) { $(this).html(enriquecer($(this).html(), true)); });
 
 	$(".nick").mouseover(function(){
 		var wnick = $(this).text();
@@ -254,7 +258,7 @@ function print_msg(data) {
 			if (idx != -1) { escondidos.push(m_ID); } else { chat_sin_leer++; }
 		}
 
-		$("#vpc_ul").append(emoticono(list));
+		$("#vpc_ul").append(enriquecer(list, false));
 		merge_list();
 		if ((chat_sin_leer > 0) || (chat_sin_leer_antes == -1)) {
 			refresh_sin_leer();
@@ -360,20 +364,37 @@ function chat_enabled() {
 
 function auto_priv(nick) { $("#vpc_msg").attr("value","/msg " + nick + " ").css("background", "#FF7777").css("color", "#952500").focus(); }
 
-function emoticono(m) {
-	m = m.replace(/(\s|^):\)/gi, " <img src=\""+IMG+"smiley/sonrie.gif\" border=\"0\" alt=\":)\" title=\":)\" />");
-	m = m.replace(/(\s|^):\(/gi, " <img src=\""+IMG+"smiley/disgustado.gif\" border=\"0\" alt=\":(\" title=\":(\" />");
-	m = m.replace(/(\s|^):\|/gi, " <img src=\""+IMG+"smiley/desconcertado.gif\" border=\"0\" alt=\":|\" title=\":|\" />");
-	m = m.replace(/(\s|^):D/gi, " <img src=\""+IMG+"smiley/xd.gif\" alt=\":D\" border=\"0\" title=\":D\" />");
-	m = m.replace(/(\s|^):\*/gi, " <img src=\""+IMG+"smiley/muacks.gif\" alt=\":*\" border=\"0\" title=\":*\" />");
-	m = m.replace(/(\s|^);\)/gi, " <img src=\""+IMG+"smiley/guino.gif\" alt=\";)\" border=\"0\" title=\";)\" />");
-	m = m.replace(/(\s|^):O/gi, " <img src=\""+IMG+"smiley/bocaabierta.gif\" alt=\":O\" border=\"0\" title=\":O\" />");
-	m = m.replace(/(\s|^):tarta:/gi, " <img src=\""+IMG+"smiley/tarta.gif\" alt=\":tarta:\" border=\"0\" title=\":tarta:\" />");
-	m = m.replace(/(\s|^):roto2:/gi, " <img src=\""+IMG+"smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" />");
-	m = m.replace(/(\s|^):facepalm:/gi, " <img src=\""+IMG+"smiley/palm.gif\" alt=\":facepalm:\" border=\"0\" title=\":facepalm:\" />");
-	m = m.replace(/(\s|^):moneda:/gi, " <img src=\""+IMG+"m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" />");
-	m = m.replace(/(\s|^):troll:/gi, " <img src=\""+IMG+"smiley/troll.gif\" alt=\":troll:\" border=\"0\" title=\":troll:\" />");
+// ### FUNCIONES CHAT END
+
+
+function enriquecer(m, bbcode) {
+	
+	// Emoticonos
+	m = m.replace(/(\s|^):\)/gi, " <img src=\""+IMG+"smiley/sonrie.gif\" border=\"0\" alt=\":)\" title=\":)\" width=\"15\" height=\"15\" />");
+	m = m.replace(/(\s|^):\(/gi, " <img src=\""+IMG+"smiley/disgustado.gif\" border=\"0\" alt=\":(\" title=\":(\" width=\"15\" height=\"15\" />");
+	m = m.replace(/(\s|^):\|/gi, " <img src=\""+IMG+"smiley/desconcertado.gif\" border=\"0\" alt=\":|\" title=\":|\" width=\"15\" height=\"15\" />");
+	m = m.replace(/(\s|^):D/gi, " <img src=\""+IMG+"smiley/xd.gif\" alt=\":D\" border=\"0\" title=\":D\" width=\"15\" height=\"15\" />");
+	m = m.replace(/(\s|^):\*/gi, " <img src=\""+IMG+"smiley/muacks.gif\" alt=\":*\" border=\"0\" title=\":*\" width=\"15\" height=\"15\" />");
+	m = m.replace(/(\s|^);\)/gi, " <img src=\""+IMG+"smiley/guino.gif\" alt=\";)\" border=\"0\" title=\";)\" width=\"15\" height=\"15\" />");
+	m = m.replace(/(\s|^):O/gi, " <img src=\""+IMG+"smiley/bocaabierta.gif\" alt=\":O\" border=\"0\" title=\":O\" width=\"15\" height=\"15\" />");
+	m = m.replace(/:tarta:/gi, " <img src=\""+IMG+"smiley/tarta.gif\" alt=\":tarta:\" border=\"0\" title=\":tarta:\" width=\"15\" height=\"15\" />");
+	m = m.replace(/:roto2:/gi, " <img src=\""+IMG+"smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" width=\"15\" height=\"15\" />");
+	m = m.replace(/:facepalm:/gi, " <img src=\""+IMG+"smiley/palm.gif\" alt=\":facepalm:\" border=\"0\" title=\":facepalm:\" width=\"15\" height=\"15\" />");
+	m = m.replace(/:moneda:/gi, " <img src=\""+IMG+"m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" width=\"15\" height=\"15\" />");
+	m = m.replace(/:troll:/gi, " <img src=\""+IMG+"smiley/troll.gif\" alt=\":troll:\" border=\"0\" title=\":troll:\" width=\"15\" height=\"15\" />");
+
+	// URL
+	m = m.replace(/(\s|^)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, " <a href=\"$2\">$2</a>");
+
+	// BBCODE
+	if (bbcode) {
+		m = m.replace(/\[(b|i|em|s)\](.*?)\[\/\1\]/gi, "<$1>$2</$1>"); 
+		m = m.replace(/\[img\](.*?)\[\/img\]/gi, "<img src=\"$1\" alt=\"img\" style=\"max-width:600px;\" />");
+		m = m.replace(/\[youtube\]http\:\/\/www\.youtube\.com\/watch\?v=(.*?)\[\/youtube\]/gi, "<iframe width=\"425\" height=\"349\" src=\"http://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>");
+		m = m.replace(/\[quote\]/gi, "<blockquote><div class=\"quote\">");
+		m = m.replace(/\[quote=(.*?)\]/gi, "<blockquote><div class=\"quote\"><cite>$1 escribi&oacute;:</cite>");
+		m = m.replace(/\[\/quote\]/gi, "</div></blockquote>");
+	}
+
 	return m;
 }
-
-// ### FUNCIONES CHAT END

@@ -187,12 +187,15 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as, '.round($i/365, 2).
 <img src="'.gen_grafico($d['hilos_msg']).'" alt="Mensajes en el Foro" border="0" />
 
 <br /><b>2.3 Partidos pol&iacute;ticos</b> (<a href="/partidos/">Ver partidos</a>)<br />
-<img src="'.gen_grafico($d['partidos']).'" alt="Partidos" border="0" />
+<img src="'.gen_grafico($d['partidos']).'" alt="Partidos" border="0" />';
 
+if (ECONOMIA) {
+	$txt .= '
 <br /><b>2.4 <span style="color:#0000FF;">Empresas</span>/<span style="color:#FF0000;">transacciones</span></b> (<a href="/empresas/">Ver empresas</a> , <a href="/pols/">Ver transferencias</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['empresas'], true, $d['transacciones']):gen_datos($d['empresas'], true)).'" alt="Empresas" border="0" />
+<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['empresas'], true, $d['transacciones']):gen_datos($d['empresas'], true)).'" alt="Empresas" border="0" />';
+}
 
-
+$txt .= '
 <br /><b>2.5 Confianza general</b> (<a href="/info/confianza/">Ver confianza</a>)<br />
 <img src="'.gen_grafico($d['confianza'], '', true).'" alt="Confianza" border="0" />
 
@@ -225,9 +228,9 @@ $txt .= '
 }
 
 $txt .= '
-<h2 style="margin-top:35px;">4. POL&Iacute;TICA</h2>
+<h2 style="margin-top:35px;">4. DEMOCRACIA</h2>
 <div class="amarillo">
-<p><b>4.1 Afiliados</b></p><div style="background:FFFFDD;"><table border="0"><tr>';
+<p><b>4.1 Afiliaciones</b></p><div style="background:FFFFDD;"><table border="0"><tr>';
 
 foreach ($vp['paises'] AS $PAIS) {
 	// GRAFICO AFILIADOS

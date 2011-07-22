@@ -129,7 +129,9 @@ LIMIT 1", $link);
 		}
 
 		$msg = str_replace("\r", "", str_replace("\n", "", trim(strip_tags($msg))));
-		if ($_SESSION['pol']['estado'] != 'anonimo') { $msg = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/()]","<a target=\"_blank\" href=\"\\0\">\\0</a>", $msg); }
+		
+		//if ($_SESSION['pol']['estado'] != 'anonimo') { $msg = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/()]","<a target=\"_blank\" href=\"\\0\">\\0</a>", $msg); }
+		
 		$target_ID = 0;
 		$tipo = 'c';
 
@@ -180,26 +182,13 @@ LIMIT 1", $link);
 					}
 					break;
 
-				case 'servidor':  
-					if ($msg_rest == 'cs') {
-						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> Servidor de Counter-Strike: <span class="gris">' . $_SERVER['REMOTE_ADDR'] . ':27015</span>';
-					} elseif ($msg_rest == 'aoe') {
-						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> Servidor de AOE: ...';
-					} elseif ($msg_rest == 'BFV') {
-						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> Servidor de Battlefield Vietnam: <span class="gris">' . $_SERVER['REMOTE_ADDR'] . ':15567</span>';
-					}
-					break;
 				case 'me': $elmsg = '<b style="margin-left:20px;">' . $_SESSION['pol']['nick'] . '</b> ' . $msg_rest; break;
 				case 'exit': $elmsg = '<span style="margin-left:20px;color:#66004C;"><b>' . $_SESSION['pol']['nick'] . '</b> se marcha, hasta pronto!</span>'; break;
 				case 'sombras': $elmsg = '<span style="margin-left:20px;color:#585858;"><b>' . $_SESSION['pol']['nick'] . '</b> se retira a las sombras...</span>'; break;
 				case 'ayuda': $elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> ofrece ayuda: <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="http://www.virtualpol.com/manual" target="_blank">Manual de ayuda</a>.</a>'; break;
 
-				case 'policia':
-					if (nucleo_acceso('cargo', '13 12'))  {
-						$elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>';
-						$tipo = 'm';
-					}
-					break;
+				case 'policia': if (nucleo_acceso('cargo', '13 12'))  { $elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>'; $tipo = 'm'; } break;
+
 				case 'msg':
 					if ($_SESSION['pol']['user_ID']) {
 						$nick_receptor = trim($msg_array[1]);
@@ -210,13 +199,6 @@ LIMIT 1", $link);
 							$tipo = 'p';
 							$elnick = $_SESSION['pol']['nick'].'&rarr;'.$row['nick'];
 						}
-					}
-					break;
-					
-				case 'parlamento':
-					if (nucleo_acceso('cargo', '22')) {
-						$elmsg = '<span style="color:blue;">'.$msg_rest.' <b>(Aviso Oficial- Presidente del Parlamento)</b></span>';
-						$tipo = 'm';
 					}
 					break;
 			}

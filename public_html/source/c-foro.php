@@ -6,46 +6,7 @@ pol_foros_hilos		(`ID` `sub_ID``url` `user_ID` `title` `time` `time_last` `text`
 pol_foros_msg		(`ID``hilo_ID` `user_ID` `time` `text` `cargo`)
 */
 
-function reemplazos($cadena) {
-	$inicio_patron = '/\s?';
-	$patrones = array();
-	$patrones[0] = $inicio_patron.':\)/';
-	$patrones[1] = $inicio_patron.':\(/';
-	$patrones[2] = $inicio_patron.':\|/';
-	$patrones[3] = $inicio_patron.':D/';
-	$patrones[4] = $inicio_patron.':\*/';
-	$patrones[5] = $inicio_patron.';\)/';
-	$patrones[6] = $inicio_patron.':O/';
-	$patrones[7] = $inicio_patron.':tarta:/';
-	$patrones[8] = $inicio_patron.':roto2:/';
-	$patrones[9] = $inicio_patron.':facepalm:/';
-	$patrones[10] = $inicio_patron.':moneda:/';
-	$patrones[11] = $inicio_patron.'\[quote\]/';
-	$patrones[12] = $inicio_patron.'\[\/quote\]/';
-	$patrones[13] = $inicio_patron.'\[quote=(.*?)\]/';
-        $patrones[14] = $inicio_patron.':troll:/';
-	//$patrones[14] = $inicio_patron.'\[policia\]/';
-	//$patrones[15] = $inicio_patron.'\[\/policia\]/';
-	$reemplazos = array();
-	$reemplazos[0] = ' <img src="'.IMG.'smiley/sonrie.gif" border="0" alt=":)" title=":)" />';
-	$reemplazos[1] = ' <img src="'.IMG.'smiley/disgustado.gif" border="0" alt=":(" title=":(" />';
-	$reemplazos[2] = ' <img src="'.IMG.'smiley/desconcertado.gif" border="0" alt=":|" title=":|" />';
-	$reemplazos[3] = ' <img src="'.IMG.'smiley/xd.gif" alt=":D" border="0" title=":D" />';
-	$reemplazos[4] = ' <img src="'.IMG.'smiley/muacks.gif" alt=":*" border="0" title=":*" />';
-	$reemplazos[5] = ' <img src="'.IMG.'smiley/guino.gif" alt=";)" border="0" title=";)" />';
-	$reemplazos[6] = ' <img src="'.IMG.'smiley/bocaabierta.gif" alt=":O" border="0" title=":O" />';
-	$reemplazos[7] = ' <img src="'.IMG.'smiley/tarta.gif" alt=":tarta:" border="0" title=":tarta:" />';
-	$reemplazos[8] = ' <img src="'.IMG.'smiley/roto2.gif" alt=":roto2:" border="0" title=":roto2:" />';
-	$reemplazos[9] = ' <img src="'.IMG.'smiley/palm.gif" alt=":facepalm:" border="0" title=":facepalm:" />';
-	$reemplazos[10] = ' <img src="'.IMG.'m.gif" alt=":moneda:" border="0" title=":moneda:" />';
-	$reemplazos[11] = ' <blockquote><div class="quote">';
-	$reemplazos[12] = ' </div></blockquote>';
-	$reemplazos[13] = ' <blockquote><div class="quote"><cite>\1 escribió:</cite>';
-        $reemplazos[14] = ' <img src="'.IMG.'smiley/troll.gif" border="0" alt="troll" title="troll" />';
-	//$reemplazos[14] = ' <span style="color:blue;">';
-	//$reemplazos[15] = ' <b>(Aviso Oficial)</b></span>';
-	return preg_replace($patrones, $reemplazos, $cadena);
-}
+function reemplazos($t) { return '<span class="rich">'.strip_tags($t, '<br>').'</span>'; }
 
 function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 	global $pol, $link, $return_url;
@@ -63,7 +24,7 @@ function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 				$result = mysql_query("SELECT sub_ID, text, cargo, title FROM ".SQL."foros_hilos WHERE ID = '" . $subforo . "' AND estado = 'ok' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $edit_title = $r['title']; $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
 			}
-			$edit_text = strip_tags($edit_text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>,<iframe>");
+			$edit_text = strip_tags($edit_text);
 		}
 		if ($citar != null) { //citar
 			if ($citar>0) { //msg
@@ -85,7 +46,7 @@ function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 				$edit_text = '[quote='.$r['nick'].'] '.$edit_text.' [/quote]'; 
 			}
 			
-			$edit_text = strip_tags($edit_text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>,<iframe>");
+			$edit_text = strip_tags($edit_text);
 			
 		}
 
@@ -119,7 +80,7 @@ ORDER BY nivel DESC", $link);
 
 <p>Mensaje:<br />
 <textarea name="text" style="color: green; font-weight: bold; width: 570px; height: 250px;">' . $edit_text . '</textarea><br />
-<span style="color:grey;font-size:12px;">Etiquetas HTML permitidas: &lt;img src="URL"&gt;, &lt;b&gt;, &lt;i&gt;, &lt;s&gt;, videos incrustados, enlaces auto-linkeados, BBCode permitido: [code], [quote].</span></p>
+<span style="color:grey;font-size:12px;">Etiquetas: [b]...[/b] [em]...[/em] [quote]...[/quote] [img]url[/img] [youtube]url-youtube[/youtube], auto-enlaces.</span></p>
 
 <p><input value="Enviar" type="submit" style="font-size:22px;" /> En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
 </select></p>
@@ -137,7 +98,7 @@ ORDER BY nivel DESC", $link);
 
 <p>Mensaje:<br />
 <textarea name="text" style="color: green; font-weight: bold; width: 570px; height: 250px;">' . $edit_text . '</textarea><br />
-<span style="color:grey;font-size:12px;">Etiquetas HTML permitidas: &lt;img src="URL"&gt;, &lt;b&gt;, &lt;i&gt;, &lt;s&gt;, videos incrustados, enlaces auto-linkeados.</span></p>
+<span style="color:grey;font-size:12px;">Etiquetas: [b]...[/b] [em]...[/em] [quote]...[/quote] [img]url[/img] [youtube]url-youtube[/youtube], auto-enlaces.</span></p>
 
 <p><input value="Enviar" type="submit" style="font-size:22px;" /> En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
 </select></p>
@@ -440,12 +401,12 @@ ORDER BY time2 DESC", $link);
 					}
 					if (strtotime($r2['time']) > (time() - 86400)) { $titulo = $titulo . ' <sup style="font-size:9px;color:red;">Nuevo!</sup>'; }
 
-					if (($pol['user_ID'] == $r2['user_ID']) AND ($pol['nivel'] >= $r['acceso'])) { $editar = ' ' . boton('X', '/accion.php?a=foro&b=eliminarhilo&ID=' . $r2['ID'], '&iquest;Est&aacute;s seguro de querer ELIMINAR este HILO?'); } else { $editar = ''; }
+					if (($pol['user_ID'] == $r2['user_ID']) AND (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']))) { $editar = ' ' . boton('X', '/accion.php?a=foro&b=eliminarhilo&ID=' . $r2['ID'], '&iquest;Est&aacute;s seguro de querer ELIMINAR este HILO?'); } else { $editar = ''; }
 					$txt .= '<tr><td align="right">' . crear_link($r2['nick']) . '</td><td align="right"><b>' . $r2['num'] . '</b></td><td>' . $titulo . '</td><td align="right"><span class="timer" value="'.strtotime($r2['time']).'"></span></td><td>' . $editar . '</td></tr>';
 				}
 			}
 			$txt .= '</table><br />';
-			if ($pol['nivel'] >= $r['acceso']) { $txt .= foro_enviar($r['ID']); }
+			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) { $txt .= foro_enviar($r['ID']); }
 		} else { $txt .= '<p><b style="color:red;">No tienes acceso de lectura a este subforo.</b></p>'; }
 	}
 

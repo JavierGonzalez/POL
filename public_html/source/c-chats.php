@@ -175,15 +175,12 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 </tr>';
 }
 
+// '.($pol['estado'] == 'ciudadano'?'<p style="float:right;"><a href="/chats/turistas/"><b>Turistas</b></a></p>':'').'
 	$txt .= '</table>
-	
-'.($pol['estado'] == 'ciudadano'?'<p style="float:right;"><a href="/chats/turistas/"><b>Turistas</b></a></p>':'').'<p>'.boton('Solicitar chat', '/chats/solicitar-chat/').' <span style="font-size:12px;">[El Presidente o Vicepresidente activar&aacute; el chat.]</span></p>';
-
+<p>'.boton('Solicitar chat', '/chats/solicitar-chat/').' <span style="font-size:12px;"></span></p>';
 
 
 }
 
-
 if (!$externo) { include('theme.php'); }
-
 ?>

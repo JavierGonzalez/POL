@@ -28,7 +28,7 @@ case 'censo':
 
 	// num ciudadanos activos (los que entraron en las ultimas 24h sin ser nuevos ciudadanos)
 	$margen_24h = date('Y-m-d H:i:s', time() - 86400);	// 24 h
-	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'ciudadano' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link));
+	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado != 'expulsado' AND estado != 'validar' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link));
 	$censo_activos_vp = $result[0];
 	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link));
 	$censo_activos = $result[0];

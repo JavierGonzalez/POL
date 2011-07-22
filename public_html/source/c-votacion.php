@@ -194,11 +194,6 @@ LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
 		$votos_total = $r['num'];
 
-		if ($r['tipo'] == 'parlamento') {
-			$result2 = mysql_unbuffered_query("SELECT ID FROM ".SQL."estudios_users WHERE user_ID = '" . $pol['user_ID'] . "' AND cargo = '1' AND ID_estudio = '6' LIMIT 1", $link);
-			while($r2 = mysql_fetch_array($result2)){ $es_diputado = true; }
-		}
-
 		$time_expire = strtotime($r['time_expire']);
 		$time_creacion = strtotime($r['time']);
 		$duracion = duracion($time_expire - $time_creacion);
@@ -318,9 +313,6 @@ ORDER BY siglas ASC", $link);
 	}
 
 } else {
-
-	$result = mysql_query("SELECT ID FROM ".SQL."estudios_users WHERE user_ID = '" . $pol['user_ID'] . "' AND cargo = '1' AND ID_estudio = '6' LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){ $es_diputado = true; }
 
 	$txt_title = 'Sistema de Votaciones';
 	$txt .= '<h1>Votaciones: &nbsp; &nbsp; '.boton('Crear votacion', '/votacion/crear/').'</h1>

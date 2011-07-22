@@ -416,7 +416,6 @@ div#footer, div.column, div.content, div#header {border: 1px solid #000;}
 .sf-menu li, .sf-menu a, .sf-menu a:visited  { color:#555; text-shadow:1px 1px 4px #FFF; }
 .md { color:#777; }
 
-
 #menu-1, #menu-1 li { background:#FF6262; }
 #menu-1:hover, #menu-1 li:hover { background:#FFB1B1; }
 
@@ -428,6 +427,7 @@ div#footer, div.column, div.content, div#header {border: 1px solid #000;}
 
 #menu-4, #menu-4 li { background:#FFFF51; }
 #menu-4:hover, #menu-4 li:hover { background:#FFFFA8; }
+
 
 #menu-5, #menu-5 li { background:#FF9900; }
 #menu-5:hover, #menu-5 li:hover { background:#FFD391; }

@@ -69,7 +69,7 @@ if (isset($sc[$pol['user_ID']])) {
 	$result = mysql_query("SELECT *,
 (SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE envia_ID = users.ID) AS num_priv,
 (SELECT COUNT(*) FROM ".SQL."foros_msg WHERE user_ID = users.ID) AS num_foro,
-(SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '" . $pol['user_ID'] . "' AND user_ID = users.ID LIMIT 1) AS has_votado
+(SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '" . $pol['user_ID'] . "' AND item_ID = users.ID LIMIT 1) AS has_votado
 FROM users 
 ORDER BY fecha_registro DESC
 LIMIT 60", $link);
@@ -107,7 +107,7 @@ LIMIT 60", $link);
 <td align="right" nowrap="nowrap">'.timer($r['fecha_registro']).'</td>
 <td align="right" nowrap="nowrap">' . $online . '</td>
 <td align="right" nowrap="nowrap">'.timer($r['fecha_last']) . '</td>
-<td>' . $siglas[$r['partido_afiliado']] . '</td>
+<td nowrap="nowrap"">' . $siglas[$r['partido_afiliado']] . '</td>
 <td align="right"><b>' . $r['num_elec'] . '</b></td>
 <td nowrap="nowrap"><b>' . confianza($r['voto_confianza']) . '</b>' . $has_votado . '</td>
 <td align="right" nowrap="nowrap"><acronym title="' . $r['fecha_init'] . '">' . $r['visitas'] . '</acronym></td>

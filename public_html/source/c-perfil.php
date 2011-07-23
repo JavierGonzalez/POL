@@ -52,10 +52,10 @@ Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="4
 		if ((($user_ID != $pol['user_ID']) AND ($pol['user_ID']) AND ($pol['estado'] != 'expulsado'))) {
 
 			// numero de votos emitidos
-			$result2 = mysql_query("SELECT COUNT(*) AS num FROM ".SQL_VOTOS." WHERE uservoto_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
+			$result2 = mysql_query("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
 			while ($r2 = mysql_fetch_array($result2)) { $num_votos = $r2['num']; }
 
-			$result2 = mysql_query("SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '".$pol['user_ID']."' AND user_ID = '".$user_ID."' LIMIT 1", $link);
+			$result2 = mysql_query("SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = '".$user_ID."' LIMIT 1", $link);
 			while ($r2 = mysql_fetch_array($result2)) { $hay_v_c = $r2['voto']; }
 
 			$c_select = ' disabled="disabled"';
@@ -67,7 +67,7 @@ Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="4
 
 $txt .= 'Confianza: '.confianza($r['voto_confianza']).'
 
-<input type="button" value="+" onClick="window.location.href=\'http://' . $pol['pais'] . '.virtualpol.com/accion.php?a=voto&b=confianza&ID=' . $user_ID . '&nick=' . $nick . '&voto_confianza=1\';"' . $confianza_1 . ' /><input type="button" value="0" onClick="window.location.href=\'http://' . $pol['pais'] . '.virtualpol.com/accion.php?a=voto&b=confianza&ID=' . $user_ID . '&nick=' . $nick . '&voto_confianza=0\';"' . $confianza_0 . ' /><input type="button" value="&#8211;" onClick="window.location.href=\'http://' . $pol['pais'] . '.virtualpol.com/accion.php?a=voto&b=confianza&ID=' . $user_ID . '&nick=' . $nick . '&voto_confianza=-1\';"' . $confianza_m1 . ' /><br />Votos emitidos: <b'.($num_votos <= VOTO_CONFIANZA_MAX?'':' style="color:red;"').'>'.$num_votos.'</b> de '.VOTO_CONFIANZA_MAX.'.
+<input type="button" value="+" onClick="window.location.href=\'http://' . $pol['pais'] . '.virtualpol.com/accion.php?a=voto&tipo=confianza&item_ID=' . $user_ID . '&nick=' . $nick . '&voto=1\';"' . $confianza_1 . ' /><input type="button" value="0" onClick="window.location.href=\'http://' . $pol['pais'] . '.virtualpol.com/accion.php?a=voto&tipo=confianza&item_ID=' . $user_ID . '&nick=' . $nick . '&voto=0\';"' . $confianza_0 . ' /><input type="button" value="&#8211;" onClick="window.location.href=\'http://' . $pol['pais'] . '.virtualpol.com/accion.php?a=voto&tipo=confianza&item_ID=' . $user_ID . '&nick=' . $nick . '&voto=-1\';"' . $confianza_m1 . ' /><br />Votos emitidos: <b'.($num_votos <= VOTO_CONFIANZA_MAX?'':' style="color:red;"').'>'.$num_votos.'</b> de '.VOTO_CONFIANZA_MAX.'.
 ';
 		} else { $txt .= 'Confianza: ' . confianza($r['voto_confianza']); }
 
@@ -229,17 +229,17 @@ $txt .= '</p>';
 */
 
 // numero de votos emitidos
-$result2 = mysql_query("SELECT COUNT(*) AS num FROM ".SQL_VOTOS." WHERE uservoto_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
+$result2 = mysql_query("SELECT COUNT(*) AS num FROM votos WHERE emisor_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
 while ($r2 = mysql_fetch_array($result2)) { $num_votos = $r2['num']; }
 
 $txt .= '<p><b>Votos de confianza emitidos:</b> (<span style="font-weight:bold;">'.$num_votos.'</span> de '.VOTO_CONFIANZA_MAX.')';
 
 $voto_anterior = '';
 $result2 = mysql_query("SELECT voto, time,
-(SELECT nick FROM users WHERE ID = ".SQL_VOTOS.".user_ID LIMIT 1) AS nick,
-(SELECT pais FROM users WHERE ID = ".SQL_VOTOS.".user_ID LIMIT 1) AS pais
-FROM ".SQL_VOTOS."
-WHERE estado = 'confianza' AND uservoto_ID = '" . $user_ID . "' AND voto != 0
+(SELECT nick FROM users WHERE ID = v.item_ID LIMIT 1) AS nick,
+(SELECT pais FROM users WHERE ID = v.item_ID LIMIT 1) AS pais
+FROM votos `v`
+WHERE tipo = 'confianza' AND emisor_ID = '".$user_ID."' AND voto != 0
 ORDER BY voto DESC, time ASC", $link);
 while($r2 = mysql_fetch_array($result2)) {
 	if ($voto_anterior != $r2['voto']) { $txt .= '<br /> ' . confianza($r2['voto']) . ' &middot; '; }

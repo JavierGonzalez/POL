@@ -170,6 +170,7 @@ array_cargos = { '.$array_cargos.', 0:"", 98:"Turista", 99:"Extranjero" };
 array_ignorados = new Array();
 
 window.onload = function(){
+	scroll_abajo();
 	merge_list();
 	$("#vpc_msg").focus();
 	if ((!elnick) && ("'.$acceso_escribir.'" == "anonimos")) {

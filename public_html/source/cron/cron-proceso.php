@@ -360,12 +360,12 @@ while($r = mysql_fetch_array($result)) {
 
 
 // ACTUALIZACION DEL VOTO CONFIANZA
-mysql_query("DELETE FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND voto = '0'", $link);
-mysql_query("DELETE FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND time < '".$margen_60dias."'", $link);
+mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND voto = '0'", $link);
+mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND time < '".$margen_60dias."'", $link);
 mysql_query("UPDATE users SET voto_confianza = '0'", $link);
-$result = mysql_query("SELECT user_ID, SUM(voto) AS num_confianza FROM ".SQL_VOTOS." WHERE estado = 'confianza' GROUP BY user_ID", $link);
+$result = mysql_query("SELECT item_ID, SUM(voto) AS num_confianza FROM votos WHERE tipo = 'confianza' GROUP BY item_ID", $link);
 while ($r = mysql_fetch_array($result)) { 
-	mysql_query("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['user_ID']."' LIMIT 1", $link);
+	mysql_query("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['item_ID']."' LIMIT 1", $link);
 } 
 evento_chat('<b>[PROCESO] Supervisores del Censo:</b> '.implode(' ', get_supervisores_del_censo()));
 
@@ -440,7 +440,7 @@ $result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudad
 while($r = mysql_fetch_array($result)) { $st['24h'] = $r['num']; }
 
 // confianza
-$result = mysql_query("SELECT SUM(voto) AS num FROM ".SQL_VOTOS." WHERE estado = 'confianza'", $link);
+$result = mysql_query("SELECT SUM(voto) AS num FROM votos WHERE tipo = 'confianza'", $link);
 while($r = mysql_fetch_array($result)) { $st['confianza'] = $r['num']; }
 
 // autentificados

@@ -288,7 +288,7 @@ case 'expulsar':
 		while ($r = mysql_fetch_array($result)) {
 			mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
-			mysql_query("DELETE FROM votos WHERE estado = 'confianza' AND uservoto_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$user_ID."'", $link);
 			
 			mysql_query("INSERT INTO expulsiones (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
 
@@ -300,33 +300,57 @@ case 'expulsar':
 
 
 case 'voto':
-	if (($_GET['b'] == 'confianza') AND ($_GET['ID'] != $pol['user_ID']) AND (($_REQUEST['voto_confianza'] == '-1') OR ($_REQUEST['voto_confianza'] == '0') OR ($_REQUEST['voto_confianza'] == '1'))) {
+	$tipo = $_GET['tipo'];	
+	$item_ID = $_GET['item_ID'];
+	$voto = $_GET['voto'];
+	$tipos_posibles = array('confianza', 'hilos', 'msg');
+	$votos_posibles = array('1', '0', '-1');
+	if ((in_array($tipo, $tipos_posibles)) AND (in_array($voto, $votos_posibles))) {
 
+		// Comprobaciones
+		$check = false;
+		if ($tipo == 'confianza') {
+			$pais = 'all';
 
-		// numero de votos emitidos
-		$result = mysql_query("SELECT COUNT(*) AS num FROM ".SQL_VOTOS." WHERE uservoto_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
-		while ($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
+			// numero de votos emitidos
+			$result = mysql_query("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
+			while ($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
 
-		// ha votado a este usuario?
-		$hay_voto = false;
-		$result = mysql_query("SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '".$pol['user_ID']."' AND user_ID = '".$_GET['ID']."' LIMIT 1", $link);
-		while ($r = mysql_fetch_array($result)) { $voto = $r['voto']; $hay_voto = true; }
+			// existe usuario
+			$result = mysql_query("SELECT ID FROM users WHERE ID = '".$item_ID."'", $link);
+			while ($r = mysql_fetch_array($result)) { $nick_existe = true; }
+			
+			if (($item_ID != $pol['user_ID']) AND ($nick_existe == true) AND (($voto == '0') OR ($num_votos < VOTO_CONFIANZA_MAX))) { $check = true; }
+		} else {
+			$pais = PAIS;
+			$result = mysql_query("SELECT ID FROM ".SQL."foros_".$tipo." WHERE ID = '".$item_ID."' AND user_ID != '".$pol['user_ID']."' LIMIT 1", $link);
+			while ($r = mysql_fetch_array($result)) { $check = true; }
+		}
 
-		// nick existe
-		$result = mysql_query("SELECT ID FROM users WHERE ID = '".$_GET['ID']."'", $link);
-		while ($r = mysql_fetch_array($result)) { $nick_existe = true; }
+		if ($check) {
 
-		if (($nick_existe == true) AND (($_REQUEST['voto_confianza'] == '0') OR ($num_votos < VOTO_CONFIANZA_MAX))) {
-			if ($hay_voto == true) {
-				// update
-				mysql_query("UPDATE ".SQL_VOTOS." SET voto = '".$_REQUEST['voto_confianza']."', time = '".$date."' WHERE estado = 'confianza' AND uservoto_ID = '".$pol['user_ID']."' AND user_ID = '".$_GET['ID']."' LIMIT 1", $link);
+			// has votado a este item?
+			$hay_voto = false;
+			$result = mysql_query("SELECT voto_ID FROM votos WHERE tipo = '".$tipo."' AND pais = '".$pais."' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = '".$item_ID."' LIMIT 1", $link);
+			while ($r = mysql_fetch_array($result)) { $hay_voto = $r['voto_ID']; }
+
+			if ($hay_voto != false) {
+				mysql_query("UPDATE votos SET voto = '".$voto."', time = '".$date."' WHERE voto_ID = '".$hay_voto."' LIMIT 1", $link);
 			} else {
-				// insert
-				mysql_query("INSERT INTO ".SQL_VOTOS." (user_ID, uservoto_ID, voto, time, estado) VALUES ('".$_GET['ID']."', '".$pol['user_ID']."', '".$_REQUEST['voto_confianza']."', '".$date."', 'confianza')", $link);
+				mysql_query("INSERT INTO votos (item_ID, pais, emisor_ID, voto, time, tipo) VALUES ('".$item_ID."', '".$pais."', '".$pol['user_ID']."', '".$voto."', '".$date."', '".$tipo."')", $link);
+			}
+
+			// Contadores
+			if (($tipo == 'hilos') OR ($tipo == 'msg')) {
+				$result = mysql_query("SELECT SUM(voto) AS num FROM votos WHERE tipo = '".$tipo."' AND pais = '".$pais."' AND item_ID = '".$item_ID."'", $link);
+				while ($r = mysql_fetch_array($result)) { 
+					$voto_refresh = $r['num'];
+					mysql_query("UPDATE ".SQL."foros_".$tipo." SET votos = '".$r['num']."' WHERE ID = '".$item_ID."' LIMIT 1", $link);
+				}
 			}
 		}
-		$refer_url = 'perfil/'.strtolower($_GET['nick']).'/';
 
+		if ($tipo == 'confianza') { $refer_url = 'perfil/'.strtolower($_GET['nick']).'/'; } else { echo $voto_refresh; mysql_close($link); exit; }
 	}
 	break;
 

@@ -210,7 +210,7 @@ LIMIT 1", $link);
 
 <div class="amarillo" style="margin:20px 0 15px 0;padding:20px 10px 0 10px;">
 <h1>'.$r['pregunta'].'</h1>
-<p>' . $r['descripcion'] . '</p>
+<p>'.$r['descripcion'].'</p>
 </div>
 
 <span style="float:right;text-align:right;">

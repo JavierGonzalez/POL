@@ -125,7 +125,7 @@ $txt .= '
 
 	if ($p_init) { $orden = $p_init + 1; } else { $orden = 1; }
 
-	if ($pol['estado']) { $sql_extra = ", (SELECT voto FROM ".SQL_VOTOS." WHERE estado = 'confianza' AND uservoto_ID = '" . $pol['user_ID'] . "' AND user_ID = users.ID LIMIT 1) AS has_votado"; }
+	if ($pol['estado']) { $sql_extra = ", (SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '" . $pol['user_ID'] . "' AND item_ID = users.ID LIMIT 1) AS has_votado"; }
 
 
 	$sc = get_supervisores_del_censo();

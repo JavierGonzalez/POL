@@ -124,13 +124,9 @@ LIMIT 1", $link);
 
 		// limpia MSG
 		$msg = $_REQUEST['msg'];
-		if ($borrar_msg) {
-			$msg='';
-		}
+		if ($borrar_msg) { $msg=''; }
 
-		$msg = str_replace("\r", "", str_replace("\n", "", trim(strip_tags($msg))));
-		
-		//if ($_SESSION['pol']['estado'] != 'anonimo') { $msg = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/()]","<a target=\"_blank\" href=\"\\0\">\\0</a>", $msg); }
+		$msg = str_replace("\r", "", str_replace("\n", "", strip_tags(trim($msg))));
 		
 		$target_ID = 0;
 		$tipo = 'c';

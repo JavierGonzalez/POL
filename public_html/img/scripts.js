@@ -26,6 +26,16 @@ $(document).ready(function(){
 
 	$(".rich").each(function (i) { $(this).html(enriquecer($(this).html(), true)); });
 
+	$(".votar").each(function (i) {
+		var tipo = $(this).attr("type");
+		var item_ID = $(this).attr("name");
+		var voto = parseInt($(this).attr("value"));
+		if (voto == 1) { var c_mas = " checked=\"checked\""; }
+		if (voto == -1) { var c_menos = " checked=\"checked\""; }
+		var radio_ID = tipo + item_ID;
+		$(this).html("+<input type=\"radio\" class=\"radio_" + radio_ID + "\" name=\"radio_" + radio_ID + "\" onclick=\"votar(1, '" + tipo + "', '" + item_ID + "');\"" + c_mas + " /><input type=\"radio\" class=\"radio_" + radio_ID + "\" name=\"radio_" + radio_ID + "\" onclick=\"votar(-1, '" + tipo + "', '" + item_ID + "');\"" + c_menos + " />&#8211;"); 
+	});
+
 	$(".nick").mouseover(function(){
 		var wnick = $(this).text();
 		if (!whois_cache[wnick]) { pnick = setTimeout(function(){ $.post("/ajax.php", { a: "whois", nick: wnick }, function(data){ $("#pnick").css("display","none"); whois_cache[wnick] = data; print_whois(data, wnick); }); }, 500);
@@ -46,7 +56,37 @@ $(document).ready(function(){
 });
 
 
+
+
+
+
+
+
+
 // FUNCIONES
+function votar(voto, tipo, item_ID) {
+	var voto_pre = parseInt($("#data_" + tipo + item_ID).attr("value"));
+	if ((voto_pre != 0) && (voto_pre == voto)) { voto = 0; $(".radio_" + tipo + item_ID).removeAttr("checked"); }
+	$.get("/accion.php", { a: "voto", tipo: tipo, item_ID: item_ID, voto: voto }, function(data){
+		if (data) {
+			$("#" + tipo + item_ID).html(print_votonum(data));
+			$("#data_" + tipo + item_ID).attr("value", data);
+		}
+	});
+}
+function print_votonum(num) {
+	var num = parseInt(num);
+	if (num >= 10) { return "<span class=\"vcc\">+" + num + "</span>"; }
+	else if (num >= 0) { return "<span class=\"vc\">+" + num + "</span>"; } 
+	else if (num > -10) { return "<span class=\"vcn\">" + num + "</span>"; }
+	else { return "<span class=\"vcnn\">" + num + "</span>"; }
+}
+
+
+
+
+
+
 function print_whois(whois, wnick) {
 	var w = whois.split(":");
 	if (!whois) { $("#pnick").html("&dagger;"); } else {
@@ -135,13 +175,13 @@ function cf_cambiarnick() {
 
 function chat_filtro_change() {
 	if (chat_filtro == "normal") {
-		$(".cf_c, .cf_e").fadeOut("slow");
+		$(".cf_c, .cf_e").hide();
 		chat_filtro = "solochat";
 	} else {
 		chat_filtro = "normal";
-		$(".cf_c, .cf_e").fadeIn("slow");
-		scroll_abajo();
+		$(".cf_c, .cf_e").show();	
 	}
+	document.getElementById("vpc").scrollTop = 9000000;
 }
 
 function msgkeyup(evt, elem) {
@@ -377,10 +417,10 @@ function enriquecer(m, bbcode) {
 	m = m.replace(/(\s|^):\*/gi, " <img src=\""+IMG+"smiley/muacks.gif\" alt=\":*\" border=\"0\" title=\":*\" width=\"15\" height=\"15\" />");
 	m = m.replace(/(\s|^);\)/gi, " <img src=\""+IMG+"smiley/guino.gif\" alt=\";)\" border=\"0\" title=\";)\" width=\"15\" height=\"15\" />");
 	m = m.replace(/(\s|^):O/gi, " <img src=\""+IMG+"smiley/bocaabierta.gif\" alt=\":O\" border=\"0\" title=\":O\" width=\"15\" height=\"15\" />");
-	m = m.replace(/:tarta:/gi, " <img src=\""+IMG+"smiley/tarta.gif\" alt=\":tarta:\" border=\"0\" title=\":tarta:\" width=\"15\" height=\"15\" />");
-	m = m.replace(/:roto2:/gi, " <img src=\""+IMG+"smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" width=\"15\" height=\"15\" />");
+	m = m.replace(/:tarta:/gi, " <img src=\""+IMG+"smiley/tarta.gif\" alt=\":tarta:\" border=\"0\" title=\":tarta:\" width=\"16\" height=\"16\" />");
+	m = m.replace(/:roto2:/gi, " <img src=\""+IMG+"smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" width=\"16\" height=\"16\" />");
 	m = m.replace(/:facepalm:/gi, " <img src=\""+IMG+"smiley/palm.gif\" alt=\":facepalm:\" border=\"0\" title=\":facepalm:\" width=\"15\" height=\"15\" />");
-	m = m.replace(/:moneda:/gi, " <img src=\""+IMG+"m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" width=\"15\" height=\"15\" />");
+	m = m.replace(/:moneda:/gi, " <img src=\""+IMG+"m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" width=\"16\" height=\"16\" />");
 	m = m.replace(/:troll:/gi, " <img src=\""+IMG+"smiley/troll.gif\" alt=\":troll:\" border=\"0\" title=\":troll:\" width=\"15\" height=\"15\" />");
 
 	// URL

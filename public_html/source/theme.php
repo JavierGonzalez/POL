@@ -248,8 +248,6 @@ if (ECONOMIA) {
 		echo '<div style="margin:0 0 0 -4px;">'.$txt_mapa.'</div>';
 	}
 }
-$dias = array("","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-echo date("d")." ".$dias[date('n')]." ".date("Y")."<br/>";;
 echo '</div>';
 ?>
 

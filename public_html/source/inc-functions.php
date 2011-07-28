@@ -26,7 +26,7 @@ function nucleo_acceso($tipo, $valor='') {
 
 function timer($t, $es_time=false) {
 	if ($es_time == true) { return '<span class="timer" value="'.$t.'"></span>'; } 
-	else { return '<span class="timer" value="'.strtotime($t).'"></span>'; } 
+	else { return '<span class="timer" value="'.strtotime($t).'" title="'.$t.'"></span>'; } 
 }
 
 function ocultar_IP($IP, $tipo='IP') { 

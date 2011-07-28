@@ -46,7 +46,7 @@ if (isset($sc[$pol['user_ID']])) {
 			$txt_title = 'Control: Supervision del Censo - Nuevos ciudadanos';
 			$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b>. Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
 			$txt .= '<h1>1. Actividad de nuevos Ciudadanos (ultimos 60)</h1><hr />
 <table border="0" cellspacing="0" cellpadding="2">
@@ -131,7 +131,7 @@ LIMIT 60", $link);
 	$txt_title = 'Control: Supervision del Censo | Extras';
 	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Extras | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b>. Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
 
 	$txt .= '<br /><h1>5. Referencias</h1><hr /><table border="0" cellspacing="4">';
@@ -277,7 +277,7 @@ ORDER BY num ASC", $link);
 	$txt_title = 'Control: Supervision del Censo';
 	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b>. Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 	
 
 	$txt .= '<h1>1. Coincidencias de IP</h1><hr /><table border="0" cellspacing="4">';
@@ -879,8 +879,7 @@ ORDER BY expire DESC", $link);
 </tr>' . "\n";
 
 		}
-		$txt .= '</table><hr /><p>Las expulsiones son ejecutadas por los desarrolladores a cualquier usuario que no ejerzan ningun cargo en su pais.</p>
-<p>Las expulsiones pueden ser canceladas por el <b><img src="'.IMG.'cargos/7.gif" />Presidente</b> y <b><img src="'.IMG.'cargos/9.gif" />Juez Supremo</b>, antes de que el expulsado sea eliminado (ocurre tras 10 dias inactivo).</p>';
+		$txt .= '</table>';
 	}
 	break;
 

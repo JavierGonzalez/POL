@@ -93,7 +93,7 @@ $txt .= '
 <th></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/nombre/">Nick</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/afiliacion/">Afil</a></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/confianza/">Confianza</a></th>
+<th style="padding:8px;" class="azul" colspan="2"><a href="/info/censo/confianza/">Confianza</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/online/">Online</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/' . $old . '/">Antig&uuml;edad</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/elec/"><acronym title="Elecciones en las que ha participado">Elec</acronym></a></th>
@@ -130,25 +130,27 @@ $txt .= '
 
 	$sc = get_supervisores_del_censo();
 
-	$result = mysql_query("SELECT ID, nick, estado, pais, nivel, online, ref, ref_num, num_elec, voto_confianza, fecha_registro, nota, fecha_last, cargo, avatar,
-(SELECT siglas FROM ".SQL."partidos WHERE users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas" . $sql_extra . "
-FROM users " . $order_by . " LIMIT " . $p_limit, $link);
+	$result = mysql_query("SELECT ID, ID AS user_ID, nick, estado, pais, nivel, online, ref, ref_num, num_elec, voto_confianza, fecha_registro, nota, fecha_last, cargo, avatar,
+(SELECT siglas FROM ".SQL."partidos WHERE users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas".$sql_extra."
+FROM users ".$order_by." LIMIT ".$p_limit, $link);
 	while($r = mysql_fetch_array($result)){
 		if ($r['online'] != 0) { $online = duracion($r['online']); } else { $online = ''; }
 		if ($r['avatar'] == 'true') { $avatar = avatar($r['ID'], 40) . ' '; } else { $avatar = ''; }
 		if ($r['siglas']) { $partido = '<a href="/partidos/' . strtolower($r['siglas']) . '/">' . $r['siglas'] . '</a>'; } else { $partido = ''; }
 		if ($r['ref_num'] == 0) { $r['ref_num'] = ''; }
 		if ($r['num_elec'] == 0) { $r['num_elec'] = ''; }
+		if (!$r['has_votado']) { $r['has_votado'] = 0; }
 
-		if ($r['has_votado']) { $has_votado = ' (' . confianza($r['has_votado']) . ')'; } else { $has_votado = ''; }
-		$txt .= '
-<tr>
+		$txt .= '<tr>
 <td align="right" class="gris">' . $orden++ . '</td>
 <td align="right">' . $r['nivel'] . '</td>
 <td>' . $avatar . '</td>
 <td>'.(isset($sc[$r['ID']])?'<span style="float:right;color:red;margin-left:5px;">SC</span>':'').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
 <td>' . $partido . '</td>
-<td>' . confianza($r['voto_confianza']) . $has_votado .'</td>
+
+<td align="right"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span></td>
+<td>'.($pol['user_ID']&&$r['user_ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['user_ID'].'" class="votar" type="confianza" name="'.$r['user_ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
+
 <td align="right" nowrap="nowrap">' . $online . '</td>
 <td>' . explodear(' ', $r['fecha_registro'], 0) . '</td>
 <td align="right">' . $r['num_elec'] . '</td>

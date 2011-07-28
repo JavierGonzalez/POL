@@ -9,8 +9,6 @@ whois_cache = new Array();
 // ON LOAD
 $(document).ready(function(){
 
-
-
 	$("ul.sfn-menu, ul.sf-menu").superfish(); 
 
 	$("dt a").click(function(){
@@ -57,20 +55,24 @@ $(document).ready(function(){
 
 
 
-
-
-
-
-
-
 // FUNCIONES
 function votar(voto, tipo, item_ID) {
-	var voto_pre = parseInt($("#data_" + tipo + item_ID).attr("value"));
-	if ((voto_pre != 0) && (voto_pre == voto)) { voto = 0; $(".radio_" + tipo + item_ID).removeAttr("checked"); }
+	var radio_ID = tipo + item_ID;
+	$(".radio_" + radio_ID).blur();
+	var voto_pre = parseInt($("#data_" + radio_ID).attr("value"));
+	if (voto_pre == voto) { voto = 0; $(".radio_" + radio_ID).removeAttr("checked"); }
 	$.get("/accion.php", { a: "voto", tipo: tipo, item_ID: item_ID, voto: voto }, function(data){
 		if (data) {
-			$("#" + tipo + item_ID).html(print_votonum(data));
-			$("#data_" + tipo + item_ID).attr("value", data);
+			if (data == "false") {
+				$(".radio_" + radio_ID).removeAttr("checked");
+				alert("El voto no se ha podido realizar.");
+			} else if (data == "limite") {
+				$(".radio_" + radio_ID).removeAttr("checked");
+				alert("Has llegado al limite de votos emitibles.");
+			} else {
+				if (tipo != "confianza") { $("#" + radio_ID).html(print_votonum(data)); }
+				$("#data_" + radio_ID).attr("value", voto);
+			}
 		}
 	});
 }
@@ -81,9 +83,6 @@ function print_votonum(num) {
 	else if (num > -10) { return "<span class=\"vcn\">" + num + "</span>"; }
 	else { return "<span class=\"vcnn\">" + num + "</span>"; }
 }
-
-
-
 
 
 
@@ -430,7 +429,7 @@ function enriquecer(m, bbcode) {
 	if (bbcode) {
 		m = m.replace(/\[(b|i|em|s)\](.*?)\[\/\1\]/gi, "<$1>$2</$1>"); 
 		m = m.replace(/\[img\](.*?)\[\/img\]/gi, "<img src=\"$1\" alt=\"img\" style=\"max-width:600px;\" />");
-		m = m.replace(/\[youtube\]http\:\/\/www\.youtube\.com\/watch\?v=(.*?)\[\/youtube\]/gi, "<iframe width=\"425\" height=\"349\" src=\"http://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>");
+		m = m.replace(/\[youtube\]http\:\/\/www\.youtube\.com\/watch\?v=(.*?)\[\/youtube\]/gi, "<iframe width=\"520\" height=\"390\" src=\"http://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>");
 		m = m.replace(/\[quote\]/gi, "<blockquote><div class=\"quote\">");
 		m = m.replace(/\[quote=(.*?)\]/gi, "<blockquote><div class=\"quote\"><cite>$1 escribi&oacute;:</cite>");
 		m = m.replace(/\[\/quote\]/gi, "</div></blockquote>");

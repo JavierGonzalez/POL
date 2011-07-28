@@ -15,13 +15,14 @@ if ($_GET['ID']) { $_GET['ID'] = mysql_real_escape_string($_GET['ID']); }
 foreach ($_POST AS $nom => $val) { $_POST[$nom] = str_replace("'", "&#39;", $val); }
 
 
-// Solo ciudadanos
+
+$acciones_multiplataforma = array('voto', 'mercado', 'foro');
+
 if (
 ((PAIS == $pol['pais']) AND ($pol['estado'] == 'ciudadano'))
 OR (($pol['estado'] == 'kickeado') AND ($_GET['a'] == 'rechazar-ciudadania'))
 OR (($pol['estado'] == 'kickeado') AND ($_GET['a'] == 'elecciones-generales'))
-OR (($pol['estado'] == 'extranjero') AND ($_GET['a'] == 'foro'))
-OR (($pol['estado'] == 'extranjero') AND ($_GET['a'] == 'mercado'))
+OR (($pol['estado'] == 'extranjero') AND (in_array($_GET['a'], $acciones_multiplataforma)))
 ) {
 
 
@@ -305,6 +306,7 @@ case 'voto':
 	$voto = $_GET['voto'];
 	$tipos_posibles = array('confianza', 'hilos', 'msg');
 	$votos_posibles = array('1', '0', '-1');
+	$voto_result = "false";
 	if ((in_array($tipo, $tipos_posibles)) AND (in_array($voto, $votos_posibles))) {
 
 		// Comprobaciones
@@ -319,8 +321,14 @@ case 'voto':
 			// existe usuario
 			$result = mysql_query("SELECT ID FROM users WHERE ID = '".$item_ID."'", $link);
 			while ($r = mysql_fetch_array($result)) { $nick_existe = true; }
-			
-			if (($item_ID != $pol['user_ID']) AND ($nick_existe == true) AND (($voto == '0') OR ($num_votos < VOTO_CONFIANZA_MAX))) { $check = true; }
+
+			if (($item_ID != $pol['user_ID']) AND ($nick_existe == true) AND (($voto == '0') OR ($num_votos < VOTO_CONFIANZA_MAX))) { 
+				$check = true; 
+				$voto_result = "true";
+			} else {
+				$voto_result = "limite";
+			}
+
 		} else {
 			$pais = PAIS;
 			$result = mysql_query("SELECT ID FROM ".SQL."foros_".$tipo." WHERE ID = '".$item_ID."' AND user_ID != '".$pol['user_ID']."' LIMIT 1", $link);
@@ -344,14 +352,14 @@ case 'voto':
 			if (($tipo == 'hilos') OR ($tipo == 'msg')) {
 				$result = mysql_query("SELECT SUM(voto) AS num FROM votos WHERE tipo = '".$tipo."' AND pais = '".$pais."' AND item_ID = '".$item_ID."'", $link);
 				while ($r = mysql_fetch_array($result)) { 
-					$voto_refresh = $r['num'];
+					$voto_result = $r['num'];
 					mysql_query("UPDATE ".SQL."foros_".$tipo." SET votos = '".$r['num']."' WHERE ID = '".$item_ID."' LIMIT 1", $link);
 				}
 			}
 		}
-
-		if ($tipo == 'confianza') { $refer_url = 'perfil/'.strtolower($_GET['nick']).'/'; } else { echo $voto_refresh; mysql_close($link); exit; }
 	}
+	echo $voto_result;
+	mysql_close($link); exit;
 	break;
 
 
@@ -1450,8 +1458,7 @@ case 'enviar-mensaje':
 					enviar_email($r['ID'], $asunto, $mensaje); 
 					$envio_urgente++;
 				}
-
-				evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/msg/"><b>Leer!</b></a>)', $r['ID'], -1, false, 'p'); 
+				evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/msg/"><b>Leer!</b></a>)', $r['ID'], -1, false, 'p', $r['pais']); 
 			}
 
 			if ($envio_urgente > 0) {

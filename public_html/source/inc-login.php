@@ -70,6 +70,7 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 		$_SESSION['pol']['estado'] = $r['estado'];
 		$_SESSION['pol']['dnie'] = $r['dnie'];
 		$_SESSION['pol']['partido_afiliado'] = $r['partido_afiliado'];
+		$_SESSION['pol']['pols'] = $r['pols'];
 
 		if (($r['pais'] != PAIS) AND ($pol['estado'] == 'ciudadano')) { 
 			// es extranjero

@@ -53,7 +53,7 @@ function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', 
 function evento_log($accion, $dato='', $user_ID2='', $user_ID='') {
 	global $pol, $link; 
 	$user_ID = $pol['user_ID'];
-	mysql_query("INSERT INTO ".SQL."log (time, user_ID, user_ID2, accion, dato) VALUES ('" . date('Y-m-d H:i:s') . "', '" . $user_ID . "', '" . $user_ID2 . "', '" . $accion . "', '" . $dato . "')", $link);
+	mysql_query("INSERT INTO ".SQL."log (time, user_ID, user_ID2, accion, dato) VALUES ('" . date('Y-m-d H:i:s') . "', '".$user_ID."', '" . $user_ID2 . "', '" . $accion . "', '" . $dato . "')", $link);
 }
 
 function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $quien=false) {
@@ -61,16 +61,16 @@ function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $quien=false) {
 	$result = mysql_query("SELECT nombre, nivel FROM ".SQL."estudios WHERE ID = '" . $cargo_ID . "' LIMIT 1", $link);
 	while($row = mysql_fetch_array($result)){
 		
-		$result2 = mysql_query("SELECT ID FROM ".SQL."estudios_users WHERE ID_estudio = '" . $cargo_ID . "' AND user_ID = '" . $user_ID . "' LIMIT 1", $link);
+		$result2 = mysql_query("SELECT ID FROM ".SQL."estudios_users WHERE ID_estudio = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' LIMIT 1", $link);
 		while($row2 = mysql_fetch_array($result2)){ $tiene_examen = true; }
 
 		if ($tiene_examen) {
-			mysql_query("UPDATE ".SQL."estudios_users SET cargo = '1', estado = 'ok' WHERE ID_estudio = '" . $cargo_ID . "' AND user_ID = '" . $user_ID . "' AND estado = 'ok' LIMIT 1", $link);
+			mysql_query("UPDATE ".SQL."estudios_users SET cargo = '1', estado = 'ok' WHERE ID_estudio = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' AND estado = 'ok' LIMIT 1", $link);
 		} else {
-			mysql_query("INSERT INTO ".SQL."estudios_users (ID_estudio, user_ID, time, estado, cargo, nota) VALUES ('" . $cargo_ID . "', '" . $user_ID . "', '" . $date . "', 'ok', '1', '0.0')", $link);
+			mysql_query("INSERT INTO ".SQL."estudios_users (ID_estudio, user_ID, time, estado, cargo, nota) VALUES ('" . $cargo_ID . "', '".$user_ID."', '" . $date . "', 'ok', '1', '0.0')", $link);
 		}
 
-		mysql_query("UPDATE users SET nivel = '" . $row['nivel'] . "', cargo = '" . $cargo_ID . "' WHERE ID = '" . $user_ID . "' AND nivel < '" . $row['nivel'] . "' LIMIT 1", $link);
+		mysql_query("UPDATE users SET nivel = '" . $row['nivel'] . "', cargo = '" . $cargo_ID . "' WHERE ID = '".$user_ID."' AND nivel < '" . $row['nivel'] . "' LIMIT 1", $link);
 		evento_log(11, $cargo_ID, $user_ID);
 
 		if ($evento_chat) { 
@@ -85,17 +85,17 @@ function cargo_del($cargo_ID, $user_ID, $evento_chat=true, $quien=false) {
 	global $link, $pol; 
 	$result = mysql_query("SELECT nivel FROM ".SQL."estudios WHERE ID = '" . $cargo_ID . "' LIMIT 1", $link);
 	while($row = mysql_fetch_array($result)){
-		mysql_query("UPDATE ".SQL."estudios_users SET cargo = '0' WHERE ID_estudio = '" . $cargo_ID . "' AND user_ID = '" . $user_ID . "' LIMIT 1", $link);
+		mysql_query("UPDATE ".SQL."estudios_users SET cargo = '0' WHERE ID_estudio = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' LIMIT 1", $link);
 		evento_log(12, $cargo_ID, $user_ID);
 		$result = mysql_query("SELECT ID_estudio, 
 (SELECT nivel FROM ".SQL."estudios WHERE ID = ".SQL."estudios_users.ID_estudio LIMIT 1) AS nivel
 FROM ".SQL."estudios_users 
-WHERE user_ID = '" . $user_ID . "' AND cargo = '1' 
+WHERE user_ID = '".$user_ID."' AND cargo = '1' 
 ORDER BY nivel DESC
 LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ $user_nivel_max = $row['nivel']; $user_nivel_sql = ", cargo = '" . $row['ID_estudio'] . "'"; }
 		if (!$user_nivel_max) { $user_nivel_max = 1; $user_nivel_sql = ", cargo = ''"; }
-		mysql_query("UPDATE users SET nivel = '" . $user_nivel_max . "'" . $user_nivel_sql . " WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
+		mysql_query("UPDATE users SET nivel = '" . $user_nivel_max . "'" . $user_nivel_sql . " WHERE ID = '".$user_ID."' LIMIT 1", $link);
 
 		if ($evento_chat) { 
 			$result2 = mysql_query("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
@@ -111,7 +111,7 @@ function enviar_email($user_ID, $asunto, $mensaje, $email='') {
 
 	if (($user_ID) AND ($email == '')) {
 		global $link;
-		$result = mysql_unbuffered_query("SELECT email FROM users WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
+		$result = mysql_unbuffered_query("SELECT email FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ $email = $row['email']; }
 	}
 	mail($email, $asunto, $mensaje, $cabeceras);
@@ -174,22 +174,22 @@ LIMIT 1", $link);
 			mysql_query("UPDATE users SET ref_num = ref_num - 1 WHERE ID = '" . $ref . "' LIMIT 1", $link);
 			mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE IP = '" . $IP . "' OR user_ID = '" . $ref . "'", $link); 
 		}
-		mysql_query("DELETE FROM users WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
-		mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '" . $user_ID . "'", $link);
-		mysql_query("DELETE FROM ".SQL."partidos WHERE ID_presidente = '" . $user_ID . "'", $link);
-		mysql_query("DELETE FROM ".SQL_MENSAJES." WHERE recibe_ID = '" . $user_ID . "'", $link);
-		mysql_query("DELETE FROM ".SQL."estudios_users WHERE user_ID = '" . $user_ID . "'", $link);
-		mysql_query("DELETE FROM ".SQL."ban WHERE user_ID = '" . $user_ID . "'", $link);
-		mysql_query("DELETE FROM ".SQL_VOTOS." WHERE user_ID = '" . $user_ID . "' OR uservoto_ID = '" . $user_ID . "'", $link);
-		mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '" . $user_ID . "' AND hilo_ID = '-1'", $link);
+		mysql_query("DELETE FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
+		mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM ".SQL."partidos WHERE ID_presidente = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM ".SQL."estudios_users WHERE user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM ".SQL."ban WHERE user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM chats WHERE user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM votos WHERE emisor_ID = '".$user_ID."' OR (tipo = 'confianza' AND item_ID = '".$user_ID."')", $link);
+		mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."' AND hilo_ID = '-1'", $link);
 
 
 		if (ECONOMIA) {
-			mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE user_ID = '" . $user_ID . "'", $link);
-			mysql_query("DELETE FROM ".SQL."empresas WHERE user_ID = '" . $user_ID . "'", $link);
-			mysql_query("DELETE FROM ".SQL."mercado WHERE user_ID = '" . $user_ID . "'", $link);
-			mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '" . $user_ID . "'", $link);
-			mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '" . $user_ID . "'", $link);
+			mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM ".SQL."empresas WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM ".SQL."mercado WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '".$user_ID."'", $link);
 		}
 
 		$img_root = RAIZ.'/img/a/' . $user_ID;
@@ -200,13 +200,13 @@ LIMIT 1", $link);
 
 		// anula el posible voto en elecciones
 		if ($pol['config']['elecciones_estado'] == 'elecciones') {
-			mysql_query("UPDATE ".SQL."elecciones SET ID_partido = '-1' WHERE user_ID = '" . $user_ID . "' LIMIT 1", $link);
+			mysql_query("UPDATE ".SQL."elecciones SET ID_partido = '-1' WHERE user_ID = '".$user_ID."' LIMIT 1", $link);
 		}
 
 		// eliminar
 		if ($estado == 'expulsado') { 
-			mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '" . $user_ID . "'", $link);
-			mysql_query("DELETE FROM ".SQL."foros_hilos WHERE user_ID = '" . $user_ID . "'", $link);
+			mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM ".SQL."foros_hilos WHERE user_ID = '".$user_ID."'", $link);
 		}
 	}
 }

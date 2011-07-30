@@ -177,10 +177,6 @@ $txt .= '
 
 
 
-
-
-
-
 } elseif ($_GET['a']) { // VER VOTACION
 
 	$result = mysql_query("SELECT *,
@@ -211,52 +207,99 @@ LIMIT 1", $link);
 <div class="amarillo" style="margin:20px 0 15px 0;padding:20px 10px 0 10px;">
 <h1>'.$r['pregunta'].'</h1>
 <p>'.$r['descripcion'].'</p>
-</div>
+</div>';
 
-<span style="float:right;text-align:right;">
+
+
+
+		if ($_GET['b'] == 'verificacion') { // ZONA ALPHA. INTENTO DE ESTABLECIMIENTO DE VERIFICACION PUBLICA.
+			
+			$txt .= '<span style="float:right;text-align:right;"><a href="/votacion/'.$r['ID'].'/"><b>Volver a votaci&oacute;n</b></a>.</span>
+
+<h1 style="margin-top:20px;">Verificaci&oacute;n <sub style="font-size:12px;">ALPHA</sub></h1>
+
+<table border="0" width="100%"><tr><td valign="top">
+
+<table border="0" cellpadding="3">
+<tr>
+<th>Orden</th>
+<th>Quien</th>
+<th>Qué</th>
+<th>Autentificado</th>
+</tr>';
+			$orden = 0;
+			$result2 = mysql_query("SELECT user_ID, voto, validez, autentificado, (SELECT nick FROM users WHERE ID = user_ID LIMIT 1) AS nick FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
+			while($r2 = mysql_fetch_array($result2)) {
+				if ($r2['user_ID'] == 0) {
+					$nick = '*';
+				} else {
+					$nick = crear_link($r2['nick']);
+				}
+
+				$txt .= '<tr>
+<td align="right"><b>'.++$orden.'</b></td>
+<td>'.$nick.'</td>
+<td>*</td>
+<td>'.($r2['autentificado']=='true'?'<span style="color:blue;">SI</span>':'<span style="color:red;">NO</span>').'</td>
+</tr>';
+			}
+			$txt .= '<tr><td colspan="4">Votos computados: <b>'.$orden.'</b> (Contador: '.$r['num'].')</td></tr></table>
+	
+</td><td valign="top">
+
+<p>Objetivo: establecer verificaci&oacute;n de votaci&oacute;n sin perder privacidad.</p>
+
+<p>Estado actual: <em>investigaci&oacute;n</em>.</p>
+
+</td></tr></table>';
+
+
+		} else {
+
+			$txt .= '<span style="float:right;text-align:right;">
 Acceso: <acronym title="'.$r['acceso_cfg_votar'].'"><b>'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</b></acronym>. Creador <b>' . crear_link($r['nick']) . '</b>. Inicio: <em>' . $r['time'] . '</em><br />
-Duraci&oacute;n <b>'.$duracion.'</b>.'.($r['votos_expire']!=0?' Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.':'').' Fin: <em>' . $r['time_expire'] . '</em>
+<a href="/votacion/'.$r['ID'].'/verificacion/"><em>Verificaci&oacute;n</em></a>. Duraci&oacute;n <b>'.$duracion.'</b>.'.($r['votos_expire']!=0?' Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.':'').' Fin: <em>' . $r['time_expire'] . '</em>
 </span>';
 
-		if ($r['estado'] == 'end') { // VOTACION TERMINADA, IMPRIMIR RESULTADOS 
+			if ($r['estado'] == 'end') { // VOTACION TERMINADA, IMPRIMIR RESULTADOS 
 
-			// Conteo/Proceso de votos (ESCRUTINIO)
-			$escrutinio['votos'] = array(0,0,0,0,0,0,0,0,0,0,0,0);
-			$escrutinio['votos_autentificados'] = 0;
-			$escrutinio['votos_total'] = 0;
-			$escrutinio['validez']['true'] = 0; $escrutinio['validez']['false'] = 0;
-			$result2 = mysql_query("SELECT voto, validez, autentificado FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
-			while($r2 = mysql_fetch_array($result2)) {
-				$escrutinio['votos'][$r2['voto']]++;
-				$escrutinio['validez'][$r2['validez']]++;
-				if ($r2['autentificado'] == 'true') { $escrutinio['votos_autentificados']++; }
-			}
-
-			// Determina validez (por mayoria simple)
-			$nulo_limite = ceil(($votos_total)/2);
-			if ($escrutinio['validez']['false'] >= $nulo_limite) { $validez = false; } else { $validez = true; }
-
-			// Imprime escrutinio en texto.
-			$txt .= '<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">';
-			if ($validez==true) {
-				$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th>Escrutinio</th><th>Votos</th><th></th></tr>';
-				foreach ($escrutinio['votos'] AS $voto => $num) { 
-					if ($respuestas[$voto]) {
-						$txt .= '<tr><td nowrap="nowrap">'.$respuestas[$voto].'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.num(($num * 100) / $votos_total, 1).'%</td></tr>';
-						$respuestas_array[$voto] = $respuestas[$voto];
-					} else { unset($escrutinio['votos'][$voto]);  }
+				// Conteo/Proceso de votos (ESCRUTINIO)
+				$escrutinio['votos'] = array(0,0,0,0,0,0,0,0,0,0,0,0);
+				$escrutinio['votos_autentificados'] = 0;
+				$escrutinio['votos_total'] = 0;
+				$escrutinio['validez']['true'] = 0; $escrutinio['validez']['false'] = 0;
+				$result2 = mysql_query("SELECT voto, validez, autentificado FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
+				while($r2 = mysql_fetch_array($result2)) {
+					$escrutinio['votos'][$r2['voto']]++;
+					$escrutinio['validez'][$r2['validez']]++;
+					if ($r2['autentificado'] == 'true') { $escrutinio['votos_autentificados']++; }
 				}
-				$txt .= '</table>';
-			}
-			$txt .= '</td><td valign="top">';
 
-			// Imprime escrutinio en grafico.
-			if ($validez == true) {
-				$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:'.implode(',', $escrutinio['votos']).'&chs=430x200&chl='.implode('|', $respuestas_array).'&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="430" height="200" />';
-			}
+				// Determina validez (por mayoria simple)
+				$nulo_limite = ceil(($votos_total)/2);
+				if ($escrutinio['validez']['false'] >= $nulo_limite) { $validez = false; } else { $validez = true; }
 
-			// Imprime datos de legitimidad y validez
-			$txt .= '</td>
+				// Imprime escrutinio en texto.
+				$txt .= '<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">';
+				if ($validez==true) {
+					$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th>Escrutinio</th><th>Votos</th><th></th></tr>';
+					foreach ($escrutinio['votos'] AS $voto => $num) { 
+						if ($respuestas[$voto]) {
+							$txt .= '<tr><td nowrap="nowrap">'.$respuestas[$voto].'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.num(($num * 100) / $votos_total, 1).'%</td></tr>';
+							$respuestas_array[$voto] = $respuestas[$voto];
+						} else { unset($escrutinio['votos'][$voto]);  }
+					}
+					$txt .= '</table>';
+				}
+				$txt .= '</td><td valign="top">';
+
+				// Imprime escrutinio en grafico.
+				if ($validez == true) {
+					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:'.implode(',', $escrutinio['votos']).'&chs=430x200&chl='.implode('|', $respuestas_array).'&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="430" height="200" />';
+				}
+
+				// Imprime datos de legitimidad y validez
+				$txt .= '</td>
 <td valign="top" style="color:#888;"><br />
 Legitimidad: <b>'.$votos_total.'</b> votos, <b>'.$escrutinio['votos_autentificados'].'</b> autentificados.<br />
 Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b> '.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>NULO</b> '.$porcentaje_validez.'%</span>').'<br />
@@ -264,20 +307,20 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b> '.num(($escrutinio[
 </tr></table>';
 
 
-		} else {
-
-			if ($r['ha_votado']) {
-				for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
-						$votos .= '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
-				} }
-				$txt .= 'Tu voto (<em>'.$respuestas[$r['que_ha_votado']].'</em>) ha sido recogido <b>correctamente</b>.<br />';
 			} else {
-				for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
-						$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
-				} }
-			}
-			$tiene_acceso_votar = nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']);
-			$txt .= '<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=votacion&b=votar" method="post">
+
+				if ($r['ha_votado']) {
+					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
+							$votos .= '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
+					} }
+					$txt .= 'Tu voto (<em>'.$respuestas[$r['que_ha_votado']].'</em>) ha sido recogido <b>correctamente</b>.<br />';
+				} else {
+					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
+							$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
+					} }
+				}
+				$tiene_acceso_votar = nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']);
+				$txt .= '<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=votacion&b=votar" method="post">
 <input type="hidden" name="ref_ID" value="'.$r['ID'].'"  />
 <p><select name="voto" style="font-size:22px;">
 '.$votos.'
@@ -290,26 +333,26 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b> '.num(($escrutinio[
 </p>
 
 </form>';
-		}
+			}
 
-		// Añade tabla de escrutinio publico si es votacion tipo parlamento.
-		if ($r['tipo'] == 'parlamento') {
-			$txt .= '<table border="0" cellpadding="0" cellspacing="3" class="pol_table"><tr><th>Diputado</th><th></th><th colspan="2">Voto</th></tr>';
-			$result2 = mysql_query("SELECT user_ID,
+			// Añade tabla de escrutinio publico si es votacion tipo parlamento.
+			if ($r['tipo'] == 'parlamento') {
+				$txt .= '<table border="0" cellpadding="0" cellspacing="3" class="pol_table"><tr><th>Diputado</th><th></th><th colspan="2">Voto</th></tr>';
+				$result2 = mysql_query("SELECT user_ID,
 (SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick,
 (SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS siglas,
 (SELECT voto FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = ".SQL."estudios_users.user_ID LIMIT 1) AS ha_votado
 FROM ".SQL."estudios_users
 WHERE cargo = '1' AND ID_estudio = '6'
 ORDER BY siglas ASC", $link);
-			while($r2 = mysql_fetch_array($result2)) {
-				if ($r2['ha_votado'] != null) { $ha_votado = ' style="background:blue;"';
-				} else { $ha_votado = ' style="background:red;"'; }
-				$txt .= '<tr><td><img src="'.IMG.'cargos/6.gif" /> <b>' . crear_link($r2['nick']) . '</b></td><td><b>' . crear_link($r2['siglas'], 'partido') . '</b></td><td' . $ha_votado . '></td><td><b>' . $respuestas[$r2['ha_votado']]  . '</b></td></tr>';
+				while($r2 = mysql_fetch_array($result2)) {
+					if ($r2['ha_votado'] != null) { $ha_votado = ' style="background:blue;"';
+					} else { $ha_votado = ' style="background:red;"'; }
+					$txt .= '<tr><td><img src="'.IMG.'cargos/6.gif" /> <b>' . crear_link($r2['nick']) . '</b></td><td><b>' . crear_link($r2['siglas'], 'partido') . '</b></td><td' . $ha_votado . '></td><td><b>' . $respuestas[$r2['ha_votado']]  . '</b></td></tr>';
+				}
+				$txt .= '</table>';
 			}
-			$txt .= '</table>';
 		}
-
 	}
 
 } else {

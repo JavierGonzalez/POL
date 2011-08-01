@@ -140,7 +140,7 @@ function click_form(tipo) {
 <p><b>Mensaje:</b><br />
 <textarea tabindex="2" name="text" style="color:green;font-weight:bold;width:550px;height:200px;"></textarea></p>
 
-<p><input type="checkbox" name="urgente" value="1" id="urgente" /> Env&iacute;o urgente. (el receptor recibir&aacute; un email) ' . pols($pol['config']['pols_mensajeurgente']) . ' '.MONEDA.'.</p>
+<p><input type="checkbox" name="urgente" value="1" id="urgente" /> Env&iacute;o urgente. (el receptor recibir&aacute; un email) '.(ECONOMIA?' '.pols($pol['config']['pols_mensajeurgente']) . ' '.MONEDA:'').'.</p>
 
 
 <p><input type="submit" value="Enviar" style="font-size:24px;" /> En calidad de: <select name="calidad" style="color:green;font-weight:bold;font-size:17px;"><option value="0">Ciudadano</option>' . $select_cargos . '</select></form></p>';

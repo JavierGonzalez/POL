@@ -96,7 +96,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <input id="login_pass" name="pass" value="123" size="10" maxlength="200" onfocus="vlgn(this)" type="password" />
 <input type="submit" value="Entrar" onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" /></form>
 </span>
-<span class="azul"><a href="'.REGISTRAR.'"><b>Crear Ciudadano!</b></a></span> &nbsp; <a href="/info/recuperar-login/"><acronym title="Recuperar contrase&ntilde;a">?</acronym></a> &nbsp;';
+<span class="azul"><a href="'.REGISTRAR.'"><b>Crear Ciudadano!</b></a></span> &nbsp; <a href="'.REGISTRAR.'login.php?a=recuperar-pass">Recuperar contrase&ntilde;a</a> &nbsp;';
 
 }
 ?>

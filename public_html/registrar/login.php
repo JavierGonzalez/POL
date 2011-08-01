@@ -10,38 +10,6 @@ function ischecked($num, $user_info) {
 switch ($_GET['a']) {
 
 
-case 'recuperar-pass':
-	// RECUPERAR PASS
-	
-	$txt .= '<h1>Recuperar contrase&ntilde;a:</h1><ul>';
-
-	//changepass
-	$txt .= '
-<li class="azul">
-<form action="'.REGISTRAR.'login.php?a=changemail" method="POST">
-<input type="hidden" name="url" value="' . base64_encode(REGISTRAR.'login.php?a=panel') . '" />
-<table border="0" cellpadding="2" cellspacing="0">
-<tr>
-<td align="center" valign="top">Nick: <input type="text" size="10" name="nick" value="" maxlength="20" /></td>
-
-<td align="center" valign="top">Email: <input type="text" size="20" name="email" value="" maxlength="100" /></td>
-
-<td align="center" valign="top"><input type="submit" value="Recuperar contrase&ntilde;a" style="font-weight:bold;font-size:15px;color:green;" />
-</td></tr></table></form></li>';
-
-		$txt .= '</ul>';
-
-
-
-	$txt_title = 'Solicitar cambio de contraseña :: Blogs Teoriza';
-	include('../theme.php');
-	break;
-
-
-
-
-
-
 case 'panel':
 	
 	if ($pol['user_ID']) {
@@ -91,7 +59,7 @@ case 'panel':
 	}
 
 
-	$txt_title = 'Panel de Usuarios :: Blogs Teoriza';
+	$txt_title = 'Panel de Usuarios';
 	include('../theme.php');
 	break;
 
@@ -99,7 +67,93 @@ case 'panel':
 
 
 
+
+
+case 'recuperar-pass':
+	if ($pol['user_ID']) { header('Location: '.REGISTRAR.'login.php?a=panel'); exit; }
+
+	$txt .= '<h2>&iquest;Has olvidado tu contrase&ntilde;a?</h2>
+
+<p>No te preocupes, puedes solicitar un reset de la contrase&ntilde;a. Siguiendo estos pasos:</p>
+
+<ol>
+<li><form action="'.REGISTRAR.'login.php?a=start-reset-pass" method="POST">Tu email: <input type="text" name="email" value="" style="width:250px;" /> <input type="submit" value="Iniciar reset" style="font-weight:bold;" onclick="alert(\'Recibir&aacute;s en segundos un email en tu correo.\n\nSi no lo recibes escribe a desarrollo@virtualpol.com\');" /></form></li>
+<li>Recibir&aacute;s inmediatamente un email con una direcci&oacute;n web que te permitir&aacute; cambiar la contrase&ntilde;a. (Quiz&aacute; est&eacute; en la carpeta spam).</li>
+</ol>
+
+<p>Por seguridad, esta acci&oacute;n <b>solo se puede iniciar una vez cada 24h</b> y el cambio de contrase&ntilde;a ha de realizarse dentro de este periodo.</p>
+
+<p>Si esto no te ayuda a recuperar tu usuario, en ultima instancia, puedes escribirnos un email a <em>desarrollo@virtualpol.com</em></p>
+';
+	$txt_title = 'Recuperar contrase&ntilde;a';
+	include('../theme.php');
+	break;
+
+
+case 'reset-pass':
+
+	$result = mysql_query("SELECT ID, nick FROM users WHERE ID = '".$_GET['user_ID']."' AND api_pass = '".$_GET['check']."' AND reset_last >= '".$date."' LIMIT 1", $link);
+	while ($r = mysql_fetch_array($result)) { 
+		$check = true;
+		
+		$txt .= '<h2>Cambio de contrase&ntilde;a:</h2>
+
+<p>Escribe tu nueva contrase&ntilde;a para efectuar el cambio:</p>
+
+<form action="'.REGISTRAR.'login.php?a=reset-pass-change" method="POST">
+<input type="hidden" name="user_ID" value="'.$_GET['user_ID'].'" />
+<input type="hidden" name="check" value="'.$_GET['check'].'" />
+<input type="password" name="pass_new" value="" /><br />
+<input type="password" name="pass_new2" value="" /> (introducir otra vez)<br />
+<br />
+<input type="submit" value="Cambiar contrase&ntilde;a" style="font-weight:bold;"/>
+</form>';
+		
+	}
+	if ($check != true) { $txt .= 'Error.'; }
+
+	$txt_title = 'Recuperar contrase&ntilde;a';
+	include('../theme.php');
+	break;
+
+
+
 // ACCIONES /login.php?a=...
+
+
+case 'reset-pass-change':
+	if ($_POST['pass_new'] === $_POST['pass_new2']) {
+		mysql_query("UPDATE users SET pass = '".md5($_POST['pass_new'])."', api_pass = '', reset_last = '".$date."' WHERE ID = '".$_POST['user_ID']."' AND api_pass = '".$_POST['check']."' AND reset_last >= '".$date."' LIMIT 1", $link);
+		
+	}
+	header('Location: http://www.virtualpol.com/');
+	break;
+
+case 'start-reset-pass':
+	$result = mysql_query("SELECT ID, nick, api_pass, email FROM users WHERE email = '".$_POST['email']."' AND reset_last < '".$date."' LIMIT 1", $link);
+	while ($r = mysql_fetch_array($result)) { 
+		$reset_pass = rand(1000000000, 9999999999);
+		mysql_query("UPDATE users SET api_pass = '".$reset_pass."', reset_last = '".date('Y-m-d H:00:00', time() + (86400*1))."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+
+		$texto_email = "<p>Hola ".$r['nick']."!</p>
+<p>Ha solicitado un reset de la contraseña, con la intención de efectuar una recuperación y posterior cambio de contraseña.</p>
+
+<p>Si has solicitado esta acción, continúa entrando en el siguiente enlace. <b>De lo contrario ignora este email</b>.</p>
+
+<blockquote>
+Reset de contraseña:<br />
+<a href=\"".REGISTRAR."login.php?a=reset-pass&user_ID=".$r['ID']."&check=".$reset_pass."\"><b>".REGISTRAR."login.php?a=reset-pass&user_ID=".$r['ID']."&check=".$reset_pass."</b></a>
+</blockquote>
+
+<p>_________<br />
+VirtualPol</p>";
+
+		mail($r['email'], "[VirtualPol] Cambio de contraseña del usuario: ".$r['nick'], $texto_email, "FROM: VirtualPol <desarrollo@virtualpol.com>\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n"); 
+	}
+	header('Location: http://www.virtualpol.com/');
+	break;
+
+
 
 case 'changepass':
 	$oldpass = md5(trim($_POST['oldpass']));
@@ -232,5 +286,5 @@ case 'logout':
 
 
 
-if ($link) { mysql_close($link); }
+if ($link) { @mysql_close($link); }
 ?>

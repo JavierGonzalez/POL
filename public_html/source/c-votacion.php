@@ -216,7 +216,7 @@ LIMIT 1", $link);
 			
 			$txt .= '<span style="float:right;text-align:right;"><a href="/votacion/'.$r['ID'].'/"><b>Volver a votaci&oacute;n</b></a>.</span>
 
-<h1 style="margin-top:20px;">Verificaci&oacute;n <sub style="font-size:12px;">ALPHA</sub></h1>
+<h1 style="margin-top:20px;">Verificaci&oacute;n <sup style="font-size:12px;">ALPHA</sup></h1>
 
 <table border="0" width="100%"><tr><td valign="top">
 
@@ -243,13 +243,25 @@ LIMIT 1", $link);
 <td>'.($r2['autentificado']=='true'?'<span style="color:blue;">SI</span>':'<span style="color:red;">NO</span>').'</td>
 </tr>';
 			}
-			$txt .= '<tr><td colspan="4">Votos computados: <b>'.$orden.'</b> (Contador: '.$r['num'].')</td></tr></table>
+			$txt .= '<tr><td colspan="4" nowrap="nowrap">Votos computados: <b>'.$orden.'</b> (Contador: '.$r['num'].')</td></tr></table>
 	
 </td><td valign="top">
 
-<p>Objetivo: establecer verificaci&oacute;n de votaci&oacute;n sin perder privacidad.</p>
+<p>Propiedades de la votaci&oacute;n:
+<ul>
 
-<p>Estado actual: <em>investigaci&oacute;n</em>.</p>
+<li><b title="Accuracy: el computo de los votos es exacto.">Precisi&oacute;n:</b> Si, el computo de los votos es exacto.</b>
+
+<li><b title="Democracy: solo pueden votar personas autorizadas y una sola vez.">Democracia:</b> Autentificaci&oacute;n solida mediante DNIe (y otros certificados) opcional y avanzado sistema de vigilancia del censo de eficacia elevada.</li>
+
+<li><b title="Privacy: el sentido del voto es secreto.">Privacidad:</b> Si, siempre que el servidor no se comprometa mientras la votaci&oacute;n est&aacute; activa.</li>
+
+<li><b title="Veriability: capacidad publica de comprobar el recuento de votos.">Verificaci&oacute;n:</b> Minima, se permite comprobar el sentido del propio voto.</li>
+
+<li><b title="Posibilidad de modificar el sentido del voto propio en una votaci&oacute;n activa.">Rectificaci&oacute;n</b> Si.</li>
+
+</ul>
+</p>
 
 </td></tr></table>';
 

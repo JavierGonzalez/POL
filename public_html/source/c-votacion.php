@@ -6,7 +6,7 @@ $votaciones_tipo = array('sondeo', 'referendum', 'parlamento', 'destituir', 'oto
 
 // ¿FINALIZAR VOTACIONES?
 $result = mysql_query("SELECT ID, tipo, num, pregunta, ejecutar FROM votacion 
-WHERE estado = 'ok' AND pais = '".PAIS."' AND (time_expire < '".$date."' OR ((votos_expire != 0) AND (num >= votos_expire)))", $link);
+WHERE estado = 'ok' AND pais = '".PAIS."' AND (time_expire <= '".$date."' OR ((votos_expire != 0) AND (num >= votos_expire)))", $link);
 while($r = mysql_fetch_array($result)){
 	
 	mysql_query("UPDATE votacion SET estado = 'end', time_expire = '".$date."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
@@ -75,21 +75,31 @@ if ($_GET['a'] == 'crear') {
 
 
 	$txt_header .= '<script type="text/javascript">
+campos_num = 3;
+campos_max = 19;
 
 function cambiar_tipo_votacion(tipo) {
-	$("#acceso_votar, #time_expire, #votar_form, #votos_expire").show();
+	$("#acceso_votar, #time_expire, #votar_form, #votos_expire, #tipo_voto").show();
 	$("#cargo_form").hide();
 	switch (tipo) {
 		case "parlamento": $("#acceso_votar, #votos_expire").hide(); break;
-		case "destituir": case "otorgar": $("#acceso_votar, #time_expire, #votar_form, #votos_expire").hide(); $("#cargo_form").show(); break;
+		case "destituir": case "otorgar": $("#acceso_votar, #time_expire, #votar_form, #votos_expire, #tipo_voto").hide(); $("#cargo_form").show(); break;
 	}
 
+}
+
+function opcion_nueva() {
+	$("#li_opciones").append("<li><input type=\"text\" name=\"respuesta" + campos_num + "\" size=\"22\" maxlength=\"30\" /></li>");
+	if (campos_num >= campos_max) { $("#a_opciones").hide(); }
+	campos_num++;
+	return false;
 }
 
 </script>';
 
 
 	$txt .= '<h1><a href="/votacion/">Votaciones</a>: Crear votaci&oacute;n</h1>
+
 <form action="/accion.php?a=votacion&b=crear" method="post">
 <table width="570"><tr><td valign="top">
 <p class="azul"><b>Tipo de votaci&oacute;n</b>:<br />
@@ -128,7 +138,15 @@ $txt .= '
 
 
 <br /><span id="votos_expire">
-<b>Finalizar con</b>: <input type="text" name="votos_expire" value="" size="1" maxlength="5" align="right" /> votos</span>
+<b>Finalizar con</b>: <input type="text" name="votos_expire" value="" size="1" maxlength="5" style="text-align:right;" /> votos</span><br />
+
+<span id="tipo_voto">
+<b>Tipo de voto</b>:<br /> 
+<select name="tipo_voto">
+<option value="estandar">Una elecci&oacute;n (estandar)</option>
+<option value="3puntos">Repartir 1, 2 y 3 puntos</option>
+<option value="5puntos">Repartir 1, 2, 3, 4 y 5 puntos</option>
+</select></span>
 </p>
 ';
 
@@ -157,21 +175,14 @@ $txt .= '
 <textarea name="descripcion" style="color: green; font-weight: bold; width: 570px; height: 250px;"></textarea></p>
 
 <p><b>Opciones de voto</b>:
-<ol>
-<li><input type="text" name="respuesta0" size="22" maxlength="30" value="SI" /></li>
-<li><input type="text" name="respuesta1" size="22" maxlength="30" value="NO" /></li>
-<li><input type="text" name="respuesta2" size="22" maxlength="30" /></li>
-<li><input type="text" name="respuesta3" size="22" maxlength="30" /></li>
-<li><input type="text" name="respuesta4" size="22" maxlength="30" /></li>
-<li><input type="text" name="respuesta5" size="22" maxlength="30" /></li>
-<li><input type="text" name="respuesta6" size="22" maxlength="30" /></li>
-<li><input type="text" name="respuesta7" size="22" maxlength="30" /></li>
-<li><input type="text" name="respuesta8" size="22" maxlength="30" /></li>
-<li><input type="text" name="respuesta9" size="22" maxlength="30" /></li>
+<ul style="margin-bottom:-16px;">
+<li><input type="text" name="respuesta0" size="22" value="En Blanco" readonly="readonly" style="color:grey;" /> &nbsp; <a href="#" id="a_opciones" onclick="opcion_nueva();return false;">A&ntilde;adir opci&oacute;n</a></li>
+</ul>
+<ol id="li_opciones">
+<li><input type="text" name="respuesta1" size="22" maxlength="30" value="SI" /></li>
+<li><input type="text" name="respuesta2" size="22" maxlength="30" value="NO" /></li>
 </ol>
-<ul style="margin-top:-16px;">
-<li><input type="text" name="respuesta10" size="22" value="En Blanco" readonly="readonly" style="color:grey;" /></li>
-</ul></p>
+</p>
 </div>
 <p><input type="submit" value="Iniciar votaci&oacute;n" style="font-size:18px;" /> &nbsp; <a href="/votacion/"><b>Ver votaciones</b></a></p>';
 
@@ -270,19 +281,35 @@ LIMIT 1", $link);
 
 			$txt .= '<span style="float:right;text-align:right;">
 Acceso: <acronym title="'.$r['acceso_cfg_votar'].'"><b>'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</b></acronym>. Creador <b>' . crear_link($r['nick']) . '</b>. Inicio: <em>' . $r['time'] . '</em><br />
-<a href="/votacion/'.$r['ID'].'/verificacion/"><em>Verificaci&oacute;n</em></a>. Duraci&oacute;n <b>'.$duracion.'</b>.'.($r['votos_expire']!=0?' Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.':'').' Fin: <em>' . $r['time_expire'] . '</em>
+<a href="/votacion/'.$r['ID'].'/verificacion/"><em>Verificaci&oacute;n</em></a>.'.($r['tipo_voto']!='estandar'?' Tipo de voto: <b>'.$r['tipo_voto'].'</b>.':'').' Duraci&oacute;n <b>'.$duracion.'</b>.'.($r['votos_expire']!=0?' Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.':'').' Fin: <em>' . $r['time_expire'] . '</em>
 </span>';
 
-			if ($r['estado'] == 'end') { // VOTACION TERMINADA, IMPRIMIR RESULTADOS 
+			if ($r['estado'] == 'end') {  // VOTACION FINALIZADA: Mostrar escrutinio. 
 
 				// Conteo/Proceso de votos (ESCRUTINIO)
 				$escrutinio['votos'] = array(0,0,0,0,0,0,0,0,0,0,0,0);
 				$escrutinio['votos_autentificados'] = 0;
 				$escrutinio['votos_total'] = 0;
 				$escrutinio['validez']['true'] = 0; $escrutinio['validez']['false'] = 0;
+				$puntos_total = ($r['tipo_voto']=='estandar'?$votos_total:0);
 				$result2 = mysql_query("SELECT voto, validez, autentificado FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
 				while($r2 = mysql_fetch_array($result2)) {
-					$escrutinio['votos'][$r2['voto']]++;
+					
+					switch ($r['tipo_voto']) {
+						case 'estandar': $escrutinio['votos'][$r2['voto']]++; break;
+						case '3puntos': case '5puntos': 
+							$voto_array = explode(' ', $r2['voto']); $puntos = 1;
+							foreach ($voto_array AS $elvoto) {
+								if (isset($respuestas[$elvoto])) {
+									$escrutinio['votos'][$elvoto] += $puntos;
+									$puntos_total += $puntos;
+									$puntos++;
+								}
+							}
+
+							break;
+					}
+
 					$escrutinio['validez'][$r2['validez']]++;
 					if ($r2['autentificado'] == 'true') { $escrutinio['votos_autentificados']++; }
 				}
@@ -294,10 +321,10 @@ Acceso: <acronym title="'.$r['acceso_cfg_votar'].'"><b>'.ucfirst(str_replace('_'
 				// Imprime escrutinio en texto.
 				$txt .= '<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">';
 				if ($validez==true) {
-					$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th>Escrutinio</th><th>Votos</th><th></th></tr>';
+					$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th>Escrutinio</th><th>'.($r['tipo_voto']=='estandar'?'Votos':'Puntos').'</th><th></th></tr>';
 					foreach ($escrutinio['votos'] AS $voto => $num) { 
 						if ($respuestas[$voto]) {
-							$txt .= '<tr><td nowrap="nowrap">'.$respuestas[$voto].'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.num(($num * 100) / $votos_total, 1).'%</td></tr>';
+							$txt .= '<tr><td nowrap="nowrap">'.$respuestas[$voto].'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.num(($num * 100) / $puntos_total, 1).'%</td></tr>';
 							$respuestas_array[$voto] = $respuestas[$voto];
 						} else { unset($escrutinio['votos'][$voto]);  }
 					}
@@ -319,24 +346,69 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b> '.num(($escrutinio[
 </tr></table>';
 
 
-			} else {
+			} else { // VOTACION EN CURSO: Votar.
 
-				if ($r['ha_votado']) {
-					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
-							$votos .= '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
-					} }
-					$txt .= 'Tu voto (<em>'.$respuestas[$r['que_ha_votado']].'</em>) ha sido recogido <b>correctamente</b>.<br />';
-				} else {
-					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
-							$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
-					} }
-				}
 				$tiene_acceso_votar = nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']);
+
 				$txt .= '<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=votacion&b=votar" method="post">
-<input type="hidden" name="ref_ID" value="'.$r['ID'].'"  />
-<p><select name="voto" style="font-size:22px;">
-'.$votos.'
-</select>
+<input type="hidden" name="ref_ID" value="'.$r['ID'].'"  /><p>';
+
+
+				if ($r['tipo_voto'] == 'estandar') {
+					if ($r['ha_votado']) {
+						for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
+								$votos .= '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
+						} }
+						$txt .= 'Tu voto (<em>'.$respuestas[$r['que_ha_votado']].'</em>) ha sido recogido <b>correctamente</b>.<br />';
+					} else {
+						for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
+								$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
+						} }
+					}
+					$txt .= '<select name="voto" style="font-size:22px;">'.$votos.'</select>';
+				} elseif (($r['tipo_voto'] == '3puntos') OR ($r['tipo_voto'] == '5puntos')) {
+
+					if ($r['ha_votado']) { $txt .= 'Tus votos han sido recogidos <b>correctamente</b>.<br />'; }
+
+					$txt .= '<table border="0">
+<tr>
+<th colspan="'.($r['tipo_voto']=='5puntos'?5:3).'" align="center">Puntos</th>
+<th></th>
+</tr>
+<tr>
+<th align="center">1</th>
+<th align="center">2</th>
+<th align="center">3</th>
+'.($r['tipo_voto']=='5puntos'?'<th align="center">4</th><th align="center">5</th>':'').'
+<th>Opciones</th>
+</tr>';				if ($r['ha_votado']) { $ha_votado_array = explode(' ', $r['que_ha_votado']); }
+					else { $ha_votado_array = array(0, 0, 0, 0, 0); }
+					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
+							$txt .= '<tr>
+<td><input type="radio" name="voto_1" value="'.$i.'"'.($ha_votado_array[0]==$i?' checked="checked"':'').' /></td>
+<td><input type="radio" name="voto_2" value="'.$i.'"'.($ha_votado_array[1]==$i?' checked="checked"':'').' /></td>
+<td><input type="radio" name="voto_3" value="'.$i.'"'.($ha_votado_array[2]==$i?' checked="checked"':'').' /></td>
+'.($r['tipo_voto']=='5puntos'?'
+<td><input type="radio" name="voto_4" value="'.$i.'"'.($ha_votado_array[3]==$i?' checked="checked"':'').' /></td>
+<td><input type="radio" name="voto_5" value="'.$i.'"'.($ha_votado_array[4]==$i?' checked="checked"':'').' /></td>
+':'').'
+<td>'.$respuestas[$i].'</td>
+</tr>';
+					} }
+					$txt .= '
+<tr>
+<th align="center">1</th>
+<th align="center">2</th>
+<th align="center">3</th>
+'.($r['tipo_voto']=='5puntos'?'<th align="center">4</th><th align="center">5</th>':'').'
+<th></th>
+</tr>
+</table>';
+				}
+
+
+				// Imprime boton para votar, aviso de tiempo y votacion correcta/nula.
+				$txt .= '
 <input type="submit" value="Votar" style="font-size:22px;"'.($tiene_acceso_votar?'':' disabled="disabled"').' /> '.($tiene_acceso_votar?'<span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span>':'<span style="color:red;">No tienes acceso para votar.</span>').'</p>
 
 <p>
@@ -400,7 +472,7 @@ ORDER BY estado ASC, time_expire DESC", $link);
 		$boton = '';
 		if ($r['user_ID'] == $pol['user_ID']) {
 			if ($r['estado'] == 'ok') {
-				if (($r['tipo'] != 'destituir') AND ($r['tipo'] != 'otorgar')) { $boton .= boton('Finalizar', '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '&iquest;Seguro que quieres FINALIZAR esta votacion?').' '; }
+				if (($r['tipo'] != 'destituir') AND ($r['tipo'] != 'otorgar')) { $boton .= boton('Finalizar', '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '&iquest;Seguro que quieres FINALIZAR esta votacion?'); }
 				$boton .= boton('X', '/accion.php?a=votacion&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta votacion?');
 			}
 		}

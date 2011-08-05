@@ -37,6 +37,7 @@ switch ($host[0]) {
 // CONFIGURACION ESPECIFICA DE PLATAFORMAS
 if (PAIS == 'VP') {
 	define('ECONOMIA', true); 
+	define('ASAMBLEA', false);
 	define('NOM_PARTIDOS','Partidos'); 
 	
 	$vp['acceso'] = array(
@@ -56,21 +57,22 @@ if (PAIS == 'VP') {
 
 } else {
 	define('ECONOMIA', false);
+	define('ASAMBLEA', true);
 	define('NOM_PARTIDOS','Comisiones');
 	
 	$vp['acceso'] = array(
-'sondeo'=>array('cargo', '41 6 16 22 19 7'),
-'referendum'=>array('nivel', '95'),
-'parlamento'=>array('cargo', '6 22'),
-'destituir'=>array('nivel', '85'),
-'otorgar'=>array('nivel', '85'),
-'kick'=>array('cargo', '12 13'),
-'kick_quitar'=>array('cargo', '9 13'),
-'foro_borrar'=>array('cargo', '12 13'),
-'control_gobierno'=>array('cargo', '7 19'),
-'control_sancion'=>array('cargo', '9'),
-'examenes_decano'=>array('cargo', '35'),
-'examenes_profesor'=>array('cargo', '34'),
+'sondeo'=>array('cargo', '6'),
+'referendum'=>array('cargo', '6'),
+'parlamento'=>array('cargo', '6'),
+'destituir'=>array('cargo', '6'),
+'otorgar'=>array('cargo', '6'),
+'kick'=>array('cargo', '13'),
+'kick_quitar'=>array('cargo', '6 13'),
+'foro_borrar'=>array('cargo', '13'),
+'control_gobierno'=>array('cargo', '6'),
+'control_sancion'=>array('cargo', ''),
+'examenes_decano'=>array('cargo', '6'),
+'examenes_profesor'=>array('cargo', ''),
 );
 }
 

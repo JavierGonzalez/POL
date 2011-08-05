@@ -56,7 +56,7 @@ ORDER BY nick ASC", $link);
 <tr>
 <th>Nivel&darr;</th>
 <th>Cargo</th>
-<th><acronym title="Salario por dia trabajado">Salario</acronym></th>
+'.(ECONOMIA?'<th><acronym title="Salario por dia trabajado">Salario</acronym></th>':'').'
 <th>Cargos</th>
 <th colspan="2">Asigna</th>
 <th>ID</th>
@@ -104,12 +104,14 @@ ORDER BY nick ASC", $link);
 		$txt .= '<tr>
 <td align="right" valign="top">' . $r['nivel'] . '</td>
 <td valign="top" nowrap="nowrap">' . $ico . '<b>' . $r['nombre'] . '</b></td>
-<td align="right" valign="top">' . pols($r['salario']) . '</td>
+'.(ECONOMIA?'<td align="right" valign="top">' . pols($r['salario']) . '</td>':'').'
 <td valign="top">' . $num . ' <b>' . $c_nicks . '</b></td><td valign="top" nowrap="nowrap">' . $asignado_por . '</td>
 <td valign="top">' . $p_edit . '</td>
 <td valign="top" align="right" style="color:grey;">'.$r['ID'].'</td></tr>';
 	}
-	$txt .= '</table>';
+	$txt .= '</table>
+	
+<p><a href="/examenes/">Ver <b>Examenes</b></a></p>';
 
 }
 

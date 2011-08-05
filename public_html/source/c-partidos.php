@@ -171,10 +171,11 @@ ORDER BY num_lista DESC, afiliados DESC, nombre DESC", $link);
 			$txt_otros .= '<span title="'.$r['afiliados'].' afiliados / '.strip_tags($num_lista).' candidatos">'.crear_link($r['siglas'], 'partido').'</span> ';
 		}
 	}
-	$txt .= '</table><p style="width:700px;">'.NOM_PARTIDOS.' que no participan en las proximas elecciones:<br />
-'.$txt_otros.'</p>';
+	$txt .= '</table><p style="width:700px;">'.NOM_PARTIDOS.' que no participan en elecciones:<br />
+<b>'.$txt_otros.'</b></p>';
 
-	$txt .= '<p>* Para poder participar en las Elecciones ha de tener al menos un candidato en su lista. Para poder a&ntilde;adir candidatos en la lista, se ha de ser el Presidente, el candidato ha de estar afiliado y con el examen de Diputado aprobado.</p>
+	$txt .= (ECONOMIA?'<p>* Para poder participar en las Elecciones ha de tener al menos un candidato en su lista. Para poder a&ntilde;adir candidatos en la lista, se ha de ser el Presidente, el candidato ha de estar afiliado y con el examen de Diputado aprobado.</p>':'').'
+
 <p>' . boton('Crear '.NOM_PARTIDOS, '/form/crear-partido/', false, false, $pol['config']['pols_partido']) . '</p>';
 	$txt_title = NOM_PARTIDOS;
 }

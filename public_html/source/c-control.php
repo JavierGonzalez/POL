@@ -576,6 +576,17 @@ $txt_header .= '
 function change_bg(img) {
 	$("body").css("background","#FFFFFF url(\''.IMG.'bg/"+img+"\') repeat top left");
 }
+
+$(function() {
+	$("#fondos").hover(
+		function(e){
+			change_bg($(this).val()); },
+		function(e){
+			change_bg($(this).val());
+		}
+	);
+});
+
 </script>';
 
 

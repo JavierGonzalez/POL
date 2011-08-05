@@ -135,95 +135,153 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <div class="column-in">
 
 
+
+
+<?php if (ECONOMIA) { // menu VP ?>
+
+
 <dl id="menu">
 <ul class="sf-menu sf-vertical">
-			<li id="menu-1">
-				<a href="/">Comunicaci&oacute;n</a>
+	<li id="menu-1">
+		<a href="/">Comunicaci&oacute;n</a>
+		<ul>
+			<li><a href="/chats/">Chats</a></li>
+			<li><a href="/foro/">Foros</a></li>
+			<li><a href="/notas/">Notas</a></li>
+			<li><a href="/msg/">Mensajes Privados</a></li>
+		</ul>
+	</li>
+
+	<li id="menu-2">
+		<a href="#">Informaci&oacute;n</a>
+			<ul>
+				<li><a href="/info/censo/">Censo <span class="md"><?=$pol['config']['info_censo']?></span></a></li>
+
+				<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
+
+				<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Registros</b></a>
+					<ul>
+						<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
+						<li><a href="http://chartbeat.com/dashboard2/?url=virtualpol.com&k=ecc15496e00f415838f6912422024d06" target="_blank" title="Estadisticas Instantaneas">Estad&iacute;sticas Instan</a></li>
+						<!--<li><a href="/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>-->
+						<li><a href="/log-eventos/">Log de eventos</a></li>
+					</ul>
+				</li>
+
+
+				<li><a href="/buscar/">Buscador</a></li>
+
+				<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Sobre VirtualPol</b></a>
+					<ul>
+						<li><a href="/historia/">Hechos hist&oacute;ricos</a></li>
+						<li><a href="http://desarrollo.virtualpol.com/" target="_blank">Blog Desarrollo</a></li>
+						<li><a href="http://code.google.com/p/virtualpol/" target="_blank">C&oacute;digo fuente</a></li>
+						<li><a href="https://www.ohloh.net/p/virtualpol/contributors" target="_blank">Info desarrollo</a></li>
+						<li><a href="http://www.virtualpol.com/legal" target="_blank" title="Condiciones de Uso de VirtualPol">TOS</a></li>
+					</ul>
+				</li>
+
+				<li><a href="http://www.virtualpol.com/manual" target="_blank">Ayuda</a></li>
+			</ul>
+	</li>
+
+	<li id="menu-3">
+		<a href="#">Democracia</a>
+		<ul>
+			<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Gesti&oacute;n</b></a>
 				<ul>
-					<li><a href="/chats/">Chats</a></li>
-					<li><a href="/foro/">Foros</a></li>
-					<?=(ECONOMIA?'<li><a href="/notas/">Notas</a></li>':'')?>
-					<li><a href="/msg/">Mensajes Privados</a></li>
+					<li><a href="/control/gobierno/">Gobierno</a></li>
+					<li><a href="/doc/boletin-oficial-de-vp/">BOE</a></li>
+					<li><a href="/control/kick/">Kicks</a></li>
+					<li><a href="/control/expulsiones/">Expulsiones</a></li>
+					<li><a href="/cargos/">Cargos</a></li>
+					<li><a href="/examenes/">Ex&aacute;menes</a></li>
+					<li><a href="<?=SSL_URL?>dnie.php">Autentificaci&oacute;n</a></li>
+					<li><a href="/poderes/">Poderes</a></li><li><a href="/control/judicial/">Sanciones</a></li>
 				</ul>
 			</li>
+			
+			<li><a href="/partidos/">Partidos <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
+			<li><a href="/elecciones/"><b>Elecciones</b></a></li>
+			<li><a href="/votacion/">Votaciones <span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
+			
+		</ul>
+	</li>
 
-			<li id="menu-2">
-				<a href="#">Informaci&oacute;n</a>
-					<ul>
-						<li><a href="/info/censo/">Censo <span class="md"><?=$pol['config']['info_censo']?></span></a></li>
+	<li id="menu-4">
+		<a href="#">Econom&iacute;a</a>
+		<ul>
+			<?=($pol['pais']==PAIS?'<li><a href="/pols/"><b>Tus monedas</b></a></li>':'')?>
+			<li><a href="/empresas/"><b>Empresas</b></a></li>
+			<li><a href="/pols/cuentas/">Cuentas</a></li>
+			<li><a href="/subasta/">Subastas</a></li>
+			<li><a href="/mapa/">Mapa</a></li>
+			<li><a href="/info/economia/">Econom&iacute;a Global</a></li>
+		</ul>
+	</li>
 
-						<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
+<?php 
 
-						<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Registros</b></a>
-							<ul>
-								<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
-								<li><a href="http://chartbeat.com/dashboard2/?url=virtualpol.com&k=ecc15496e00f415838f6912422024d06" target="_blank" title="Estadisticas Instantaneas">Estad&iacute;sticas Instan</a></li>
-								<!--<li><a href="/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>-->
-								<li><a href="/log-eventos/">Log de eventos</a></li>
-							</ul>
-						</li>
+if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5" class="menu-5" style="margin:10px 0 0 1px;"><a href="/votacion/">Votaciones! <span class="md" style="font-size:19px;">'.$pol['config']['info_consultas'].'</span></a></li>'; }
 
 
-						<li><a href="/buscar/">Buscador</a></li>
+echo '</ul></dd></dl>
 
-						<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Sobre VirtualPol</b></a>
-							<ul>
-								<?=(ECONOMIA?'<li><a href="/historia/">Hechos hist&oacute;ricos</a></li>':'')?>
-								<li><a href="http://desarrollo.virtualpol.com/" target="_blank">Blog Desarrollo</a></li>
-								<li><a href="http://code.google.com/p/virtualpol/" target="_blank">C&oacute;digo fuente</a></li>
-								<li><a href="https://www.ohloh.net/p/virtualpol/contributors" target="_blank">Info desarrollo</a></li>
-								<li><a href="http://www.virtualpol.com/legal" target="_blank" title="Condiciones de Uso de VirtualPol">TOS</a></li>
-							</ul>
-						</li>
+<hr style="margin:5px 20px -5px -5px;color:#FF6;" />
 
-						<li><a href="http://www.virtualpol.com/manual" target="_blank">Ayuda</a></li>
-					</ul>
-			</li>
+<div id="palabras">';
 
-			<li id="menu-3">
-				<a href="#">Democracia</a>
+foreach(explode(";", $pol['config']['palabras']) as $t) {
+	$t = explode(":", $t);
+	if ($t[0] == $pol['user_ID']) { $edit = ' <a href="/subasta/editar/" class="gris">#</a>'; } else { $edit = ''; }
+	if ($t[1]) { echo '<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>'.$edit."<br />\n"; } 
+	else { echo $t[2].$edit."<br />\n"; }
+}
+
+echo '<a href="/mapa/" class="gris" style="float:right;margin:0 11px 0 0;">Mapa</a><a href="/subasta/" class="gris" style="margin:0 0 0 -3px;">Subasta</a>';
+if (!isset($cuadrado_size)) {
+	$cuadrado_size = 10;
+	include('inc-mapa.php');
+	echo '<div style="margin:0 0 0 -4px;">'.$txt_mapa.'</div>';
+}
+
+echo '</div>';
+?>
+
+
+
+
+
+<?php } else { // menu ASAMBLEA ?>
+
+
+<dl id="menu">
+<ul class="sf-menu sf-vertical">
+	<li id="menu-3">
+		<a href="/">Plaza Virtual</a>
+		<ul>
+			<li><a href="/chats/">Chats</a></li>
+			<li><a href="/foro/">Foros</a></li>
+			<li><a href="/doc/">Archivo <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
+			<li><a href="/info/censo/"><span style="float:right;">&#9658;</span>Ciudadanos</a>
 				<ul>
-					<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Gesti&oacute;n</b></a>
+					<li><a href="/partidos/">Comisiones <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
+					<li><a href="/cargos/"><span style="float:right;">&#9658;</span>Equipo Gestor</a>
 						<ul>
-							<li><a href="/control/gobierno/">Gobierno</a></li>
-							<?=(ECONOMIA?'<li><a href="/doc/boletin-oficial-de-vp/">BOE</a></li>':'')?>
-							<li><a href="/control/kick/">Kicks</a></li>
-							<li><a href="/control/expulsiones/">Expulsiones</a></li>
-							<li><a href="/cargos/">Cargos</a></li>
-							<li><a href="/examenes/">Ex&aacute;menes</a></li>
-							<li><a href="https://virtualpol.com/dnie.php">Autentificaci&oacute;n</a></li>
-							<?=(ECONOMIA?'<li><a href="/poderes/">Poderes</a></li><li><a href="/control/judicial/">Sanciones</a></li>':'')?>
+							<li><a href="/control/">Controles</a>
+							<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
+							<li><a href="/log-eventos/">Log de eventos</a></li>
 						</ul>
 					</li>
-					
-					<li><a href="/partidos/"><?=NOM_PARTIDOS?> <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
-					<li><a href="/elecciones/"><b>Elecciones</b></a></li>
-					<li><a href="/votacion/">Votaciones <span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
-					
 				</ul>
 			</li>
+		</ul>
+	</li>
+<?php
 
-<?php if (ECONOMIA) { ?>
-			<li id="menu-4">
-				<a href="#">Econom&iacute;a</a>
-				<ul>
-					<?=($pol['pais']==PAIS?'<li><a href="/pols/"><b>Tus monedas</b></a></li>':'')?>
-					<li><a href="/empresas/"><b>Empresas</b></a></li>
-					<li><a href="/pols/cuentas/">Cuentas</a></li>
-					<li><a href="/subasta/">Subastas</a></li>
-					<li><a href="/mapa/">Mapa</a></li>
-					<li><a href="/info/economia/">Econom&iacute;a Global</a></li>
-				</ul>
-			</li>
-<?php }
-
-if (ECONOMIA) {
-	if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5" class="menu-5" style="margin:10px 0 0 1px;"><a href="/votacion/">Votaciones! <span class="md" style="font-size:19px;">'.$pol['config']['info_consultas'].'</span></a></li>'; }
-} else {
-	echo '<li id="menu-5" class="menu-5" style="margin:10px 0 1px 1px;"><a href="/foro/propuestas/">Propuestas</a></li>';
-	if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:20px;">'.$pol['config']['info_consultas'].'</span></a></li>'; }
-	echo '<li id="menu-5" class="menu-5"><a href="/foro/acuerdos/">Acuerdos</a></li>';
-}
+echo '<li id="menu-5" class="menu-5" style="margin:10px 0 1px 1px;"><a href="/foro/propuestas/">Propuestas</a></li>';
+if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:20px;">'.$pol['config']['info_consultas'].'</span></a></li>'; }
+echo '<li id="menu-5" class="menu-5"><a href="/foro/acuerdos/">Acuerdos</a></li>';
 
 
 
@@ -240,17 +298,13 @@ foreach(explode(";", $pol['config']['palabras']) as $t) {
 	else { echo $t[2].$edit."<br />\n"; }
 }
 
-if (ECONOMIA) {
-	echo '<a href="/mapa/" class="gris" style="float:right;margin:0 11px 0 0;">Mapa</a><a href="/subasta/" class="gris" style="margin:0 0 0 -3px;">Subasta</a>';
-	if (!isset($cuadrado_size)) {
-		$cuadrado_size = 10;
-		include('inc-mapa.php');
-		echo '<div style="margin:0 0 0 -4px;">'.$txt_mapa.'</div>';
-	}
-}
 echo '</div>';
 ?>
 
+
+
+
+<?php } ?>
 
 
 
@@ -290,11 +344,11 @@ if (isset($pol['user_ID'])) {
 <a href="http://www.virtualpol.com/legal" title="Condiciones del Servicio" target="_blank">TOS</a> | 
 <a href="http://www.virtualpol.com/manual" target="_blank"><b>Ayuda</b></a> &nbsp; 
 &nbsp; 2008-2011 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b> <sub>Beta</sub></span>
-<b><?=PAIS?></b> <span style="font-size:11px;">DEFCON <b><?=$pol['config']['defcon']?></b></span>
+<b><?=PAIS?></b>
 
 <?php
 if (ECONOMIA) {
-	echo '<span class="amarillo" id="pols_frase"><b>'.$pol['config']['pols_frase'].'</b>';
+	echo ' <span style="font-size:11px;">DEFCON <b>'.$pol['config']['defcon'].'</b></span> <span class="amarillo" id="pols_frase"><b>'.$pol['config']['pols_frase'].'</b>';
 	if ($pol['config']['pols_fraseedit'] == $pol['user_ID']) { echo ' <a href="/subasta/editar/" class="gris">#</a>'; }
 }
 ?>

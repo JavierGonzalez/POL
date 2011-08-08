@@ -36,7 +36,7 @@ function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 					break;
 
 				case 'select_partidos':
-					$f .= '<li><b>Partido Pol&iacute;tico:</b> Elige las siglas de tu partido o <em>ninguno</em>.<br /><select name="partido"><option value="0">Ninguno</option>';
+					$f .= '<li><b>'.NOM_PARTIDOS.':</b><br /><select name="partido"><option value="0">Ninguno</option>';
 					
 					$result = mysql_query("SELECT siglas, ID FROM ".SQL."partidos WHERE estado = 'ok' ORDER BY siglas ASC", $link);
 					while($row = mysql_fetch_array($result)){
@@ -119,7 +119,7 @@ case 'solicitar-ciudadania':
 
 case 'afiliarse':
 
-	$txt .= '<p>Hola <b>' . $pol['nick'] . '</b>!</p> <p>Puedes afiliarte a cualquier partido o a ninguno, es una muestra tu fidelidad de forma simbolica.</p>';
+	$txt .= '<p>Afiliaci&oacute;n '.NOM_PARTIDOS.':</p>';
 
 	$pol_form = array(
 	array('type'=>'select_partidos', 'partido'=>$_GET['b']),

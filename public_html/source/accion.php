@@ -1136,7 +1136,7 @@ case 'votacion':
 
 			if ($_POST['votos_expire'] > 0) { } else { $_POST['votos_expire'] = 0; }
 
-			for ($i=0;$i<12;$i++) { if (trim($_POST['respuesta'.$i]) != '') { $respuestas .= trim($_POST['respuesta'.$i]).'|'; } }
+			for ($i=0;$i<22;$i++) { if (trim($_POST['respuesta'.$i]) != '') { $respuestas .= trim($_POST['respuesta'.$i]).'|'; } }
 
 			$_POST['pregunta'] = strip_tags($_POST['pregunta']);
 			$_POST['descripcion'] = gen_text($_POST['descripcion'], 'plain');

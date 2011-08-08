@@ -800,7 +800,6 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 	<option value="Ataque al sistema: 2.a">2.a Uso o descubrimiento de bugs del sistema, sea cual fuere su finalidad, sin reportarlo inmediatamente u obrando de mala fe.</option>
 	<option value="Ataque al sistema: 2.b">2.b Ejecutar cualquier tipo de acci&oacute;n que busque causar un perjuicio al mismo.</option>
 	<option value="Ataque al sistema: 2.c">2.c La utilizaci&oacute;n malintencionada del privilegio de expulsi&oacute;n.</option>
-	<option value="Ataque al sistema: 2.d">2.d Faltar gravemente al respeto por lo personal a un Administrador.</option>
 </optgroup>
 
 

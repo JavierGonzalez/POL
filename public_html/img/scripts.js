@@ -370,7 +370,7 @@ function enviarmsg() {
 			ajax_refresh = true;
 			if (data) { chat_sin_leer = -1; print_msg(data); }
 			setTimeout(function(){ $("#botonenviar").removeAttr("disabled"); }, 1600);
-			chat_delay = 4500;
+			chat_delay = 4000;
 			refresh = setTimeout(chat_query_ajax, chat_delay);
 			delays();
 		} );

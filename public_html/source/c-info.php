@@ -3,11 +3,40 @@ include('inc-login.php');
 
 switch ($_GET['a']) {
 
+
+case 'voz':
+	$txt .= '<h1>Chat de voz:</h1>
+<p>El chat de voz de VirtualPol funciona mediante un programa externo llamado Mumble. Es un programa de escritorio facil de instalar, multisistema, software libre y con encriptaci&oacute;n de las comunicaciones. Es la mejor formula disponible para proveer a VirtualPol de una opcion de comunicaci&oacute;n por voz.</p>
+
+<p><b>&iquest;Como usar el chat de Voz?</b></p>
+
+<ol>
+<li><b>Instala Mumble</b> en tu ordenador. <a href="http://mumble.sourceforge.net/">Descarga e instalaci&oacute;n gratuita</a>.
+	<ul>
+		<li>Windows (<a href="http://sourceforge.net/projects/mumble/files%2FMumble%2F1.2.3%2Fmumble-1.2.3.msi/download">Descargar</a>)</li>
+		<li>OSX (<a href="http://sourceforge.net/projects/mumble/files%2FMumble%2F1.2.3%2FMumble-1.2.3.dmg/download">Descargar</a>)</li>
+		<li>GNU/Linux (<a href="http://sourceforge.net/projects/mumble/files%2FMumble%2F1.2.3%2Fmurmur-static_x86-1.2.3.tar.bz2/download">Descargar</a>)</li>
+	</ul><br />
+	</li>
+
+<li>Conecta unos <b>auriculares con micr&oacute;fono</b> (es lo m&aacute;s comodo, para que no se acople el sonido).<br /><br /></li>
+
+<li><b><a href="mumble://'.$pol['nick'].'@mumble.noc4net.com/Virtualpol/'.PAIS.'/?version=1.2.0">Entra aqu&iacute;</a>!</b> (o desde el men&uacute; "Voz")</li>
+
+</ol>
+
+<p><br />El servidor de Mumble es "mumble.noc4net.com". De uso compartido con otras plataformas. Cedido y administrado por <em>L. Cabrera</em>.</p>';
+
+
+	$txt_title = 'Chat de Voz';
+	break;
+
+
 case 'recuperar-login':
-	$adsense_exclude = true;
 	$txt .= '<h1>Recuperar Contrase&ntilde;a:</h1><p>Si has perdido tu contrase&ntilde;a debes escribirnos un email a <em>desarrollo@virtualpol.com</em>, desde tu email de registro y gestionaremos tu recuperaci&oacute;n.</p><p>Proximamente esta funcionalidad ser&aacute; autom&aacute;tica. Gracias.</p>';
 	$txt_title = 'Recuperar contrase&ntilde;a';
 	break;
+
 
 case 'foto':
 

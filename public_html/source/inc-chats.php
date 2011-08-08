@@ -145,7 +145,7 @@ hace_kick = '.($js_kick==''?'false':'true').';
 kick_nick = "___";
 js_kick = "'.$js_kick.'";
 
-chat_delay = 4500;
+chat_delay = 4000;
 chat_delay1 = "";
 chat_delay2 = "";
 chat_delay3 = "";

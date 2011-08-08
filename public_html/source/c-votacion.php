@@ -76,7 +76,7 @@ if ($_GET['a'] == 'crear') {
 
 	$txt_header .= '<script type="text/javascript">
 campos_num = 3;
-campos_max = 19;
+campos_max = 20;
 
 function cambiar_tipo_votacion(tipo) {
 	$("#acceso_votar, #time_expire, #votar_form, #votos_expire, #tipo_voto").show();
@@ -107,7 +107,15 @@ function opcion_nueva() {
 
 	foreach ($votaciones_tipo AS $tipo) {
 		$disabled['sondeo'] .= ' checked="checked"';
-		$txt .= '<span style="font-size:18px;"><input type="radio" name="tipo" value="'.$tipo.'"'.$disabled[$tipo].' onclick="cambiar_tipo_votacion(\''.$tipo.'\');" />'.ucfirst($tipo).'</span><br >';
+		$tipo_extra = array(
+'sondeo'=>'<span style="float:right;">(no vinculante)</span>', 
+'referendum'=>'<span style="float:right;">(vinculante)</span>',
+'parlamento'=>'<span style="float:right;">(vinculante)</span>',
+'destituir'=>'<span style="float:right;" title="Se ejecuta una acci&oacute;n autom&aacute;tica tras su finalizaci&oacute;n.">(ejecutiva)</span>',
+'otorgar'=>'<span style="float:right;" title="Se ejecuta una acci&oacute;n autom&aacute;tica tras su finalizaci&oacute;n.">(ejecutiva)</span>',
+);
+		
+		$txt .= '<span style="font-size:18px;"><input type="radio" name="tipo" value="'.$tipo.'"'.$disabled[$tipo].' onclick="cambiar_tipo_votacion(\''.$tipo.'\');" />'.$tipo_extra[$tipo].ucfirst($tipo).'</span><br >';
 	}
 
 $txt .= '</span><br />
@@ -318,13 +326,15 @@ Acceso: <acronym title="'.$r['acceso_cfg_votar'].'"><b>'.ucfirst(str_replace('_'
 				$nulo_limite = ceil(($votos_total)/2);
 				if ($escrutinio['validez']['false'] >= $nulo_limite) { $validez = false; } else { $validez = true; }
 
+				arsort($escrutinio['votos']);
+
 				// Imprime escrutinio en texto.
 				$txt .= '<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">';
 				if ($validez==true) {
 					$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th>Escrutinio</th><th>'.($r['tipo_voto']=='estandar'?'Votos':'Puntos').'</th><th></th></tr>';
 					foreach ($escrutinio['votos'] AS $voto => $num) { 
 						if ($respuestas[$voto]) {
-							$txt .= '<tr><td nowrap="nowrap">'.$respuestas[$voto].'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.num(($num * 100) / $puntos_total, 1).'%</td></tr>';
+							$txt .= '<tr><td nowrap="nowrap">'.($respuestas[$voto]=='En Blanco'?'<em>En Blanco</em>':$respuestas[$voto]).'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.num(($num * 100) / $puntos_total, 1).'%</td></tr>';
 							$respuestas_array[$voto] = $respuestas[$voto];
 						} else { unset($escrutinio['votos'][$voto]);  }
 					}
@@ -385,14 +395,14 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b> '.num(($escrutinio[
 					else { $ha_votado_array = array(0, 0, 0, 0, 0); }
 					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
 							$txt .= '<tr>
-<td><input type="radio" name="voto_1" value="'.$i.'"'.($ha_votado_array[0]==$i?' checked="checked"':'').' /></td>
-<td><input type="radio" name="voto_2" value="'.$i.'"'.($ha_votado_array[1]==$i?' checked="checked"':'').' /></td>
-<td><input type="radio" name="voto_3" value="'.$i.'"'.($ha_votado_array[2]==$i?' checked="checked"':'').' /></td>
+<td valign="top"><input type="radio" name="voto_1" value="'.$i.'"'.($ha_votado_array[0]==$i?' checked="checked"':'').' /></td>
+<td valign="top"><input type="radio" name="voto_2" value="'.$i.'"'.($ha_votado_array[1]==$i?' checked="checked"':'').' /></td>
+<td valign="top"><input type="radio" name="voto_3" value="'.$i.'"'.($ha_votado_array[2]==$i?' checked="checked"':'').' /></td>
 '.($r['tipo_voto']=='5puntos'?'
-<td><input type="radio" name="voto_4" value="'.$i.'"'.($ha_votado_array[3]==$i?' checked="checked"':'').' /></td>
-<td><input type="radio" name="voto_5" value="'.$i.'"'.($ha_votado_array[4]==$i?' checked="checked"':'').' /></td>
+<td valign="top"><input type="radio" name="voto_4" value="'.$i.'"'.($ha_votado_array[3]==$i?' checked="checked"':'').' /></td>
+<td valign="top"><input type="radio" name="voto_5" value="'.$i.'"'.($ha_votado_array[4]==$i?' checked="checked"':'').' /></td>
 ':'').'
-<td>'.$respuestas[$i].'</td>
+<td>'.($respuestas[$i]==='En Blanco'?'<em>'.$respuestas[$i].'</em>':$respuestas[$i]).'</td>
 </tr>';
 					} }
 					$txt .= '

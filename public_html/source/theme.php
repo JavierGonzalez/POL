@@ -147,6 +147,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 		<ul>
 			<li><a href="/chats/">Chats</a></li>
 			<li><a href="/foro/">Foros</a></li>
+			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.noc4net.com/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/notas/">Notas</a></li>
 			<li><a href="/msg/">Mensajes Privados</a></li>
 		</ul>
@@ -159,7 +160,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 				<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
 
-				<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Registros</b></a>
+				<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span>Registros</a>
 					<ul>
 						<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
 						<li><a href="http://chartbeat.com/dashboard2/?url=virtualpol.com&k=ecc15496e00f415838f6912422024d06" target="_blank" title="Estadisticas Instantaneas">Estad&iacute;sticas Instan</a></li>
@@ -262,6 +263,7 @@ echo '</div>';
 		<ul>
 			<li><a href="/chats/">Chats</a></li>
 			<li><a href="/foro/">Foros</a></li>
+			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.noc4net.com/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/doc/">Archivo <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
 			<li><a href="/info/censo/"><span style="float:right;">&#9658;</span>Ciudadanos</a>
 				<ul>
@@ -280,7 +282,13 @@ echo '</div>';
 <?php
 
 echo '<li id="menu-5" class="menu-5" style="margin:10px 0 1px 1px;"><a href="/foro/propuestas/">Propuestas</a></li>';
-if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:20px;">'.$pol['config']['info_consultas'].'</span></a></li>'; }
+
+if ($pol['config']['info_consultas'] > 0) { 
+	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:20px;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
+} else {
+	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones</a></li>'; 
+}
+
 echo '<li id="menu-5" class="menu-5"><a href="/foro/acuerdos/">Acuerdos</a></li>';
 
 

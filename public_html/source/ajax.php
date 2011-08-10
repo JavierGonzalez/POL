@@ -112,7 +112,7 @@ LIMIT 1", $link);
 
 	// CHECK MSG
 	$msg_len = strlen($_REQUEST['msg']);
-	if (($msg_len > 0) AND ($msg_len < 400) AND (!$expulsado) AND (acceso_check($chat_ID, 'escribir') === true)) {
+	if (($msg_len > 0) AND ($msg_len < 400) AND (!$expulsado) AND ((acceso_check($chat_ID, 'escribir') === true) OR (($_REQUEST['msg'] == '/me') AND ($_SESSION['pol']['pais'] == PAIS)))) {
 		
 		if ((!$_SESSION['pol']['nick']) AND (substr($_POST['anonimo'], 0, 1) == '-') AND (strlen($_POST['anonimo']) >= 3) AND (strlen($_POST['anonimo']) <= 15) AND (!stristr($_POST['anonimo'], '__'))) { 
 			$result = mysql_query("SELECT nick FROM users WHERE nick='".substr($_POST['anonimo'], 1)."'", $link);

@@ -287,7 +287,7 @@ function print_msg(data) {
 					list += "<li id=\"" + m_ID + "\" class=\"" + m_nick + "\">" + m_time + " <img src=\""+IMG+"cargos/" + cargo_ID + ".gif\" width=\"16\" height=\"16\" title=\"" + array_cargos[cargo_ID] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + m_nick + "\');\">" + m_nick + "</b>: " + txt + "</li>\n";
 			}
 
-			if (((msg_num - 1) == i) && (msg_num != "n")) { msg_ID = m_ID; }
+			if (((msg_num - 1) == i) && (msg_num != "n") && (m_nick != "&nbsp;")) { msg_ID = m_ID; }
 			if ((m_tipo != "e") && (m_tipo != "c")) { 
 				al[m_nick] = parseInt(new Date().getTime().toString().substring(0, 10));
 				al_cargo[m_nick] = m_tipo;
@@ -360,7 +360,7 @@ function print_delay() {
 
 function enviarmsg() {
  	var elmsg = $("#vpc_msg").attr("value");
-	if ((elmsg) && (acceso_escribir)) {
+	if (elmsg) {
 		ajax_refresh = false;
 		clearTimeout(refresh);
 		$("#botonenviar").attr("disabled","disabled");

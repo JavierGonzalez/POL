@@ -6,22 +6,23 @@ switch ($_GET['a']) {
 
 case 'voz':
 	$txt .= '<h1>Chat de voz:</h1>
-<p>El chat de voz de VirtualPol funciona mediante un programa externo llamado Mumble. Es un programa de escritorio facil de instalar, multisistema, software libre y con encriptaci&oacute;n de las comunicaciones. Es la mejor formula disponible para proveer a VirtualPol de una opcion de comunicaci&oacute;n por voz.</p>
+<p>El chat de voz de VirtualPol funciona mediante un programa externo llamado Mumble. Es un programa de escritorio gratuito, f&aacute;cil de instalar, compatible con todos los sistemas, software libre y con encriptaci&oacute;n de las comunicaciones. Es la mejor formula disponible para proveer a VirtualPol de una opcion de comunicaci&oacute;n por voz.</p>
 
 <p><b>&iquest;Como usar el chat de Voz?</b></p>
 
 <ol>
-<li><b>Instala Mumble</b> en tu ordenador. <a href="http://mumble.sourceforge.net/">Descarga e instalaci&oacute;n gratuita</a>.
+<li><b>Instala Mumble</b> en tu ordenador:
 	<ul>
 		<li>Windows (<a href="http://sourceforge.net/projects/mumble/files%2FMumble%2F1.2.3%2Fmumble-1.2.3.msi/download">Descargar</a>)</li>
 		<li>OSX (<a href="http://sourceforge.net/projects/mumble/files%2FMumble%2F1.2.3%2FMumble-1.2.3.dmg/download">Descargar</a>)</li>
-		<li>GNU/Linux (<a href="http://sourceforge.net/projects/mumble/files%2FMumble%2F1.2.3%2Fmurmur-static_x86-1.2.3.tar.bz2/download">Descargar</a>)</li>
+		<li>GNU/Linux (<a href="http://sourceforge.net/projects/mumble/files%2FMumble%2F1.2.3%2Fmurmur-static_x86-1.2.3.tar.bz2/download">Descargar</a>) <span style="color:grey;">Nota: puede haber problemas para que el navegador ejecute el programa, <a href="http://mumble.sourceforge.net/Mumble_URL#URL_Handler_Installation">info aqu&iacute;</a>.</span></li>
+		<li><a href="http://mumble.sourceforge.net/">Ver todas las descargas</a></li>
 	</ul><br />
 	</li>
 
 <li>Conecta unos <b>auriculares con micr&oacute;fono</b> (es lo m&aacute;s comodo, para que no se acople el sonido).<br /><br /></li>
 
-<li><b><a href="mumble://'.$pol['nick'].'@mumble.noc4net.com/Virtualpol/'.PAIS.'/?version=1.2.0">Entra aqu&iacute;</a>!</b> (o desde el men&uacute; "Voz")</li>
+<li><b>¡<a href="mumble://'.$pol['nick'].'@mumble.noc4net.com/Virtualpol/'.PAIS.'/?version=1.2.0">Entra aqu&iacute;</a>!</b> (o desde el men&uacute; "Voz")</li>
 
 </ol>
 

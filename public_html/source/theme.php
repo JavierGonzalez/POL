@@ -265,16 +265,13 @@ echo '</div>';
 			<li><a href="/foro/">Foros</a></li>
 			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.noc4net.com/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/doc/">Archivo <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
-			<li><a href="/info/censo/"><span style="float:right;">&#9658;</span>Ciudadanos</a>
+			<li><a href="/info/censo/">Ciudadanos</a></li>
+			<li><a href="/partidos/">Comisiones <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
+			<li><a href="/cargos/"><span style="float:right;">&#9658;</span>Gesti&oacute;n</a>
 				<ul>
-					<li><a href="/partidos/">Comisiones <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
-					<li><a href="/cargos/"><span style="float:right;">&#9658;</span>Equipo Gestor</a>
-						<ul>
-							<li><a href="/control/">Controles</a>
-							<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
-							<li><a href="/log-eventos/">Log de eventos</a></li>
-						</ul>
-					</li>
+					<li><a href="/control/">Controles</a>
+					<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
+					<li><a href="/log-eventos/">Log de eventos</a></li>
 				</ul>
 			</li>
 		</ul>

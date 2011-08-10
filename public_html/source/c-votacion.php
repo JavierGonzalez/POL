@@ -488,11 +488,11 @@ ORDER BY estado ASC, time_expire DESC", $link);
 		}
 
 		$txt .= '<tr>
-<td style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').'">' . ucfirst($r['tipo']) . '</td>
-<td align="right"><b>' . $r['num'] . '</b></td>
-<td><a href="/votacion/' . $r['ID'] . '/"><b>' . $r['pregunta'] . '</b></a></td>
-<td>' . crear_link($r['nick']) . '</td>
-<td><b>' . $estado . '</b></td>
+<td style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').'">'.ucfirst($r['tipo']).'</td>
+<td align="right"><b>'.$r['num'].'</b></td>
+<td><a href="/votacion/'.$r['ID'].'/"><b>'.$r['pregunta'].'</b></a></td>
+<td>'.crear_link($r['nick']).'</td>
+<td nowrap="nowrap"><b>'.$estado.'</b></td>
 <td nowrap="nowrap">'.$votar.$boton.'</td>
 <td></td>
 </tr>';

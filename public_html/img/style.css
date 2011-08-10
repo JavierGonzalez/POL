@@ -366,7 +366,7 @@ blockquote cite {
 	font-weight: bold;
 	display: block;
 	font-size: 0.9em;
-	margin-bottom: 4px;
+	margin-bottom: 0;
 }
 
 .citar {

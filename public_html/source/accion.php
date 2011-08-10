@@ -1177,7 +1177,7 @@ case 'votacion':
 			$result = mysql_query("SELECT ID FROM votacion WHERE user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' ORDER BY ID DESC LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $ref_ID = $r['ID']; }
 
-			evento_chat('<b>['.strtoupper($_POST['tipo']).']</b> Creado por '.$pol['nick'].': <a href="/votacion/'.$ref_ID.'/"><b>'.$_POST['pregunta'].'</b></a> <span style="color:grey;">('.duracion($_POST['time_expire']).')</span>');
+			evento_chat('<b>['.strtoupper($_POST['tipo']).'] <a href="/votacion/'.$ref_ID.'/">'.$_POST['pregunta'].'</a></b> <span style="color:grey;">('.duracion($_POST['time_expire']).', creado por '.$pol['nick'].')</span>');
 		}
 	} elseif (($_GET['b'] == 'votar') AND ($_POST['ref_ID'])) { 
 
@@ -1204,7 +1204,7 @@ case 'votacion':
 					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto, validez, autentificado) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."')", $link);
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 
-					evento_chat('<b>['.strtoupper($tipo).']</b> Voto'.($_SESSION['pol']['dnie']=='true'?' <b>autentificado</b>':'').' de  '.$pol['nick'].' en: <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(votos <b>'.$num.'</b>'.($votos_expire>0?' de '.$votos_expire:'').')</span>', '0', '', false, 'e', $pais);
+					evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(<b>'.$num.'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
 				}
 				unset($_POST['voto']);
 			}
@@ -1260,7 +1260,7 @@ case 'foro':
 					mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
 				}
 
-				evento_chat('<b>[FORO]</b> Nuevo hilo de '.$pol['nick'].': <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a>');
+				evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a> <span style="color:grey;">(hilo, '.$pol['nick'].')</span>');
 
 			} elseif ($_GET['b'] == 'reply') {
 				
@@ -1269,7 +1269,7 @@ case 'foro':
 					
 					$result = mysql_unbuffered_query("SELECT title, num FROM ".SQL."foros_hilos WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
 					while($r = mysql_fetch_array($result)) { $title = $r['title']; }
-					evento_chat('<b>[FORO]</b> Nuevo mensaje de '.$pol['nick'].': <a href="/'.$_POST['return_url'].'">'.$title.'</a>');
+					evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'].'">'.$title.'</a> <span style="color:grey;">(mensaje, '.$pol['nick'].')</span>');
 				} else {
 					//$text = strip_tags($text);
 				}
@@ -1468,7 +1468,7 @@ case 'enviar-mensaje':
 					enviar_email($r['ID'], $asunto, $mensaje); 
 					$envio_urgente++;
 				}
-				evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/msg/"><b>Leer!</b></a>)', $r['ID'], -1, false, 'p', $r['pais']); 
+				evento_chat('<b>[MP]</b> <a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/msg/">Nuevo mensaje privado</a> <span style="color:grey;">('.$pol['nick'].')</span>', $r['ID'], -1, false, 'p', $r['pais']); 
 			}
 
 			if ($envio_urgente > 0) {
@@ -1483,7 +1483,8 @@ case 'enviar-mensaje':
 			foreach ($sc AS $user_ID => $nick) {
 				if ($user_ID != $pol['user_ID']) {
 					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$user_ID."', '".$date."', '<b>Mensaje multiple: Supervisor del Censo</b><br />".$text."', '0', '".$_POST['calidad']."', 'SC')", $link);
-					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).DEV.'.'.URL.'/msg/"><b>Leer!</b></a>)', $user_ID, -1, false, 'p');
+
+					evento_chat('<b>[MP]</b> <a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/msg/">Nuevo mensaje privado</a> <span style="color:grey;">(multiple)</span>', $user_ID, -1, false, 'p');
 				}
 			}
 		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'])) {

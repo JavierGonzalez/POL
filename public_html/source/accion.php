@@ -78,13 +78,14 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 		while($r = mysql_fetch_array($result)) {
 			pols_transferir($pol['config']['pols_crearchat'], $pol['user_ID'], '-1', 'Solicitud chat: '.$nombre);
 		}
+		$refer_url = 'chats/';
 	} elseif (($_GET['b'] == 'cambiarfundador') AND ($_POST['fundador']) AND ($_POST['chat_ID'])) {
 
 		$result = mysql_query("SELECT ID FROM users WHERE nick = '".$_POST['fundador']."' AND estado = 'ciudadano' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) {
 			mysql_query("UPDATE chats SET user_ID = ".$r['ID']." WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		}
-
+		$refer_url = 'chats/';
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {
 
 		if ($_POST['acceso_cfg_leer']) { 
@@ -101,16 +102,18 @@ acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."',
 acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."'
 WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' AND ((user_ID = '".$pol['user_ID']."') OR ((user_ID = 0) AND (".$pol['nivel']." >= 98))) 
 LIMIT 1", $link);
+		$refer_url = 'chats/'.$_POST['chat_nom'].'/opciones/';
 
 	} elseif (($_GET['b'] == 'activar') AND ($_GET['chat_ID']) AND ($pol['nivel'] >= 98)) {
 		mysql_query("UPDATE chats SET estado = 'activo' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado != 'activo' AND pais = '".PAIS."' LIMIT 1", $link);
+		$refer_url = 'chats/';
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['chat_ID'])) {
 		mysql_query("DELETE FROM chats WHERE chat_ID = '".$_GET['chat_ID']."' AND estado = 'bloqueado' AND pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		$refer_url = 'chats/';
 	} elseif (($_GET['b'] == 'bloquear') AND ($_GET['chat_ID'])) {
 		mysql_query("UPDATE chats SET estado = 'bloqueado' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR ((acceso_escribir = 'anonimos') AND ('".$pol['nivel']."' >= 95))) LIMIT 1", $link);
+		$refer_url = 'chats/';
 	}
-
-	$refer_url = 'chats/';
 	break;
 
 

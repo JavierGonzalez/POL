@@ -86,7 +86,7 @@ Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_e
 <table border="0" width="100%">
 <tr>
 
-<td width="100%"><input type="text" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" id="vpc_msg" tabindex="1" autocomplete="off" size="65" maxlength="250" style="width:95%;'.($acceso['escribir']?'':'color:red;').'" '.($acceso['escribir']?'':'value="No tienes acceso de escritura." readonly="readonly"').' /></td>
+<td width="100%"><input type="text" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" id="vpc_msg" tabindex="1" autocomplete="off" size="65" maxlength="250" style="width:95%;'.(isset($pol['user_ID'])?'':'color:red;').'" '.(isset($pol['user_ID'])?'':'value="Debes registrarte para poder participar." readonly="readonly"').' /></td>
 
 <td><input name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" style="margin-top:8px;" title="Filtro de eventos" /></td>
 

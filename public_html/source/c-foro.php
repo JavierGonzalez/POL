@@ -452,7 +452,7 @@ LIMIT " . $num_limit, $link);
 <td align="right" valign="top">' . crear_link($r2['nick']) . '</td>
 <td valign="top" align="right"><b>' . $r2['num'] . '</b></td>
 <td colspan="2"><b style="font-size:19px;">'.confianza($r2['votos']).'</b> ' . $titulo . '</td>
-<td align="right" valign="top"><span class="timer" value="'.strtotime($r2['time']).'"></span></td>
+<td align="right" valign="top" nowrap="nowrap"><span class="timer" value="'.strtotime($r2['time']).'"></span></td>
 </tr>';
 				}
 			}

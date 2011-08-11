@@ -1147,6 +1147,7 @@ case 'votacion':
 			
 			switch ($_POST['tipo']) {
 				case 'parlamento':
+					$_POST['privacidad'] = 'false';
 					$_POST['acceso_votar'] = 'cargo'; 
 					$_POST['acceso_cfg_votar'] = '6 22';
 					$_POST['votos_expire'] = $pol['config']['num_escanos'];
@@ -1163,6 +1164,7 @@ case 'votacion':
 					if (($cargo_nombre) AND ($cargo_user_ID)) { // fuerza configuracion
 						$_POST['time_expire'] = 86400;
 						$_POST['tipo_votacion'] = 'estandar';
+						$_POST['privacidad'] = 'true';
 						if ($_POST['cargo'] == 7) { $_POST['time_expire'] = (86400*2); }
 						$_POST['acceso_votar'] = 'ciudadanos'; $_POST['acceso_cfg_votar'] = '';
 						$ejecutar = $_POST['cargo'].'|'.$cargo_user_ID;
@@ -1175,7 +1177,7 @@ case 'votacion':
 					break;
 			}
 
-			mysql_query("INSERT INTO votacion (pais, pregunta, descripcion, respuestas, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, ejecutar, votos_expire, tipo_voto) VALUES ('".PAIS."', '".$_POST['pregunta']."', '".$_POST['descripcion']."', '".$respuestas."', '".$date."', '".date('Y-m-d H:i:s', time() + $_POST['time_expire'])."', '".$pol['user_ID']."', 'ok', '".$_POST['tipo']."', '".$_POST['acceso_votar']."', '".$_POST['acceso_cfg_votar']."', '".$ejecutar."', '".$_POST['votos_expire']."', '".$_POST['tipo_voto']."')", $link);
+			mysql_query("INSERT INTO votacion (pais, pregunta, descripcion, respuestas, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, ejecutar, votos_expire, tipo_voto, privacidad) VALUES ('".PAIS."', '".$_POST['pregunta']."', '".$_POST['descripcion']."', '".$respuestas."', '".$date."', '".date('Y-m-d H:i:s', time() + $_POST['time_expire'])."', '".$pol['user_ID']."', 'ok', '".$_POST['tipo']."', '".$_POST['acceso_votar']."', '".$_POST['acceso_cfg_votar']."', '".$ejecutar."', '".$_POST['votos_expire']."', '".$_POST['tipo_voto']."', '".$_POST['privacidad']."')", $link);
 
 			$result = mysql_query("SELECT ID FROM votacion WHERE user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' ORDER BY ID DESC LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $ref_ID = $r['ID']; }
@@ -1263,7 +1265,7 @@ case 'foro':
 					mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
 				}
 
-				evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a> <span style="color:grey;">(hilo, '.$pol['nick'].')</span>');
+				evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a> <span style="color:grey;">('.$pol['nick'].')</span>');
 
 			} elseif ($_GET['b'] == 'reply') {
 				
@@ -1272,7 +1274,7 @@ case 'foro':
 					
 					$result = mysql_unbuffered_query("SELECT title, num FROM ".SQL."foros_hilos WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
 					while($r = mysql_fetch_array($result)) { $title = $r['title']; }
-					evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'].'">'.$title.'</a> <span style="color:grey;">(mensaje, '.$pol['nick'].')</span>');
+					evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'].'">'.$title.'</a> <span style="color:grey;">('.$pol['nick'].')</span>');
 				} else {
 					//$text = strip_tags($text);
 				}

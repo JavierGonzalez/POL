@@ -66,45 +66,52 @@ case 'exencion_impuestos':
 case 'chat':
 
 	if (($_GET['b'] == 'solicitar') AND ($pol['pols'] >= $pol['config']['pols_crearchat']) AND ($_POST['nombre'])) {
-
 		$nombre = $_POST['nombre'];
 		$url = gen_url($nombre);
 
-
-		mysql_query("INSERT INTO chats (pais, url, titulo, user_ID, fecha_creacion, fecha_last, dias_expira) 
-VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '".$date."', '".$date."', '".$pol['config']['chat_diasexpira']."')", $link);
-
-		$result = mysql_query("SELECT chat_ID FROM chats WHERE url = '".$url."' AND user_ID = '".$pol['user_ID']."' AND pais = '".$_POST['pais']."' LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)) {
-			pols_transferir($pol['config']['pols_crearchat'], $pol['user_ID'], '-1', 'Solicitud chat: '.$nombre);
+		mysql_query("INSERT INTO chats (pais, url, titulo, user_ID, admin, fecha_creacion, fecha_last, dias_expira) 
+VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '".$pol['nick']."', '".$date."', '".$date."', '".$pol['config']['chat_diasexpira']."')", $link);
+		if (ECONOMIA) {
+			$result = mysql_query("SELECT chat_ID FROM chats WHERE url = '".$url."' AND user_ID = '".$pol['user_ID']."' AND pais = '".$_POST['pais']."' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)) {
+				pols_transferir($pol['config']['pols_crearchat'], $pol['user_ID'], '-1', 'Solicitud chat: '.$nombre);
+			}
 		}
 		$refer_url = 'chats/';
-	} elseif (($_GET['b'] == 'cambiarfundador') AND ($_POST['fundador']) AND ($_POST['chat_ID'])) {
+	} elseif (($_GET['b'] == 'cambiarfundador') AND ($_POST['admin']) AND ($_POST['chat_ID'])) {
 
-		$result = mysql_query("SELECT ID FROM users WHERE nick = '".$_POST['fundador']."' AND estado = 'ciudadano' LIMIT 1", $link);
+		$result = mysql_query("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) {
-			mysql_query("UPDATE chats SET user_ID = ".$r['ID']." WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		}
-		$refer_url = 'chats/';
+			if ((nucleo_acceso('privado', $r['admin'])) OR ($r['user_ID'] == $pol['user_ID'])) {
+				mysql_query("UPDATE chats SET admin = '".strtolower(strip_tags($_POST['admin']))."' WHERE chat_ID = '".$_POST['chat_ID']."' LIMIT 1", $link);
+			}
+			$refer_url = 'chats/'.$r['url'].'/opciones/';
+		} 
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {
 
-		if ($_POST['acceso_cfg_leer']) { 
-			$_POST['acceso_cfg_leer'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_leer']))); 
-		}
-		if ($_POST['acceso_cfg_escribir']) { 
-			$_POST['acceso_cfg_escribir'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir'])));
-		}
+		$result = mysql_query("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) {
+ 
+			if ((nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))) {
+				if ($_POST['acceso_cfg_leer']) { 
+					$_POST['acceso_cfg_leer'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_leer']))); 
+				}
+				if ($_POST['acceso_cfg_escribir']) { 
+					$_POST['acceso_cfg_escribir'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir'])));
+				}
 
-		mysql_query("UPDATE chats 
+				mysql_query("UPDATE chats 
 SET acceso_leer = '".$_POST['acceso_leer']."', 
 acceso_escribir = '".$_POST['acceso_escribir']."', 
 acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', 
 acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."'
-WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' AND ((user_ID = '".$pol['user_ID']."') OR ((user_ID = 0) AND (".$pol['nivel']." >= 98))) 
-LIMIT 1", $link);
+WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' LIMIT 1", $link);
+			}
+		}
 		$refer_url = 'chats/'.$_POST['chat_nom'].'/opciones/';
 
-	} elseif (($_GET['b'] == 'activar') AND ($_GET['chat_ID']) AND ($pol['nivel'] >= 98)) {
+
+	} elseif (($_GET['b'] == 'activar') AND ($_GET['chat_ID']) AND (nucleo_acceso('nivel', 98))) {
 		mysql_query("UPDATE chats SET estado = 'activo' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado != 'activo' AND pais = '".PAIS."' LIMIT 1", $link);
 		$refer_url = 'chats/';
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['chat_ID'])) {
@@ -115,9 +122,6 @@ LIMIT 1", $link);
 		$refer_url = 'chats/';
 	}
 	break;
-
-
-
 
 
 

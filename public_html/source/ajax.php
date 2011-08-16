@@ -111,7 +111,7 @@ LIMIT 1", $link);
 
 	// CHECK MSG
 	$msg_len = strlen($_REQUEST['msg']);
-	if (($msg_len > 0) AND ($msg_len < 400) AND (!$expulsado) AND ((acceso_check($chat_ID, 'escribir') === true) OR (($_REQUEST['msg'] == '/me') AND ($_SESSION['pol']['pais'] == PAIS)))) {
+	if (($msg_len > 0) AND ($msg_len < 400) AND (!$expulsado) AND ((acceso_check($chat_ID, 'escribir') === true) OR ((($_REQUEST['msg'] == '/me') OR (substr($_REQUEST['msg'], 0, 4) == '/msg')) AND ($_SESSION['pol']['pais'] == PAIS)))) {
 		
 		if ((!$_SESSION['pol']['nick']) AND (substr($_POST['anonimo'], 0, 1) == '-') AND (strlen($_POST['anonimo']) >= 3) AND (strlen($_POST['anonimo']) <= 15) AND (!stristr($_POST['anonimo'], '__'))) { 
 			$result = mysql_query("SELECT nick FROM users WHERE nick='".substr($_POST['anonimo'], 1)."'", $link);
@@ -158,6 +158,23 @@ LIMIT 1", $link);
 					$elmsg = '<b>[$]</b> <em>' . $_SESSION['pol']['nick'] . '</em> tira el <b>dado'.$result_type.': <span style="font-size:16px;">'.$result_rand.'</span></b>';
 					break;
 
+				case 'acceso':
+					$result = mysql_query("SELECT admin, acceso_cfg_escribir, acceso_escribir FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
+					while($r = mysql_fetch_array($result)){
+						$admins = explode(' ', trim(strtolower($r['admin'])));
+						if ((in_array(strtolower($_SESSION['pol']['nick']), $admins)) AND (in_array($r['acceso_escribir'], array('privado', 'excluir')))) {
+							$escribir = explode(' ', $r['acceso_cfg_escribir']);
+							if ($msg_array[1] == 'add') { $escribir[] = $msg_array[2]; } 
+							elseif ($msg_array[1] == 'del') { $escribir = array_diff($escribir, array(strtolower($msg_array[2]))); }
+							$escribir = trim(strtolower(implode(' ', $escribir)));
+							mysql_query("UPDATE chats SET acceso_cfg_escribir = '".$escribir."' WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
+							$elmsg = 'Acceso cambiado a: <b>'.$escribir.'</b>';
+							$target_ID = $_SESSION['pol']['user_ID'];
+							$tipo = 'p';
+							$elnick = $_SESSION['pol']['nick'];
+						}
+					}
+					break;
 
 				case 'calc': 
 					if (ereg("^[0-9\+-\/\*\(\)\.]{1,100}$", strtolower($msg_rest))) { 
@@ -172,6 +189,13 @@ LIMIT 1", $link);
 				case 'ciudadano': 
 					if ($_SESSION['pol']['user_ID']) {
 						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> te anima a unirte a la comunidad: <a href="http://'.pais.'.virtualpol.com/r/'.strtolower($_SESSION['pol']['nick']).'/" target="_blank"><b>Crear Usuario</b></a>'; 
+					}
+					break;
+
+				case 'trabaja': 
+					if (pais == 'vp') {
+						$elmsg = 'la econom&iacute;a te necesita! <button style="font-weight:bold;margin:0;">Trabaja</button> :troll:'; 
+						$tipo = 'm';
 					}
 					break;
 
@@ -192,11 +216,11 @@ LIMIT 1", $link);
 					if ($_SESSION['pol']['user_ID']) {
 						$nick_receptor = trim($msg_array[1]);
 						$result = mysql_unbuffered_query("SELECT HIGH_PRIORITY ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1", $link);
-						while($row = mysql_fetch_array($result)){ 
-							$elmsg = substr($msg_rest, (strlen($row['nick'])));
-							$target_ID = $row['ID'];
+						while($r = mysql_fetch_array($result)){ 
+							$elmsg = substr($msg_rest, (strlen($r['nick'])));
+							$target_ID = $r['ID'];
 							$tipo = 'p';
-							$elnick = $_SESSION['pol']['nick'].'&rarr;'.$row['nick'];
+							$elnick = $_SESSION['pol']['nick'].'&rarr;'.$r['nick'];
 						}
 					}
 					break;

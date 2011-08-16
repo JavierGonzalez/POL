@@ -66,13 +66,6 @@ if ($_GET['a'] == 'crear') {
 	$sc = get_supervisores_del_censo();
 	if (isset($sc[$pol['user_ID']])) { $disabled['sondeo'] = ''; }
 
-	$result = mysql_query("SELECT ID FROM votacion WHERE (tipo = 'destituir' OR tipo = 'otorgar') AND estado = 'ok' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) { 
-		$disabled['destituir'] = ' disabled="disabled"'; 
-		$disabled['otorgar'] = ' disabled="disabled"';
-	}
-
-
 	$txt_header .= '<script type="text/javascript">
 campos_num = 3;
 campos_max = 30;
@@ -84,7 +77,6 @@ function cambiar_tipo_votacion(tipo) {
 		case "parlamento": $("#acceso_votar, #votos_expire, #privacidad").hide(); break;
 		case "destituir": case "otorgar": $("#acceso_votar, #time_expire, #votar_form, #votos_expire, #tipo_voto, #privacidad").hide(); $("#cargo_form").show(); break;
 	}
-
 }
 
 function opcion_nueva() {

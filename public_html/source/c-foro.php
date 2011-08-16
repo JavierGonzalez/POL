@@ -6,7 +6,7 @@ function reemplazos($t) { return '<span class="rich">'.strip_tags($t, '<br>').'<
 function print_lateral($nick, $cargo_ID=false, $time, $siglas='', $user_ID='', $avatar='', $votos=0, $voto=false, $tipo='msg', $item_ID=0) {
 	global $pol;
 	if ($cargo_ID == 99) { $cargo = 'Extranjero'; }
-	return '<table border="0"><tr>
+	return '<table border="0" width="100%"><tr>
 <td width="40" valign="top">'.($avatar=='true'?'<span>'.avatar($user_ID, 40).'</span>':'').'</td>
 <td align="right" valign="top">
 <b>'.($cargo_ID?'<img src="'.IMG.'cargos/'.$cargo_ID.'.gif" /> ':'').crear_link($nick).'</b><br />

@@ -89,21 +89,22 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 '.$txt_li['escribir'].' <input type="text" name="acceso_cfg_escribir" size="40" maxlength="900" autocomplete="off" id="acceso_cfg_escribir_var" value="'.$r['acceso_cfg_escribir'].'" /></td>
 
 </tr>
+<tr><td colspan="2" align="center"><input type="submit" style="font-size:24px;width:150px;" value="Editar"'.((nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))?'':' disabled="disabled"').' /></td></tr>
 </table>
 
-<p><input type="submit" style="font-size:24px;" value="Editar"'.(($r['user_ID'] == $pol['user_ID']) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))?'':' disabled="disabled"').' /> &nbsp; <span style="color:grey;">Solo el fundador del chat puede editar estos par&aacute;metros.</span><br /><br /></p>
+</form>';
 
-</form>
-
-<form action="/accion.php?a=chat&b=cambiarfundador" method="post">
+	if ($r['user_ID'] != 0) {
+		$txt .= '<form action="/accion.php?a=chat&b=cambiarfundador" method="post">
 <input type="hidden" name="chat_ID" value="'.$r['chat_ID'].'" />
-<p>Ceder el chat al ciudadano: <input type="text" name="fundador" size="10" maxlength="16" value="" /> <input type="submit" value="Cambiar Fundador"'.(($r['user_ID'] == $pol['user_ID']) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))?'':' disabled="disabled"').' /></p>
+<p>Administradores: <input type="text" name="admin" size="40" maxlength="900" value="'.$r['admin'].'" /> <input type="submit" value="Cambiar Administradores"'.(($r['user_ID'] == $pol['user_ID']) OR (nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND (nucleo_acceso('nivel', 98)))?'':' disabled="disabled"').' /></p></form>';
+	}
 
-</form>
+	if (($r['estado'] == 'activo') AND ($r['user_ID'] != 0) AND (($r['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= 95) AND ($r['acceso_escribir'] == 'anonimos')))) { 
+		$txt .= boton('Bloquear', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=bloquear&chat_ID='.$r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?');
+	}
 
-<p>Codigo HTML: <input type="text" style="color:grey;font-weight:normal;" value="&lt;iframe width=&quot;730&quot; height=&quot;480&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; transparency=&quot;transparency&quot; src=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/e/&quot;&gt;&lt;p&gt;&lt;a href=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/&quot;&gt;&lt;b&gt;Entra al chat&lt;/b&gt;&lt;/a&gt;&lt;/p&gt;&lt;/iframe&gt;" size="70" /></p>
-
-';
+$txt .= '<p>Codigo HTML: <input type="text" style="color:grey;font-weight:normal;" value="&lt;iframe width=&quot;730&quot; height=&quot;480&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; transparency=&quot;transparency&quot; src=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/e/&quot;&gt;&lt;p&gt;&lt;a href=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/&quot;&gt;&lt;b&gt;Entra al chat&lt;/b&gt;&lt;/a&gt;&lt;/p&gt;&lt;/iframe&gt;" size="70" /></p>';
 	}
 
 
@@ -137,13 +138,12 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 <th style="background:#5CB3FF;">Leer</th>
 <th style="background:#F97E7B;">Escribir</th>
 <th>Visitas</th>
-<th>Fundador</th>
+<th>Admin</th>
 <th>Hace...</th>
 <th></th>
 <th></th>
 </tr>';
 	$result = mysql_query("SELECT *,
-(SELECT nick FROM users WHERE ID = chats.user_ID LIMIT 1) AS fundador,
 (SELECT COUNT(DISTINCT nick) FROM chats_msg WHERE chat_ID = chats.chat_ID AND user_ID = 0 AND tipo != 'e' AND time > '".date('Y-m-d H:i:s', time() - 1800)."') AS online
 FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creacion ASC", $link);
 	while ($r = mysql_fetch_array($result)) { 
@@ -159,14 +159,12 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 
 <td valign="top" align="right">'.$r['stats_visitas'].'</td>
 
-<td valign="top">'.($r['user_ID']==0?'<em>Sistema</em>':crear_link($r['fundador'])).'</td>
+<td valign="top">'.($r['user_ID']==0?'<em>Sistema</em>':$r['admin']).'</td>
+
 <td valign="top" align="right" nowrap="nowrap">'.timer($r['fecha_creacion']).'</td>
 <td valign="top" align="right">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/opciones/">Editar</a>':'').'</td>
 <td>';
 
-		if (($r['estado'] == 'activo') AND ($r['user_ID'] != 0) AND (($r['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= 95) AND ($r['acceso_escribir'] == 'anonimos')))) { 
-			$txt .= boton('Bloquear', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=bloquear&chat_ID='.$r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?');
-		}							
 		$txt .= ((($r['estado'] != 'activo') AND ($pol['pais'] == $r['pais']) AND ($pol['nivel'] >= 95))?boton('Activar', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=activar&chat_ID='.$r['chat_ID']):'').
 ((($r['estado'] == 'bloqueado') AND ($pol['user_ID'] == $r['user_ID']))?boton('Borrar', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=eliminar&chat_ID='.$r['chat_ID']):'').'</td>
 </tr>';

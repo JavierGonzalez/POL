@@ -74,6 +74,8 @@ case 'recuperar-pass':
 
 	$txt .= '<h2>&iquest;Has olvidado tu contrase&ntilde;a?</h2>
 
+'.($_GET['b']=='no-existe'?'<p style="color:red;"><b>No existe ningun usuario con ese email. Probablemente ha sido eliminado por inactividad, puedes registrarlo de nuevo.</b></p>':'').'
+
 <p>No te preocupes, puedes solicitar un reset de la contrase&ntilde;a. Siguiendo estos pasos:</p>
 
 <ol>
@@ -88,6 +90,8 @@ case 'recuperar-pass':
 	$txt_title = 'Recuperar contrase&ntilde;a';
 	include('../theme.php');
 	break;
+
+
 
 
 case 'reset-pass':
@@ -130,8 +134,10 @@ case 'reset-pass-change':
 	break;
 
 case 'start-reset-pass':
+	$enviado = false;
 	$result = mysql_query("SELECT ID, nick, api_pass, email FROM users WHERE email = '".$_POST['email']."' AND reset_last < '".$date."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
+		$enviado = true;
 		$reset_pass = rand(1000000000, 9999999999);
 		mysql_query("UPDATE users SET api_pass = '".$reset_pass."', reset_last = '".date('Y-m-d H:00:00', time() + (86400*1))."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
@@ -150,7 +156,12 @@ VirtualPol</p>";
 
 		mail($r['email'], "[VirtualPol] Cambio de contraseña del usuario: ".$r['nick'], $texto_email, "FROM: VirtualPol <desarrollo@virtualpol.com>\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n"); 
 	}
-	header('Location: http://www.virtualpol.com/');
+
+	if ($enviado == false) { // NO existe nick
+		header('Location: '.REGISTRAR.'login.php?a=recuperar-pass&b=no-existe');
+	} else {
+		header('Location: http://www.virtualpol.com/');
+	}
 	break;
 
 

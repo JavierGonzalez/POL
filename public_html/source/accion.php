@@ -1349,7 +1349,7 @@ case 'foro':
 		} else { //hilo
 			if (strlen($_POST['title']) >= 4) {
 				$title = strip_tags($_POST['title']);
-				mysql_query("UPDATE ".SQL."foros_hilos SET text = '".$text."', title = '".$title."', cargo = '".$_POST['encalidad']."' WHERE ID = '".$_POST['subforo']."' AND estado = 'ok' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+				mysql_query("UPDATE ".SQL."foros_hilos SET text = '".$text."', title = '".$title."', sub_ID = '".$_POST['sub_ID']."', cargo = '".$_POST['encalidad']."' WHERE ID = '".$_POST['subforo']."' AND estado = 'ok' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 			}
 		}
 	}
@@ -1806,17 +1806,14 @@ case 'crear-partido':
 	$result = mysql_query("SELECT ID FROM ".SQL."partidos WHERE ID_presidente = '".$pol['user_ID']."'", $link);
 	while($r = mysql_fetch_array($result)){ $ya_es_presidente = true; }
 
-	if (($pol['config']['elecciones_estado'] != 'elecciones') AND (strlen($_POST['siglas']) <= 12) AND (strlen($_POST['siglas']) >= 2) AND ($pol['pols'] >= $pol['config']['pols_partido']) AND ($_POST['nombre']) AND ($ya_es_presidente == false)) {
+	if (($pol['config']['elecciones_estado'] != 'elecciones') AND (strlen($_POST['siglas']) <= 12) AND (strlen($_POST['siglas']) >= 2) AND (nucleo_acceso($vp['acceso']['crear_partido'])) AND ($_POST['nombre']) AND ($ya_es_presidente == false)) {
 
 		$_POST['descripcion'] = gen_text($_POST['descripcion']);
-
-		pols_transferir($pol['config']['pols_partido'], $pol['user_ID'], '-1', 'Creacion nuevo partido: '.$_POST['siglas']);
 
 		mysql_query("INSERT INTO ".SQL."partidos 
 (ID_presidente, fecha_creacion, siglas, nombre, descripcion, estado) 
 VALUES ('".$pol['user_ID']."', '".$date."', '".strtoupper($_POST['siglas'])."', '".$_POST['nombre']."', '".$_POST['descripcion']."', 'ok')
 ", $link);
-
 
 		$result = mysql_query("SELECT ID FROM ".SQL."partidos WHERE siglas = '".$_POST['siglas']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ $partido_ID = $r['ID']; }

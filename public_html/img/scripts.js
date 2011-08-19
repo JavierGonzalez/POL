@@ -428,7 +428,7 @@ function enriquecer(m, bbcode) {
 	// BBCODE
 	if (bbcode) {
 		m = m.replace(/\[(b|i|em|s)\](.*?)\[\/\1\]/gi, "<$1>$2</$1>"); 
-		m = m.replace(/\[img\](.*?)\[\/img\]/gi, "<img src=\"$1\" alt=\"img\" style=\"max-width:600px;\" />");
+		m = m.replace(/\[img\](.*?)\[\/img\]/gi, "<img src=\"$1\" alt=\"img\" style=\"max-width:800px;\" />");
 		m = m.replace(/\[youtube\]http\:\/\/www\.youtube\.com\/watch\?v=(.*?)\[\/youtube\]/gi, "<iframe width=\"520\" height=\"390\" src=\"http://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>");
 		m = m.replace(/\[quote\]/gi, "<blockquote><div class=\"quote\">");
 		m = m.replace(/\[quote=(.*?)\]/gi, "<blockquote><div class=\"quote\"><cite>$1 escribi&oacute;:</cite>");

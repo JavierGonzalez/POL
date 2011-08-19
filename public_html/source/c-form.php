@@ -132,18 +132,14 @@ case 'afiliarse':
 
 case 'crear-partido':
 
-	$txt .= '<p>Formulario para crear un nuevo partido pol&iacute;tico en '.PAIS.'.</p>
+	$txt .= '<h2>Crear '.NOM_PARTIDOS.':</h2>';
 
-<ul>
-<li>Afirmas que el partido creado es legal en '.PAIS.'.</li>
-</ul>
-';
 	$pol_form = array(
-	array('type'=>'text', 'name'=>'siglas', 'value'=>'', 'size'=>'6', 'maxlegth'=>'10', 'nombre'=>'Siglas del partido', 'desc'=>'Escribe entre 2 y 10 letras may&uacute;sculas, guion permitido.'),
-	array('type'=>'text', 'name'=>'nombre', 'value'=>'', 'size'=>'', 'maxlegth'=>'40', 'nombre'=>'Nombre del partido', 'desc'=>'Frase a modo de nombre que concuerda con las siglas anteriormente dadas.'),
+	array('type'=>'text', 'name'=>'siglas', 'value'=>'', 'size'=>'6', 'maxlegth'=>'10', 'nombre'=>'Siglas', 'desc'=>'Escribe entre 2 y 10 letras may&uacute;sculas, guion permitido.'),
+	array('type'=>'text', 'name'=>'nombre', 'value'=>'', 'size'=>'', 'maxlegth'=>'40', 'nombre'=>'Nombre', 'desc'=>'Frase a modo de nombre que concuerda con las siglas anteriormente dadas.'),
 	array('type'=>'textrico', 'name'=>'descripcion', 'size'=>'10', 'nombre'=>'Introducci&oacute;n'),
 	);
-	$txt .= polform($_GET['a'], $pol_form, 'Crear partido');
+	$txt .= polform($_GET['a'], $pol_form, 'Crear '.NOM_PARTIDOS);
 
 
 	break;

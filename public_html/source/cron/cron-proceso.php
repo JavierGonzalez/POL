@@ -358,6 +358,24 @@ while($r = mysql_fetch_array($result)) {
 }
 
 
+// Avisos por email 48h antes de la eliminación
+function retrasar_t($t) { return date('Y-m-d 20:00:00', (strtotime($t)+(86400*2))); }
+$result = mysql_query("SELECT ID, nick, email, fecha_registro, fecha_last FROM users
+WHERE dnie = 'false' AND 
+((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".retrasar_t($margen_90dias)."' AND fecha_last <= '".retrasar_t($margen_60dias)."') OR
+((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_90dias)."' AND fecha_registro <= '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_30dias)."') OR
+((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_10dias)."') OR
+((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".retrasar_t($margen_10dias)."') OR
+(estado = 'validar' AND fecha_last <= '".retrasar_t($margen_10dias)."')
+", $link);
+while($r = mysql_fetch_array($result)) {
+	mail($r['email'], '[VirtualPol] Tu usuario '.$r['nick'].' está a punto de expirar por inactividad', "Hola Ciudadano ".$r['nick'].",\n\nEn VirtualPol preferimos tener un censo fiel a la realidad y ordenado, que tener miles de usuarios sin actividad. Por ello eliminamos los usuarios inactivos en tramos desde los 10 dias de inactividad.\n\nSi no entras en VirtualPol con tu usuario proximamente, será eliminado.\n\n\nVirtualPol\nhttp://www.virtualpol.com", "FROM: VirtualPol <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
+}
+
+
+
+
+
 
 // ACTUALIZACION DEL VOTO CONFIANZA
 mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND voto = '0'", $link);

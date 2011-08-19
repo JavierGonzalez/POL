@@ -53,6 +53,7 @@ if (PAIS == 'VP') {
 'control_sancion'=>array('cargo', '9'),
 'examenes_decano'=>array('cargo', '35'),
 'examenes_profesor'=>array('cargo', '34'),
+'crear_partido'=>array('antiguedad','0'),
 );
 
 } else {
@@ -73,6 +74,7 @@ if (PAIS == 'VP') {
 'control_sancion'=>array('cargo', ''),
 'examenes_decano'=>array('cargo', '6'),
 'examenes_profesor'=>array('cargo', ''),
+'crear_partido'=>array('cargo','6'),
 );
 }
 

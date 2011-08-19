@@ -30,7 +30,7 @@ function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 				while($r = mysql_fetch_array($result)){ $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
 			} else { //hilo
 				$result = mysql_query("SELECT sub_ID, text, cargo, title FROM ".SQL."foros_hilos WHERE ID = '" . $subforo . "' AND estado = 'ok' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-				while($r = mysql_fetch_array($result)){ $edit_title = $r['title']; $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
+				while($r = mysql_fetch_array($result)){ $sub_ID = $r['sub_ID']; $edit_title = $r['title']; $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
 			}
 			$edit_text = strip_tags($edit_text);
 		}
@@ -77,12 +77,22 @@ ORDER BY nivel DESC", $link);
 // <input type="hidden" name="return_url" value="' . $return_url . '"  />
 
 			$html .= '<div id="enviar">
-<form action="/accion.php?a=foro&b=' . $get . '" method="post">
-<input type="hidden" name="subforo" value="' . $subforo . '"  />
-<input type="hidden" name="return_url" value="' . $return_url . '"  />
-
 <h2>Nuevo hilo</h2>
 
+
+<form action="/accion.php?a=foro&b=' . $get . '" method="post">
+<input type="hidden" name="subforo" value="' . $subforo . '"  />
+<input type="hidden" name="return_url" value="' . $return_url . '"  />';
+
+			if ($edit) {
+				$html .= '<p>Foro: <select name="sub_ID">';
+				$result = mysql_query("SELECT ID, url, title, acceso_escribir, acceso_cfg_escribir FROM ".SQL."foros WHERE estado = 'ok' ORDER BY time ASC", $link);
+				while($r = mysql_fetch_array($result)){ 
+					$html .= '<option value="'.$r['ID'].'"'.($r['ID']==$sub_ID?' selected="selected"':'').(nucleo_acceso($r['acceso_escribir'],$r['acceso_cfg_escribir'])?'':' disabled="disabled"').'>'.$r['title'].'</option>';
+				}
+				$html .= '</select></p>';
+			}
+			$html .= '
 <p>T&iacute;tulo:<br />
 <input name="title" size="60" maxlength="80" type="text" value="' . $edit_title . '" /></p>
 
@@ -92,6 +102,9 @@ ORDER BY nivel DESC", $link);
 
 <p><input value="Enviar" type="submit" style="font-size:22px;" /> En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
 </select></p>
+</form>
+
+'.($edit?'<p>'.boton('Eliminar hilo', '/accion.php?a=foro&b=eliminarhilo&ID=' . $r2['ID'], '&iquest;Est&aacute;s seguro de querer ELIMINAR este HILO DE FORMA IRREVOCABLE?').'</p>':'').'
 
 </div>';
 		} else {

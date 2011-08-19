@@ -122,6 +122,7 @@ $txt .= '</span><br />
 <option value="172800">2 d&iacute;as</option>
 <option value="259200">3 d&iacute;as</option>
 <option value="345600">4 d&iacute;as</option>
+'.(ASAMBLEA?'<option value="604800">7 d&iacute;as</option><option value="864000">10 d&iacute;as</option>':'').'
 </select></span>
 
 

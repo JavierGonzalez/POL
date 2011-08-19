@@ -14,7 +14,7 @@ LIMIT 1", $link);
 
 		if (($_GET['b'] == 'editar')) { //edit/  AND ($r['ID_presidente'] == $pol['user_ID'])
 
-			$txt_title = 'Editar Partido';
+			$txt_title = 'Editar '.NOM_PARTIDOS;
 			//print listas
 			$candidatos_num = 0;
 			$result2 = mysql_query("SELECT user_ID, orden, 
@@ -176,7 +176,7 @@ ORDER BY num_lista DESC, afiliados DESC, nombre DESC", $link);
 
 	$txt .= (ECONOMIA?'<p>* Para poder participar en las Elecciones ha de tener al menos un candidato en su lista. Para poder a&ntilde;adir candidatos en la lista, se ha de ser el Presidente, el candidato ha de estar afiliado y con el examen de Diputado aprobado.</p>':'').'
 
-<p>' . boton('Crear '.NOM_PARTIDOS, '/form/crear-partido/', false, false, $pol['config']['pols_partido']) . '</p>';
+<p>'.(nucleo_acceso($vp['acceso']['crear_partido'])?boton('Crear '.NOM_PARTIDOS, '/form/crear-partido/'):'').'</p>';
 	$txt_title = NOM_PARTIDOS;
 }
 

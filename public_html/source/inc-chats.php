@@ -52,7 +52,7 @@ if ($externo) {
 		$txt .= '<span style="float:right;"><a href="http://www'.DEV.'.virtualpol.com/registrar/">Crear ciudadano</a></span>'.$titulo;
 	}
 } else {
-	$txt .= '<span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones/">Opciones</a>]</span><a href="/chats/">Chat</a>: '.$titulo;
+	$txt .= '<span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones/">Opciones</a>] [<a href="/chats/'.$_GET['a'].'/log/">Log</a>]</span><a href="/chats/">Chat</a>: '.$titulo;
 }
 
 

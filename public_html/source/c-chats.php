@@ -59,6 +59,26 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 
 	$txt .= '</table>';
 
+} elseif ($_GET['b'] == 'log') { // Ultimo.
+
+	$result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
+	while ($r = mysql_fetch_array($result)) { 
+
+		$txt_title = 'Chat: '.$r['titulo'].' | log';
+		
+		$txt .= '<h1><a href="/chats/">Chats</a>: <a href="/chats/'.$r['url'].'/">'.$r['titulo'].'</a> | log</h1>';
+
+		if ((nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) AND (isset($pol['user_ID']))) {
+			$txt .= '<p>Log de las ultimas 24 horas:</p><p class="rich" style="background:#FFFFFF;padding:15px;font-size:14px;text-align:left;">VirtualPol: Plataforma '.PAIS.'. Sala: '.$r['titulo'].'. A fecha de '.date('Y-m-d').'.<br />...<br />';
+			$result2 = mysql_query("SELECT * FROM chats_msg WHERE chat_ID = '".$r['chat_ID']."' AND tipo != 'p' ORDER BY time ASC", $link);
+			while ($r2 = mysql_fetch_array($result2)) { 
+				$txt .= '<span'.($r2['tipo']!='m'?' style="color:green;"':'').'>'.date('H:i', strtotime($r2['time'])).' <img src="'.IMG.'cargos/'.$r2['cargo'].'.gif" width="16" height="16" border="0"> <b>'.$r2['nick'].'</b>: '.$r2['msg']."</span><br />\n"; 
+			}
+			$txt .= '<b>FIN</b>: '.$date.'</p>';
+		} else {
+			$txt .= '<p style="color:red;">No tienes acceso de lectura.</p>';
+		}
+	}
 
 } elseif ($_GET['b'] == 'opciones') { // Configurar chat
 
@@ -94,17 +114,17 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 
 </form>';
 
-	if ($r['user_ID'] != 0) {
-		$txt .= '<form action="/accion.php?a=chat&b=cambiarfundador" method="post">
+		if ($r['user_ID'] != 0) {
+			$txt .= '<form action="/accion.php?a=chat&b=cambiarfundador" method="post">
 <input type="hidden" name="chat_ID" value="'.$r['chat_ID'].'" />
 <p>Administradores: <input type="text" name="admin" size="40" maxlength="900" value="'.$r['admin'].'" /> <input type="submit" value="Cambiar Administradores"'.(($r['user_ID'] == $pol['user_ID']) OR (nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND (nucleo_acceso('nivel', 98)))?'':' disabled="disabled"').' /></p></form>';
-	}
+		}
 
-	if (($r['estado'] == 'activo') AND ($r['user_ID'] != 0) AND (($r['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= 95) AND ($r['acceso_escribir'] == 'anonimos')))) { 
-		$txt .= boton('Bloquear', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=bloquear&chat_ID='.$r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?');
-	}
+		if (($r['estado'] == 'activo') AND ($r['user_ID'] != 0) AND (($r['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= 95) AND ($r['acceso_escribir'] == 'anonimos')))) { 
+			$txt .= boton('Bloquear', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=bloquear&chat_ID='.$r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?');
+		}
 
-$txt .= '<p>Codigo HTML: <input type="text" style="color:grey;font-weight:normal;" value="&lt;iframe width=&quot;730&quot; height=&quot;480&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; transparency=&quot;transparency&quot; src=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/e/&quot;&gt;&lt;p&gt;&lt;a href=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/&quot;&gt;&lt;b&gt;Entra al chat&lt;/b&gt;&lt;/a&gt;&lt;/p&gt;&lt;/iframe&gt;" size="70" /></p>';
+		$txt .= '<p>Codigo HTML: <input type="text" style="color:grey;font-weight:normal;" value="&lt;iframe width=&quot;730&quot; height=&quot;480&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; transparency=&quot;transparency&quot; src=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/e/&quot;&gt;&lt;p&gt;&lt;a href=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/&quot;&gt;&lt;b&gt;Entra al chat&lt;/b&gt;&lt;/a&gt;&lt;/p&gt;&lt;/iframe&gt;" size="70" /></p>';
 	}
 
 
@@ -112,8 +132,6 @@ $txt .= '<p>Codigo HTML: <input type="text" style="color:grey;font-weight:normal
 	include('inc-chats.php');
 } else { // Listado de chats
 	$txt_title = 'Chats';
-		// Borrar chats para refrescar
-	mysql_query("DELETE FROM chats_msg WHERE time < '".date('Y-m-d H:i:s', time() - 18000)."' ORDER BY time DESC", $link);
 
 	$result = mysql_query("SELECT COUNT(*) AS num FROM chats_msg WHERE time > '".date('Y-m-d H:i:s', time() - 600)."'", $link);
 	while ($r = mysql_fetch_array($result)) { 
@@ -176,6 +194,9 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 
 
 }
+
+// Limpiar logs de 24h
+mysql_query("DELETE FROM chats_msg WHERE time < '".date('Y-m-d H:i:s', time() - (60*60*24))."'", $link);
 
 if (!$externo) { include('theme.php'); }
 ?>

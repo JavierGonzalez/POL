@@ -27,7 +27,19 @@ function gen_datos($datos, $cero=false, $datos2=false) {
 $txt_title = 'Estad&iacute;sticas';
 
 
-if ($_GET['a'] == 'full') {
+if ($_GET['a'] == 'full-tab') {
+
+	header('Content-Type: text/plain');
+
+	echo 'Dia (20:00)	Pais	Ciudadanos	Ciudadanos nuevos	Ciudadanos eliminados	Ciudadanos que entraron en 24h, sin ser nuevos	Hilos en el foro	Confianza	Partidos	Empresas	Pols	Pols Gobierno	Pols cuentas	Pols frase+palabras	Numero de transacciones	Porcentaje del mapa en venta	Pols de la propiedad mas barata en venta'."\n";
+
+	$result = mysql_query("SELECT * FROM stats ORDER BY time DESC, pais ASC LIMIT 20000", $link);
+	while($r = mysql_fetch_array($result)) {
+		echo explodear(' ', $r['time'], 0).'	'.$r['pais'].'	'.$r['ciudadanos'].'	'.$r['nuevos'].'	'.$r['eliminados'].'	'.$r['24h'].'	'.$r['hilos_msg'].'	'.$r['confianza'].'	'.$r['partidos'].'	'.$r['empresas'].'	'.$r['pols'].'	'.$r['pols_gobierno'].'	'.$r['pols_cuentas'].'	'.$r['frase'].'	'.$r['transacciones'].'	'.$r['mapa'].'	'.$r['mapa_vende']."\n";
+	}
+	exit;
+
+} else if ($_GET['a'] == 'full') {
 
 
 $txt .= '
@@ -52,7 +64,7 @@ $txt .= '
 <th title="Pols de la propiedad mas barata en venta">MV</th>
 </tr>
 ';
-$result = mysql_query("SELECT * FROM stats ORDER BY time DESC LIMIT 20000", $link);
+$result = mysql_query("SELECT * FROM stats ORDER BY time DESC, pais ASC LIMIT 20000", $link);
 while($r = mysql_fetch_array($result)) {
 
 

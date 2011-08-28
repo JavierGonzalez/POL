@@ -261,7 +261,7 @@ echo '</div>';
 	<li id="menu-3">
 		<a href="/">Plaza Virtual</a>
 		<ul>
-			<li><a href="/chats/">Chats</a></li>
+			<li><a href="/chats/">Otras plazas</a></li>
 			<li><a href="/foro/">Foros</a></li>
 			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.noc4net.com/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/doc/">Archivo <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
@@ -278,7 +278,8 @@ echo '</div>';
 	</li>
 <?php
 
-echo '<li id="menu-5" class="menu-5" style="margin:10px 0 1px 1px;"><a href="/foro/propuestas/">Propuestas</a></li>';
+echo '<li id="menu-5" class="menu-5" style="margin:8px 0 1px 1px;"><a href="http://propongo.tomalaplaza.net/" target="_blank">Propuestas</a></li>
+<li id="menu-5" class="menu-5"><a href="/foro/propuestas/">Debates</a></li>';
 
 if ($pol['config']['info_consultas'] > 0) { 
 	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:20px;">'.$pol['config']['info_consultas'].'</span></a></li>'; 

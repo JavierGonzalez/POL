@@ -257,7 +257,7 @@ LIMIT 1", $link);
 
 				$txt .= '<h1><a href="/foro/">Foro</a>: <a href="/foro/' . $_GET['a'] . '/">' . ucfirst($_GET['a']) . '</a></h1>
 
-<p style="margin-bottom:4px;">' .  $p_paginas . ' &nbsp; ' . boton('Responder', $crear_hilo) . ' &nbsp; <b>' . $r['num'] . '</b> mensajes en este hilo creado hace <acronym title="' . $r['time'] . '"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym>.</p>
+<p style="margin-bottom:4px;">' .  $p_paginas . ' &nbsp; ' . boton('Responder', $crear_hilo) . ' &nbsp; <b>' . $r['num'] . '</b> mensajes en este hilo creado hace <acronym title="' . $r['time'] . '"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym>. <a href="/'.$return_url.'mejores/">Mejores mensajes</a>.</p>
 
 
 
@@ -278,8 +278,7 @@ FROM ".SQL."foros_msg `m`
 INNER JOIN users `u` on (u.ID = user_ID)
 LEFT JOIN votos `v` ON (tipo = 'msg' AND v.pais = '".PAIS."' AND item_ID = m.ID AND emisor_ID = '".$pol['user_ID']."')
 WHERE hilo_ID = '".$r['ID']."' AND m.estado = 'ok'
-ORDER BY time ASC
-LIMIT ".$p_limit, $link);
+ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 50':'time ASC LIMIT '.$p_limit), $link);
 				while($r2 = mysql_fetch_array($result2)) {
 
 					if (($pol['user_ID'] == $r2['user_ID']) AND ($subforo != 'notaria') AND (strtotime($r2['time']) > (time() - 3600))) { 

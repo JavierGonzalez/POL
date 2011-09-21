@@ -225,13 +225,15 @@ if ($pol['config']['impuestos'] > 0) {
 
 	$result = mysql_query("SELECT ID, nick, pols, estado,
 (SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = users.ID AND nivel = '0' AND exenta_impuestos = '0' GROUP BY user_ID) AS pols_cuentas
-FROM users WHERE pais = '".PAIS."'
+FROM users WHERE pais = '".PAIS."' AND fecha_registro < '".$margen_24h."'
 ORDER BY fecha_registro ASC", $link);
 	while($r = mysql_fetch_array($result)) { 
 		$pols_total = ($r['pols'] + $r['pols_cuentas']);
 
 		if ($pols_total >= $minimo) { // REGLAS
-			$impuesto = floor( ( $pols_total * $porcentaje) / 100);
+			$base_imponible = $pols_total;
+			if ($minimo < 0) { $base_imponible -= $minimo; }
+			$impuesto = ceil( ( $base_imponible * $porcentaje) / 100);
 			$redaudacion += $impuesto;
 		} else { $impuesto = 0; $num_porcentaje_0++; }
 
@@ -245,8 +247,7 @@ ORDER BY fecha_registro ASC", $link);
 
 			$result2 = mysql_query("SELECT ID, pols FROM ".SQL."cuentas WHERE user_ID = '".$r['ID']."' AND nivel = '0' AND exenta_impuestos = '0'", $link);
 			while($r2 = mysql_fetch_array($result2)) {
-				$proporcion_cuenta = $r2['pols']/$pols_total;
-				$impuesto_cuenta = floor($proporcion_cuenta * $impuesto);
+				$impuesto_cuenta = ceil(($r2['pols']/$pols_total) * $impuesto);
 				pols_transferir($impuesto_cuenta, '-'.$r2['ID'], '-1', 'IMPUESTO '.date('Y-m-d').': '.$pol['config']['impuestos'].'%');
 				$resto_impuestos -= $impuesto_cuenta;
 			}
@@ -361,7 +362,7 @@ while($r = mysql_fetch_array($result)) {
 // Avisos por email 48h antes de la eliminación
 function retrasar_t($t) { return date('Y-m-d 20:00:00', (strtotime($t)+(86400*2))); }
 $result = mysql_query("SELECT ID, nick, email, fecha_registro, fecha_last FROM users
-WHERE dnie = 'false' AND 
+WHERE dnie = 'false' AND estado != 'expulsado' AND 
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".retrasar_t($margen_90dias)."' AND fecha_last <= '".retrasar_t($margen_60dias)."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_90dias)."' AND fecha_registro <= '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_30dias)."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_10dias)."') OR

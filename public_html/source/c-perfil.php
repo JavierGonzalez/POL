@@ -146,7 +146,8 @@ while($r2 = mysql_fetch_array($result2)){
 
 $patrimonio_con_impuestos = $patrimonio - $patrimonio_libre_impuestos;
 if ($patrimonio_con_impuestos >= $pol['config']['impuestos_minimo']) {
-	$impuesto = floor( ( $patrimonio_con_impuestos * $pol['config']['impuestos']) / 100);
+	if ($pol['config']['impuestos_minimo'] < 0) { $patrimonio_con_impuestos -= $pol['config']['impuestos_minimo']; }
+	$impuesto = ceil( ( $patrimonio_con_impuestos * $pol['config']['impuestos']) / 100);
 	$impuestos = '<em>Impuestos al dia: '.pols(-$impuesto).' '.MONEDA.'</em>';
 } else {
 	$impuestos = '<em style="#AAA">Sin impuestos.</em>';

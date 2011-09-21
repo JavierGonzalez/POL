@@ -392,7 +392,7 @@ $txt .= '
 <span><acronym title="Superficie ocupada" style="color:blue;"><b>' . round(($sup_total * 100) / $superficie_total, 1) . '%</b> ocupado</acronym> 
 <acronym title="Superficie en venta" style="color:red;"><b>' . round(($venta_total * 100) / $superficie_total, 1) . '%</b> en venta </acronym>	
 </span><br />
-<img style="margin:0 0 4px 0;" src="http://chart.apis.google.com/chart?cht=lc&chs=450x80&chxt=y&chxl=0:|0|' . round($dgrafico_max / 2) . '|' . $dgrafico_max . '&chd=s:' . chart_data($dgrafico) . '&chco=0066FF&chm=B,FFFFDD,0,0,0&chf=bg,s,ffffff01|c,s,ffffff01" height="80" />
+<img style="margin:0 0 4px 0;" src="http://chart.apis.google.com/chart?cht=lc&chs=450x110&chxt=y&chxl=0:|0|' . round($dgrafico_max / 2) . '|' . $dgrafico_max . '&chd=s:' . chart_data($dgrafico) . '&chco=0066FF&chm=B,FFFFDD,0,0,0&chf=bg,s,ffffff01|c,s,ffffff01" width="450" height="110" />
 </td></tr>
 <tr><td valign="top">
 <h1>Terratenientes</h1>
@@ -400,8 +400,8 @@ $txt .= '
 
 $n = 0;
 $result = mysql_query("SELECT SUM(superficie) AS superficie, COUNT(*) AS num,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS nick,
-(SELECT cargo FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS cargo
+(SELECT nick FROM users WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS nick,
+(SELECT cargo FROM users WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS cargo
 FROM ".SQL."mapa
 WHERE estado != 'e'
 GROUP BY user_ID
@@ -411,9 +411,9 @@ while ($row = mysql_fetch_array($result)) {
 	$n++;
 	if ($n <= 3) { 
 		$first = true;
-		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</b></li>';
+		$txt .= '<li><img width="16" height="16" src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</b></li>';
 	} else {
-		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> ' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</li>';
+		$txt .= '<li><img width="16" height="16" src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> ' . crear_link($row['nick']) . ' (' . $row['superficie'] . ')</li>';
 	}
 }
 
@@ -424,8 +424,8 @@ while ($row = mysql_fetch_array($result)) {
 
 $n = 0;
 $result = mysql_query("SELECT size_x, size_y, superficie,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS nick,
-(SELECT cargo FROM ".SQL_USERS." WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS cargo
+(SELECT nick FROM users WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS nick,
+(SELECT cargo FROM users WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS cargo
 FROM ".SQL."mapa
 WHERE estado != 'e'
 ORDER BY superficie DESC
@@ -434,9 +434,9 @@ while ($row = mysql_fetch_array($result)) {
 	$n++;
 	if ($n <= 3) { 
 		$first = true;
-		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . ' ('.$row['size_x'].'x'.$row['size_y'].'=' . $row['superficie'] . ')</b></li>';
+		$txt .= '<li><img width="16" height="16" src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . ' ('.$row['size_x'].'x'.$row['size_y'].'=' . $row['superficie'] . ')</b></li>';
 	} else {
-		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> ' . crear_link($row['nick']) . ' ('.$row['size_x'].'x'.$row['size_y'].'=' . $row['superficie'] . ')</li>';
+		$txt .= '<li><img width="16" height="16" src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> ' . crear_link($row['nick']) . ' ('.$row['size_x'].'x'.$row['size_y'].'=' . $row['superficie'] . ')</li>';
 	}
 }
 

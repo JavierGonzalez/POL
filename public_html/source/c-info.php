@@ -205,9 +205,10 @@ case 'economia':
 
 
 // #CUADRAR
-// TOTAL 11 AGOSTO: 544.645 | 554.528 | 674.518
+// 11 AGOSTO 2010: 544.645 | 554.528 | 674.518
+// 28 AGOSTO 2011: 883.003
 
-$moneda_mundial = '865741';
+$moneda_mundial = '883003';
 
 
 $txt .= '<br /><table border="0" cellspacing="0" cellpadding="2">

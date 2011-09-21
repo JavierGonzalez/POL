@@ -278,8 +278,7 @@ echo '</div>';
 	</li>
 <?php
 
-echo '<li id="menu-5" class="menu-5" style="margin:8px 0 1px 1px;"><a href="http://propongo.tomalaplaza.net/" target="_blank">Propuestas</a></li>
-<li id="menu-5" class="menu-5"><a href="/foro/propuestas/">Debates</a></li>';
+echo '<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/propuestas/">Debates</a></li>';
 
 if ($pol['config']['info_consultas'] > 0) { 
 	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:20px;">'.$pol['config']['info_consultas'].'</span></a></li>'; 

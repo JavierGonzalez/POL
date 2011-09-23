@@ -286,6 +286,7 @@ VALUES ('" . $r['cargo_ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', 'e
 FROM ".SQL."examenes_preg
 WHERE examen_ID = '" . $_GET['b'] . "' OR examen_ID = 0
 ORDER BY examen_ID DESC, RAND() LIMIT " . $r['num_preguntas'], $link);
+			echo mysql_error($link);
 			while($r2 = mysql_fetch_array($result2)){
 				$respuestas = '';
 				$res2 = '';
@@ -408,7 +409,6 @@ LIMIT 1", $link);
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick,
 (SELECT fecha_registro FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS fecha_registro
 FROM ".SQL."estudios_users WHERE ID_estudio = '" . $r['cargo_ID'] . "' AND nota != '' ORDER BY nota DESC, cargo DESC, fecha_registro ASC LIMIT 100", $link);
-		$txt .= mysql_error($link);
 		while($r2 = mysql_fetch_array($result2)){ 
 			if ($r2['cargo'] == 1) { $cargo = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" />'; } else { $cargo = ''; }
 			if ($r2['estado'] == 'ok') { $sello = '<img src="'.IMG.'estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = '<span style="margin-left:21px;"></span>'; }

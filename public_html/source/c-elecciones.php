@@ -233,8 +233,7 @@ window.onload = function(){
 
 
 
-} else {
-	//elecciones/
+} else { // elecciones/
 	$txt .= '
 <div id="elec">
 
@@ -244,7 +243,7 @@ window.onload = function(){
 <tr><td colspan="2" class="amarillo" valign="top">
 
 <h2>Calendario</h2>
-
+<p style="margin-bottom:-8px;">Pr&oacute;ximas elecciones: <b>'.explodear(' ', $pol['config']['elecciones_inicio'], 0).'</b> (siempre a las 20:00h). Duraci&oacute;n: <b>48h</b>. Periodicidad: <b>cada 2 semanas</b>.'.(ASAMBLEA?' Coordinadores a elegir: <b>'.$pol['config']['num_escanos'].'</b>.':'').'</p>
 <table border="0" width="100%" height="50" cellpadding="2" cellspacing="0">
 <tr>';
 
@@ -284,7 +283,8 @@ window.onload = function(){
 
 <tr>
 <td colspan="12" style="background:#D2D2D2;font-size:26px;" width="41%" height="30" title="Periodo normal" align="center">&rarr; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &rarr;</td>
-<td colspan="2" style="background:red;color:white;" align="center" width="9%" title="Elecciones Presidenciales"><b>Pres</b></td>
+'.(ASAMBLEA?'<td colspan="2" style="background:blue;color:white;" align="center" width="9%" title="Elecciones al Parlamento"><b>Parl</b></td>':'<td colspan="2" style="background:red;color:white;" align="center" width="9%" title="Elecciones Presidenciales"><b>Pres</b></td>').'
+
 <td colspan="12" style="background:#D2D2D2;font-size:26px;" width="41%" title="Periodo normal" align="center">&rarr; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &rarr;</td>
 <td colspan="2" style="background:blue;color:white;" align="center" width="9%" title="Elecciones al Parlamento"><b>Parl</b></td>
 </tr>
@@ -301,74 +301,78 @@ if ($_GET['a'] == 'votar') {
 
 } else {
 
-	$txt .= '
-<tr><td class="amarillo" width="50%" valign="top">
+	$txt .= '<tr>';
+
+	if (!ASAMBLEA) {
+
+		$txt .= '
+<td class="amarillo" width="50%" valign="top">
 <h1 style="color:red;">Presidenciales en '.$queda['pres'].'</h1>';
 
-	$tabla = '';
-	$chart_dato = '';
-	$chart_nom = '';
-	$tabla_final = '';
-	$result = mysql_query("SELECT time, tipo, num_votantes, escrutinio, num_votos
+		$tabla = '';
+		$chart_dato = '';
+		$chart_nom = '';
+		$tabla_final = '';
+		$result = mysql_query("SELECT time, tipo, num_votantes, escrutinio, num_votos
 FROM ".SQL."elec 
 WHERE tipo = 'pres'
 ORDER BY time DESC LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){
-		$votos_total = $r['num_votos'];
+		while($r = mysql_fetch_array($result)){
+			$votos_total = $r['num_votos'];
 
-		$txt .= '<p style="text-align:center;margin-top:8px;"><b>' . $votos_total . '</b> votos de <em>' . $r['num_votantes'] . '</em>, participaci&oacute;n: <b>' . number_format(($votos_total * 100) / $r['num_votantes'], 1, ',', '') . '%</b></p>';
+			$txt .= '<p style="text-align:center;margin-top:8px;"><b>' . $votos_total . '</b> votos de <em>' . $r['num_votantes'] . '</em>, participaci&oacute;n: <b>' . number_format(($votos_total * 100) / $r['num_votantes'], 1, ',', '') . '%</b></p>';
 
 
-		// formato: candidato1|candidato1#escrutinio
-		if ($r['escrutinio']) {
-			if ($pol['config']['elecciones'] == 'pres2') { 
-				$r['escrutinio'] = explodear("#", $r['escrutinio'], 1); 
-				$tabla .= '<tr><td colspan="4" align="center"><b>Escrutinio de la Primera Vuelta:</b></td></tr>';
-			}
-
-			// genera escrutinio en tabla
-			$m = explode("|", $r['escrutinio']);
-			$votos_total = 0;
-			foreach($m as $t) {
-				$t = explode(":", $t);
-				if ($t[1] != 'I') { $votos_total += $t[0]; }
-			}
-			foreach($m as $t) {
-				$t = explode(":", $t);
-				if ($t[1] == 'B') {
-					if ($chart_dato) { $chart_dato .= ','; } $chart_dato .= $t[0];
-					if ($chart_nom) { $chart_nom .= '|'; } $chart_nom .= 'En Blanco';
-					$tabla_final .= '<tr><td align="right" colspan="2"><b>En Blanco</b></td><td align="right">' . $t[0] . '</td><td align="right">' . number_format(($t[0] * 100) / $votos_total, 2, ',', '') . '%</td></tr>';
-				} elseif ($t[1] == 'I') {
-					$tabla_final .= '<tr><td align="right" colspan="2"><b>Nulo</b></td><td align="right">' . $t[0] . '</td><td></td></tr>';
-				} else {
-					if ($chart_dato) { $chart_dato .= ','; } $chart_dato .= $t[0];
-					if ($chart_nom) { $chart_nom .= '|'; } $chart_nom .= $t[2];
-					$tabla .= '<tr><td align="right"><b>' . crear_link($t[2]) . '</b></td><td>' . crear_link($t[1], 'partido') . '</td><td align="right"><b>' . $t[0] . '</b></td><td align="right">' . number_format(($t[0] * 100) / $votos_total, 2, ',', '') . '%</td></tr>';
+			// formato: candidato1|candidato1#escrutinio
+			if ($r['escrutinio']) {
+				if ($pol['config']['elecciones'] == 'pres2') { 
+					$r['escrutinio'] = explodear("#", $r['escrutinio'], 1); 
+					$tabla .= '<tr><td colspan="4" align="center"><b>Escrutinio de la Primera Vuelta:</b></td></tr>';
 				}
+
+				// genera escrutinio en tabla
+				$m = explode("|", $r['escrutinio']);
+				$votos_total = 0;
+				foreach($m as $t) {
+					$t = explode(":", $t);
+					if ($t[1] != 'I') { $votos_total += $t[0]; }
+				}
+				foreach($m as $t) {
+					$t = explode(":", $t);
+					if ($t[1] == 'B') {
+						if ($chart_dato) { $chart_dato .= ','; } $chart_dato .= $t[0];
+						if ($chart_nom) { $chart_nom .= '|'; } $chart_nom .= 'En Blanco';
+						$tabla_final .= '<tr><td align="right" colspan="2"><b>En Blanco</b></td><td align="right">' . $t[0] . '</td><td align="right">' . number_format(($t[0] * 100) / $votos_total, 2, ',', '') . '%</td></tr>';
+					} elseif ($t[1] == 'I') {
+						$tabla_final .= '<tr><td align="right" colspan="2"><b>Nulo</b></td><td align="right">' . $t[0] . '</td><td></td></tr>';
+					} else {
+						if ($chart_dato) { $chart_dato .= ','; } $chart_dato .= $t[0];
+						if ($chart_nom) { $chart_nom .= '|'; } $chart_nom .= $t[2];
+						$tabla .= '<tr><td align="right"><b>' . crear_link($t[2]) . '</b></td><td>' . crear_link($t[1], 'partido') . '</td><td align="right"><b>' . $t[0] . '</b></td><td align="right">' . number_format(($t[0] * 100) / $votos_total, 2, ',', '') . '%</td></tr>';
+					}
+				}
+				$tabla .= $tabla_final;
 			}
-			$tabla .= $tabla_final;
+
+			// PRESIDENCIALES EN CURSO
+			if (substr($pol['config']['elecciones'], 0, 4) == 'pres') {
+
+				// presenta grafico participacion
+				$p = round(($r['num_votos'] * 100) / $r['num_votantes']);
+				$chart_dato = $p . ',' . (100 - $p);
+				$chart_nom = 'Participacion|Abstencion';
+
+				// boton votar
+				$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+				while($r = mysql_fetch_array($result)){ $havotado = $r['ID']; }
+				if ((!$havotado) AND ($pol['user_ID'])) { $boton = '<br />' . boton('VOTAR', '/elecciones/votar/'); }
+				
+				$tabla = '<tr><td colspan="4" style="color:grey;" align="center">Elecciones en curso...' . $boton . '</td></tr>' . $tabla;
+			}
 		}
 
-		// PRESIDENCIALES EN CURSO
-		if (substr($pol['config']['elecciones'], 0, 4) == 'pres') {
 
-			// presenta grafico participacion
-			$p = round(($r['num_votos'] * 100) / $r['num_votantes']);
-			$chart_dato = $p . ',' . (100 - $p);
-			$chart_nom = 'Participacion|Abstencion';
-
-			// boton votar
-			$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-			while($r = mysql_fetch_array($result)){ $havotado = $r['ID']; }
-			if ((!$havotado) AND ($pol['user_ID'])) { $boton = '<br />' . boton('VOTAR', '/elecciones/votar/'); }
-			
-			$tabla = '<tr><td colspan="4" style="color:grey;" align="center">Elecciones en curso...' . $boton . '</td></tr>' . $tabla;
-		}
-	}
-
-
-	$txt .= '<center>
+		$txt .= '<center>
 <img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato . '&chs=362x220&chds=a&chl=' . $chart_nom . '&chf=bg,s,ffffff01|c,s,ffffff01&chp=3.14" alt="Escrutinio Presidenciales" />
 
 <table border="0" class="pol_table">
@@ -381,7 +385,12 @@ ORDER BY time DESC LIMIT 1", $link);
 </table>
 </center>
 
-</td><td class="amarillo" width="50%" valign="top">
+</td>';
+
+}
+
+$txt .= '
+<td class="amarillo" width="50%" valign="top"'.(ASAMBLEA?' colspan="2"':'').'>
 <h1 style="color:blue;">Parlamentarias en '.$queda['parl'].'</h1>';
 
 

@@ -1208,9 +1208,9 @@ case 'votacion':
 				while($r = mysql_fetch_array($result)){ $ha_votado = true; }
 
 				if ($ha_votado) { // MODIFICAR VOTO
-					mysql_query("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".($_POST['validez']=='true'?'true':'false')."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+					mysql_query("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".($_POST['validez']=='true'?'true':'false')."', mensaje = '".strip_tags($_POST['mensaje'])."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 				} else { // INSERTAR VOTO
-					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto, validez, autentificado) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."')", $link);
+					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto, validez, autentificado, mensaje) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".strip_tags($_POST['mensaje'])."')", $link);
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 
 					evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(<b>'.$num.'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);

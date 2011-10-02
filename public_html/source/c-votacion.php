@@ -201,7 +201,8 @@ $txt .= '
 (SELECT nick FROM users WHERE ID = votacion.user_ID LIMIT 1) AS nick, 
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado,
 (SELECT voto FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado,
-(SELECT validez FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado_validez
+(SELECT validez FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado_validez,
+(SELECT mensaje FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_mensaje
 FROM votacion
 WHERE ID = '".$_GET['a']."' AND pais = '".PAIS."'
 LIMIT 1", $link);
@@ -243,10 +244,11 @@ LIMIT 1", $link);
 <th>Orden</th>
 <th>Quien</th>
 <th>Voto</th>
-<th>Autentificado</th>
+<th title="Autentificado">Auten</th>
+<th>Mensaje</th>
 </tr>';
 			$orden = 0;
-			$result2 = mysql_query("SELECT user_ID, voto, validez, autentificado, (SELECT nick FROM users WHERE ID = user_ID LIMIT 1) AS nick FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
+			$result2 = mysql_query("SELECT user_ID, voto, validez, autentificado, mensaje, (SELECT nick FROM users WHERE ID = user_ID LIMIT 1) AS nick FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
 			while($r2 = mysql_fetch_array($result2)) {
 				if ($r2['user_ID'] == 0) {
 					$nick = '*';
@@ -259,11 +261,13 @@ LIMIT 1", $link);
 <td>'.$nick.'</td>
 <td nowrap="nowrap">'.($r['privacidad']=='false'&&$r['estado']=='end'?$respuestas[$r2['voto']]:'*').'</td>
 <td>'.($r2['autentificado']=='true'?'<span style="color:blue;">SI</span>':'<span style="color:red;">NO</span>').'</td>
+<td style="color:#555;font-size:12px;">'.($r['estado']=='end'?$r2['mensaje']:'*').'</td>
 </tr>';
 			}
 			$txt .= '<tr><td colspan="4" nowrap="nowrap">Votos computados: <b>'.$orden.'</b> (Contador: '.$r['num'].')</td></tr></table>
 	
-</td><td valign="top">
+</td>
+<td valign="top" width="350">
 
 <p>Propiedades de la votaci&oacute;n:
 <ul>';
@@ -317,7 +321,7 @@ Acceso: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', '
 				$escrutinio['votos_total'] = 0;
 				$escrutinio['validez']['true'] = 0; $escrutinio['validez']['false'] = 0;
 				$puntos_total = ($r['tipo_voto']=='estandar'?$votos_total:0);
-				$result2 = mysql_query("SELECT voto, validez, autentificado FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
+				$result2 = mysql_query("SELECT voto, validez, autentificado, mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
 				while($r2 = mysql_fetch_array($result2)) {
 					
 					switch ($r['tipo_voto']) {
@@ -444,6 +448,10 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b> '.num(($escrutinio[
 <input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votaci&oacute;n correcta.<br />
 <input type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> Votaci&oacute;n nula (inv&aacute;lida, inapropiada o tendenciosa).<br />
 </p>
+
+
+<p><b>Comentario:</b> Opcional. Ser&aacute; p&uacute;blico al terminar la votaci&oacute;n.<br />
+<input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="50" maxlength="50" /></p>
 
 </form>';
 			}

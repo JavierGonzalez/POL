@@ -241,24 +241,18 @@ LIMIT 1", $link);
 
 <table border="0" cellpadding="3">
 <tr>
-<th>Orden</th>
 <th>Quien</th>
 <th>Voto</th>
 <th title="Autentificado">Auten</th>
 <th>Mensaje</th>
 </tr>';
 			$orden = 0;
-			$result2 = mysql_query("SELECT user_ID, voto, validez, autentificado, mensaje, (SELECT nick FROM users WHERE ID = user_ID LIMIT 1) AS nick FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
+			$result2 = mysql_query("SELECT user_ID, voto, validez, autentificado, mensaje, (SELECT nick FROM users WHERE ID = user_ID LIMIT 1) AS nick FROM votacion_votos WHERE ref_ID = '".$r['ID']."' ORDER BY RAND()", $link);
 			while($r2 = mysql_fetch_array($result2)) {
-				if ($r2['user_ID'] == 0) {
-					$nick = '*';
-				} else {
-					$nick = crear_link($r2['nick']);
-				}
+				$orden++;
 
 				$txt .= '<tr>
-<td align="right"><b>'.++$orden.'</b></td>
-<td>'.$nick.'</td>
+<td>'.($r2['user_ID']==0?'*':crear_link($r2['nick'])).'</td>
 <td nowrap="nowrap">'.($r['privacidad']=='false'&&$r['estado']=='end'?$respuestas[$r2['voto']]:'*').'</td>
 <td>'.($r2['autentificado']=='true'?'<span style="color:blue;">SI</span>':'<span style="color:red;">NO</span>').'</td>
 <td style="color:#555;font-size:12px;">'.($r['estado']=='end'?$r2['mensaje']:'*').'</td>

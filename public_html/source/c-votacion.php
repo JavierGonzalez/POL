@@ -96,16 +96,18 @@ function opcion_nueva() {
 <p class="azul" style="text-align:left;"><b>Tipo de votaci&oacute;n</b>:<br />
 <span id="tipo_select">';
 
-	foreach ($votaciones_tipo AS $tipo) {
-		$disabled['sondeo'] .= ' checked="checked"';
-		$tipo_extra = array(
-'sondeo'=>'<span style="float:right;">(no vinculante)</span>', 
+	$tipo_extra = array(
+'sondeo'=>'<span style="float:right;">(informativo, no vinculante)</span>', 
 'referendum'=>'<span style="float:right;">(vinculante)</span>',
 'parlamento'=>'<span style="float:right;">(vinculante)</span>',
 'destituir'=>'<span style="float:right;" title="Se ejecuta una acci&oacute;n autom&aacute;tica tras su finalizaci&oacute;n.">(ejecutiva)</span>',
 'otorgar'=>'<span style="float:right;" title="Se ejecuta una acci&oacute;n autom&aacute;tica tras su finalizaci&oacute;n.">(ejecutiva)</span>',
 );
-		
+
+	if (ASAMBLEA) { unset($votaciones_tipo[2]); }
+
+	foreach ($votaciones_tipo AS $tipo) {
+		$disabled['sondeo'] .= ' checked="checked"';	
 		$txt .= '<span style="font-size:18px;"><input type="radio" name="tipo" value="'.$tipo.'"'.$disabled[$tipo].' onclick="cambiar_tipo_votacion(\''.$tipo.'\');" />'.$tipo_extra[$tipo].ucfirst($tipo).'</span><br >';
 	}
 
@@ -235,7 +237,7 @@ LIMIT 1", $link);
 			
 			$txt .= '<span style="float:right;text-align:right;"><a href="/votacion/'.$r['ID'].'/"><b>Volver a votaci&oacute;n</b></a>.</span>
 
-<h1 style="margin-top:20px;">Verificaci&oacute;n <sup style="font-size:12px;">ALPHA</sup></h1>
+<h1 style="margin-top:20px;">Votos</h1>
 
 <table border="0" width="100%"><tr><td valign="top">
 
@@ -254,8 +256,8 @@ LIMIT 1", $link);
 				$txt .= '<tr>
 <td>'.($r2['user_ID']==0?'*':crear_link($r2['nick'])).'</td>
 <td nowrap="nowrap">'.($r['privacidad']=='false'&&$r['estado']=='end'?$respuestas[$r2['voto']]:'*').'</td>
-<td>'.($r2['autentificado']=='true'?'<span style="color:blue;">SI</span>':'<span style="color:red;">NO</span>').'</td>
-<td style="color:#555;font-size:12px;">'.($r['estado']=='end'?$r2['mensaje']:'*').'</td>
+<td>'.($r2['autentificado']=='true'?'<span style="color:blue;"><b>SI</b></span>':'<span style="color:red;">NO</span>').'</td>
+<td style="color:#555;font-size:12px;" class="rich">'.($r['estado']=='end'?$r2['mensaje']:'*').'</td>
 </tr>';
 			}
 			$txt .= '<tr><td colspan="4" nowrap="nowrap">Votos computados: <b>'.$orden.'</b> (Contador: '.$r['num'].')</td></tr></table>
@@ -484,6 +486,7 @@ ORDER BY siglas ASC", $link);
 <th>Estado</th>
 <th></th>
 </tr>';
+	$mostrar_separacion = true;
 	$result = mysql_query("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar,
 (SELECT nick FROM users WHERE ID = votacion.user_ID LIMIT 1) AS nick,
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS ha_votado
@@ -508,10 +511,17 @@ ORDER BY estado ASC, time_expire DESC", $link);
 			}
 		}
 
+		if (($mostrar_separacion) AND ($r['estado'] != 'ok')) {
+			$mostrar_separacion = false;
+			$txt .= '<tr>
+<td colspan="6"><span style="color:#888;"><br />Votaciones finalizadas:</span><hr /></td>
+</tr>';
+		}
+
 		$txt .= '<tr>
-<td style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').'">'.ucfirst($r['tipo']).'</td>
+<td'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.$r['num'].'</b></td>
-<td><a href="/votacion/'.$r['ID'].'/"><b>'.$r['pregunta'].'</b></a></td>
+<td><a href="/votacion/'.$r['ID'].'/"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.$r['pregunta'].'</a></td>
 <td>'.crear_link($r['nick']).'</td>
 <td nowrap="nowrap"><b>'.$estado.'</b></td>
 <td nowrap="nowrap">'.$votar.$boton.'</td>

@@ -13,6 +13,17 @@ include($root_dir.'source/inc-functions.php');
 include($root_dir.'source/inc-functions-accion.php');
 $link = conectar();
 
+
+
+
+
+// PROTECCION DE DOBLE EJECUCION. Evita que se ejcute el proceso mas de una vez en un mismo dia.
+$result = mysql_query("SELECT pais FROM stats WHERE pais = '".PAIS."' AND time = '".date('Y-m-d 20:00:00')."' LIMIT 1", $link);
+while($r = mysql_fetch_array($result)) { echo 'Ya se ha ejecutado hoy'; exit; }
+
+
+
+
 // INICIO PROCESO
 evento_chat('<b>[PROCESO] Inicio del proceso diario...</b>');
 
@@ -379,15 +390,15 @@ while($r = mysql_fetch_array($result)) {
 
 
 // ACTUALIZACION DEL VOTO CONFIANZA
-mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND voto = '0'", $link);
-mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND time < '".$margen_60dias."'", $link);
-mysql_query("UPDATE users SET voto_confianza = '0'", $link);
-$result = mysql_query("SELECT item_ID, SUM(voto) AS num_confianza FROM votos WHERE tipo = 'confianza' GROUP BY item_ID", $link);
-while ($r = mysql_fetch_array($result)) { 
-	mysql_query("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['item_ID']."' LIMIT 1", $link);
-} 
-evento_chat('<b>[PROCESO] Supervisores del Censo:</b> '.implode(' ', get_supervisores_del_censo()));
-
+if (date('N') == 7) { // SOLO EL DOMINGO
+	mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '".$margen_60dias."')", $link);
+	mysql_query("UPDATE users SET voto_confianza = '0'", $link);
+	$result = mysql_query("SELECT item_ID, SUM(voto) AS num_confianza FROM votos WHERE tipo = 'confianza' GROUP BY item_ID", $link);
+	while ($r = mysql_fetch_array($result)) { 
+		mysql_query("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['item_ID']."' LIMIT 1", $link);
+	} 
+	evento_chat('<b>[PROCESO] Supervisores del Censo:</b> '.implode(' ', get_supervisores_del_censo()));
+}
 
 
 

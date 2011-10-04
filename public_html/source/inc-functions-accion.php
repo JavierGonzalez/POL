@@ -219,7 +219,7 @@ function gen_title($title) {
 function gen_url($url) {
         $url = trim($url);
         $url = utf8_decode($url);
-        $url = strtr($url, " Ã¡Ã©Ã­Ã³ÃºÃ±Ã§ÃÃ‰ÃÃ“ÃšÃ‘Ã‡Ã¼Ãœ", "-aeiouncaeiouncuU");
+        $url = strtr($url, " áéíóúñçÁÉÍÓÚÑÇüÜ", "-aeiouncaeiouncuU");
         $url = ereg_replace("[^A-Za-z0-9-]", "", $url);
         $url = substr($url, 0, 90);
         $url = strip_tags($url);
@@ -239,7 +239,7 @@ function gen_text($text, $type='') {
                 $text = str_replace("\r\n\r\n", "<br /><br />\r\n\r\n", $text); //WINDOWS
         } 
         //acentos
-        $mal = array(chr(183), chr(231), chr(199), chr(128), 'Âº', 'Âª', 'Â©', 'Â®', 'Â°', 'Ã¡', 'Ã©', 'Ã­', 'Ã³', 'Ãº', 'Ã', 'Ã‰', 'Ã', 'Ã“', 'Ãš', 'Ã±', 'Ã‘', 'Ã¼', 'Ãœ', chr(191), 'Â¡', 'Ã ', 'Ã¨', 'Ã¬', 'Ã²', 'Ã¹', 'Ã€', 'Ãˆ', 'ÃŒ', 'Ã’', 'Ã™');
+        $mal = array(chr(183), chr(231), chr(199), chr(128), 'º', 'ª', '©', '®', '°', 'á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú', 'ñ', 'Ñ', 'ü', 'Ü', chr(191), '¡', 'à', 'è', 'ì', 'ò', 'ù', 'À', 'È', 'Ì', 'Ò', 'Ù');
         $ok     = array('&#183;', '&#231;', '&#199;', '&#128;', '&ordm;', '&ordf;', '&copy;', '&reg;', '&deg;', '&aacute;', '&eacute;', '&iacute;', '&oacute;', '&uacute;', '&Aacute;', '&Eacute;', '&Iacute;', '&Oacute;', '&Uacute;', '&ntilde;', '&Ntilde;', '&uuml;', '&Uuml;', '&iquest;', '&iexcl;', '&agrave;', '&egrave;', '&igrave;', '&ograve;', '&ugrave;', '&Agrave;', '&Egrave;', '&Igrave;', '&Ograve;', '&Ugrave;');
         $text = str_replace($mal, $ok, $text);
 

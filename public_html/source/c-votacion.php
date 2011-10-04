@@ -349,9 +349,16 @@ Acceso: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', '
 				$txt .= '<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">';
 				if ($validez==true) {
 					$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th>Escrutinio</th><th>'.($r['tipo_voto']=='estandar'?'Votos':'Puntos').'</th><th></th></tr>';
+					
+
+					// Obtener ID del voto "En Blanco"
+					foreach ($escrutinio['votos'] AS $voto => $num) { if ($respuestas[$voto] == 'En Blanco') { $en_blanco_ID = $voto; } }
+					
+					$puntos_total_sin_en_blanco = $puntos_total - $escrutinio['votos'][$en_blanco_ID];
+
 					foreach ($escrutinio['votos'] AS $voto => $num) { 
 						if ($respuestas[$voto]) {
-							$txt .= '<tr><td nowrap="nowrap">'.($respuestas[$voto]=='En Blanco'?'<em>En Blanco</em>':$respuestas[$voto]).'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.num(($num * 100) / $puntos_total, 1).'%</td></tr>';
+							$txt .= '<tr><td nowrap="nowrap">'.($respuestas[$voto]=='En Blanco'?'<em>En Blanco</em>':$respuestas[$voto]).'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.($respuestas[$voto]=='En Blanco'?'':num(($num * 100) / $puntos_total_sin_en_blanco, 1).'%').'</td></tr>';
 							$respuestas_array[$voto] = $respuestas[$voto];
 						} else { unset($escrutinio['votos'][$voto]);  }
 					}

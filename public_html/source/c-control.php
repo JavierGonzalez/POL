@@ -934,7 +934,11 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 <option value="900">15 minutos</option>
 <option value="1200">20 minutos</option>
 <option value="1800" selected="selected">30 minutos</option>
+<option value="2700">45 minutos</option>
+<option value="4500">75 minutos</option>
 <option value="3600">1 hora</option>
+<option value="5400">1.5 horas</option>
+<option value="7200">2 horas</option>
 <option value="18000">5 horas</option>
 <option value="86400">1 d&iacute;a</option>
 <option value="172800">2 d&iacute;as</option>

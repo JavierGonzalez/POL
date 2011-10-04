@@ -6,7 +6,7 @@ if (($pol['user_ID']) AND ($pol['pais'] == PAIS)) {
 if ($_GET['a'] == 'mensajes-enviados') {
 
 	$txt_title = 'Tus mensajes enviados';
-	$txt .= '<h1><img src="'.IMG.'email.gif" alt="Msg" /> <a href="/msg/">Mensajes privados</a>: Mensajes enviados</h1>';
+	$txt .= '<h1><img src="'.IMG.'varios/email.gif" alt="Msg" /> <a href="/msg/">Mensajes privados</a>: Mensajes enviados</h1>';
 	
 	$txt .= '<p>' . boton('Enviar mensaje', '/msg/enviar/') . ' &nbsp; <span class="gris">Mensajes enviados por ti.</span></p>';
 
@@ -118,7 +118,7 @@ function click_form(tipo) {
 
 	$disabled_todos = '';
 	if ($pol['config']['pols_mensajetodos'] > $pol['pols']) { $disabled_todos = ' disabled="disabled"'; }
-	$txt .= '<h1><img src="'.IMG.'email.gif" alt="Msg" /> <a href="/msg/">Mensajes privados</a>: Enviar mensaje</h1>
+	$txt .= '<h1><img src="'.IMG.'varios/email.gif" alt="Msg" /> <a href="/msg/">Mensajes privados</a>: Enviar mensaje</h1>
 
 <form action="/accion.php?a=enviar-mensaje" method="post">
 
@@ -148,7 +148,7 @@ function click_form(tipo) {
 
 } else {
 	$txt_title = $pol['msg'] . ' mensajes recibidos';
-	$txt .= '<h1><img src="'.IMG.'email.gif" alt="Msg" /> Mensajes privados: <a href="/msg/mensajes-enviados/">Mensajes enviados</a></h1>
+	$txt .= '<h1><img src="'.IMG.'varios/email.gif" alt="Msg" /> Mensajes privados: <a href="/msg/mensajes-enviados/">Mensajes enviados</a></h1>
 
 <p>' . boton('Enviar mensaje', '/msg/enviar/') . ' &nbsp; <span class="gris">Tienes <b>' . $pol['msg'] . '</b> mensajes</span></p>
 

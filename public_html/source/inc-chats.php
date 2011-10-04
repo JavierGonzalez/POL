@@ -35,7 +35,7 @@ while ($r = mysql_fetch_array($result)) {
 
 // Muestra control de kicks.
 if ((nucleo_acceso($vp['acceso']['kick'])) AND ($pol['pais'] == PAIS)) {
-	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"'.IMG.'kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a> ';
+	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"'.IMG.'varios/kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a> ';
 } else { $js_kick = ''; }
 
 

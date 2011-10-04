@@ -382,7 +382,7 @@ blockquote cite {
 .ayuda {
 display:inline-block;
 cursor:help;
-background-image:url('help.gif');
+background-image:url('varios/help.gif');
 width:22px;
 height:22px;
 }

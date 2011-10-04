@@ -328,7 +328,7 @@ function merge_list() {
 			if (array_list[cargo_ID] === undefined) { array_list[cargo_ID] = ""; }
 
 			if (hace_kick) {
-				js_kick = "<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"" + IMG + "kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a>";
+				js_kick = "<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"" + IMG + "varios/kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a>";
 			} else {
 				js_kick = "";
 			}
@@ -419,7 +419,7 @@ function enriquecer(m, bbcode) {
 	m = m.replace(/:tarta:/gi, " <img src=\""+IMG+"smiley/tarta.gif\" alt=\":tarta:\" border=\"0\" title=\":tarta:\" width=\"16\" height=\"16\" />");
 	m = m.replace(/:roto2:/gi, " <img src=\""+IMG+"smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" width=\"16\" height=\"16\" />");
 	m = m.replace(/:facepalm:/gi, " <img src=\""+IMG+"smiley/palm.gif\" alt=\":facepalm:\" border=\"0\" title=\":facepalm:\" width=\"15\" height=\"15\" />");
-	m = m.replace(/:moneda:/gi, " <img src=\""+IMG+"m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" width=\"16\" height=\"16\" />");
+	m = m.replace(/:moneda:/gi, " <img src=\""+IMG+"varios/m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" width=\"16\" height=\"16\" />");
 	m = m.replace(/:troll:/gi, " <img src=\""+IMG+"smiley/troll.gif\" alt=\":troll:\" border=\"0\" title=\":troll:\" width=\"15\" height=\"15\" />");
 
 	// URL

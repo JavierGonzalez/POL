@@ -96,7 +96,7 @@ define('COLOR_BG2', $vp['bg2'][PAIS]);
 
 define('HOST', $_SERVER['HTTP_HOST']);
 define('VERSION', '1.0 Beta');
-define('MONEDA', '<img src="'.IMG.'m.gif" border="0" />');
+define('MONEDA', '<img src="'.IMG.'varios/m.gif" border="0" />');
 define('MONEDA_NOMBRE', 'monedas');
 // variables de tablas SQL
 define('SQL_USERS', 'users');

@@ -198,7 +198,7 @@ FROM ".SQL."estudios_users
 WHERE user_ID = '" . $pol['user_ID'] . "'
 ORDER BY estado ASC, nota DESC", $link);
 	while($r = mysql_fetch_array($result)){
-		if ($r['estado'] == 'ok') { $sello = '<img src="'.IMG.'estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = ''; }
+		if ($r['estado'] == 'ok') { $sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = ''; }
 		if ($r['cargo'] == 1) { $cargo = '(Cargo ejercido)'; } else { $cargo = ''; }
 		if (($r['ID_estudio'] <= 0) AND (time()-strtotime($r['time']) > $pol['config']['examen_repe']*6)) {
 			$caducar_examen = ' <form action="/accion.php?a=examenes&b=caducar_examen&ID='.$r['ID'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="X"  onclick="if (!confirm(\'&iquest;Seguro que quieres que CADUQUE el examen de ' . $r['nombre_examen'] . '?\')) { return false; }"/></form>';
@@ -411,7 +411,7 @@ LIMIT 1", $link);
 FROM ".SQL."estudios_users WHERE ID_estudio = '" . $r['cargo_ID'] . "' AND nota != '' ORDER BY nota DESC, cargo DESC, fecha_registro ASC LIMIT 100", $link);
 		while($r2 = mysql_fetch_array($result2)){ 
 			if ($r2['cargo'] == 1) { $cargo = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" />'; } else { $cargo = ''; }
-			if ($r2['estado'] == 'ok') { $sello = '<img src="'.IMG.'estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = '<span style="margin-left:21px;"></span>'; }
+			if ($r2['estado'] == 'ok') { $sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = '<span style="margin-left:21px;"></span>'; }
 			$txt .= '<li><b class="gris">' . $sello . ' ' . $r2['nota'] . ' ' . $cargo . crear_link($r2['nick']) . '</b></li>';
 		}
 

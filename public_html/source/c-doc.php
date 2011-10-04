@@ -15,7 +15,7 @@ if ($_GET['a']) {
 			$txt .= '<form action="/accion.php?a=editar-documento&ID='.$r['ID'].'" method="post">
 <input type="hidden" name="url" value="' . $r['url'] . '"  />
 
-<h1><img src="'.IMG.'doc-edit.gif" alt="Editar Documento" /> <a href="/doc/">Documento</a>: <input type="text" name="titulo" value="' . $r['title'] . '" size="60" /></h1>
+<h1><img src="'.IMG.'documentos/doc-edit.gif" alt="Editar Documento" /> <a href="/doc/">Documento</a>: <input type="text" name="titulo" value="' . $r['title'] . '" size="60" /></h1>
 
 <p>Categor&iacute;a:<br />
 ' . form_select_cat('docs', $r['cat_ID']) . '</p>';
@@ -43,7 +43,7 @@ if ($_GET['a']) {
 
 		} else { 
 
-			$txt .= '<h1><img src="'.IMG.'doc.gif" alt="Documento" /> <a href="/doc/">Documento</a>: ' . $r['title'] . '</h1><div style="text-align:justify;margin:20px;">'.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])?$r['text']:'<b style="color:red;">No tienes acceso de lectura.</b>').'</div><br /><br /><hr style="width:100%;" />'; 
+			$txt .= '<h1><img src="'.IMG.'documentos/doc.gif" alt="Documento" /> <a href="/doc/">Documento</a>: ' . $r['title'] . '</h1><div style="text-align:justify;margin:20px;">'.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])?$r['text']:'<b style="color:red;">No tienes acceso de lectura.</b>').'</div><br /><br /><hr style="width:100%;" />'; 
 
 			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
 				$txt .= '<span style="float:right;"><form><input type="button" value="Eliminar" onClick="if (!confirm(\'&iquest;Estas convencido de que quieres ELIMINAR para siempre este Documento?\')) { return false; } else { window.location.href=\'/accion.php?a=eliminar-documento&url=' . $r['url'] . '\'; }"></form></span>';
@@ -59,7 +59,7 @@ if ($_GET['a']) {
 
 
 	$txt_title = 'Documentos';
-	$txt .= '<h1><img src="'.IMG.'doc.gif" alt="Documento" /> Documentos:</h1>
+	$txt .= '<h1><img src="'.IMG.'documentos/doc.gif" alt="Documento" /> Documentos:</h1>
 
 <p>' . boton('Crear Documento', '/form/crear-documento/') . '</p>
 

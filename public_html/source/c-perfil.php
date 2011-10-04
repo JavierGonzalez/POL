@@ -45,7 +45,7 @@ Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="4
 			$extras .= '</td></tr>';
 		} else { $extras = ''; }
 		
-		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="3" valign="top" align="center">'.($r['avatar']=='true'?'<img src="'.IMG.'a/' . $r['ID'] . '.jpg" alt="'.$nick.'" />':'').($r['dnie']=='true'?'<br /><img src="'.IMG.'autentificacion.png" border="0" style="margin-top:6px;" />':'').'</td><td nowrap="nowrap"><h1><span class="amarillo"><img src="'.IMG.'cargos/'.$r['cargo'].'.gif" alt="Cargo" style="margin-bottom:0;" border="0" /> ' . $nick . ' &nbsp; <span style="color:grey;"><span class="' . $r['estado'] . '">' . ucfirst($r['estado']) . '</span> de ' . $r['pais'] . '</span></span></h1></td><td nowrap="nowrap">';
+		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="3" valign="top" align="center">'.($r['avatar']=='true'?'<img src="'.IMG.'a/' . $r['ID'] . '.jpg" alt="'.$nick.'" />':'').($r['dnie']=='true'?'<br /><img src="'.IMG.'varios/autentificacion.png" border="0" style="margin-top:6px;" />':'').'</td><td nowrap="nowrap"><h1><span class="amarillo"><img src="'.IMG.'cargos/'.$r['cargo'].'.gif" alt="Cargo" style="margin-bottom:0;" border="0" /> ' . $nick . ' &nbsp; <span style="color:grey;"><span class="' . $r['estado'] . '">' . ucfirst($r['estado']) . '</span> de ' . $r['pais'] . '</span></span></h1></td><td nowrap="nowrap">';
 
 
 		// CONFIANZA
@@ -83,7 +83,7 @@ ORDER BY cargo DESC, estado ASC, nota DESC", $link);
 			}
 			$estudios_num++;
 			if ($r2['estado'] == 'ok') { 
-				$sello = '<img src="'.IMG.'estudiado.gif" alt="Aprobado" title="Aprobado" border="0" /> '; 
+				$sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" /> '; 
 			} else { $sello = ''; }
 
 			if ($r2['ID_estudio'] > 0) { $cargo_img = '<img src="'.IMG.'cargos/' . $r2['ID_estudio'] . '.gif" border="0" />'; } else { $cargo_img = ''; }
@@ -270,7 +270,7 @@ $txt .= 'Registrado hace: <b><acronym title="' . $r['fecha_registro'] . '">'.rou
 ';
 
 
-/* Tramos de expiración
+/* Tramos de expiraciï¿½n
 	< 30d	- 10 dias
 30d < 90d	- 30 dias 
 90d >		- 60 dias

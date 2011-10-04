@@ -42,7 +42,7 @@ LIMIT 1", $link);
 <li>Propiedad: <b>' . $r['ID'] . '</b><br />
 Posici&oacute;n: <b>' . $r['pos_x'] . '-' . $r['pos_y'] . '</b><br />
 Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * $r['size_y']) . '</b><br />
-Coste: <b>'.pols(round($r['pols'] / ($r['size_x'] * $r['size_y']))).'</b> <img src="'.CDN.'varios/m.gif" alt="monedas" /> por cuadrado<br /><br /></li>
+Coste: <b>'.pols(round($r['pols'] / ($r['size_x'] * $r['size_y']))).'</b> <img src="'.IMG.'varios/m.gif" alt="monedas" /> por cuadrado<br /><br /></li>
 
 <li>' . boton('COMPRAR', '/accion.php?a=mapa&b=compraventa&ID=' . $r['ID'], false, false, $r['pols']) . '<br /><br /></li>
 

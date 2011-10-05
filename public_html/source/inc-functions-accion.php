@@ -76,14 +76,14 @@ function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $quien=false) {
                 if ($evento_chat) { 
                         $result2 = mysql_query("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
                         while($row2 = mysql_fetch_array($result2)){ $nick_asignado = $row2['nick']; }
-                        evento_chat('<b>[CARGO]</b> El cargo de <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$result['nombre'].' ha sido asignado a '.crear_link($nick_asignado).' por '.crear_link(($quien==''?'VirtualPol':$pol['nick'])));
+                        evento_chat('<b>[CARGO]</b> El cargo de <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$row['nombre'].' ha sido asignado a '.crear_link($nick_asignado).' por '.crear_link(($quien==''?'VirtualPol':$pol['nick'])));
                 }
         }
 }
 
 function cargo_del($cargo_ID, $user_ID, $evento_chat=true, $quien=false) {
         global $link, $pol; 
-        $result = mysql_query("SELECT nivel FROM ".SQL."estudios WHERE ID = '" . $cargo_ID . "' LIMIT 1", $link);
+        $result = mysql_query("SELECT nombre, nivel FROM ".SQL."estudios WHERE ID = '" . $cargo_ID . "' LIMIT 1", $link);
         while($row = mysql_fetch_array($result)){
                 mysql_query("UPDATE ".SQL."estudios_users SET cargo = '0' WHERE ID_estudio = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' LIMIT 1", $link);
                 evento_log(12, $cargo_ID, $user_ID);
@@ -100,7 +100,7 @@ LIMIT 1", $link);
                 if ($evento_chat) { 
                         $result2 = mysql_query("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
                         while($row2 = mysql_fetch_array($result2)){ $nick_asignado = $row2['nick']; }
-                        evento_chat('<b>[CARGO] '.crear_link(($quien==''?'VirtualPol':$pol['nick'])).' quita</b> el cargo <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$result['nombre'].' a '. crear_link($nick_asignado));
+                        evento_chat('<b>[CARGO] '.crear_link(($quien==''?'VirtualPol':$pol['nick'])).' quita</b> el cargo <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$row['nombre'].' a '. crear_link($nick_asignado));
                 }
         }
 }

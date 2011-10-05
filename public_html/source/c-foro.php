@@ -291,7 +291,7 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 50':'time ASC LIMIT '.$p_lim
 						 $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/'.$r2['ID'].'#enviar').'</div>'; 
 					}
 
-					$txt .= '<tr id="m-' . $r2['ID'] . '"><td align="right" valign="top">' . (ASAMBLEA?'print_lateral($r2['nick'], $r2['cargo'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], '', '', 'msg', $r2['ID'])':'print_lateral($r2['nick'], $r2['cargo'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['votos'], $r2['voto'], 'msg', $r2['ID'])') . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $r2['ID'] . '">#</a></span>'.($r2['nick_estado']=='expulsado'?'<span style="color:red;">Expulsado.</span>':$citar.reemplazos($r2['text'])).'</p></td></tr>';
+					$txt .= '<tr id="m-' . $r2['ID'] . '"><td align="right" valign="top">' . '.(ASAMBLEA?'print_lateral($r2['nick'], $r2['cargo'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], '', '', 'msg', $r2['ID'])':'print_lateral($r2['nick'], $r2['cargo'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['votos'], $r2['voto'], 'msg', $r2['ID'])').' . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $r2['ID'] . '">#</a></span>'.($r2['nick_estado']=='expulsado'?'<span style="color:red;">Expulsado.</span>':$citar.reemplazos($r2['text'])).'</p></td></tr>';
 				}
 				$txt .= '</table> <p>' . $p_paginas . '</p>';
 

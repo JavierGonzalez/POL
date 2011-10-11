@@ -250,9 +250,8 @@ function confianza($num) {
 }
 
 
-function direccion_IP($tipo='') { 
-	if ($_SERVER['HTTP_CLIENT_IP']) { $IP = $_SERVER['HTTP_CLIENT_IP']; } 
-	else { $IP = $_SERVER['REMOTE_ADDR']; }
+function direccion_IP($tipo='') {
+	$IP = $_SERVER['REMOTE_ADDR'];
 	if ($tipo == 'longip') { $IP = ip2long($IP); }
 	return $IP;
 }

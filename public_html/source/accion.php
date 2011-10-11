@@ -1300,11 +1300,17 @@ case 'foro':
 
 	if (($_GET['b'] == 'borrar') AND ($_GET['ID']) AND ($_GET['c']) AND (nucleo_acceso($vp['acceso']['foro_borrar']))) {
 
+		$result = mysql_query("SELECT user_ID FROM ".SQL."foros_".($_GET['c']=='hilo'?'hilo':'msg')." WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)){ $el_user_ID = $r['user_ID']; }
+
 		if ($_GET['c'] == 'hilo') {
 			mysql_query("UPDATE ".SQL."foros_hilos SET estado = 'borrado', time_last = '".$date."' WHERE ID = '".$_GET['ID']."' AND estado = 'ok' LIMIT 1", $link);
 		} elseif ($_GET['c'] == 'mensaje') {
 			mysql_query("UPDATE ".SQL."foros_msg SET estado = 'borrado', time2 = '".$date."' WHERE ID = '".$_GET['ID']."' AND estado = 'ok' LIMIT 1", $link);
 		}
+
+		evento_log(17, $_GET['ID'], $el_user_ID);
+
 		$refer_url = 'foro/papelera/';
 
 	} elseif (($_GET['b'] == 'restaurar') AND ($_GET['ID']) AND ($_GET['c']) AND (nucleo_acceso($vp['acceso']['foro_borrar']))) {

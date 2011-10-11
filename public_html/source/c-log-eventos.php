@@ -67,6 +67,7 @@ LIMIT " . $p_limit, $link);
 14 - Kick cancelado
 15 - Ceder empresa (user_ID2=user_ID, dato=empresa_ID)
 16 - Ceder propiedad (user_ID2=user_ID, dato=propiedad_ID)
+17 - Hilo borrado (dato=hilo_ID)
 */
 switch ($r['accion']) {
 	case 1: $accion = 'Nuevo Turista'; break;
@@ -95,6 +96,7 @@ switch ($r['accion']) {
 		break;
 	case 15: $accion = 'Empresa <em>'.dato_nombre($r['dato'], 'empresa').'</em> cedida a '.crear_link($r['nick2']); break;
 	case 16: $accion = 'Propiedad <em>#'.$r['dato'].'</em> cedida a '.crear_link($r['nick2']); break;
+	case 17: $accion = 'Mensaje en el foro borrado de '.crear_link($r['nick2']); break;
 	default: $accion = $r['accion'];
 }
 

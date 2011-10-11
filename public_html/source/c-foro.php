@@ -271,7 +271,7 @@ LIMIT 1", $link);
 					$editar = '<span style="float:right;">' . boton('Papelera', '/accion.php?a=foro&b=borrar&c=hilo&ID=' . $r['ID'] . '/', '&iquest;Quieres enviar a la PAPELERA este HILO y sus MENSAJES?') . '</span>'; 
 				} else { $editar = ''; }
 
-				$txt .= '<tr class="amarillo"><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['voto'], 'hilos', $r['ID']) . '</td><td valign="top" width="80%"><p style="text-align:justify;">'.$citar.$editar.'<h1 style="margin:-6px 0 10px 0;"><a href="/'.$return_url.'">'.$r['title'].'</a></h1>'.reemplazos($r['text']).'</p></td></tr>';
+				$txt .= '<tr class="amarillo"><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['voto'], 'hilos', $r['ID']) . '</td><td valign="top" width="80%"><p style="text-align:justify;">'.$citar.$editar.'<h1 style="margin:-6px 0 10px 0;"><a href="/'.$return_url.'" class="rich">'.$r['title'].'</a></h1>'.reemplazos($r['text']).'</p></td></tr>';
 
 				$result2 = mysql_query("SELECT m.ID, hilo_ID, user_ID, m.time, m.text, m.cargo, nick, m.estado AS nick_estado, avatar, votos, v.voto
 FROM ".SQL."foros_msg `m`
@@ -290,8 +290,6 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 50':'time ASC LIMIT '.$p_lim
 					if ($citar) {
 						 $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/'.$r2['ID'].'#enviar').'</div>'; 
 					}
-
-        // '.(ASAMBLEA?'print_lateral($r2['nick'], $r2['cargo'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], '', '', 'msg', $r2['ID'])' : 'print_lateral($r2['nick'], $r2['cargo'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['votos'], $r2['voto'], 'msg', $r2['ID'])').'
 
 					$txt .= '<tr id="m-' . $r2['ID'] . '"><td align="right" valign="top">' . print_lateral($r2['nick'], $r2['cargo'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['votos'], $r2['voto'], 'msg', $r2['ID']) . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $r2['ID'] . '">#</a></span>'.($r2['nick_estado']=='expulsado'?'<span style="color:red;">Expulsado.</span>':$citar.reemplazos($r2['text'])).'</p></td></tr>';
 				}
@@ -465,7 +463,7 @@ LIMIT " . $num_limit, $link);
 					$txt .= '<tr>
 <td align="right" valign="top">' . crear_link($r2['nick']) . '</td>
 <td valign="top" align="right"><b>' . $r2['num'] . '</b></td>
-<td colspan="2"><b style="font-size:19px;">'.confianza($r2['votos']).'</b> ' . $titulo . '</td>
+<td colspan="2" class="rich"><b style="font-size:19px;">'.confianza($r2['votos']).'</b> ' . $titulo . '</td>
 <td align="right" valign="top" nowrap="nowrap"><span class="timer" value="'.strtotime($r2['time']).'"></span></td>
 </tr>';
 				}

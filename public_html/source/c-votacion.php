@@ -445,7 +445,7 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b> '.num(($escrutinio[
 
 				// Imprime boton para votar, aviso de tiempo y votacion correcta/nula.
 				$txt .= '
-<input type="submit" value="Votar" style="font-size:22px;"'.($tiene_acceso_votar?'':' disabled="disabled"').' /> '.($tiene_acceso_votar?'<span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span>':'<span style="color:red;">No tienes acceso para votar.</span>').'</p>
+<input type="submit" value="Votar" style="font-size:22px;"'.($tiene_acceso_votar?'':' disabled="disabled"').' /> '.($tiene_acceso_votar?'<span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span>':'<span style="color:red;">'.(!$bt['user_ID']?'Para votar debes <a href="'.REGISTRAR.'">crear tu ciudadano</a>.':'No tienes acceso para votar.').'</span>').'</p>
 
 <p>
 <input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votaci&oacute;n correcta.<br />
@@ -453,7 +453,7 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b> '.num(($escrutinio[
 </p>
 
 
-<p><b>Comentario:</b> Opcional. Ser&aacute; p&uacute;blico al terminar la votaci&oacute;n.<br />
+<p>Comentario (opcional, ser&aacute; p&uacute;blico al terminar la votaci&oacute;n).<br />
 <input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="50" maxlength="50" /></p>
 
 </form>';

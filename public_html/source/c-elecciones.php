@@ -335,14 +335,14 @@ ORDER BY time DESC LIMIT 1", $link);
 				$votos_total = 0;
 				foreach($m as $t) {
 					$t = explode(":", $t);
-					if ($t[1] != 'I') { $votos_total += $t[0]; }
+					if (($t[1] != 'I') AND ($t[1] != 'B')) { $votos_total += $t[0]; }
 				}
 				foreach($m as $t) {
 					$t = explode(":", $t);
 					if ($t[1] == 'B') {
-						if ($chart_dato) { $chart_dato .= ','; } $chart_dato .= $t[0];
-						if ($chart_nom) { $chart_nom .= '|'; } $chart_nom .= 'En Blanco';
-						$tabla_final .= '<tr><td align="right" colspan="2"><b>En Blanco</b></td><td align="right">' . $t[0] . '</td><td align="right">' . number_format(($t[0] * 100) / $votos_total, 2, ',', '') . '%</td></tr>';
+						// if ($chart_dato) { $chart_dato .= ','; } $chart_dato .= $t[0];
+						// if ($chart_nom) { $chart_nom .= '|'; } $chart_nom .= 'En Blanco';
+						$tabla_final .= '<tr><td align="right" colspan="2"><b>En Blanco</b></td><td align="right">' . $t[0] . '</td><td align="right"></td></tr>';
 					} elseif ($t[1] == 'I') {
 						$tabla_final .= '<tr><td align="right" colspan="2"><b>Nulo</b></td><td align="right">' . $t[0] . '</td><td></td></tr>';
 					} else {

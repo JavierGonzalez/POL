@@ -359,7 +359,6 @@ Acceso: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', '
 					foreach ($escrutinio['votos'] AS $voto => $num) { 
 						if ($respuestas[$voto]) {
 							$txt .= '<tr><td nowrap="nowrap">'.($respuestas[$voto]=='En Blanco'?'<em>En Blanco</em>':$respuestas[$voto]).'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.($respuestas[$voto]=='En Blanco'?'':num(($num * 100) / $puntos_total_sin_en_blanco, 1).'%').'</td></tr>';
-							$respuestas_array[$voto] = $respuestas[$voto];
 						} else { unset($escrutinio['votos'][$voto]);  }
 					}
 					$txt .= '</table>';
@@ -368,7 +367,15 @@ Acceso: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', '
 
 				// Imprime escrutinio en grafico.
 				if ($validez == true) {
-					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:'.implode(',', $escrutinio['votos']).'&chs=430x200&chl='.implode('|', $respuestas_array).'&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="430" height="200" />';
+					
+					foreach ($escrutinio['votos'] AS $voto => $num) {
+						if ($respuestas[$voto] != 'En Blanco') {
+							$grafico_array_votos[] = $num;
+							$grafico_array_respuestas[] = $respuestas[$voto];
+						}
+					}
+
+					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:'.implode(',', $grafico_array_votos).'&chs=430x200&chl='.implode('|', $grafico_array_respuestas).'&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="430" height="200" />';
 				}
 
 				// Imprime datos de legitimidad y validez

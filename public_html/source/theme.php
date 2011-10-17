@@ -109,12 +109,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 <ul class="sfn-menu">
 	<li class="current">
-		
-		<!--<a href="http://www.virtualpol.com/" title="VirtualPol"><img src="<?=IMG?>logo-virtualpol-1.gif" border="0" alt="VirtualPol" style="margin:-15px 0;" /></a>-->
-
-		<a href="http://www.virtualpol.com/" title="VirtualPol">&#9660; <img src="<?=IMG?>virtualpol-logo-cuadrado-40.gif" border="0" alt="VirtualPol" style="margin:-15px 0;" /></a>
-
-		<ul><?php foreach ($vp['paises'] AS $pais) { if ($pais != PAIS) { echo '<li><a href="http://'.strtolower($pais).'.virtualpol.com/">Plataforma '.$pais.'</a></li>'; } } ?></ul>
+		<a href="http://www.virtualpol.com/" title="VirtualPol"><img src="<?=IMG?>virtualpol-logo-cuadrado-40.gif" border="0" alt="VirtualPol" style="margin:-11px 0;" /></a>
 	</li>
 </ul>
 

@@ -408,6 +408,8 @@ function auto_priv(nick) { $("#vpc_msg").attr("value","/msg " + nick + " ").css(
 
 function enriquecer(m, bbcode) {
 	
+	
+
 	// Emoticonos
 	m = m.replace(/(\s|^):\)/gi, " <img src=\""+IMG+"smiley/sonrie.gif\" border=\"0\" alt=\":)\" title=\":)\" width=\"15\" height=\"15\" />");
 	m = m.replace(/(\s|^):\(/gi, " <img src=\""+IMG+"smiley/disgustado.gif\" border=\"0\" alt=\":(\" title=\":(\" width=\"15\" height=\"15\" />");
@@ -421,6 +423,15 @@ function enriquecer(m, bbcode) {
 	m = m.replace(/:facepalm:/gi, " <img src=\""+IMG+"smiley/palm.gif\" alt=\":facepalm:\" border=\"0\" title=\":facepalm:\" width=\"15\" height=\"15\" />");
 	m = m.replace(/:moneda:/gi, " <img src=\""+IMG+"varios/m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" width=\"16\" height=\"16\" />");
 	m = m.replace(/:troll:/gi, " <img src=\""+IMG+"smiley/troll.gif\" alt=\":troll:\" border=\"0\" title=\":troll:\" width=\"15\" height=\"15\" />");
+
+	// Botones Instant
+	if (bbcode) { var boton_width = 80; } else { var boton_width = 15; }
+	m = m.replace(/:aplauso:/gi, html_instant('aplauso', boton_width));
+	m = m.replace(/:noo:/gi, html_instant('noo', boton_width));
+	//m = m.replace(/:rickroll:/gi, html_instant('rickroll', boton_width));
+	m = m.replace(/:relax:/gi, html_instant('relax', boton_width));
+	m = m.replace(/:alarmanuclear:/gi, html_instant('alarmanuclear', boton_width));
+	m = m.replace(/:porquenotecallas:/gi, html_instant('porquenotecallas', boton_width));
 
 	// URL
 	m = m.replace(/(\s|^)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, " <a href=\"$2\" target=\"_blank\">$2</a>");
@@ -436,4 +447,8 @@ function enriquecer(m, bbcode) {
 	}
 
 	return m;
+}
+
+function html_instant(nom, width) {
+	return '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" title=":' + nom + ':" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" height="' + width + '" width="' + width + '"><param name="quality" value="high" /><param name="wmode" value="transparent" /><param name="movie" value="' + IMG + 'instant/' + nom + '.swf" /><embed height="' + width + '" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="' + IMG + 'instant/' + nom + '.swf" type="application/x-shockwave-flash" width="' + width + '" wmode="transparent"></embed></object>';
 }

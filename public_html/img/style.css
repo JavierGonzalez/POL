@@ -410,7 +410,7 @@ border-radius:6px;
 
 
 
-div#footer, div.column, div.content, div#header {border: 1px solid #000;}
+div#footer, div.column, div.content, div#header {border: 1px solid #AAA;}
 
 
 .sf-menu li, .sf-menu a, .sf-menu a:visited  { color:#555; text-shadow:1px 1px 4px #FFF; }

@@ -444,17 +444,15 @@ ORDER BY time ASC", $link);
 <td align="right" width="10%">' . $crear_hilo . '</td>
 </tr>';
 
-			if ($r['num'] > 100) { $num_limit = 12; } 
-			elseif ($r['num'] > 50) { $num_limit = 8; }
-			else { $num_limit = 4; }
+			if (!$r['limit']) { $r['limit'] = 8; }
 
 			$result2 = mysql_query("SELECT ID, url, user_ID, title, time, time_last, cargo, num, votos,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
 (SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS estado
 FROM ".SQL."foros_hilos
-WHERE sub_ID = '" . $r['ID'] . "' AND estado = 'ok'
+WHERE sub_ID = '".$r['ID']."' AND estado = 'ok'
 ORDER BY time_last DESC
-LIMIT " . $num_limit, $link);
+LIMIT ".$r['limit'], $link);
 			while($r2 = mysql_fetch_array($result2)) {
 				if ($r2['estado'] != 'expulsado') {
 					$hilo_url[$r2['ID']] = '<a href="/foro/' . $r['url'] . '/' . $r2['url'] . '/">' . $r2['title'] . '</a>';

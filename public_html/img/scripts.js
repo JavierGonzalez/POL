@@ -420,18 +420,20 @@ function enriquecer(m, bbcode) {
 	m = m.replace(/(\s|^):O/gi, " <img src=\""+IMG+"smiley/bocaabierta.gif\" alt=\":O\" border=\"0\" title=\":O\" width=\"15\" height=\"15\" />");
 	m = m.replace(/:tarta:/gi, " <img src=\""+IMG+"smiley/tarta.gif\" alt=\":tarta:\" border=\"0\" title=\":tarta:\" width=\"16\" height=\"16\" />");
 	m = m.replace(/:roto2:/gi, " <img src=\""+IMG+"smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" width=\"16\" height=\"16\" />");
-	m = m.replace(/:facepalm:/gi, " <img src=\""+IMG+"smiley/palm.gif\" alt=\":facepalm:\" border=\"0\" title=\":facepalm:\" width=\"15\" height=\"15\" />");
+	m = m.replace(/:(palm|facepalm):/gi, " <img src=\""+IMG+"smiley/palm.gif\" alt=\":palm:\" border=\"0\" title=\":palm:\" width=\"15\" height=\"15\" />");
 	m = m.replace(/:moneda:/gi, " <img src=\""+IMG+"varios/m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" width=\"16\" height=\"16\" />");
 	m = m.replace(/:troll:/gi, " <img src=\""+IMG+"smiley/troll.gif\" alt=\":troll:\" border=\"0\" title=\":troll:\" width=\"15\" height=\"15\" />");
 
 	// Botones Instant
-	if (bbcode) { var boton_width = 80; } else { var boton_width = 15; }
+	if (bbcode) { var boton_width = 50; } else { var boton_width = 16; }
 	m = m.replace(/:aplauso:/gi, html_instant('aplauso', boton_width));
 	m = m.replace(/:noo:/gi, html_instant('noo', boton_width));
-	//m = m.replace(/:rickroll:/gi, html_instant('rickroll', boton_width));
+	m = m.replace(/:rickroll:/gi, html_instant('rickroll', boton_width));
 	m = m.replace(/:relax:/gi, html_instant('relax', boton_width));
 	m = m.replace(/:alarmanuclear:/gi, html_instant('alarmanuclear', boton_width));
 	m = m.replace(/:porquenotecallas:/gi, html_instant('porquenotecallas', boton_width));
+	m = m.replace(/:zas:/gi, html_instant('zas', boton_width));
+	m = m.replace(/:aleluya:/gi, html_instant('aleluya', boton_width));
 
 	// URL
 	m = m.replace(/(\s|^)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, " <a href=\"$2\" target=\"_blank\">$2</a>");
@@ -450,5 +452,5 @@ function enriquecer(m, bbcode) {
 }
 
 function html_instant(nom, width) {
-	return '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" title=":' + nom + ':" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" height="' + width + '" width="' + width + '"><param name="quality" value="high" /><param name="wmode" value="transparent" /><param name="movie" value="' + IMG + 'instant/' + nom + '.swf" /><embed height="' + width + '" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="' + IMG + 'instant/' + nom + '.swf" type="application/x-shockwave-flash" width="' + width + '" wmode="transparent"></embed></object>';
+	return '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" title=":' + nom + ':" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" height="' + width + '" width="' + width + '"><param name="quality" value="high" /><param name="wmode" value="transparent" /><param name="movie" value="' + IMG + 'instant/' + nom + '.swf" /><embed style="margin:0 0 -3px 0;" height="' + width + '" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="' + IMG + 'instant/' + nom + '.swf" type="application/x-shockwave-flash" width="' + width + '" wmode="transparent"></embed></object>';
 }

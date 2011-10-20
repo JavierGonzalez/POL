@@ -488,6 +488,7 @@ case 'gobierno':
 <th>Foro/Descripcion</th>
 <th style="background:#5CB3FF;">Leer</th>
 <th style="background:#F97E7B;">Escribir</th>
+<th title="Numero de hilos mostrados en la home del foro">Mostrar</th>
 <th></th>
 <th></th>
 </tr>';
@@ -525,6 +526,7 @@ ORDER BY time ASC", $link);
 <td style="background:#F97E7B;"><b><select name="'.$r['ID'].'_acceso_escribir">'.$txt_li['escribir'].'</select><br />
 <input type="text" name="'.$r['ID'].'_acceso_cfg_escribir" size="16" maxlength="900" value="'.$r['acceso_cfg_escribir'].'" /></td>
 
+<td align="right"><input type="text" style="text-align:right;" name="'.$r['ID'].'_limit" size="1" maxlength="2" value="'.$r['limit'].'" /></td>
 
 <td align="right" style="color:#999;">'.number_format($r['num_hilos'], 0, ',', '.').' hilos<br />
 '.number_format($r['num_msg'], 0, ',', '.').' mensajes</td>

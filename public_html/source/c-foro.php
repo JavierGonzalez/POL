@@ -217,7 +217,13 @@ WHERE hilo_ID != '-1' AND estado = 'ok'
 ORDER BY time DESC
 LIMIT 25", $link);
 	while($r = mysql_fetch_array($result)) {
-		$txt .= '<tr><td align="right" valign="top" colspan="2">' . print_lateral($r['nick'], $r['cargo'], $r['time'], '', '', '', $r['votos'], false, 'msg', $r['ID']) . '</td><td valign="top" colspan="2"><p style="text-align:justify;margin:1px;"><a href="/foro/' . $sub[$r['sub_ID']] . '/' . $r['hilo_url'] . '"><b>' . $r['hilo_titulo'] . '</b></a><br />' . $r['text'] . '</p></td></tr>';
+
+		$result2 = mysql_query("SELECT acceso_leer, acceso_cfg_leer FROM ".SQL."foros WHERE ID = '".$r['sub_ID']."' LIMIT 1", $link);
+		while($r2 = mysql_fetch_array($result2)) {
+			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {
+				$txt .= '<tr><td align="right" valign="top" colspan="2">' . print_lateral($r['nick'], $r['cargo'], $r['time'], '', '', '', $r['votos'], false, 'msg', $r['ID']) . '</td><td valign="top" colspan="2"><p style="text-align:justify;margin:1px;"><a href="/foro/' . $sub[$r['sub_ID']] . '/' . $r['hilo_url'] . '"><b>' . $r['hilo_titulo'] . '</b></a><br />' . $r['text'] . '</p></td></tr>';
+			}
+		}
 	}
 
 
@@ -444,7 +450,7 @@ ORDER BY time ASC", $link);
 <td align="right" width="10%">' . $crear_hilo . '</td>
 </tr>';
 
-			if (!$r['limit']) { $r['limit'] = 8; }
+			if (!$r['limite']) { $r['limite'] = 8; }
 
 			$result2 = mysql_query("SELECT ID, url, user_ID, title, time, time_last, cargo, num, votos,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
@@ -452,7 +458,7 @@ ORDER BY time ASC", $link);
 FROM ".SQL."foros_hilos
 WHERE sub_ID = '".$r['ID']."' AND estado = 'ok'
 ORDER BY time_last DESC
-LIMIT ".$r['limit'], $link);
+LIMIT ".$r['limite'], $link);
 			while($r2 = mysql_fetch_array($result2)) {
 				if ($r2['estado'] != 'expulsado') {
 					$hilo_url[$r2['ID']] = '<a href="/foro/' . $r['url'] . '/' . $r2['url'] . '/">' . $r2['title'] . '</a>';

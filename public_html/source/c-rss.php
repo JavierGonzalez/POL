@@ -1,5 +1,5 @@
 <?php
-include('../config.php');
+include('inc-login.php');
 // Pillamos la constante SQL y la ponemos en una variable, para referenciarla
 // dentro de sintaxis Heredoc.
 $plataformaSQL=SQL;
@@ -38,7 +38,7 @@ echo <<< print
 <image>
 <title>$plataforma</title>
 <link>http://www.virtualpol.com/</link>
-<url>http://www.virtualpol.com/img/banderas/{$plataformaSQL}_60.gif</url>
+<url>http://www.virtualpol.com/img/banderas/{$plataformaSQL}60.gif</url>
 </image>
 <description>
 Comunidad de usuarios sin admins, gestionada democráticamente por un simulador político.

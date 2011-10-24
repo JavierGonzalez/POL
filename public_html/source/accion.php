@@ -789,7 +789,7 @@ foreach ($_POST AS $dato => $valor) {
 		$subforos = explode('.', $_POST['subforos']);
 
 		foreach ($subforos AS $subforo_ID) {
-			mysql_query("UPDATE ".SQL."foros SET descripcion = '".$_POST[$subforo_ID.'_descripcion']."', time = '".$_POST[$subforo_ID.'_time']."', acceso_leer = '".$_POST[$subforo_ID.'_acceso_leer']."', acceso_escribir = '".$_POST[$subforo_ID.'_acceso_escribir']."', acceso_cfg_leer = '".$_POST[$subforo_ID.'_acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST[$subforo_ID.'_acceso_cfg_escribir']."', limit = '".$_POST[$subforo_ID.'_limit']."' WHERE ID = '".$subforo_ID."' LIMIT 1", $link);
+			mysql_query("UPDATE ".SQL."foros SET descripcion = '".$_POST[$subforo_ID.'_descripcion']."', time = '".$_POST[$subforo_ID.'_time']."', acceso_leer = '".$_POST[$subforo_ID.'_acceso_leer']."', acceso_escribir = '".$_POST[$subforo_ID.'_acceso_escribir']."', acceso_cfg_leer = '".$_POST[$subforo_ID.'_acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST[$subforo_ID.'_acceso_cfg_escribir']."', limite = '".$_POST[$subforo_ID.'_limite']."' WHERE ID = '".$subforo_ID."' LIMIT 1", $link);
 		}
 
 		$refer_url = 'control/gobierno/foro/';

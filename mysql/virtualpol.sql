@@ -418,7 +418,7 @@ CREATE TABLE `votacion` (
   `user_ID` mediumint(8) NOT NULL default '0',
   `estado` enum('ok','end') character set utf8 NOT NULL default 'ok',
   `num` smallint(5) NOT NULL default '0',
-  `tipo` enum('sondeo','referendum','parlamento','destituir','otorgar') character set utf8 NOT NULL default 'sondeo',
+  `tipo` enum('sondeo','referendum','parlamento','cargo') character set utf8 NOT NULL default 'sondeo',
   `acceso_votar` varchar(30) character set utf8 NOT NULL default 'ciudadanos_pais',
   `acceso_cfg_votar` varchar(800) character set utf8 NOT NULL default '',
   `ejecutar` varchar(255) character set utf8 NOT NULL default '',

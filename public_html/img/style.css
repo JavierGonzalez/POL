@@ -6,6 +6,15 @@ body {
 	font-size:17px;
 }
 
+*[title] { cursor: help; }
+
+.redondeado {
+	border-radius: 6px;
+	-moz-border-radius: 6px; 
+	-webkit-border-radius: 6px;
+}
+
+
 div#container {
 	width: 700px;margin: 0 auto;
 	text-align: left;

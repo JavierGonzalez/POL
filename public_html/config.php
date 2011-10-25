@@ -41,11 +41,12 @@ if (PAIS == 'VP') {
 	define('NOM_PARTIDOS','Partidos'); 
 	
 	$vp['acceso'] = array(
+
 'sondeo'=>array('cargo', '41 6 16 22 19 7'),
 'referendum'=>array('nivel', '95'),
 'parlamento'=>array('cargo', '6 22'),
-'destituir'=>array('nivel', '85'),
-'otorgar'=>array('nivel', '85'),
+'cargo'=>array('nivel', '85'),
+
 'kick'=>array('cargo', '12 13 22 9'),
 'kick_quitar'=>array('cargo', '13 9 8'),
 'foro_borrar'=>array('cargo', '12 13'),
@@ -65,8 +66,7 @@ if (PAIS == 'VP') {
 'sondeo'=>array('cargo', '6'),
 'referendum'=>array('cargo', '6'),
 'parlamento'=>array('cargo', '6'),
-'destituir'=>array('cargo', '6'),
-'otorgar'=>array('cargo', '6'),
+'cargo'=>array('cargo', '6'),
 'kick'=>array('cargo', '6 13'),
 'kick_quitar'=>array('cargo', '6 13'),
 'foro_borrar'=>array('cargo', '6 13'),

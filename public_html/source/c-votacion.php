@@ -1,7 +1,7 @@
 <?php 
 include('inc-login.php');
 
-$votaciones_tipo = array('sondeo', 'referendum', 'parlamento', 'destituir', 'otorgar');
+$votaciones_tipo = array('sondeo', 'referendum', 'parlamento', 'cargo');
 
 
 // ¿FINALIZAR VOTACIONES?
@@ -17,22 +17,21 @@ while($r = mysql_fetch_array($result)){
 
 	if ($r['ejecutar'] != '') { // EJECUTAR ACCIONES
 
-		$validez_voto['true'] = 0; $validez_voto['false'] = 0; $voto[0] = 0; $voto[1] = 0;
-		$result2 = mysql_query("SELECT validez, voto FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
+		$validez_voto['true'] = 0; $validez_voto['false'] = 0; $voto[0] = 0; $voto[1] = 0; $voto[2] = 0;
+		$result2 = mysql_query("SELECT validez, voto FROM votacion_votos WHERE ref_ID = ".$r['ID']."", $link);
 		while($r2 = mysql_fetch_array($result2)) {
 			$validez_voto[$r2['validez']]++;
 			$voto[$r2['voto']]++;
 		}
 
 		// Determinar validez: mayoria simple = votacion nula.
-		$nulo_limite = ceil(($validez_voto['true']+$validez_voto['false'])/2);
-		if ($validez_voto['false'] >= $nulo_limite) { $validez = false; } else { $validez = true; }
-
-		if (($voto[0] > $voto[1]) AND ($validez)) {
-			if ($r['tipo'] == 'destituir') {
-				cargo_del(explodear('|', $r['ejecutar'], 0), explodear('|', $r['ejecutar'], 1), true, '');
-			} else if ($r['tipo'] == 'otorgar') {
-				cargo_add(explodear('|', $r['ejecutar'], 0), explodear('|', $r['ejecutar'], 1), true, '');
+		if ($validez_voto['false'] < $validez_voto['true']) { // Validez: OK.
+			if ($r['tipo'] == 'cargo') {
+				if ($voto[1] > $voto[2]) {
+					cargo_add(explodear('|', $r['ejecutar'], 0), explodear('|', $r['ejecutar'], 1), true, true);
+				} else {
+					cargo_del(explodear('|', $r['ejecutar'], 0), explodear('|', $r['ejecutar'], 1), true, true);
+				}
 			}
 		}
 	}
@@ -75,7 +74,7 @@ function cambiar_tipo_votacion(tipo) {
 	$("#cargo_form").hide();
 	switch (tipo) {
 		case "parlamento": $("#acceso_votar, #votos_expire, #privacidad").hide(); break;
-		case "destituir": case "otorgar": $("#acceso_votar, #time_expire, #votar_form, #votos_expire, #tipo_voto, #privacidad").hide(); $("#cargo_form").show(); break;
+		case "cargo": $("#acceso_votar, #time_expire, #votar_form, #votos_expire, #tipo_voto, #privacidad").hide(); $("#cargo_form").show(); break;
 	}
 }
 
@@ -100,8 +99,7 @@ function opcion_nueva() {
 'sondeo'=>'<span style="float:right;">(informativo, no vinculante)</span>', 
 'referendum'=>'<span style="float:right;">(vinculante)</span>',
 'parlamento'=>'<span style="float:right;">(vinculante)</span>',
-'destituir'=>'<span style="float:right;" title="Se ejecuta una acci&oacute;n autom&aacute;tica tras su finalizaci&oacute;n.">(ejecutiva)</span>',
-'otorgar'=>'<span style="float:right;" title="Se ejecuta una acci&oacute;n autom&aacute;tica tras su finalizaci&oacute;n.">(ejecutiva)</span>',
+'cargo'=>'<span style="float:right;" title="Se ejecuta una acci&oacute;n autom&aacute;tica tras su finalizaci&oacute;n.">(ejecutiva)</span>',
 );
 
 	if (ASAMBLEA) { unset($votaciones_tipo[2]); }
@@ -145,9 +143,16 @@ $txt .= '
 <span id="tipo_voto">
 <b>Tipo de voto</b>: 
 <select name="tipo_voto">
-<option value="estandar" selected="selected">Uno (estandar)</option>
+
+<optgroup label="Estandar">
+<option value="estandar" selected="selected">Elegir uno</option>
+</optgroup>
+
+<optgroup label="Preferencial">
 <option value="3puntos">1, 2 y 3 puntos</option>
 <option value="5puntos">1, 2, 3, 4 y 5 puntos</option>
+</optgroup>
+
 </select></span>
 
 <span id="privacidad">
@@ -341,7 +346,7 @@ Acceso: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', '
 
 				// Determina validez (por mayoria simple)
 				$nulo_limite = ceil(($votos_total)/2);
-				if ($escrutinio['validez']['false'] >= $nulo_limite) { $validez = false; } else { $validez = true; }
+				if ($escrutinio['validez']['false'] < $escrutinio['validez']['true']) { $validez = true; } else { $validez = false; }
 
 				arsort($escrutinio['votos']);
 
@@ -521,7 +526,7 @@ ORDER BY estado ASC, time_expire DESC", $link);
 		$boton = '';
 		if ($r['user_ID'] == $pol['user_ID']) {
 			if ($r['estado'] == 'ok') {
-				if (($r['tipo'] != 'destituir') AND ($r['tipo'] != 'otorgar')) { $boton .= boton('Finalizar', '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '&iquest;Seguro que quieres FINALIZAR esta votacion?'); }
+				if ($r['tipo'] != 'cargo') { $boton .= boton('Finalizar', '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '&iquest;Seguro que quieres FINALIZAR esta votacion?'); }
 				$boton .= boton('X', '/accion.php?a=votacion&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta votacion?');
 			}
 		}

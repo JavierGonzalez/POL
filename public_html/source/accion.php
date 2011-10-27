@@ -1324,11 +1324,10 @@ case 'foro':
 
 
 	} elseif (($_GET['b'] == 'eliminarhilo') AND ($_GET['ID'])) {
-		$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."foros_hilos WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)){ $es_ok = true; }
-		if ($es_ok) {
-			mysql_query("DELETE FROM ".SQL."foros_hilos WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-			mysql_query("DELETE FROM ".SQL."foros_msg WHERE hilo_ID = '".$_GET['ID']."'", $link);
+		$result = mysql_query("SELECT ID FROM ".SQL."foros_hilos WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)){
+			mysql_query("DELETE FROM ".SQL."foros_hilos WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+			mysql_query("DELETE FROM ".SQL."foros_msg WHERE hilo_ID = '".$r['ID']."'", $link);
 		}
 		$refer_url = 'foro/';
 
@@ -1355,9 +1354,11 @@ case 'foro':
 		} else { //hilo
 			if (strlen($_POST['title']) >= 4) {
 				$title = strip_tags($_POST['title']);
-				mysql_query("UPDATE ".SQL."foros_hilos SET text = '".$text."', title = '".$title."', sub_ID = '".$_POST['sub_ID']."', cargo = '".$_POST['encalidad']."' WHERE ID = '".$_POST['subforo']."' AND estado = 'ok' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+				mysql_query("UPDATE ".SQL."foros_hilos SET text = '".$text."', title = '".$title."', sub_ID = '".$_POST['sub_ID']."', cargo = '".$_POST['encalidad']."' WHERE ID = '".$_POST['subforo']."' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1", $link);
 			}
 		}
+
+		$refer_url = '/foro/r/'.$_POST['subforo'];
 	}
 
 	break;

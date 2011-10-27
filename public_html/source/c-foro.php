@@ -17,7 +17,7 @@ function print_lateral($nick, $cargo_ID=false, $time, $siglas='', $user_ID='', $
 }
 
 function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
-	global $pol, $link, $return_url;
+	global $pol, $link, $return_url, $vp;
 
 	$referer = explode('/', $_SERVER['HTTP_REFERER'], 4); 
 	$referer = '/'.$referer[3];
@@ -29,8 +29,8 @@ function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 				$result = mysql_query("SELECT text, cargo FROM ".SQL."foros_msg WHERE ID = '" . $hilo . "' AND estado = 'ok' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
 			} else { //hilo
-				$result = mysql_query("SELECT sub_ID, text, cargo, title FROM ".SQL."foros_hilos WHERE ID = '" . $subforo . "' AND estado = 'ok' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-				while($r = mysql_fetch_array($result)){ $sub_ID = $r['sub_ID']; $edit_title = $r['title']; $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
+				$result = mysql_query("SELECT sub_ID, text, cargo, title, user_ID, ID FROM ".SQL."foros_hilos WHERE ID = '" . $subforo . "' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1", $link);
+				while($r = mysql_fetch_array($result)){ $sub_ID = $r['sub_ID']; $edit_ID = $r['ID']; $edit_user_ID = $r['user_ID']; $edit_title = $r['title']; $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
 			}
 			$edit_text = strip_tags($edit_text);
 		}
@@ -71,7 +71,7 @@ ORDER BY nivel DESC", $link);
 		}
 		if ($pol['estado'] == 'extranjero') { $select_cargos = '<option value="99">Extranjero</option>'; } else { $select_cargos = '<option value="0">Ciudadano</option>' . $select_cargos; }
 
-		if ((!$hilo)) { 
+		if (!$hilo) { 
 			if ($edit) { $get = 'editar'; } else { $get = 'hilo'; } 
 
 // <input type="hidden" name="return_url" value="' . $return_url . '"  />
@@ -96,7 +96,7 @@ ORDER BY nivel DESC", $link);
 <p>T&iacute;tulo:<br />
 <input name="title" size="60" maxlength="80" type="text" value="' . $edit_title . '" /></p>
 
-<p>Mensaje:<br />
+<p'.($edit&&$edit_user_ID!=$pol['user_ID']?' style="display:none;"':'').'>Mensaje:<br />
 <textarea name="text" style="color: green; font-weight: bold; width: 570px; height: 250px;">' . $edit_text . '</textarea><br />
 <span style="color:grey;font-size:12px;">Etiquetas: [b]...[/b] [em]...[/em] [quote]...[/quote] [img]url[/img] [youtube]url-youtube[/youtube], auto-enlaces.</span></p>
 
@@ -104,7 +104,7 @@ ORDER BY nivel DESC", $link);
 </select></p>
 </form>
 
-'.($edit?'<p>'.boton('Eliminar hilo', '/accion.php?a=foro&b=eliminarhilo&ID=' . $r2['ID'], '&iquest;Est&aacute;s seguro de querer ELIMINAR este HILO DE FORMA IRREVOCABLE?').'</p>':'').'
+'.($edit?'<hr /><p>'.boton('Eliminar hilo', '/accion.php?a=foro&b=eliminarhilo&ID='.$edit_ID, '&iquest;Est&aacute;s seguro de querer ELIMINAR este HILO DE FORMA IRREVOCABLE?').'</p>':'').'
 
 </div>';
 		} else {
@@ -145,7 +145,23 @@ pol_foros			(`ID` `url` `title` `descripcion` `acceso` `time` `estado`)
 pol_foros_hilos		(`ID` `sub_ID``url` `user_ID` `title` `time` `time_last` `text` `cargo` `num`)
 pol_foros_msg		(`ID``hilo_ID` `user_ID` `time` `text` `cargo`)
 */
-if ($_GET['a'] == 'editar') {
+
+
+
+if ($_GET['a'] == 'r') { // redirigir
+
+	$result = mysql_query("SELECT url,
+(SELECT url FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS subforo
+FROM ".SQL."foros_hilos
+WHERE ID = '".$_GET['b']."'
+LIMIT 1", $link);
+$txt .= mysql_error($link);
+	while($r = mysql_fetch_array($result)) {
+		r301('/foro/'.$r['subforo'].'/'.$r['url'].'/');
+	}
+
+
+} elseif ($_GET['a'] == 'editar') {
 	$txt .= '<h1><a href="/foro/">Foro</a>: editar</h1>';
 
 	$txt .= foro_enviar($_GET['b'], $_GET['c'], true);
@@ -278,10 +294,9 @@ LIMIT 1", $link);
 
 				if (($pol['user_ID'] == $r['user_ID']) AND ($subforo != 'notaria')) { 
 					// es tu post
-					$editar = '<span style="float:right;">' . boton('Editar', '/foro/editar/' . $r['ID'] . '/') . '</span>'; 
+					$editar = '<span style="float:right;">'.boton('Editar', '/foro/editar/'.$r['ID'].'/').'</span>'; 
 				} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
-					// policia borra
-					$editar = '<span style="float:right;">' . boton('Papelera', '/accion.php?a=foro&b=borrar&c=hilo&ID=' . $r['ID'] . '/', '&iquest;Quieres enviar a la PAPELERA este HILO y sus MENSAJES?') . '</span>'; 
+					$editar = '<span style="float:right;">'.boton('Mover', '/foro/editar/'.$r['ID'].'/').' '.boton('Papelera', '/accion.php?a=foro&b=borrar&c=hilo&ID='.$r['ID'].'/', '&iquest;Quieres enviar a la PAPELERA este HILO y sus MENSAJES?').'</span>'; 
 				} else { $editar = ''; }
 
 				$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['voto'], 'hilos', $r['ID']) . '</td><td class="amarillo redondeado" valign="top" width="80%"><p style="text-align:justify;">'.$citar.$editar.'<h1 style="margin:-6px 0 10px 0;"><a href="/'.$return_url.'" class="rich" style="font-size:20px;">'.$r['title'].'</a></h1>'.reemplazos($r['text']).'</p></td></tr>';
@@ -413,7 +428,10 @@ LIMIT 200", $link);
 					}
 					if (strtotime($r2['time']) > (time() - 86400)) { $titulo = $titulo . ' <sup style="font-size:9px;color:red;">Nuevo!</sup>'; }
 
-					if (($pol['user_ID'] == $r2['user_ID']) AND (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']))) { $editar = ' ' . boton('X', '/accion.php?a=foro&b=eliminarhilo&ID=' . $r2['ID'], '&iquest;Est&aacute;s seguro de querer ELIMINAR este HILO?'); } else { $editar = ''; }
+					if (($pol['user_ID'] == $r2['user_ID']) AND (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']))) { 
+						$editar = ' ' . boton('X', '/accion.php?a=foro&b=eliminarhilo&ID=' . $r2['ID'], '&iquest;Est&aacute;s seguro de querer ELIMINAR este HILO?'); 
+					} else { $editar = ''; }
+
 					$txt .= '<tr>
 <td align="right">' . crear_link($r2['nick']) . '</td>
 <td align="right"><b>' . $r2['num'] . '</b></td>

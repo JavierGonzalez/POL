@@ -273,7 +273,7 @@ echo '</div>';
 	</li>
 <?php
 
-echo '<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/propuestas/">Debates</a></li>';
+echo '<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/propuestas/">Propuestas</a></li>';
 
 if ($pol['config']['info_consultas'] > 0) { 
 	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:20px;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
@@ -281,7 +281,7 @@ if ($pol['config']['info_consultas'] > 0) {
 	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones</a></li>'; 
 }
 
-echo '<li id="menu-5" class="menu-5"><a href="/foro/acuerdos/">Acuerdos</a></li>';
+echo '<li id="menu-5" class="menu-5"><a href="/doc/">Acuerdos</a></li>';
 
 
 

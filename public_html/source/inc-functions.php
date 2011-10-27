@@ -48,6 +48,13 @@ function ocultar_IP($IP, $tipo='IP') {
 	}
 }
 
+function r301($url) {
+	global $link;
+	header('HTTP/1.1 301 Moved Permanently'); 
+	header('Location: '.$url); 
+	mysql_close($link);
+	exit;
+}
 
 function get_supervisores_del_censo() {
 	global $link;

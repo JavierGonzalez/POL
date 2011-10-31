@@ -76,7 +76,7 @@ ORDER BY nivel DESC", $link);
 
 // <input type="hidden" name="return_url" value="' . $return_url . '"  />
 
-			$html .= '<div id="enviar">
+			$html .= '<div id="enviar" class="redondeado">
 <h2>Nuevo hilo</h2>
 
 
@@ -109,7 +109,7 @@ ORDER BY nivel DESC", $link);
 </div>';
 		} else {
 			if ($edit) { $get = 'editar'; } else { $get = 'reply'; } 
-			$html .= '<div id="enviar">
+			$html .= '<div id="enviar" class="redondeado">
 <form action="/accion.php?a=foro&b=' . $get . '" method="post">
 <input type="hidden" name="subforo" value="' . $subforo . '"  />
 <input type="hidden" name="hilo" value="' . $hilo . '"  />

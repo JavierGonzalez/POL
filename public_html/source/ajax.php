@@ -30,8 +30,8 @@ function nucleo_acceso($tipo, $valor='') {
 		case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $rt = true; } break;
 		case 'ciudadanos_global': if ((isset($_SESSION['pol']['user_ID'])) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $rt = true; } break;
 		case 'ciudadanos': if (($_SESSION['pol']['estado'] == 'ciudadano') && (($_SESSION['pol']['pais'] == PAIS) || (in_array($_SESSION['pol']['pais'], explode(' ', $valor))))) { $rt = true; } break;
-		case 'excluir': if (!in_array(strtolower($_SESSION['pol']['nick']), explode(' ', strtolower($valor)))) { $rt = true; } break;
-		case 'privado': if (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', strtolower($valor)))) { $rt = true; } break;
+		case 'excluir': if ((isset($_SESSION['pol']['nick'])) AND (!in_array(strtolower($_SESSION['pol']['nick']), explode(' ', strtolower($valor))))) { $rt = true; } break;
+		case 'privado': if ((isset($_SESSION['pol']['nick'])) AND (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', strtolower($valor))))) { $rt = true; } break;
 		case 'afiliado': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['partido_afiliado'] == $valor)) { $rt = true; } break;
 		case 'confianza': if ($_SESSION['pol']['confianza'] >= $valor) { $rt = true; } break;
 		case 'nivel': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['nivel'] >= $valor)) { $rt = true; } break;

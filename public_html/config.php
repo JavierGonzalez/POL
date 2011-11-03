@@ -11,55 +11,32 @@ include(RAIZ.'config-pwd.php');
 
 // PAISES
 $vp['paises'] = array('15M', 'VP'); // ACTIVOS
-$vp['paises_congelados'] = array('POL', '15MBCN', '15MMAD', 'VULCAN', 'Hispania', 'Atlantis'); // INACTIVOS
+$vp['paises_congelados'] = array('POL', 'VULCAN', 'Hispania', 'Atlantis'); // INACTIVOS
 $vp['paises_economia'] = array('VP'); // Plataformas con economia
 
 // COLORES
-$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', '15MBCN'=>'#95DB95', '15MMAD'=>'#F8DCBE', 'www'=>'#eeeeee');
-$vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'VP'=>'#71D8FF', '15M' => '#FFFF64', '15MBCN'=>'#95DB95', '15MMAD'=>'#F8DCBE', 'www'=>'grey');
+$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'www'=>'#eeeeee');
+$vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'VP'=>'#71D8FF', '15M' => '#FFFF64', 'www'=>'grey');
 
-$vp['paises_chat'] = array('VP'=>4, '15M'=>5, '15MBCN'=>6, '15MBCN'=>7, ''=>4);
+$vp['paises_chat'] = array('VP'=>4, '15M'=>5, ''=>4);
 
-// Configuracion por pais
 switch ($host[0]) { 
-	case '15m': define('PAIS', '15M'); break;
-	case 'vp': define('PAIS', 'VP'); break;
+	// PLATAFORMAS ACTIVAS
+	case '15m': define('PAIS', '15M'); define('ASAMBLEA', true); break;
+	case 'vp': define('PAIS', 'VP'); define('ASAMBLEA', false); break;
 
+	// PLATAFORMAS INACTIVAS
 	case 'pol': define('PAIS', 'POL'); break;
 	case 'vulcan': define('PAIS', 'Vulcan'); break;
 	case 'hispania': define('PAIS', 'Hispania'); break;
 	case 'atlantis': define('PAIS', 'Atlantis'); break;
-	case '15mbcn': define('PAIS', '15MBCN'); break;
-	case '15mmad': define('PAIS', '15MMAD'); break;
 	default: define('PAIS', 'VP'); break;
 }
 
+
 // CONFIGURACION ESPECIFICA DE PLATAFORMAS
-if (PAIS == 'VP') {
-	define('ECONOMIA', true); 
-	define('ASAMBLEA', false);
-	define('NOM_PARTIDOS','Partidos'); 
-	
-	$vp['acceso'] = array(
-
-'sondeo'=>array('cargo', '41 6 16 22 19 7'),
-'referendum'=>array('nivel', '95'),
-'parlamento'=>array('cargo', '6 22'),
-'cargo'=>array('nivel', '85'),
-
-'kick'=>array('cargo', '12 13 22 9'),
-'kick_quitar'=>array('cargo', '13 9 8'),
-'foro_borrar'=>array('cargo', '12 13'),
-'control_gobierno'=>array('cargo', '7 19'),
-'control_sancion'=>array('cargo', '9'),
-'examenes_decano'=>array('cargo', '35'),
-'examenes_profesor'=>array('cargo', '34'),
-'crear_partido'=>array('antiguedad','0'),
-);
-
-} else {
+if (ASAMBLEA) {
 	define('ECONOMIA', false);
-	define('ASAMBLEA', true);
 	define('NOM_PARTIDOS','Comisiones');
 	
 	$vp['acceso'] = array(
@@ -76,6 +53,26 @@ if (PAIS == 'VP') {
 'examenes_profesor'=>array('cargo', ''),
 'crear_partido'=>array('cargo','6'),
 );
+
+} else { // Plataformas NO asamblearias
+	define('ECONOMIA', true); 
+	define('NOM_PARTIDOS','Partidos'); 
+	
+	$vp['acceso'] = array(
+'sondeo'=>array('cargo', '41 6 16 22 19 7'),
+'referendum'=>array('nivel', '95'),
+'parlamento'=>array('cargo', '6 22'),
+'cargo'=>array('nivel', '85'),
+'kick'=>array('cargo', '12 13 22 9'),
+'kick_quitar'=>array('cargo', '13 9 8'),
+'foro_borrar'=>array('cargo', '12 13'),
+'control_gobierno'=>array('cargo', '7 19'),
+'control_sancion'=>array('cargo', '9'),
+'examenes_decano'=>array('cargo', '35'),
+'examenes_profesor'=>array('cargo', '34'),
+'crear_partido'=>array('antiguedad','0'),
+);
+	$columnas = 14; $filas = 18; // Tamaño del mapa
 }
 
 
@@ -108,8 +105,4 @@ define('VOTO_CONFIANZA_MAX', 40); // numero maximo de votos de confianza emitido
 
 // Variables del sistema de usuarios
 define('USERCOOKIE', '.virtualpol.com');
-
-
-// MAPA
-$columnas = 14; $filas = 18;
 ?>

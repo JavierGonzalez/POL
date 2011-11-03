@@ -7,7 +7,7 @@ include('inc-login.php');
 
 
 function test_acceso($tipo, $valor) {
-	return (nucleo_acceso($tipo, $valor)?'<b style="color:blue;">true</b>':'<b style="color:red;">false</b>').' - Acceso: <em>'.$tipo.'</em> ('.$valor.')<br />';
+	return (nucleo_acceso($tipo, $valor)?'<b style="color:blue;">true</b>':'<b style="color:red;">false</b>').' = nucleo_acceso(\''.$tipo.'\', \''.$valor.'\');<br />';
 }
 
 $txt .= '<h1>Test nucleo_acceso()</h1><hr />';
@@ -30,7 +30,7 @@ $txt .= test_acceso('antiguedad', '100000');
 $txt .= test_acceso('antentificados', '');
 $txt .= test_acceso('ciudadanos', '');
 $txt .= test_acceso('ciudadanos', 'VP 15M');
-$txt .= test_acceso('ciudadanos global', '');
+$txt .= test_acceso('ciudadanos_global', '');
 $txt .= test_acceso('anonimos', '');
 
 include('theme.php');

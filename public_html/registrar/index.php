@@ -394,22 +394,22 @@ $txt .= '</blockquote></div>';
 <li><b>Email</b>: recibir&aacute;s un email de verificaci&oacute;n.<br />
 <input type="text" name="email" value="' . $email . '" size="30" maxlength="50" /><br /><br /></li>
 
-<li><b>Contrase&ntilde;a</b>:<br />
+<li><b>Contrase&ntilde;a</b>: introduce dos veces.<br />
 <input id="pass1" type="password" autocomplete="off" name="pass1" value="" maxlength="40" /><br />
 <input id="pass2" type="password" autocomplete="off" name="pass2" value="" maxlength="40" style="margin-top:1px;" /><br /><br /></li>
 
 
-<li><b>&iquest;Qu&eacute; animal es?</b> (un nombre y sin espacios, nivel primaria)<br />
+<li><b>&iquest;Qu&eacute; animal es?</b> (un nombre, sin espacios, nivel primaria)<br />
 <img src="animal-captcha.php" alt="Animal" id="animalcaptchaimg"  onclick="document.getElementById(\'animalcaptchaimg\').src=\'animal-captcha.php?\'+Math.random();" style="cursor:pointer;" /><br />
 <input type="text" name="animal" value="" autocomplete="off" maxlength="20" /><br /><br /></li>
 
 
 <li><b>&iquest;Compartes conexi&oacute;n a Internet con otro usuario de VirtualPol?</b><br /> 
-<input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (dejar en blanco en caso negativo)<br /><br /></li>
+Nick: <input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (en caso negativo dejar en blanco)<br /><br /></li>
 
 <li><input name="condiciones" value="ok" type="checkbox" /> <a href="http://www'.DEV.'.'.URL.'/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.<br /><br /></li>
 
-<li><input type="submit" value="Crear usuario" style="height:40px;font-size:22px;" onclick="$(\'#pass1\').val(hex_md5($(\'#pass1\').val()));$(\'#pass2\').val(hex_md5($(\'#pass2\').val()));" /></li>
+<li><input type="submit" value="Crear ciudadano" style="height:40px;font-size:22px;" onclick="$(\'#pass1\').val(hex_md5($(\'#pass1\').val()));$(\'#pass2\').val(hex_md5($(\'#pass2\').val()));" /></li>
 </form>
 </ol>
 <br />';

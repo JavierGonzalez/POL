@@ -21,6 +21,8 @@ div#footer {color: inherit;background-color: #fff;}
 div#footer-in {padding: 10px 20px 10px 20px;}
 div.content, div.column, div#header, div#footer {border-radius: 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px;}
 
+*[title] { cursor: help; }
+
 a { color:#06f;text-decoration:none;}
 a:hover {text-decoration:underline;}
 .infog { color:green; }
@@ -88,3 +90,11 @@ h1 a { color:#4BB000; }
 .chat_accion { color:green; font-size:16px; }
 .chat_priv { color:#9F009F; font-size:16px; }
 .yo { color:#2D2D2D; }
+
+
+
+.redondeado {
+	border-radius: 6px;
+	-moz-border-radius: 6px; 
+	-webkit-border-radius: 6px;
+}

@@ -2,40 +2,45 @@
 include('inc-login.php');
 $adsense_exclude = true;
 
-$txt_title = 'VirtualPol | Plataforma democratica | Simulador Pol&iacute;tico Espa&ntilde;ol | democracia online politica | simuladores Espa&ntilde;a';
+$txt_title = 'VirtualPol | Plataforma Democratica Autogestionada | democracia online - simulador politico';
 
-$txt_description = 'La Primera y Unica Plataforma de Auto-gestion y Democracia. Simulador Politico Espa&ntilde;ol, Juego online, experimento social, el mejor simulador de politica de Espa&ntilde;a. Simuladores geo-politica POL Hispania Atlantis. El mejor simulador politico.'; 
+$txt_description = 'Plataforma democratica autogestionada. Simulador Politico Espa&ntilde;ol, Juego online, experimento social o simulador de politica. Simuladores geo-politica POL Hispania Atlantis.'; 
 
 
-if (isset($pol['user_ID'])) {
-	$txt .= '<h1>Bienvenido a VirtualPol</h1>
 
-<p>VirtualPol es una <b>plataforma democr&aacute;tica de Internet</b> donde los usuarios se auto-gestionan a s&iacute; mismos. Hasta ahora el &uacute;nico m&eacute;todo de administrar una comunidad en Internet era mediante una estructura rigida y autoritaria.</p>
 
-     <p><b>VirtualPol es una revoluci&oacute;n</b>, con la <b>Democracia</b> como pilar fundamental. Las Elecciones estan automatizadas, por lo tanto no existe ning&uacute;n usuario privilegiado. No hay intervenci&oacute;n del admin, a no ser que una situación determinada dada en un momento determinado no pueda ser arreglada por la ciudadanía. Esto es un avance hist&oacute;rico en las comunidades de Internet. Todos los ciudadanos est&aacute;n en absoluta igualdad. Con las mismas oportunidades para el liderazgo o el fracaso en la b&uacute;squeda del Poder y la auto-gesti&oacute;n. <a href="http://vp.virtualpol.com/historia/">Historia de VirtualPol</a>. <a href="http://www.virtualpol.com/manual">Manual de VirtualPol</a>.</p>';
-} else {
+$txt .= '
 
-	$txt .= '<h1>Bienvenido a VirtualPol - Simulador Politico</h1>
+'.(isset($pol['user_ID'])?'':'<span style="float:right;margin-left:10px;"><iframe src="http://docs.google.com/present/embed?id=ddfcnxdb_15fqwwcpct&interval=30" frameborder="0" width="410" height="342"></iframe></span>').'
 
-<p><span style="float:right;margin-left:10px;"><iframe src="http://docs.google.com/present/embed?id=ddfcnxdb_15fqwwcpct&interval=30" frameborder="0" width="410" height="342"></iframe></span>VirtualPol es una <b>plataforma democr&aacute;tica de Internet</b> donde los usuarios se auto-gestionan a s&iacute; mismos. Hasta ahora el &uacute;nico m&eacute;todo de administrar una comunidad en Internet era mediante una estructura rigida y autoritaria.</p>
+<h1>Bienvenido a VirtualPol</h1>
 
-     <p><b>VirtualPol es una revoluci&oacute;n</b>, con la <b>Democracia</b> como pilar fundamental. Las Elecciones estan automatizadas, por lo tanto no existe ning&uacute;n usuario privilegiado. No hay intervenci&oacute;n del admin, a no ser que una situación determinada dada en un momento determinado no pueda ser arreglada por la ciudadanía. Esto es un avance hist&oacute;rico en las comunidades de Internet. Todos los ciudadanos est&aacute;n en absoluta igualdad. Con las mismas oportunidades para el liderazgo o el fracaso en la b&uacute;squeda del Poder y la auto-gesti&oacute;n. <a href="http://vp.virtualpol.com/historia/">Historia de VirtualPol</a>. <a href="http://www.virtualpol.com/manual">Manual de VirtualPol</a>.</p>';
+<p><a href="http://www.virtualpol.com/">VirtualPol</a> es un sistema de <b>plataformas democr&aacute;ticas autogestionadas</b>.</p>
 
-}
-if (!$pol['nick']) {
-        $txt .= '<br /><center><span class="amarillo" style="padding:17px 9px 13px 9px;"><input value="REGISTRAR CIUDADANO" onclick="window.location.href=\'/registrar/\';" type="button" style="font-size:18px;height:40px;color:red;" /></span></center><br />';
-} elseif ($pol['pais'] == 'ninguno'){ 
-        $txt .= '<p>' . boton('Solicita ciudadania!', 'http://www.virtualpol.com/registrar/') . '</p>';
-}
+<p><b>En VirtualPol no hay administrador.</b> Todo se decide mediante Democracia Directa: un ciudadano, un voto. Dentro de VirtualPol hay diferentes plataformas totalmente independientes entre sí que comparten este sistema como base.</p>
+
+<p>Los principales gestores se eligen mediante elecciones periódicas y automáticas, de forma que nadie puede detener el ciclo. De esta forma no existe ningún usuario privilegiado, todos parten de la absoluta igualdad de condiciones.</p>
+
+<ul><em>VirtualPol tiene:</em>
+<li><b>Herramientas democráticas</b>: elecciones, votaciones avanzadas, cargos flexibles, voto de confianza, grupos/partidos, control de kicks, exámenes...</li>
+<li><b>Herramientas de comunicación</b>: salas de chat, foros, voz (mumble), mensajes privados, notas...</li>
+<li>Custodiado por un <b>avanzado sistema de Supervisión del Censo</b> (<a href="https://virtualpol.com/dnie.php">DNIe</a>, panel de detección, supervisores elegidos democráticamente, <a href="http://www.virtualpol.com/legal" title="Condiciones de Uso de VirtualPol.">TOS</a>...). Con una experiencia de más de 3 años funcionando con solidez.</li>
+<li>Es <a href="http://code.google.com/p/virtualpol/source/list">software libre</a>.</li>
+</ul>
+
+
+<p>VirtualPol es pionero, es un paso firme hacia la Democracia Directa.</p>
+
+';
 
 
 $txt .= '<center>
-<table border="0" cellpadding="5" cellspacing="0">
+<table border="0" cellpadding="5" cellspacing="0" width="60%">
 <tr style="color:grey;">
 <th colspan="2" align="left">Plataformas</th>
 <th>Poblaci&oacute;n</th>
 <th>Antig&uuml;edad</th>
-<th>Informaci&oacute;n</th>
+<th></th>
 <th></th>
 </tr>';
 
@@ -86,7 +91,7 @@ foreach ($vp['paises'] AS $pais) {
 	$txt .= '<tr style="background:'.$vp['bg'][$pais].';">
 <td><a href="http://'.$pais_low.'.virtualpol.com/"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.'" width="60" height="40" /></a></td>
 
-<td><a href="http://'.$pais_low.'.virtualpol.com/"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
+<td nowrap="nowrap"><a href="http://'.$pais_low.'.virtualpol.com/"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
 
 <td align="right"><b style="font-size:20px;">' . $pais_pob . '</b></td>
 <td nowrap="nowrap" align="right"><b>' . $pais_dias . '</b> d&iacute;as</td>
@@ -98,13 +103,7 @@ foreach ($vp['paises'] AS $pais) {
 </td>
 
 <td nowrap="nowrap">'.($pais!='VP'?'':'<img src="'.IMG.'cargos/7.gif" alt="Presidente de '.$pais.'" title="Presidente de '.$pais.'" width="16" height="16" /> '.$pais_presidente.'<br /><img src="'.IMG.'cargos/19.gif" alt="Vicepresidente de '.$pais.'" title="Vicepresidente de '.$pais.'" width="16" height="16" /> '.$pais_vice.'').'</td>
-
-
-
 </tr>';
-
-
-
 
 }
 
@@ -124,7 +123,7 @@ while($r = mysql_fetch_array($result)){
 $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="10"></td></tr>
 
 <tr>
-<td colspan="2" rowspan="2"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=225x110&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto del censo entre Plataformas" width="225" height="110" /></td>
+<td colspan="2" rowspan="2" align="right"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=225x110&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto de la población entre plataformas." width="225" height="110" /></td>
 <td align="right" valign="top"><b style="font-size:20px;">' . $poblacion_num . '</b></td>
 <td colspan="2" valign="top"><b style="font-size:20px;">Ciudadanos</b></td>
 <td colspan="3" align="right"></td>
@@ -140,7 +139,11 @@ $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="10"></td></tr>
 </center>';
 
 
-if (!$pol['nick']) { $txt .= '<h1>Simulador Pol&iacute;tico Espa&ntilde;ol | Ciudadanos online:</h1>'; }
+if (!$pol['nick']) {
+	$txt .= '<p style="text-align:center;"><span class="amarillo" style="padding:17px 9px 13px 9px;"><input value="REGISTRAR CIUDADANO" onclick="window.location.href=\''.REGISTRAR.'\';" type="button" style="font-size:18px;height:40px;" /></span></p>';
+} elseif ($pol['pais'] == 'ninguno'){ 
+	$txt .= '<p>'.boton('Solicitar ciudadania', REGISTRAR).'</p>';
+}
 
 
 $time_pre = date('Y-m-d H:i:00', time() - 3600); // 1 hora
@@ -154,17 +157,18 @@ while($r = mysql_fetch_array($result)){
 
 	$pais_url = strtolower($r['pais']);
 	if ($pais_url == 'ninguno') { $pais_url = 'vp'; }
-	$li_online .= ' <a href="http://'.$pais_url.'.virtualpol.com/perfil/'.$r['nick'].'/" class="nick '.$r['estado'].'" style="padding:2px;line-height:25px;background:' . $vp['bg'][$r['pais']] . ';">'.$r['nick'].'</a>'; 
+	$li_online .= ' <a href="http://'.$pais_url.'.virtualpol.com/perfil/'.$r['nick'].'/" class="nick redondeado '.$r['estado'].'" style="padding:2px;line-height:25px;background:' . $vp['bg'][$r['pais']] . ';">'.$r['nick'].'</a>'; 
 }
 
-$txt .= '<br /><div class="amarillo">
+$txt .= '<br />
+
+<div class="amarillo" style="width:90%;margin:0 auto;">
 <table border="0">
 <tr>
 <td><b style="font-size:34px;">' . $li_online_num . '</b></td>
 <td>Ciudadanos online: ' . $li_online . '</td>
 </tr>
 </table></div>'; 
-
 
 
 $txt_header .= '<style type="text/css">td b { font-size:15px; }</style>';

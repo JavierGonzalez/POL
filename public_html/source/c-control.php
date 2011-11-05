@@ -857,7 +857,6 @@ WHERE ID = '".$_GET['c']."' LIMIT 1", $link);
 <table border="0" cellspacing="1" cellpadding="" class="pol_table">
 <tr>
 <th>Expulsado</th>
-<th>Pa&iacute;s</th>
 <th>Cuando</th>
 <th>Por</th>
 <th>Motivo</th>
@@ -882,7 +881,6 @@ ORDER BY expire DESC", $link);
 
 		$txt .= '
 <tr><td valign="top" nowrap="nowrap">'.($r['estado'] == 'expulsado'?'<img src="'.IMG.'varios/expulsar.gif" alt="Expulsado" border="0" /> ':'<img src="'.IMG.'cargos/0.gif" border="0" /> ').'<b>' . crear_link($r['tiempo'], 'nick', $r['expulsado_estado'], $r['expulsado_pais']) . '</b></td>
-<td valign="top">'.$r['expulsado_pais'].'</td>
 <td valign="top" align="right" valign="top" nowrap="nowrap"><acronym title="' . $r['expire'] . '">'.timer($r['expire']).'</acronym></td>
 <td valign="top">'.crear_link($r['nick_autor']).'</td>
 <td valign="top"><b style="font-size:13px;">' . $r['razon'] . '</b></td>

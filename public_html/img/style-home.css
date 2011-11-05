@@ -22,6 +22,7 @@ div#footer-in {padding: 10px 20px 10px 20px;}
 div.content, div.column, div#header, div#footer {border-radius: 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px;}
 
 *[title] { cursor: help; }
+abbr { border-bottom:1px dotted #999; }
 
 a { color:#06f;text-decoration:none;}
 a:hover {text-decoration:underline;}

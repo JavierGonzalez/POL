@@ -1,37 +1,60 @@
 <?php
 include('inc-login.php');
-$adsense_exclude = true;
 
-$txt_title = 'VirtualPol | Plataforma Democratica Autogestionada | democracia online - simulador politico';
+$txt_title = 'VirtualPol | Plataforma Democratica Autogestionada | VP - 15M asamblea | democracia online - simulador politico';
 
-$txt_description = 'Plataforma democratica autogestionada. Simulador Politico Espa&ntilde;ol, Juego online, experimento social o simulador de politica. Simuladores geo-politica POL Hispania Atlantis.'; 
-
+$txt_description = 'Ecosistema de plataformas democraticas autogestioandas. Simulador Politico Espa&ntilde;ol, Juego online, experimento social o simulador de politica. VP POL 15M atlantis vulcan hispania'; 
 
 
 
-$txt .= '
+// '.(isset($pol['user_ID'])?'':'<span style="float:right;margin-left:10px;"><iframe src="http://docs.google.com/present/embed?id=ddfcnxdb_15fqwwcpct&interval=30" frameborder="0" width="410" height="342"></iframe></span>').'
 
-'.(isset($pol['user_ID'])?'':'<span style="float:right;margin-left:10px;"><iframe src="http://docs.google.com/present/embed?id=ddfcnxdb_15fqwwcpct&interval=30" frameborder="0" width="410" height="342"></iframe></span>').'
 
-<h1>Bienvenido a VirtualPol</h1>
 
-<p><a href="http://www.virtualpol.com/">VirtualPol</a> es un sistema de <b>plataformas democr&aacute;ticas autogestionadas</b>.</p>
+// Datos estadisticos
+
+/*
+Se contabilizan los siguientes datos antiguos conservadas en tablas antiguas.
+Plataforma votaciones votos
+Atlantis 402 4540
+POL 773 13752
+Hispania 1079 15546
+Vulcan 161 954
+VP 369 11341
+*/
+
+$result = mysql_query("SELECT COUNT(*) AS num FROM votacion", $link);
+while($r = mysql_fetch_array($result)) { $num_votaciones = $r['num']+2784; }
+
+$result = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos", $link);
+while($r = mysql_fetch_array($result)) { $num_votaciones_votos = $r['num']+46133; }
+
+$result = mysql_query("SELECT COUNT(*) AS num FROM votos", $link);
+while($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
+
+$txt .= '<h1>Bienvenido a VirtualPol</h1>
+
+<p><a href="http://www.virtualpol.com/">VirtualPol</a> es un ecosistema de <b>plataformas democr&aacute;ticas autogestionadas</b>.</p>
 
 <p><b>En VirtualPol no hay administrador.</b> Todo se decide mediante Democracia Directa: un ciudadano, un voto. Dentro de VirtualPol hay diferentes plataformas totalmente independientes entre sí que comparten este sistema como base.</p>
 
 <p>Los principales gestores se eligen mediante elecciones periódicas y automáticas, de forma que nadie puede detener el ciclo. De esta forma no existe ningún usuario privilegiado, todos parten de la absoluta igualdad de condiciones.</p>
 
 <ul><em>VirtualPol tiene:</em>
+
 <li><b>Herramientas democráticas</b>: elecciones, votaciones avanzadas, cargos flexibles, voto de confianza, grupos/partidos, control de kicks, exámenes...</li>
+
 <li><b>Herramientas de comunicación</b>: salas de chat, foros, voz (mumble), mensajes privados, notas...</li>
-<li>Custodiado por un <b>avanzado sistema de Supervisión del Censo</b> (<a href="https://virtualpol.com/dnie.php">DNIe</a>, panel de detección, supervisores elegidos democráticamente, <a href="http://www.virtualpol.com/legal" title="Condiciones de Uso de VirtualPol.">TOS</a>...). Con una experiencia de más de 3 años funcionando con solidez.</li>
+
+<li>Custodiado por un <b>avanzado sistema de Supervisión del Censo</b> (<a href="https://virtualpol.com/dnie.php" title="Autentificación mediante DNIe y otros certificados.">DNIe</a>, <abbr title="Avanzado sistema de deteccion mediante factores tecnicos.">panel de detección</abbr>, supervisores elegidos democráticamente, <a href="http://www.virtualpol.com/legal" title="Condiciones de Uso de VirtualPol.">TOS</a>...). Con 3 años de experiencia, funcionando con solidez.</li>
+
+<li>Algunos datos: '.num($num_votaciones_votos).' votos procesados en '.num($num_votaciones).' votaciones y '.num($num_votos).' valoraciones.</li>
+
 <li>Es <a href="http://code.google.com/p/virtualpol/source/list">software libre</a>.</li>
 </ul>
 
 
-<p>VirtualPol es pionero, es un paso firme hacia la Democracia Directa.</p>
-
-';
+<p>VirtualPol es la primera comunidad de Internet autogestionada sin administrador y un paso firme hacia la Democracia Directa.</p>';
 
 
 $txt .= '<center>
@@ -93,13 +116,13 @@ foreach ($vp['paises'] AS $pais) {
 
 <td nowrap="nowrap"><a href="http://'.$pais_low.'.virtualpol.com/"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
 
-<td align="right"><b style="font-size:20px;">' . $pais_pob . '</b></td>
+<td align="right"><b style="font-size:22px;">' . $pais_pob . '</b></td>
 <td nowrap="nowrap" align="right"><b>' . $pais_dias . '</b> d&iacute;as</td>
 
 <td style="font-size:13px;">
 <a href="http://'.$pais_low.'.virtualpol.com/elecciones/">Elecciones</a><br />
-<a href="http://'.$pais_low.'.virtualpol.com/foro/">Foro</a><br />
-<a href="http://'.$pais_low.'.virtualpol.com/chats/">Chats</a>
+<a href="http://'.$pais_low.'.virtualpol.com/votaciones/">Votaciones</a><br />
+<a href="http://'.$pais_low.'.virtualpol.com/chats/">Chats</a> <a href="http://'.$pais_low.'.virtualpol.com/foro/">Foro</a>
 </td>
 
 <td nowrap="nowrap">'.($pais!='VP'?'':'<img src="'.IMG.'cargos/7.gif" alt="Presidente de '.$pais.'" title="Presidente de '.$pais.'" width="16" height="16" /> '.$pais_presidente.'<br /><img src="'.IMG.'cargos/19.gif" alt="Vicepresidente de '.$pais.'" title="Vicepresidente de '.$pais.'" width="16" height="16" /> '.$pais_vice.'').'</td>
@@ -124,14 +147,14 @@ $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="10"></td></tr>
 
 <tr>
 <td colspan="2" rowspan="2" align="right"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=225x110&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto de la población entre plataformas." width="225" height="110" /></td>
-<td align="right" valign="top"><b style="font-size:20px;">' . $poblacion_num . '</b></td>
+<td align="right" valign="top"><b style="font-size:22px;">' . $poblacion_num . '</b></td>
 <td colspan="2" valign="top"><b style="font-size:20px;">Ciudadanos</b></td>
 <td colspan="3" align="right"></td>
 </tr>
 
 <tr>
-<td align="right" valign="top"><b style="font-size:16px;">'.$autentificados.'</b></td>
-<td colspan="2" valign="top"><em>Autentificados</em></td>
+<td align="right" valign="top"><b style="font-size:18px;">'.$autentificados.'</b></td>
+<td colspan="2" valign="top">Autentificados</td>
 <td colspan="3" align="right"></td>
 </tr>
 

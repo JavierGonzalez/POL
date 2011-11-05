@@ -113,7 +113,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 	</li>
 </ul>
 
-<a href="/" title="Bandera de <?=PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" border="0" alt="Bandera de <?=PAIS?>" style="margin:-6px 0 2px 0;" /></a>
+<a href="/" title="Plataforma <?=PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" border="0" alt="Bandera de <?=PAIS?>" style="margin:-6px 0 2px 0;" /></a>
 </td>
 
 <td align="right" nowrap="nowrap" style="padding:0 0 6px 0;"><?=$txt_perfil?></td>

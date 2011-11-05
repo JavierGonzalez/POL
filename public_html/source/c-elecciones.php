@@ -185,7 +185,7 @@ ORDER BY RAND()", $link);
 					if (($r['estado'] == 'ciudadano') AND ($partidos[$r['partido_afiliado']])) {
 						if ($lat != true) { $txt .= '<tr>'; }
 
-						$txt .= '<td><input class="diputado" name="' . $r['user_ID'] . '" value="1" type="checkbox" /> <b style="font-size:18px;">' . crear_link($r['nick']) . '</b></td><td>' . crear_link($partidos[$r['partido_afiliado']], 'partido') . '</td><td align="right">'.(ECONOMIA?confianza($r['confianza']):'').'</td>';
+						$txt .= '<td><input class="diputado" name="' . $r['user_ID'] . '" value="1" type="checkbox" /> <b style="font-size:18px;">' . crear_link($r['nick']) . '</b></td><td>'.(ASAMBLEA?'':crear_link($partidos[$r['partido_afiliado']], 'partido')).'</td><td align="right">'.(ECONOMIA?confianza($r['confianza']):'').'</td>';
 
 						if ($lat != true) { $txt .= '<td width="90"></td>'; $lat = true; } 
 						else { $txt .= '</tr>'; $lat = false; }

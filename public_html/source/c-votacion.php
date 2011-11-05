@@ -311,7 +311,7 @@ $txt .= '
 			$txt .= '<span style="float:right;text-align:right;">
 Creador <b>' . crear_link($r['nick']) . '</b>. Inicio: <em>' . $r['time'] . '</em><br />
 '.($r['tipo_voto']!='estandar'?' Tipo de voto: <b>'.$r['tipo_voto'].'</b>.':'').' Duraci&oacute;n <b>'.$duracion.'</b>.'.($r['votos_expire']!=0?' Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.':'').' Fin: <em>' . $r['time_expire'] . '</em><br />
-Acceso: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</acronym>. <a href="/votacion/'.$r['ID'].'/verificacion/"><em>Verificaci&oacute;n</em></a>.
+Acceso: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</acronym>. <a href="/votacion/'.$r['ID'].'/verificacion/">Más información</a>.
 </span>';
 
 			if ($r['estado'] == 'end') {  // VOTACION FINALIZADA: Mostrar escrutinio. 

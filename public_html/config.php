@@ -72,7 +72,8 @@ if (ASAMBLEA) {
 'examenes_profesor'=>array('cargo', '34'),
 'crear_partido'=>array('antiguedad','0'),
 );
-	$columnas = 14; $filas = 18; // Tamaño del mapa
+	//$columnas = 14; $filas = 18; // Tamaño del mapa
+	$columnas = 36; $filas = 40; // Tamaño del mapa ampliado, decision democratica de VP http://vp.virtualpol.com/votacion/1172/
 }
 
 

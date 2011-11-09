@@ -210,7 +210,7 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . str
 
 
 
-									$texto_email = "Hola $nick\n\n\nAccede a la siguiente direccion, para activar tu usuario y entrar a VirtualPol.\n\nUsuario: $nick\nContraseña: ***\n\n ".REGISTRAR."?a=verificar&nick=" . $nick . "&code=" . $api_pass . "\n\nEsperamos que te diviertas!\n\n\nVirtualPol - http://www.virtualpol.com/";
+									$texto_email = "Hola $nick\n\n\nAccede a la siguiente direccion, para activar tu usuario y entrar a VirtualPol.\n\nUsuario: $nick\nContraseña: ***\n\n ".REGISTRAR."?a=verificar&nick=" . $nick . "&code=" . $api_pass . "\n\nContamos contigo!\n\n\nVirtualPol - http://www.virtualpol.com/";
 
 
 									mail($email, "[VirtualPol] Verificar " . $nick, $texto_email, "FROM: VirtualPol <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
@@ -343,8 +343,10 @@ $txt .= '</blockquote></div>';
 
 
 	$txt .= '
-<blockquote class="azul" style="width:600px;">
+<blockquote class="azul" style="width:650px;">
 <form action="?a=solicitar-ciudadania" method="post">
+<h1>Solicitar ciudadania:</h1>
+<p style="text-align:left;">Dentro de VirtualPol hay diversas plataformas democraticas que son 100% independientes entre s&iacute;. Elige en la que quieres participar.</p>
 <b>Plataformas:</b><br />
 <table border="0" cellspacing="4">';
 
@@ -359,9 +361,9 @@ $txt .= '</blockquote></div>';
 
 		$txt .= ($pais=='VP'?'<tr><td>&nbsp;</td></tr>':'').'
 <tr style="font-size:19px;">
-<td align="right"><a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a></td>
 <td><input type="radio" name="pais" id="pr_'.$pais.'" value="'.$pais.'"'.($pais=='15M'?' checked="checked"':'').' /></td>
-<td><b>'.$pais_des.'</b></td>
+<td><b>Plataforma '.$pais.'</b></td>
+<td>'.$pais_des.'</td>
 <td align="right">'.$ciudadanos_num.' ciudadanos</td>
 </tr>';
 	}
@@ -399,13 +401,26 @@ $txt .= '</blockquote></div>';
 <input id="pass2" type="password" autocomplete="off" name="pass2" value="" maxlength="40" style="margin-top:1px;" /><br /><br /></li>
 
 
-<li><b>&iquest;Qu&eacute; animal es?</b> (un nombre, sin espacios, nivel primaria)<br />
-<img src="animal-captcha.php" alt="Animal" id="animalcaptchaimg"  onclick="document.getElementById(\'animalcaptchaimg\').src=\'animal-captcha.php?\'+Math.random();" style="cursor:pointer;" /><br />
-<input type="text" name="animal" value="" autocomplete="off" maxlength="20" /><br /><br /></li>
+<li><b>&iquest;Qu&eacute; animal es?</b> Un nombre, sin espacios, nivel primaria. <a href="http://www.teoriza.com/captcha/example.php">Animal Captcha</a>.<br />
+<img src="animal-captcha.php" alt="Animal" id="animalcaptchaimg"  onclick="document.getElementById(\'animalcaptchaimg\').src=\'animal-captcha.php?\'+Math.random();" title="Haz clic para visualizar otro animal distinto." /><br />
+<input type="text" name="animal" value="" autocomplete="off" size="14" maxlength="20" /><br /><br /></li>
 
 
 <li><b>&iquest;Compartes conexi&oacute;n a Internet con otro usuario de VirtualPol?</b><br /> 
-Nick: <input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (en caso negativo dejar en blanco)<br /><br /></li>
+<!--Nick: <input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (en caso negativo dejar en blanco)<br /><br />-->
+<select name="nick_clon">
+<option value="" selected="selected">NO.</option>
+<optgroup label="Usuarios:">';
+
+
+	$result = mysql_query("SELECT nick FROM users WHERE estado != 'expulsado' ORDER BY nick ASC", $link);
+	while($r = mysql_fetch_array($result)) { 
+		$txt .= '<option value="'.$r['nick'].'">'.strtoupper($r['nick']).'</option>'."\n"; 
+	}
+
+	$txt .= '</optgroup></select><br /><br />
+
+</li>
 
 <li><input name="condiciones" value="ok" type="checkbox" /> <a href="http://www'.DEV.'.'.URL.'/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.<br /><br /></li>
 

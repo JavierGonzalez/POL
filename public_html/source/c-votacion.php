@@ -380,15 +380,15 @@ Acceso: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', '
 						}
 					}
 
-					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:'.implode(',', $grafico_array_votos).'&chs=430x200&chl='.implode('|', $grafico_array_respuestas).'&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="430" height="200" />';
+					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chp=4.71&chd=t:'.implode(',', $grafico_array_votos).'&chs=430x200&chl='.implode('|', $grafico_array_respuestas).'&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="430" height="200" />';
 				}
 
 				// Imprime datos de legitimidad y validez
 				$txt .= '</td>
 <td valign="top" style="color:#888;"><br />
-Legitimidad: <b>'.$votos_total.'</b> votos, <b>'.$escrutinio['votos_autentificados'].'</b> autentificados.<br />
-Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b> '.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>NULO</b> '.$porcentaje_validez.'%</span>').'<br />
-<img title="Votos de validez: '.$escrutinio['validez']['true'].' OK, '.$escrutinio['validez']['false'].' NULO" src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$escrutinio['validez']['true'].','.$escrutinio['validez']['false'].'&chs=210x130&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>
+Legitimidad: <b>'.$votos_total.'</b>&nbsp;votos, <b>'.$escrutinio['votos_autentificados'].'</b>&nbsp;autentificados.<br />
+Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>NULO</b>&nbsp;'.$porcentaje_validez.'%</span>').'<br />
+<img title="Votos de validez: '.$escrutinio['validez']['true'].' OK, '.$escrutinio['validez']['false'].' NULO" src="http://chart.apis.google.com/chart?cht=p&chp=4.71&chd=t:'.$escrutinio['validez']['true'].','.$escrutinio['validez']['false'].'&chs=210x130&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>
 </tr></table>';
 
 

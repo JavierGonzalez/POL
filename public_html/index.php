@@ -121,7 +121,7 @@ foreach ($vp['paises'] AS $pais) {
 
 <td style="font-size:13px;">
 <a href="http://'.$pais_low.'.virtualpol.com/elecciones/">Elecciones</a><br />
-<a href="http://'.$pais_low.'.virtualpol.com/votaciones/">Votaciones</a><br />
+<a href="http://'.$pais_low.'.virtualpol.com/votacion/">Votaciones</a><br />
 <a href="http://'.$pais_low.'.virtualpol.com/chats/">Chats</a> <a href="http://'.$pais_low.'.virtualpol.com/foro/">Foro</a>
 </td>
 

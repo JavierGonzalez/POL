@@ -234,12 +234,15 @@ foreach(explode(";", $pol['config']['palabras']) as $t) {
 	else { echo $t[2].$edit."<br />\n"; }
 }
 
-echo '<a href="/mapa/" class="gris" style="float:right;margin:0 11px 0 0;">Mapa</a><a href="/subasta/" class="gris" style="margin:0 0 0 -3px;">Subasta</a>';
+// <a href="/mapa/" class="gris" style="float:right;margin:0 11px 0 0;">Mapa</a>
+echo '<a href="/subasta/" class="gris" style="margin:0 0 0 -3px;">Subasta</a>';
+/*
 if (!isset($cuadrado_size)) {
 	$cuadrado_size = 10;
 	include('inc-mapa.php');
 	echo '<div style="margin:0 0 0 -4px;">'.$txt_mapa.'</div>';
 }
+*/
 
 echo '</div>';
 ?>
@@ -336,19 +339,16 @@ if (isset($pol['user_ID'])) {
 	$tiempofinal = $mtime[1] + $mtime[0]; 
 	$tiempototal = round(($tiempofinal-$tiempoinicial)*1000); 
 	echo ($pol['user_ID']==1?$tiempototal.'ms ':'');
-} else {
-	// Enlaces de GONZO, solo lo ven los no-registrados, no quitar por favor :))))
-	// echo '<a href="http://www.teoriza.com/">Teoriza</a> &middot; <a href="http://www.eventuis.com/">eventos</a>';
 }
 ?> | 
-<a href="http://www.virtualpol.com/legal" title="Condiciones del Servicio" target="_blank">TOS</a> | 
-<a href="http://www.virtualpol.com/manual" target="_blank"><b>Ayuda</b></a> &nbsp; 
+<a href="http://www.virtualpol.com/legal" target="_blank"><abbr title="Condiciones de Uso de VirtualPol">TOS</abbr></a> | <a href="http://code.google.com/p/virtualpol/source/list" title="VirtualPol es software libre">Código</a> | 
+<a href="http://www.virtualpol.com/manual" target="_blank">Ayuda</a> &nbsp; 
 &nbsp; 2008-2011 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b> <sub>Beta</sub></span>
 <b><?=PAIS?></b>
 
 <?php
 if (ECONOMIA) {
-	echo ' <span style="font-size:11px;">DEFCON <b>'.$pol['config']['defcon'].'</b></span> <span class="amarillo" id="pols_frase"><b>'.$pol['config']['pols_frase'].'</b>';
+	echo ' <span style="font-size:11px;"><abbr title="CONdicion de DEFensa">DEFCON <b>'.$pol['config']['defcon'].'</b></abbr></span> <span class="amarillo" id="pols_frase"><b>'.$pol['config']['pols_frase'].'</b>';
 	if ($pol['config']['pols_fraseedit'] == $pol['user_ID']) { echo ' <a href="/subasta/editar/" class="gris">#</a>'; }
 }
 ?>

@@ -363,7 +363,7 @@ ORDER BY estado ASC, time ASC", $link);
 
 } else {
 
-	$cuadrado_size = 24;
+	$cuadrado_size = 15;
 	$mapa_full = true;
 	include('inc-mapa.php');
 

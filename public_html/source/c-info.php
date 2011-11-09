@@ -113,7 +113,9 @@ $txt .= '
 <input value="Buscar en perfil" type="submit" onclick="var cmq = $(\'#cmq\').attr(\'value\'); window.location.href=\'/info/censo/busqueda/\'+cmq+\'/\'; return false;">
 </div>
 
-<p>' . $p_paginas . ' &nbsp; &nbsp; <a href="/info/censo/">Ciudadanos</a>: <b>' . $pol['config']['info_censo'] . '</b> (activos <b>'.$censo_activos.'</b>,  global <b>'.$censo_activos_vp.'</b>)'.(ECONOMIA?' | <a href="/control/expulsiones/" class="expulsado">Expulsados</a>: <b>' . $censo_expulsados . '</b> | <a href="/info/censo/SC/">SC</a> | <a href="/info/censo/riqueza/">Ricos</a>':'').' &nbsp; 
+<p>' . $p_paginas . ' &nbsp; &nbsp; <a href="/info/censo/">Ciudadanos</a>: <abbr title="Numero de ciudadanos en la plataforma '.PAIS.'."><b>' . $pol['config']['info_censo'] . '</b></abbr> (<abbr title="Ciudadanos -no nuevos- que entraron en las últimas 24h, en la plataforma '.PAIS.'.">activos <b>'.$censo_activos.'</b></abbr>,  <abbr title="Ciudadanos en todo VirtualPol.">global <b>'.$censo_activos_vp.'</b></abbr>)
+
+'.(ECONOMIA?' | <a href="/control/expulsiones/" class="expulsado">Expulsados</a>: <b>' . $censo_expulsados . '</b> | <a href="/info/censo/riqueza/" title="Los ciudadanos con más monedas.">Ricos</a>':'').' | <abbr title="Mostrar posibles Supervisores del Censo."><a href="/info/censo/SC/">SC</a></abbr> &nbsp; 
 </p>
 
 <table border="0" cellspacing="2" cellpadding="0" class="pol_table">
@@ -122,12 +124,11 @@ $txt .= '
 <th style="padding:8px;" class="azul"><a href="/info/censo/nivel/">Nivel</a></th>
 <th></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/nombre/">Nick</a></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/afiliacion/">Afil</a></th>
+'.(ASAMBLEA?'':'<th style="padding:8px;" class="azul"><a href="/info/censo/afiliacion/">Afil</a></th>').'
 <th style="padding:8px;" class="azul" colspan="2"><a href="/info/censo/confianza/">Confianza</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/online/">Online</a></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/' . $old . '/">Antig&uuml;edad</a></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/elec/"><acronym title="Elecciones en las que ha participado">Elec</acronym></a></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/nota/">Nota</a></th>
+<th style="padding:8px;" class="azul"><a href="/info/censo/elec/"><abbr title="Elecciones en las que ha participado">Elec</abbr></a></th>
 <th style="padding:8px;" class="azul" colspan="2"><a href="/info/censo/">&Uacute;ltimo&nbsp;acceso&darr;</a></th>
 </tr>';
 
@@ -139,7 +140,6 @@ $txt .= '
 		case 'antiguedad': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY fecha_registro ASC'; break;
 		case 'elec': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY num_elec DESC, fecha_registro ASC'; break;
 		case 'online': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY online DESC'; break;
-		case 'nota': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY nota DESC'; break;
 		case 'riqueza': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY pols DESC, fecha_registro ASC'; break;
 		case 'afiliacion': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY partido_afiliado DESC, fecha_registro ASC'; break;
 		case 'confianza': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY voto_confianza DESC, fecha_registro ASC'; break;
@@ -176,17 +176,17 @@ FROM users ".$order_by." LIMIT ".$p_limit, $link);
 <td align="right">' . $r['nivel'] . '</td>
 <td>' . $avatar . '</td>
 <td>'.(isset($sc[$r['ID']])?'<span style="float:right;color:red;margin-left:5px;">SC</span>':'').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
-<td>' . $partido . '</td>
-
+'.(ASAMBLEA?'':'<td>' . $partido . '</td>').'
 <td align="right"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span></td>
 <td>'.($pol['user_ID']&&$r['user_ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['user_ID'].'" class="votar" type="confianza" name="'.$r['user_ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
 
 <td align="right" nowrap="nowrap">' . $online . '</td>
 <td>' . explodear(' ', $r['fecha_registro'], 0) . '</td>
 <td align="right">' . $r['num_elec'] . '</td>
-<td class="gris" align="right">' . $r['nota'] . '</td>
 <td align="right" nowrap="nowrap" class="timer" value="'.strtotime($r['fecha_last']).'"></td>
 </tr>' . "\n";
+
+	
 	}
 	$txt .= '</table><p>' . $p_paginas . '</p>';
 	

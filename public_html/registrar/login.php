@@ -248,7 +248,7 @@ case 'login':
 <header>
 <title></title>
 <meta http-equiv="refresh" content="6;url=http://www.virtualpol.com/">
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="'.IMG.'evercookie/swfobject-2.2.min.js"></script>
 <script type="text/javascript" src="'.IMG.'evercookie/evercookie.js"></script>
 <script type="text/javascript">

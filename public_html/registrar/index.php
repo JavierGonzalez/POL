@@ -296,21 +296,21 @@ if ($pol['estado'] == 'ciudadano') {
 
 	$txt_title = 'Registrar: PASO 3 (Ya eres Ciudadano!)';
 	$txt .= '<h1><span class="gris">1. Crear usuario | 2. Solicitar Ciudadan&iacute;a</span> | 3. Ser Ciudadano</h1><hr />
-<p>Felicidades! <b>ya eres Ciudadano de ' . $pol['pais'] . '</b>.</p>
+<p><b>Eres ciudadano de ' . $pol['pais'] . '</b>.</p>
 
-<p>Puedes entrar en tu Pais <a href="http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/"><b>'.$pol['pais'].'</b></a> y saluda a tus compa&ntilde;eros Ciudadanos!</p>
+<p>Puedes entrar en la <a href="http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/"><b>plataforma '.$pol['pais'].'</b></a> y saluda a tus compa&ntilde;eros ciudadanos!</p>
 
 <br /><br /><hr />
 
 <div class="azul">
-<p style="color:red;"><b>Rechazar Ciudadania de ' . $pol['pais'] . '</b>:</p>
+<p style="color:red;"><b>Rechazar ciudadania de ' . $pol['pais'] . '</b>:</p>
 
 <ul>
 <li>Esta acci&oacute;n es irreversible.</li>
-<li style="color:red;"><b>PERDERAS:</b> tus cuentas bancarias (pero no su dinero), <b>cargos</b>, examenes, <b>votos</b> en elecciones activas en este momento, tus empresas, tu partido, subastas de hoy y todos los derechos de Ciudadano.</li>
-<li>CONSERVARAS: tu dinero (restando un arancel del <b style="color:red;">'.$pol['config']['arancel_salida'].'%</b>), tu antiguedad, online, mensajes privados, confianza, mensajes en foro... y todo lo dem&aacute;s.</li>
-<li>No es necesario rechazar la Ciudadania para experimentar y participar (limitadamente) en otros Paises.</li>
-<li>Siempre podr&aacute;s solicitar ciudadan&iacute;a de cualquier Pa&iacute;s.</li>
+<li>No es necesario rechazar la ciudadania para experimentar y participar (limitadamente) en otras plataformas.</li>
+<li>Siempre podr&aacute;s solicitar ciudadan&iacute;a de cualquier plataforma.</li>
+<li style="color:red;"><b>PERDERAS:</b> tus cuentas bancarias (pero tus monedas), <b>cargos</b>, examenes, <b>votos</b> en elecciones activas en este momento, tus empresas, tu partido, subastas de hoy y todos los derechos de ciudadano.</li>
+<li>CONSERVARAS: tus monedas (restando un arancel del <b style="color:red;">'.$pol['config']['arancel_salida'].'%</b>), tu antiguedad, online, mensajes privados, confianza, mensajes en foro... y todo lo dem&aacute;s.</li>
 </ul>
 <blockquote>';
 
@@ -319,10 +319,10 @@ if (strtotime($pol['rechazo_last']) < (time() - 21600)) { // 6 horas
 	$txt .= '
 <form action="http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/accion.php?a=rechazar-ciudadania" method="POST">
 <input type="hidden" name="pais" value="'.$pol['pais'].'" />
-<p><b style="color:red;">[<input type="submit" value="Rechazar Ciudadania de '.$pol['pais'].'" />]</b></p>
+<p><b style="color:red;">[<input type="submit" value="Rechazar ciudadania de la plataforma '.$pol['pais'].'" />]</b></p>
 </form>';
 
-} else { $txt .= '<p style="color:red;"><b>Solo puedes rechazar tu Ciudadan&iacute;a una vez cada 6 horas...</b></p>'; }
+} else { $txt .= '<p style="color:red;"><b>Solo puedes rechazar tu ciudadan&iacute;a una vez cada 6 horas...</b></p>'; }
 
 $txt .= '</blockquote></div>';
 
@@ -401,8 +401,8 @@ $txt .= '</blockquote></div>';
 <input id="pass2" type="password" autocomplete="off" name="pass2" value="" maxlength="40" style="margin-top:1px;" /><br /><br /></li>
 
 
-<li><b>&iquest;Qu&eacute; animal es?</b> Un nombre, sin espacios, nivel primaria. <a href="http://www.teoriza.com/captcha/example.php">Animal Captcha</a>.<br />
-<img src="animal-captcha.php" alt="Animal" id="animalcaptchaimg"  onclick="document.getElementById(\'animalcaptchaimg\').src=\'animal-captcha.php?\'+Math.random();" title="Haz clic para visualizar otro animal distinto." /><br />
+<li><b>&iquest;Qu&eacute; animal es?</b> Un nombre, sin espacios, nivel primaria. <a href="http://www.teoriza.com/captcha/example.php" target="_blank">Animal Captcha</a>.<br />
+<img src="animal-captcha.php" alt="Animal" id="animalcaptchaimg"  onclick="document.getElementById(\'animalcaptchaimg\').src=\'animal-captcha.php?\'+Math.random();" title="Visualizar otro animal" /><br />
 <input type="text" name="animal" value="" autocomplete="off" size="14" maxlength="20" /><br /><br /></li>
 
 
@@ -422,7 +422,7 @@ $txt .= '</blockquote></div>';
 
 </li>
 
-<li><input name="condiciones" value="ok" type="checkbox" /> <a href="http://www'.DEV.'.'.URL.'/legal"><b>Aceptas las Condiciones de Uso de VirtualPol</b></a>.<br /><br /></li>
+<li><input name="condiciones" value="ok" type="checkbox" /> <b>Aceptas las <a href="http://www'.DEV.'.'.URL.'/legal" target="_blank">Condiciones de Uso de VirtualPol</a>.</b><br /><br /></li>
 
 <li><input type="submit" value="Crear ciudadano" style="height:40px;font-size:22px;" onclick="$(\'#pass1\').val(hex_md5($(\'#pass1\').val()));$(\'#pass2\').val(hex_md5($(\'#pass2\').val()));" /></li>
 </form>

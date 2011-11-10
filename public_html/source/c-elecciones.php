@@ -378,7 +378,7 @@ ORDER BY time DESC LIMIT 1", $link);
 <table border="0" class="pol_table">
 <tr>
 <th align="left">Candidato</th>
-<th align="left">'.NOM_PARTIDOS.'</th>
+<th align="left">'.(ASAMBLEA?'':NOM_PARTIDOS).'</th>
 <th colspan="2" align="left">Votos</th>
 </tr>
 ' . $tabla . '
@@ -437,9 +437,9 @@ ORDER BY time DESC LIMIT 1", $link);
 
 					if ($t[1]) {
 						if ($cargo == '1') {
-							$tabla .= '<tr><td align="right">' . crear_link($t[1], 'partido') . '</td><td><img src="'.IMG.'cargos/6.gif" alt="Diputado" title="Diputado" border="0" /> <b>' . crear_link($t[2], 'nick', $nestado) . '</b></td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';
+							$tabla .= '<tr><td align="right">'.(ASAMBLEA?'':crear_link($t[1], 'partido')).'</td><td><img src="'.IMG.'cargos/6.gif" alt="Diputado" title="Diputado" border="0" /> <b>' . crear_link($t[2], 'nick', $nestado) . '</b></td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';
 						} else {
-							$tabla .= '<tr><td align="right">' . crear_link($t[1], 'partido') . '</td><td>' . crear_link($t[2], 'nick', $nestado) . '</td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';
+							$tabla .= '<tr><td align="right">'.(ASAMBLEA?'':crear_link($t[1], 'partido')).'</td><td>' . crear_link($t[2], 'nick', $nestado) . '</td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';
 						}
 					}
 
@@ -559,7 +559,7 @@ ORDER BY time DESC LIMIT 1", $link);
 	}
 	$txt .= '<table border="0" class="pol_table">
 <tr>
-<th align="left" colspan="2">'.NOM_PARTIDOS.'</th>
+<th align="left" colspan="2">'.(ASAMBLEA?'':NOM_PARTIDOS).'</th>
 <th colspan="2" align="left">Votos</th>
 </tr>
 ' . $tabla . '

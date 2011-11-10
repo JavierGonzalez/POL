@@ -5,15 +5,15 @@ VirtualPol.com
 ### INTRODUCCION ###
 ####################
 VirtualPol es un sistema de plataformas democraticas autogestionadas. Es pionero 
-en la busqueda de la ausencia de administrador y en la supervisi√≥n del censo, 
-basandose en pilares democraticos. El sistema tiene como objetivo ser lo m√°s 
+en la busqueda de la ausencia de administrador y en la supervisiÛn del censo, 
+basandose en pilares democraticos. El sistema tiene como objetivo ser lo m·s 
 automatico y flexible posible. Toda automatizacion significa un paso adelante al 
-no hacer falta un administrador para esa tar√©a.
+no hacer falta un administrador para esa tarÈa.
 
-Los principios de VirtualPol son: democracia, igualdad, transparencia, soberan√≠a, 
+Los principios de VirtualPol son: democracia, igualdad, transparencia, soberanÌa, 
 flexibilidad y software libre.
 
-La web principal est√° funcionando actualmente en http://www.virtualpol.com/
+La web principal est· funcionando actualmente en http://www.virtualpol.com/
 
 
 ################
@@ -21,12 +21,13 @@ La web principal est√° funcionando actualmente en http://www.virtualpol.com/
 ################
 El concepto de VirtualPol fue originado a mediados del 2004 en un canal de 
 una red de IRC llamado #pol creado por RhoX Cheme, Pablo1 y otros amigos. 
-En 2005 GONZO (Javier Gonz√°lez Gonz√°lez) cre√≥ un bot de IRC que dio capacidad 
-telem√°tica y automatizada a la sala de chat. Esta versi√≥n inicial del concepto 
-fue el precursor del proyecto actual VirtualPol. Tuvo actividad durante 2 a√±os.
+En 2005 GONZO (Javier Gonz·lez Gonz·lez) creÛ un bot de IRC que dio capacidad 
+telem·tica y automatizada a la sala de chat. Esta versiÛn inicial del concepto 
+fue el precursor del proyecto actual VirtualPol. Tuvo actividad durante 2 aÒos.
 
-El 1 de Octubre del 2008 entr√≥ en funcionamiento la primera versi√≥n publica y 
-estable de VirtualPol (en pol.teoriza.com). El desarrollo ha sufrido cambios diarios desde entonces.
+El 1 de Octubre del 2008 entrÛ en funcionamiento la primera versiÛn publica y 
+estable de VirtualPol (en pol.teoriza.com). El desarrollo ha sufrido cambios 
+diarios desde entonces.
 
 El resultado del camino desde entonces hasta hoy es este codigo fuente.
 
@@ -34,16 +35,16 @@ El resultado del camino desde entonces hasta hoy es este codigo fuente.
 ################
 ### LICENCIA ###
 ################
-El codigo fuente de VirtualPol est√° publicado bajo licencia GNU GPL v2. Siendo 
-as√≠ software libre. http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+El codigo fuente de VirtualPol est· publicado bajo licencia GNU GPL v2. Siendo 
+asÌ software libre. http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-Se especifican las dos siguientes condiciones a√±adidas
+Se especifican las dos siguientes condiciones aÒadidas
 
-1. Se debe reconocer los cr√©ditos de la obra mediante un enlace web regular en 
-el pie de todas las p√°ginas con el texto ‚ÄúVirtualPol‚Äù y llevando hacia la siguiente 
-direcci√≥n http://www.virtualpol.com/.
+1. Se debe reconocer los crÈditos de la obra mediante un enlace web regular en 
+el pie de todas las p·ginas con el texto ìVirtualPolî y llevando hacia la siguiente 
+direcciÛn http://www.virtualpol.com/.
 
-2. Se debe reportar cualquier fallo de seguridad encontrado en el c√≥digo fuente.
+2. Se debe reportar cualquier fallo de seguridad encontrado en el cÛdigo fuente.
 
 
 ######################
@@ -51,7 +52,7 @@ direcci√≥n http://www.virtualpol.com/.
 ######################
 
 # CODIGO FUENTE
-2009-10-09 GONZO (Javier Gonz√°lez Gonz√°lez) - gonzomail(a)gmail.com
+2008-04-01 GONZO (Javier Gonz·lez Gonz·lez) - gonzomail(a)gmail.com
 2009-10-09 Cucuta - wblomo22(a)gmail.com
 2009-10-09 selvatgi - selvatgi(a)gmail.com
 2009-10-09 oportunista - teo.diaz(a)gmail.com

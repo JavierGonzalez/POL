@@ -24,7 +24,7 @@ if ($pol['config']['bg']) { $body_bg = COLOR_BG.' url(\''.IMG.'bg/'.$pol['config
 <link href="<?=IMG?>style.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" media="screen" href="<?=IMG?>superfish.css" /> 
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="<?=IMG?>superfish.js"></script> 
 
 <script type="text/javascript">
@@ -264,7 +264,7 @@ echo '</div>';
 			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.noc4net.com/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/doc/">Archivo <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
 			<li><a href="/info/censo/">Ciudadanos</a></li>
-			<li><a href="/partidos/">Comisiones <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
+			<li><a href="/partidos/">Grupos <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
 			<li><a href="/cargos/"><span style="float:right;">&#9658;</span>Gesti&oacute;n</a>
 				<ul>
 					<li><a href="/control/">Controles</a>

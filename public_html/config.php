@@ -37,7 +37,7 @@ switch ($host[0]) {
 // CONFIGURACION ESPECIFICA DE PLATAFORMAS
 if (ASAMBLEA) {
 	define('ECONOMIA', false);
-	define('NOM_PARTIDOS','Comisiones');
+	define('NOM_PARTIDOS','Grupos');
 	
 	$vp['acceso'] = array(
 'sondeo'=>array('cargo', '6'),

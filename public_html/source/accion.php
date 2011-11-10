@@ -325,6 +325,9 @@ case 'voto':
 			$result = mysql_query("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
 			while ($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
 
+			$sc = get_supervisores_del_censo();
+			if (isset($sc[$pol['user_ID']])) { $num_votos = 0; }
+
 			// existe usuario
 			$result = mysql_query("SELECT ID FROM users WHERE ID = '".$item_ID."'", $link);
 			while ($r = mysql_fetch_array($result)) { $nick_existe = true; }

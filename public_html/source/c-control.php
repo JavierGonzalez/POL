@@ -11,13 +11,15 @@ $pol['cargos'] = cargos();
 
 $sc = get_supervisores_del_censo();
 
-
 switch ($_GET['a']) {
 
 
 case 'supervisor-censo':
 
 if (isset($sc[$pol['user_ID']])) {
+
+	// extrae user_ID de SC
+	foreach ($sc AS $user_ID => $nick) { $sc_user_ID[] = $user_ID; }
 
 	$hosts_array = array(0=>'null');
 	function IP2host($IP) {
@@ -55,9 +57,9 @@ if (isset($sc[$pol['user_ID']])) {
 <th align="right" colspan="2"><acronym title="Tiempo desde que se registr&oacute;">Registro</acronym></th>
 <th align="right">Online</th>
 <th align="right"><acronym title="Tiempo desde el ultimo acceso">Ultimo</acronym></th>
-<th align="right"><acronym title="Pais">P</acronym></th>
+<th align="right"><acronym title="Plataforma">P</acronym></th>
 <th align="right"><acronym title="Votos ejercidos en Elecciones">E</acronym></th>
-<th><acronym title="Confianza">C</acronym></th>
+<th align="center" colspan="2"><acronym title="Confianza de SC, actualizada en tiempo real">C_SC</acronym></th>
 <th align="right"><acronym title="Visitas">V</acronym></th>
 <th align="right"><acronym title="Paginas vistas">PV</acronym></th>
 <th align="right"><acronym title="Mensajes en foro">F</acronym></th>
@@ -69,7 +71,8 @@ if (isset($sc[$pol['user_ID']])) {
 	$result = mysql_query("SELECT *,
 (SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE envia_ID = users.ID) AS num_priv,
 (SELECT COUNT(*) FROM ".SQL."foros_msg WHERE user_ID = users.ID) AS num_foro,
-(SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '" . $pol['user_ID'] . "' AND item_ID = users.ID LIMIT 1) AS has_votado
+(SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '" . $pol['user_ID'] . "' AND item_ID = users.ID LIMIT 1) AS has_votado, 
+(SELECT SUM(voto) AS voto_total FROM votos WHERE tipo = 'confianza' AND item_ID = users.ID AND emisor_ID IN (".implode(',', $sc_user_ID).") LIMIT 1) AS voto_confianza_SC
 FROM users 
 ORDER BY fecha_registro DESC
 LIMIT 60", $link);
@@ -97,9 +100,8 @@ LIMIT 60", $link);
 		} elseif ($r['visitas'] <= 6) {
 			$td_bg = ' style="background:#EFEFEF;"';
 		} else { $td_bg = ''; }
-
-		if ($r['has_votado']) { $has_votado = ' (' . confianza($r['has_votado']) . ')'; } else { $has_votado = ''; }
-
+		
+		if (!$r['voto_confianza_SC']) { $r['voto_confianza_SC'] = 0; }
 		
 		$txt .= '<tr' . $td_bg . '>
 <td align="right"><b>' . $dia_registro . '</b></td>
@@ -107,9 +109,10 @@ LIMIT 60", $link);
 <td align="right" nowrap="nowrap">'.timer($r['fecha_registro']).'</td>
 <td align="right" nowrap="nowrap">' . $online . '</td>
 <td align="right" nowrap="nowrap">'.timer($r['fecha_last']) . '</td>
-<td nowrap="nowrap"">' . $siglas[$r['partido_afiliado']] . '</td>
+<td nowrap="nowrap">' . $siglas[$r['partido_afiliado']] . '</td>
 <td align="right"><b>' . $r['num_elec'] . '</b></td>
-<td nowrap="nowrap"><b>' . confianza($r['voto_confianza']) . '</b>' . $has_votado . '</td>
+<td align="right"><span id="confianza'.$r['ID'].'">'.confianza($r['voto_confianza_SC']).'</span></td>
+<td align="right" nowrap="nowrap">'.($pol['user_ID']&&$r['ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['ID'].'" class="votar" type="confianza" name="'.$r['ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
 <td align="right" nowrap="nowrap"><acronym title="' . $r['fecha_init'] . '">' . $r['visitas'] . '</acronym></td>
 <td align="right">' . $r['paginas'] . '</td>
 <td align="right">' . $r['num_foro'] . '</td>
@@ -278,7 +281,7 @@ ORDER BY num ASC", $link);
 	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
-	
+
 
 	$txt .= '<h1>1. Coincidencias de IP</h1><hr /><table border="0" cellspacing="4">';
 	$result = mysql_query("SELECT nick, IP, COUNT(*) AS num, host
@@ -290,14 +293,16 @@ ORDER BY num DESC, fecha_registro DESC", $link);
 		$nota_SC = '';
 		$desarrollador = false;
 		$clones_expulsados = true;
-		$result2 = mysql_query("SELECT ID, nick, estado, pais, partido_afiliado, nota_SC FROM users WHERE IP = '" . $r['IP'] . "' ORDER BY fecha_registro DESC", $link);
+		$confianza_total = 0;
+		$result2 = mysql_query("SELECT ID, nick, estado, pais, partido_afiliado, nota_SC, (SELECT SUM(voto) AS voto_total FROM votos WHERE tipo = 'confianza' AND item_ID = users.ID AND emisor_ID IN (".implode(',', $sc_user_ID).") LIMIT 1) AS voto_confianza_SC FROM users WHERE IP = '" . $r['IP'] . "' ORDER BY fecha_registro DESC", $link);
 		while($r2 = mysql_fetch_array($result2)) {
 			$nota_SC .= $r2['nota_SC'].' ';
+			$confianza_total += $r2['voto_confianza_SC'];
 			if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 			$clones[] = '<b>'.crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']) . '</b> ' . $siglas[$r2['partido_afiliado']];
 		}
 		if ((!$desarrollador) AND (!$clones_expulsados)) {
-			$txt .= '<tr><td>' . $r['num'] . '</td><td>'.implode(' & ', $clones).'</td><td align="right" nowrap="nowrap">'.ocultar_IP($r['host'], 'host').'</td><td>'.ocultar_IP($r['IP']).'</td><td><em>'.$nota_SC.'</em></td></tr>';
+			$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td>'.implode(' & ', $clones).'</td><td align="right" nowrap="nowrap">'.ocultar_IP($r['host'], 'host').'</td><td>'.ocultar_IP($r['IP']).'</td><td><em>'.$nota_SC.'</em></td></tr>';
 		}
 	}
 	$txt .= '</table>';
@@ -315,19 +320,21 @@ ORDER BY num DESC, fecha_registro DESC", $link);
 
 			$clones = array();
 			$nota_SC = '';
-			$result2 = mysql_query("SELECT ID, nick, pais, partido_afiliado, estado, nota_SC
+			$confianza_total = 0;
+			$result2 = mysql_query("SELECT ID, nick, pais, partido_afiliado, estado, nota_SC, (SELECT SUM(voto) AS voto_total FROM votos WHERE tipo = 'confianza' AND item_ID = users.ID AND emisor_ID IN (".implode(',', $sc_user_ID).") LIMIT 1) AS voto_confianza_SC
 FROM users 
 WHERE pass = '" . $r['pass'] . "'", $link);
 			$clones_expulsados = true;
 			while($r2 = mysql_fetch_array($result2)) { 
 				if ($r2['nick']) {
 					$nota_SC .= $r2['nota_SC'].' ';
+					$confianza_total += $r2['voto_confianza_SC'];
 					if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 					$clones[] = crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']) . '</b> ' . $siglas[$r2['partido_afiliado']] . '<b>';
 				} 
 			}
 			if (!$clones_expulsados) {
-				$txt .= '<tr><td>' . $r['num'] . '</td><td><b>'.implode(' & ', $clones).'</b></td><td><em>'.$nota_SC.'</em></td></tr>';
+				$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td><b>'.implode(' & ', $clones).'</b></td><td><em>'.$nota_SC.'</em></td></tr>';
 			}
 		}
 	}

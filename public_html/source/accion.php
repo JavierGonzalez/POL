@@ -297,6 +297,12 @@ case 'expulsar':
 			mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
 			mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$user_ID."'", $link);
+
+			// Cambiado a "En Blanco" los votos
+			$votaciones_activas_ID = array('-1');
+			$result2 = mysql_query("SELECT ID FROM votacion WHERE estado = 'ok'", $link);
+			while ($r2 = mysql_fetch_array($result2)) { $votaciones_activas_ID[] = $r2['ID']; }
+			mysql_query("UPDATE votacion_votos SET voto = '0' WHERE ref_ID IN (".implode(',', $votaciones_activas_ID).") AND user_ID = '".$r['ID']."'", $link);
 			
 			mysql_query("INSERT INTO expulsiones (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
 
@@ -1253,8 +1259,8 @@ case 'foro':
 	if ((strlen($_POST['text']) > 1) AND ($_POST['subforo'])) {
 
 		$acceso = false;
-		$result = mysql_query("SELECT acceso_escribir, acceso_cfg_escribir FROM ".SQL."foros WHERE ID = '".$_POST['subforo']."' LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)) { $acceso = nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']); }
+		$result = mysql_query("SELECT acceso_escribir, acceso_cfg_escribir, acceso_leer FROM ".SQL."foros WHERE ID = '".$_POST['subforo']."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) { $acceso_leer = $r['acceso_leer']; $acceso = nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']); }
 
 		if ($acceso) {
 
@@ -1271,17 +1277,22 @@ case 'foro':
 					$url = $url.'-'.date('dmyHi');
 					mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
 				}
-
-				evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a> <span style="color:grey;">('.$pol['nick'].')</span>');
+				
+				if (in_array($acceso_leer, array('anonimos', 'ciudadanos', 'ciudadanos_global'))) {
+					evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a> <span style="color:grey;">('.$pol['nick'].')</span>');
+				}
 
 			} elseif ($_GET['b'] == 'reply') {
 				
 				if ($_POST['hilo'] != -1) {
 					mysql_query("UPDATE ".SQL."foros_hilos SET time_last = '".$time."' WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
 					
-					$result = mysql_unbuffered_query("SELECT title, num FROM ".SQL."foros_hilos WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
+					$result = mysql_query("SELECT title, num FROM ".SQL."foros_hilos WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
 					while($r = mysql_fetch_array($result)) { $title = $r['title']; }
-					evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'].'">'.$title.'</a> <span style="color:grey;">('.$pol['nick'].')</span>');
+
+					if (in_array($acceso_leer, array('anonimos', 'ciudadanos', 'ciudadanos_global'))) {
+						evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'].'">'.$title.'</a> <span style="color:grey;">('.$pol['nick'].')</span>');
+					}
 				} else {
 					//$text = strip_tags($text);
 				}

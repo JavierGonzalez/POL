@@ -107,7 +107,12 @@ ORDER BY cargo DESC, estado ASC, nota DESC", $link);
 			while($r2 = mysql_fetch_array($result2)){ if ($r2['pols'] >= $pols) { $pols_afiliacion = $r2['valor']; } }
 
 			$text_limit = 1600 - strlen(strip_tags($r['text']));
-			$txt .= '<div class="azul">';
+			
+			
+			
+			
+			
+			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="color:green;font-size:16px;font-weight:bold;">Editar perfil</button><div class="azul" id="editarperfil" style="display:none;">';
 
 if (ECONOMIA) {
 			
@@ -175,8 +180,6 @@ $txt .= '<p>'.boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel').
 '.boton('Autentificar con DNIe', SSL_URL.'dnie.php').' 
 '.($pol['pais']!='ninguno'?boton('Rechazar Ciudadania', REGISTRAR).' ':'').'</p>
 
-<p><form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">Avatar: <input name="avatar" type="file" /><input type="submit" value="Cambiar Avatar" /> | ' . boton('Borrar Avatar', '/accion.php?a=avatar&b=borrar') . ' (jpg, max 1mb)</form></p>
-
 <p>
 <form action="/accion.php?a=afiliarse" method="post">
 
@@ -185,19 +188,17 @@ Afiliaci&oacute;n: <select name="partido"><option value="0">Ninguno</option>';
 
 $result2 = mysql_query("SELECT ID, siglas FROM ".SQL."partidos ORDER BY siglas ASC", $link);
 while($r2 = mysql_fetch_array($result2)){
-	$txt .= '<option value="' . $r2['ID'] . '">' . $r2['siglas'] . '</option>';
+	$txt .= '<option value="'.$r2['ID'].'"'.($r2['ID']==$pol['partido']?' selected="selected"':'').'>' . $r2['siglas'] . '</option>';
 }
-if ($pol['config']['elecciones_estado'] == 'elecciones') { $disable_afiliar = ' disabled="disabled"'; } else { $disable_afiliar = ''; }
-
 
 $txt .= '
 </select>
 
-<input value="Afiliarse" type="submit"' . $disable_afiliar . '></form>
+<input value="Afiliarse" type="submit"'.($pol['config']['elecciones_estado']=='elecciones'?' disabled="disabled"':'').'></form>
 </p>
 
-<p><form action="/accion.php?a=avatar&b=desc" method="post">Espacio para lo que quieras: (<span id="desc_limit" style="color:blue;">' . $text_limit . '</span> caracteres)<br />
-<textarea name="desc" id="desc_area" style="background:#FFFFDD;border: 1px solid grey; padding:4px; color: green; font-weight: bold; width: 500px; height: 80px;">' . strip_tags($r['text'], '<b>') . '</textarea> <input value="Guardar" type="submit" />
+<p><form action="/accion.php?a=avatar&b=desc" method="post">Espacio para lo que quieras: (<span id="desc_limit" style="color:blue;">'.$text_limit.'</span> caracteres)<br />
+<textarea name="desc" id="desc_area" style="background:#FFFFDD;border: 1px solid grey; padding:4px; color: green; font-weight: bold; width: 500px; height: 80px;">'.strip_tags($r['text'], '<b>').'</textarea> <input value="Guardar" type="submit" />
 </form></p>';
 
 
@@ -221,7 +222,10 @@ while($r2 = mysql_fetch_array($result2)) {
 }
 
 
-$txt .= '</p>';
+$txt .= '</p>
+
+
+<p><form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">Avatar: <input name="avatar" type="file" /><input type="submit" value="Cambiar Avatar" /> | ' . boton('Borrar Avatar', '/accion.php?a=avatar&b=borrar') . ' (jpg, max 1mb)</form></p>';
 
 
 $txt .= '</div>

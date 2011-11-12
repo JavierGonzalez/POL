@@ -299,10 +299,13 @@ case 'expulsar':
 			mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$user_ID."'", $link);
 
 			// Cambiado a "En Blanco" los votos
-			$votaciones_activas_ID = array('-1');
-			$result2 = mysql_query("SELECT ID FROM votacion WHERE estado = 'ok'", $link);
-			while ($r2 = mysql_fetch_array($result2)) { $votaciones_activas_ID[] = $r2['ID']; }
-			mysql_query("UPDATE votacion_votos SET voto = '0' WHERE ref_ID IN (".implode(',', $votaciones_activas_ID).") AND user_ID = '".$r['ID']."'", $link);
+			$result2 = mysql_query("SELECT ID, tipo_voto FROM votacion WHERE estado = 'ok'", $link);
+			while ($r2 = mysql_fetch_array($result2)) { 
+				if ($r2['tipo_voto'] == 'estandar') { $voto_en_blanco = '0'; }
+				elseif ($r2['tipo_voto'] == '3puntos') { $voto_en_blanco = '0 0 0'; }
+				elseif ($r2['tipo_voto'] == '5puntos') { $voto_en_blanco = '0 0 0 0 0'; }
+				mysql_query("UPDATE votacion_votos SET voto = '".$voto_en_blanco."', validez = 'true' WHERE ref_ID = ".$r2['ID']." AND user_ID = ".$r['ID']." LIMIT 1", $link);
+			}
 			
 			mysql_query("INSERT INTO expulsiones (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
 

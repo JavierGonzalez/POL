@@ -210,7 +210,7 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . str
 
 
 
-									$texto_email = "Hola $nick\n\n\nAccede a la siguiente direccion, para activar tu usuario y entrar a VirtualPol.\n\nUsuario: $nick\nContraseña: ***\n\n ".REGISTRAR."?a=verificar&nick=" . $nick . "&code=" . $api_pass . "\n\nContamos contigo!\n\n\nVirtualPol - http://www.virtualpol.com/";
+									$texto_email = "Hola $nick\n\n\nAccede a la siguiente direccion, para activar tu usuario y entrar a VirtualPol.\n\n".REGISTRAR."?a=verificar&nick=" . $nick . "&code=" . $api_pass . "\n\nContamos contigo!\n\n\nVirtualPol - http://www.virtualpol.com/";
 
 
 									mail($email, "[VirtualPol] Verificar " . $nick, $texto_email, "FROM: VirtualPol <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 

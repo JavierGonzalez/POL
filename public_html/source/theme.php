@@ -259,11 +259,11 @@ echo '</div>';
 	<li id="menu-3">
 		<a href="/">Plaza Virtual</a>
 		<ul>
-			<li><a href="/chats/">Otras plazas</a></li>
+			<li><a href="/chats/">Chats</a></li>
 			<li><a href="/foro/">Foros</a></li>
 			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.noc4net.com/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
-			<li><a href="/doc/">Archivo <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
-			<li><a href="/info/censo/">Ciudadanos</a></li>
+			<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
+			<li><a href="/info/censo/">Censo <span class="md"><?=$pol['config']['info_censo']?></span></a></li>
 			<li><a href="/partidos/">Grupos <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
 			<li><a href="/cargos/"><span style="float:right;">&#9658;</span>Gesti&oacute;n</a>
 				<ul>

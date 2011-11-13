@@ -92,7 +92,7 @@ function print_whois(whois, wnick) {
 	if (w[6] == 1) { var wa = "<img src=\"" + IMG + "a/" + w[0] + ".jpg\" style=\"float:right;margin:0 -6px 0 0;\" />"; } else { var wa = ""; }
 	if (w[11] != 0) { var wc = "<img src=\"" + IMG + "cargos/" + w[11] + ".gif\" width=\"16\" /> "; } else { var wc = ""; }
 	if (w[9] == "expulsado") { var exp = "<br /><b style=\"color:red;\">" + w[12] + "</b>"; } else { var exp = ""; }
-		$("#pnick").html(wc + "<b style=\"color:grey;\">" + wnick + " (<span class=\"" + w[9] + "\">" + w[9].substr(0,1).toUpperCase() + w[9].substr(1,w[9].length) + "</span> de " + w[10] + ")</b>" + exp + "<br />" + wa + "Nivel: <b>" + w[3] + "</b><br />Nota: <b>" + w[4] + "</b><br />Partido: <b>" + w[7] + "</b><br />Foro: <b>" + w[8] + "</b><br /><br />Online: <b>" + w[5] + "</b><br />Ultimo acceso: <b>" + w[2] + "</b><br />Registrado hace: <b>" + w[1] + "</b>").css("display","inline");
+		$("#pnick").html(wc + "<b style=\"color:grey;\">" + wnick + " (<span class=\"" + w[9] + "\">" + w[9].substr(0,1).toUpperCase() + w[9].substr(1,w[9].length) + "</span> de " + w[10] + ")</b>" + exp + "<br />" + wa + "Afil: <b>" + w[7] + "</b><br />Foro: <b>" + w[8] + "</b><br /><br />Online: <b>" + w[5] + "</b><br />Ultimo acceso: <b>" + w[2] + "</b><br />Registrado: <b>" + w[1] + "</b>").css("display","inline");
 	}
 }
 

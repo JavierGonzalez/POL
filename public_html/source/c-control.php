@@ -128,11 +128,103 @@ LIMIT 60", $link);
 
 
 
+} else if ($_GET['b'] == 'confianza-mutua') {
+
+
+
+	$txt_title = 'Control: Supervision del Censo | Confianza mutua';
+	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Extras | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+
+<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+
+
+$data_amigos = array();
+$data_enemigos = array();
+$confianzas_amigos = array();
+
+$result = mysql_query("SELECT *,
+(SELECT nick FROM users WHERE ID = votos.emisor_ID LIMIT 1) AS emisor_nick,
+(SELECT nick FROM users WHERE ID = votos.item_ID LIMIT 1) AS item_nick
+FROM votos
+WHERE tipo = 'confianza' AND voto = '1'
+ORDER BY RAND()", $link);
+while($r = mysql_fetch_array($result)) {
+	$r['emisor_nick'] = substr($r['emisor_nick'], 0, 8);
+	$r['item_nick'] = substr($r['item_nick'], 0, 8);
+
+	if ($r['emisor_ID'] < $r['item_ID']) {
+		$confianzas_amigos[$r['emisor_nick'].'--'.$r['item_nick']]++;
+	} else {
+		$confianzas_amigos[$r['item_nick'].'--'.$r['emisor_nick']]++;
+	}
+
+}
+
+foreach ($confianzas_amigos AS $emisor_item => $num) {
+	if ($num >= 2) { 
+		$data_amigos[] = $emisor_item;
+		//$txt .= $emisor_item.'<br />'; 
+	}
+}
+
+
+$result = mysql_query("SELECT *,
+(SELECT nick FROM users WHERE ID = votos.emisor_ID LIMIT 1) AS emisor_nick,
+(SELECT nick FROM users WHERE ID = votos.item_ID LIMIT 1) AS item_nick
+FROM votos
+WHERE tipo = 'confianza' AND voto = '-1'", $link);
+while($r = mysql_fetch_array($result)) {
+	$r['emisor_nick'] = substr($r['emisor_nick'], 0, 8);
+	$r['item_nick'] = substr($r['item_nick'], 0, 8);
+
+	if ($r['emisor_ID'] < $r['item_ID']) {
+		$confianzas_enemigos[$r['emisor_nick'].'--'.$r['item_nick']]++;
+	} else {
+		$confianzas_enemigos[$r['item_nick'].'--'.$r['emisor_nick']]++;
+	}
+
+}
+
+foreach ($confianzas_enemigos AS $emisor_item => $num) {
+	if ($num >= 2) { 
+		$data_enemigos[] = $emisor_item;
+		//$txt .= $emisor_item.'<br />'; 
+	}
+}
+
+
+
+
+$gwidth = 500;
+$gheight = 600;
+
+$txt .= '<h1>Grafico confianza</h1>
+
+<hr />
+
+<table>
+<tr>
+<td>
+<b>Confianza mutua '.count($data_amigos).'</b><br />
+<!--<img src="http://chart.googleapis.com/chart?cht=gv:neato&chs='.$gwidth.'x'.$gheight.'&chl=graph{'.implode(';', $data_amigos).'}" width="'.$gwidth.'" height="'.$gheight.'" alt="grafico confianza" /><br />-->
+<img src="http://chart.googleapis.com/chart?cht=gv:twopi&chs='.$gwidth.'x'.$gheight.'&chl=graph{'.implode(';', $data_amigos).'}" width="'.$gwidth.'" height="'.$gheight.'" alt="grafico confianza" />
+</td>
+
+<td>
+<b>Desconfianza mutua '.count($data_enemigos).'</b><br />
+<!--<img src="http://chart.googleapis.com/chart?cht=gv:neato&chs='.$gwidth.'x'.$gheight.'&chl=graph{'.implode(';', $data_enemigos).'}" width="'.$gwidth.'" height="'.$gheight.'" alt="grafico confianza" /><br />-->
+<img src="http://chart.googleapis.com/chart?cht=gv:twopi&chs='.$gwidth.'x'.$gheight.'&chl=graph{'.implode(';', $data_enemigos).'}" width="'.$gwidth.'" height="'.$gheight.'" alt="grafico confianza" />
+</td>
+</tr>
+</table>
+';
 
 } else if ($_GET['b'] == 'factores-secundarios') {
 
+
+
 	$txt_title = 'Control: Supervision del Censo | Extras';
-	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Extras | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Extras | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
@@ -278,7 +370,7 @@ ORDER BY num ASC", $link);
 	} else { // principal
 
 	$txt_title = 'Control: Supervision del Censo';
-	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 

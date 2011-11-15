@@ -133,7 +133,7 @@ LIMIT 60", $link);
 
 
 	$txt_title = 'Control: Supervision del Censo | Confianza mutua';
-	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Extras | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | Confianza | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 

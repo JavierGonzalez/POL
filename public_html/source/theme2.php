@@ -1,4 +1,7 @@
 <?php 
+// ##############################
+// ### THEME v2 (nuevo theme) ###
+
 if ((!$txt) OR ($_SERVER['HTTP_HOST'] == 'ninguno.virtualpol.com')) { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
 $kw = '';
 

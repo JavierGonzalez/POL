@@ -94,7 +94,7 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 					return '<a href="/perfil/' . $a . '/" class="nick"'.$bg.'>' . $a . '</a>';
 				}
 			} else { 
-				return '&dagger;'; 
+				return '<span title="Usuario expirado">&dagger;</span>'; 
 			} 
 			break;
 		case 'partido': if ($a) { return '<a href="/partidos/' . strtolower($a) . '/">' . $a . '</a>'; } else { return 'Ninguno'; } break;

@@ -1,7 +1,4 @@
 <?php 
-// ##############################
-// ### THEME v2 (nuevo theme) ###
-
 if ((!$txt) OR ($_SERVER['HTTP_HOST'] == 'ninguno.virtualpol.com')) { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); exit; }
 $kw = '';
 
@@ -60,7 +57,7 @@ body { background: <?=$body_bg?>; }
 
 
 <div id="header_vp">
-<a href="http://www.virtualpol.com/" title="VirtualPol"><img src="<?=IMG?>logo-virtualpol-2.png" border="0" alt="VirtualPol" /></a>
+<a href="http://www.virtualpol.com/" title="VirtualPol"><img src="<?=IMG?>logo-virtualpol-2.png" border="0" alt="VirtualPol" width="162" height="46" /></a>
 </div>
 
 <div id="header">
@@ -87,13 +84,13 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 			case 'parl': $elecciones = ' <a href="/elecciones/" style="color:blue;"><b>Elecciones en curso</b>, queda <b style="font-size:18px;">'.timer($elecciones_quedan, true).'</b></a> |';  break;
 		}
 	}
-	if ($pol['cargo']) { $cargo_icono = ' <img src="'.IMG.'cargos/' . $pol['cargo'] . '.gif" border="0" />'; } else { $cargo_icono = ''; }
-	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a>'.(ECONOMIA?' | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a>':'').' | <a href="/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a> | <a href="/foro/mis-respuestas/" title="Respuestas a tus mensajes en el foro">Resp</a> |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';} elseif ($pol['estado'] == 'extranjero') { // extranjero
-	$txt_perfil = '<a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <img src="'.IMG.'cargos/99.gif" style="margin-bottom:-2px;" border="0" /> (<b class="extranjero">Extranjero</b>) |  <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a> | <a href="/accion.php?a=logout">Salir</a>';
+	if ($pol['cargo']) { $cargo_icono = ' <img src="'.IMG.'cargos/' . $pol['cargo'] . '.gif" border="0" width="16" height="16" />'; } else { $cargo_icono = ''; }
+	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a>'.(ECONOMIA?' | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a>':'').' | <a href="/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a> | <a href="/foro/mis-respuestas/" title="Respuestas a tus mensajes en el foro">Resp</a> |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';} elseif ($pol['estado'] == 'extranjero') { // extranjero
+	$txt_perfil = '<a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <img src="'.IMG.'cargos/99.gif" style="margin-bottom:-2px;" border="0" width="16" height="16" /> (<b class="extranjero">Extranjero</b>) |  <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a> | <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'turista') { // TURISTA
 	$txt_perfil = $pol['nick'] . ' (<b class="turista">Turista</b>) ' . $pol['tiempo_ciudadanizacion'] . ' | ' . boton('Solicitar Ciudadania', REGISTRAR) . ' | <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'kickeado') { // KICKEADO
-	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Kickeado</b>) | <a href="/control/kick/"><b>Ver Kicks</b></a> | <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" style="margin-bottom:-5px;" /></a>';
+	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Kickeado</b>) | <a href="/control/kick/"><b>Ver Kicks</b></a> | <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a>';
 } elseif ($pol['estado'] == 'expulsado') { // EXPULSADO
 	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Expulsado</b>)';
 } elseif ($pol['nick']) { // sin identificar, login OK
@@ -120,7 +117,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <tr>
 
 <td nowrap="nowrap">
-<a href="/" title="Plataforma <?=PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" border="0" alt="Bandera de <?=PAIS?>" /></a>
+<a href="/" title="Plataforma <?=PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" width="60" height="40" border="0" /></a>
 </td>
 
 <td align="right" valign="middle" nowrap="nowrap"><?=$txt_perfil?></td>
@@ -149,7 +146,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 		<ul>
 			<li><a href="/chats/">Chats</a></li>
 			<li><a href="/foro/">Foros</a></li>
-			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.noc4net.com/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
+			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/notas/">Notas</a></li>
 			<li><a href="/msg/">Mensajes Privados</a></li>
 		</ul>
@@ -268,7 +265,7 @@ echo '</div>';
 		<ul>
 			<li><a href="/chats/">Chats</a></li>
 			<li><a href="/foro/">Foros</a></li>
-			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.noc4net.com/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
+			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
 			<li><a href="/info/censo/">Censo <span class="md"><?=$pol['config']['info_censo']?></span></a></li>
 			<li><a href="/partidos/">Grupos <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>

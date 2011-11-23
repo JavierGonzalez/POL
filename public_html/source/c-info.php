@@ -22,11 +22,11 @@ case 'voz':
 
 <li>Conecta unos <b>auriculares con micr&oacute;fono</b> (es lo m&aacute;s comodo, para que no se acople el sonido).<br /><br /></li>
 
-<li><b>¡<a href="mumble://'.$pol['nick'].'@mumble.noc4net.com/Virtualpol/'.PAIS.'/?version=1.2.0">Entra aqu&iacute;</a>!</b> (o desde el men&uacute; "Voz")</li>
+<li><b>¡<a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0">Entra aqu&iacute;</a>!</b> (o desde el men&uacute; "Voz")</li>
 
 </ol>
 
-<p><br />El servidor de Mumble es "mumble.noc4net.com". De uso compartido con otras plataformas. Cedido y administrado por <em>L. Cabrera</em>.</p>';
+<p><br />El servidor de Mumble es "mumble.democraciarealya.es". De uso compartido con otras plataformas.</p>';
 
 
 	$txt_title = 'Chat de Voz';
@@ -113,9 +113,9 @@ $txt .= '
 <input value="Buscar en perfil" type="submit" onclick="var cmq = $(\'#cmq\').attr(\'value\'); window.location.href=\'/info/censo/busqueda/\'+cmq+\'/\'; return false;">
 </div>
 
-<p>' . $p_paginas . ' &nbsp; &nbsp; <a href="/info/censo/">Ciudadanos</a>: <abbr title="Numero de ciudadanos en la plataforma '.PAIS.'."><b>' . $pol['config']['info_censo'] . '</b></abbr> (<abbr title="Ciudadanos -no nuevos- que entraron en las últimas 24h, en la plataforma '.PAIS.'.">activos <b>'.$censo_activos.'</b></abbr>,  <abbr title="Ciudadanos en todo VirtualPol.">global <b>'.$censo_activos_vp.'</b></abbr>)
+<p>' . $p_paginas . ' &nbsp; &nbsp; <a href="/info/censo/">Ciudadanos</a>: <abbr title="Numero de ciudadanos en la plataforma '.PAIS.'"><b>' . $pol['config']['info_censo'] . '</b></abbr> (<abbr title="Ciudadanos -no nuevos- que entraron en las últimas 24h, en la plataforma '.PAIS.'">activos <b>'.$censo_activos.'</b></abbr>,  <abbr title="Ciudadanos en todo VirtualPol">global <b>'.$censo_activos_vp.'</b></abbr>)
 
-'.(ECONOMIA?' | <a href="/control/expulsiones/" class="expulsado">Expulsados</a>: <b>' . $censo_expulsados . '</b> | <a href="/info/censo/riqueza/" title="Los ciudadanos con más monedas.">Ricos</a>':'').' | <abbr title="Mostrar posibles Supervisores del Censo."><a href="/info/censo/SC/">SC</a></abbr> &nbsp; 
+'.(ECONOMIA?' | <a href="/control/expulsiones/" class="expulsado">Expulsados</a>: <b>' . $censo_expulsados . '</b> | <a href="/info/censo/riqueza/" title="Los ciudadanos con más monedas.">Ricos</a>':'').' | <abbr title="Mostrar posibles Supervisores del Censo"><a href="/info/censo/SC/">SC</a></abbr> &nbsp; 
 </p>
 
 <table border="0" cellspacing="2" cellpadding="0" class="pol_table">
@@ -175,7 +175,7 @@ FROM users ".$order_by." LIMIT ".$p_limit, $link);
 <td align="right" class="gris">' . $orden++ . '</td>
 <td align="right">' . $r['nivel'] . '</td>
 <td height="38">' . $avatar . '</td>
-<td>'.(isset($sc[$r['ID']])?'<span style="float:right;color:red;margin-left:5px;">SC</span>':'').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
+<td>'.(isset($sc[$r['ID']])?'<span style="float:right;color:red;margin-left:5px;" title="Supervisor del Censo">SC</span>':'').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
 <td align="right"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span></td>
 <td>'.($pol['user_ID']&&$r['user_ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['user_ID'].'" class="votar" type="confianza" name="'.$r['user_ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
 '.(ASAMBLEA?'':'<td>' . $partido . '</td>').'

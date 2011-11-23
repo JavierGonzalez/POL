@@ -225,7 +225,7 @@ while($r2 = mysql_fetch_array($result2)) {
 $txt .= '</p>
 
 
-<p><form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">Avatar: <input name="avatar" type="file" /><input type="submit" value="Cambiar Avatar" /> | ' . boton('Borrar Avatar', '/accion.php?a=avatar&b=borrar') . ' (jpg, max 1mb)</form></p>';
+<p><form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">Avatar: <input name="avatar" type="file" /><input type="submit" value="Guardar Avatar" /> | ' . boton('Borrar Avatar', '/accion.php?a=avatar&b=borrar') . ' (jpg, max 1mb)</form></p>';
 
 
 $txt .= '</div>

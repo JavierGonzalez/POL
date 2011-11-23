@@ -309,9 +309,13 @@ $txt .= '
 		} else {
 
 			$txt .= '<span style="float:right;text-align:right;">
-Creador <b>' . crear_link($r['nick']) . '</b>. Inicio: <em>' . $r['time'] . '</em><br />
-'.($r['tipo_voto']!='estandar'?' Tipo de voto: <b>'.$r['tipo_voto'].'</b>.':'').' Duraci&oacute;n <b>'.$duracion.'</b>.'.($r['votos_expire']!=0?' Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.':'').' Fin: <em>' . $r['time_expire'] . '</em><br />
-Acceso: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</acronym>. <a href="/votacion/'.$r['ID'].'/verificacion/">Más información</a>.
+Creador <b>' . crear_link($r['nick']) . '</b>. Duraci&oacute;n <b>'.$duracion.'</b>.<br />
+Acceso de voto: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</acronym>.<br /> 
+Inicio: <em>' . $r['time'] . '</em><br /> 
+Fin: <em>' . $r['time_expire'] . '</em><br />
+'.($r['votos_expire']!=0?'Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.<br />':'').'
+<a href="/votacion/'.$r['ID'].'/verificacion/">Más información</a>.
+'.($r['tipo_voto']!='estandar'?'<br />Tipo de voto: <b>'.$r['tipo_voto'].'</b>.':'').'
 </span>';
 
 			if ($r['estado'] == 'end') {  // VOTACION FINALIZADA: Mostrar escrutinio. 
@@ -380,7 +384,7 @@ Acceso: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', '
 						}
 					}
 
-					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chp=4.71&chd=t:'.implode(',', $grafico_array_votos).'&chs=430x200&chl='.implode('|', $grafico_array_respuestas).'&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="430" height="200" />';
+					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chp=4.71&chd=t:'.implode(',', $grafico_array_votos).'&chs=320x200&chl='.implode('|', $grafico_array_respuestas).'&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="320" height="200" />';
 				}
 
 				// Imprime datos de legitimidad y validez
@@ -457,11 +461,14 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 
 				// Imprime boton para votar, aviso de tiempo y votacion correcta/nula.
 				$txt .= '
-<input type="submit" value="Votar" style="font-size:22px;"'.($tiene_acceso_votar?'':' disabled="disabled"').' /> '.($tiene_acceso_votar?'<span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span>':'<span style="color:red;">'.(!$pol['user_ID']?'Para votar debes <a href="'.REGISTRAR.'">crear tu ciudadano</a>.':'No tienes acceso para votar.').'</span>').'</p>
+<input type="submit" value="Votar" style="font-size:22px;"'.($tiene_acceso_votar?'':' disabled="disabled"').' /> '.($tiene_acceso_votar?'<span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span>':'<span style="color:red;white-space:nowrap;">'.(!$pol['user_ID']?'Para votar debes <a href="'.REGISTRAR.'">crear tu ciudadano</a>.':'No tienes acceso para votar.').'</span>').'</p>
 
 <p>
-<input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votaci&oacute;n correcta.<br />
-<input type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> Votaci&oacute;n nula (inv&aacute;lida, inapropiada o tendenciosa).<br />
+<!--<fieldset>
+    <legend>Validez</legend>-->
+	<input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votaci&oacute;n correcta.<br />
+	<input type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> Votaci&oacute;n nula (inv&aacute;lida, inapropiada o tendenciosa).<br />
+<!--</fieldset>-->
 </p>
 
 
@@ -498,26 +505,31 @@ ORDER BY siglas ASC", $link);
 	$txt .= '<h1>Votaciones: &nbsp; &nbsp; '.boton('Crear votacion', '/votacion/crear/').'</h1>
 
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">
-<tr>
+
+<!--<tr>
 <th>Tipo</th>
 <th>Votos</th>
 <th>Pregunta</th>
-<th>Autor</th>
 <th>Estado</th>
 <th></th>
+</tr>-->
+
+<tr>
+<td colspan="5"><span style="color:#888;"><br /><b>En curso</b>:</span><hr /></td>
 </tr>';
 	$mostrar_separacion = true;
+	// (SELECT nick FROM users WHERE ID = votacion.user_ID LIMIT 1) AS nick,
 	$result = mysql_query("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar,
-(SELECT nick FROM users WHERE ID = votacion.user_ID LIMIT 1) AS nick,
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS ha_votado
 FROM votacion
 WHERE pais = '".PAIS."' 
-ORDER BY estado ASC, time_expire DESC", $link);
+ORDER BY estado ASC, time_expire DESC
+LIMIT 500", $link);
 	while($r = mysql_fetch_array($result)) {
+		$time_expire = strtotime($r['time_expire']);
 		if ($r['estado'] == 'ok') { 
-			$time_expire = strtotime($r['time_expire']);
-			$estado =  '<span style="color:blue;"><span class="timer" value="'.$time_expire.'"></span></span>'; 
-		} else { $estado = '<span style="color:grey;">Finalizado</span>'; }
+			$estado =  '<span style="color:blue;"><b><span class="timer" value="'.$time_expire.'"></span></b></span>'; 
+		} else { $estado = '<span style="color:grey;">Hace <span class="timer" value="'.$time_expire.'"></span></span>'; }
 
 		if ((!$r['ha_votado']) AND ($r['estado'] == 'ok') AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']))) { 
 			$votar = boton('Votar', '/votacion/' . $r['ID'] . '/');
@@ -533,17 +545,14 @@ ORDER BY estado ASC, time_expire DESC", $link);
 
 		if (($mostrar_separacion) AND ($r['estado'] != 'ok')) {
 			$mostrar_separacion = false;
-			$txt .= '<tr>
-<td colspan="6"><span style="color:#888;"><br />Votaciones finalizadas:</span><hr /></td>
-</tr>';
+			$txt .= '<tr><td colspan="5"><span style="color:#888;"><br /><b>Finalizadas</b>:</span><hr /></td></tr>';
 		}
 
 		$txt .= '<tr>
 <td'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.$r['num'].'</b></td>
 <td><a href="/votacion/'.$r['ID'].'/"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.$r['pregunta'].'</a></td>
-<td>'.crear_link($r['nick']).'</td>
-<td nowrap="nowrap"><b>'.$estado.'</b></td>
+<td nowrap="nowrap">'.$estado.'</td>
 <td nowrap="nowrap">'.$votar.$boton.'</td>
 <td></td>
 </tr>';

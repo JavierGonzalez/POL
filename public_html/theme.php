@@ -52,20 +52,7 @@ unset($txt_header);
 if ($pol['nick']) {
 	$txt_perfil = '<b><a href="http://' . strtolower($pol['pais']) . '.virtualpol.com/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . '</a></b> | <b class="' . $pol['estado'] . '">' . ucfirst($pol['estado']) . '</b> de <b>' . $pol['pais'] . '</b> | <a href="'.REGISTRAR.'login.php?a=logout">Salir</a>';
 } else { // sin identificar, sin login
-	$txt_perfil = '
-<script type="text/javascript" src="'.IMG.'md5.js"></script> 
-<script type="text/javascript">
-function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "123")) { objeto.value = ""; } }
-</script>
-<span style="float:right;margin-top:-3px;">
-<form action="'.REGISTRAR.'login.php?a=login" method="post">
-<input name="url" value="' . base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) . '" type="hidden" />
-<input name="user" value="Usuario" size="8" maxlength="20" onfocus="vlgn(this)" type="text" />
-<input id="login_pass" name="pass" value="123" size="10" maxlength="200" onfocus="vlgn(this)" type="password" />
-<input type="submit" value="Entrar" onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" /></form>
-</span>
-'.boton('Reg&iacute;strate!', REGISTRAR).' | <a href="'.REGISTRAR.'login.php?a=recuperar-pass">Recuperar contrase&ntilde;a</a> &nbsp;';
-
+	$txt_perfil = boton('Crear ciudadano', REGISTRAR).' | '.boton('Login', REGISTRAR.'login.php');
 }
 ?>
 <div style="margin:10px 0 2px 0;">

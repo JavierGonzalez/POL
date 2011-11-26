@@ -275,7 +275,19 @@ body, a { color:#FFFFFF; }
 </body>
 </html>';
 		} else { header('Location: '.$url); } 
-	} else { header('Location: '.$url); } 
+	} else { 
+		$result = mysql_query("SELECT estado FROM users WHERE nick = '".$nick."' LIMIT 1", $link);
+		while ($r = mysql_fetch_array($result)) { $nick_estado = $r['estado']; }
+
+		switch ($nick_estado) {
+			case 'turista': case 'ciudadano': $msg_error = 'Contrase&ntilde;a incorrecta'; break;
+			case 'expulsado': $msg_error = 'Est&aacute;s expulsado de VirtualPol por infracci&oacute;n del <a href="/legal">TOS</a>'; break;
+			case 'validar': $msg_error = 'Usuario no validado, revisa tu email'; break;
+			default: $msg_error = 'Usuario inexistente, probablemente expirado'; break;
+		}
+
+		header('Location: '.REGISTRAR.'login.php?error='.base64_encode($msg_error));
+	} 
 	break;
 
 
@@ -291,6 +303,58 @@ case 'logout':
 	header("Location: $url");
 	break;
 
+
+
+default:
+
+	$txt_header .= '<style type="text/css">.content { width:400px; margin: 0 auto; padding: 2px 12px 0 12px; }</style>';
+
+
+	$txt .= '<center><h1>Entrar con ciudadano:</h1></center>';
+
+	if (isset($pol['user_ID'])) {
+		$txt .= '<p>Ya est&aacute;s logueado correctamente como <b>'.$pol['nick'].'</b>.</p>';
+	} else {
+		$txt .= '
+<script type="text/javascript" src="'.IMG.'md5.js"></script>
+<script type="text/javascript">
+function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "123")) { objeto.value = ""; } }
+</script>
+
+
+<form action="'.REGISTRAR.'login.php?a=login" method="post">
+<input name="url" value="'.($_GET['r']?$_GET['r']:base64_encode('http://www.virtualpol.com/')).'" type="hidden" />
+
+<table border="0" style="margin:20px auto;">
+
+<tr>
+<td align="right">Usuario:</td>
+<td><input name="user" value="" size="10" maxlength="20" onfocus="vlgn(this)" type="text" style="font-size:20px;font-weight:bold;" /></td>
+</tr>
+
+<tr>
+<td align="right">Contrase&ntilde;a:</td>
+<td><input id="login_pass" name="pass" type="password" value="" size="10" maxlength="200" onfocus="vlgn(this)" style="font-size:20px;font-weight:bold;" /></td>
+</tr>
+
+<tr>
+<td colspan="2" align="center">
+'.($_GET['error']?'<em style="color:red;">'.base64_decode($_GET['error']).'.</em><br /><br />':'').'
+<input type="submit" value="Entrar" onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" style="font-size:25px;color:#777;" /><br /><br />
+<a href="'.REGISTRAR.'login.php?a=recuperar-pass">&iquest;Has olvidado tu contrase&ntilde;a?</a><br /><br />
+<a href="'.REGISTRAR.'">&iquest;A&uacute;n no tienes usuario registrado?</a><br /><br /><br />
+<span style="color:#888;">Contacto: desarrollo@virtualpol.com</span>
+</td>
+</tr>
+
+</table>
+
+</form>';
+	}
+
+	$txt_title = 'Login';
+	include('../theme.php');
+	break;
 
 }
  

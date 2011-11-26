@@ -10,6 +10,8 @@ body {
 abbr { border-bottom:1px dotted #999; }
 
 .redondeado {
+	padding-left:2px;
+	padding-right:2px;
 	border-radius: 6px;
 	-moz-border-radius: 6px; 
 	-webkit-border-radius: 6px;

@@ -87,11 +87,12 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 				if ($pais) {
 					global $vp;
 					$bg = ' style="background:'.$vp['bg'][$pais].';"';
+					$add_class .= ' redondeado';
 				}
 				if (($estado) && ($estado != 'ciudadano')) { 
-					return '<a href="/perfil/' . $a . '/" class="nick ' . $estado . '"'.$bg.'>' . $a . '</a>';
+					return '<a href="/perfil/'.$a.'/" class="nick'.$add_class.' '.$estado.'"'.$bg.'>'.$a.'</a>';
 				} else {
-					return '<a href="/perfil/' . $a . '/" class="nick"'.$bg.'>' . $a . '</a>';
+					return '<a href="/perfil/'.$a.'/" class="nick'.$add_class.'"'.$bg.'>'.$a.'</a>';
 				}
 			} else { 
 				return '<span title="Usuario expirado">&dagger;</span>'; 

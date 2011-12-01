@@ -59,7 +59,7 @@ if ($pol['nick']) {
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 
-<td width="208"><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><img src="<?=IMG?>logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-11px 0 -9px -6px;" border="0" /></a></td><td><span style="color:grey;font-size:20x;">Plataforma democr&aacute;tica autogestionada</span></span></td>
+<td width="208"><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><img src="<?=IMG?>logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-12px 0 -9px -6px;" border="0" /></a></td><td><span style="color:grey;font-size:20x;">Plataforma democr&aacute;tica autogestionada</span></span></td>
 
 <td align="right"><?=$txt_perfil?></td>
 
@@ -71,7 +71,7 @@ if ($pol['nick']) {
 </div>
 <div id="content-wrap" class="clear lcol">
 
-<div class="content">
+<div class="content" style="max-width:900px;margin:0 auto;">
 <div class="content-in">
 
 <?=$txt?>

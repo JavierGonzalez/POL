@@ -201,7 +201,7 @@ case 'pass':
 		}
 
 		if ($user_ID) {
-			$new_pass = $nick.rand(10000,99999);
+			$new_pass = rand(100000,999999);
 
 			$asunto = '[VirtualPol] Contraseña reseteada del usuario: '.$nick;
 
@@ -296,7 +296,7 @@ case 'expulsar':
 		while ($r = mysql_fetch_array($result)) {
 			mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
-			mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$r['ID']."'", $link);
 
 			// Cambiado a "En Blanco" los votos
 			$result2 = mysql_query("SELECT ID, tipo_voto FROM votacion WHERE estado = 'ok'", $link);
@@ -385,6 +385,9 @@ case 'voto':
 case 'avatar':
 	$img_root = RAIZ.'/img/a/';
 	if ($_GET['b'] == 'upload') {
+		unlink($img_root.$pol['user_ID'].'.jpg');
+		unlink($img_root.$pol['user_ID'].'_40.jpg');
+		unlink($img_root.$pol['user_ID'].'_80.jpg');
 		$nom_file = $pol['user_ID'].'.jpg';
 		$img_name = $_FILES['avatar']['name'];
 	        $img_type = str_replace('image/', '', $_FILES['avatar']['type']);
@@ -400,9 +403,9 @@ case 'avatar':
 			mysql_query("UPDATE users SET avatar_localdir = '".$_FILES['avatar']['name']."', avatar = 'true' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		}
 	} elseif ($_GET['b'] == 'borrar') {
-		unlink($img_root . $pol['user_ID'].'.jpg');
-		unlink($img_root . $pol['user_ID'].'_40.jpg');
-		unlink($img_root . $pol['user_ID'].'_80.jpg');
+		unlink($img_root.$pol['user_ID'].'.jpg');
+		unlink($img_root.$pol['user_ID'].'_40.jpg');
+		unlink($img_root.$pol['user_ID'].'_80.jpg');
 		mysql_query("UPDATE users SET avatar = 'false' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		$refer_url = 'perfil/'.strtolower($pol['nick']).'/';
 	} elseif (($_GET['b'] == 'desc') AND (strlen($_POST['desc']) <= 2000)) {
@@ -1772,7 +1775,7 @@ case 'editar-documento':
 		$text = str_replace("../../", "/doc/", $text);
 		$_POST['titulo'] = strip_tags($_POST['titulo']);
 
-		$result = mysql_query("SELECT ID, acceso_escribir, acceso_cfg_escribir FROM docs WHERE url = '".$_POST['url']."' AND pais = '".PAIS."' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, acceso_escribir, acceso_cfg_escribir FROM docs WHERE url = '".$_POST['url']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
 

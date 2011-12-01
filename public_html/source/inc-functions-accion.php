@@ -204,10 +204,12 @@ LIMIT 1", $link);
                 }
 
                 // eliminar
-                if ($estado == 'expulsado') { 
+                /* PENDIENTE DE ARREGLAR. CODIGO CORRECTO, EXCEPTO QUE NO DEBE BORRAR MENSAJES DE EXPULSADOS POR PETICION PROPIA.
+				if ($estado == 'expulsado') { 
                         mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."'", $link);
                         mysql_query("DELETE FROM ".SQL."foros_hilos WHERE user_ID = '".$user_ID."'", $link);
                 }
+				*/
         }
 }
 

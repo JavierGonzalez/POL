@@ -12,7 +12,7 @@ if ($_GET['a']) {
 
 			$confirm_salir = ' onClick="if (!confirm(\'&iquest;Seguro que quieres salir? No se guardar&aacute;n los cambios.\')) { return false; }"';
 			include('inc-functions-accion.php');
-			$txt .= '<form action="/accion.php?a=editar-documento&ID='.$r['ID'].'" method="post">
+			$txt .= '<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=editar-documento&ID='.$r['ID'].'" method="post">
 <input type="hidden" name="url" value="' . $r['url'] . '"  />
 
 <h1><img src="'.IMG.'documentos/doc-edit.gif" alt="Editar Documento" /> <a href="/doc/">Documento</a>: <input type="text" name="titulo" value="' . $r['title'] . '" size="60" /></h1>

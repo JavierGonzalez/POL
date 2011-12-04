@@ -121,7 +121,7 @@ $txt .= '
 <table border="0" cellspacing="2" cellpadding="0" class="pol_table">
 <tr>
 <th></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/nivel/">Nivel</a></th>
+'.(ASAMBLEA?'':'<th style="padding:8px;" class="azul"><a href="/info/censo/nivel/">Nivel</a></th>').'
 <th></th>
 <th style="padding:8px;" class="azul"><a href="/info/censo/nombre/">Nick</a></th>
 <th style="padding:8px;" class="azul" colspan="2"><a href="/info/censo/confianza/">Confianza</a></th>
@@ -173,7 +173,7 @@ FROM users ".$order_by." LIMIT ".$p_limit, $link);
 
 		$txt .= '<tr>
 <td align="right" class="gris">' . $orden++ . '</td>
-<td align="right">' . $r['nivel'] . '</td>
+'.(ASAMBLEA?'':'<td align="right">' . $r['nivel'] . '</td>').'
 <td height="38">' . $avatar . '</td>
 <td>'.(isset($sc[$r['ID']])?'<span style="float:right;color:red;margin-left:5px;" title="Supervisor del Censo">SC</span>':'').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
 <td align="right"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span></td>

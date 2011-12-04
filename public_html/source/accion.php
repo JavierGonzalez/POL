@@ -209,8 +209,8 @@ case 'pass':
 
 			mail($email, $asunto, $mensaje, "FROM: VirtualPOL <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
 
-			mysql_query("UPDATE users SET pass = '".md5($new_pass)."' WHERE ID = '".$user_ID."' LIMIT 1", $link);
-			echo 'OK.';
+			mysql_query("UPDATE users SET pass = '".md5($new_pass)."', reset_last = fecha_registro WHERE ID = '".$user_ID."' LIMIT 1", $link);
+			echo 'OK: '.$_GET['nick'];
 		} else { echo 'Error.'; }
 		exit;
 	}

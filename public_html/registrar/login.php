@@ -72,10 +72,15 @@ case 'panel':
 case 'recuperar-pass':
 	if ($pol['user_ID']) { header('Location: '.REGISTRAR.'login.php?a=panel'); exit; }
 
-	$txt .= '<h2>&iquest;Has olvidado tu contrase&ntilde;a?</h2>
+	$txt .= '<h2>&iquest;Has olvidado tu contrase&ntilde;a?</h2>';
 
-'.($_GET['b']=='no-existe'?'<p style="color:red;"><b>No existe ningun usuario con ese email. Probablemente ha sido eliminado por inactividad, puedes registrarlo de nuevo.</b></p>':'').'
+	if ($_GET['b']=='no-existe') {
+		$txt .= '<p style="color:red;"><b>No existe ningun usuario con ese email. Probablemente ha sido eliminado por inactividad, puedes registrarlo de nuevo.</b></p>';
+	} elseif ($_GET['b']=='no-24h') {
+		$txt .= '<p style="color:red;"><b>Solo se puede hacer un reseteo de contrase&ntilde;a cada 24 horas. Debes esperar.</b></p>';
+	}
 
+	$txt .= '
 <p>No te preocupes, puedes solicitar un reset de la contrase&ntilde;a. Siguiendo estos pasos:</p>
 
 <ol>
@@ -125,10 +130,9 @@ case 'reset-pass':
 // ACCIONES /login.php?a=...
 
 
-case 'reset-pass-change':
+case 'reset-pass-change':	
 	if ($_POST['pass_new'] === $_POST['pass_new2']) {
-		mysql_query("UPDATE users SET pass = '".md5($_POST['pass_new'])."', api_pass = '', reset_last = '".$date."' WHERE ID = '".$_POST['user_ID']."' AND api_pass = '".$_POST['check']."' AND reset_last >= '".$date."' LIMIT 1", $link);
-		
+		mysql_query("UPDATE users SET pass = '".md5($_POST['pass_new'])."', api_pass = '".rand(1000000,9999999)."', reset_last = '".$date."' WHERE ID = '".$_POST['user_ID']."' AND api_pass = '".$_POST['check']."' AND reset_last >= '".$date."' LIMIT 1", $link);
 	}
 	header('Location: http://www.virtualpol.com/');
 	break;
@@ -157,8 +161,18 @@ VirtualPol</p>";
 		mail($r['email'], "[VirtualPol] Cambio de contraseña del usuario: ".$r['nick'], $texto_email, "FROM: VirtualPol <desarrollo@virtualpol.com>\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n"); 
 	}
 
-	if ($enviado == false) { // NO existe nick
-		header('Location: '.REGISTRAR.'login.php?a=recuperar-pass&b=no-existe');
+	if ($enviado == false) {
+		$nick_existe = false;
+		$result = mysql_query("SELECT ID FROM users WHERE email = '".$_POST['email']."' LIMIT 1", $link);
+		while ($r = mysql_fetch_array($result)) { $nick_existe = true; }
+		
+		if ($nick_existe) {
+			header('Location: '.REGISTRAR.'login.php?a=recuperar-pass&b=no-24h');
+		} else {
+			header('Location: '.REGISTRAR.'login.php?a=recuperar-pass&b=no-existe');
+		}
+
+
 	} else {
 		header('Location: http://www.virtualpol.com/');
 	}
@@ -175,9 +189,10 @@ case 'changepass':
 	$pre_login = true;
 	
 	if ($pol['user_ID']) {
-		$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND pass = '$oldpass' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND pass = '".$oldpass."' LIMIT 1", $link);
 		while ($r = mysql_fetch_array($result)) { $userID = $r['ID']; }
 		if (($pol['user_ID'] == $userID) AND ($newpass === $newpass2)) {
+			if (strlen($newpass) != 32) { $newpass = md5($newpass); }
 			mysql_query("UPDATE users SET pass = '" . $newpass . "' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		}
 	}
@@ -232,7 +247,8 @@ case 'login':
 	}
 
 	$link = conectar();
-
+	
+	if (strlen($pass) != 32) { $pass = md5($pass); }
 	$result = mysql_query("SELECT ID AS user_ID, nick FROM users WHERE nick = '".$nick."' AND pass = '".$pass."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { $user_ID = $r['user_ID']; }
 

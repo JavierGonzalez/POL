@@ -391,13 +391,14 @@ while($r = mysql_fetch_array($result)) {
 
 // ACTUALIZACION DEL VOTO CONFIANZA
 if (date('N') == 7) { // SOLO EL DOMINGO
-	mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '".$margen_60dias."')", $link);
 	mysql_query("UPDATE users SET voto_confianza = '0'", $link);
 	$result = mysql_query("SELECT item_ID, SUM(voto) AS num_confianza FROM votos WHERE tipo = 'confianza' GROUP BY item_ID", $link);
 	while ($r = mysql_fetch_array($result)) { 
 		mysql_query("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['item_ID']."' LIMIT 1", $link);
 	} 
 	evento_chat('<b>[PROCESO] Supervisores del Censo:</b> '.implode(' ', get_supervisores_del_censo()));
+	mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '".$margen_90dias."')", $link);
+	
 }
 
 

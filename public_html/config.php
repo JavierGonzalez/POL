@@ -68,7 +68,7 @@ if (ASAMBLEA) {
 'foro_borrar'=>array('cargo', '12 13'),
 'control_gobierno'=>array('cargo', '7 19'),
 'control_sancion'=>array('cargo', '9'),
-'examenes_decano'=>array('cargo', '35'),
+'examenes_decano'=>array('cargo', '35 60'),
 'examenes_profesor'=>array('cargo', '34'),
 'crear_partido'=>array('antiguedad','0'),
 );
@@ -103,6 +103,9 @@ define('SQL_MENSAJES', 'mensajes');
 define('SQL_VOTOS', 'votos');
 define('SQL_EXPULSIONES', 'expulsiones');
 define('VOTO_CONFIANZA_MAX', 50); // numero maximo de votos de confianza emitibles
+
+$datos_perfil = array('Blog', 'Twitter', 'Facebook', 'Google+', '', 'Menéame');
+
 
 // Variables del sistema de usuarios
 define('USERCOOKIE', '.virtualpol.com');

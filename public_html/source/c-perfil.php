@@ -22,15 +22,10 @@ while($r = mysql_fetch_array($result)){
 
 		$extras = '';
 		if (isset($sc[$pol['user_ID']])) {
-			$hosts = explode(".", $r['host']);
-			$host = '';
-			if (strlen($hosts[count($hosts)-3]) > 3) { 
-				$host = '*.'.$hosts[count($hosts)-3] . '.' . $hosts[count($hosts)-2] . '.' . $hosts[count($hosts)-1]; 
-			}
 	
 			$extras = '
 <tr>
-<td colspan="2"><input style="float:right;" value="Expulsar" onclick="window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/control/expulsiones/expulsar/'.$r['nick'].'\';" type="button"'.$exp_disabled.' />(' . $r['ID'] . ', <span title="'.$r['avatar_localdir'].'">'.$r['email'].'</span>, '.ocultar_IP($host, 'host').', <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-20,20)).'">GeoIP</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
+<td colspan="2"><input style="float:right;" value="Expulsar" onclick="window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/control/expulsiones/expulsar/'.$r['nick'].'\';" type="button"'.$exp_disabled.' />(' . $r['ID'] . ', <span title="'.$r['avatar_localdir'].'">'.$r['email'].'</span>, '.ocultar_IP($r['host'], 'host').', <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-30,30)).'">GeoIP</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
 <tr><td colspan="3" align="right">
 
 <form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post">
@@ -40,9 +35,11 @@ Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="4
 
 </td>
 
-<td valign="top" align="right" style="font-size:9px;">';
+<td valign="top" align="right"><div style="font-size:12px;width:180px;max-height:100px;overflow:auto;">';
+			
 			foreach (explode('|', $r['hosts']) AS $el_host) { if ($el_host != '') { $extras .= ocultar_IP($el_host, 'host').'<br />'; } }
-			$extras .= '</td></tr>';
+			
+			$extras .= '</div></td></tr>';
 		} else { $extras = ''; }
 		
 		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="3" valign="top" align="center">'.($r['avatar']=='true'?'<img src="'.IMG.'a/' . $r['ID'] . '.jpg" alt="'.$nick.'" />':'').($r['dnie']=='true'?'<br /><img src="'.IMG.'varios/autentificacion.png" border="0" style="margin-top:6px;" />':'').'</td><td nowrap="nowrap"><h1><span class="amarillo"><img src="'.IMG.'cargos/'.$r['cargo'].'.gif" alt="Cargo" style="margin-bottom:0;" border="0" /> ' . $nick . ' &nbsp; <span style="color:grey;"><span class="' . $r['estado'] . '">' . ucfirst($r['estado']) . '</span> de ' . $r['pais'] . '</span></span></h1></td><td nowrap="nowrap">';
@@ -197,6 +194,29 @@ $txt .= '
 <input value="Afiliarse" type="submit"'.($pol['config']['elecciones_estado']=='elecciones'?' disabled="disabled"':'').'></form>
 </p>
 
+
+<form action="/accion.php?a=perfil&b=datos" method="POST">
+<table border="0">
+<tr>
+<td colspan="2"><b>Perfiles</b></td>
+<td>&nbsp; Direcciones web (empiezan por http://...)</td>
+</tr>';
+
+
+
+// DATOS DE PERFIL
+$datos = explode('][', $r['datos']);
+foreach ($datos_perfil AS $id => $dato) {
+	if ($dato != '') {
+		$txt .= '<tr><td align="right">'.$dato.'</td><td><img src="'.IMG.'ico/'.$id.'_32.png" width="32" width="32" alt="'.$datos.'" /></td><td><input type="text" name="'.$dato.'" value="'.$datos[$id].'" size="60" /></td></tr>';
+	}
+}
+
+$txt .= '
+<tr><td colspan="2"></td><td><input type="submit" value="Guardar" /></td></tr>
+</table></form>
+
+
 <p><form action="/accion.php?a=avatar&b=desc" method="post">Espacio para lo que quieras: (<span id="desc_limit" style="color:blue;">'.$text_limit.'</span> caracteres)<br />
 <textarea name="desc" id="desc_area" style="background:#FFFFDD;border: 1px solid grey; padding:4px; color: green; font-weight: bold; width: 500px; height: 80px;">'.strip_tags($r['text'], '<b>').'</textarea> <input value="Guardar" type="submit" />
 </form></p>';
@@ -295,7 +315,17 @@ $txt .= 'Expira '.($r['dnie']=='true'?'<b>Nunca</b> (Autentificado)':'<b>tras '.
 
 
 </p></td><td valign="top">
+<p>';
 
+
+$datos = explode('][', $r['datos']);
+foreach ($datos_perfil AS $id => $dato) {
+	if ($datos[$id] != '') {
+		$txt .= '<a href="'.$datos[$id].'" target="_blank"><img src="'.IMG.'ico/'.$id.'_32.png" width="32" width="32" alt="'.$datos.'" /></a>';
+	}
+}
+
+$txt .= '</p>
 
 <b>Ultimas 5 notas:</b>
 

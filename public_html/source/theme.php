@@ -295,12 +295,9 @@ foreach(explode(";", $pol['config']['palabras']) as $t) {
 echo '</div>';
 ?>
 
-
-
-
 <?php } ?>
 
-
+<div style="margin:12px 0 -5px 5px;"><a href="/hacer/">&iquest;Qu&eacute; hacer?</a></div>
 
 
 

@@ -354,8 +354,25 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 
 				arsort($escrutinio['votos']);
 
+
 				// Imprime escrutinio en texto.
-				$txt .= '<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">';
+				$txt .= '<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top"><b>Resultados:</b><br />';
+
+				// Imprime escrutinio en grafico.
+				if ($validez == true) {
+					
+					foreach ($escrutinio['votos'] AS $voto => $num) {
+						if ($respuestas[$voto] != 'En Blanco') {
+							$grafico_array_votos[] = $num;
+							$grafico_array_respuestas[] = $respuestas[$voto];
+						}
+					}
+
+					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chp=4.71&chd=t:'.implode(',', $grafico_array_votos).'&chs=350x175&chl='.implode('|', $grafico_array_respuestas).'&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="350" height="175" />';
+				}
+
+				$txt .= '<br />';
+
 				if ($validez==true) {
 					$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th>Escrutinio</th><th>'.($r['tipo_voto']=='estandar'?'Votos':'Puntos').'</th><th></th></tr>';
 					
@@ -372,27 +389,15 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 					}
 					$txt .= '</table>';
 				}
-				$txt .= '</td><td valign="top">';
+				
 
-				// Imprime escrutinio en grafico.
-				if ($validez == true) {
-					
-					foreach ($escrutinio['votos'] AS $voto => $num) {
-						if ($respuestas[$voto] != 'En Blanco') {
-							$grafico_array_votos[] = $num;
-							$grafico_array_respuestas[] = $respuestas[$voto];
-						}
-					}
-
-					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chp=4.71&chd=t:'.implode(',', $grafico_array_votos).'&chs=320x200&chl='.implode('|', $grafico_array_respuestas).'&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="320" height="200" />';
-				}
 
 				// Imprime datos de legitimidad y validez
 				$txt .= '</td>
 <td valign="top" style="color:#888;"><br />
 Legitimidad: <b>'.$votos_total.'</b>&nbsp;votos, <b>'.$escrutinio['votos_autentificados'].'</b>&nbsp;autentificados.<br />
 Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>NULO</b>&nbsp;'.$porcentaje_validez.'%</span>').'<br />
-<img title="Votos de validez: '.$escrutinio['validez']['true'].' OK, '.$escrutinio['validez']['false'].' NULO" src="http://chart.apis.google.com/chart?cht=p&chp=4.71&chd=t:'.$escrutinio['validez']['true'].','.$escrutinio['validez']['false'].'&chs=210x130&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>
+<img width="230" height="130" title="Votos de validez: '.$escrutinio['validez']['true'].' OK, '.$escrutinio['validez']['false'].' NULO" src="http://chart.apis.google.com/chart?cht=p&chp=4.71&chd=t:'.$escrutinio['validez']['true'].','.$escrutinio['validez']['false'].'&chs=230x130&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>
 </tr></table>';
 
 

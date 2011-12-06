@@ -29,6 +29,17 @@ OR (($pol['estado'] == 'extranjero') AND (in_array($_GET['a'], $acciones_multipl
 switch ($_GET['a']) { // #####################################################
 
 
+
+case 'perfil':
+	if ($_GET['b'] == 'datos') {		
+		foreach ($datos_perfil AS $id => $dato) {
+			$datos_array[] = $_POST[$dato];
+		}
+		mysql_query("UPDATE users SET datos = '".implode('][', $datos_array)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		$refer_url = 'perfil/'.strtolower($pol['nick']).'/';
+	}
+	break;
+
 case 'aceptar-condiciones':
 	$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND fecha_legal = '0000-00-00 00:00:00' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {

@@ -96,7 +96,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 } elseif ($pol['nick']) { // sin identificar, login OK
 	$txt_perfil = '<b>' . $pol['nick'] . '</b> (<span class="infog"><b>Turista</b></span>) <span class="azul">' . boton('Solicitar Ciudadania', REGISTRAR) . '</span> | <a href="/accion.php?a=logout">Salir</a>';
 } else { // sin identificar, sin login
-	$txt_perfil = boton('Crear ciudadano', REGISTRAR).' | '.boton('Login', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
+	$txt_perfil = boton('Crear ciudadano', REGISTRAR.'?p='.PAIS).' | '.boton('Login', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
 }
 ?>
 
@@ -297,7 +297,7 @@ echo '</div>';
 
 <?php } ?>
 
-<div style="margin:12px 0 -5px 5px;"><a href="/hacer/">&iquest;Qu&eacute; hacer?</a></div>
+<div style="margin:12px 0 -5px 7px;"><a href="/hacer/">&iquest;Qu&eacute; hacer?</a></div>
 
 
 

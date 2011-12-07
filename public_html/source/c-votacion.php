@@ -466,7 +466,7 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 
 				// Imprime boton para votar, aviso de tiempo y votacion correcta/nula.
 				$txt .= '
-<input type="submit" value="Votar" style="font-size:22px;"'.($tiene_acceso_votar?'':' disabled="disabled"').' /> '.($tiene_acceso_votar?'<span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span>':'<span style="color:red;white-space:nowrap;">'.(!$pol['user_ID']?'Para votar debes <a href="'.REGISTRAR.'">crear tu ciudadano</a>.':'No tienes acceso para votar.').'</span>').'</p>
+<input type="submit" value="Votar" style="font-size:22px;"'.($tiene_acceso_votar?'':' disabled="disabled"').' /> '.($tiene_acceso_votar?'<span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span>':'<span style="color:red;white-space:nowrap;">'.(!$pol['user_ID']?'Para votar debes <a href="'.REGISTRAR.'?p='.PAIS.'">crear tu ciudadano</a>.':'No tienes acceso para votar.').'</span>').'</p>
 
 <p>
 <!--<fieldset>

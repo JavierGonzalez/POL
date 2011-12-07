@@ -200,7 +200,7 @@ FROM ".SQL_REFERENCIAS." WHERE IP = '".$longip."' LIMIT 1", $link);
 									
 									mysql_query("INSERT INTO users 
 (nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, pais, pass, host, IP_proxy, geo, dnie_check, bando, nota_SC, fecha_legal) 
-VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', 'ninguno', '".$pass1."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')", $link);
+VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '".(in_array($_GET['p'], $vp['paises'])?$_GET['p']:'ninguno')."', '".$pass1."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')", $link);
 
 									if ($ref) {
 										$result = mysql_query("SELECT ID FROM users WHERE nick = '" . $nick . "' LIMIT 1", $link);
@@ -232,12 +232,29 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . str
 
 
 case 'verificar': //URL EMAIL
-	$result = mysql_query("SELECT ID, nick, pass FROM users WHERE estado = 'validar' AND nick = '".$_GET['nick']."' AND api_pass = '".$_GET['code']."' LIMIT 1", $link);
+	$result = mysql_query("SELECT ID, nick, pass, pais FROM users WHERE estado = 'validar' AND nick = '".$_GET['nick']."' AND api_pass = '".$_GET['code']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
 
-		mysql_query("UPDATE users SET estado = 'turista' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+		if ($r['pais'] == 'ninguno') {
+			mysql_query("UPDATE users SET estado = 'turista' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+			header("Location: ".REGISTRAR."login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=".REGISTRAR);
+		} else {
+			include('../source/inc-functions-accion.php');
 
-		header("Location: ".REGISTRAR."login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=".REGISTRAR); 
+			mysql_query("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+
+			evento_chat('<b>[#] <a href="http://'.strtolower($r['pais']).'.virtualpol.com/perfil/'.$r['nick'].'/" class="nick">'.$r['nick'].'</a> acepta la Ciudadania</b> de '.$r['pais'], 0, 0, false, 'e', $r['pais']);
+
+			mysql_query("INSERT INTO ".strtolower($r['pais'])."_log 
+(time, user_ID, user_ID2, accion, dato) 
+VALUES ('".date('Y-m-d H:i:s')."', '".$r['ID']."', '".$r['ID']."', '2', '')", $link);
+
+			unset($_SESSION);
+			session_unset(); session_destroy();
+
+			header("Location: ".REGISTRAR."login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=http://".strtolower($r['pais']).".virtualpol.com/");
+		}
+
 		mysql_close($link); 
 		exit;
 	}
@@ -384,9 +401,15 @@ $txt .= '</blockquote></div>';
 	$txt_title = 'Registrar: PASO 1 (Crear usuario Turista)';
 	$txt .= '<h1>1. Crear usuario <span class="gris">| 2. Solicitar Ciudadan&iacute;a | 3. Ser Ciudadano</span></h1><hr />
 
-<form action="?a=registrar" method="POST">
+<form action="?a=registrar'.($_GET['p']?'&p='.$_GET['p']:'').($_GET['r']?'&r='.$_GET['r']:'').'" method="POST">
 <input type="hidden" name="repid" value="' . $rn . '" />
 <input type="hidden" name="crono" value="' . time() . '" />
+'.($_GET['p']?'<input type="hidden" name="p" value="'.$_GET['p'].'" />':'').'
+'.($_GET['r']?'<input type="hidden" name="r" value="'.$_GET['r'].'" />':'').'
+
+
+
+
 
 <div style="color:red;font-weight:bold;">' . $verror . '</div>
 
@@ -416,7 +439,7 @@ $txt .= '</blockquote></div>';
 
 	$result = mysql_query("SELECT nick FROM users WHERE estado != 'expulsado' ORDER BY nick ASC", $link);
 	while($r = mysql_fetch_array($result)) { 
-		$txt .= '<option value="'.$r['nick'].'">'.strtoupper($r['nick']).'</option>'."\n"; 
+		$txt .= '<option value="'.$r['nick'].'">'.$r['nick'].'</option>'."\n"; 
 	}
 
 	$txt .= '</optgroup></select><br /><br />

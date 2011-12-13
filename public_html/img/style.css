@@ -396,7 +396,7 @@ blockquote cite {
 .ayuda {
 display:inline-block;
 cursor:help;
-background-image:url('varios/help.gif');
+background-image:url('varios/help.png');
 width:22px;
 height:22px;
 }

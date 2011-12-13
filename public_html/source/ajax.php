@@ -199,10 +199,11 @@ LIMIT 1", $link);
 						$tipo = 'm';
 					}
 					break;
-
+				
+				case 'dnie':
 				case 'autentificado': 
 					if (nucleo_acceso('autentificados')) {
-						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> est&aacute; correctamente <a href="http://www.virtualpol.com/dnie.php">autentificado</a>.'; 
+						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . ' es autentico.</b> (<a href="http://www.virtualpol.com/dnie.php">Autentificado</a>)'; 
 					}
 					break;
 

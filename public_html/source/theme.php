@@ -248,7 +248,7 @@ echo '</div>';
 <dl id="menu">
 <ul class="sf-menu sf-vertical">
 	<li id="menu-3">
-		<a href="/">Plaza Virtual</a>
+		<a href="/"><span style="float:right;">&#9658;</span>Plaza Virtual</a>
 		<ul>
 			<li><a href="/chats/">Chats</a></li>
 			<li><a href="/foro/">Foros</a></li>

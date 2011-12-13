@@ -2,7 +2,8 @@ body {
 	cursor:default;
 	min-width:810px;
 	padding: 0 10px;
-	text-align: center;color: #333;
+	text-align: center;
+	color: #333;
 	font-family: "Arial", "Helvetica", sans-serif;
 	font-size:17px;
 }
@@ -405,7 +406,7 @@ blockquote cite {
 .ayuda {
 display:inline-block;
 cursor:help;
-background-image:url('varios/help.gif');
+background-image:url('varios/help.png');
 width:22px;
 height:22px;
 }
@@ -413,14 +414,13 @@ height:22px;
 .ayudap {
 margin:-10px 0 0 -90px;
 position:absolute;
-background:#FFFF64;
-font-size:16px;
-text-align:justify;
+background:#FFFF95;
+font-size:14px;
 color:#666;
 border:2px solid #FFFFFF;
 cursor:help;
-max-width:300px;
-min-height:40px;
+max-width:350px;
+min-height:50px;
 padding:6px 8px;
 z-index:10;
 }

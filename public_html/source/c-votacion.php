@@ -79,7 +79,7 @@ function cambiar_tipo_votacion(tipo) {
 }
 
 function opcion_nueva() {
-	$("#li_opciones").append("<li><input type=\"text\" name=\"respuesta" + campos_num + "\" size=\"22\" maxlength=\"34\" /></li>");
+	$("#li_opciones").append("<li><input type=\"text\" name=\"respuesta" + campos_num + "\" size=\"22\" maxlength=\"34\" /> &nbsp; Descripci&oacute;n: <input type=\"text\" name=\"respuesta_desc" + campos_num + "\" size=\"28\" maxlength=\"500\" value=\"\" /> (opcional)</li>");
 	if (campos_num >= campos_max) { $("#a_opciones").hide(); }
 	campos_num++;
 	return false;
@@ -149,8 +149,9 @@ $txt .= '
 </optgroup>
 
 <optgroup label="Preferencial">
-<option value="3puntos">1, 2 y 3 puntos</option>
-<option value="5puntos">1, 2, 3, 4 y 5 puntos</option>
+<option value="3puntos">3 votos (6 puntos)</option>
+<option value="5puntos">5 votos (15 puntos)</option>
+<option value="8puntos">8 votos (36 puntos)</option>
 </optgroup>
 
 </select></span>
@@ -159,7 +160,7 @@ $txt .= '
 <b>Voto</b>: 
 <select name="privacidad">
 <option value="true" selected="selected">Secreto (estandar)</option>
-<option value="false">P&uacute;blico y verificable</option>
+<option value="false">P&uacute;blico</option>
 </select></span>
 </p>
 ';
@@ -193,8 +194,8 @@ $txt .= '
 <li><input type="text" name="respuesta0" size="22" value="En Blanco" readonly="readonly" style="color:grey;" /> &nbsp; <a href="#" id="a_opciones" onclick="opcion_nueva();return false;">A&ntilde;adir opci&oacute;n</a></li>
 </ul>
 <ol id="li_opciones">
-<li><input type="text" name="respuesta1" size="22" maxlength="34" value="SI" /></li>
-<li><input type="text" name="respuesta2" size="22" maxlength="34" value="NO" /></li>
+<li><input type="text" name="respuesta1" size="22" maxlength="34" value="SI" /> &nbsp; Descripci&oacute;n: <input type="text" name="respuesta_desc1" size="28" maxlength="500" value="" /> (opcional)</li>
+<li><input type="text" name="respuesta2" size="22" maxlength="34" value="NO" /> &nbsp; Descripci&oacute;n: <input type="text" name="respuesta_desc2" size="28" maxlength="500" value="" /> (opcional)</li>
 </ol>
 </p>
 </div>
@@ -220,6 +221,7 @@ LIMIT 1", $link);
 		$time_creacion = strtotime($r['time']);
 		$duracion = duracion($time_expire - $time_creacion);
 		$respuestas = explode("|", $r['respuestas']);
+		$respuestas_desc = explode("][", $r['respuestas_desc']);
 		$respuestas_num = count($respuestas) - 1;
 		$txt_title = 'Votacion: ' . strtoupper($r['tipo']) . ' | ' . $r['pregunta'];
 
@@ -331,7 +333,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 					
 					switch ($r['tipo_voto']) {
 						case 'estandar': $escrutinio['votos'][$r2['voto']]++; break;
-						case '3puntos': case '5puntos': 
+						case '3puntos': case '5puntos': case '8puntos': 
 							$voto_array = explode(' ', $r2['voto']); $puntos = 1;
 							foreach ($voto_array AS $elvoto) {
 								if (isset($respuestas[$elvoto])) {
@@ -384,7 +386,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 
 					foreach ($escrutinio['votos'] AS $voto => $num) { 
 						if ($respuestas[$voto]) {
-							$txt .= '<tr><td nowrap="nowrap">'.($respuestas[$voto]=='En Blanco'?'<em>En Blanco</em>':$respuestas[$voto]).'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.($respuestas[$voto]=='En Blanco'?'':num(($num * 100) / $puntos_total_sin_en_blanco, 1).'%').'</td></tr>';
+							$txt .= '<tr><td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'"':'').'>'.($respuestas[$voto]=='En Blanco'?'<em>En Blanco</em>':$respuestas[$voto]).'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.($respuestas[$voto]=='En Blanco'?'':num(($num * 100) / $puntos_total_sin_en_blanco, 1).'%').'</td></tr>';
 						} else { unset($escrutinio['votos'][$voto]);  }
 					}
 					$txt .= '</table>';
@@ -413,23 +415,26 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 				if ($r['tipo_voto'] == 'estandar') {
 					if ($r['ha_votado']) {
 						for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
-								$votos .= '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
+								$votos_array[] = '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
 						} }
 						$txt .= 'Tu voto [<em>'.$respuestas[$r['que_ha_votado']].'</em>] ha sido recogido <b>correctamente</b>.<br />';
 					} else {
 						if ($r['privacidad'] == 'false') { $txt .= '<p style="color:red;">El voto es p&uacute;blico en esta votaci&oacute;n, por lo tanto NO ser&aacute; secreto.</p>'; }
 						for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
-								$votos .= '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
+								$votos_array[] = '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
 						} }
 					}
-					$txt .= '<select name="voto" style="font-size:22px;">'.$votos.'</select>';
-				} elseif (($r['tipo_voto'] == '3puntos') OR ($r['tipo_voto'] == '5puntos')) {
+					if (count($votos_array) > 9) { shuffle($votos_array); }
+					$txt .= '<select name="voto" style="font-size:22px;">'.implode('', $votos_array).'</select>';
 
-					if ($r['ha_votado']) { $txt .= 'Tus votos han sido recogidos <b>correctamente</b>.<br />'; }
+				} elseif (($r['tipo_voto'] == '3puntos') OR ($r['tipo_voto'] == '5puntos') OR ($r['tipo_voto'] == '8puntos')) {
 
-					$txt .= '<table border="0">
+					if ($r['ha_votado']) { $txt .= 'Tu voto preferencial ha sido recogido <b>correctamente</b>.<br /><br />'; }
+
+					$txt .= 'Esta votaci&oacute;n es preferencial. Debes repartir los puntos m&aacute;s altos a tus opciones preferidas.
+<table border="0">
 <tr>
-<th colspan="'.($r['tipo_voto']=='5puntos'?5:3).'" align="center">Puntos</th>
+<th colspan="'.substr($r['tipo_voto'], 0, 1).'" align="center">Puntos</th>
 <th></th>
 </tr>
 <tr>
@@ -437,11 +442,12 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 <th align="center">2</th>
 <th align="center">3</th>
 '.($r['tipo_voto']=='5puntos'?'<th align="center">4</th><th align="center">5</th>':'').'
+'.($r['tipo_voto']=='8puntos'?'<th align="center">4</th><th align="center">5</th><th align="center">6</th><th align="center">7</th><th align="center">8</th>':'').'
 <th>Opciones</th>
 </tr>';				if ($r['ha_votado']) { $ha_votado_array = explode(' ', $r['que_ha_votado']); }
-					else { $ha_votado_array = array(0, 0, 0, 0, 0); }
+					else { $ha_votado_array = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); }
 					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
-							$txt .= '<tr>
+							$votos_array[] = '<tr>
 <td valign="top"><input type="radio" name="voto_1" value="'.$i.'"'.($ha_votado_array[0]==$i?' checked="checked"':'').' /></td>
 <td valign="top"><input type="radio" name="voto_2" value="'.$i.'"'.($ha_votado_array[1]==$i?' checked="checked"':'').' /></td>
 <td valign="top"><input type="radio" name="voto_3" value="'.$i.'"'.($ha_votado_array[2]==$i?' checked="checked"':'').' /></td>
@@ -449,15 +455,24 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 <td valign="top"><input type="radio" name="voto_4" value="'.$i.'"'.($ha_votado_array[3]==$i?' checked="checked"':'').' /></td>
 <td valign="top"><input type="radio" name="voto_5" value="'.$i.'"'.($ha_votado_array[4]==$i?' checked="checked"':'').' /></td>
 ':'').'
-<td>'.($respuestas[$i]==='En Blanco'?'<em>'.$respuestas[$i].'</em>':$respuestas[$i]).'</td>
+'.($r['tipo_voto']=='8puntos'?'
+<td valign="top"><input type="radio" name="voto_4" value="'.$i.'"'.($ha_votado_array[3]==$i?' checked="checked"':'').' /></td>
+<td valign="top"><input type="radio" name="voto_5" value="'.$i.'"'.($ha_votado_array[4]==$i?' checked="checked"':'').' /></td>
+<td valign="top"><input type="radio" name="voto_6" value="'.$i.'"'.($ha_votado_array[5]==$i?' checked="checked"':'').' /></td>
+<td valign="top"><input type="radio" name="voto_7" value="'.$i.'"'.($ha_votado_array[6]==$i?' checked="checked"':'').' /></td>
+<td valign="top"><input type="radio" name="voto_8" value="'.$i.'"'.($ha_votado_array[7]==$i?' checked="checked"':'').' /></td>
+':'').'
+<td'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'"':'').'>'.($respuestas[$i]==='En Blanco'?'<em title="Equivale a No sabe/No contesta. No computable.">En Blanco</em>':$respuestas[$i]).'</td>
 </tr>';
 					} }
-					$txt .= '
+					if (count($votos_array) > 9) { shuffle($votos_array); }
+					$txt .= implode('', $votos_array).'
 <tr>
 <th align="center">1</th>
 <th align="center">2</th>
 <th align="center">3</th>
 '.($r['tipo_voto']=='5puntos'?'<th align="center">4</th><th align="center">5</th>':'').'
+'.($r['tipo_voto']=='8puntos'?'<th align="center">4</th><th align="center">5</th><th align="center">6</th><th align="center">7</th><th align="center">8</th>':'').'
 <th></th>
 </tr>
 </table>';

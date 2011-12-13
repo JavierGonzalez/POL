@@ -315,6 +315,7 @@ case 'expulsar':
 				if ($r2['tipo_voto'] == 'estandar') { $voto_en_blanco = '0'; }
 				elseif ($r2['tipo_voto'] == '3puntos') { $voto_en_blanco = '0 0 0'; }
 				elseif ($r2['tipo_voto'] == '5puntos') { $voto_en_blanco = '0 0 0 0 0'; }
+				elseif ($r2['tipo_voto'] == '8puntos') { $voto_en_blanco = '0 0 0 0 0 0 0 0'; }
 				mysql_query("UPDATE votacion_votos SET voto = '".$voto_en_blanco."', validez = 'true' WHERE ref_ID = ".$r2['ID']." AND user_ID = ".$r['ID']." LIMIT 1", $link);
 			}
 			
@@ -1169,7 +1170,16 @@ case 'votacion':
 
 			if ($_POST['votos_expire'] > 0) { } else { $_POST['votos_expire'] = 0; }
 
-			for ($i=0;$i<22;$i++) { if (trim($_POST['respuesta'.$i]) != '') { $respuestas .= trim($_POST['respuesta'.$i]).'|'; } }
+			for ($i=0;$i<30;$i++) { 
+				if (trim($_POST['respuesta'.$i]) != '') { 
+					$respuestas .= trim($_POST['respuesta'.$i]).'|';
+					$respuestas_desc .= trim($_POST['respuesta_desc'.$i]).'][';
+				}
+			}
+
+
+
+
 
 			$_POST['pregunta'] = strip_tags($_POST['pregunta']);
 			$_POST['descripcion'] = gen_text($_POST['descripcion'], 'plain');
@@ -1207,7 +1217,7 @@ case 'votacion':
 					break;
 			}
 
-			mysql_query("INSERT INTO votacion (pais, pregunta, descripcion, respuestas, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, ejecutar, votos_expire, tipo_voto, privacidad) VALUES ('".PAIS."', '".$_POST['pregunta']."', '".$_POST['descripcion']."', '".$respuestas."', '".$date."', '".date('Y-m-d H:i:s', time() + $_POST['time_expire'])."', '".$pol['user_ID']."', 'ok', '".$_POST['tipo']."', '".$_POST['acceso_votar']."', '".$_POST['acceso_cfg_votar']."', '".$ejecutar."', '".$_POST['votos_expire']."', '".$_POST['tipo_voto']."', '".$_POST['privacidad']."')", $link);
+			mysql_query("INSERT INTO votacion (pais, pregunta, descripcion, respuestas, respuestas_desc, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, ejecutar, votos_expire, tipo_voto, privacidad) VALUES ('".PAIS."', '".$_POST['pregunta']."', '".$_POST['descripcion']."', '".$respuestas."', '".$respuestas_desc."', '".$date."', '".date('Y-m-d H:i:s', time() + $_POST['time_expire'])."', '".$pol['user_ID']."', 'ok', '".$_POST['tipo']."', '".$_POST['acceso_votar']."', '".$_POST['acceso_cfg_votar']."', '".$ejecutar."', '".$_POST['votos_expire']."', '".$_POST['tipo_voto']."', '".$_POST['privacidad']."')", $link);
 
 			$result = mysql_query("SELECT ID FROM votacion WHERE user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' ORDER BY ID DESC LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $ref_ID = $r['ID']; }
@@ -1227,7 +1237,10 @@ case 'votacion':
 					$_POST['voto'] = $_POST['voto_1'].' '.$_POST['voto_2'].' '.$_POST['voto_3'];
 				} else if ($tipo_voto == '5puntos') {
 					$_POST['voto'] = $_POST['voto_1'].' '.$_POST['voto_2'].' '.$_POST['voto_3'].' '.$_POST['voto_4'].' '.$_POST['voto_5'];
+				} else if ($tipo_voto == '8puntos') {
+					$_POST['voto'] = $_POST['voto_1'].' '.$_POST['voto_2'].' '.$_POST['voto_3'].' '.$_POST['voto_4'].' '.$_POST['voto_5'].' '.$_POST['voto_6'].' '.$_POST['voto_7'].' '.$_POST['voto_8'];
 				}
+
 
 				$ha_votado = false;
 				$result = mysql_query("SELECT ID FROM votacion_votos WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);

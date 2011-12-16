@@ -1119,8 +1119,7 @@ ORDER BY expire DESC", $link);
 		}
 		if (!$r['expulsado_estado']) { $r['expulsado_estado'] = 'expulsado'; }
 
-		if ($r['motivo']) { $motivo = '<a href="/control/kick/info/'.$r['ID'].'/">#</a>'; } else { $motivo = ''; }
-		$txt .= '<tr><td valign="top"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /></td><td valign="top"><b>' . $estado . '</b></td><td valign="top"><b>'.($r['user_ID'] == 0?'Anonimo':crear_link($r['expulsado'], 'nick', $r['expulsado_estado'])).'</b></td><td valign="top" nowrap="nowrap"><img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" border="0" /> ' . crear_link($r['nick_autor']) . '</td><td align="right" valign="top" nowrap="nowrap"><acronym title="' . $r['expire'] . '">'.timer($r['expire']).'</acronym></td><td align="right" valign="top" nowrap="nowrap">' . duracion($r['tiempo']+1) . '</td><td><b style="font-size:13px;">' . $r['razon'] . '</b></td><td>' . $expulsar . '</td><td>'.$motivo.'</td></tr>' . "\n";
+		$txt .= '<tr><td valign="top"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /></td><td valign="top"><b>' . $estado . '</b></td><td valign="top"><b>'.($r['user_ID'] == 0?'Anonimo':crear_link($r['expulsado'], 'nick', $r['expulsado_estado'])).'</b></td><td valign="top" nowrap="nowrap"><img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" border="0" /> ' . crear_link($r['nick_autor']) . '</td><td align="right" valign="top" nowrap="nowrap"><acronym title="' . $r['expire'] . '">'.timer($r['expire']).'</acronym></td><td align="right" valign="top" nowrap="nowrap">' . duracion($r['tiempo']+1) . '</td><td><b style="font-size:13px;">'.($r['motivo']?'<a href="/control/kick/info/'.$r['ID'].'/">'.$r['razon'].'</a>':$r['razon']).'</b></td><td>'.$expulsar.'</td></tr>' . "\n";
 	}
 	$txt .= '</table><p>Los kicks solo pueden ser revocadas por un Comisario de Policia, un Juez Supremo o el Polic&iacute;a autor de la expulsi&oacute;n.</p>';
 

@@ -146,7 +146,7 @@ $txt .= '
 		case 'confianza': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY voto_confianza DESC, fecha_registro ASC'; break;
 		case 'expulsados': $order_by = 'WHERE estado = \'expulsado\' ORDER BY fecha_last DESC'; $num_element_pag = $censo_expulsados; break;
 		case 'turistas': $order_by = 'WHERE estado = \'turista\' ORDER BY fecha_registro DESC'; $num_element_pag = $censo_turistas; break;
-		case 'perfiles': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' AND datos != \'\' ORDER BY fecha_registro ASC'; break;
+		case 'perfiles': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' AND datos != \'\' AND datos != \'][][][][][\' ORDER BY fecha_registro ASC'; break;
 		case 'SC': 
 			$margen_365d = date('Y-m-d 20:00:00', time() - 86400*365); // Un año de antiguedad exigida
 			$order_by = "WHERE estado = 'ciudadano' AND fecha_registro < '".$margen_365d."' ORDER BY voto_confianza DESC, fecha_registro ASC";

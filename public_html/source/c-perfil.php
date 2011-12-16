@@ -25,7 +25,7 @@ while($r = mysql_fetch_array($result)){
 	
 			$extras = '
 <tr>
-<td colspan="2"><input style="float:right;" value="Expulsar" onclick="window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/control/expulsiones/expulsar/'.$r['nick'].'\';" type="button"'.$exp_disabled.' />(' . $r['ID'] . ', <span title="'.$r['avatar_localdir'].'">'.$r['email'].'</span>, '.ocultar_IP($r['host'], 'host').', <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-30,30)).'">GeoIP</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
+<td colspan="2"><input style="float:right;" value="Expulsar" onclick="window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/control/expulsiones/expulsar/'.$r['nick'].'\';" type="button"'.$exp_disabled.' />('.$r['ID'].', <span title="'.$r['avatar_localdir'].'" style="font-size:12px;">'.$r['email'].'</span>, '.num($r['visitas']).' v, '.num($r['paginas']).' pv,  <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-30,30)).'">'.ocultar_IP($r['host'], 'host').'</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
 <tr><td colspan="3" align="right">
 
 <form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post">

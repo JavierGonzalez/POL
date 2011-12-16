@@ -266,10 +266,10 @@ function imageCompression($imgfile='',$thumbsize=0,$savePath=NULL,$format) {
         }
     imagecopyresampled($thumb,$source,0,0,0,0,$newwidth,$newheight,$width,$height);
     if ($format == 'png') {
-       imagepng($thumb,$savePath,7);
+       imagepng($thumb,$savePath,80);
     }
     else {
-       imagejpeg($thumb,$savePath,70);
+       imagejpeg($thumb,$savePath,80);
     }
 }
 

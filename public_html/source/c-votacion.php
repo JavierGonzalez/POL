@@ -57,8 +57,9 @@ $pol['cargos'] = cargos();
 if ($_GET['a'] == 'crear') {
 	$txt_title = 'Crear votacion';
 
+	$algun_acceso_voto = false;
 	foreach ($votaciones_tipo AS $tipo) {
-		if (!nucleo_acceso($vp['acceso'][$tipo])) { $disabled[$tipo] = ' disabled="disabled"'; }
+		if (!nucleo_acceso($vp['acceso'][$tipo])) { $disabled[$tipo] = ' disabled="disabled"'; } else { $algun_acceso_voto = true; }
 	}
 
 	// SI el usuario es SC puee hacer sondeos tambien.
@@ -91,6 +92,9 @@ function opcion_nueva() {
 	$txt .= '<h1><a href="/votacion/">Votaciones</a>: Crear votaci&oacute;n</h1>
 
 <form action="/accion.php?a=votacion&b=crear" method="post">
+
+'.($algun_acceso_voto?'':'<p>No tienes acceso para crear votaciones, pero puedes ver las opciones.</p>').'
+
 <table width="570"><tr><td valign="top">
 <p class="azul" style="text-align:left;"><b>Tipo de votaci&oacute;n</b>:<br />
 <span id="tipo_select">';
@@ -199,7 +203,7 @@ $txt .= '
 </ol>
 </p>
 </div>
-<p><input type="submit" value="Iniciar votaci&oacute;n" style="font-size:18px;" /> &nbsp; <a href="/votacion/"><b>Ver votaciones</b></a></p>';
+<p><input type="submit" value="Iniciar votaci&oacute;n" style="font-size:18px;"'.($algun_acceso_voto?'':' disabled="disabled"').' /> &nbsp; <a href="/votacion/"><b>Ver votaciones</b></a></p>';
 
 
 
@@ -234,7 +238,7 @@ LIMIT 1", $link);
 
 <div class="amarillo" style="margin:20px 0 15px 0;padding:20px 10px 0 10px;">
 <h1>'.$r['pregunta'].'</h1>
-<p>'.$r['descripcion'].'</p>
+<p style="text-align:left;">'.$r['descripcion'].'</p>
 </div>';
 
 

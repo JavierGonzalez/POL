@@ -1528,7 +1528,7 @@ case 'enviar-mensaje':
 					enviar_email($r['ID'], $asunto, $mensaje); 
 					$envio_urgente++;
 				}
-				evento_chat('<b>[MP]</b> <a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/msg/">Nuevo mensaje privado</a> <span style="color:grey;">('.$pol['nick'].')</span>', $r['ID'], -1, false, 'p', $r['pais']); 
+				evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.virtualpol.com/msg/">Nuevo mensaje privado</a> <span style="color:grey;">('.$pol['nick'].')</span>', $r['ID'], -1, false, 'p', $r['pais']); 
 			}
 
 			if ($envio_urgente > 0) {

@@ -297,7 +297,7 @@ echo '</div>';
 
 <?php } ?>
 
-<div style="margin:12px 0 -5px 7px;"><a href="/hacer/">&iquest;Qu&eacute; hacer?</a></div>
+<div style="margin:12px 0 -5px 0px;"><a href="/hacer/" style="font-size:20px;">&iquest;Qu&eacute; hacer?</a></div>
 
 
 

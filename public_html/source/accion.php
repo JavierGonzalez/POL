@@ -214,11 +214,11 @@ case 'pass':
 		if ($user_ID) {
 			$new_pass = rand(100000,999999);
 
-			$asunto = '[VirtualPol] Contraseña reseteada del usuario: '.$nick;
+			$asunto = '[VirtualPol] Reseteo de contraseña del usuario: '.$nick;
 
-			$mensaje = "Hola Ciudadano,\n\nSe ha procedido a resetear tu contraseña de seguridad. Por lo tanto tu contraseña ha cambiado.\n\n\nUsuario: ".$nick."\nNueva contraseña: ".$new_pass."\n\nLogin en: http://www.virtualpol.com/\n\nGracias, nos vemos en VirtualPol ;)\n\n\nVirtualPol\nhttp://www.virtualpol.com";
+			$mensaje = "Hola Ciudadano,\n\nSe ha procedido a resetear tu contraseña por razones de seguridad. Por lo tanto tu contraseña ha cambiado.\n\n\nUsuario: ".$nick."\nNueva contraseña: ".$new_pass."\n\nLogin en: http://www.virtualpol.com/\n\nRecuerda que puedes cambiar tu contraseña en cualquier momento, así como iniciar un proceso de recuperación con tu email.\n\nGracias, nos vemos en VirtualPol ;)\n\n\nVirtualPol\nhttp://www.virtualpol.com";
 
-			mail($email, $asunto, $mensaje, "FROM: VirtualPOL <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
+			mail($email, $asunto, $mensaje, "FROM: VirtualPol <desarrollo@virtualpol.com> \nReturn-Path: VirtualPol <desarrollo@virtualpol.com> \nX-Sender: VirtualPol <desarrollo@virtualpol.com> \nMIME-Version: 1.0\n"); 
 
 			mysql_query("UPDATE users SET pass = '".md5($new_pass)."', reset_last = fecha_registro WHERE ID = '".$user_ID."' LIMIT 1", $link);
 			echo 'OK: '.$_GET['nick'];

@@ -15,6 +15,11 @@ Cosas por hacer:
 */
 
 
+// LOAD CONFIG
+$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
+while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
+
+
 $margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); // 30 dias
 
 $txt .= '<h1>&iquest;Qu&eacute; puedes hacer en VirtualPol?</h1>
@@ -26,27 +31,44 @@ Puedes identificarte solidamente con <abbr title="DNI electronico y otros 30 cer
 
 
 
+
+
+
+
+
+$fecha_24_antes = date('Y-m-d H:i:00', strtotime($pol['config']['elecciones_inicio']) - $pol['config']['elecciones_antiguedad']);
+
+//fecha registro?
+$result = mysql_query("SELECT fecha_registro FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+while($r = mysql_fetch_array($result)){ $fecha_registro = $r['fecha_registro']; }
+
+
+
 $has_votado_elecciones = false;
 if ($pol['config']['elecciones_estado'] == 'elecciones') {
 	$result = mysql_query("SELECT user_ID FROM ".SQL."elecciones WHERE user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) { $has_votado_elecciones = true; }
 }
 
-$txt .= '<li>'.($pol['config']['elecciones_estado']=='normal'?'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Quedan <span class="timer" value="'.strtotime($pol['config']['elecciones_inicio']).'"></span> para las pr&oacute;ximas Elecciones.</b>':($has_votado_elecciones==true?'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Has votado correctamente en las elecciones.</b>':'<img src="'.IMG.'ico/no.png" width="32" height="32" /> <b style="color:red;">No has votado en las elecciones Elecciones.</b>')).' <a href="/elecciones/" target="_blank">Ver Elecciones</a>.<br />
+$txt .= '<li>'.($pol['config']['elecciones_estado']=='normal'?'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Quedan <span class="timer" value="'.strtotime($pol['config']['elecciones_inicio']).'"></span> para las pr&oacute;ximas Elecciones.</b>':($has_votado_elecciones==true?'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Has votado correctamente en las elecciones.</b>':($fecha_registro>=$fecha_24_antes?'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Podr&aacute;s votar en las pr&oacute;ximas elecciones.</b>':'<img src="'.IMG.'ico/no.png" width="32" height="32" /> <b style="color:red;">No has votado en las elecciones Elecciones.</b>'))).' <a href="/elecciones/" target="_blank">Ver Elecciones</a>.<br />
 Las Elecciones son un proceso democr&aacute;tico, peri&oacute;dico y autom&aacute;tico. De su resultado dependen los cargos principales de moderaci&oacute;n y gesti&oacute;n. Todos los participantes pueden votar y cualquiera puede postularse como candidato.<br /><br /></li>';
 
 
 
 
-$hay_votaciones = false;
+$hay_votaciones = 0;
 if ($pol['config']['info_consultas'] > 0) {
-	$result = mysql_query("SELECT ID, acceso_votar, acceso_cfg_votar, (SELECT user_ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
+	$result = mysql_query("SELECT ID, pregunta, acceso_votar, acceso_cfg_votar, (SELECT user_ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
 	while($r = mysql_fetch_array($result)) { 
-		if ((!$r['ha_votado']) AND (nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar']))) { $hay_votaciones = true; }
+		if ((!$r['ha_votado']) AND (nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar']))) { 
+			$hay_votaciones++;
+			$votaciones_array[] = '<li><a href="/votacion/'.$r['ID'].'/"><b>'.$r['pregunta'].'</b></a></li>';
+		}
 	}
 }
 
-$txt .= '<li>'.($pol['config']['info_consultas']>0?($hay_votaciones?'<img src="'.IMG.'ico/no.png" width="32" height="32" /> <b style="color:red;">Hay votaciones en las que puedes votar.</b>':'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Has votado en todas las votaciones en curso.</b>'):'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">No hay votaciones en curso.</b>').' <a href="/votacion/" target="_blank">Ver votaciones</a>.<br />
+$txt .= '<li>'.($pol['config']['info_consultas']>0?($hay_votaciones>0?'<img src="'.IMG.'ico/no.png" width="32" height="32" /> <b style="color:red;">Hay votaciones en las que a&uacute;n no has votado.</b>':'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Has votado en todas las votaciones en curso.</b>'):'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">No hay votaciones en curso.</b>').' <a href="/votacion/" target="_blank">Ver votaciones</a>.<br />
+'.($hay_votaciones>0?'<ul>'.implode('', $votaciones_array).'</ul>':'').'
 Las votaciones (informativas o vinculantes) son el mecanismo democr&aacute;tico m&aacute;s habitual. Duran un tiempo determinado, configuraci&oacute;n espec&iacute;fica y puede haber varias simult&aacute;neas.<br /><br /></li>';
 
 
@@ -88,7 +110,7 @@ $txt .= '</ol>
 
 
 if (!$pol['user_ID']) { $txt = '<p>Debes <a href="'.REGISTRAR.'?p='.PAIS.'">registrar un ciudadano</a> para poder ver esta p&aacute;gina.</p>'; } 
-elseif ($pol['estado'] == 'extranjero') { header('Location: http://'.strtolower($pol['pais']).'.virtualpol.com/hacer/'); exit; }
+//elseif ($pol['estado'] == 'extranjero') { header('Location: http://'.strtolower($pol['pais']).'.virtualpol.com/hacer/'); exit; }
 elseif ($pol['estado'] != 'ciudadano') { $txt = '<p>Debes <a href="'.REGISTRAR.'">solicitar ciudadania</a> en alguna plataforma.</p>'; }
 
 

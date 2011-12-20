@@ -113,9 +113,9 @@ $txt .= '
 <input value="Buscar en perfil" type="submit" onclick="var cmq = $(\'#cmq\').attr(\'value\'); window.location.href=\'/info/censo/busqueda/\'+cmq+\'/\'; return false;">
 </div>
 
-<p>' . $p_paginas . ' &nbsp; &nbsp; <a href="/info/censo/">Ciudadanos</a>: <abbr title="Numero de ciudadanos en la plataforma '.PAIS.'"><b>' . $pol['config']['info_censo'] . '</b></abbr> (<abbr title="Ciudadanos -no nuevos- que entraron en las últimas 24h, en la plataforma '.PAIS.'">activos <b>'.$censo_activos.'</b></abbr>,  <abbr title="Ciudadanos en todo VirtualPol">global <b>'.$censo_activos_vp.'</b></abbr>)
+<p>' . $p_paginas . ' &nbsp; &nbsp; <a href="/info/censo/">Ciudadanos</a>: <abbr title="Numero de ciudadanos en la plataforma '.PAIS.'"><b>' . $pol['config']['info_censo'] . '</b></abbr> (<abbr title="Ciudadanos -no nuevos- que entraron en las últimas 24h, en la plataforma '.PAIS.'">activos <b>'.$censo_activos.'</b></abbr>,  <abbr title="Ciudadanos activos en todo VirtualPol">activos global <b>'.$censo_activos_vp.'</b></abbr>)
 
-'.(ECONOMIA?' | <a href="/control/expulsiones/" class="expulsado">Expulsados</a>: <b>' . $censo_expulsados . '</b> | <a href="/info/censo/riqueza/" title="Los ciudadanos con más monedas.">Ricos</a>':'').' | <abbr title="Mostrar posibles Supervisores del Censo"><a href="/info/censo/SC/">SC</a></abbr> &nbsp; 
+'.(ECONOMIA?' | <a href="/control/expulsiones/" class="expulsado">Expulsados</a>: <b>' . $censo_expulsados . '</b> | <a href="/info/censo/riqueza/" title="Los ciudadanos con más monedas.">Ricos</a>':'').' | <abbr><a href="/info/censo/SC/">Ver censo de todo VirtualPol</a></abbr> &nbsp; 
 </p>
 
 <table border="0" cellspacing="2" cellpadding="0" class="pol_table">
@@ -147,10 +147,7 @@ $txt .= '
 		case 'expulsados': $order_by = 'WHERE estado = \'expulsado\' ORDER BY fecha_last DESC'; $num_element_pag = $censo_expulsados; break;
 		case 'turistas': $order_by = 'WHERE estado = \'turista\' ORDER BY fecha_registro DESC'; $num_element_pag = $censo_turistas; break;
 		case 'perfiles': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' AND datos != \'\' AND datos != \'][][][][][\' ORDER BY fecha_registro ASC'; break;
-		case 'SC': 
-			$margen_365d = date('Y-m-d 20:00:00', time() - 86400*365); // Un año de antiguedad exigida
-			$order_by = "WHERE estado = 'ciudadano' AND fecha_registro < '".$margen_365d."' ORDER BY voto_confianza DESC, fecha_registro ASC";
-			break;
+		case 'SC': $order_by = "WHERE estado != 'expulsado' ORDER BY voto_confianza DESC, fecha_registro ASC"; break;
 
 		default: $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY fecha_last DESC';
 	}
@@ -177,7 +174,7 @@ FROM users ".$order_by." LIMIT ".$p_limit, $link);
 <td align="right" class="gris">' . $orden++ . '</td>
 '.(ASAMBLEA?'':'<td align="right">' . $r['nivel'] . '</td>').'
 <td height="38">' . $avatar . '</td>
-<td>'.(isset($sc[$r['ID']])?'<span style="float:right;color:red;margin-left:5px;" title="Supervisor del Censo">SC</span>':'').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
+<td>'.(isset($sc[$r['ID']])?'<span style="float:right;color:red;margin-left:5px;" title="Supervisor del Censo">SC</span>':'').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" width="16" height="16" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
 <td align="right" nowrap="nowrap"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span></td>
 <td nowrap="nowrap">'.($pol['user_ID']&&$r['user_ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['user_ID'].'" class="votar" type="confianza" name="'.$r['user_ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
 '.(ASAMBLEA?'':'<td>' . $partido . '</td>').'

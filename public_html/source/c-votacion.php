@@ -93,7 +93,7 @@ function opcion_nueva() {
 
 <form action="/accion.php?a=votacion&b=crear" method="post">
 
-'.($algun_acceso_voto?'':'<p>No tienes acceso para crear votaciones, pero puedes ver las opciones.</p>').'
+'.($algun_acceso_voto?'':'<p style="color:red;">No tienes acceso para crear votaciones, pero puedes ver las opciones.</p>').'
 
 <table width="570"><tr><td valign="top">
 <p class="azul" style="text-align:left;"><b>Tipo de votaci&oacute;n</b>:<br />
@@ -190,7 +190,7 @@ $txt .= '
 <p><b>Pregunta</b>: 
 <input type="text" name="pregunta" size="57" maxlength="70" /></p>
 
-<p><b>Descripci&oacute;n</b>: (siempre visible)<br />
+<p><b>Descripci&oacute;n</b>:<br />
 <textarea name="descripcion" style="color: green; font-weight: bold; width: 570px; height: 250px;"></textarea></p>
 
 <p><b>Opciones de voto</b>:
@@ -244,23 +244,29 @@ LIMIT 1", $link);
 
 
 
-		if ($_GET['b'] == 'verificacion') { // ZONA ALPHA. INTENTO DE ESTABLECIMIENTO DE VERIFICACION PUBLICA.
+		if ($_GET['b'] == 'info') {
 			
-			$txt .= '<span style="float:right;text-align:right;"><a href="/votacion/'.$r['ID'].'/"><b>Volver a votaci&oacute;n</b></a>.</span>
+			$txt .= '<span style="float:right;text-align:right;"><a href="/votacion/'.$r['ID'].'/"><b>Volver a la votaci&oacute;n</b></a></span><table border="0" width="100%"><tr><td valign="top">';
+			
+			if ($r['estado'] == 'end') {
+				$txt .= '<h1 style="margin-top:18px;">Comentarios anonimos:</h1>';
+				$result2 = mysql_query("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != '' ORDER BY RAND()", $link);
+				while($r2 = mysql_fetch_array($result2)) {
+					$txt .= '<p>'.ucfirst($r2['mensaje']).'</p>';
+				}
+			}
 
-<h1 style="margin-top:20px;">Votos</h1>
-
-<table border="0" width="100%"><tr><td valign="top">
+			$txt .= '
+<h1 style="margin-top:18px;">Registro de votos</h1>
 
 <table border="0" cellpadding="3">
 <tr>
 <th>Quien</th>
 <th>Voto</th>
-<th title="Autentificado">Auten</th>
-<th>Mensaje</th>
+<th>Autentificado</th>
 </tr>';
 			$orden = 0;
-			$result2 = mysql_query("SELECT user_ID, voto, validez, autentificado, mensaje, (SELECT nick FROM users WHERE ID = user_ID LIMIT 1) AS nick FROM votacion_votos WHERE ref_ID = '".$r['ID']."' ORDER BY RAND()", $link);
+			$result2 = mysql_query("SELECT user_ID, voto, validez, autentificado, (SELECT nick FROM users WHERE ID = user_ID LIMIT 1) AS nick FROM votacion_votos WHERE ref_ID = '".$r['ID']."' ORDER BY RAND()", $link);
 			while($r2 = mysql_fetch_array($result2)) {
 				$orden++;
 
@@ -268,7 +274,6 @@ LIMIT 1", $link);
 <td>'.($r2['user_ID']==0?'*':crear_link($r2['nick'])).'</td>
 <td nowrap="nowrap">'.($r['privacidad']=='false'&&$r['estado']=='end'?$respuestas[$r2['voto']]:'*').'</td>
 <td>'.($r2['autentificado']=='true'?'<span style="color:blue;"><b>SI</b></span>':'<span style="color:red;">NO</span>').'</td>
-<td style="color:#555;font-size:12px;" class="rich">'.($r['estado']=='end'?$r2['mensaje']:'*').'</td>
 </tr>';
 			}
 			$txt .= '<tr><td colspan="4" nowrap="nowrap">Votos computados: <b>'.$orden.'</b> (Contador: '.$r['num'].')</td></tr></table>
@@ -320,7 +325,7 @@ Acceso de voto: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replac
 Inicio: <em>' . $r['time'] . '</em><br /> 
 Fin: <em>' . $r['time_expire'] . '</em><br />
 '.($r['votos_expire']!=0?'Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.<br />':'').'
-<a href="/votacion/'.$r['ID'].'/verificacion/">Más información</a>.
+<a href="/votacion/'.$r['ID'].'/info/">Más información</a>.
 '.($r['tipo_voto']!='estandar'?'<br />Tipo de voto: <b>'.$r['tipo_voto'].'</b>.':'').'
 </span>';
 
@@ -435,7 +440,7 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 
 					if ($r['ha_votado']) { $txt .= 'Tu voto preferencial ha sido recogido <b>correctamente</b>.<br /><br />'; }
 
-					$txt .= 'Esta votaci&oacute;n es preferencial. Debes repartir los puntos m&aacute;s altos a tus opciones preferidas.
+					$txt .= 'Esta votaci&oacute;n es preferencial. <span style="color:red;">Debes repartir <b>los puntos m&aacute;s altos a tus opciones preferidas</b>.</span>
 <table border="0">
 <tr>
 <th colspan="'.substr($r['tipo_voto'], 0, 1).'" align="center">Puntos</th>
@@ -496,8 +501,8 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 </p>
 
 
-<p>Comentario (opcional, ser&aacute; p&uacute;blico al terminar la votaci&oacute;n).<br />
-<input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="50" maxlength="50" /></p>
+<p>Comentario (opcional, secreto y p&uacute;blico al terminar la votaci&oacute;n).<br />
+<input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="60" maxlength="60" /></p>
 
 </form>';
 			}

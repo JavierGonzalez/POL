@@ -174,13 +174,13 @@ function cf_cambiarnick() {
 
 function chat_filtro_change() {
 	if (chat_filtro == "normal") {
-		$(".cf_c, .cf_e").hide();
 		chat_filtro = "solochat";
+		$(".cf_c, .cf_e").hide();
 	} else {
 		chat_filtro = "normal";
 		$(".cf_c, .cf_e").show();	
 	}
-	document.getElementById("vpc").scrollTop = 9000000;
+	scroll_abajo();
 }
 
 function msgkeyup(evt, elem) {
@@ -350,10 +350,10 @@ function merge_list() {
 
 function print_delay() {
 	$("#vpc li:last").hide();
-	if (chat_filtro == "solochat") { $(".cf_c, .cf_e").css("display","none"); }
+	if (chat_filtro == "solochat") { $(".cf_c, .cf_e").hide(); }
 	$("#vpc_msg").focus();
 	setTimeout(function(){
-		$("#vpc li:last").fadeIn("slow");
+		$("#vpc li:last").show(); // .fadeIn("slow")
 		scroll_abajo();
 	}, 200);
 }

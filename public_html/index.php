@@ -36,25 +36,25 @@ $txt .= '<h1>Bienvenido a VirtualPol</h1>
 
 <p><a href="http://www.virtualpol.com/">VirtualPol</a> es un ecosistema de <b>plataformas democr&aacute;ticas autogestionadas</b>.</p>
 
-<p><b>En VirtualPol no hay administrador.</b> Todo se decide mediante Democracia Directa: un ciudadano, un voto. Dentro de VirtualPol hay diferentes plataformas totalmente independientes entre sí que comparten este sistema como base.</p>
+<p><b>En VirtualPol no hay administrador.</b> Todo se decide mediante Democracia Directa (1 ciudadano, 1 voto). VirtualPol d&aacute; soporte a diferentes plataformas totalmente independientes entre s&iacute; que comparten este sistema como base.</p>
 
-<p>Los principales gestores se eligen mediante elecciones periódicas y automáticas, de forma que nadie puede detener el ciclo. De esta forma no existe ningún usuario privilegiado, todos parten de la absoluta igualdad de condiciones.</p>
+<p>Los principales gestores se eligen mediante elecciones peri&oacute;dicas y autom&aacute;ticas, de forma que nadie puede detener el ciclo. De esta forma no existe ning&uacute;n usuario privilegiado, todos parten de la absoluta igualdad de condiciones.</p>
 
-<ul><em>VirtualPol tiene:</em>
+<ul><em>VirtualPol ofrece:</em>
 
-<li><b>Herramientas democráticas</b>: elecciones, votaciones avanzadas, cargos flexibles, voto de confianza, grupos/partidos, control de kicks, exámenes...</li>
+<li><b>Herramientas democr&aacute;ticas</b>: elecciones, votaciones avanzadas, sistema de cargos, <abbr title="El voto de confianza es un voto +1 -1 secreto, que cada usuario otorga a otros usuarios">voto de confianza</abbr>, grupos/partidos, control de <abbr title="Los kicks sirven para moderar, son bloqueos temporales de usuarios">kicks</abbr>, <abbr title="Ex&aacute;menes tipo test automaticos">ex&aacute;menes</abbr>...</li>
 
-<li><b>Herramientas de comunicación</b>: salas de chat, foros, voz (mumble), mensajes privados, notas...</li>
+<li><b>Herramientas de comunicaci&oacute;n</b>: salas de chat, foros, voz (mumble), mensajes privados, notas...</li>
 
-<li>Custodiado por un <b>avanzado sistema de Supervisión del Censo</b> (<a href="https://virtualpol.com/dnie.php" title="Autentificación mediante DNIe y otros certificados.">DNIe</a>, <abbr title="Avanzado sistema de deteccion mediante factores tecnicos.">panel de detección</abbr>, supervisores elegidos democráticamente, <a href="http://www.virtualpol.com/legal" title="Condiciones de Uso de VirtualPol.">TOS</a>...). Con 3 años de experiencia, funcionando con solidez.</li>
+<li>Custodiado por un <b>avanzado sistema de Supervisi&oacute;n del Censo</b> (<a href="https://virtualpol.com/dnie.php" title="Autentificaci&oacute;n mediante DNIe y otros certificados">DNIe</a>, <abbr title="Avanzado sistema de deteccion mediante factores tecnicos">sistema de detecci&oacute;n</abbr>, supervisores elegidos democr&aacute;ticamente, <a href="http://www.virtualpol.com/legal" title="Condiciones de Uso de VirtualPol">TOS</a>...). M&aacute;s de 3 a&ntilde;os de experiencia funcionando con solidez.</li>
 
-<li>Algunos datos: '.num($num_votaciones_votos).' votos procesados en '.num($num_votaciones).' votaciones y '.num($num_votos).' valoraciones.</li>
+<li>Algunos datos: '.num($num_votaciones_votos).' votos procesados en '.num($num_votaciones).' votaciones y '.num($num_votos).' votos de otros tipos.</li>
 
-<li>Es <a href="http://code.google.com/p/virtualpol/source/list">software libre</a>.</li>
+<li>Es <a href="http://code.google.com/p/virtualpol/source/list">Software Libre</a>.</li>
 </ul>
 
 
-<p>VirtualPol es la primera comunidad de Internet autogestionada sin administrador y un paso firme hacia la Democracia Directa.</p>';
+<p>VirtualPol es la primera comunidad de Internet sin administrador. Un paso firme hacia la Democracia Directa.</p>';
 
 
 $txt .= '<center>
@@ -146,7 +146,7 @@ while($r = mysql_fetch_array($result)){
 $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="10"></td></tr>
 
 <tr>
-<td colspan="2" rowspan="2" align="right"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=225x110&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto de la población entre plataformas." width="225" height="110" /></td>
+<td colspan="2" rowspan="2" align="right"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=225x110&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto de la poblaci&oacute;n entre plataformas." width="225" height="110" /></td>
 <td align="right" valign="top"><b style="font-size:22px;">' . $poblacion_num . '</b></td>
 <td colspan="2" valign="top"><b style="font-size:20px;">Ciudadanos</b></td>
 <td colspan="3" align="right"></td>

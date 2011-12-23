@@ -1246,10 +1246,12 @@ case 'votacion':
 				$result = mysql_query("SELECT ID FROM votacion_votos WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $ha_votado = true; }
 
+				$_POST['mensaje'] = ucfirst(trim(strip_tags($_POST['mensaje'])));
+
 				if ($ha_votado) { // MODIFICAR VOTO
-					mysql_query("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".($_POST['validez']=='true'?'true':'false')."', mensaje = '".strip_tags($_POST['mensaje'])."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+					mysql_query("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".($_POST['validez']=='true'?'true':'false')."', mensaje = '".$_POST['mensaje']."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 				} else { // INSERTAR VOTO
-					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto, validez, autentificado, mensaje) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".strip_tags($_POST['mensaje'])."')", $link);
+					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto, validez, autentificado, mensaje) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."')", $link);
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 
 					evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(<b>'.$num.'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
@@ -1553,9 +1555,9 @@ case 'enviar-mensaje':
 			while($r = mysql_fetch_array($result)){ $cargo_nombre = $r['nombre']; }
 
 			if ($_POST['cargo_ID'] == '55') {
-				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1'  AND estado = 'ok' AND ID_estudio IN (55, 56, 57) LIMIT 80", $link);
+				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1' AND estado = 'ok' AND ID_estudio IN (55, 56, 57) LIMIT 80", $link);
 			} else {
-				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1'  AND estado = 'ok' AND ID_estudio = '".$_POST['cargo_ID']."' LIMIT 80", $link);
+				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1' AND estado = 'ok' AND ID_estudio = '".$_POST['cargo_ID']."' LIMIT 80", $link);
 			}
 			while($r = mysql_fetch_array($result)){ 
 				if ($r['user_ID'] != $pol['user_ID']) {

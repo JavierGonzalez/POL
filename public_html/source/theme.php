@@ -256,6 +256,7 @@ echo '</div>';
 			<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
 			<li><a href="/info/censo/">Censo <span class="md"><?=$pol['config']['info_censo']?></span></a></li>
 			<li><a href="/partidos/">Grupos <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
+			<li><a href="/elecciones/">Elecciones</a></li>
 			<li><a href="/cargos/"><span style="float:right;">&#9658;</span>Gesti&oacute;n</a>
 				<ul>
 					<li><a href="/control/">Controles</a>
@@ -270,14 +271,12 @@ echo '</div>';
 echo '<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/propuestas/">Propuestas</a></li>';
 
 if ($pol['config']['info_consultas'] > 0) { 
-	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:20px;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
+	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:22px;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
 } else {
 	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones</a></li>'; 
 }
 
-echo '<li id="menu-5" class="menu-5"><a href="/doc/">Acuerdos</a></li>';
-
-
+//echo '<li id="menu-5" class="menu-5"><a href="/doc/">Acuerdos</a></li>';
 
 echo '</ul></dd></dl>
 

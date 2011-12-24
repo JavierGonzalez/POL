@@ -452,7 +452,7 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 				} 
 			}
 			if (!$clones_expulsados) {
-				$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td nowrap="nowrap"><b>'.implode(' & ', $clones).'</b></td><td><em>'.$nota_SC.'</em></td></tr>';
+				$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td><b>'.implode(' & ', $clones).'</b></td><td><em>'.$nota_SC.'</em></td></tr>';
 			}
 		}
 	}

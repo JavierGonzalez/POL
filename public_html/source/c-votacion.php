@@ -531,7 +531,7 @@ ORDER BY siglas ASC", $link);
 } else {
 
 	$txt_title = 'Sistema de Votaciones';
-	$txt .= '<h1>Votaciones: &nbsp; &nbsp; '.boton('Crear votacion', '/votacion/crear/').'</h1>
+	$txt .= '<h1>Votaciones: &nbsp; &nbsp; '.boton('Crear votaci&oacute;n', '/votacion/crear/').'</h1>
 
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 
@@ -557,7 +557,7 @@ LIMIT 500", $link);
 	while($r = mysql_fetch_array($result)) {
 		$time_expire = strtotime($r['time_expire']);
 		if ($r['estado'] == 'ok') { 
-			$estado =  '<span style="color:blue;"><b><span class="timer" value="'.$time_expire.'"></span></b></span>'; 
+			$estado =  '<span style="color:blue;" title="Tiempo que falta para el resultado">Faltan <b><span class="timer" value="'.$time_expire.'"></span></b></span>'; 
 		} else { $estado = '<span style="color:grey;">Hace <span class="timer" value="'.$time_expire.'"></span></span>'; }
 
 		if ((!$r['ha_votado']) AND ($r['estado'] == 'ok') AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']))) { 

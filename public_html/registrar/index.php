@@ -417,7 +417,7 @@ $txt .= '</blockquote></div>';
 <li><b>Nick</b>: ser&aacute; tu identidad.<br />
 <input type="text" name="nick" value="' . $nick . '" size="10" maxlength="14" /><br /><br /></li>
 
-<li><b>Email</b>: recibir&aacute;s un email de verificaci&oacute;n. No enviaremos spam.<br />
+<li><b>Email</b>: recibir&aacute;s un email de verificaci&oacute;n. No se enviar&aacute; spam.<br />
 <input type="text" name="email" value="' . $email . '" size="30" maxlength="50" /><br /><br /></li>
 
 <li><b>Contrase&ntilde;a</b>: introduce dos veces.<br />

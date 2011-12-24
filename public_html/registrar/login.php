@@ -254,7 +254,7 @@ case 'login':
 
 	if ($user_ID) {
 		
-		$expire = time() + 31536000;
+		$expire = time() + (86400*60);
 		setcookie('teorizauser', $nick, $expire, '/', USERCOOKIE);
 		setcookie('teorizapass', md5(CLAVE.$pass), $expire, '/', USERCOOKIE);
 
@@ -299,7 +299,7 @@ body, a { color:#FFFFFF; }
 			case 'turista': case 'ciudadano': $msg_error = 'Contrase&ntilde;a incorrecta'; break;
 			case 'expulsado': $msg_error = 'Est&aacute;s expulsado de VirtualPol por infracci&oacute;n del <a href="/legal">TOS</a>'; break;
 			case 'validar': $msg_error = 'Usuario no validado, revisa tu email'; break;
-			default: $msg_error = 'Usuario inexistente, probablemente expirado'; break;
+			default: $msg_error = 'Usuario inexistente, probablemente expirado por inactividad'; break;
 		}
 
 		header('Location: '.REGISTRAR.'login.php?error='.base64_encode($msg_error));
@@ -308,11 +308,11 @@ body, a { color:#FFFFFF; }
 
 
 case 'logout':
+	unset($_SESSION); 
+	session_destroy();
+
 	setcookie('teorizauser', '', time()-3600, '/', USERCOOKIE);
 	setcookie('teorizapass', '', time()-3600, '/', USERCOOKIE);
-
-	session_start();
-	session_destroy();
 
 	if ($_SERVER['HTTP_REFERER']) { $url = $_SERVER['HTTP_REFERER']; }
 	else { $url = 'http://'.HOST.'/'; }

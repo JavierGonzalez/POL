@@ -1652,7 +1652,7 @@ LIMIT 1", $link);
 			$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."elecciones", $link);
 			while($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
 
-			evento_chat('<b>[ELECCIONES]</b> Nuevo voto (<a href="/elecciones/"><b>info</b></a>, <b style="color:grey;">'.$num_votos.' votos, '.number_format((($num_votos * 100) / $num_votantes), 1, '.', '').'%</b>)', '0', '0', true); 
+			evento_chat('<b>[ELECCIONES]</b> <a href="/elecciones/">Nuevo voto</a> <span style="color:grey;">(<b>'.$num_votos.'</b> votos, '.$pol['nick'].', '.number_format((($num_votos * 100) / $num_votantes), 1, '.', '').'%)</span>', '0', '0', true); 
 
 		}
 
@@ -1886,7 +1886,9 @@ VALUES ('".$pol['user_ID']."', '".$date."', '".strtoupper($_POST['siglas'])."', 
 
 
 if ($_GET['a'] == 'logout') {
-	if ($_SESSION) { unset($_SESSION); session_unset(); session_destroy(); }
+	setcookie('teorizauser', '', time()-3600, '/', USERCOOKIE);
+	setcookie('teorizapass', '', time()-3600, '/', USERCOOKIE);
+	unset($_SESSION); session_destroy();
 	header('Location: '.REGISTRAR.'login.php?a=logout');
 	mysql_close($link); exit;
 }

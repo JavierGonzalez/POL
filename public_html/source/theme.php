@@ -93,8 +93,8 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Kickeado</b>) | <a href="/control/kick/"><b>Ver Kicks</b></a> | <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a>';
 } elseif ($pol['estado'] == 'expulsado') { // EXPULSADO
 	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Expulsado</b>)';
-} elseif ($pol['nick']) { // sin identificar, login OK
-	$txt_perfil = '<b>' . $pol['nick'] . '</b> (<span class="infog"><b>Turista</b></span>) <span class="azul">' . boton('Solicitar Ciudadania', REGISTRAR) . '</span> | <a href="/accion.php?a=logout">Salir</a>';
+} elseif (($pol['nick']) AND ($pol['estado'] != '')) { // sin identificar, login OK
+	$txt_perfil = '<b>'.$pol['nick'].'</b> (<span class="infog"><b>Turista</b></span>) <span class="azul">' . boton('Solicitar Ciudadania', REGISTRAR) . '</span> | <a href="/accion.php?a=logout">Salir</a>';
 } else { // sin identificar, sin login
 	$txt_perfil = boton('Crear ciudadano', REGISTRAR.'?p='.PAIS).' | '.boton('Login', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
 }
@@ -103,9 +103,11 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 
-<td nowrap="nowrap">
-<a href="/" title="Plataforma <?=PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" width="60" height="40" border="0" /></a>
+<td nowrap="nowrap" width="80" height="40">
+<a href="/" title="<?=$pol['config']['pais_des'].' de '.PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" width="60" height="40" border="0" /></a>
 </td>
+
+<td><span style="color:#888;"><?=$pol['config']['pais_des'].' de '.PAIS?></span></td>
 
 <td align="right" valign="middle" nowrap="nowrap"><?=$txt_perfil?></td>
 
@@ -252,7 +254,7 @@ echo '</div>';
 		<ul>
 			<li><a href="/chats/">Chats</a></li>
 			<li><a href="/foro/">Foros</a></li>
-			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
+			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li title="Es necesario instalar el programa de escritorio llamado Mumble"><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
 			<li><a href="/info/censo/">Censo <span class="md"><?=$pol['config']['info_censo']?></span></a></li>
 			<li><a href="/partidos/">Grupos <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
@@ -328,9 +330,9 @@ if (isset($pol['user_ID'])) {
 	echo ($pol['user_ID']==1?$tiempototal.'ms ':'');
 }
 ?> | 
-<a href="http://www.virtualpol.com/legal" target="_blank"><abbr title="Condiciones de Uso de VirtualPol">TOS</abbr></a> | <a href="http://code.google.com/p/virtualpol/source/list" title="VirtualPol es software libre">Código</a> | 
+<a href="http://www.virtualpol.com/legal" target="_blank"><abbr title="Condiciones de Uso de VirtualPol">TOS</abbr></a> | <a href="http://code.google.com/p/virtualpol/source/list" title="VirtualPol es software libre">C&oacute;digo</a> | 
 <a href="http://www.virtualpol.com/manual" target="_blank">Ayuda</a> &nbsp; 
-&nbsp; 2008-2011 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b> <sub>Beta</sub></span>
+&nbsp; 2008-2012 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b> <sub>Beta</sub></span>
 <b><?=PAIS?></b>
 <?php
 if (ECONOMIA) {

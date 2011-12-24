@@ -139,7 +139,7 @@ function hace(cuando, ts, num, pre) {
 
 function scroll_abajo() {
 	if (chat_scroll <= document.getElementById("vpc").scrollTop) {
-		document.getElementById("vpc").scrollTop = 900000;
+		document.getElementById("vpc").scrollTop = 90000000;
 		chat_scroll = document.getElementById("vpc").scrollTop;
 	}
 }
@@ -159,6 +159,8 @@ function toggle_ignorados(nick) {
 		$("."+nick).hide();
 	}
 	merge_list();
+	chat_scroll = 0;
+	scroll_abajo();
 }
 
 function cf_cambiarnick() {
@@ -180,6 +182,7 @@ function chat_filtro_change() {
 		chat_filtro = "normal";
 		$(".cf_c, .cf_e").show();	
 	}
+	chat_scroll = 0;
 	scroll_abajo();
 }
 
@@ -349,14 +352,12 @@ function merge_list() {
 
 
 function print_delay() {
-	$("#vpc li:last").hide();
 	if (chat_filtro == "solochat") { $(".cf_c, .cf_e").hide(); }
 	$("#vpc_msg").focus();
-	setTimeout(function(){
-		$("#vpc li:last").show(); // .fadeIn("slow")
-		scroll_abajo();
-	}, 200);
+	scroll_abajo();
 }
+
+
 
 function enviarmsg() {
  	var elmsg = $("#vpc_msg").attr("value");

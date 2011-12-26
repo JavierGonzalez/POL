@@ -504,7 +504,7 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 
 
 <p>Comentario (opcional, secreto y p&uacute;blico al terminar la votaci&oacute;n).<br />
-<input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="60" maxlength="60" /></p>
+<input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="60" maxlength="160" /></p>
 
 </form>';
 			}

@@ -45,7 +45,7 @@ if (isset($sc[$pol['user_ID']])) {
 
 	if ($_GET['b'] == 'nuevos-ciudadanos') {
 
-			$txt_title = 'Control: Supervision del Censo - Nuevos ciudadanos';
+			$txt_title = 'Control: SC | Nuevos ciudadanos';
 			$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
@@ -132,7 +132,7 @@ LIMIT 60", $link);
 
 
 
-	$txt_title = 'Control: Supervision del Censo | Confianza mutua';
+	$txt_title = 'Control: SC | Confianza mutua';
 	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | Confianza | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
@@ -223,7 +223,7 @@ $txt .= '<h1>Grafico confianza</h1>
 
 
 
-	$txt_title = 'Control: Supervision del Censo | Extras';
+	$txt_title = 'Control: SC | Extras';
 	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Extras | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
@@ -390,7 +390,7 @@ ORDER BY factor DESC LIMIT 30", $link);
 
 	} else { // principal
 
-	$txt_title = 'Control: Supervision del Censo';
+	$txt_title = 'Control: SC';
 	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
@@ -462,7 +462,7 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 
 
 	$trazas_rep = array();
-	$txt .= '<br /><h1>3. Traza (coincidencia de dispositivo)</h1><hr /><table border="0" cellspacing="4">';
+	$txt .= '<br /><h1>3. Traza (coincidencia de dispositivo segura)</h1><hr /><table border="0" cellspacing="4">';
 	$result = mysql_query("SELECT ID AS user_ID, nick, estado, pais, traza FROM users WHERE traza != '' ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$tn = 1;
@@ -492,16 +492,13 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 	$txt .= '</table>';
 
 
-
-
-
 	$txt .= '<br /><h1>4. Ocultaci&oacute;n de conexi&oacute;n (proxys, TOR...)</h1><hr /><table border="0" cellspacing="4">';
 	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%proxy%');
 	$sql_anon = '';
 	foreach ($array_searchtor AS $filtro) { if ($sql_anon != '') { $sql_anon .= ' OR ';  } $sql_anon .= "hosts LIKE '".$filtro."'"; }
-	$result = mysql_query("SELECT nick, estado, host, IP, nav FROM users WHERE ".$sql_anon." ORDER BY fecha_registro DESC", $link);
+	$result = mysql_query("SELECT nick, estado, host, IP, nav, nota_SC FROM users WHERE ".$sql_anon." ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
-		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td></tr>';
+		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td><td>'.($r['nota_SC']!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post"><input type="text" name="nota_SC" size="20" maxlength="255" value="'.$r['nota_SC'].'" /><input type="submit" value="OK" /></form>':'').'</td></tr>';
 	}
 	$txt .= '</table>';
 
@@ -900,7 +897,7 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 	if (isset($sc[$pol['user_ID']])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
 	$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'varios/expulsar.gif" alt="Expulsion" border="0" /> <a href="/control/expulsiones/">Expulsiones</a> | Expulsar</h1>
 
-<p>Esta acci&oacute;n es efectuada por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminaci&oacute;n forzada tras 10 dias, pasado ese periodo de tiempo es irreversible. Seg&uacute;n el <a href="http://www.virtualpol.com/legal">TOS</a> es motivo de expulsi&oacute;n <em>2.c La utilizaci&oacute;n malintencionada del privilegio de expulsi&oacute;n.</em></p>
+<p>Las expulsiones son efectuadas por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminaci&oacute;n forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.virtualpol.com/legal">Condiciones de Uso</a> (con la excepci&oacute;n de Registro erroneo y Test de desarrollo).</p>
 
 <form action="/accion.php?a=expulsar" method="post">
 
@@ -977,7 +974,7 @@ WHERE ID = '".$_GET['c']."' LIMIT 1", $link);
 	$txt_title = 'Control:  Expulsiones';
 	$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'varios/expulsar.gif" alt="Expulsado" border="0" /> Expulsiones | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p>Una expulsi&oacute;n bloquea de forma perpetua a un usuario de <a href="http://www.virtualpol.com/">VirtualPol</a>. Esta responsabilidad est&aacute; a cargo de los Supervisores del Censo (son los 7 m&aacute;s votados de confianza, con m&aacute;s de 365 dias de veteran&iacute;a). Son elegidos mediante democracia directa. Las expulsiones siguen las reglas del <a href="http://www.virtualpol.com/legal">TOS</a>.</p>
+<p>Las expulsiones son efectuadas por los Supervisores del Censo (SC). Consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminaci&oacute;n forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.virtualpol.com/legal">Condiciones de Uso</a> (con la excepci&oacute;n de Registro erroneo y Test de desarrollo). Los Supervisores del Censo son ciudadanos con m&aacute;s de 1 a&ntilde;o de antiguedad y elegidos por democracia directa, mediante el "voto de confianza", actualizado cada Domingo a las 20:00.</p>
 
 <table border="0" cellspacing="1" cellpadding="" class="pol_table">
 <tr>

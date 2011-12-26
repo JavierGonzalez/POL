@@ -150,8 +150,8 @@ dios
 policia
 ';
 	$nicks_prohibidos = explode("\n", $nicks_prohibidos);
-
 	$crono = $_POST['crono'];
+
 
 	//CONTROL: captcha
 	include('animal-captcha-check.php');
@@ -397,11 +397,25 @@ $txt .= '</blockquote></div>';
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';
 	$txt .= '<h1>1. Crear usuario <span class="gris">| 2. Solicitar Ciudadan&iacute;a | 3. Ser Ciudadano</span></h1><hr />' . $registro_txt;
 } else {
-	$atrack = '"/atrack/registro/formulario.html"';
-	$txt_title = 'Registrar: PASO 1 (Crear usuario Turista)';
-	$txt .= '<h1>1. Crear usuario <span class="gris">| 2. Solicitar Ciudadan&iacute;a | 3. Ser Ciudadano</span></h1><hr />
 
-<form action="?a=registrar'.($_GET['p']?'&p='.$_GET['p']:'').($_GET['r']?'&r='.$_GET['r']:'').'" method="POST">
+
+	$txt_header .= '
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".password").valid();
+	$("#form_crear_ciudadano").validate();
+});
+</script>
+<script type="text/javascript" src="'.IMG.'lib/jquery-validate.password/lib/jquery.validate.js"></script>
+<script type="text/javascript" src="'.IMG.'lib/jquery-validate.password/jquery.validate.password.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="'.IMG.'lib/jquery-validate.password/jquery.validate.password.css" />
+';
+
+	$atrack = '"/atrack/registro/formulario.html"';
+	$txt_title = 'Registrar: PASO 1 (Crear ciudadano)';
+	$txt .= '<h1>Crear tu ciudadano</h1><hr />
+
+<form action="?a=registrar'.($_GET['p']?'&p='.$_GET['p']:'').($_GET['r']?'&r='.$_GET['r']:'').'" method="POST" id="form_crear_ciudadano">
 <input type="hidden" name="repid" value="' . $rn . '" />
 <input type="hidden" name="crono" value="' . time() . '" />
 '.($_GET['p']?'<input type="hidden" name="p" value="'.$_GET['p'].'" />':'').'
@@ -421,7 +435,17 @@ $txt .= '</blockquote></div>';
 <input type="text" name="email" value="' . $email . '" size="30" maxlength="50" /><br /><br /></li>
 
 <li><b>Contrase&ntilde;a</b>: introduce dos veces.<br />
-<input id="pass1" type="password" autocomplete="off" name="pass1" value="" maxlength="40" /><br />
+<input id="pass1" class="password" type="password" autocomplete="off" name="pass1" value="" maxlength="40" />
+<div class="password-meter" style="float:right;margin-right:400px;color:#666;">
+	<div class="password-meter-message">&nbsp;</div>
+	<div class="password-meter-bg">
+		<div class="password-meter-bar"></div>
+	</div>
+</div>
+
+
+
+<br />
 <input id="pass2" type="password" autocomplete="off" name="pass2" value="" maxlength="40" style="margin-top:1px;" /><br /><br /></li>
 
 

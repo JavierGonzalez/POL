@@ -356,23 +356,23 @@ mysql_query("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '
 Autentificados NO expiran.
 */
 $st['eliminados'] = 0;
-$result = mysql_query("SELECT ID, nick, fecha_registro, fecha_last FROM users
+$result = mysql_query("SELECT ID, estado FROM users
 WHERE dnie = 'false' AND 
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".$margen_90dias."' AND fecha_last <= '".$margen_60dias."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_90dias."' AND fecha_registro <= '".$margen_30dias."' AND fecha_last <= '".$margen_30dias."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_30dias."' AND fecha_last <= '".$margen_10dias."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".$margen_10dias."') OR
+((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".$margen_5dias."') OR
 (estado = 'validar' AND fecha_last <= '".$margen_10dias."')
 ", $link);
 while($r = mysql_fetch_array($result)) {
-	$st['eliminados']++;
+	if ($r['estado'] != 'expulsado') { $st['eliminados']++; }
 	eliminar_ciudadano($r['ID']);
 }
 
 
 // Avisos por email 48h antes de la eliminación
 function retrasar_t($t) { return date('Y-m-d 20:00:00', (strtotime($t)+(86400*2))); }
-$result = mysql_query("SELECT ID, nick, email, fecha_registro, fecha_last FROM users
+$result = mysql_query("SELECT ID, nick, email FROM users
 WHERE dnie = 'false' AND estado != 'expulsado' AND 
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".retrasar_t($margen_90dias)."' AND fecha_last <= '".retrasar_t($margen_60dias)."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_90dias)."' AND fecha_registro <= '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_30dias)."') OR

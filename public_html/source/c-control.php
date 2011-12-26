@@ -414,13 +414,13 @@ FROM users
 WHERE IP = '" . $r['IP'] . "' 
 ORDER BY fecha_registro DESC", $link);
 		while($r2 = mysql_fetch_array($result2)) {
-			$nota_SC .= $r2['nota_SC'].' ';
+			$nota_SC .= ($r2['nota_SC']!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r2['ID'].'" method="post"><input type="text" name="nota_SC" size="20" maxlength="255" value="'.$r2['nota_SC'].'" /><input type="submit" value="OK" /></form>':'');
 			$confianza_total += $r2['voto_confianza_SC'];
 			if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 			$clones[] = '<b>'.crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']).'</b>';
 		}
 		if ((!$desarrollador) AND (!$clones_expulsados)) {
-			$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td nowrap="nowrap">'.implode(' & ', $clones).'</td><td align="right" nowrap="nowrap">'.ocultar_IP($r['host'], 'host').'</td><td>'.ocultar_IP($r['IP']).'</td><td><em>'.$nota_SC.'</em></td></tr>';
+			$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td nowrap="nowrap"><span style="float:right;">'.ocultar_IP($r['host'], 'host').'</span>'.implode(' & ', $clones).'</td><td>'.ocultar_IP($r['IP']).'</td><td nowrap="nowrap">'.$nota_SC.'</td></tr>';
 		}
 	}
 	$txt .= '</table>';
@@ -445,14 +445,14 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 			$clones_expulsados = true;
 			while($r2 = mysql_fetch_array($result2)) { 
 				if ($r2['nick']) {
-					$nota_SC .= $r2['nota_SC'].' ';
+					$nota_SC .= ($r2['nota_SC']!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r2['ID'].'" method="post"><input type="text" name="nota_SC" size="20" maxlength="255" value="'.$r2['nota_SC'].'" /><input type="submit" value="OK" /></form>':'');
 					$confianza_total += $r2['voto_confianza_SC'];
 					if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 					$clones[] = crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']);
 				} 
 			}
 			if (!$clones_expulsados) {
-				$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td><b>'.implode(' & ', $clones).'</b></td><td><em>'.$nota_SC.'</em></td></tr>';
+				$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td><b>'.implode(' & ', $clones).'</b></td><td nowrap="nowrap">'.$nota_SC.'</td></tr>';
 			}
 		}
 	}

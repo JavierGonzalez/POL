@@ -70,7 +70,7 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 
 		if ((nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) AND (isset($pol['user_ID']))) {
 			$txt .= '<p>Log de las ultimas 24 horas:</p><p class="rich" style="background:#FFFFFF;padding:15px;font-size:14px;text-align:left;">VirtualPol: Plataforma '.PAIS.'. Sala: '.$r['titulo'].'. A fecha de '.date('Y-m-d').'.<br />...<br />';
-			$result2 = mysql_query("SELECT * FROM chats_msg WHERE chat_ID = '".$r['chat_ID']."' AND tipo != 'p' ORDER BY time ASC", $link);
+			$result2 = mysql_query("SELECT * FROM chats_msg WHERE chat_ID = '".$r['chat_ID']."' AND tipo != 'p' ORDER BY msg_ID ASC", $link);
 			while ($r2 = mysql_fetch_array($result2)) { 
 				$txt .= '<span'.($r2['tipo']!='m'?' style="color:green;"':'').'>'.date('H:i', strtotime($r2['time'])).' <img src="'.IMG.'cargos/'.$r2['cargo'].'.gif" width="16" height="16" border="0"> <b>'.$r2['nick'].'</b>: '.$r2['msg']."</span><br />\n"; 
 			}

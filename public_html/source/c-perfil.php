@@ -29,8 +29,8 @@ while($r = mysql_fetch_array($result)){
 <tr><td colspan="3" align="right">
 
 <form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post">
-Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="40" value="'.$r['nota_SC'].'" />
-<input type="submit" value="Guardar" />
+Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="255" value="'.$r['nota_SC'].'" />
+<input type="submit" value="OK" />
 </form>
 
 </td>

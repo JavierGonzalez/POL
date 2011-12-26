@@ -34,7 +34,7 @@ while($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
 
 $txt .= '<h1>Bienvenido a VirtualPol</h1>
 
-<p><a href="http://www.virtualpol.com/">VirtualPol</a> es un ecosistema de <b>plataformas democr&aacute;ticas autogestionadas</b>.</p>
+<p>VirtualPol es un ecosistema de <b>plataformas democr&aacute;ticas autogestionadas</b>.</p>
 
 <p><b>En VirtualPol no hay administrador.</b> Todo se decide mediante Democracia Directa (1 ciudadano, 1 voto). VirtualPol d&aacute; soporte a diferentes plataformas totalmente independientes entre s&iacute; que comparten este sistema como base.</p>
 
@@ -74,7 +74,7 @@ foreach ($vp['paises'] AS $pais) {
 	$pais_low = strtolower($pais);
 	
 	// ciudadanos
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE pais = '".$pais."' AND estado != 'expulsado'", $link);
+	$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE pais = '".$pais."' AND estado = 'ciudadano'", $link);
 	while($r = mysql_fetch_array($result)) { $pais_pob = $r['num']; $pais_pob_num[$pais] = $r['num']; }
 
 	// dias de existencia
@@ -116,8 +116,8 @@ foreach ($vp['paises'] AS $pais) {
 
 <td nowrap="nowrap"><a href="http://'.$pais_low.'.virtualpol.com/"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
 
-<td align="right"><b style="font-size:22px;">' . $pais_pob . '</b></td>
-<td nowrap="nowrap" align="right"><b>' . $pais_dias . '</b> d&iacute;as</td>
+<td align="right"><b style="font-size:22px;">'.num($pais_pob).'</b></td>
+<td nowrap="nowrap" align="right"><b>'.num($pais_dias).'</b> d&iacute;as</td>
 
 <td style="font-size:13px;">
 <a href="http://'.$pais_low.'.virtualpol.com/elecciones/">Elecciones</a><br />
@@ -147,13 +147,13 @@ $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="10"></td></tr>
 
 <tr>
 <td colspan="2" rowspan="2" align="right"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=225x110&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto de la poblaci&oacute;n entre plataformas." width="225" height="110" /></td>
-<td align="right" valign="top"><b style="font-size:22px;">' . $poblacion_num . '</b></td>
+<td align="right" valign="top"><b style="font-size:22px;">'.num($poblacion_num).'</b></td>
 <td colspan="2" valign="top"><b style="font-size:20px;">Ciudadanos</b></td>
 <td colspan="3" align="right"></td>
 </tr>
 
 <tr>
-<td align="right" valign="top"><b style="font-size:18px;">'.$autentificados.'</b></td>
+<td align="right" valign="top"><b style="font-size:18px;">'.num($autentificados).'</b></td>
 <td colspan="2" valign="top">Autentificados</td>
 <td colspan="3" align="right"></td>
 </tr>
@@ -188,8 +188,8 @@ $txt .= '<br />
 <div class="amarillo" style="width:90%;margin:0 auto;">
 <table border="0">
 <tr>
-<td><b style="font-size:34px;">' . $li_online_num . '</b></td>
-<td>Ciudadanos online: ' . $li_online . '</td>
+<td><b style="font-size:34px;">'.num($li_online_num).'</b></td>
+<td>Ciudadanos online: '.$li_online.'</td>
 </tr>
 </table></div>'; 
 

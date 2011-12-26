@@ -468,11 +468,10 @@ ORDER BY time ASC", $link);
 			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) { $crear_hilo = boton('Crear Hilo', '/foro/' . $r['url'] . '/#enviar'); } else { $crear_hilo = boton('Crear Hilo'); }
 
 			$txt .= '<tr class="amarillo">
-<td nowrap="nowrap"><h2><a href="/foro/' . $r['url'] . '/" style="font-size:22px;margin-left:8px;"><b>' . $r['title'] . '</b></a></h2></td>
-<td align="right"><b style="font-size:19px;">' . $r['num'] . '</b></td>
-<td style="color:green;">' . $r['descripcion'] . '</td>
-<td align="right" style="color:grey;">' . $el_acceso . '</td>
-<td align="right" width="10%">' . $crear_hilo . '</td>
+<td nowrap="nowrap"><h2><a href="/foro/'.$r['url'].'/" style="font-size:22px;margin-left:8px;"><b>'.$r['title'].'</b></a></h2></td>
+<td align="right"><b style="font-size:19px;">'.$r['num'].'</b></td>
+<td style="color:green;" colspan="2"><span style="float:right;color:grey;">'.$el_acceso.'</span>'.$r['descripcion'].'</td>
+<td align="right" width="10%">'.$crear_hilo.'</td>
 </tr>';
 
 			if (!$r['limite']) { $r['limite'] = 8; }
@@ -490,9 +489,10 @@ LIMIT ".$r['limite'], $link);
 					if (strtotime($r2['time']) < (time() - 432000)) { $titulo = $hilo_url[$r2['ID']]; } else { $titulo = '<b>' . $hilo_url[$r2['ID']] . '</b>'; }
 					if (strtotime($r2['time']) > (time() - 86400)) { $titulo = $titulo . ' <sup style="font-size:9px;color:red;">Nuevo!</sup>'; }
 					$txt .= '<tr>
-<td align="right" valign="top">' . crear_link($r2['nick']) . '</td>
-<td valign="top" align="right"><b>' . $r2['num'] . '</b></td>
-<td colspan="2" class="rich"><b style="font-size:19px;">'.confianza($r2['votos']).'</b> ' . $titulo . '</td>
+<td align="right" valign="top">'.crear_link($r2['nick']).'</td>
+<td valign="top" align="right"><b>'.$r2['num'].'</b></td>
+<td align="right" style="padding-right:4px;">'.confianza($r2['votos']).'</td>
+<td class="rich">'.$titulo.'</td>
 <td align="right" valign="top" nowrap="nowrap"><span class="timer" value="'.strtotime($r2['time']).'"></span></td>
 </tr>';
 				}
@@ -505,8 +505,7 @@ LIMIT ".$r['limite'], $link);
 		$txt .= '<tr class="amarillo">
 <td width="120"><h2><a href="/foro/papelera/" style="font-size:22px;margin-left:8px;">Papelera</a></h2></td>
 <td align="right"><b style="font-size:19px;"></b></td>
-<td style="color:green;">Cuarentena de mensajes eliminados, 10 dias.</td>
-<td align="right" style="color:grey;"></td>
+<td style="color:green;" colspan="2">Cuarentena de mensajes, eliminados tras 10 d&iacute;as.</td>
 <td align="right" width="10%"></td>
 </tr>
 </table>';

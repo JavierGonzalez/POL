@@ -184,6 +184,7 @@ function chat_filtro_change() {
 	}
 	chat_scroll = 0;
 	scroll_abajo();
+	$("#vpc_msg").focus();
 }
 
 function msgkeyup(evt, elem) {
@@ -400,6 +401,8 @@ function chat_enabled() {
 	chat_delay = 4500;
 	refresh = setTimeout(chat_query_ajax, chat_delay);
 	delays();
+	$("#vpc_msg").focus();
+	scroll_abajo();
 }
 
 function auto_priv(nick) { $("#vpc_msg").attr("value","/msg " + nick + " ").css("background", "#FF7777").css("color", "#952500").focus(); }

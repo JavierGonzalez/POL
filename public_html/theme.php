@@ -50,7 +50,7 @@ border-width: 0 2px 2px 0;
 <?php
 unset($txt_header);
 if ($pol['nick']) {
-	$txt_perfil = '<b><a href="http://' . strtolower($pol['pais']) . '.virtualpol.com/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . '</a></b> | <b class="' . $pol['estado'] . '">' . ucfirst($pol['estado']) . '</b> de <b>' . $pol['pais'] . '</b> | <a href="'.REGISTRAR.'login.php?a=logout">Salir</a>';
+	$txt_perfil = '<b><a href="http://' . strtolower($pol['pais']) . '.virtualpol.com/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . '</a></b> | <b class="' . $pol['estado'] . '">' . ucfirst($pol['estado']) . '</b> de <b>' . $pol['pais'] . '</b> | '.boton('Salir', REGISTRAR.'login.php?a=logout');
 } else { // sin identificar, sin login
 	$txt_perfil = boton('Crear ciudadano', REGISTRAR).' | '.boton('Login', REGISTRAR.'login.php');
 }
@@ -59,7 +59,7 @@ if ($pol['nick']) {
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 
-<td width="208"><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><img src="<?=IMG?>logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-12px 0 -9px -6px;" border="0" /></a></td><td><span style="color:grey;font-size:20x;">Plataforma democr&aacute;tica autogestionada</span></span></td>
+<td width="208"><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><img src="<?=IMG?>logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-12px 0 -9px -6px;" border="0" /></a></td><td><span style="color:grey;font-size:20x;">Ecosistema de plataformas democr&aacute;ticas autogestionadas</span></span></td>
 
 <td align="right"><?=$txt_perfil?></td>
 
@@ -121,7 +121,7 @@ var _sf_async_config={uid:26055,domain:"virtualpol.com"};
 })();
 
 </script>
-
+<script type="text/javascript" src="<?=IMG?>efectonieve.js"></script>
 
 </body>
 </html>

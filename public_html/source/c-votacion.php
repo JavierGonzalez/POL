@@ -381,7 +381,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 						}
 					}
 
-					$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chp=4.71&chd=t:'.implode(',', $grafico_array_votos).'&chs=350x175&chl='.implode('|', $grafico_array_respuestas).'&chf=bg,s,ffffff01|c,s,ffffff01" alt="Escrutinio" width="350" height="175" />';
+					if (count($respuestas) <= 10) { $txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chp=4.71&chd=t:'.implode(',', $grafico_array_votos).'&chs=350x175&chl='.implode('|', $grafico_array_respuestas).'&chf=bg,s,ffffff01|c,s,ffffff01&chco=FF9900|FFBE5E|FFD08A|FFDBA6" alt="Escrutinio" width="350" height="175" />'; }
 				}
 
 				$txt .= '<br />';
@@ -397,10 +397,12 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 
 					foreach ($escrutinio['votos'] AS $voto => $num) { 
 						if ($respuestas[$voto]) {
-							$txt .= '<tr><td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'"':'').'>'.($respuestas[$voto]=='En Blanco'?'<em>En Blanco</em>':$respuestas[$voto]).'</td><td align="right"><b>'.num($num).'</b></td><td align="right">'.($respuestas[$voto]=='En Blanco'?'':num(($num * 100) / $puntos_total_sin_en_blanco, 1).'%').'</td></tr>';
+							if ($respuestas[$voto] != 'En Blanco') {
+								$txt .= '<tr><td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'"':'').'>'.$respuestas[$voto].'</td><td align="right"><b>'.num($num).'</b></td><td align="right">'.num(($num*100)/$puntos_total_sin_en_blanco, 1).'%</td></tr>';
+							} else { $votos_en_blanco = $num; }
 						} else { unset($escrutinio['votos'][$voto]);  }
 					}
-					$txt .= '</table>';
+					$txt .= '<tr><td nowrap="nowrap" title="Voto no computable. Equivale a: No sabe/No contesta."><em>En Blanco</em></td><td align="right"><b>'.num($votos_en_blanco).'</b></td><td></td></tr></table>';
 				}
 				
 

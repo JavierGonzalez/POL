@@ -86,7 +86,7 @@ case 'censo':
 		$num_element_pag = $censo_expulsados;
 	}
 
-	paginacion('censo', $pagina_url, null, $pagina, $num_element_pag, 50);
+	paginacion('censo', $pagina_url, null, $pagina, $num_element_pag, 100);
 
 	if ($_GET['b'] == 'nuevos') {
 		$old = 'antiguedad';
@@ -113,7 +113,9 @@ $txt .= '
 <input value="Buscar en perfil" type="submit" onclick="var cmq = $(\'#cmq\').attr(\'value\'); window.location.href=\'/info/censo/busqueda/\'+cmq+\'/\'; return false;">
 </div>
 
-<p>' . $p_paginas . ' &nbsp; &nbsp; <a href="/info/censo/">Ciudadanos</a>: <abbr title="Numero de ciudadanos en la plataforma '.PAIS.'"><b>' . $pol['config']['info_censo'] . '</b></abbr> (<abbr title="Ciudadanos -no nuevos- que entraron en las últimas 24h, en la plataforma '.PAIS.'">activos <b>'.$censo_activos.'</b></abbr>,  <abbr title="Ciudadanos activos en todo VirtualPol">activos global <b>'.$censo_activos_vp.'</b></abbr>)
+<p>'.$p_paginas.'</p>
+
+<p><abbr title="Numero de ciudadanos en la plataforma '.PAIS.'"><b>' . $pol['config']['info_censo'] . '</b> ciudadanos</abbr> (<abbr title="Ciudadanos -no nuevos- que entraron en las últimas 24h, en la plataforma '.PAIS.'">activos <b>'.$censo_activos.'</b></abbr>,  <abbr title="Ciudadanos activos en todo VirtualPol">activos global <b>'.$censo_activos_vp.'</b></abbr>)
 
 '.(ECONOMIA?' | <a href="/control/expulsiones/" class="expulsado">Expulsados</a>: <b>' . $censo_expulsados . '</b> | <a href="/info/censo/riqueza/" title="Los ciudadanos con más monedas.">Ricos</a>':'').' | <abbr><a href="/info/censo/SC/">Ver censo de todo VirtualPol</a></abbr> &nbsp; 
 </p>
@@ -174,7 +176,7 @@ FROM users ".$order_by." LIMIT ".$p_limit, $link);
 <td align="right" class="gris">' . $orden++ . '</td>
 '.(ASAMBLEA?'':'<td align="right">' . $r['nivel'] . '</td>').'
 <td height="38">' . $avatar . '</td>
-<td>'.(isset($sc[$r['ID']])?'<span style="float:right;color:red;margin-left:5px;" title="Supervisor del Censo">SC</span>':'').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" width="16" height="16" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
+<td nowrap="nowrap">'.(isset($sc[$r['ID']])?'<span style="float:right;color:red;margin-left:5px;" title="Supervisor del Censo">SC</span>':'').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" width="16" height="16" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
 <td align="right" nowrap="nowrap"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span></td>
 <td nowrap="nowrap">'.($pol['user_ID']&&$r['user_ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['user_ID'].'" class="votar" type="confianza" name="'.$r['user_ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
 '.(ASAMBLEA?'':'<td>' . $partido . '</td>').'

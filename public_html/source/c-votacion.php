@@ -71,11 +71,11 @@ campos_num = 3;
 campos_max = 30;
 
 function cambiar_tipo_votacion(tipo) {
-	$("#acceso_votar, #time_expire, #votar_form, #votos_expire, #tipo_voto, #privacidad").show();
+	$("#acceso_votar, #time_expire, .votar_form, #votos_expire, #tipo_voto, #privacidad").show();
 	$("#cargo_form").hide();
 	switch (tipo) {
 		case "parlamento": $("#acceso_votar, #votos_expire, #privacidad").hide(); break;
-		case "cargo": $("#acceso_votar, #time_expire, #votar_form, #votos_expire, #tipo_voto, #privacidad").hide(); $("#cargo_form").show(); break;
+		case "cargo": $("#acceso_votar, #time_expire, .votar_form, #votos_expire, #tipo_voto, #privacidad").hide(); $("#cargo_form").show(); break;
 	}
 }
 
@@ -186,13 +186,15 @@ $txt .= '
 
 </td></tr></table>
 
-<div id="votar_form">
+<div class="votar_form">
 <p><b>Pregunta</b>: 
 <input type="text" name="pregunta" size="57" maxlength="70" /></p>
+</div>
 
 <p><b>Descripci&oacute;n</b>:<br />
 <textarea name="descripcion" style="color: green; font-weight: bold; width: 570px; height: 250px;"></textarea></p>
 
+<div class="votar_form">
 <p><b>Opciones de voto</b>:
 <ul style="margin-bottom:-16px;">
 <li><input type="text" name="respuesta0" size="22" value="En Blanco" readonly="readonly" style="color:grey;" /> &nbsp; <a href="#" id="a_opciones" onclick="opcion_nueva();return false;">A&ntilde;adir opci&oacute;n</a></li>
@@ -234,7 +236,7 @@ LIMIT 1", $link);
 		} else { $tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; }
 
 
-		$txt .= '<h1><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).' | '.$votos_total.' votos | '.$tiempo_queda.'</h1>
+		$txt .= '<h1><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).' | '.num($votos_total).' votos | '.$tiempo_queda.'</h1>
 
 <div class="amarillo" style="margin:20px 0 15px 0;padding:20px 10px 0 10px;">
 <h1>'.$r['pregunta'].'</h1>
@@ -273,7 +275,7 @@ LIMIT 1", $link);
 				$txt .= '<tr>
 <td>'.($r2['user_ID']==0?'*':crear_link($r2['nick'])).'</td>
 <td nowrap="nowrap">'.($r['privacidad']=='false'&&$r['estado']=='end'?$respuestas[$r2['voto']]:'*').'</td>
-<td>'.($r2['autentificado']=='true'?'<span style="color:blue;"><b>SI</b></span>':'<span style="color:red;">NO</span>').'</td>
+<td>'.($r2['autentificado']=='true'?'<span style="color:blue;"><b>SI</b></span>':'<span style="color:grey;">NO</span>').'</td>
 </tr>';
 			}
 			$txt .= '<tr><td colspan="4" nowrap="nowrap">Votos computados: <b>'.$orden.'</b> (Contador: '.$r['num'].')</td></tr></table>
@@ -395,7 +397,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 
 					foreach ($escrutinio['votos'] AS $voto => $num) { 
 						if ($respuestas[$voto]) {
-							$txt .= '<tr><td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'"':'').'>'.($respuestas[$voto]=='En Blanco'?'<em>En Blanco</em>':$respuestas[$voto]).'</td><td align="right"><b>'.$num.'</b></td><td align="right">'.($respuestas[$voto]=='En Blanco'?'':num(($num * 100) / $puntos_total_sin_en_blanco, 1).'%').'</td></tr>';
+							$txt .= '<tr><td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'"':'').'>'.($respuestas[$voto]=='En Blanco'?'<em>En Blanco</em>':$respuestas[$voto]).'</td><td align="right"><b>'.num($num).'</b></td><td align="right">'.($respuestas[$voto]=='En Blanco'?'':num(($num * 100) / $puntos_total_sin_en_blanco, 1).'%').'</td></tr>';
 						} else { unset($escrutinio['votos'][$voto]);  }
 					}
 					$txt .= '</table>';
@@ -406,7 +408,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 				// Imprime datos de legitimidad y validez
 				$txt .= '</td>
 <td valign="top" style="color:#888;"><br />
-Legitimidad: <b>'.$votos_total.'</b>&nbsp;votos, <b>'.$escrutinio['votos_autentificados'].'</b>&nbsp;autentificados.<br />
+Legitimidad: <b>'.num($votos_total).'</b>&nbsp;votos, <b>'.$escrutinio['votos_autentificados'].'</b>&nbsp;autentificados.<br />
 Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>NULO</b>&nbsp;'.$porcentaje_validez.'%</span>').'<br />
 <img width="230" height="130" title="Votos de validez: '.$escrutinio['validez']['true'].' OK, '.$escrutinio['validez']['false'].' NULO" src="http://chart.apis.google.com/chart?cht=p&chp=4.71&chd=t:'.$escrutinio['validez']['true'].','.$escrutinio['validez']['false'].'&chs=230x130&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>
 </tr></table>';
@@ -579,7 +581,7 @@ LIMIT 500", $link);
 
 		$txt .= '<tr>
 <td'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
-<td align="right"><b>'.$r['num'].'</b></td>
+<td align="right"><b>'.num($r['num']).'</b></td>
 <td><a href="/votacion/'.$r['ID'].'/"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap">'.$estado.'</td>
 <td nowrap="nowrap">'.$votar.$boton.'</td>

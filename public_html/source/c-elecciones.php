@@ -243,7 +243,7 @@ window.onload = function(){
 <tr><td colspan="2" class="amarillo" valign="top">
 
 <h2>Calendario</h2>
-<p style="margin-bottom:-8px;">Pr&oacute;ximas elecciones: <b>'.explodear(' ', $pol['config']['elecciones_inicio'], 0).'</b> (siempre a las 20:00h). Duraci&oacute;n: <b>48h</b>. Periodicidad: <b>cada 2 semanas</b>.'.(ASAMBLEA?' Coordinadores a elegir: <b>'.$pol['config']['num_escanos'].'</b>.':'').'</p>
+<p>Pr&oacute;ximas elecciones: <b>'.explodear(' ', $pol['config']['elecciones_inicio'], 0).'</b> (siempre a las 20:00h). Duraci&oacute;n: <b>48h</b>. Periodicidad: <b>cada 2 semanas</b>.'.(ASAMBLEA?' Coordinadores a elegir: <b>'.$pol['config']['num_escanos'].'</b>.':'').'</p>
 <table border="0" width="100%" height="50" cellpadding="2" cellspacing="0">
 <tr>';
 

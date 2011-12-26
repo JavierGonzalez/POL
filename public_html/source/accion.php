@@ -1178,9 +1178,6 @@ case 'votacion':
 			}
 
 
-
-
-
 			$_POST['pregunta'] = strip_tags($_POST['pregunta']);
 			$_POST['descripcion'] = gen_text($_POST['descripcion'], 'plain');
 
@@ -1209,7 +1206,7 @@ case 'votacion':
 						$_POST['acceso_votar'] = 'ciudadanos'; $_POST['acceso_cfg_votar'] = '';
 						$ejecutar = $_POST['cargo'].'|'.$cargo_user_ID;
 						$_POST['pregunta'] = '&iquest;Apruebas que el ciudadano '.$_POST['nick'].' ostente el cargo '.$cargo_nombre.'?';
-						$_POST['descripcion'] = '&iquest;Estas a favor que <b>'.crear_link($_POST['nick']).'</b> tenga el cargo <b>'.$cargo_nombre.'</b>?<br /><br />Al finalizar esta votaci&oacute;n, si el resultado por mayor&iacute;a es a favor, se otorgar&aacute; el cargo autom&aacute;ticamente, si por el contrario el resultado es en contra se le destituir&aacute; del cargo.';
+						$_POST['descripcion'] .= '<hr />&iquest;Estas a favor que <b>'.crear_link($_POST['nick']).'</b> tenga el cargo <b>'.$cargo_nombre.'</b>?<br /><br />Al finalizar esta votaci&oacute;n, si el resultado por mayor&iacute;a es a favor, se otorgar&aacute; el cargo autom&aacute;ticamente, si por el contrario el resultado es en contra se le destituir&aacute; del cargo.';
 						$respuestas = 'En Blanco|SI|NO|';
 						$_POST['votos_expire'] = 0;
 						if ($_POST['cargo'] == 22) { $_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22'; $_POST['votos_expire'] = $pol['config']['num_escanos']; }	
@@ -1254,7 +1251,7 @@ case 'votacion':
 					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto, validez, autentificado, mensaje) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."')", $link);
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 
-					evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(<b>'.$num.'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
+					evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
 				}
 				unset($_POST['voto']);
 			}

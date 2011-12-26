@@ -13,8 +13,8 @@ if ((isset($pol['user_ID'])) AND ($dnie_autentificado == false)) {
 	// Es un usuario y no está autentificado con DNIe 
 	
 	// Plugin de Tractis para PHP. Software Libre. Fuente: https://github.com/tractis/tractis_identity_verifications_for_php
-	require('img/tractis_identity/tractis_identity.php');
-	$tractis_identity = new tractis_identity(CLAVE_API_TRACTIS, SSL_URL.'dnie.php', 'false', IMG.'tractis_identity/images/trac_but_bg_lrg_b_es.png', 'POST');
+	require('img/lib/tractis_identity/tractis_identity.php');
+	$tractis_identity = new tractis_identity(CLAVE_API_TRACTIS, SSL_URL.'dnie.php', 'false', IMG.'lib/tractis_identity/images/trac_but_bg_lrg_b_es.png', 'POST');
 
 	// Trata la redireccion desde Tractis tras una autentificacion correcta.
 	if ($data = $tractis_identity->check_auth()) { 

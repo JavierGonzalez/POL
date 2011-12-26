@@ -332,7 +332,7 @@ default:
 		$txt .= '<p>Ya est&aacute;s logueado correctamente como <b>'.$pol['nick'].'</b>.</p>';
 	} else {
 		$txt .= '
-<script type="text/javascript" src="'.IMG.'md5.js"></script>
+<script type="text/javascript" src="'.IMG.'lib/md5.js"></script>
 <script type="text/javascript">
 function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "123")) { objeto.value = ""; } }
 </script>

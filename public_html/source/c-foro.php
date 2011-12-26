@@ -129,7 +129,7 @@ ORDER BY nivel DESC", $link);
 		}
 		return $html;
 	} else {
-		return '<p class="azul"><b>Debes ser Ciudadano para participar, <a href="'.REGISTRAR.'">reg&iacute;strate aqu&iacute;!</a></b></p>';
+		return '<p class="azul"><b>Debes ser Ciudadano para participar, <a href="'.REGISTRAR.'?p='.PAIS.'">reg&iacute;strate aqu&iacute;!</a></b></p>';
 	}
 }
 
@@ -325,7 +325,7 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 50':'time ASC LIMIT '.$p_lim
 
 				if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) { $txt .= foro_enviar($r['sub_ID'], $r['ID'], null, $_GET['d']); }
 
-				if (!$pol['user_ID']) { $txt .= '<p class="azul"><b>Para poder participar en esta conversacion has de <a href="'.REGISTRAR.'">solicitar la Ciudadania en '.PAIS.'</a></b></p>'; }
+				if (!$pol['user_ID']) { $txt .= '<p class="azul"><b>Para poder participar en esta conversacion has de <a href="'.REGISTRAR.'?p='.PAIS.'">registrar tu ciudadano</a></b></p>'; }
 				
 				$txt .= '<br /><hr /><p>'.$r['title'].'. M&aacute;s hilos: ';
 				$result2 = mysql_query("SELECT url, title, (SELECT url FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS subforo FROM ".SQL."foros_hilos WHERE estado = 'ok' ORDER BY RAND() LIMIT 8", $link);

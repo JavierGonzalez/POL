@@ -209,7 +209,14 @@ LIMIT 1", $link);
 				case 'me': $elmsg = '<b style="margin-left:20px;">' . $_SESSION['pol']['nick'] . '</b> ' . $msg_rest; break;
 				case 'exit': $elmsg = '<span style="margin-left:20px;color:#66004C;"><b>' . $_SESSION['pol']['nick'] . '</b> se marcha, hasta pronto!</span>'; break;
 				case 'sombras': $elmsg = '<span style="margin-left:20px;color:#585858;"><b>' . $_SESSION['pol']['nick'] . '</b> se retira a las sombras...</span>'; break;
-				case 'ayuda': $elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> ofrece ayuda: <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="http://www.virtualpol.com/manual" target="_blank">Manual de ayuda</a>.</a>'; break;
+				case 'ayuda': 
+					$tipo = 'm';
+					if (PAIS == 'VP') {
+						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
+					} else {
+						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="http://15m.virtualpol.com/doc/faq---consultas-a-la-ciudadania/" target="_blank"><b>Ayuda y FAQ (Preguntas frecuentes)</b></a> - <a href="http://15m.virtualpol.com/doc/declaracion-de-la-asamblea-virtual-15m/">La Declaraci&oacute;n</a> - <a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
+					}
+					break;
 
 				case 'policia': if (nucleo_acceso('cargo', '13 12'))  { $elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>'; $tipo = 'm'; } break;
 

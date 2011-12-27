@@ -83,12 +83,14 @@ ORDER BY nivel DESC", $link);
 (SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick
 FROM ".SQL."estudios_users 
 WHERE cargo = '1'
-AND ID_estudio = '" . $r['ID'] . "'
+AND ID_estudio = '".$r['ID']."'
 ORDER BY nick ASC", $link);
 		while($r2 = mysql_fetch_array($result2)){
-			$num++;
-			if ($c_nicks) { $c_nicks .= ', '; } 
-			$c_nicks .= crear_link($r2['nick']);
+			if ($r2['nick']) {
+				$num++;
+				if ($c_nicks) { $c_nicks .= ', '; } 
+				$c_nicks .= crear_link($r2['nick']);
+			}
 		}
 
 

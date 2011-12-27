@@ -37,6 +37,7 @@ $margen_15dias	= date('Y-m-d 20:00:00', time() - 1296000); // 15 dias
 $margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); // 30 dias
 $margen_60dias	= date('Y-m-d 20:00:00', time() - 5184000); // 60 dias
 $margen_90dias	= date('Y-m-d 20:00:00', time() - 7776000); // 90 dias
+$margen_180dias	= date('Y-m-d 20:00:00', time() - (86400*180)); // 180 dias
 
 
 // LOAD CONFIG $pol['config'][]
@@ -387,17 +388,26 @@ while($r = mysql_fetch_array($result)) {
 
 
 
-
-
 // ACTUALIZACION DEL VOTO CONFIANZA
-if (date('N') == 7) { // SOLO EL DOMINGO
-	mysql_query("UPDATE users SET voto_confianza = '0'", $link);
-	$result = mysql_query("SELECT item_ID, SUM(voto) AS num_confianza FROM votos WHERE tipo = 'confianza' GROUP BY item_ID", $link);
-	while ($r = mysql_fetch_array($result)) { 
-		mysql_query("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['item_ID']."' LIMIT 1", $link);
-	} 
+mysql_query("UPDATE users SET voto_confianza = '0'", $link);
+$result = mysql_query("SELECT item_ID, SUM(voto) AS num_confianza FROM votos WHERE tipo = 'confianza' GROUP BY item_ID", $link);
+while ($r = mysql_fetch_array($result)) { 
+	mysql_query("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['item_ID']."' LIMIT 1", $link);
+} 
+mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '".$margen_180dias."')", $link);
+
+
+if (date('N') == 7) { // SOLO DOMINGO
+
+	// Actualizar nuevos SC
+	$SC_num = 8; // Numero de SC + 1
+	$margen_365d = date('Y-m-d 20:00:00', time() - 86400*365); // Antiguedad minima: 365 dias.
+	mysql_query("UPDATE users SET SC = 'false' WHERE ID != 1", $link);
+	$result = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".$margen_365d."' AND ID != 1 ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT ".$SC_num, $link);
+	while($r = mysql_fetch_array($result)){ 
+		mysql_query("UPDATE users SET SC = 'true' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+	}
 	evento_chat('<b>[PROCESO] Supervisores del Censo:</b> '.implode(' ', get_supervisores_del_censo()));
-	mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '".$margen_90dias."')", $link);
 	
 }
 

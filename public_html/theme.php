@@ -52,7 +52,7 @@ unset($txt_header);
 if ($pol['nick']) {
 	$txt_perfil = '<b><a href="http://' . strtolower($pol['pais']) . '.virtualpol.com/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . '</a></b> | <b class="' . $pol['estado'] . '">' . ucfirst($pol['estado']) . '</b> de <b>' . $pol['pais'] . '</b> | '.boton('Salir', REGISTRAR.'login.php?a=logout');
 } else { // sin identificar, sin login
-	$txt_perfil = boton('Crear ciudadano', REGISTRAR).' | '.boton('Login', REGISTRAR.'login.php');
+	$txt_perfil = boton('Crear ciudadano', REGISTRAR).' | '.boton('Entrar', REGISTRAR.'login.php');
 }
 ?>
 <div style="margin:10px 0 2px 0;">

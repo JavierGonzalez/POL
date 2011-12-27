@@ -32,7 +32,7 @@
 	}
 	
 	$.validator.passwordRating = function(password, username) {
-		if (!password || password.length < 8)
+		if (!password || password.length < 7)
 			return rating(0, "too-short");
 		if (username && password.toLowerCase().match(username.toLowerCase()))
 			return rating(0, "similar-to-username");
@@ -53,7 +53,7 @@
 	}
 	
 	$.validator.passwordRating.messages = {
-		"similar-to-username": "Demasiado similar al usuario",
+		"similar-to-username": "Contraseña similar al usuario",
 		"too-short": "Contraseña muy corta",
 		"very-weak": "Contraseña muy debil",
 		"weak": "Contraseña débil",

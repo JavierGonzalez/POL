@@ -58,11 +58,8 @@ function r301($url) {
 
 function get_supervisores_del_censo() {
 	global $link;
-	$SC_num = 8; // Numero de SC + 1
-	$margen_365d = date('Y-m-d 20:00:00', time() - 86400*365); // Antiguedad minima: 365 dias.
-	$result = mysql_query("SELECT ID, nick FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".$margen_365d."' AND ID != 1 ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT ".$SC_num, $link);
+	$result = mysql_query("SELECT ID, nick FROM users WHERE SC = 'true'", $link);
 	while($r = mysql_fetch_array($result)){ $supervisores_del_censo[$r['ID']] = $r['nick']; }
-	$supervisores_del_censo[1] = 'GONZO'; // Añadido GONZO como Supervisor vitalicio por ser el responsable del servidor y fundador del proyecto. Es el ultimo cortafuegos en caso de ataque a la supervivencia del proyecto.
 	return $supervisores_del_censo; // Devuelve un array con los Supervisores del Censo activos. Formato: $array[user_ID] = nick;
 }
 

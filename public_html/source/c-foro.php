@@ -406,7 +406,7 @@ ORDER BY time2 DESC", $link);
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 <tr>
 <th>Autor</th>
-<th></th>
+<th colspan="2">Mensajes</th>
 <th>Hilo</th>
 <th>Creado</th>
 <th></th>
@@ -433,11 +433,12 @@ LIMIT 200", $link);
 					} else { $editar = ''; }
 
 					$txt .= '<tr>
-<td align="right">' . crear_link($r2['nick']) . '</td>
-<td align="right"><b>' . $r2['num'] . '</b></td>
-<td><b style="font-size:19px;">'.confianza($r2['votos']).'</b> ' . $titulo . '</td>
+<td align="right">'.crear_link($r2['nick']).'</td>
+<td align="right"><b>'.$r2['num'].'</b></td>
+<td align="right" style="padding-right:4px;">'.confianza($r2['votos']).'</td>
+<td>'.$titulo.'</td>
 <td align="right"><span class="timer" value="'.strtotime($r2['time']).'"></span></td>
-<td>' . $editar . '</td>
+<td>'.$editar.'</td>
 </tr>';
 				}
 			}

@@ -96,7 +96,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 } elseif (($pol['nick']) AND ($pol['estado'] != '')) { // sin identificar, login OK
 	$txt_perfil = '<b>'.$pol['nick'].'</b> (<span class="infog"><b>Turista</b></span>) <span class="azul">' . boton('Solicitar Ciudadania', REGISTRAR) . '</span> | <a href="/accion.php?a=logout">Salir</a>';
 } else { // sin identificar, sin login
-	$txt_perfil = boton('Crear ciudadano', REGISTRAR.'?p='.PAIS).' | '.boton('Login', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
+	$txt_perfil = boton('Crear ciudadano', REGISTRAR.'?p='.PAIS).' | '.boton('Entrar', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
 }
 ?>
 
@@ -256,7 +256,7 @@ echo '</div>';
 			<li><a href="/foro/">Foros</a></li>
 			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li title="Es necesario instalar el programa de escritorio llamado Mumble"><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
-			<li><a href="/info/censo/">Censo <span class="md"><?=$pol['config']['info_censo']?></span></a></li>
+			<li><a href="/info/censo/">Censo <span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
 			<li><a href="/partidos/">Grupos <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
 			<li><a href="/elecciones/">Elecciones</a></li>
 			<li><a href="/cargos/"><span style="float:right;">&#9658;</span>Gesti&oacute;n</a>
@@ -270,7 +270,7 @@ echo '</div>';
 	</li>
 <?php
 
-echo '<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/propuestas/">Propuestas</a></li>';
+echo '<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/general/">Debates</a></li>';
 
 if ($pol['config']['info_consultas'] > 0) { 
 	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:22px;">'.$pol['config']['info_consultas'].'</span></a></li>'; 

@@ -248,7 +248,7 @@ LIMIT 1", $link);
 
 		if ($_GET['b'] == 'info') {
 			
-			$txt .= '<span style="float:right;text-align:right;"><a href="/votacion/'.$r['ID'].'/"><b>Volver a la votaci&oacute;n</b></a></span><table border="0" width="100%"><tr><td valign="top">';
+			$txt .= '<span id="ver_info"></span><span style="float:right;text-align:right;"><a href="/votacion/'.$r['ID'].'/"><b>Volver a la votaci&oacute;n</b></a></span><table border="0" width="100%"><tr><td valign="top">';
 			
 			if ($r['estado'] == 'end') {
 				$txt .= '<h1 style="margin-top:18px;">Comentarios anonimos:</h1>';
@@ -258,7 +258,9 @@ LIMIT 1", $link);
 				}
 			}
 
-			$txt .= '
+
+			if (($r['privacidad']=='false') && ($r['estado']=='end')) {
+				$txt .= '
 <h1 style="margin-top:18px;">Registro de votos</h1>
 
 <table border="0" cellpadding="3">
@@ -267,19 +269,22 @@ LIMIT 1", $link);
 <th>Voto</th>
 <th>Autentificado</th>
 </tr>';
-			$orden = 0;
-			$result2 = mysql_query("SELECT user_ID, voto, validez, autentificado, (SELECT nick FROM users WHERE ID = user_ID LIMIT 1) AS nick FROM votacion_votos WHERE ref_ID = '".$r['ID']."' ORDER BY RAND()", $link);
-			while($r2 = mysql_fetch_array($result2)) {
-				$orden++;
+				$orden = 0;
+				$result2 = mysql_query("SELECT user_ID, voto, validez, autentificado, (SELECT nick FROM users WHERE ID = user_ID LIMIT 1) AS nick FROM votacion_votos WHERE ref_ID = '".$r['ID']."' ORDER BY RAND()", $link);
+				while($r2 = mysql_fetch_array($result2)) {
+					$orden++;
 
-				$txt .= '<tr>
+					$txt .= '<tr>
 <td>'.($r2['user_ID']==0?'*':crear_link($r2['nick'])).'</td>
 <td nowrap="nowrap">'.($r['privacidad']=='false'&&$r['estado']=='end'?$respuestas[$r2['voto']]:'*').'</td>
 <td>'.($r2['autentificado']=='true'?'<span style="color:blue;"><b>SI</b></span>':'<span style="color:grey;">NO</span>').'</td>
 </tr>';
+				}
+				$txt .= '<tr><td colspan="4" nowrap="nowrap">Votos computados: <b>'.$orden.'</b> (Contador: '.$r['num'].')</td></tr></table>';
 			}
-			$txt .= '<tr><td colspan="4" nowrap="nowrap">Votos computados: <b>'.$orden.'</b> (Contador: '.$r['num'].')</td></tr></table>
+
 	
+			$txt .= '
 </td>
 <td valign="top" width="350">
 
@@ -327,8 +332,8 @@ Acceso de voto: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replac
 Inicio: <em>' . $r['time'] . '</em><br /> 
 Fin: <em>' . $r['time_expire'] . '</em><br />
 '.($r['votos_expire']!=0?'Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.<br />':'').'
-<a href="/votacion/'.$r['ID'].'/info/">Más información</a>.
-'.($r['tipo_voto']!='estandar'?'<br />Tipo de voto: <b>'.$r['tipo_voto'].'</b>.':'').'
+'.($r['tipo_voto']!='estandar'?'<b>Votaci&oacute;n preferencial</b> ('.$r['tipo_voto'].').<br />':'').'
+<a href="/votacion/'.$r['ID'].'/info/#ver_info">Más información</a>.
 </span>';
 
 			if ($r['estado'] == 'end') {  // VOTACION FINALIZADA: Mostrar escrutinio. 
@@ -411,7 +416,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 				$txt .= '</td>
 <td valign="top" style="color:#888;"><br />
 Legitimidad: <b>'.num($votos_total).'</b>&nbsp;votos, <b>'.$escrutinio['votos_autentificados'].'</b>&nbsp;autentificados.<br />
-Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>NULO</b>&nbsp;'.$porcentaje_validez.'%</span>').'<br />
+Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>NULO</b>&nbsp;'.$porcentaje_validez.'%</span>').'<br />
 <img width="230" height="130" title="Votos de validez: '.$escrutinio['validez']['true'].' OK, '.$escrutinio['validez']['false'].' NULO" src="http://chart.apis.google.com/chart?cht=p&chp=4.71&chd=t:'.$escrutinio['validez']['true'].','.$escrutinio['validez']['false'].'&chs=230x130&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>
 </tr></table>';
 

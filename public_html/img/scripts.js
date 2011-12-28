@@ -4,6 +4,7 @@
 // VARIABLES
 pnick = "";
 whois_cache = new Array();
+chat_msg_ID = new Array();
 
 
 // ON LOAD
@@ -256,49 +257,54 @@ function print_msg(data) {
 			var m_time = mli[2];
 			var m_nick = mli[3];
 
-			if (chat_time == m_time) { m_time = "<span style=\"color:white;\">" + m_time + "</span>"; } else { chat_time = m_time; }
+			if (!chat_msg_ID[m_ID]) {
+				
+				chat_msg_ID[m_ID] = true;
 
-			switch(m_tipo) {
-				case "c":
-				case "e":
-					list += "<li id=\"" + m_ID + "\" class=\"cf_" + m_tipo + "\">" + m_time + " <span class=\"vpc_accion\">" + txt + "</span></li>\n";
-					break;
+				if (chat_time == m_time) { m_time = "<span style=\"color:white;\">" + m_time + "</span>"; } else { chat_time = m_time; }
 
-				case "p":
-					if ((m_nick == minick) && (mli[4] == "<b>Nuevo")) { } else {
-						var nick_solo = m_nick.split("&rarr;");
-						var nick_s = nick_solo[0];
-						if (minick == nick_s) {
-							list += "<li id=\"" + m_ID + "\" class=\"" + nick_s + "\">" + m_time + " <span class=\"vpc_priv\" style=\"color:#004FC6\" ;OnClick=\"auto_priv(\'" + nick_s + "\');\"><b>[PRIV] " + m_nick + "</b>: " + txt + "</span></li>\n";
-						} else {
-							list += "<li id=\"" + m_ID + "\" class=\"" + nick_s + "\">" + m_time + " <span class=\"vpc_priv\" OnClick=\"auto_priv(\'" + nick_s + "\');\"><b>[PRIV] " + m_nick + "</b>: " + txt + "</span></li>\n";
-							chat_sin_leer_yo = chat_sin_leer_yo + "+";
+				switch(m_tipo) {
+					case "c":
+					case "e":
+						list += "<li id=\"" + m_ID + "\" class=\"cf_" + m_tipo + "\">" + m_time + " <span class=\"vpc_accion\">" + txt + "</span></li>\n";
+						break;
+
+					case "p":
+						if ((m_nick == minick) && (mli[4] == "<b>Nuevo")) { } else {
+							var nick_solo = m_nick.split("&rarr;");
+							var nick_s = nick_solo[0];
+							if (minick == nick_s) {
+								list += "<li id=\"" + m_ID + "\" class=\"" + nick_s + "\">" + m_time + " <span class=\"vpc_priv\" style=\"color:#004FC6\" ;OnClick=\"auto_priv(\'" + nick_s + "\');\"><b>[PRIV] " + m_nick + "</b>: " + txt + "</span></li>\n";
+							} else {
+								list += "<li id=\"" + m_ID + "\" class=\"" + nick_s + "\">" + m_time + " <span class=\"vpc_priv\" OnClick=\"auto_priv(\'" + nick_s + "\');\"><b>[PRIV] " + m_nick + "</b>: " + txt + "</span></li>\n";
+								chat_sin_leer_yo = chat_sin_leer_yo + "+";
+							}
 						}
-					}
-					var nick_p = m_nick.split("&rarr"); m_nick = nick_p[0]; m_tipo = "0";
-					break;
+						var nick_p = m_nick.split("&rarr"); m_nick = nick_p[0]; m_tipo = "0";
+						break;
 
-				default:
-					if (minick != "") { 
-						var regexp = eval("/"+minick+"/gi");
-						var txt = txt.replace(regexp, "<b style=\"color:orange;\">" + minick + "</b>"); 
-						if (txt.search(regexp) != -1) { chat_sin_leer_yo = chat_sin_leer_yo + "+"; } 
-					}
+					default:
+						if (minick != "") { 
+							var regexp = eval("/"+minick+"/gi");
+							var txt = txt.replace(regexp, "<b style=\"color:orange;\">" + minick + "</b>"); 
+							if (txt.search(regexp) != -1) { chat_sin_leer_yo = chat_sin_leer_yo + "+"; } 
+						}
 
-					var vpc_yo = "";
-					if (minick == m_nick) { var vpc_yo = " class=\"vpc_yo\""; }
-					if (m_tipo.substr(0,3) == "98_") { var cargo_ID = 98; } else { var cargo_ID = m_tipo; }
-					list += "<li id=\"" + m_ID + "\" class=\"" + m_nick + "\">" + m_time + " <img src=\""+IMG+"cargos/" + cargo_ID + ".gif\" width=\"16\" height=\"16\" title=\"" + array_cargos[cargo_ID] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + m_nick + "\');\">" + m_nick + "</b>: " + txt + "</li>\n";
+						var vpc_yo = "";
+						if (minick == m_nick) { var vpc_yo = " class=\"vpc_yo\""; }
+						if (m_tipo.substr(0,3) == "98_") { var cargo_ID = 98; } else { var cargo_ID = m_tipo; }
+						list += "<li id=\"" + m_ID + "\" class=\"" + m_nick + "\">" + m_time + " <img src=\""+IMG+"cargos/" + cargo_ID + ".gif\" width=\"16\" height=\"16\" title=\"" + array_cargos[cargo_ID] + "\" /> <b" + vpc_yo + " OnClick=\"auto_priv(\'" + m_nick + "\');\">" + m_nick + "</b>: " + txt + "</li>\n";
+				}
+
+				if (((msg_num - 1) == i) && (msg_num != "n") && (m_nick != "&nbsp;")) { msg_ID = m_ID; }
+				if ((m_tipo != "e") && (m_tipo != "c")) { 
+					al[m_nick] = parseInt(new Date().getTime().toString().substring(0, 10));
+					al_cargo[m_nick] = m_tipo;
+				}
+
+				var idx = array_ignorados.indexOf(m_nick);
+				if (idx != -1) { escondidos.push(m_ID); } else { chat_sin_leer++; }
 			}
-
-			if (((msg_num - 1) == i) && (msg_num != "n") && (m_nick != "&nbsp;")) { msg_ID = m_ID; }
-			if ((m_tipo != "e") && (m_tipo != "c")) { 
-				al[m_nick] = parseInt(new Date().getTime().toString().substring(0, 10));
-				al_cargo[m_nick] = m_tipo;
-			}
-
-			var idx = array_ignorados.indexOf(m_nick);
-			if (idx != -1) { escondidos.push(m_ID); } else { chat_sin_leer++; }
 		}
 
 		$("#vpc_ul").append(enriquecer(list, false));
@@ -362,7 +368,8 @@ function print_delay() {
 
 function enviarmsg() {
  	var elmsg = $("#vpc_msg").attr("value");
-	if (elmsg) {
+	var boton_envia_estado = $("#botonenviar").attr("disabled");
+	if ((elmsg) && (boton_envia_estado != "disabled")) {
 		ajax_refresh = false;
 		clearTimeout(refresh);
 		$("#botonenviar").attr("disabled","disabled");

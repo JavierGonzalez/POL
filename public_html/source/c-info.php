@@ -86,7 +86,7 @@ case 'censo':
 		$num_element_pag = $censo_expulsados;
 	}
 
-	paginacion('censo', $pagina_url, null, $pagina, $num_element_pag, 100);
+	paginacion('censo', $pagina_url, null, $pagina, $num_element_pag, 250);
 
 	if ($_GET['b'] == 'nuevos') {
 		$old = 'antiguedad';

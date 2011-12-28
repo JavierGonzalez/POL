@@ -134,7 +134,12 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 		<a href="/">Comunicaci&oacute;n</a>
 		<ul style="margin-top:-38px;">
 			<li><a href="/chats/">Chats</a></li>
-			<li><a href="/foro/">Foros</a></li>
+			<li><a href="/foro/"><span style="float:right;">&#9658;</span>Foros</a>
+				<ul>
+					<li><a href="/foro/ultima-actividad/">&Uacute;ltima actividad</a>
+					<?=(isset($pol['user_ID'])?'<li><a href="/foro/mis-respuestas/">Respuestas</a></li>':'')?>
+				</ul>
+			</li>
 			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/notas/">Notas</a></li>
 			<li><a href="/msg/">Mensajes Privados</a></li>
@@ -253,7 +258,12 @@ echo '</div>';
 		<a href="/"><span style="float:right;">&#9658;</span>Plaza Virtual</a>
 		<ul style="margin-top:-38px;">
 			<li><a href="/chats/">Chats</a></li>
-			<li><a href="/foro/">Foros</a></li>
+			<li><a href="/foro/"><span style="float:right;">&#9658;</span>Foros</a>
+				<ul>
+					<li><a href="/foro/ultima-actividad/">&Uacute;ltima actividad</a>
+					<?=(isset($pol['user_ID'])?'<li><a href="/foro/mis-respuestas/">Respuestas</a></li>':'')?>
+				</ul>
+			</li>
 			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li title="Es necesario instalar el programa de escritorio llamado Mumble"><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
 			<li><a href="/info/censo/">Censo <span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>

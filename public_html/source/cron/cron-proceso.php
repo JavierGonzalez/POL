@@ -349,9 +349,10 @@ mysql_query("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '
 //mysql_query("DELETE FROM ".SQL."estudios_users WHERE cargo = '0' AND time < '".$margen_60dias."'", $link);
 
 
+
 // ELIMINAR USUARIOS
 /* periodos:
-	< 30d	- 10 dias
+	< 30d	- 15 dias
 30d < 90d	- 30 dias 
 90d >		- 60 dias
 Autentificados NO expiran.
@@ -361,9 +362,9 @@ $result = mysql_query("SELECT ID, estado FROM users
 WHERE dnie = 'false' AND 
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".$margen_90dias."' AND fecha_last <= '".$margen_60dias."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_90dias."' AND fecha_registro <= '".$margen_30dias."' AND fecha_last <= '".$margen_30dias."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_30dias."' AND fecha_last <= '".$margen_10dias."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".$margen_5dias."') OR
-(estado = 'validar' AND fecha_last <= '".$margen_10dias."')
+((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_30dias."' AND fecha_last <= '".$margen_15dias."') OR
+((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".$margen_15dias."') OR
+(estado = 'validar' AND fecha_last <= '".$margen_15dias."')
 ", $link);
 while($r = mysql_fetch_array($result)) {
 	if ($r['estado'] != 'expulsado') { $st['eliminados']++; }
@@ -377,12 +378,12 @@ $result = mysql_query("SELECT ID, nick, email FROM users
 WHERE dnie = 'false' AND estado != 'expulsado' AND 
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".retrasar_t($margen_90dias)."' AND fecha_last <= '".retrasar_t($margen_60dias)."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_90dias)."' AND fecha_registro <= '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_30dias)."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_10dias)."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".retrasar_t($margen_10dias)."') OR
-(estado = 'validar' AND fecha_last <= '".retrasar_t($margen_10dias)."')
+((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_15dias)."') OR
+((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".retrasar_t($margen_15dias)."') OR
+(estado = 'validar' AND fecha_last <= '".retrasar_t($margen_15dias)."')
 ", $link);
 while($r = mysql_fetch_array($result)) {
-	mail($r['email'], '[VirtualPol] Tu usuario '.$r['nick'].' está a punto de expirar por inactividad', "Hola ciudadano ".$r['nick'].",\n\nEl sistema VirtualPol se esmera en tener un censo limpio y fiel a la realidad, en lugar de tener decenas de miles de usuarios sin actividad. Por ello se eliminan usuarios en tramos desde 10 dias (en el primer mes) hasta 60 dias de inactividad.\n\nDebes entrar lo antes posible en VirtualPol o tu usuario expirará. Con entrar una vez es suficiente.\n\n\nVirtualPol\nhttp://www.virtualpol.com", "FROM: VirtualPol <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
+	mail($r['email'], '[VirtualPol] Tu usuario '.$r['nick'].' está a punto de expirar por inactividad', "Hola ciudadano ".$r['nick'].",\n\nEl sistema VirtualPol se esmera en tener un censo limpio y fiel a la realidad, en lugar de tener decenas de miles de usuarios sin actividad. Por ello se eliminan usuarios en tramos desde 15 dias (en el primer mes) hasta 60 dias de inactividad.\n\nDebes entrar lo antes posible en VirtualPol o tu usuario expirará. Con entrar una vez es suficiente.\n\n\nVirtualPol\nhttp://www.virtualpol.com", "FROM: VirtualPol <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
 }
 
 

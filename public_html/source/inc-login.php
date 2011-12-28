@@ -1,4 +1,6 @@
 <?php
+define('TIME_START', microtime(true));
+
 include('../config.php');
 include(RAIZ.'source/inc-functions.php');
 

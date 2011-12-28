@@ -353,7 +353,7 @@ ORDER BY num ASC", $link);
 	while($r = mysql_fetch_array($result)) {
 
 		$clones = '';
-		if ($r['num'] <= 10) {
+		if ($r['num'] <= 25) {
 			$result2 = mysql_query("SELECT ID, nick, estado, pais FROM users WHERE nav = '" . $r['nav'] . "' ORDER BY fecha_registro DESC", $link);
 			while($r2 = mysql_fetch_array($result2)) {
 				if ($clones) { $clones .= ' & '; }
@@ -362,7 +362,7 @@ ORDER BY num ASC", $link);
 		} else { $clones = '</b>(navegador muy comun)<b>'; }
 
 
-		$txt .= '<tr><td align="right"><b>' . $r['num'] . '</b></td><td><b>' . $clones . '</b></td><td style="font-size:9px;">' . $r['nav'] . '</td></tr>';
+		$txt .= '<tr><td align="right"><b>'.$r['num'].'</b></td><td>'.$clones.'</td><td style="font-size:9px;">'.$r['nav'].'</td></tr>';
 	}
 	$txt .= '</table>';
 
@@ -396,7 +396,7 @@ ORDER BY factor DESC LIMIT 30", $link);
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
 
-	$txt .= '<h1>1. Coincidencias de IP</h1><hr /><table border="0" cellspacing="4">';
+	$txt .= '<h1>1. Coincidencias de IP<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
 	$result = mysql_query("SELECT nick, IP, COUNT(*) AS num, host
 FROM users 
 GROUP BY IP HAVING COUNT(*) > 1
@@ -428,7 +428,7 @@ ORDER BY fecha_registro DESC", $link);
 
 
 
-	$txt .= '<br /><h1>2. Coincidencia de clave</h1><hr /><table border="0" cellspacing="4">';
+	$txt .= '<br /><h1>2. Coincidencia de clave<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
 	$result = mysql_query("SELECT ID, IP, COUNT(*) AS num, pass
 FROM users 
 GROUP BY pass HAVING COUNT(*) > 1
@@ -462,7 +462,7 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 
 
 	$trazas_rep = array();
-	$txt .= '<br /><h1>3. Traza (coincidencia de dispositivo segura)</h1><hr /><table border="0" cellspacing="4">';
+	$txt .= '<br /><h1>3. Coincidencia de dispositivo (Traza)<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
 	$result = mysql_query("SELECT ID AS user_ID, nick, estado, pais, traza FROM users WHERE traza != '' ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$tn = 1;
@@ -492,7 +492,7 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 	$txt .= '</table>';
 
 
-	$txt .= '<br /><h1>4. Ocultaci&oacute;n de conexi&oacute;n (proxys, TOR...)</h1><hr /><table border="0" cellspacing="4">';
+	$txt .= '<br /><h1>4. Ocultaci&oacute;n de conexi&oacute;n (proxys, TOR...)<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
 	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%proxy%');
 	$sql_anon = '';
 	foreach ($array_searchtor AS $filtro) { if ($sql_anon != '') { $sql_anon .= ' OR ';  } $sql_anon .= "hosts LIKE '".$filtro."'"; }
@@ -1118,7 +1118,7 @@ ORDER BY expire DESC", $link);
 
 		$txt .= '<tr><td valign="top"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /></td><td valign="top"><b>' . $estado . '</b></td><td valign="top"><b>'.($r['user_ID'] == 0?'Anonimo':crear_link($r['expulsado'], 'nick', $r['expulsado_estado'])).'</b></td><td valign="top" nowrap="nowrap"><img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" border="0" /> ' . crear_link($r['nick_autor']) . '</td><td align="right" valign="top" nowrap="nowrap"><acronym title="' . $r['expire'] . '">'.timer($r['expire']).'</acronym></td><td align="right" valign="top" nowrap="nowrap">' . duracion($r['tiempo']+1) . '</td><td><b style="font-size:13px;">'.($r['motivo']?'<a href="/control/kick/info/'.$r['ID'].'/">'.$r['razon'].'</a>':$r['razon']).'</b></td><td>'.$expulsar.'</td></tr>' . "\n";
 	}
-	$txt .= '</table><p>Los kicks solo pueden ser revocadas por un Comisario de Policia, un Juez Supremo o el Polic&iacute;a autor de la expulsi&oacute;n.</p>';
+	$txt .= '</table>'.(ASAMBLEA?'':'<p>Los kicks solo pueden ser revocadas por un Comisario de Policia, un Juez Supremo o el Polic&iacute;a autor de la expulsi&oacute;n.</p>');
 
 
 	}

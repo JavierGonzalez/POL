@@ -250,18 +250,17 @@ LIMIT 1", $link);
 			
 			$txt .= '<span id="ver_info"></span><span style="float:right;text-align:right;"><a href="/votacion/'.$r['ID'].'/"><b>Volver a la votaci&oacute;n</b></a></span><table border="0" width="100%"><tr><td valign="top">';
 			
-			if ($r['estado'] == 'end') {
-				$txt .= '<h1 style="margin-top:18px;">Comentarios anonimos:</h1>';
-				$result2 = mysql_query("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != '' ORDER BY RAND()", $link);
-				while($r2 = mysql_fetch_array($result2)) {
-					$txt .= '<p>'.ucfirst($r2['mensaje']).'</p>';
-				}
-			}
+			$txt .= '<h2 style="margin-top:18px;">Comentarios an&oacute;nimos:</h2>';
+			if ($pol['estado'] == 'ciudadano') {
+				if ($r['estado'] == 'end') { 
+					$result2 = mysql_query("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != '' ORDER BY RAND()", $link);
+					while($r2 = mysql_fetch_array($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
+				} else { $txt .= '<p>Los comentarios estar&aacute;n visibles al finalizar la votaci&oacute;n.</p>'; }
+			} else { $txt .= '<p>Para ver los comentarios debes ser ciudadano.</p>'; }
 
 
-			if (($r['privacidad']=='false') && ($r['estado']=='end')) {
-				$txt .= '
-<h1 style="margin-top:18px;">Registro de votos</h1>
+			if (($r['privacidad']=='false') AND ($r['estado']=='end')) {
+				$txt .= '<h1>Registro de votos</h1>
 
 <table border="0" cellpadding="3">
 <tr>
@@ -276,7 +275,7 @@ LIMIT 1", $link);
 
 					$txt .= '<tr>
 <td>'.($r2['user_ID']==0?'*':crear_link($r2['nick'])).'</td>
-<td nowrap="nowrap">'.($r['privacidad']=='false'&&$r['estado']=='end'?$respuestas[$r2['voto']]:'*').'</td>
+<td nowrap="nowrap">'.$respuestas[$r2['voto']].'</td>
 <td>'.($r2['autentificado']=='true'?'<span style="color:blue;"><b>SI</b></span>':'<span style="color:grey;">NO</span>').'</td>
 </tr>';
 				}
@@ -288,7 +287,7 @@ LIMIT 1", $link);
 </td>
 <td valign="top" width="350">
 
-<p>Propiedades de la votaci&oacute;n:
+<h2>Propiedades de la votaci&oacute;n:</h2>
 <ul>';
 
 if ($r['privacidad'] == 'true') { // Privacidad SI, voto secreto.
@@ -316,10 +315,7 @@ if ($r['privacidad'] == 'true') { // Privacidad SI, voto secreto.
 }
 
 
-$txt .= '
-
-</ul>
-</p>
+$txt .= '</ul>
 
 </td></tr></table>';
 

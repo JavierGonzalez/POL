@@ -107,7 +107,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 <a href="/" title="<?=$pol['config']['pais_des'].' de '.PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" width="60" height="40" border="0" /></a>
 </td>
 
-<td><span style="color:#888;"><?=$pol['config']['pais_des'].' de '.PAIS?></span></td>
+<td><span style="color:#888;font-size:18px;"><?=$pol['config']['pais_des'].' de '.PAIS?></span></td>
 
 <td align="right" valign="middle" nowrap="nowrap"><?=$txt_perfil?></td>
 
@@ -132,7 +132,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 <ul class="sf-menu sf-vertical">
 	<li id="menu-1">
 		<a href="/">Comunicaci&oacute;n</a>
-		<ul>
+		<ul style="margin-top:-38px;">
 			<li><a href="/chats/">Chats</a></li>
 			<li><a href="/foro/">Foros</a></li>
 			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
@@ -251,7 +251,7 @@ echo '</div>';
 <ul class="sf-menu sf-vertical">
 	<li id="menu-3">
 		<a href="/"><span style="float:right;">&#9658;</span>Plaza Virtual</a>
-		<ul>
+		<ul style="margin-top:-38px;">
 			<li><a href="/chats/">Chats</a></li>
 			<li><a href="/foro/">Foros</a></li>
 			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li title="Es necesario instalar el programa de escritorio llamado Mumble"><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
@@ -324,10 +324,7 @@ echo '</div>';
 <?php
 unset($txt);
 if (isset($pol['user_ID'])) {
-	$mtime = explode(' ', microtime()); 
-	$tiempofinal = $mtime[1] + $mtime[0]; 
-	$tiempototal = round(($tiempofinal-$tiempoinicial)*1000); 
-	echo ($pol['user_ID']==1?$tiempototal.'ms ':'');
+	echo ($pol['user_ID']==1?round((microtime(true)-TIME_START)*1000).'ms ':'');
 }
 ?> | 
 <a href="http://www.virtualpol.com/legal" target="_blank"><abbr title="Condiciones de Uso de VirtualPol">TOS</abbr></a> | <a href="http://code.google.com/p/virtualpol/source/list" title="VirtualPol es software libre">C&oacute;digo</a> | 

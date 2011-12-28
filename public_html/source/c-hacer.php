@@ -32,10 +32,6 @@ Puedes identificarte solidamente con <abbr title="DNI electronico y otros 30 cer
 
 
 
-
-
-
-
 $fecha_24_antes = date('Y-m-d H:i:00', strtotime($pol['config']['elecciones_inicio']) - $pol['config']['elecciones_antiguedad']);
 
 //fecha registro?
@@ -97,8 +93,9 @@ $votos_foro = 0;
 $result = mysql_query("SELECT COUNT(*) AS num FROM votos WHERE tipo IN ('msg', 'hilos') AND emisor_ID = '".$pol['user_ID']."' AND time > '".$margen_30dias."'", $link);
 while($r = mysql_fetch_array($result)) { $votos_foro = $r['num']; }
 
-$txt .= '<li>'.($votos_foro>=15?'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Has votado '.$votos_foro.' veces en el foro el &uacute;ltimo mes.</b>':'<img src="'.IMG.'ico/no.png" width="32" height="32" /> <b style="color:red;">Participa votando m&aacute;s en el foro.</b>').' <a href="/foro/" target="_blank">Ir al foro</a>.<br />
-Puedes votar (+1 -1) cualquier hilo y mensaje del foro, as&iacute; contribuir&aacute;s al debate con tu opini&oacute;n. Se recomienda hacer al menos 15 votos al mes (vas '.$votos_foro.').</li>';
+$votos_foro_minimo = 30;
+$txt .= '<li>'.($votos_foro>=$votos_foro_minimo?'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Has votado '.$votos_foro.' veces en el foro el &uacute;ltimo mes.</b>':'<img src="'.IMG.'ico/no.png" width="32" height="32" /> <b style="color:red;">Participa votando m&aacute;s en el foro.</b>').' <a href="/foro/" target="_blank">Ir al foro</a>.<br />
+Puedes votar (+1 -1) cualquier hilo y mensaje del foro, as&iacute; contribuir&aacute;s al debate con tu opini&oacute;n. Se recomienda hacer al menos '.$votos_foro_minimo.' votos al mes (vas '.$votos_foro.').</li>';
 
 
 

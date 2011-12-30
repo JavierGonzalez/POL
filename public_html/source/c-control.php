@@ -414,7 +414,7 @@ FROM users
 WHERE IP = '" . $r['IP'] . "' 
 ORDER BY fecha_registro DESC", $link);
 		while($r2 = mysql_fetch_array($result2)) {
-			$nota_SC .= ($r2['nota_SC']!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r2['ID'].'" method="post"><input type="text" name="nota_SC" size="20" maxlength="255" value="'.$r2['nota_SC'].'" /><input type="submit" value="OK" /></form>':'');
+			$nota_SC .= ($r2['nota_SC']!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r2['ID'].'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$r2['nota_SC'].'" /><input type="submit" value="OK" /></form>':'');
 			$confianza_total += $r2['voto_confianza_SC'];
 			if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 			$clones[] = '<b>'.crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']).'</b>';
@@ -445,7 +445,7 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 			$clones_expulsados = true;
 			while($r2 = mysql_fetch_array($result2)) { 
 				if ($r2['nick']) {
-					$nota_SC .= ($r2['nota_SC']!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r2['ID'].'" method="post"><input type="text" name="nota_SC" size="20" maxlength="255" value="'.$r2['nota_SC'].'" /><input type="submit" value="OK" /></form>':'');
+					$nota_SC .= ($r2['nota_SC']!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r2['ID'].'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$r2['nota_SC'].'" /><input type="submit" value="OK" /></form>':'');
 					$confianza_total += $r2['voto_confianza_SC'];
 					if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 					$clones[] = crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']);
@@ -498,7 +498,7 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 	foreach ($array_searchtor AS $filtro) { if ($sql_anon != '') { $sql_anon .= ' OR ';  } $sql_anon .= "hosts LIKE '".$filtro."'"; }
 	$result = mysql_query("SELECT nick, estado, host, IP, nav, nota_SC FROM users WHERE ".$sql_anon." ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
-		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td><td>'.($r['nota_SC']!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post"><input type="text" name="nota_SC" size="20" maxlength="255" value="'.$r['nota_SC'].'" /><input type="submit" value="OK" /></form>':'').'</td></tr>';
+		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td><td>'.($r['nota_SC']!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$r['nota_SC'].'" /><input type="submit" value="OK" /></form>':'').'</td></tr>';
 	}
 	$txt .= '</table>';
 
@@ -601,7 +601,7 @@ case 'gobierno':
 
 <tr>
 <th colspan="2"></th>
-<th colspan="2" align="center">Acceso</th>
+<th colspan="3" align="center" style="background:#CCC;">Acceso</th>
 <th colspan="2"></th>
 </tr>
 
@@ -609,9 +609,9 @@ case 'gobierno':
 <th>Orden</th>
 <th>Foro/Descripcion</th>
 <th style="background:#5CB3FF;">Leer</th>
-<th style="background:#F97E7B;">Escribir</th>
+<th style="background:#F97E7B;">Crear Hilos</th>
+<th style="background:#F97E7B;">Responder Mensajes</th>
 <th title="Numero de hilos mostrados en la home del foro">Mostrar</th>
-<th></th>
 <th></th>
 </tr>';
 	$subforos = '';
@@ -622,17 +622,21 @@ FROM ".SQL."foros WHERE estado = 'ok'
 ORDER BY time ASC", $link);
 	while($r = mysql_fetch_array($result)){
 
-		if ($r['num_hilos'] == 0) { $del = '<input style="margin-bottom:-16px;" type="button" value="Eliminar" onClick="window.location.href=\'/accion.php?a=gobierno&b=eliminarsubforo&ID=' . $r['ID'] . '/\';">';
+		if ($r['num_hilos'] == 0) { $del = '<br /><input style="margin-bottom:-16px;" type="button" value="Eliminar" onClick="window.location.href=\'/accion.php?a=gobierno&b=eliminarsubforo&ID=' . $r['ID'] . '/\';">';
 		} else { $del = ''; }
 
 
 
-		$txt_li['leer'] = ''; $txt_li['escribir'] = '';
+		$txt_li['leer'] = ''; $txt_li['escribir'] = ''; $txt_li['escribir_msg'] = '';
 		foreach (nucleo_acceso('print') AS $at => $at_var) { 
 			$txt_li['leer'] .= '<option value="'.$at.'"'.($at==$r['acceso_leer']?' selected="selected"':'').'>'.ucfirst(str_replace("_", " ", $at)).'</option>';
 		}
 		foreach (nucleo_acceso('print') AS $at => $at_var) { 
 			$txt_li['escribir'] .= '<option value="'.$at.'"'.($at==$r['acceso_escribir']?' selected="selected"':'').($at=='anonimos'?' disabled="disabled"':'').'>'.ucfirst(str_replace("_", " ", $at)).'</option>';
+		}
+
+		foreach (nucleo_acceso('print') AS $at => $at_var) { 
+			$txt_li['escribir_msg'] .= '<option value="'.$at.'"'.($at==$r['acceso_escribir_msg']?' selected="selected"':'').($at=='anonimos'?' disabled="disabled"':'').'>'.ucfirst(str_replace("_", " ", $at)).'</option>';
 		}
 
 
@@ -648,11 +652,14 @@ ORDER BY time ASC", $link);
 <td style="background:#F97E7B;"><b><select name="'.$r['ID'].'_acceso_escribir">'.$txt_li['escribir'].'</select><br />
 <input type="text" name="'.$r['ID'].'_acceso_cfg_escribir" size="16" maxlength="900" value="'.$r['acceso_cfg_escribir'].'" /></td>
 
+<td style="background:#F97E7B;"><b><select name="'.$r['ID'].'_acceso_escribir_msg">'.$txt_li['escribir_msg'].'</select><br />
+<input type="text" name="'.$r['ID'].'_acceso_cfg_escribir_msg" size="16" maxlength="900" value="'.$r['acceso_cfg_escribir_msg'].'" /></td>
+
+
 <td align="right"><input type="text" style="text-align:right;" name="'.$r['ID'].'_limite" size="1" maxlength="2" value="'.$r['limite'].'" /></td>
 
-<td align="right" style="color:#999;">'.number_format($r['num_hilos'], 0, ',', '.').' hilos<br />
-'.number_format($r['num_msg'], 0, ',', '.').' mensajes</td>
-<td>'.$del.'</td>
+<td align="right" style="color:#999;" nowrap="nowrap">'.number_format($r['num_hilos'], 0, ',', '.').' hilos<br />
+'.number_format($r['num_msg'], 0, ',', '.').' mensajes'.$del.'</td>
 </tr>'."\n";
 
 		if ($subforos) { $subforos .= '.'; }

@@ -43,7 +43,7 @@ if ($_GET['a'] == 'full-tab') {
 
 
 $txt .= '
-<table>
+<table width="100%">
 <tr>
 <th>Dia (20:00)</th>
 <th>Pais</th>
@@ -64,7 +64,7 @@ $txt .= '
 <th title="Pols de la propiedad mas barata en venta">MV</th>
 </tr>
 ';
-$result = mysql_query("SELECT * FROM stats ORDER BY time DESC, pais ASC LIMIT 20000", $link);
+$result = mysql_query("SELECT * FROM stats WHERE pais = '".PAIS."' ORDER BY time DESC, pais ASC LIMIT 20000", $link);
 while($r = mysql_fetch_array($result)) {
 
 

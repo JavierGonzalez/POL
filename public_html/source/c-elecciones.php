@@ -52,11 +52,11 @@ if ($_GET['a'] == 'votar') {
 		}
 
 		$txt_title = $elec_nombre;
-		$txt .= '<h1>' . $elec_nombre . '</h1>';
+		$txt .= '<h1>' . (ASAMBLEA?'Elecciones de Coordinadores':$elec_nombre) . '</h1>';
 		
 
 
-		if (($pol['config']['elecciones_estado'] == 'elecciones') AND (($pol['config']['elecciones'] == 'pres1') OR ($pol['config']['elecciones'] == 'pres2'))) {
+		if ((($pol['config']['elecciones_estado'] == 'elecciones') AND (($pol['config']['elecciones'] == 'pres1') OR ($pol['config']['elecciones'] == 'pres2'))) AND ($pol['user_ID'] == 1)) {
 			// ELECCIONES PRESIDENCIALES
 
 			$fecha_24_antes = date('Y-m-d H:i:00', strtotime($pol['config']['elecciones_inicio']) - $pol['config']['elecciones_antiguedad']);
@@ -153,7 +153,7 @@ LIMIT 1", $link);
 				$votos_num = $pol['config']['num_escanos'];
 				$txt .= '
 <ul>
-<li>Debes ejercer tu derecho a voto, como ciudadano de '.PAIS.'.</li>
+<li>Debes ejercer tu derecho a voto, como ciudadano de '.PAIS.' cada 2 semanas.</li>
 <li>El voto es siempre libre, anonimo y unipersonal.</li>
 '.(ECONOMIA?'<li>Puedes ver las <a href="/partidos/"><b>listas</b> y <b>candidatos</b> aqu&iacute;</a>.</li>':'').'
 <li>Puedes conceder hasta <b>'.$pol['config']['num_escanos'].' votos</b> a tus candidatos favoritos. Puedes dejar los votos que quieras en Blanco.</li>
@@ -391,7 +391,7 @@ ORDER BY time DESC LIMIT 1", $link);
 
 $txt .= '
 <td class="amarillo" width="50%" valign="top"'.(ASAMBLEA?' colspan="2"':'').'>
-<h1 style="color:blue;">Parlamentarias en '.$queda['parl'].'</h1>';
+<h1 style="color:blue;">'.$queda['parl'].'</h1>';
 
 
 

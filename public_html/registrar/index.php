@@ -243,7 +243,11 @@ case 'verificar': //URL EMAIL
 
 			mysql_query("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
-			evento_chat('<b>[#] <a href="http://'.strtolower($r['pais']).'.virtualpol.com/perfil/'.$r['nick'].'/" class="nick">'.$r['nick'].'</a> acepta la Ciudadania</b> de '.$r['pais'], 0, 0, false, 'e', $r['pais']);
+			
+			$result2 = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$r['pais']."'", $link);
+			while ($r2 = mysql_fetch_array($result2)) { $ciudadanos_num = $r2['num']; }
+
+			evento_chat('<b>[#] <a href="http://'.strtolower($r['pais']).'.virtualpol.com/perfil/'.$r['nick'].'/" class="nick">'.$r['nick'].'</a> acepta la Ciudadania</b> de '.$r['pais'].' <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos)</span>', 0, 0, false, 'e', $r['pais']);
 
 			mysql_query("INSERT INTO ".strtolower($r['pais'])."_log 
 (time, user_ID, user_ID2, accion, dato) 
@@ -278,14 +282,19 @@ case 'solicitar-ciudadania':
 		include('../source/inc-functions-accion.php');
 
 		if (($pol['pols'] > 0) AND ($_POST['pais'] != '15M') AND ($_POST['pais'] != '15MBCN')) {
-			$trae = ' (Trayendo consigo: '.pols($pol['pols']).' '.MONEDA.')';
+			$trae = ', trayendo consigo: '.pols($pol['pols']).' '.MONEDA;
 		} else { $trae = ''; }
 
-		evento_chat('<b>[#] <a href="http://'.strtolower($_POST['pais']).DEV.'.virtualpol.com/perfil/'.$pol['nick'].'/" class="nick">' . $pol['nick'] . '</a> acepta la Ciudadania</b> de ' . $_POST['pais'] . $trae, 0, 0, false, 'e', $_POST['pais']);
 
-		mysql_query("INSERT INTO " . strtolower($_POST['pais']) . "_log 
+
+		$result2 = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$_POST['pais']."'", $link);
+		while ($r2 = mysql_fetch_array($result2)) { $ciudadanos_num = $r2['num']; }
+
+		evento_chat('<b>[#] <a href="http://'.strtolower($_POST['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'/" class="nick">'.$pol['nick'].'</a> acepta la Ciudadania</b> de '.$_POST['pais'].' <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos'.$trae.')</span>', 0, 0, false, 'e', $_POST['pais']);
+
+		mysql_query("INSERT INTO ".strtolower($_POST['pais'])."_log 
 (time, user_ID, user_ID2, accion, dato) 
-VALUES ('" . date('Y-m-d H:i:s') . "', '" . $pol['user_ID'] . "', '" . $pol['user_ID'] . "', '2', '')", $link);
+VALUES ('".date('Y-m-d H:i:s')."', '".$pol['user_ID']."', '".$pol['user_ID']."', '2', '')", $link);
 
 		unset($_SESSION);
 		session_unset(); session_destroy();

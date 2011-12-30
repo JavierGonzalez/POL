@@ -816,7 +816,7 @@ foreach ($_POST AS $dato => $valor) {
 		$subforos = explode('.', $_POST['subforos']);
 
 		foreach ($subforos AS $subforo_ID) {
-			mysql_query("UPDATE ".SQL."foros SET descripcion = '".$_POST[$subforo_ID.'_descripcion']."', time = '".$_POST[$subforo_ID.'_time']."', acceso_leer = '".$_POST[$subforo_ID.'_acceso_leer']."', acceso_escribir = '".$_POST[$subforo_ID.'_acceso_escribir']."', acceso_cfg_leer = '".$_POST[$subforo_ID.'_acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST[$subforo_ID.'_acceso_cfg_escribir']."', limite = '".$_POST[$subforo_ID.'_limite']."' WHERE ID = '".$subforo_ID."' LIMIT 1", $link);
+			mysql_query("UPDATE ".SQL."foros SET descripcion = '".$_POST[$subforo_ID.'_descripcion']."', time = '".$_POST[$subforo_ID.'_time']."', acceso_leer = '".$_POST[$subforo_ID.'_acceso_leer']."', acceso_escribir = '".$_POST[$subforo_ID.'_acceso_escribir']."', acceso_escribir_msg = '".$_POST[$subforo_ID.'_acceso_escribir_msg']."', acceso_cfg_leer = '".$_POST[$subforo_ID.'_acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST[$subforo_ID.'_acceso_cfg_escribir']."', acceso_cfg_escribir_msg = '".$_POST[$subforo_ID.'_acceso_cfg_escribir_msg']."', limite = '".$_POST[$subforo_ID.'_limite']."' WHERE ID = '".$subforo_ID."' LIMIT 1", $link);
 		}
 
 		$refer_url = 'control/gobierno/foro/';
@@ -1288,53 +1288,55 @@ case 'foro':
 	if ((strlen($_POST['text']) > 1) AND ($_POST['subforo'])) {
 
 		$acceso = false;
-		$result = mysql_query("SELECT acceso_escribir, acceso_cfg_escribir, acceso_leer FROM ".SQL."foros WHERE ID = '".$_POST['subforo']."' LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)) { $acceso_leer = $r['acceso_leer']; $acceso = nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']); }
+		$result = mysql_query("SELECT acceso_leer, acceso_escribir, acceso_cfg_escribir, acceso_escribir_msg, acceso_cfg_escribir_msg FROM ".SQL."foros WHERE ID = '".$_POST['subforo']."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) { 
+			$acceso_leer = $r['acceso_leer']; 
+			$acceso['escribir'] = nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']); 
+			$acceso['escribir_msg'] = nucleo_acceso($r['acceso_escribir_msg'], $r['acceso_cfg_escribir_msg']);
+		}
 
-		if ($acceso) {
 
-			$text = gen_text(trim($_POST['text']), 'plain');
-			$time = $date;
-			if (($_GET['b'] == 'hilo') AND ($_POST['title'])) {
-				$title = strip_tags($_POST['title']);
-				$url = gen_url($title);
-				$exito = mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
-				if (!$exito) {
-					if (strlen($url) > 69) {
-						 $url = substr($url, 0, 69);	
-					}
-					$url = $url.'-'.date('dmyHi');
-					mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
+		$text = gen_text(trim($_POST['text']), 'plain');
+		$time = $date;
+		if (($_GET['b'] == 'hilo') AND ($_POST['title']) AND ($acceso['escribir'])) {
+			$title = strip_tags($_POST['title']);
+			$url = gen_url($title);
+			$exito = mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
+			if (!$exito) {
+				if (strlen($url) > 69) {
+					 $url = substr($url, 0, 69);	
 				}
+				$url = $url.'-'.date('dmyHi');
+				mysql_query("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$time."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
+			}
+			
+			if (in_array($acceso_leer, array('anonimos', 'ciudadanos', 'ciudadanos_global'))) {
+				evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a> <span style="color:grey;">('.$pol['nick'].')</span>');
+			}
+
+		} elseif (($_GET['b'] == 'reply') AND ($acceso['escribir_msg'])) {
+			
+			if ($_POST['hilo'] != -1) {
+				mysql_query("UPDATE ".SQL."foros_hilos SET time_last = '".$time."' WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
 				
+				$result = mysql_query("SELECT title, num FROM ".SQL."foros_hilos WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
+				while($r = mysql_fetch_array($result)) { $title = $r['title']; }
+
 				if (in_array($acceso_leer, array('anonimos', 'ciudadanos', 'ciudadanos_global'))) {
-					evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a> <span style="color:grey;">('.$pol['nick'].')</span>');
+					evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'].'">'.$title.'</a> <span style="color:grey;">('.$pol['nick'].')</span>');
 				}
-
-			} elseif ($_GET['b'] == 'reply') {
-				
-				if ($_POST['hilo'] != -1) {
-					mysql_query("UPDATE ".SQL."foros_hilos SET time_last = '".$time."' WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
-					
-					$result = mysql_query("SELECT title, num FROM ".SQL."foros_hilos WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
-					while($r = mysql_fetch_array($result)) { $title = $r['title']; }
-
-					if (in_array($acceso_leer, array('anonimos', 'ciudadanos', 'ciudadanos_global'))) {
-						evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'].'">'.$title.'</a> <span style="color:grey;">('.$pol['nick'].')</span>');
-					}
-				} else {
-					//$text = strip_tags($text);
-				}
-				
-				mysql_query("INSERT INTO ".SQL."foros_msg (hilo_ID, user_ID, time, text, cargo) VALUES ('".$_POST['hilo']."', '".$pol['user_ID']."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
+			} else {
+				//$text = strip_tags($text);
 			}
+			
+			mysql_query("INSERT INTO ".SQL."foros_msg (hilo_ID, user_ID, time, text, cargo) VALUES ('".$_POST['hilo']."', '".$pol['user_ID']."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
+		}
 
-			if ($_POST['hilo']) {
-				$msg_num = 0;
-				$result = mysql_query("SELECT COUNT(*) AS num FROM ".SQL."foros_msg WHERE hilo_ID = '".$_POST['hilo']."' AND estado = 'ok'", $link);
-				while($r = mysql_fetch_array($result)) { $msg_num = $r['num']; }
-				mysql_query("UPDATE ".SQL."foros_hilos SET num = '".$msg_num."' WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
-			}
+		if ($_POST['hilo']) {
+			$msg_num = 0;
+			$result = mysql_query("SELECT COUNT(*) AS num FROM ".SQL."foros_msg WHERE hilo_ID = '".$_POST['hilo']."' AND estado = 'ok'", $link);
+			while($r = mysql_fetch_array($result)) { $msg_num = $r['num']; }
+			mysql_query("UPDATE ".SQL."foros_hilos SET num = '".$msg_num."' WHERE ID = '".$_POST['hilo']."' LIMIT 1", $link);
 		}
 
 		$refer_url = $_POST['return_url'];
@@ -1393,11 +1395,11 @@ case 'foro':
 		$text = gen_text($_POST['text'], 'plain');
 
 		if ($_POST['hilo']) { //msg
-			mysql_query("UPDATE ".SQL."foros_msg SET text = '".$text."', cargo = '".$_POST['encalidad']."' WHERE ID = '".$_POST['hilo']."' AND estado = 'ok' AND user_ID = '".$pol['user_ID']."' AND time > '".date('Y-m-d H:i:s', time() - 3600)."' LIMIT 1", $link);
+			mysql_query("UPDATE ".SQL."foros_msg SET text = '".$text."' WHERE ID = '".$_POST['hilo']."' AND estado = 'ok' AND user_ID = '".$pol['user_ID']."' AND time > '".date('Y-m-d H:i:s', time() - 3600)."' LIMIT 1", $link);
 		} else { //hilo
 			if (strlen($_POST['title']) >= 4) {
 				$title = strip_tags($_POST['title']);
-				mysql_query("UPDATE ".SQL."foros_hilos SET text = '".$text."', title = '".$title."', sub_ID = '".$_POST['sub_ID']."', cargo = '".$_POST['encalidad']."' WHERE ID = '".$_POST['subforo']."' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1", $link);
+				mysql_query("UPDATE ".SQL."foros_hilos SET text = '".$text."', title = '".$title."', sub_ID = '".$_POST['sub_ID']."' WHERE ID = '".$_POST['subforo']."' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1", $link);
 			}
 		}
 
@@ -1543,7 +1545,7 @@ case 'enviar-mensaje':
 				if ($user_ID != $pol['user_ID']) {
 					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$user_ID."', '".$date."', '<b>Mensaje multiple: Supervisor del Censo</b><br />".$text."', '0', '".$_POST['calidad']."', 'SC')", $link);
 
-					evento_chat('<b>[MP]</b> <a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/msg/">Nuevo mensaje privado</a> <span style="color:grey;">(multiple)</span>', $user_ID, -1, false, 'p');
+					evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.virtualpol.com/msg/">Nuevo mensaje privado</a> <span style="color:grey;">(multiple)</span>', $user_ID, -1, false, 'p');
 				}
 			}
 		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'])) {
@@ -1559,7 +1561,7 @@ case 'enviar-mensaje':
 			while($r = mysql_fetch_array($result)){ 
 				if ($r['user_ID'] != $pol['user_ID']) {
 					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: ".$cargo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
-					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).DEV.'.'.URL.'/msg/"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
+					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.URL.'/msg/"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
 				}
 			}
 		} elseif (($_POST['para'] == 'todos') AND ($pol['pols'] >= $pol['config']['pols_mensajetodos'])) {
@@ -1649,7 +1651,7 @@ LIMIT 1", $link);
 			$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."elecciones", $link);
 			while($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
 
-			evento_chat('<b>[ELECCIONES]</b> <a href="/elecciones/">Nuevo voto</a> <span style="color:grey;">(<b>'.$num_votos.'</b> votos, '.$pol['nick'].', '.number_format((($num_votos * 100) / $num_votantes), 1, '.', '').'%)</span>', '0', '0', true); 
+			evento_chat('<b>[ELECCIONES]</b> <a href="/elecciones/">Nuevo voto</a> <span style="color:grey;">(<b>'.$num_votos.'</b> votos, '.number_format((($num_votos * 100) / $num_votantes), 2, '.', '').'%, '.$pol['nick'].')</span>', '0', '0', true); 
 
 		}
 

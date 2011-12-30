@@ -250,7 +250,11 @@ LIMIT 1", $link);
 			
 			$txt .= '<span id="ver_info"></span><span style="float:right;text-align:right;"><a href="/votacion/'.$r['ID'].'/"><b>Volver a la votaci&oacute;n</b></a></span><table border="0" width="100%"><tr><td valign="top">';
 			
-			$txt .= '<h2 style="margin-top:18px;">Comentarios an&oacute;nimos:</h2>';
+			
+			$result2 = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
+			while($r2 = mysql_fetch_array($result2)) { $comentarios_num = $r2['num']; }
+
+			$txt .= '<h2 style="margin-top:18px;">Comentarios an&oacute;nimos ('.($r['estado']=='end'?$comentarios_num:'*').')</h2>';
 			if ($pol['estado'] == 'ciudadano') {
 				if ($r['estado'] == 'end') { 
 					$result2 = mysql_query("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != '' ORDER BY RAND()", $link);
@@ -259,8 +263,8 @@ LIMIT 1", $link);
 			} else { $txt .= '<p>Para ver los comentarios debes ser ciudadano.</p>'; }
 
 
-			if (($r['privacidad']=='false') AND ($r['estado']=='end')) {
-				$txt .= '<h1>Registro de votos</h1>
+			if ((($r['privacidad'] == 'false') AND ($r['estado'] == 'end')) OR ($r['estado'] != 'end')) {
+				$txt .= '<h2 style="margin-top:18px;">Registro de votos</h2>
 
 <table border="0" cellpadding="3">
 <tr>
@@ -275,7 +279,7 @@ LIMIT 1", $link);
 
 					$txt .= '<tr>
 <td>'.($r2['user_ID']==0?'*':crear_link($r2['nick'])).'</td>
-<td nowrap="nowrap">'.$respuestas[$r2['voto']].'</td>
+<td nowrap="nowrap">'.($r['privacidad']=='false'?$respuestas[$r2['voto']]:'*').'</td>
 <td>'.($r2['autentificado']=='true'?'<span style="color:blue;"><b>SI</b></span>':'<span style="color:grey;">NO</span>').'</td>
 </tr>';
 				}
@@ -298,7 +302,7 @@ if ($r['privacidad'] == 'true') { // Privacidad SI, voto secreto.
 
 <li><b title="Privacy: el sentido del voto es secreto.">Privacidad:</b> Si, siempre que el servidor no se comprometa mientras la votaci&oacute;n est&aacute; activa.</li>
 
-<li><b title="Veriability: capacidad publica de comprobar el recuento de votos.">Verificaci&oacute;n:</b> Minima, se permite comprobar el sentido del propio voto.</li>
+<li><b title="Veriability: capacidad publica de comprobar el recuento de votos.">Verificaci&oacute;n:</b> Se permite verificar el sentido del propio voto mientras la votaci&oacute;n est&aacute; activa. Y se hace publico CUANDO vota QUIEN.</li>
 
 <li><b title="Posibilidad de modificar el sentido del voto propio en una votaci&oacute;n activa.">Rectificaci&oacute;n</b> Si.</li>';
 } else { // Privacidad NO, voto publico, verificabilidad

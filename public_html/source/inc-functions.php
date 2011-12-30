@@ -247,11 +247,12 @@ function pols($pols) {
 	else { return '<span class="pp">' . $pols . '</span>'; }
 }
 
-function confianza($num) {
-	if ($num >= 10) { return '<span class="vcc">+' . $num . '</span>'; }
-	elseif ($num >= 0) { return '<span class="vc">+' . $num . '</span>'; } 
-	elseif ($num > -10) { return '<span class="vcn">' . $num . '</span>'; }
-	else { return '<span class="vcnn">' . $num . '</span>'; }
+function confianza($num, $size=false) {
+	if ($size != false) { $s = ' style="font-size:'.$size.'px;"'; } else { $s = ''; }
+	if ($num >= 10) { return '<span class="vcc"'.$s.'>+'.$num.'</span>'; }
+	elseif ($num >= 0) { return '<span class="vc"'.$s.'>+'.$num.'</span>'; } 
+	elseif ($num > -10) { return '<span class="vcn"'.$s.'>'.$num.'</span>'; }
+	else { return '<span class="vcnn"'.$s.'>'.$num.'</span>'; }
 }
 
 

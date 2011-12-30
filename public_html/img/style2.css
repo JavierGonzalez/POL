@@ -290,7 +290,7 @@ dt {
 }
 
 #pnick { 
-	min-width:250px;
+	min-width:280px;
 	text-align:left; 
 }
 
@@ -299,6 +299,7 @@ dt {
 }
 
 .nick:hover { 
+	cursor:help;
 	color:#00CCFF; 
 }
 
@@ -337,9 +338,8 @@ h1 a {
 
 .vcc, .vc, .vcn, .vcnn { 
 	background-color:#EEE;
-	font-weight:bold; 
-	font-size:18px; 
-
+	font-weight:bold;  
+	font-size:18px;
 	padding: 2px 5px 1px 4px;
 	border-radius: 6px;
 	-moz-border-radius: 6px; 

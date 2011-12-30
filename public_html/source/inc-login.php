@@ -102,7 +102,7 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 			if ($fecha_init != '0000-00-00 00:00:00') { $update .= ", online = online + " . (strtotime($fecha_last) - strtotime($fecha_init)); }
 		}
 		mysql_query("UPDATE LOW_PRIORITY users SET paginas = paginas + 1, fecha_last = '".$date."'".$update." WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-	} else { $pol = null; session_unset(); session_destroy(); } // impide el acceso a expulsados
+	} else { unset($pol); session_unset(); session_destroy(); } // impide el acceso a expulsados
 
 
 	// EXPULSADO?

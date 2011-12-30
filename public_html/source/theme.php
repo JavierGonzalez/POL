@@ -137,7 +137,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 			<li><a href="/foro/"><span style="float:right;">&#9658;</span>Foros</a>
 				<ul>
 					<li><a href="/foro/ultima-actividad/">&Uacute;ltima actividad</a>
-					<?=(isset($pol['user_ID'])?'<li><a href="/foro/mis-respuestas/">Respuestas</a></li>':'')?>
+					<?=(isset($pol['user_ID'])?'<li><a href="/foro/mis-respuestas/">Tu actividad</a></li>':'')?>
 				</ul>
 			</li>
 			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
@@ -232,15 +232,15 @@ foreach(explode(";", $pol['config']['palabras']) as $t) {
 	else { echo $t[2].$edit."<br />\n"; }
 }
 
-// <a href="/mapa/" class="gris" style="float:right;margin:0 11px 0 0;">Mapa</a>
-echo '<a href="/subasta/" class="gris" style="margin:0 0 0 -3px;">Subasta</a>';
-/*
+
+echo '<a href="/mapa/" class="gris" style="float:right;margin:0 11px 0 0;">Mapa</a><a href="/subasta/" class="gris" style="margin:0 0 0 -3px;">Subasta</a>';
+
 if (!isset($cuadrado_size)) {
 	$cuadrado_size = 10;
 	include('inc-mapa.php');
 	echo '<div style="margin:0 0 0 -4px;">'.$txt_mapa.'</div>';
 }
-*/
+
 
 echo '</div>';
 ?>
@@ -261,7 +261,7 @@ echo '</div>';
 			<li><a href="/foro/"><span style="float:right;">&#9658;</span>Foros</a>
 				<ul>
 					<li><a href="/foro/ultima-actividad/">&Uacute;ltima actividad</a>
-					<?=(isset($pol['user_ID'])?'<li><a href="/foro/mis-respuestas/">Respuestas</a></li>':'')?>
+					<?=(isset($pol['user_ID'])?'<li><a href="/foro/mis-respuestas/">Tu actividad</a></li>':'')?>
 				</ul>
 			</li>
 			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li title="Es necesario instalar el programa de escritorio llamado Mumble"><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
@@ -280,7 +280,7 @@ echo '</div>';
 	</li>
 <?php
 
-echo '<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/general/">Debates</a></li>';
+echo '<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/debates-15m/">Debates</a></li>';
 
 if ($pol['config']['info_consultas'] > 0) { 
 	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:22px;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
@@ -290,10 +290,18 @@ if ($pol['config']['info_consultas'] > 0) {
 
 //echo '<li id="menu-5" class="menu-5"><a href="/doc/">Acuerdos</a></li>';
 
-echo '</ul></dd></dl>
+echo '</ul></dd></dl>';
 
-<hr style="margin:5px 20px -5px -5px;color:#FF6;" />
 
+if (($pol['config']['elecciones_estado'] == 'elecciones') AND (isset($pol['user_ID']))) {
+	// boton votar
+	$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+	while($r = mysql_fetch_array($result)){ $havotado = $r['ID']; }
+	if (!$havotado) { echo '<span style="margin:0 -10px 0 -10px;"><b>Elecciones</b> '.boton('Votar', '/elecciones/votar/').'</span><br /><br />'; }
+}
+
+
+echo '
 <div id="palabras">';
 
 foreach(explode(";", $pol['config']['palabras']) as $t) {

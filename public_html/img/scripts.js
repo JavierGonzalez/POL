@@ -261,7 +261,7 @@ function print_msg(data) {
 				
 				chat_msg_ID[m_ID] = true;
 
-				if (chat_time == m_time) { m_time = "<span style=\"color:white;\">" + m_time + "</span>"; } else { chat_time = m_time; }
+				if (chat_time == m_time) { m_time = "<span style=\"color:#fff;\">" + m_time + "</span>"; } else { chat_time = m_time; }
 
 				switch(m_tipo) {
 					case "c":

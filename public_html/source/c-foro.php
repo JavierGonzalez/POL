@@ -188,7 +188,7 @@ ORDER BY time DESC
 LIMIT 10", $link);
 	$txt .= mysql_error($link);
 	while($r = mysql_fetch_array($result)) {
-		$txt .= '<tr><td align="right" valign="top" colspan="2">' . print_lateral($r['nick'], $r['cargo'], $r['time'], '', $r['user_ID'], '', $r['votos'], false, 'hilos', $r['ID']) . '</td><td align="right" valign="top"><b style="font-size:18px;">'.$r['num'].'</b></td><td valign="top" colspan="2" nowrap="nowrap" style="color:grey;"><a href="/foro/' . $sub[$r['sub_ID']] . '/' . $r['url'] . '/"><b>' . $r['title'] . '</b></a><br />' . substr(strip_tags($r['text']), 0, 90) . '..</td></tr>';
+		$txt .= '<tr><td align="right" valign="top" colspan="2">' . print_lateral($r['nick'], $r['cargo'], $r['time'], '', $r['user_ID'], '', $r['votos'], false, 'hilos', $r['ID']) . '</td><td align="right" valign="top"><b style="font-size:20px;">'.$r['num'].'</b></td><td valign="top" colspan="2" nowrap="nowrap" style="color:grey;"><a href="/foro/' . $sub[$r['sub_ID']] . '/' . $r['url'] . '/"><b>' . $r['title'] . '</b></a><br />' . substr(strip_tags($r['text']), 0, 90) . '..</td></tr>';
 	}
 
 
@@ -223,7 +223,7 @@ LIMIT 50", $link);
 		if (!$repes[$r['hilo_ID']]) {
 			$repes[$r['hilo_ID']] = true;
 
-			$txt .= '<tr><td align="right" valign="top" colspan="2">' . print_lateral($r['nick'], $r['cargo'], $r['time'], '', $r['user_ID'], '', $r['votos'], false, 'msg', $r['ID']) . '</td><td align="right" valign="top"><acronym title="Nuevos mensajes"><b style="font-size:18px;">'.$resp_num.'</b></acronym></td><td valign="top" colspan="2" nowrap="nowrap" style="color:grey;"><a href="/foro/' . $sub[$r['sub_ID']] . '/' . $r['hilo_url'] . '"><b>' . $r['hilo_titulo'] . '</b></a> &nbsp; (<b style="font-size:18px;">'.$resp_num.'</b></span> mensajes nuevos)<br />' . substr(strip_tags($r['text']), 0, 90) . '..</td></tr>';
+			$txt .= '<tr><td align="right" valign="top" colspan="2">' . print_lateral($r['nick'], $r['cargo'], $r['time'], '', $r['user_ID'], '', $r['votos'], false, 'msg', $r['ID']) . '</td><td align="right" valign="top"><acronym title="Nuevos mensajes"><b style="font-size:20px;">'.$resp_num.'</b></acronym></td><td valign="top" colspan="2" nowrap="nowrap" style="color:grey;"><a href="/foro/'.$sub[$r['sub_ID']].'/'.$r['hilo_url'].'"><b>'.$r['hilo_titulo'].'</b></a><br /><span title="Mensajes despu&eacute;s del tuyo">(<b style="font-size:18px;">'.$resp_num.'</b> nuevos)</span> '.substr(strip_tags($r['text']), 0, 90).'..</td></tr>';
 		}
 	}
 
@@ -487,7 +487,7 @@ LIMIT 200", $link);
 	$adsense_exclude = true;
 
 	$txt_title = 'Foro';
-	$txt .= '<div style="float:right;color:green;"><a href="/foro/ultima-actividad/">&Uacute;ltima actividad</a> | <a href="/foro/mis-respuestas/">Mis respuestas</a> &nbsp; [<a href="/control/gobierno/foro/">Configuraci&oacute;n foro</a>]</div>
+	$txt .= '<div style="float:right;color:green;"><a href="/foro/ultima-actividad/">&Uacute;ltima actividad</a> | <a href="/foro/mis-respuestas/">Tu actividad</a> &nbsp; [<a href="/control/gobierno/foro/">Configuraci&oacute;n foro</a>]</div>
 
 <h1><b>Foro</b>:</h1>
 <br />

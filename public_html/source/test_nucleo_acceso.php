@@ -28,6 +28,7 @@ $txt .= test_acceso('antiguedad', '1');
 $txt .= test_acceso('antiguedad', '360');
 $txt .= test_acceso('antiguedad', '100000');
 $txt .= test_acceso('antentificados', '');
+$txt .= test_acceso('supervisores_censo', '');
 $txt .= test_acceso('ciudadanos', '');
 $txt .= test_acceso('ciudadanos', 'VP 15M');
 $txt .= test_acceso('ciudadanos_global', '');

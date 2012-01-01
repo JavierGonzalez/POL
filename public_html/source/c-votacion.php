@@ -13,7 +13,9 @@ while($r = mysql_fetch_array($result)){
 
 	include_once('inc-functions-accion.php');
 
-	evento_chat('<b>['.strtoupper($r['tipo']).']</b> Finalizado, resultados: <a href="/votacion/'.$r['ID'].'/"><b>'.$r['pregunta'].'</b></a> <span style="color:grey;">(votos: <b>'.$r['num'].'</b>)</span>');
+	if ($r['acceso_ver'] == 'anonimos') {
+		evento_chat('<b>['.strtoupper($r['tipo']).']</b> Finalizado, resultados: <a href="/votacion/'.$r['ID'].'/"><b>'.$r['pregunta'].'</b></a> <span style="color:grey;">(votos: <b>'.$r['num'].'</b>)</span>');
+	}
 
 	if ($r['ejecutar'] != '') { // EJECUTAR ACCIONES
 
@@ -61,6 +63,7 @@ if ($_GET['a'] == 'crear') {
 	foreach ($votaciones_tipo AS $tipo) {
 		if (!nucleo_acceso($vp['acceso'][$tipo])) { $disabled[$tipo] = ' disabled="disabled"'; } else { $algun_acceso_voto = true; }
 	}
+	if (nucleo_acceso('supervisores_censo')) { $algun_acceso_voto = true; }
 
 	// SI el usuario es SC puee hacer sondeos tambien.
 	$sc = get_supervisores_del_censo();
@@ -71,11 +74,11 @@ campos_num = 3;
 campos_max = 30;
 
 function cambiar_tipo_votacion(tipo) {
-	$("#acceso_votar, #time_expire, .votar_form, #votos_expire, #tipo_voto, #privacidad").show();
+	$("#acceso_ver, #acceso_votar, #time_expire, .votar_form, #votos_expire, #tipo_voto, #privacidad").show();
 	$("#cargo_form").hide();
 	switch (tipo) {
-		case "parlamento": $("#acceso_votar, #votos_expire, #privacidad").hide(); break;
-		case "cargo": $("#acceso_votar, #time_expire, .votar_form, #votos_expire, #tipo_voto, #privacidad").hide(); $("#cargo_form").show(); break;
+		case "parlamento": $("#acceso_votar, #votos_expire, #privacidad, #acceso_ver").hide(); break;
+		case "cargo": $("#acceso_ver, #acceso_votar, #time_expire, .votar_form, #votos_expire, #tipo_voto, #privacidad").hide(); $("#cargo_form").show(); break;
 	}
 }
 
@@ -95,7 +98,7 @@ function opcion_nueva() {
 
 '.($algun_acceso_voto?'':'<p style="color:red;">No tienes acceso para crear votaciones, pero puedes ver las opciones.</p>').'
 
-<table width="570"><tr><td valign="top">
+<table border="0"><tr><td valign="top">
 <p class="azul" style="text-align:left;"><b>Tipo de votaci&oacute;n</b>:<br />
 <span id="tipo_select">';
 
@@ -159,7 +162,7 @@ $txt .= '
 </optgroup>
 
 </select></span>
-
+<br />
 <span id="privacidad">
 <b>Voto</b>: 
 <select name="privacidad">
@@ -167,22 +170,33 @@ $txt .= '
 <option value="false">P&uacute;blico</option>
 </select></span>
 </p>
-';
 
 
-		$r['acceso_votar'] = 'ciudadanos';
-		$tipos_array = nucleo_acceso('print');
-		unset($tipos_array['anonimos']);
-		foreach ($tipos_array AS $at => $at_var) {
-			$txt_li['votar'] .= '<input type="radio" name="acceso_votar" value="'.$at.'"'.($at==$r['acceso_votar']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_votar_var\').val(\''.$at_var.'\');" />'.ucfirst(str_replace("_", " ", $at)).'<br />';
-		}
-
-
-		$txt .= '</td><td valign="top" align="right">
+</td><td valign="top" align="right">
 		
 <p id="acceso_votar" class="azul"><b>Acceso para votar:</b><br />
-'.$txt_li['votar'].'
-<input type="text" name="acceso_cfg_votar" size="18" maxlength="500" id="acceso_cfg_votar_var" value="'.$r['acceso_cfg_votar'].'" /></p>
+<select name="acceso_votar">';
+
+
+	$tipos_array = nucleo_acceso('print');
+	foreach ($tipos_array AS $at => $at_var) {
+		$txt .= '<option value="'.$at.'"'.($at=='ciudadanos'?' selected="selected"':'').($at=='anonimos'?' disabled="disabled"':'').' />'.ucfirst(str_replace("_", " ", $at)).'</option>';
+	}
+
+	$txt .= '</select><br />
+<input type="text" name="acceso_cfg_votar" size="18" maxlength="500" id="acceso_cfg_votar_var" value="" /></p>
+		
+<p id="acceso_ver" class="azul"><b>Acceso ver votaci&oacute;n:</b><br />
+<select name="acceso_ver">';
+
+
+	$tipos_array = nucleo_acceso('print');
+	foreach ($tipos_array AS $at => $at_var) {
+		$txt .= '<option value="'.$at.'"'.($at=='anonimos'?' selected="selected"':'').' />'.ucfirst(str_replace("_", " ", $at)).'</opcion>';
+	}
+
+	$txt .= '</select><br />
+<input type="text" name="acceso_cfg_ver" size="18" maxlength="500" id="acceso_cfg_ver_var" value="" /></p>
 
 </td></tr></table>
 
@@ -221,6 +235,12 @@ FROM votacion
 WHERE ID = '".$_GET['a']."' AND pais = '".PAIS."'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
+
+		if (!nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver'])) { 
+			$txt .= '<p style="color:red;">Esta votaci&oacute;n es privada. No tienes acceso para ver su contenido o resultado.</p>'; 
+			break; 
+		}
+
 		$votos_total = $r['num'];
 
 		$time_expire = strtotime($r['time_expire']);
@@ -294,8 +314,8 @@ LIMIT 1", $link);
 <h2>Propiedades de la votaci&oacute;n:</h2>
 <ul>';
 
-if ($r['privacidad'] == 'true') { // Privacidad SI, voto secreto.
-	$txt .= '
+			if ($r['privacidad'] == 'true') { // Privacidad SI, voto secreto.
+			$txt .= '
 <li><b title="Accuracy: el computo de los votos es exacto.">Precisi&oacute;n:</b> Si, el computo de los votos es exacto.</b>
 
 <li><b title="Democracy: solo pueden votar personas autorizadas y una sola vez.">Democracia:</b> Autentificaci&oacute;n solida mediante DNIe (y otros certificados) opcional y avanzado sistema de vigilancia del censo de eficacia elevada.</li>
@@ -557,7 +577,7 @@ ORDER BY siglas ASC", $link);
 </tr>';
 	$mostrar_separacion = true;
 	// (SELECT nick FROM users WHERE ID = votacion.user_ID LIMIT 1) AS nick,
-	$result = mysql_query("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar,
+	$result = mysql_query("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS ha_votado
 FROM votacion
 WHERE pais = '".PAIS."' 
@@ -585,15 +605,17 @@ LIMIT 500", $link);
 			$mostrar_separacion = false;
 			$txt .= '<tr><td colspan="5"><span style="color:#888;"><br /><b>Finalizadas</b>:</span><hr /></td></tr>';
 		}
-
-		$txt .= '<tr>
+		
+		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
+			$txt .= '<tr>
 <td'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
-<td><a href="/votacion/'.$r['ID'].'/"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.$r['pregunta'].'</a></td>
+<td><a href="/votacion/'.$r['ID'].'/"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.$r['pregunta'].'</a>'.($r['acceso_ver']!='anonimos'?' <sup style="color:red;">Privado!</sup>':'').'</td>
 <td nowrap="nowrap">'.$estado.'</td>
 <td nowrap="nowrap">'.$votar.$boton.'</td>
 <td></td>
 </tr>';
+		}
 	}
 	$txt .= '</table>';
 

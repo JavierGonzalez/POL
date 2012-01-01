@@ -320,7 +320,7 @@ ORDER BY time DESC LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){
 			$votos_total = $r['num_votos'];
 
-			$txt .= '<p style="text-align:center;margin-top:8px;"><b>' . $votos_total . '</b> votos de <em>' . $r['num_votantes'] . '</em>, participaci&oacute;n: <b>' . number_format(($votos_total * 100) / $r['num_votantes'], 1, ',', '') . '%</b></p>';
+			$txt .= '<p style="text-align:center;margin-top:8px;"><b>'.num($votos_total).'</b> votos de <em>'.num($r['num_votantes']).'</em>, participaci&oacute;n: <b>'.num(($votos_total*100)/$r['num_votantes'], 2).'%</b></p>';
 
 
 			// formato: candidato1|candidato1#escrutinio
@@ -373,7 +373,7 @@ ORDER BY time DESC LIMIT 1", $link);
 
 
 		$txt .= '<center>
-<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato . '&chs=362x220&chds=a&chl=' . $chart_nom . '&chf=bg,s,ffffff01|c,s,ffffff01&chp=3.14" alt="Escrutinio Presidenciales" />
+<img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$chart_dato.'&chs=362x220&chds=a&chl='.$chart_nom.'&chf=bg,s,ffffff01|c,s,ffffff01&chp=3.14" alt="Escrutinio Presidenciales" />
 
 <table border="0" class="pol_table">
 <tr>
@@ -406,7 +406,7 @@ ORDER BY time DESC LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 		$votos_total = $r['num_votos'];
 
-		$txt .= '<p style="text-align:center;margin-top:8px;"><b>' . $votos_total . '</b> votos de <em>' . $r['num_votantes'] . '</em>, participaci&oacute;n: <b>' . number_format(($votos_total * 100) / $r['num_votantes'], 1, ',', '') . '%</b></p>';
+		$txt .= '<p style="text-align:center;margin-top:8px;"><b>'.num($votos_total).'</b> votos de <em>'.num($r['num_votantes']).'</em>, participaci&oacute;n: <b>'.num(($votos_total * 100) / $r['num_votantes'], 2).'%</b></p>';
 		
 		if ($pol['config']['elecciones'] != 'parl') {
 			$m = explode("|", $r['escrutinio']);

@@ -1,7 +1,7 @@
 <?php
 include('inc-login.php');
 
-$txt_title = 'VirtualPol | Plataforma Democratica Autogestionada | VP - 15M asamblea | democracia online - simulador politico';
+$txt_title = 'VirtualPol | Ecosistema de plataformas democr&aacute;ticas autogestionadas | VP - 15M asamblea | democracia online - simulador politico';
 
 $txt_description = 'Ecosistema de plataformas democraticas autogestioandas. Simulador Politico Espa&ntilde;ol, Juego online, experimento social o simulador de politica. VP POL 15M atlantis vulcan hispania'; 
 

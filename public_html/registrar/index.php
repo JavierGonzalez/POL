@@ -484,6 +484,7 @@ $(document).ready(function() {
 <li><input type="submit" value="Crear ciudadano" style="height:40px;font-size:22px;" onclick="$(\'#pass1\').val(hex_md5($(\'#pass1\').val()));$(\'#pass2\').val(hex_md5($(\'#pass2\').val()));" /></li>
 </form>
 </ol>
+<script type="text/javascript" src="'.IMG.'lib/md5.js"></script>
 <br />';
 }
 

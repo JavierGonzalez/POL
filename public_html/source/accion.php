@@ -1164,9 +1164,8 @@ case 'votacion':
 	$votaciones_tipo = array('referendum', 'parlamento', 'sondeo', 'cargo');
 	if (($_GET['b'] == 'crear') AND (in_array($_POST['tipo'], $votaciones_tipo))) {
 		
-		$sc = get_supervisores_del_censo();
 
-		if ((nucleo_acceso($vp['acceso'][$_POST['tipo']])) OR (($_POST['tipo'] == 'sondeo') AND (isset($sc[$pol['user_ID']])))) { 
+		if ((nucleo_acceso($vp['acceso'][$_POST['tipo']])) OR (($_POST['tipo'] == 'sondeo') AND (nucleo_acceso('supervisores_censo')))) { 
 
 			if ($_POST['votos_expire'] > 0) { } else { $_POST['votos_expire'] = 0; }
 
@@ -1185,8 +1184,8 @@ case 'votacion':
 			switch ($_POST['tipo']) {
 				case 'parlamento':
 					$_POST['privacidad'] = 'false';
-					$_POST['acceso_votar'] = 'cargo'; 
-					$_POST['acceso_cfg_votar'] = '6 22';
+					$_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22';
+					$_POST['acceso_ver'] = 'anonimos'; $_POST['acceso_cfg_ver'] = '';
 					$_POST['votos_expire'] = $pol['config']['num_escanos'];
 					break;
 
@@ -1204,6 +1203,7 @@ case 'votacion':
 						$_POST['privacidad'] = 'true';
 						if ($_POST['cargo'] == 7) { $_POST['time_expire'] = (86400*2); }
 						$_POST['acceso_votar'] = 'ciudadanos'; $_POST['acceso_cfg_votar'] = '';
+						$_POST['acceso_ver'] = 'anonimos'; $_POST['acceso_cfg_ver'] = '';
 						$ejecutar = $_POST['cargo'].'|'.$cargo_user_ID;
 						$_POST['pregunta'] = '&iquest;Apruebas que el ciudadano '.$_POST['nick'].' ostente el cargo '.$cargo_nombre.'?';
 						$_POST['descripcion'] .= '<hr />&iquest;Estas a favor que <b>'.crear_link($_POST['nick']).'</b> tenga el cargo <b>'.$cargo_nombre.'</b>?<br /><br />Al finalizar esta votaci&oacute;n, si el resultado por mayor&iacute;a es a favor, se otorgar&aacute; el cargo autom&aacute;ticamente, si por el contrario el resultado es en contra se le destituir&aacute; del cargo.';
@@ -1214,18 +1214,20 @@ case 'votacion':
 					break;
 			}
 
-			mysql_query("INSERT INTO votacion (pais, pregunta, descripcion, respuestas, respuestas_desc, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, ejecutar, votos_expire, tipo_voto, privacidad) VALUES ('".PAIS."', '".$_POST['pregunta']."', '".$_POST['descripcion']."', '".$respuestas."', '".$respuestas_desc."', '".$date."', '".date('Y-m-d H:i:s', time() + $_POST['time_expire'])."', '".$pol['user_ID']."', 'ok', '".$_POST['tipo']."', '".$_POST['acceso_votar']."', '".$_POST['acceso_cfg_votar']."', '".$ejecutar."', '".$_POST['votos_expire']."', '".$_POST['tipo_voto']."', '".$_POST['privacidad']."')", $link);
+			mysql_query("INSERT INTO votacion (pais, pregunta, descripcion, respuestas, respuestas_desc, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, ejecutar, votos_expire, tipo_voto, privacidad) VALUES ('".PAIS."', '".$_POST['pregunta']."', '".$_POST['descripcion']."', '".$respuestas."', '".$respuestas_desc."', '".$date."', '".date('Y-m-d H:i:s', time() + $_POST['time_expire'])."', '".$pol['user_ID']."', 'ok', '".$_POST['tipo']."', '".$_POST['acceso_votar']."', '".$_POST['acceso_cfg_votar']."', '".$_POST['acceso_ver']."', '".$_POST['acceso_cfg_ver']."', '".$ejecutar."', '".$_POST['votos_expire']."', '".$_POST['tipo_voto']."', '".$_POST['privacidad']."')", $link);
 
 			$result = mysql_query("SELECT ID FROM votacion WHERE user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' ORDER BY ID DESC LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $ref_ID = $r['ID']; }
 
-			evento_chat('<b>['.strtoupper($_POST['tipo']).'] <a href="/votacion/'.$ref_ID.'/">'.$_POST['pregunta'].'</a></b> <span style="color:grey;">('.duracion($_POST['time_expire']).', creado por '.$pol['nick'].')</span>');
+			if ($_POST['acceso_ver'] == 'anonimos') {
+				evento_chat('<b>['.strtoupper($_POST['tipo']).'] <a href="/votacion/'.$ref_ID.'/">'.$_POST['pregunta'].'</a></b> <span style="color:grey;">('.duracion($_POST['time_expire']).', creado por '.$pol['nick'].')</span>');
+			}
 		}
 	} elseif (($_GET['b'] == 'votar') AND ($_POST['ref_ID'])) { 
 
 
-			$result = mysql_query("SELECT pais, tipo, pregunta, estado, acceso_votar, acceso_cfg_votar, num, votos_expire, tipo_voto FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
-			while($r = mysql_fetch_array($result)){ $tipo = $r['tipo']; $pregunta = $r['pregunta']; $estado = $r['estado']; $pais = $r['pais']; $acceso_votar = $r['acceso_votar']; $acceso_cfg_votar = $r['acceso_cfg_votar']; $num = $r['num']; $votos_expire = $r['votos_expire']; $tipo_voto = $r['tipo_voto']; $num++; }
+			$result = mysql_query("SELECT pais, tipo, pregunta, estado, acceso_votar, acceso_cfg_votar, acceso_ver, num, votos_expire, tipo_voto FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)){ $tipo = $r['tipo']; $pregunta = $r['pregunta']; $estado = $r['estado']; $pais = $r['pais']; $acceso_votar = $r['acceso_votar']; $acceso_cfg_votar = $r['acceso_cfg_votar']; $acceso_ver = $r['acceso_ver']; $num = $r['num']; $votos_expire = $r['votos_expire']; $tipo_voto = $r['tipo_voto']; $num++; }
 
 			if (($estado == 'ok') AND (in_array($tipo, $votaciones_tipo)) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar))) { 
 				// Votacion activa, tipo correcto, acceso de voto OK
@@ -1250,8 +1252,10 @@ case 'votacion':
 				} else { // INSERTAR VOTO
 					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto, validez, autentificado, mensaje) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."')", $link);
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
-
-					evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
+					
+					if ($acceso_ver == 'anonimos') {
+						evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
+					}
 				}
 				unset($_POST['voto']);
 			}
@@ -1269,7 +1273,7 @@ case 'votacion':
 	}
 
 	// actualizar info en theme
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
+	$result = mysql_query("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_ver = 'anonimos'", $link);
 	while($r = mysql_fetch_array($result)) {
 		mysql_query("UPDATE ".SQL."config SET valor = '".$r['num']."' WHERE dato = 'info_consultas' LIMIT 1", $link);
 	}
@@ -1651,7 +1655,7 @@ LIMIT 1", $link);
 			$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."elecciones", $link);
 			while($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
 
-			evento_chat('<b>[ELECCIONES]</b> <a href="/elecciones/">Nuevo voto</a> <span style="color:grey;">(<b>'.$num_votos.'</b> votos, '.number_format((($num_votos * 100) / $num_votantes), 2, '.', '').'%, '.$pol['nick'].')</span>', '0', '0', true); 
+			evento_chat('<b>[ELECCIONES]</b> <a href="/elecciones/">Nuevo voto</a> <span style="color:grey;">(<b>'.num($num_votos).'</b> votos, '.num(($num_votos*100)/$num_votantes, 2).'%, '.$pol['nick'].')</span>', '0', '0', true); 
 
 		}
 

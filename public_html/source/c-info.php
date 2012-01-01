@@ -115,9 +115,9 @@ $txt .= '
 
 <p>'.$p_paginas.'</p>
 
-<p><abbr title="Numero de ciudadanos en la plataforma '.PAIS.'"><b>'.num($pol['config']['info_censo']).'</b> ciudadanos</abbr> (<abbr title="Ciudadanos -no nuevos- que entraron en las últimas 24h, en la plataforma '.PAIS.'">activos <b>'.$censo_activos.'</b></abbr>,  <abbr title="Ciudadanos activos en todo VirtualPol">activos global <b>'.$censo_activos_vp.'</b></abbr>)
+<p><abbr title="Numero de ciudadanos en la plataforma '.PAIS.'"><b>'.num($pol['config']['info_censo']).'</b> ciudadanos de '.PAIS.'</abbr> (<abbr title="Ciudadanos -no nuevos- que entraron en las últimas 24h, en la plataforma '.PAIS.'">activos <b>'.$censo_activos.'</b></abbr>,  <abbr title="Ciudadanos activos en todo VirtualPol">activos global <b>'.$censo_activos_vp.'</b></abbr>)
 
-'.(ECONOMIA?' | <a href="/control/expulsiones/" class="expulsado">Expulsados</a>: <b>' . $censo_expulsados . '</b> | <a href="/info/censo/riqueza/" title="Los ciudadanos con más monedas.">Ricos</a>':'').' | <abbr><a href="/info/censo/SC/">Ver censo de todo VirtualPol</a></abbr> &nbsp; 
+'.(ECONOMIA?' | <a href="/control/expulsiones/" class="expulsado">Expulsados</a>: <b>'.$censo_expulsados.'</b> | <a href="/info/censo/riqueza/" title="Los ciudadanos con m&aacute;s monedas.">Ricos</a>':'').' | <a href="/info/censo/SC/" title="Todos los ciudadanos registrados en VirtualPol globalmente">Censo de VirtualPol</a> &nbsp; 
 </p>
 
 <table border="0" cellspacing="2" cellpadding="0" class="pol_table">

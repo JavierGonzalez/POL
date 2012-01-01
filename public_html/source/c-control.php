@@ -1237,12 +1237,7 @@ $txt .= '
 
 }
 
-$txt .= '
-<tr><td nowrap="nowrap"><a class="abig" href="/referendum/crear/"><b>Sondeos</b></a></td>
-<td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/41.gif" title="Consultor" /></td>
-<td>El Consultor puede hacer sondeos de petici&oacute;n popular.</td></tr>
-
-</table>';
+$txt .= '</table>';
 
 		break;
 

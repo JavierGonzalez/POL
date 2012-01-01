@@ -410,9 +410,11 @@ LIMIT 1", $link);
 (SELECT fecha_registro FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS fecha_registro
 FROM ".SQL."estudios_users WHERE ID_estudio = '" . $r['cargo_ID'] . "' AND nota != '' ORDER BY nota DESC, cargo DESC, fecha_registro ASC LIMIT 100", $link);
 		while($r2 = mysql_fetch_array($result2)){ 
-			if ($r2['cargo'] == 1) { $cargo = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" />'; } else { $cargo = ''; }
-			if ($r2['estado'] == 'ok') { $sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = '<span style="margin-left:21px;"></span>'; }
-			$txt .= '<li><b class="gris">' . $sello . ' ' . $r2['nota'] . ' ' . $cargo . crear_link($r2['nick']) . '</b></li>';
+			if ($r2['nick'] != '') {
+				if ($r2['cargo'] == 1) { $cargo = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" />'; } else { $cargo = ''; }
+				if ($r2['estado'] == 'ok') { $sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = '<span style="margin-left:21px;"></span>'; }
+				$txt .= '<li><b class="gris">' . $sello . ' ' . $r2['nota'] . ' ' . $cargo . crear_link($r2['nick']) . '</b></li>';
+			}
 		}
 
 		$txt .= '</ol></td></tr></table>';

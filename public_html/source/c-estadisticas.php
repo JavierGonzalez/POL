@@ -239,6 +239,7 @@ $txt .= '
 </p>';
 }
 
+if (ASAMBLEA) { } else {
 $txt .= '
 <h2 style="margin-top:35px;">4. DEMOCRACIA</h2>
 <div class="amarillo">
@@ -279,9 +280,10 @@ ORDER BY num DESC", $link);
 	}
 }
 
-$txt .= '
-
-</tr></table>
+$txt .= '</tr></table>';
+}
+	
+	$txt .= '
 </div>
 </div>
 

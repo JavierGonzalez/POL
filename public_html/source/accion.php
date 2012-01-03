@@ -1198,12 +1198,13 @@ case 'votacion':
 					while($r = mysql_fetch_array($result)){ $cargo_user_ID = $r['ID']; $_POST['nick'] = $r['nick']; }
 
 					if (($cargo_nombre) AND ($cargo_user_ID)) { // fuerza configuracion
-						$_POST['time_expire'] = 86400;
 						$_POST['tipo_votacion'] = 'estandar';
-						$_POST['privacidad'] = 'true';
+						$_POST['time_expire'] = 86400;
 						if ($_POST['cargo'] == 7) { $_POST['time_expire'] = (86400*2); }
-						$_POST['acceso_votar'] = 'ciudadanos'; $_POST['acceso_cfg_votar'] = '';
-						$_POST['acceso_ver'] = 'anonimos'; $_POST['acceso_cfg_ver'] = '';
+						if ((!ASAMBLEA) OR ($_POST['cargo'] == 6)) {
+							$_POST['acceso_votar'] = 'ciudadanos'; $_POST['acceso_cfg_votar'] = '';
+							$_POST['acceso_ver'] = 'anonimos'; $_POST['acceso_cfg_ver'] = '';
+						}
 						$ejecutar = $_POST['cargo'].'|'.$cargo_user_ID;
 						$_POST['pregunta'] = '&iquest;Apruebas que el ciudadano '.$_POST['nick'].' ostente el cargo '.$cargo_nombre.'?';
 						$_POST['descripcion'] .= '<hr />&iquest;Estas a favor que <b>'.crear_link($_POST['nick']).'</b> tenga el cargo <b>'.$cargo_nombre.'</b>?<br /><br />Al finalizar esta votaci&oacute;n, si el resultado por mayor&iacute;a es a favor, se otorgar&aacute; el cargo autom&aacute;ticamente, si por el contrario el resultado es en contra se le destituir&aacute; del cargo.';
@@ -1248,9 +1249,9 @@ case 'votacion':
 				$_POST['mensaje'] = ucfirst(trim(strip_tags($_POST['mensaje'])));
 
 				if ($ha_votado) { // MODIFICAR VOTO
-					mysql_query("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".($_POST['validez']=='true'?'true':'false')."', mensaje = '".$_POST['mensaje']."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+					mysql_query("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".($_POST['validez']=='true'?'true':'false')."', mensaje = '".$_POST['mensaje']."', time = '".$date."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 				} else { // INSERTAR VOTO
-					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, voto, validez, autentificado, mensaje) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."')", $link);
+					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."')", $link);
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 					
 					if ($acceso_ver == 'anonimos') {

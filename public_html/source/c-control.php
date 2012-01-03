@@ -35,6 +35,11 @@ if (isset($sc[$pol['user_ID']])) {
 		$supervisores .= ' '.crear_link($nick); 
 	}
 
+	function print_nota_SC($nota_SC, $user_ID) {
+		global $pol;
+		return ($nota_SC!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$user_ID.'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$nota_SC.'" /><input type="submit" value="OK" /></form>':'');
+	}
+
 	// nomenclatura
 	foreach ($vp['paises'] AS $pais) { $paises .= ' <span style="background:'.$vp['bg'][$pais].';" class="redondeado">'.$pais.'</span>'; }
 	$nomenclatura = '<span style="float:right;">Plataformas:'.$paises.' | Estados: <b class="ciudadano">Ciudadano</b> <b class="turista">Turista</b> <b class="validar">Validar</b> <b class="expulsado">Expulsado</b></span>';
@@ -414,13 +419,13 @@ FROM users
 WHERE IP = '" . $r['IP'] . "' 
 ORDER BY fecha_registro DESC", $link);
 		while($r2 = mysql_fetch_array($result2)) {
-			$nota_SC .= ($r2['nota_SC']!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r2['ID'].'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$r2['nota_SC'].'" /><input type="submit" value="OK" /></form>':'');
+			$nota_SC .= print_nota_SC($r2['nota_SC'], $r2['ID']);
 			$confianza_total += $r2['voto_confianza_SC'];
 			if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 			$clones[] = '<b>'.crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']).'</b>';
 		}
 		if ((!$desarrollador) AND (!$clones_expulsados)) {
-			$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td nowrap="nowrap"><span style="float:right;">'.ocultar_IP($r['host'], 'host').'</span>'.implode(' & ', $clones).'</td><td>'.ocultar_IP($r['IP']).'</td><td nowrap="nowrap">'.$nota_SC.'</td></tr>';
+			$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td><span style="float:right;">'.ocultar_IP($r['host'], 'host').'</span>'.implode(' & ', $clones).'</td><td>'.ocultar_IP($r['IP']).'</td><td nowrap="nowrap">'.$nota_SC.'</td></tr>';
 		}
 	}
 	$txt .= '</table>';
@@ -445,7 +450,7 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 			$clones_expulsados = true;
 			while($r2 = mysql_fetch_array($result2)) { 
 				if ($r2['nick']) {
-					$nota_SC .= ($r2['nota_SC']!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r2['ID'].'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$r2['nota_SC'].'" /><input type="submit" value="OK" /></form>':'');
+					$nota_SC .= print_nota_SC($r2['nota_SC'], $r2['ID']);
 					$confianza_total += $r2['voto_confianza_SC'];
 					if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 					$clones[] = crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']);
@@ -463,16 +468,18 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 
 	$trazas_rep = array();
 	$txt .= '<br /><h1>3. Coincidencia de dispositivo (Traza)<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
-	$result = mysql_query("SELECT ID AS user_ID, nick, estado, pais, traza FROM users WHERE traza != '' ORDER BY fecha_registro DESC", $link);
+	$result = mysql_query("SELECT ID AS user_ID, ID, nick, estado, pais, traza, nota_SC FROM users WHERE traza != '' ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
+		$nota_SC .= print_nota_SC($r['nota_SC'], $r['ID']);
 		$tn = 1;
 		$trazas = explode(' ', $r['traza']);
 		$trazas_clones = array();
 		if ($r['estado'] == 'expulsado') { $mostrar = false; } else { $mostrar = true; }
 		foreach ($trazas AS $unatraza) {
 			$trazado = false;
-			$result2 = mysql_query("SELECT nick, estado, pais FROM users WHERE ID = '".$unatraza."' LIMIT 1", $link);
+			$result2 = mysql_query("SELECT ID, nick, estado, pais, nota_SC FROM users WHERE ID = '".$unatraza."' LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)) {
+				$nota_SC .= print_nota_SC($r2['nota_SC'], $r2['ID']);
 				$tn++; $trazas_clones[] = crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']);
 				$trazado = true;
 				if ($r2['estado'] != 'expulsado') { $mostrar = true; }
@@ -486,7 +493,8 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 			}
 		}
 		if (($mostrar == true) AND (count($trazas_clones) > 0)) {
-			$txt .= '<tr><td>'.$tn.'</td><td><b>'.crear_link($r['nick'], 'nick', $r['estado'], $r['pais']).'</b>: <b>'.implode(' & ', $trazas_clones).'</b></td></tr>';
+			$txt .= '<tr><td>'.$tn.'</td><td><b>'.crear_link($r['nick'], 'nick', $r['estado'], $r['pais']).'</b>: <b>'.implode(' & ', $trazas_clones).'</b></td><td>'.$nota_SC.'</td></tr>';
+			$nota_SC = '';
 		}
 	}
 	$txt .= '</table>';
@@ -498,7 +506,7 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 	foreach ($array_searchtor AS $filtro) { if ($sql_anon != '') { $sql_anon .= ' OR ';  } $sql_anon .= "hosts LIKE '".$filtro."'"; }
 	$result = mysql_query("SELECT nick, estado, host, IP, nav, nota_SC FROM users WHERE ".$sql_anon." ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
-		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td><td>'.($r['nota_SC']!=''?'<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$r['nota_SC'].'" /><input type="submit" value="OK" /></form>':'').'</td></tr>';
+		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td><td>'.print_nota_SC($r['nota_SC'], $r['ID']).'</td></tr>';
 	}
 	$txt .= '</table>';
 

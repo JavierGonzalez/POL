@@ -83,7 +83,7 @@ window.onload = function(){
 }
 
 function click_form(tipo) {
-	$("#ciudadano").attr("value","");
+	
 
 	switch (tipo) {
 	case "ciudadano":
@@ -95,6 +95,7 @@ function click_form(tipo) {
 		break;
 
 	case "cargos":
+		$("#ciudadano").attr("value","");
 		$("#urgente").attr("disabled","disabled");
 		$("#urgente").removeAttr("checked");
 
@@ -104,6 +105,7 @@ function click_form(tipo) {
 		break;
 
 	case "todos":
+		$("#ciudadano").attr("value","");
 		$("#urgente").attr("disabled","disabled");
 		$("#urgente").removeAttr("checked");
 

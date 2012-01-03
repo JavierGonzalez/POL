@@ -41,7 +41,7 @@ function nucleo_acceso($tipo, $valor='') {
 		case 'supervisores_censo': if ($_SESSION['pol']['SC'] == 'true') { $rt = true; } break;
 		case 'antiguedad': if (($_SESSION['pol']['fecha_registro']) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($valor*86400)))) { $rt = true; } break;
 		case 'print': 
-			if (ECONOMIA) {	return array('privado'=>'Ciudadano1 C2 C3 ...', 'excluir'=>'Ciudadano1 C2 C3 ...', 'afiliado'=>'partido_ID', 'confianza'=>'0', 'cargo'=>'cargo_ID1 cID2 cID3 ...', 'nivel'=>'1', 'antiguedad'=>'365', 'monedas'=>'0', 'autentificados'=>'', 'ciudadanos'=>'', 'ciudadanos_global'=>'', 'anonimos'=>''); } 
+			if (ECONOMIA) {	return array('privado'=>'Ciudadano1 C2 C3 ...', 'excluir'=>'Ciudadano1 C2 C3 ...', 'afiliado'=>'partido_ID', 'confianza'=>'0', 'cargo'=>'cargo_ID1 cID2 cID3 ...', 'nivel'=>'1', 'antiguedad'=>'365', 'monedas'=>'0', 'autentificados'=>'', 'supervisores_censo'=>'', 'ciudadanos'=>'', 'ciudadanos_global'=>'', 'anonimos'=>''); } 
 			else { return array('privado'=>'Ciudadano1 C2 C3 ...', 'excluir'=>'Ciudadano1 C2 C3 ...', 'afiliado'=>'partido_ID', 'confianza'=>'0', 'cargo'=>'cargo_ID1 cID2 cID3 ...', 'nivel'=>'1', 'antiguedad'=>'365', 'autentificados'=>'', 'supervisores_censo'=>'', 'ciudadanos'=>'', 'ciudadanos_global'=>'', 'anonimos'=>''); }
 		exit;
 	}

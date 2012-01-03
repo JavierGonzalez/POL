@@ -5,14 +5,17 @@ include('inc-login.php');
 <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&lang=es"></script>
 
 */
+
+if (!$_GET['q']) { $_GET['q'] = 'site:'.PAIS.'.virtualpol.com '; } 
+
 $txt .= '
 
 <form action="/buscar/" id="cse-search-box">
-<div><b style="color:green;font-size:20px;">Buscador de VirtualPol:</b> 
+<div> 
 <input type="hidden" name="cx" value="000141954329957006250:h-_yuvq_rwk" />
 <input type="hidden" name="cof" value="FORID:9" />
 <input type="hidden" name="ie" value="UTF-8" />
-<input type="text" name="q" size="35" style="color:blue;" value="' . $_GET['q'] . '" />
+<input type="text" name="q" size="50" style="font-size:18px;" value="'.$_GET['q'].'" />
 <input type="submit" name="sa" value="Buscar" />
 </div>
 </form>

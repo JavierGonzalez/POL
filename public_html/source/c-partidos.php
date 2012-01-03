@@ -89,8 +89,8 @@ WHERE ID_partido = '" . $r['ID'] . "'
 ORDER BY ID ASC", $link);
 			while($r2 = mysql_fetch_array($result2)){ 
 				$li_presi = '';
-				if ((!$li_listas) AND (ECONOMIA)) {  $li_presi = ' &larr; Candidato a Presidente'; }
-				if ($r['ID_presidente'] == $r2['user_ID']) {  $li_presi .= ' &larr; Presidente de ' . $r['siglas']; }
+				if ((!ASAMBLEA) AND (!$li_listas)) {  $li_presi = ' &larr; Candidato a Presidente'; }
+				if ((!ASAMBLEA) AND ($r['ID_presidente'] == $r2['user_ID'])) {  $li_presi .= ' &larr; Presidente de ' . $r['siglas']; }
 				$li_listas .= '<li><b>' . crear_link($r2['nick']) . '</b> ('.(ECONOMIA?confianza($r2['confianza']).', ':'').duracion(time() - strtotime($r2['fecha_last'])) . ')' . $li_presi . '</li>' . "\n";
 				$num_listas++;
 			}

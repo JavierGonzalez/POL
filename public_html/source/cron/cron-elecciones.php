@@ -201,7 +201,7 @@ ORDER BY ID ASC LIMIT 1", $link);
 
 	} elseif ($pol['config']['elecciones'] == 'parl') {
 		// Parlamento
-		$elec_next = '_pres';
+		if (ASAMBLEA) { $elec_next = '_parl'; } else { $elec_next = '_pres'; }
 
 
 		// QUITA DIPUTADOS

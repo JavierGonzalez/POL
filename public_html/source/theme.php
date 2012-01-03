@@ -280,18 +280,16 @@ echo '</div>';
 	</li>
 <?php
 
-echo '<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/debates-15m/">Debates</a></li>';
+echo '
+<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/comunicados/">Comunicados</a></li>
+<li id="menu-5" class="menu-5"><a href="/foro/debates-15m/">Debates</a></li>';
 
 if ($pol['config']['info_consultas'] > 0) { 
 	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:22px;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
 } else {
 	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones</a></li>'; 
 }
-
-//echo '<li id="menu-5" class="menu-5"><a href="/doc/">Acuerdos</a></li>';
-
 echo '</ul></dd></dl>';
-
 
 if (($pol['config']['elecciones_estado'] == 'elecciones') AND (isset($pol['user_ID']))) {
 	// boton votar
@@ -300,21 +298,20 @@ if (($pol['config']['elecciones_estado'] == 'elecciones') AND (isset($pol['user_
 	if (!$havotado) { echo '<span style="margin:0 -10px 0 -10px;"><b>Elecciones</b> '.boton('Votar', '/elecciones/votar/').'</span><br /><br />'; }
 }
 
-
-echo '
-<div id="palabras">';
-
+echo '<div id="palabras">';
 foreach(explode(";", $pol['config']['palabras']) as $t) {
 	$t = explode(":", $t);
 	if ($t[0] == $pol['user_ID']) { $edit = ' <a href="/subasta/editar/" class="gris">#</a>'; } else { $edit = ''; }
 	if ($t[1]) { echo '<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>'.$edit."<br />\n"; } 
 	else { echo $t[2].$edit."<br />\n"; }
 }
-
 echo '</div>';
+
+echo '<div style="margin:12px 0 0 0;"><a href="https://www.facebook.com/pages/Asamblea-Virtual/216054178475524"><img src="'.IMG.'ico/2_32.png" alt="Facebook" /></a> <a href="https://twitter.com/#!/AsambleaVirtuaI"><img src="'.IMG.'ico/1_32.png" alt="Twitter" /></a></div>';
+} 
 ?>
 
-<?php } ?>
+
 
 <div style="margin:12px 0 -5px 0px;"><a href="/hacer/" style="font-size:20px;"><b>&iquest;Qu&eacute; hacer?</b></a></div>
 
@@ -350,7 +347,9 @@ if (isset($pol['user_ID'])) {
 &nbsp; 2008-2012 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b> <sub>Beta</sub></span>
 <b><?=PAIS?></b>
 <?php
-if (ECONOMIA) {
+if (ASAMBLEA) {
+	echo '';
+} else {
 	echo ' <span style="font-size:11px;"><abbr title="CONdicion de DEFensa">DEFCON <b>'.$pol['config']['defcon'].'</b></abbr></span> <span class="amarillo" id="pols_frase"><b>'.$pol['config']['pols_frase'].'</b>';
 	if ($pol['config']['pols_fraseedit'] == $pol['user_ID']) { echo ' <a href="/subasta/editar/" class="gris">#</a>'; }
 }

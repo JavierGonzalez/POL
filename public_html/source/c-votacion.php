@@ -40,7 +40,7 @@ while($r = mysql_fetch_array($result)){
 	
 	if ($r['privacidad'] == 'true') {
 		// Elimina la relacion entre USUARIO y VOTO una vez finaliza. Por privacidad.
-		mysql_query("UPDATE votacion_votos SET user_ID = '0' WHERE ref_ID = '".$r['ID']."'", $link); 
+		mysql_query("UPDATE votacion_votos SET user_ID = '0', time = NULL WHERE ref_ID = '".$r['ID']."'", $link); 
 	}
 
 	// actualizar info en theme
@@ -78,7 +78,7 @@ function cambiar_tipo_votacion(tipo) {
 	$("#cargo_form").hide();
 	switch (tipo) {
 		case "parlamento": $("#acceso_votar, #votos_expire, #privacidad, #acceso_ver").hide(); break;
-		case "cargo": $("#acceso_ver, #acceso_votar, #time_expire, .votar_form, #votos_expire, #tipo_voto, #privacidad").hide(); $("#cargo_form").show(); break;
+		case "cargo": $("'.(ASAMBLEA?'':'#acceso_ver, #acceso_votar, ').'#time_expire, .votar_form, #votos_expire, #tipo_voto, #privacidad").hide(); $("#cargo_form").show(); break;
 	}
 }
 
@@ -299,7 +299,7 @@ LIMIT 1", $link);
 
 					$txt .= '<tr>
 <td>'.($r2['user_ID']==0?'*':crear_link($r2['nick'])).'</td>
-<td nowrap="nowrap">'.($r['privacidad']=='false'?$respuestas[$r2['voto']]:'*').'</td>
+<td nowrap="nowrap"><b>'.($r['privacidad']=='false'?$respuestas[$r2['voto']]:'*').'</b></td>
 <td>'.($r2['autentificado']=='true'?'<span style="color:blue;"><b>SI</b></span>':'<span style="color:grey;">NO</span>').'</td>
 </tr>';
 				}
@@ -559,18 +559,17 @@ ORDER BY siglas ASC", $link);
 
 } else {
 
+
+	// Calcular votos por hora
+	$result = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE time >= '".date('Y-m-d H:i:s', time() - 60*60*2)."'", $link);
+	while($r = mysql_fetch_array($result)) { $votos_por_hora = num($r['num']/2); }
+
 	$txt_title = 'Sistema de Votaciones';
 	$txt .= '<h1>Votaciones: &nbsp; &nbsp; '.boton('Crear votaci&oacute;n', '/votacion/crear/').'</h1>
 
-<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
+<span style="float:right;" title="Promedio global de las ultimas 2 horas"><b>'.$votos_por_hora.'</b> votos/hora</span>
 
-<!--<tr>
-<th>Tipo</th>
-<th>Votos</th>
-<th>Pregunta</th>
-<th>Estado</th>
-<th></th>
-</tr>-->
+<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 
 <tr>
 <td colspan="5"><span style="color:#888;"><br /><b>En curso</b>:</span><hr /></td>

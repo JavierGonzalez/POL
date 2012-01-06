@@ -56,7 +56,7 @@ if ($_GET['a'] == 'votar') {
 		
 
 
-		if ((($pol['config']['elecciones_estado'] == 'elecciones') AND (($pol['config']['elecciones'] == 'pres1') OR ($pol['config']['elecciones'] == 'pres2'))) AND ($pol['user_ID'] == 1)) {
+		if ((($pol['config']['elecciones_estado'] == 'elecciones') AND (($pol['config']['elecciones'] == 'pres1') OR ($pol['config']['elecciones'] == 'pres2')))) {
 			// ELECCIONES PRESIDENCIALES
 
 			$fecha_24_antes = date('Y-m-d H:i:00', strtotime($pol['config']['elecciones_inicio']) - $pol['config']['elecciones_antiguedad']);
@@ -96,7 +96,7 @@ if ($_GET['a'] == 'votar') {
 (SELECT COUNT(ID) FROM ".SQL."partidos_listas WHERE ID_partido = ".SQL."partidos.ID LIMIT 1) AS num_lista
 FROM ".SQL."partidos 
 WHERE estado = 'ok' 
-AND fecha_creacion < '" . $fecha_24_antes . "'
+AND fecha_creacion < '".$fecha_24_antes."'
 ORDER BY RAND()", $link);
 				while($r = mysql_fetch_array($result)){
 					if ($r['num_lista'] >= 1) {

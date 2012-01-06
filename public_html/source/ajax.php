@@ -219,7 +219,7 @@ LIMIT 1", $link);
 					}
 					break;
 
-				case 'policia': if (nucleo_acceso('cargo', '13 12'))  { $elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>'; $tipo = 'm'; } break;
+				case 'policia': if (nucleo_acceso('cargo', '13 12 6'))  { $elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>'; $tipo = 'm'; } break;
 
 				case 'msg':
 					if ($_SESSION['pol']['user_ID']) {

@@ -1169,7 +1169,9 @@ case 'votacion':
 
 			if ($_POST['votos_expire'] > 0) { } else { $_POST['votos_expire'] = 0; }
 
-			for ($i=0;$i<30;$i++) { 
+			if ($_POST['tipo_voto'] == 'multiple') { unset($_POST['respuesta0']); }
+
+			for ($i=0;$i<100;$i++) { 
 				if (trim($_POST['respuesta'.$i]) != '') { 
 					$respuestas .= trim($_POST['respuesta'.$i]).'|';
 					$respuestas_desc .= trim($_POST['respuesta_desc'.$i]).'][';
@@ -1198,7 +1200,7 @@ case 'votacion':
 					while($r = mysql_fetch_array($result)){ $cargo_user_ID = $r['ID']; $_POST['nick'] = $r['nick']; }
 
 					if (($cargo_nombre) AND ($cargo_user_ID)) { // fuerza configuracion
-						$_POST['tipo_votacion'] = 'estandar';
+						$_POST['tipo_voto'] = 'estandar';
 						$_POST['time_expire'] = 86400;
 						if ($_POST['cargo'] == 7) { $_POST['time_expire'] = (86400*2); }
 						if ((!ASAMBLEA) OR ($_POST['cargo'] == 6)) {
@@ -1233,35 +1235,36 @@ case 'votacion':
 			if (($estado == 'ok') AND (in_array($tipo, $votaciones_tipo)) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar))) { 
 				// Votacion activa, tipo correcto, acceso de voto OK
 				
-				if ($tipo_voto == '3puntos') {
-					$_POST['voto'] = $_POST['voto_1'].' '.$_POST['voto_2'].' '.$_POST['voto_3'];
-				} else if ($tipo_voto == '5puntos') {
-					$_POST['voto'] = $_POST['voto_1'].' '.$_POST['voto_2'].' '.$_POST['voto_3'].' '.$_POST['voto_4'].' '.$_POST['voto_5'];
-				} else if ($tipo_voto == '8puntos') {
-					$_POST['voto'] = $_POST['voto_1'].' '.$_POST['voto_2'].' '.$_POST['voto_3'].' '.$_POST['voto_4'].' '.$_POST['voto_5'].' '.$_POST['voto_6'].' '.$_POST['voto_7'].' '.$_POST['voto_8'];
-				}
 
+				switch ($tipo_voto) {
+					case '3puntos': $_POST['voto'] = $_POST['voto_1'].' '.$_POST['voto_2'].' '.$_POST['voto_3']; break;
+					case '5puntos': $_POST['voto'] = $_POST['voto_1'].' '.$_POST['voto_2'].' '.$_POST['voto_3'].' '.$_POST['voto_4'].' '.$_POST['voto_5']; break;
+					case '8puntos': $_POST['voto'] = $_POST['voto_1'].' '.$_POST['voto_2'].' '.$_POST['voto_3'].' '.$_POST['voto_4'].' '.$_POST['voto_5'].' '.$_POST['voto_6'].' '.$_POST['voto_7'].' '.$_POST['voto_8']; break;
+					case 'multiple': for ($i=0;$i<100;$i++) { if ($_POST['voto_'.$i] != '') { $_POST['voto'] .= $_POST['voto_'.$i].' '; } } break;
+				}
+	
+				$_POST['mensaje'] = ucfirst(trim(strip_tags($_POST['mensaje'])));
+				$_POST['validez'] = ($_POST['validez']=='true'?'true':'false');
 
 				$ha_votado = false;
 				$result = mysql_query("SELECT ID FROM votacion_votos WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $ha_votado = true; }
 
-				$_POST['mensaje'] = ucfirst(trim(strip_tags($_POST['mensaje'])));
-
 				if ($ha_votado) { // MODIFICAR VOTO
-					mysql_query("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".($_POST['validez']=='true'?'true':'false')."', mensaje = '".$_POST['mensaje']."', time = '".$date."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+					mysql_query("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".$_POST['validez']."', mensaje = '".$_POST['mensaje']."', time = '".$date."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 				} else { // INSERTAR VOTO
-					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".($_POST['validez']=='true'?'true':'false')."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."')", $link);
+					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".$_POST['validez']."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."')", $link);
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 					
 					if ($acceso_ver == 'anonimos') {
 						evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
 					}
 				}
-				unset($_POST['voto']);
+				unset($_POST['voto']); unset($_POST['mensaje']); unset($_POST['validez']);
 			}
 
-			header('Location: http://'.strtolower($pais).'.virtualpol.com/votacion/'.$_POST['ref_ID'].'/'); mysql_close($link); exit;
+			header('Location: http://'.strtolower($pais).'.virtualpol.com/votacion/'.$_POST['ref_ID'].'/'); 
+			mysql_close($link); exit;
 
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['ID'])) { 
 		$result = mysql_query("SELECT ID FROM votacion WHERE estado = 'ok' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
@@ -1564,7 +1567,7 @@ case 'enviar-mensaje':
 				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1' AND estado = 'ok' AND ID_estudio = '".$_POST['cargo_ID']."' LIMIT 80", $link);
 			}
 			while($r = mysql_fetch_array($result)){ 
-				if ($r['user_ID'] != $pol['user_ID']) {
+				if (($r['user_ID'] != $pol['user_ID']) AND ($r['user_ID'] != 0)) {
 					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: ".$cargo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
 					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.URL.'/msg/"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
 				}

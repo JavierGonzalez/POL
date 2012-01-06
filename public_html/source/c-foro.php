@@ -8,7 +8,7 @@ function print_lateral($nick, $cargo_ID=false, $time, $siglas='', $user_ID='', $
 	if ($cargo_ID == 99) { $cargo = 'Extranjero'; }
 	return '<table border="0" width="100%"><tr>
 <td width="40" valign="top">'.($avatar=='true'?'<span>'.avatar($user_ID, 40).'</span>':'').'</td>
-<td align="right" valign="top">
+<td align="right" valign="top" nowrap="nowrap">
 <b>'.($cargo_ID?'<img src="'.IMG.'cargos/'.$cargo_ID.'.gif" /> ':'').crear_link($nick).'</b><br />
 <span class="min">'.timer($time).' '.$siglas.'</span> 
 <span id="'.$tipo.$item_ID.'">'.confianza($votos).'</span>'.($pol['pais']==PAIS&&$item_ID!=0&&$user_ID!=$pol['user_ID']?'<br />

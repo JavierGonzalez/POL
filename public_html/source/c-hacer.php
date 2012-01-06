@@ -54,9 +54,9 @@ Las Elecciones son un proceso democr&aacute;tico, peri&oacute;dico y autom&aacut
 
 $hay_votaciones = 0;
 if ($pol['config']['info_consultas'] > 0) {
-	$result = mysql_query("SELECT ID, pregunta, acceso_votar, acceso_cfg_votar, (SELECT user_ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
+	$result = mysql_query("SELECT ID, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, (SELECT user_ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
 	while($r = mysql_fetch_array($result)) { 
-		if ((!$r['ha_votado']) AND (nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar']))) { 
+		if ((!$r['ha_votado']) AND (nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) { 
 			$hay_votaciones++;
 			$votaciones_array[] = '<li><a href="/votacion/'.$r['ID'].'/"><b>'.$r['pregunta'].'</b></a></li>';
 		}

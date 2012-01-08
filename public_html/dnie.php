@@ -4,13 +4,13 @@ include('inc-login.php');
 
 if (!$_SERVER['HTTPS']) { header('Location: '.SSL_URL.'dnie.php'); } // Fuerza el uso de una conexion segura entre navegador y servidor. (https SSL)
 
-// Comprueba si el usuario está autentificado o no.
+// Comprueba si el usuario est&aacute; autentificado o no.
 $dnie_autentificado = false;
 $result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND dnie = 'true'", $link);
 while ($r = mysql_fetch_array($result)) { $dnie_autentificado = true; }
 
 if ((isset($pol['user_ID'])) AND ($dnie_autentificado == false)) {
-	// Es un usuario y no está autentificado con DNIe 
+	// Es un usuario y no est&aacute; autentificado con DNIe 
 	
 	// Plugin de Tractis para PHP. Software Libre. Fuente: https://github.com/tractis/tractis_identity_verifications_for_php
 	require('img/lib/tractis_identity/tractis_identity.php');
@@ -21,7 +21,7 @@ if ((isset($pol['user_ID'])) AND ($dnie_autentificado == false)) {
 
 /* LA SIGUIENTE LINEA ES EL QUID DE LA CUESTION
 
-Consiste en una miniaturización irreversible de la información extraida del DNIe (proveeida por la pasarela de Tractis), junto con otra información estática para evitar ataques por diccionario y hacer inéditos los hash. Se hace mediante el algoritmo de hash sha256.
+Consiste en una miniaturizaci&oacute;n irreversible de la informaci&oacute;n extraida del DNIe (proveeida por la pasarela de Tractis), junto con otra informaci&oacute;n est&aacute;tica para evitar ataques por diccionario y hacer in&eacute;ditos los hash. Se hace mediante el algoritmo de hash sha256.
 
 EJEMPLO: 
 
@@ -31,11 +31,11 @@ Se convierte en:
 
 da39a3ee5e6b4b0d3255bfef95606b4b0d3255bfef95601890afdd80709
 
-Esta linea final no supone ninguna información en claro.
+Esta linea final no supone ninguna informaci&oacute;n en claro.
 */
 		$dnie_check = hash('sha256', '.VirtualPol.'.CLAVE_DNIE.'.'.strtoupper($data['tractis:attribute:dni']).'.'.str_replace('+', ' ', strtoupper($data['tractis:attribute:name'])).'.'); // Generacion del hash anteriormente explicado.
 		
-		// Elimina todos los datos obtenidos del DNIe y desaparecen definitivamente a partir de aquí.
+		// Elimina todos los datos obtenidos del DNIe y desaparecen definitivamente a partir de aqu&iacute;.
 		unset($data);
 
 		// Busca checks coincidentes (para garantizar que cada DNIe se inscribe una vez).
@@ -64,7 +64,7 @@ Esta linea final no supone ninguna información en claro.
 
 	} else { 
 		// Autentificar.
-		$txt .= 'Usuario sin autentificar.<br />'.$tractis_identity->show_form(); // Muestra el boton de autentificación de Tractis.
+		$txt .= 'Usuario sin autentificar.<br />'.$tractis_identity->show_form(); // Muestra el boton de autentificaci&oacute;n de Tractis.
 	}
 } elseif (isset($pol['user_ID'])) {
 	$txt .= 'Est&aacute;s autentificado correctamente.';
@@ -73,7 +73,7 @@ Esta linea final no supone ninguna información en claro.
 }
 
 
-// Presentacion, diseño y poco más. No relevante.
+// Presentacion, dise&ntilde;o y poco m&aacute;s. No relevante.
 $txt_title = 'Autentificaci&oacute;n DNIe'; // Define el titulo de la pagina finalmente formada.
 $txt = '
 <style type="text/css">.content { text-align:center; width:500px; margin: 0 auto; padding: 2px 12px 30px 12px; }</style>
@@ -86,11 +86,11 @@ $txt = '
 
 <p>&nbsp;</p>
 
-<p><em>Seguridad:</em> no se almacenar&aacute; ningun dato proporcionado por el DNIe u otro certificado en ninguna parte del sistema. Tan solo se almacena una miniaturizaci&oacute;n irreversible de esta informaci&oacute;n. De esta forma incluso ante el peor ataque posible (acceso a contrase&ntilde;as, claves y base de datos) no se podr&iacute;a obtener informaci&oacute;n alguna. La pasarela de autentificaci&oacute;n se conf&iacute;a totalmente a una empresa importante del sector llamada <a href="http://www.tractis.com/">Tractis</a>.</p>
+<p><em>Seguridad:</em> no se almacenar&aacute; ning&uacute;n dato proporcionado por el DNIe u otro certificado en ninguna parte del sistema. Tan s&oacute;lo se almacena una miniaturizaci&oacute;n irreversible de esta informaci&oacute;n. De esta forma incluso ante el peor ataque posible (acceso a contrase&ntilde;as, claves y base de datos) no se podr&iacute;a obtener informaci&oacute;n alguna. La pasarela de autentificaci&oacute;n se conf&iacute;a totalmente a una empresa importante del sector llamada <a href="http://www.tractis.com/">Tractis</a>.</p>
 
 <p><a href="http://vp.virtualpol.com/doc/autentificacion/">M&aacute;s informaci&oacute;n aqu&iacute;.</a></p>
 
-<p>Puedes ver el codigo fuente de <a href="http://code.google.com/p/virtualpol/source/browse/trunk/public_html/dnie.php">esta aplicaci&oacute;n</a>.</p>';
+<p>Puedes ver el c&oacute;digo fuente de <a href="http://code.google.com/p/virtualpol/source/browse/trunk/public_html/dnie.php">esta aplicaci&oacute;n</a>.</p>';
 
 // Carga el dise&ntilde;o completo de VirtualPol. Mucho HTML, CSS y poco m&aacute;s.
 include('theme.php');

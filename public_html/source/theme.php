@@ -17,6 +17,18 @@ if (isset($_GET['bg'])) {
 } else { $body_bg = COLOR_BG; }
 
 
+
+// MOTOR CONTADOR DE VOTACIONES POR VOTAR
+if (isset($pol['user_ID'])) {
+	$pol['config']['info_consultas'] = 0;
+	$result = mysql_query("SELECT v.ID, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
+	FROM votacion `v`
+	LEFT OUTER JOIN votacion_votos `vv` ON v.ID = vv.ref_ID AND vv.user_ID = '".$pol['user_ID']."'
+	WHERE v.estado = 'ok' AND v.pais = '".PAIS."' AND vv.ID IS null", $link);
+	while($r = mysql_fetch_array($result)) {
+		if ((nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) { $pol['config']['info_consultas']++; }
+	}
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -107,7 +119,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 <a href="/" title="<?=$pol['config']['pais_des'].' de '.PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" width="60" height="40" border="0" /></a>
 </td>
 
-<td><span style="color:#888;font-size:18px;"><?=$pol['config']['pais_des'].' de '.PAIS?></span></td>
+<td nowrap="nowrap"><span style="color:#888;font-size:18px;"><?=$pol['config']['pais_des'].' de '.PAIS?></span></td>
 
 <td align="right" valign="middle" nowrap="nowrap"><?=$txt_perfil?></td>
 
@@ -216,7 +228,10 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 
 <?php 
 
-if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5" class="menu-5" style="margin:10px 0 0 1px;"><a href="/votacion/">Votaciones! <span class="md" style="font-size:19px;">'.$pol['config']['info_consultas'].'</span></a></li>'; }
+if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5" class="menu-5" style="margin:10px 0 0 1px;"><a href="/votacion/">&iexcl;Votaciones! <span class="md" style="font-size:22px;color:red;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
+} else {
+	echo '<li id="menu-5" class="menu-5" style="margin:10px 0 0 1px;"><a href="/votacion/">Votaciones</a></li>'; 
+}
 
 
 echo '</ul></dd></dl>
@@ -282,10 +297,10 @@ echo '</div>';
 
 echo '
 <li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/comunicados/">Comunicados</a></li>
-<li id="menu-5" class="menu-5"><a href="/foro/debates-15m/">Debates</a></li>';
+<li id="menu-5" class="menu-5"><a href="/foro/">Foro</a></li>';
 
 if ($pol['config']['info_consultas'] > 0) { 
-	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones! <span class="md" style="font-size:22px;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
+	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">&iexcl;Votaciones! <span class="md" style="font-size:22px;color:red;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
 } else {
 	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones</a></li>'; 
 }
@@ -307,7 +322,31 @@ foreach(explode(";", $pol['config']['palabras']) as $t) {
 }
 echo '</div>';
 
-echo '<div style="margin:12px 0 0 0;"><a href="https://www.facebook.com/pages/Asamblea-Virtual/216054178475524"><img src="'.IMG.'ico/2_32.png" alt="Facebook" /></a> <a href="https://twitter.com/#!/AsambleaVirtuaI"><img src="'.IMG.'ico/1_32.png" alt="Twitter" /></a></div>';
+
+echo '<div style="margin:12px 0 0 0;"><a href="https://www.facebook.com/pages/Asamblea-Virtual/216054178475524"><img src="'.IMG.'ico/2_32.png" alt="Facebook" /></a> ';
+if (false) {
+	echo '<a href="https://twitter.com/#!/AsambleaVirtuaI"><img src="'.IMG.'ico/1_32.png" alt="Twitter" /></a>';
+} else {
+	echo '
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://15m.virtualpol.com/" data-text="Participa en la Asamblea Virtual!" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="AsambleaVirtual">Twittear</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+';
+
+/*
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, \'script\', \'facebook-jssdk\'));</script>
+<div class="fb-like" data-href="http://15m.virtualpol.com/" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="verdana"></div>
+*/
+}
+echo '</div>';
+
+
 } 
 ?>
 
@@ -338,18 +377,14 @@ echo '<div style="margin:12px 0 0 0;"><a href="https://www.facebook.com/pages/As
 <span style="float:right;font-size:14px;">
 <?php
 unset($txt);
-if (isset($pol['user_ID'])) {
-	echo ($pol['user_ID']==1?round((microtime(true)-TIME_START)*1000).'ms ':'');
-}
-?> | 
+echo ($pol['user_ID']==1?round((microtime(true)-TIME_START)*1000).'ms | ':'');
+?>
 <a href="http://www.virtualpol.com/legal" target="_blank"><abbr title="Condiciones de Uso de VirtualPol">TOS</abbr></a> | <a href="http://code.google.com/p/virtualpol/source/list" title="VirtualPol es software libre">C&oacute;digo</a> | 
 <a href="http://www.virtualpol.com/manual" target="_blank">Ayuda</a> &nbsp; 
 &nbsp; 2008-2012 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b> <sub>Beta</sub></span>
 <b><?=PAIS?></b>
 <?php
-if (ASAMBLEA) {
-	echo '';
-} else {
+if (!ASAMBLEA) {
 	echo ' <span style="font-size:11px;"><abbr title="CONdicion de DEFensa">DEFCON <b>'.$pol['config']['defcon'].'</b></abbr></span> <span class="amarillo" id="pols_frase"><b>'.$pol['config']['pols_frase'].'</b>';
 	if ($pol['config']['pols_fraseedit'] == $pol['user_ID']) { echo ' <a href="/subasta/editar/" class="gris">#</a>'; }
 }

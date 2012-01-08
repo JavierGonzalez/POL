@@ -5,7 +5,7 @@ $votaciones_tipo = array('sondeo', 'referendum', 'parlamento', 'cargo');
 
 
 // ¿FINALIZAR VOTACIONES?
-$result = mysql_query("SELECT ID, tipo, num, pregunta, ejecutar, privacidad FROM votacion 
+$result = mysql_query("SELECT ID, tipo, num, pregunta, ejecutar, privacidad, acceso_ver FROM votacion 
 WHERE estado = 'ok' AND pais = '".PAIS."' AND (time_expire <= '".$date."' OR ((votos_expire != 0) AND (num >= votos_expire)))", $link);
 while($r = mysql_fetch_array($result)){
 	
@@ -151,8 +151,8 @@ $txt .= '
 <b>Tipo de voto</b>: 
 <select name="tipo_voto">
 
-<option value="estandar" selected="selected">Una elecci&oacute;n (estandar)</option>
-<option value="multiple">Multiple</option>
+<option value="estandar" selected="selected">Una elecci&oacute;n (est&aacute;ndar)</option>
+<option value="multiple">M&uacute;ltiple</option>
 
 <optgroup label="Preferencial">
 <option value="3puntos">3 votos (6 puntos)</option>
@@ -166,7 +166,7 @@ $txt .= '
 <span id="privacidad">
 <b>Voto</b>: 
 <select name="privacidad">
-<option value="true" selected="selected">Secreto (estandar)</option>
+<option value="true" selected="selected">Secreto (est&aacute;ndar)</option>
 <option value="false">P&uacute;blico</option>
 </select></span>
 </p>
@@ -275,7 +275,7 @@ LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)) { $comentarios_num = $r2['num']; }
 
 			$txt .= '<h2 style="margin-top:18px;">Comentarios an&oacute;nimos ('.($r['estado']=='end'?$comentarios_num:'*').')</h2>';
-			if ($pol['estado'] == 'ciudadano') {
+			if (nucleo_acceso('ciudadanos_global')) {
 				if ($r['estado'] == 'end') { 
 					$result2 = mysql_query("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != '' ORDER BY RAND()", $link);
 					while($r2 = mysql_fetch_array($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
@@ -353,7 +353,7 @@ Inicio: <em>' . $r['time'] . '</em><br />
 Fin: <em>' . $r['time_expire'] . '</em><br />
 '.($r['votos_expire']!=0?'Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.<br />':'').'
 '.($r['tipo_voto']!='estandar'?'<b>Votaci&oacute;n preferencial</b> ('.$r['tipo_voto'].').<br />':'').'
-<a href="/votacion/'.$r['ID'].'/info/#ver_info">Más información</a>.
+<a href="/votacion/'.$r['ID'].'/info/#ver_info">M&aacute;s informaci&oacute;n</a>.
 </span>';
 
 			if ($r['estado'] == 'end') {  // VOTACION FINALIZADA: Mostrar escrutinio. 
@@ -499,14 +499,14 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 								$votos_array[] = '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
 						} }
 					}
-					if (count($votos_array) > 9) { shuffle($votos_array); }
+					if (count($votos_array) > 7) { shuffle($votos_array); }
 					$txt .= '<select name="voto" style="font-size:22px;">'.implode('', $votos_array).'</select>';
 
 				} elseif (($r['tipo_voto'] == '3puntos') OR ($r['tipo_voto'] == '5puntos') OR ($r['tipo_voto'] == '8puntos')) {
 
 					if ($r['ha_votado']) { $txt .= 'Tu voto preferencial ha sido recogido <b>correctamente</b>.<br /><br />'; }
 
-					$txt .= 'Esta votaci&oacute;n es preferencial. <span style="color:red;">Debes repartir <b>los puntos m&aacute;s altos a tus opciones preferidas</b>.</span>
+					$txt .= '<span style="color:red;">Debes repartir <b>los puntos m&aacute;s altos a tus opciones preferidas</b>.</span>
 <table border="0">
 <tr>
 <th colspan="'.substr($r['tipo_voto'], 0, 1).'" align="center">Puntos</th>
@@ -540,7 +540,7 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 <td'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'"':'').'>'.($respuestas[$i]==='En Blanco'?'<em title="Equivale a No sabe/No contesta. No computable.">En Blanco</em>':$respuestas[$i]).'</td>
 </tr>';
 					} }
-					if (count($votos_array) > 9) { shuffle($votos_array); }
+					if (count($votos_array) > 7) { shuffle($votos_array); }
 					$txt .= implode('', $votos_array).'
 <tr>
 <th align="center">1</th>
@@ -573,7 +573,7 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 <td'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'"':'').'>'.$respuestas[$i].'</td>
 </tr>';
 					} }
-					if (count($votos_array) > 9) { shuffle($votos_array); }
+					if (count($votos_array) > 7) { shuffle($votos_array); }
 					$txt .= implode('', $votos_array).'<tr>
 <th>SI</th>
 <th>NO</th>
@@ -605,7 +605,7 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 </form>';
 			}
 
-			// Añade tabla de escrutinio publico si es votacion tipo parlamento.
+			// A&ntilde;ade tabla de escrutinio publico si es votacion tipo parlamento.
 			if ($r['tipo'] == 'parlamento') {
 				$txt .= '<table border="0" cellpadding="0" cellspacing="3" class="pol_table"><tr><th>Diputado</th><th></th><th colspan="2">Voto</th><th>Mensaje</th></tr>';
 				$result2 = mysql_query("SELECT user_ID,
@@ -669,9 +669,9 @@ LIMIT 500", $link);
 			$txt .= '<tr>
 <td'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
-<td><a href="/votacion/'.$r['ID'].'/"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.$r['pregunta'].'</a>'.($r['acceso_ver']!='anonimos'?' <sup style="color:red;">Privado!</sup>':'').'</td>
+<td>'.$votar.'<a href="/votacion/'.$r['ID'].'/"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.$r['pregunta'].'</a>'.($r['acceso_ver']!='anonimos'?' <sup style="color:red;">Privado!</sup>':'').'</td>
 <td nowrap="nowrap"><span style="color:blue;" title="Tiempo que falta para el resultado">Faltan <b><span class="timer" value="'.$time_expire.'"></span></b></span></td>
-<td nowrap="nowrap">'.$votar.$boton.'</td>
+<td nowrap="nowrap">'.$boton.'</td>
 <td></td>
 </tr>';
 		}

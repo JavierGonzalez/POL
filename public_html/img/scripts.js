@@ -112,7 +112,7 @@ function hace(cuando, ts, num, pre) {
 	tiempo = Math.abs(tiempo);
 	
 	var periods_sec = new Array(2419200, 86400, 3600, 60, 1);
-	var periods_txt = new Array("meses", "dias", "horas", "minutos", "segundos");
+	var periods_txt = new Array("meses", "días", "horas", "minutos", "segundos");
 
 	if (pre) { var duracion = pre + " "; } else { var duracion = ""; }
 

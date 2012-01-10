@@ -14,6 +14,11 @@ case 'panel':
 	
 	if ($pol['user_ID']) {
 
+		
+
+		$result = mysql_query("SELECT ser_SC FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) { $ser_SC = $r['ser_SC']; }
+
 		$txt .= '<h1>Configuraci&oacute;n de usuario</h1><ul>';
 
 		//changepass
@@ -40,6 +45,17 @@ case 'panel':
 <td align="center" valign="top"><input type="submit" value="Cambiar email" style="font-weight:bold;font-size:15px;color:green;" />
 </td></tr></table></form></li>
 
+<br />
+
+<li class="azul"><b>Supervisor del Censo:</b><br />
+<form action="'.REGISTRAR.'login.php?a=ser_SC" method="POST">
+<table border="0" cellpadding="2" cellspacing="0" width="100%">
+<tr>
+<td align="center" valign="top">
+<input type="checkbox" name="ser_SC" value="true"'.($ser_SC=='true'?' checked="checked"':'').' /> Quiero ser candidato a Supervisor del Censo.
+</td>
+<td><input type="submit" value="Guardar" /></td>
+</tr></table></form></li>
 <br />
 
 <li class="azul"><b>Borrar usuario y datos personales:</b><br />
@@ -232,6 +248,18 @@ case 'traza':
 	}
 	header("Location: ".$_GET['url']);
 	break;
+
+
+
+case 'ser_SC':
+	mysql_query("UPDATE users SET ser_SC = '".($_POST['ser_SC']=='true'?'true':'false')."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+	header("Location: ".REGISTRAR."login.php?a=panel");
+	break;
+
+
+
+
+
 
 
 case 'login':

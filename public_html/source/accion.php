@@ -11,9 +11,8 @@ $pol['cargos'] = cargos();
 
 // prevent SSX
 if ($_GET['ID']) { $_GET['ID'] = mysql_real_escape_string($_GET['ID']); }
-
 foreach ($_POST AS $nom => $val) { $_POST[$nom] = str_replace("'", "&#39;", $val); }
-
+foreach ($_GET AS $nom => $val) { $_GET[$nom] = str_replace("'", "&#39;", $val); }
 
 
 $acciones_multiplataforma = array('voto', 'mercado', 'foro');
@@ -1243,7 +1242,7 @@ case 'votacion':
 					case 'multiple': for ($i=0;$i<100;$i++) { if ($_POST['voto_'.$i] != '') { $_POST['voto'] .= $_POST['voto_'.$i].' '; } } break;
 				}
 	
-				$_POST['mensaje'] = ucfirst(trim(strip_tags($_POST['mensaje'])));
+				$_POST['mensaje'] = str_replace('"', "&quot;", ucfirst(trim(strip_tags($_POST['mensaje']))));
 				$_POST['validez'] = ($_POST['validez']=='true'?'true':'false');
 
 				$ha_votado = false;

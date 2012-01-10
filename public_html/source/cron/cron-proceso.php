@@ -401,10 +401,10 @@ mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time 
 if (date('N') == 7) { // SOLO DOMINGO
 
 	// Actualizar nuevos SC
-	$SC_num = 8; // Numero de SC + 1
+	$SC_num = 8; // 8 SC + Custodiador = 9 SC
 	$margen_365d = date('Y-m-d 20:00:00', time() - 86400*365); // Antiguedad minima: 365 dias.
 	mysql_query("UPDATE users SET SC = 'false' WHERE ID != 1", $link);
-	$result = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".$margen_365d."' AND ID != 1 ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT ".$SC_num, $link);
+	$result = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".$margen_365d."' AND ser_SC = 'true' AND ID != 1 ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT ".$SC_num, $link);
 	while($r = mysql_fetch_array($result)){ 
 		mysql_query("UPDATE users SET SC = 'true' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 	}

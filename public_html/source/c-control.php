@@ -398,7 +398,7 @@ ORDER BY factor DESC LIMIT 30", $link);
 	$txt_title = 'Control: SC';
 	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>'.$supervisores.'</b></p>'.$nomenclatura;
 
 
 	$txt .= '<h1>1. Coincidencias de IP<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
@@ -511,7 +511,7 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 	$txt .= '</table>';
 
 	$txt .= '<table border="0" cellspacing="4">';
-	$result = mysql_query("SELECT ID, IP, nick, estado, pais, IP_proxy
+	$result = mysql_query("SELECT ID, IP, nick, estado, pais, IP_proxy, host
 FROM users 
 WHERE IP_proxy != ''
 ORDER BY fecha_registro DESC", $link);
@@ -532,7 +532,8 @@ ORDER BY fecha_registro DESC", $link);
 			if (($IP_anterior != $IP) AND ($IP != '127.0.0.1') AND ($IP != '0.0.0.80') AND ($IP != '0.0.0.0') AND ($IP != '-1')) {
 				$IP_anterior = $IP;
 				
-				$host = IP2host($IP);
+				//$host = IP2host($IP);
+				$host = $r['host'];
 				if ($host == $IP) { $host = '*'; }
 				
 				$proxys_num .= '<b>'.$num++.'.</b><br />';
@@ -561,7 +562,7 @@ ORDER BY fecha_registro DESC", $link);
 		}
 
 	}
-	$txt .= '</table>';
+	$txt .= '</table><span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span>';
 
 
 

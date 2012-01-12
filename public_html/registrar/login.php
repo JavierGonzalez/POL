@@ -19,7 +19,7 @@ case 'panel':
 		$result = mysql_query("SELECT ser_SC FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) { $ser_SC = $r['ser_SC']; }
 
-		$txt .= '<h1>Configuraci&oacute;n de usuario</h1><ul>';
+		$txt .= '<h1>Opciones de usuario</h1><ul>';
 
 		//changepass
 		$txt .= '<li class="azul"><b>Cambio de contrase&ntilde;a:</b><br />

@@ -1178,6 +1178,8 @@ case 'votacion':
 			}
 
 
+			
+			$_POST['debate_url'] = strip_tags($_POST['debate_url']);
 			$_POST['pregunta'] = strip_tags($_POST['pregunta']);
 			$_POST['descripcion'] = gen_text($_POST['descripcion'], 'plain');
 
@@ -1216,7 +1218,7 @@ case 'votacion':
 					break;
 			}
 
-			mysql_query("INSERT INTO votacion (pais, pregunta, descripcion, respuestas, respuestas_desc, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, ejecutar, votos_expire, tipo_voto, privacidad) VALUES ('".PAIS."', '".$_POST['pregunta']."', '".$_POST['descripcion']."', '".$respuestas."', '".$respuestas_desc."', '".$date."', '".date('Y-m-d H:i:s', time() + $_POST['time_expire'])."', '".$pol['user_ID']."', 'ok', '".$_POST['tipo']."', '".$_POST['acceso_votar']."', '".$_POST['acceso_cfg_votar']."', '".$_POST['acceso_ver']."', '".$_POST['acceso_cfg_ver']."', '".$ejecutar."', '".$_POST['votos_expire']."', '".$_POST['tipo_voto']."', '".$_POST['privacidad']."')", $link);
+			mysql_query("INSERT INTO votacion (pais, pregunta, descripcion, respuestas, respuestas_desc, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, ejecutar, votos_expire, tipo_voto, privacidad, debate_url) VALUES ('".PAIS."', '".$_POST['pregunta']."', '".$_POST['descripcion']."', '".$respuestas."', '".$respuestas_desc."', '".$date."', '".date('Y-m-d H:i:s', time() + $_POST['time_expire'])."', '".$pol['user_ID']."', 'ok', '".$_POST['tipo']."', '".$_POST['acceso_votar']."', '".$_POST['acceso_cfg_votar']."', '".$_POST['acceso_ver']."', '".$_POST['acceso_cfg_ver']."', '".$ejecutar."', '".$_POST['votos_expire']."', '".$_POST['tipo_voto']."', '".$_POST['privacidad']."', '".$_POST['debate_url']."')", $link);
 
 			$result = mysql_query("SELECT ID FROM votacion WHERE user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' ORDER BY ID DESC LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $ref_ID = $r['ID']; }

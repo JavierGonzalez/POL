@@ -109,7 +109,9 @@ ORDER BY cargo DESC, estado ASC, nota DESC", $link);
 			
 			
 			
-			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="color:green;font-size:16px;font-weight:bold;">Editar perfil</button><div class="azul" id="editarperfil" style="display:none;">';
+			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="color:green;font-size:16px;font-weight:bold;">Editar perfil</button> '.boton('Opciones de usuario', REGISTRAR.'login.php?a=panel').'
+
+<div class="azul" id="editarperfil" style="display:none;">';
 
 if (ECONOMIA) {
 			
@@ -173,9 +175,9 @@ $txt .= '
 } // fin ECONOMIA
 
 // <p>Clave API: <input class="api_box" type="text" size="12" value="' . $r['api_pass'] . '" readonly="readonly" /> ' . boton('Generar clave', '/accion.php?a=api&b=gen_pass', '&iquest;Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua no funcionar&aacute;.') . ' (Equivale a tu contrase&ntilde;a, mantenla en secreto. M&aacute;s info: <a href="http://www.virtualpol.com/api.php">API</a>)</p>
-$txt .= '<p>'.boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel').' 
-'.boton('Autentificar con DNIe', SSL_URL.'dnie.php').' 
-'.($pol['pais']!='ninguno'?boton('Rechazar Ciudadania', REGISTRAR).' ':'').'</p>
+
+
+$txt .= '<p>'.boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel').' '.boton('Autentificar con DNIe', SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton('Rechazar Ciudadania', REGISTRAR).' ':'').'</p>
 
 <p>
 <form action="/accion.php?a=afiliarse" method="post">

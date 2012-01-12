@@ -208,6 +208,9 @@ $txt .= '
 <p><b>Descripci&oacute;n</b>:<br />
 <textarea name="descripcion" style="color: green; font-weight: bold; width: 570px; height: 250px;"></textarea></p>
 
+<p><b>URL de debate</b>: (opcional, debe empezar por http://...)<br />
+<input type="text" name="debate_url" size="57" maxlength="70" /></p>
+
 <div class="votar_form">
 <p><b>Opciones de voto</b>:
 <ul style="margin-bottom:-16px;">
@@ -258,12 +261,34 @@ LIMIT 1", $link);
 
 		$txt .= '<h1><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).' | '.num($votos_total).' votos | '.$tiempo_queda.'</h1>
 
-<div class="amarillo" style="margin:20px 0 15px 0;padding:20px 10px 0 10px;">
+<div class="amarillo" style="margin:20px 0 5px 0;padding:20px 10px 0 10px;">
 <h1>'.$r['pregunta'].'</h1>
 <p style="text-align:left;">'.$r['descripcion'].'</p>
-</div>';
+</div>
 
 
+<table border="0" style="margin-bottom:15px;"><tr>
+
+<td width="20"></td>
+
+<td><b style="font-size:20px;color:#777;">¡Dif&uacute;nde esta votaci&oacute;n!</b> &nbsp;</td>
+
+<td width="140" height="35">
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.strtolower(PAIS).'.virtualpol.com/votacion/'.$r['ID'].'/" data-text="'.($r['estado']=='ok'?'VOTACI&Oacute;N':'RESULTADO').': '.substr($r['pregunta'], 0, 83).'" data-via="AsambleaVirtuaI" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="AsambleaVirtual">Twittear</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</td>
+
+<td><div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, \'script\', \'facebook-jssdk\'));</script>
+<div style="display:inline;" class="fb-like" data-href="http://'.strtolower(PAIS).'.virtualpol.com/votacion/'.$r['ID'].'/" data-send="true" data-layout="button_count" data-width="300" data-show-faces="false" data-action="recommend" data-font="verdana"></div></td>
+
+</tr></table>';
 
 
 		if ($_GET['b'] == 'info') {
@@ -472,7 +497,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 				// Imprime datos de legitimidad y validez
 				$txt .= '</td>
 <td valign="top" style="color:#888;"><br />
-Legitimidad: <b>'.num($votos_total).'</b>&nbsp;votos, <b>'.$escrutinio['votos_autentificados'].'</b>&nbsp;autentificados.<br />
+Legitimidad: <span style="color:#555;"><b>'.num($votos_total).'</b>&nbsp;votos</span>, <b>'.$escrutinio['votos_autentificados'].'</b>&nbsp;autentificados.<br />
 Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>NULO</b>&nbsp;'.$porcentaje_validez.'%</span>').'<br />
 <img width="230" height="130" title="Votos de validez: '.$escrutinio['validez']['true'].' OK, '.$escrutinio['validez']['false'].' NULO" src="http://chart.apis.google.com/chart?cht=p&chp=4.71&chd=t:'.$escrutinio['validez']['true'].','.$escrutinio['validez']['false'].'&chs=230x130&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>
 </tr></table>';
@@ -591,11 +616,8 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 <input type="submit" value="'.($r['ha_votado']?'Modificar voto':'Votar').'" style="font-size:22px;"'.($tiene_acceso_votar?'':' disabled="disabled"').' /> '.($tiene_acceso_votar?($r['ha_votado']?'<span style="color:#2E64FE;">Puedes modificar tu voto durante <span class="timer" value="'.$time_expire.'"></span>.</span>':'<span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span>'):'<span style="color:red;white-space:nowrap;">'.(!$pol['user_ID']?'<b>Para votar debes <a href="'.REGISTRAR.'?p='.PAIS.'">crear tu ciudadano</a>.</b>':'No tienes acceso para votar.').'</span>').'</p>
 
 <p>
-<!--<fieldset>
-    <legend>Validez</legend>-->
-	<input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votaci&oacute;n correcta.<br />
-	<input type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> Votaci&oacute;n nula (inv&aacute;lida, inapropiada o tendenciosa).<br />
-<!--</fieldset>-->
+<input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votaci&oacute;n correcta.<br />
+<input type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> Votaci&oacute;n nula (inv&aacute;lida, inapropiada o tendenciosa).<br />
 </p>
 
 
@@ -634,7 +656,7 @@ ORDER BY siglas ASC", $link);
 	while($r = mysql_fetch_array($result)) { $votos_por_hora = num($r['num']/2); }
 
 	$txt_title = 'Sistema de Votaciones';
-	$txt .= '<h1>Votaciones: &nbsp; &nbsp; '.boton('Crear votaci&oacute;n', '/votacion/crear/').'</h1>
+	$txt .= '<h1>Votaciones: &nbsp; &nbsp; '.(isset($pol['user_ID'])?boton('Crear votaci&oacute;n', '/votacion/crear/'):boton('Crear ciudadano', REGISTRAR.'?p='.PAIS)).'</h1>
 
 <span style="float:right;" title="Promedio global de las ultimas 2 horas"><b>'.$votos_por_hora.'</b> votos/hora</span>
 
@@ -652,8 +674,8 @@ LIMIT 500", $link);
 	while($r = mysql_fetch_array($result)) {
 		$time_expire = strtotime($r['time_expire']);
 
-		if ((!$r['ha_votado']) AND ($r['estado'] == 'ok') AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']))) { 
-			$votar = boton('Votar', '/votacion/' . $r['ID'] . '/');
+		if ((!isset($pol['user_ID'])) OR ((!$r['ha_votado']) AND ($r['estado'] == 'ok') AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])))) { 
+			$votar = boton('Votar', '/votacion/'.$r['ID'].'/');
 		} else { $votar = ''; }
 
 		$boton = '';

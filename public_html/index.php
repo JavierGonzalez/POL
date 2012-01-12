@@ -36,7 +36,7 @@ $txt .= '<h1>Bienvenido a VirtualPol</h1>
 
 <p>VirtualPol es un ecosistema de <b>plataformas democr&aacute;ticas autogestionadas</b>.</p>
 
-<p><b>En VirtualPol no hay administrador.</b> Todo se decide mediante Democracia Directa (1 ciudadano, 1 voto). VirtualPol d&aacute; soporte a diferentes plataformas totalmente independientes entre s&iacute; que comparten este sistema como base.</p>
+<p><b>En VirtualPol no hay administrador.</b> Se ha automatizado la democracia. Todo se decide con pilares democr&aacute;ticos (1 ciudadano 1 voto). En VirtualPol hay diferentes plataformas independientes entre s&iacute; que comparten este sistema como base.</p>
 
 <p>Los principales gestores se eligen mediante elecciones peri&oacute;dicas y autom&aacute;ticas, de forma que nadie puede detener el ciclo. De esta forma no existe ning&uacute;n usuario privilegiado, todos parten de la absoluta igualdad de condiciones.</p>
 

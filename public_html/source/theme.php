@@ -38,14 +38,13 @@ if (isset($pol['user_ID'])) {
 <meta name="language" content="es_ES" />
 <meta name="description" content="<?=$txt_description?>" />
 
-<script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
-
 <link rel="stylesheet" type="text/css" href="<?=IMG?>style2.css" />
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="<?=IMG?>superfish.js"></script> 
 
 <script type="text/javascript">
+var _sf_startpt=(new Date()).getTime()
 defcon = <?=$pol['config']['defcon']?>;
 IMG = "<?=IMG?>";
 window.google_analytics_uacct = "UA-59186-46";
@@ -300,7 +299,7 @@ echo '
 <li id="menu-5" class="menu-5"><a href="/foro/">Foro</a></li>';
 
 if ($pol['config']['info_consultas'] > 0) { 
-	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">&iexcl;Votaciones! <span class="md" style="font-size:22px;color:red;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
+	echo '<li id="menu-5" class="menu-5"><a href="/votacion/" style="font-size:19px;">&iexcl;Votaciones! <span class="md" style="font-size:22px;color:red;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
 } else {
 	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones</a></li>'; 
 }
@@ -320,31 +319,15 @@ foreach(explode(";", $pol['config']['palabras']) as $t) {
 	if ($t[1]) { echo '<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>'.$edit."<br />\n"; } 
 	else { echo $t[2].$edit."<br />\n"; }
 }
-echo '</div>';
+echo '</div>
 
+<div style="margin:12px 0 0 0;">
+<a href="https://www.facebook.com/pages/Asamblea-Virtual/216054178475524"><img src="'.IMG.'ico/2_32.png" alt="Facebook" /></a> 
 
-echo '<div style="margin:12px 0 0 0;"><a href="https://www.facebook.com/pages/Asamblea-Virtual/216054178475524"><img src="'.IMG.'ico/2_32.png" alt="Facebook" /></a> ';
-if (false) {
-	echo '<a href="https://twitter.com/#!/AsambleaVirtuaI"><img src="'.IMG.'ico/1_32.png" alt="Twitter" /></a>';
-} else {
-	echo '
-<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://15m.virtualpol.com/" data-text="Participa en la Asamblea Virtual!" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="AsambleaVirtual">Twittear</a>
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://15m.virtualpol.com/" data-text="Participa en la Asamblea Virtual del 15M!" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="AsambleaVirtual">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-';
 
-/*
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, \'script\', \'facebook-jssdk\'));</script>
-<div class="fb-like" data-href="http://15m.virtualpol.com/" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="verdana"></div>
-*/
-}
-echo '</div>';
+</div>';
 
 
 } 

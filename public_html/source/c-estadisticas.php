@@ -198,8 +198,7 @@ $txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as, '.round($i/365, 2).
 <br /><b id="2.2">2.2 Foro, nuevos mensajes</b> (<a href="/foro/">Ver foro</a>)<br />
 <img src="'.gen_grafico($d['hilos_msg']).'" alt="Mensajes en el Foro" border="0" />
 
-<br /><b id="2.3">2.3 Partidos pol&iacute;ticos</b> (<a href="/partidos/">Ver partidos</a>)<br />
-<img src="'.gen_grafico($d['partidos']).'" alt="Partidos" border="0" />';
+'.(!ASAMBLEA?'<br /><b id="2.3">2.3 Partidos pol&iacute;ticos</b> (<a href="/partidos/">Ver partidos</a>)<br /><img src="'.gen_grafico($d['partidos']).'" alt="Partidos" border="0" />':'').'';
 
 if (ECONOMIA) {
 	$txt .= '

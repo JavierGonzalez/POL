@@ -4,6 +4,66 @@ include('inc-login.php');
 switch ($_GET['a']) {
 
 
+case 'expiracion':
+
+
+	$margen_15dias	= date('Y-m-d 20:00:00', time() - 1296000); // 15 dias
+	$margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); // 30 dias
+	$margen_90dias	= date('Y-m-d 20:00:00', time() - 7776000); // 90 dias
+
+	$txt .= '<h1>Expiracion:</h1><br />
+
+<table><tr><td valign="top"><h2>30 dias</h2>
+
+
+<table border="0">
+<tr>
+<th>#</th>
+<th>Dia</th>
+<th>Ciudadanos</th>
+</tr>';
+	$dias = 1;
+	$result = mysql_query("SELECT fecha_last, COUNT(*) AS num, DAY(fecha_last) AS day 
+FROM users
+WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_registro > '".$margen_30dias."'
+GROUP BY day
+ORDER BY fecha_last DESC", $link);
+	while($r = mysql_fetch_array($result)) { 
+		$txt .= '<tr><td align="right">'.$dias++.'</td><td align="right">'.$r['day'].'</td><td align="right"><b>'.$r['num'].'</b></td></tr>'; 
+	}
+	$txt .= '</table>
+
+
+</td><td>&nbsp;&nbsp;&nbsp;</td><td valign="top"><h2>Total</h2>
+
+
+<table border="0">
+<tr>
+<th>#</th>
+<th>Dia</th>
+<th>Ciudadanos</th>
+</tr>';
+
+	$dias = 1;
+	$result = mysql_query("SELECT fecha_last, COUNT(*) AS num, DAY(fecha_last) AS day 
+FROM users
+WHERE estado = 'ciudadano' AND pais = '".PAIS."'
+GROUP BY day
+ORDER BY fecha_last DESC", $link);
+	while($r = mysql_fetch_array($result)) { 
+		$txt .= '<tr><td align="right">'.$dias++.'</td><td align="right">'.$r['day'].'</td><td align="right"><b>'.$r['num'].'</b></td></tr>'; 
+	}
+	$txt .= '</table>
+
+
+</td></tr></table>';
+
+
+
+
+
+	break;
+
 case 'voz':
 	$txt .= '<h1>Chat de voz:</h1>
 <p>El chat de voz de VirtualPol funciona mediante un programa externo llamado Mumble. Es un programa de escritorio gratuito, f&aacute;cil de instalar, compatible con todos los sistemas, software libre y con encriptaci&oacute;n de las comunicaciones. Es la mejor formula disponible para proveer a VirtualPol de una opcion de comunicaci&oacute;n por voz.</p>
@@ -13,7 +73,7 @@ case 'voz':
 <ol>
 <li><b>Instala Mumble</b> en tu ordenador:
 	<ul>
-		<li>Windows (<a href="http://sourceforge.net/projects/mumble/files%2FMumble%2F1.2.3%2Fmumble-1.2.3.msi/download">Descargar</a>)</li>
+		<li>Windows (<a href="http://download.mumble.com/en/mumble-1.2.3a.msi">Descargar</a>)</li>
 		<li>OSX (<a href="http://sourceforge.net/projects/mumble/files%2FMumble%2F1.2.3%2FMumble-1.2.3.dmg/download">Descargar</a>)</li>
 		<li>GNU/Linux (<a href="http://sourceforge.net/projects/mumble/files%2FMumble%2F1.2.3%2Fmurmur-static_x86-1.2.3.tar.bz2/download">Descargar</a>) <span style="color:grey;">Nota: puede haber problemas para que el navegador ejecute el programa, <a href="http://mumble.sourceforge.net/Mumble_URL#URL_Handler_Installation">info aqu&iacute;</a>.</span></li>
 		<li><a href="http://mumble.sourceforge.net/">Ver todas las descargas</a></li>
@@ -22,7 +82,7 @@ case 'voz':
 
 <li>Conecta unos <b>auriculares con micr&oacute;fono</b> (es lo m&aacute;s comodo, para que no se acople el sonido).<br /><br /></li>
 
-<li><b>¡<a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0">Entra aqu&iacute;</a>!</b> (o desde el men&uacute; "Voz")</li>
+<li><b>¡<a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0">Entra aqu&iacute;</a>!</b> (o desde el men&uacute; "Voz") (<a href="mumble://'.$pol['nick'].'@democraciarealya.es/Virtualpol/?version=1.2.0">servidor alternativo</a>)</li>
 
 </ol>
 
@@ -30,12 +90,6 @@ case 'voz':
 
 
 	$txt_title = 'Chat de Voz';
-	break;
-
-
-case 'recuperar-login':
-	$txt .= '<h1>Recuperar Contrase&ntilde;a:</h1><p>Si has perdido tu contrase&ntilde;a debes escribirnos un email a <em>desarrollo@virtualpol.com</em>, desde tu email de registro y gestionaremos tu recuperaci&oacute;n.</p><p>Proximamente esta funcionalidad ser&aacute; autom&aacute;tica. Gracias.</p>';
-	$txt_title = 'Recuperar contrase&ntilde;a';
 	break;
 
 
@@ -110,7 +164,7 @@ case 'censo':
 $txt .= '
 <div style="float:right;">
 <input name="qcmq" size="10" value="'.$busqueda.'" type="text" id="cmq">
-<input value="Buscar en perfil" type="submit" onclick="var cmq = $(\'#cmq\').attr(\'value\'); window.location.href=\'/info/censo/busqueda/\'+cmq+\'/\'; return false;">
+<input value="Buscador de perfil" type="submit" onclick="var cmq = $(\'#cmq\').attr(\'value\'); window.location.href=\'/info/censo/busqueda/\'+cmq+\'/\'; return false;">
 </div>
 
 <p>'.$p_paginas.'</p>
@@ -136,7 +190,7 @@ $txt .= '
 </tr>';
 
 	switch ($_GET['b']) {
-		case 'busqueda': $order_by = 'WHERE text LIKE \'%'.$_GET['c'].'%\' AND pais = \''.PAIS.'\' ORDER BY fecha_last DESC'; break;
+		case 'busqueda': $order_by = 'WHERE (text LIKE \'%'.$_GET['c'].'%\' OR nick LIKE \'%'.$_GET['c'].'%\' OR datos LIKE \'%'.$_GET['c'].'%\') AND pais = \''.PAIS.'\' ORDER BY fecha_last DESC'; break;
 		case 'nivel': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' AND ID != \'1\' ORDER BY nivel DESC'; break;
 		case 'nombre': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY nick ASC'; break;
 		case 'nuevos': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY fecha_registro DESC'; break;

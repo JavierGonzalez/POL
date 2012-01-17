@@ -1481,9 +1481,7 @@ case 'kick':
 			$expire = date('Y-m-d H:i:s', time() + $_POST['expire']);
 			mysql_query("INSERT INTO ".SQL."ban (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$el_userid."', ".$pol['user_ID'].", '".$expire."', '".$_POST['razon']."', 'activo', '".$_POST['expire']."', ".$kick_IP.", '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
 
-			$kick_msg = '<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>';
-			evento_chat($kick_msg);
-			if ((isset($_POST['chat_ID'])) AND ($_POST['chat_ID'] != 1) AND ($_POST['chat_ID'] != 2) AND ($_POST['chat_ID'] != 3) AND ($_POST['chat_ID'] != 4)) { evento_chat($kick_msg, 0, $_POST['chat_ID']); }
+			evento_chat('<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>');
 		}
 		$refer_url = 'control/kick/';
 	}

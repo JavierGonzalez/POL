@@ -209,7 +209,7 @@ $txt .= '
 <textarea name="descripcion" style="color: green; font-weight: bold; width: 570px; height: 250px;"></textarea></p>
 
 <p><b>URL de debate</b>: (opcional, debe empezar por http://...)<br />
-<input type="text" name="debate_url" size="57" maxlength="70" /></p>
+<input type="text" name="debate_url" size="57" maxlength="300" /></p>
 
 <div class="votar_form">
 <p><b>Opciones de voto</b>:
@@ -263,18 +263,16 @@ LIMIT 1", $link);
 
 <div class="amarillo" style="margin:20px 0 5px 0;padding:20px 10px 0 10px;">
 <h1>'.$r['pregunta'].'</h1>
-<p style="text-align:left;">'.$r['descripcion'].'</p>
+<p style="text-align:left;'.($r['estado']=='end'?'max-height:300px;overflow-y:auto;':'').'">'.$r['descripcion'].'</p>
+'.(substr($r['debate_url'], 0, 4)=='http'?'<hr /><p><b>Debate de esta votación: <a href="'.$r['debate_url'].'">aqu&iacute;</a>.</b></p>':'').'
 </div>
 
-
-<table border="0" style="margin-bottom:15px;"><tr>
-
+'.($r['acceso_ver']=='anonimos'?'<table border="0" style="margin-bottom:15px;"><tr>
 <td width="20"></td>
-
 <td><b style="font-size:20px;color:#777;">¡Dif&uacute;nde esta votaci&oacute;n!</b> &nbsp;</td>
 
 <td width="140" height="35">
-<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.strtolower(PAIS).'.virtualpol.com/votacion/'.$r['ID'].'/" data-text="'.($r['estado']=='ok'?'VOTACI&Oacute;N':'RESULTADO').': '.substr($r['pregunta'], 0, 83).'" data-via="AsambleaVirtuaI" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="AsambleaVirtual">Twittear</a>
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.strtolower(PAIS).'.virtualpol.com/votacion/'.$r['ID'].'/" data-text="'.($r['estado']=='ok'?'VOTACI&Oacute;N':'RESULTADO').': '.substr($r['pregunta'], 0, 83).'" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="AsambleaVirtual">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </td>
 
@@ -288,7 +286,8 @@ LIMIT 1", $link);
 }(document, \'script\', \'facebook-jssdk\'));</script>
 <div style="display:inline;" class="fb-like" data-href="http://'.strtolower(PAIS).'.virtualpol.com/votacion/'.$r['ID'].'/" data-send="true" data-layout="button_count" data-width="300" data-show-faces="false" data-action="recommend" data-font="verdana"></div></td>
 
-</tr></table>';
+</tr></table>':'').'
+';
 
 
 		if ($_GET['b'] == 'info') {
@@ -483,11 +482,11 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 						foreach ($escrutinio['votos'] AS $voto => $num) { 
 							if ($respuestas[$voto]) {
 								if ($respuestas[$voto] != 'En Blanco') {
-									$txt .= '<tr><td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'"':'').'>'.$respuestas[$voto].'</td><td align="right"><b>'.num($num).'</b></td><td align="right">'.num(($num*100)/$puntos_total_sin_en_blanco, 1).'%</td></tr>';
+									$txt .= '<tr><td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'"':'').'>'.$respuestas[$voto].'</td><td align="right" title="'.num(($num*100)/$puntos_total, 1).'%"><b>'.num($num).'</b></td><td align="right">'.num(($num*100)/$puntos_total_sin_en_blanco, 1).'%</td></tr>';
 								} else { $votos_en_blanco = $num; }
 							} else { unset($escrutinio['votos'][$voto]);  }
 						}
-						$txt .= '<tr><td nowrap="nowrap" title="Voto no computable. Equivale a: No sabe/No contesta."><em>En Blanco</em></td><td align="right"><b>'.num($votos_en_blanco).'</b></td><td></td></tr></table>';
+						$txt .= '<tr><td nowrap="nowrap" title="Voto no computable. Equivale a: No sabe/No contesta."><em>En Blanco</em></td><td align="right" title="'.num(($votos_en_blanco*100)/$puntos_total, 1).'%"><b>'.num($votos_en_blanco).'</b></td><td></td></tr></table>';
 					}
 
 				}

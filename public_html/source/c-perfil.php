@@ -287,7 +287,7 @@ $txt .= '</div>
 
 '.(ECONOMIA?'<p>Empresas: <b>' . $empresas_num . '</b><br /><b>' . $empresas . '</b></p>':'').'
 
-<p>Foro: <b><acronym title="hilos+mensajes">' . $r['num_hilos'] . '+' . $r['num_msg'] . '</acronym></b></p>
+<p>Foro: <a href="/foro/mis-respuestas/'.$r['nick'].'/" title="hilos+mensajes" style="font-weight:bold;">'.$r['num_hilos'].'+'.$r['num_msg'].'</a></p>
 <!--<p>Referencias: <b>' . $r['ref_num'] . '</b><br /><b>' . $refs . '</b></p>-->
 <p>Afiliado a: <b>' . crear_link($r['partido'], 'partido') . '</b></p>
 <p>Ultimo acceso: <acronym title="' . $r['fecha_last'] . '"><b>' . duracion(time() - strtotime($r['fecha_last'])) . '</b></acronym><br />';

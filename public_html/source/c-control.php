@@ -506,7 +506,7 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 	foreach ($array_searchtor AS $filtro) { if ($sql_anon != '') { $sql_anon .= ' OR ';  } $sql_anon .= "hosts LIKE '".$filtro."'"; }
 	$result = mysql_query("SELECT nick, estado, host, IP, nav, nota_SC FROM users WHERE ".$sql_anon." ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
-		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td><td>'.print_nota_SC($r['nota_SC'], $r['ID']).'</td></tr>';
+		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td><td nowrap="nowrap">'.print_nota_SC($r['nota_SC'], $r['ID']).'</td></tr>';
 	}
 	$txt .= '</table>';
 

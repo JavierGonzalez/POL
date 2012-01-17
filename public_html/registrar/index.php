@@ -172,11 +172,11 @@ policia
 						if (!$email_existe) { //el email esta libre
 							if ((strlen($nick) >= 3) AND (strlen($nick) <= 14)) {
 
-								$result = mysql_query("SELECT ID FROM users WHERE nick = '$nick' LIMIT 1", $link);
+								$result = mysql_query("SELECT ID FROM users WHERE nick = '".$nick."' LIMIT 1", $link);
 								while ($r = mysql_fetch_array($result)) { $nick_existe = $r['ID'];}
 
 								$result = mysql_query("SELECT tiempo FROM ".SQL_EXPULSIONES." WHERE tiempo = '".$nick."' AND estado = 'expulsado' LIMIT 1", $link);
-								while ($r = mysql_fetch_array($result)) { $nick_expulsado_existe = $r['tiempo'];}
+								while ($r = mysql_fetch_array($result)) { $nick_expulsado_existe = $r['tiempo']; }
 
 								if ((!$nick_existe) AND (!$nick_expulsado_existe)) { //si el nick esta libre
 									$longip = ip2long($_SERVER['REMOTE_ADDR']);

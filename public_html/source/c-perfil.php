@@ -201,7 +201,7 @@ $txt .= '
 <table border="0">
 <tr>
 <td colspan="2"><b>Perfiles</b></td>
-<td>&nbsp; <b>Solo Direcciones web</b> (http://...)</td>
+<td>&nbsp; <b>Solo Direcciones web</b> (<span style="color:red;">Debe empezar por: <span style="font-weight:bold;">http://</span> o <span style="font-weight:bold;">https://</span></span>)</td>
 </tr>';
 
 
@@ -317,19 +317,18 @@ $txt .= 'Expira '.($r['dnie']=='true'?'<b>Nunca</b> (Autentificado)':'<b>tras '.
 
 
 </p></td><td valign="top">
+
 <p>';
-
-
 $datos = explode('][', $r['datos']);
 foreach ($datos_perfil AS $id => $dato) {
 	if ($datos[$id] != '') {
 		$txt .= '<a href="'.$datos[$id].'" target="_blank"><img src="'.IMG.'ico/'.$id.'_32.png" width="32" width="32" alt="'.$datos.'" /></a>';
 	}
 }
+$txt .= ' (<a href="/info/seguir/">Seguir desde redes sociales</a>)</p>
 
-$txt .= '</p>
 
-<b>Ultimas 5 notas:</b>
+<b>&Uacute;ltimas 5 notas:</b>
 
 <table border="0" cellpadding="0" cellspacing="3" class="pol_table">';
 

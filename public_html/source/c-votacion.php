@@ -516,7 +516,7 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 						for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
 								$votos_array[] = '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
 						} }
-						$txt .= 'Tu voto [<em>'.$respuestas[$r['que_ha_votado']].'</em>] ha sido recogido <b>correctamente</b>.<br />';
+						$txt .= 'Tu voto ha sido computado <b>correctamente</b>.<br />';
 					} else {
 						if ($r['privacidad'] == 'false') { $txt .= '<p style="color:red;">El voto es p&uacute;blico en esta votaci&oacute;n, por lo tanto NO ser&aacute; secreto.</p>'; }
 						for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
@@ -530,7 +530,7 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 
 					if ($r['ha_votado']) { $txt .= 'Tu voto preferencial ha sido recogido <b>correctamente</b>.<br /><br />'; }
 
-					$txt .= '<span style="color:red;">Debes repartir <b>los puntos m&aacute;s altos a tus opciones preferidas</b>.</span>
+					$txt .= '<span style="color:red;">Debes repartir <b>los puntos m&aacute;s altos a tus opciones preferidas</b>. Puntos no acumulables.</span>
 <table border="0">
 <tr>
 <th colspan="'.substr($r['tipo_voto'], 0, 1).'" align="center">Puntos</th>
@@ -561,7 +561,7 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 <td valign="top"><input type="radio" name="voto_7" value="'.$i.'"'.($ha_votado_array[6]==$i?' checked="checked"':'').' /></td>
 <td valign="top"><input type="radio" name="voto_8" value="'.$i.'"'.($ha_votado_array[7]==$i?' checked="checked"':'').' /></td>
 ':'').'
-<td'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'"':'').'>'.($respuestas[$i]==='En Blanco'?'<em title="Equivale a No sabe/No contesta. No computable.">En Blanco</em>':$respuestas[$i]).'</td>
+<td'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'" class="punteado"':'').'>'.($respuestas[$i]==='En Blanco'?'<em title="Equivale a No sabe/No contesta. No computable.">En Blanco</em>':$respuestas[$i]).'</td>
 </tr>';
 					} }
 					if (count($votos_array) > 7) { shuffle($votos_array); }
@@ -577,9 +577,9 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 </table>';
 				} elseif ($r['tipo_voto'] == 'multiple') { // VOTAR MULTIPLE
 
-					if ($r['ha_votado']) { $txt .= 'Tus votos han sido recogidos <b>correctamente</b>.<br /><br />'; }
+					if ($r['ha_votado']) { $txt .= 'Tus votos han sido recogidos <b>correctamente</b>. '; }
 
-					$txt .= 'Esta votaci&oacute;n es multiple.
+					$txt .= 'Esta votaci&oacute;n es m&uacute;ltiple.
 <table border="0">
 <tr>
 <th>SI</th>
@@ -594,7 +594,7 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 <td valign="top" align="center"><input type="radio" name="voto_'.$i.'" value="1"'.($ha_votado_array[$i]==1?' checked="checked"':'').' /></td>
 <td valign="top" align="center"><input type="radio" name="voto_'.$i.'" value="2"'.($ha_votado_array[$i]==2?' checked="checked"':'').' /></td>
 <td valign="top" align="center"><input type="radio" name="voto_'.$i.'" value="0"'.($ha_votado_array[$i]==0||!$ha_votado_array[$i]?' checked="checked"':'').' /></td>
-<td'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'"':'').'>'.$respuestas[$i].'</td>
+<td'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'" class="punteado"':'').'>'.$respuestas[$i].'</td>
 </tr>';
 					} }
 					if (count($votos_array) > 7) { shuffle($votos_array); }
@@ -614,11 +614,10 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 				$txt .= '
 <input type="submit" value="'.($r['ha_votado']?'Modificar voto':'Votar').'" style="font-size:22px;"'.($tiene_acceso_votar?'':' disabled="disabled"').' /> '.($tiene_acceso_votar?($r['ha_votado']?'<span style="color:#2E64FE;">Puedes modificar tu voto durante <span class="timer" value="'.$time_expire.'"></span>.</span>':'<span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span>'):'<span style="color:red;white-space:nowrap;">'.(!$pol['user_ID']?'<b>Para votar debes <a href="'.REGISTRAR.'?p='.PAIS.'">crear tu ciudadano</a>.</b>':'No tienes acceso para votar.').'</span>').'</p>
 
-<p>
+<p style="margin-top:-10px;">
 <input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votaci&oacute;n correcta.<br />
-<input type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> Votaci&oacute;n nula (inv&aacute;lida, inapropiada o tendenciosa).<br />
+<input type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> Votaci&oacute;n nula (inv&aacute;lida, inapropiada o tendenciosa).
 </p>
-
 
 <p>Comentario (opcional, secreto y p&uacute;blico al terminar la votaci&oacute;n).<br />
 <input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="60" maxlength="160" /></p>
@@ -688,7 +687,7 @@ LIMIT 500", $link);
 		
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 			$txt .= '<tr>
-<td'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
+<td width="100"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
 <td>'.$votar.'<a href="/votacion/'.$r['ID'].'/"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.$r['pregunta'].'</a>'.($r['acceso_ver']!='anonimos'?' <sup style="color:red;">Privado!</sup>':'').'</td>
 <td nowrap="nowrap"><span style="color:blue;" title="Tiempo que falta para el resultado">Faltan <b><span class="timer" value="'.$time_expire.'"></span></b></span></td>
@@ -738,7 +737,7 @@ LIMIT 1000", $link);
 		
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 			$txt .= '<tr class="v_'.$r['tipo'].'"'.(in_array($r['tipo'], array('referendum', 'parlamento', 'sondeo'))?'':' style="display:none;"').'>
-<td'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
+<td width="100"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
 <td><a href="/votacion/'.$r['ID'].'/"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.$r['pregunta'].'</a>'.($r['acceso_ver']!='anonimos'?' <sup style="color:red;">Privado!</sup>':'').'</td>
 <td nowrap="nowrap"><span style="color:grey;">Hace <span class="timer" value="'.$time_expire.'"></span></span></td>

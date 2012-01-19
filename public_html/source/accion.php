@@ -25,8 +25,36 @@ OR (($pol['estado'] == 'extranjero') AND (in_array($_GET['a'], $acciones_multipl
 ) {
 
 
-switch ($_GET['a']) { // #####################################################
+switch ($_GET['a']) { 
+// ##################################################### EL GRAN SWITCH DE ACCIONES ############
 
+
+case 'grupos';
+	if (($_GET['b'] == 'crear') AND (nucleo_acceso($vp['acceso']['control_grupos']))) {
+		mysql_query("INSERT INTO grupos (pais, nombre) VALUES ('".PAIS."', '".ucfirst($_POST['nombre'])."')", $link);
+	} elseif (($_GET['b'] == 'eliminar') AND (nucleo_acceso($vp['acceso']['control_grupos'])) AND ($_GET['grupo_ID'])) {
+		mysql_query("DELETE FROM grupos WHERE grupo_ID = '".$_GET['grupo_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
+	} elseif ($_GET['b'] == 'afiliarse') {
+		$grupos_array = array();
+		$result = mysql_query("SELECT * FROM grupos WHERE pais = '".PAIS."'", $link);
+		while($r = mysql_fetch_array($result)) {
+
+			if ($_POST['grupo_'.$r['grupo_ID']] == 'true') {
+				$grupos_array[] = $r['grupo_ID'];
+			
+				if (!nucleo_acceso('grupos', $r['grupo_ID'])) {
+					mysql_query("UPDATE grupos SET num = num + 1 WHERE grupo_ID = '".$r['grupo_ID']."' LIMIT 1", $link);
+				}
+			} else {
+				if (nucleo_acceso('grupos', $r['grupo_ID'])) {
+					mysql_query("UPDATE grupos SET num = num - 1 WHERE grupo_ID = '".$r['grupo_ID']."' LIMIT 1", $link);
+				}
+			}
+		}
+		mysql_query("UPDATE users SET grupos = '".implode(' ', $grupos_array)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+	}
+	$refer_url = 'grupos/';
+	break;
 
 
 case 'perfil':

@@ -205,8 +205,8 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 					<li><a href="/poderes/">Poderes</a></li><li><a href="/control/judicial/">Sanciones</a></li>
 				</ul>
 			</li>
-			
 			<li><a href="/partidos/">Partidos <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
+			<li><a href="/grupos/">Grupos</a></li>
 			<li><a href="/elecciones/"><b>Elecciones</b></a></li>
 			<li><a href="/votacion/">Votaciones <span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
 			
@@ -281,7 +281,7 @@ echo '</div>';
 			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li title="Es necesario instalar el programa de escritorio llamado Mumble"><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
 			<li><a href="/info/censo/">Censo <span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
-			<li><a href="/partidos/">Grupos <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
+			<li><a href="/grupos/">Grupos</a></li>
 			<li><a href="/elecciones/">Elecciones</a></li>
 			<li><a href="/cargos/"><span style="float:right;">&#9658;</span>Gesti&oacute;n</a>
 				<ul>

@@ -464,20 +464,23 @@ $(document).ready(function() {
 
 
 <li><b>&iquest;Compartes conexi&oacute;n a Internet con otro usuario de VirtualPol?</b><br /> 
-<!--Nick: <input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (en caso negativo dejar en blanco)<br /><br />-->
+En caso afirmativo indica el nick: <input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (en caso negativo deja vac&iacute;o)<br /><br />
+
+';
+
+/*
 <select name="nick_clon">
 <option value="" selected="selected">NO.</option>
-<optgroup label="Usuarios:">';
-
-
+<optgroup label="Usuarios:">
 	$result = mysql_query("SELECT nick FROM users WHERE estado != 'expulsado' ORDER BY nick ASC", $link);
 	while($r = mysql_fetch_array($result)) { 
 		$txt .= '<option value="'.$r['nick'].'">'.$r['nick'].'</option>'."\n"; 
 	}
+</optgroup></select>	
+*/
 
-	$txt .= '</optgroup></select><br /><br />
+	$txt .= '</li>
 
-</li>
 
 <li><input name="condiciones" value="ok" type="checkbox" /> <b>Aceptas las <a href="http://www'.DEV.'.'.URL.'/legal" target="_blank">Condiciones de Uso de VirtualPol</a>.</b><br /><br /></li>
 

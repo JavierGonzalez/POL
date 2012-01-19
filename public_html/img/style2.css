@@ -9,7 +9,7 @@ body {
 }
 
 *[title] { cursor: help; }
-abbr { border-bottom:1px dotted #999; }
+abbr, .punteado { border-bottom:1px dotted #999; }
 
 .redondeado {
 	padding-left:2px;

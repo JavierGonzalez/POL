@@ -460,7 +460,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 									$voto_en_blanco = ($escrutinio['votos_full'][$voto][0]?$escrutinio['votos_full'][$voto][0]:0);
 
 									$txt .= '<tr>
-<td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'"':'').'>'.$respuestas[$voto].'</td>
+<td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'" class="punteado"':'').'>'.$respuestas[$voto].'</td>
 <td align="right"><b>'.$voto_si.'</b></td>
 <td align="right">'.$voto_no.'</td>
 <td align="right"><b title="Votos computables: '.num($voto_si+$voto_no).', Balance: '.num($num).', En Blanco: '.$voto_en_blanco.'">'.num(($voto_si>0?($voto_si*100)/($voto_si + $voto_no):0),1).'%</b></td>
@@ -482,7 +482,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 						foreach ($escrutinio['votos'] AS $voto => $num) { 
 							if ($respuestas[$voto]) {
 								if ($respuestas[$voto] != 'En Blanco') {
-									$txt .= '<tr><td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'"':'').'>'.$respuestas[$voto].'</td><td align="right" title="'.num(($num*100)/$puntos_total, 1).'%"><b>'.num($num).'</b></td><td align="right">'.num(($num*100)/$puntos_total_sin_en_blanco, 1).'%</td></tr>';
+									$txt .= '<tr><td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'" class="punteado"':'').'>'.$respuestas[$voto].'</td><td align="right" title="'.num(($num*100)/$puntos_total, 1).'%"><b>'.num($num).'</b></td><td align="right">'.num(($num*100)/$puntos_total_sin_en_blanco, 1).'%</td></tr>';
 								} else { $votos_en_blanco = $num; }
 							} else { unset($escrutinio['votos'][$voto]);  }
 						}

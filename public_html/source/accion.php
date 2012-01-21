@@ -1938,5 +1938,9 @@ if ($_GET['a'] == 'logout') {
 }
 
 if ($link) { mysql_close($link); }
-header('Location: http://'.HOST.'/'.$refer_url);
+if (isset($refer_url)) {
+	header('Location: http://'.HOST.'/'.$refer_url);
+} else {
+	header('Location: http://'.HOST.'/?error='.base64_encode('Acci&oacute;n no permitida o erronea'));
+}
 ?>

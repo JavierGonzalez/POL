@@ -62,6 +62,7 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 		$pol['online'] = $r['online'];
 		$pol['cargo'] = $r['cargo'];
 		$pol['IP'] = $r['IP'];
+		$pol['grupos'] = $r['grupos'];
 		$fecha_init = $r['fecha_init'];
 		$fecha_last = $r['fecha_last'];
 		
@@ -94,12 +95,12 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 
 	// UPDATE
 	if ($pol['estado'] != 'expulsado') { // No esta expulsado
-		if ($session_new) { // START SESSION
+		if (isset($session_new)) { // START SESSION
 			$update = ", visitas = visitas + 1, nav = '".$_SERVER['HTTP_USER_AGENT']."', fecha_init = '".$date."'";
 			if ($pol['IP'] != $IP) { 
 				$host = gethostbyaddr(long2ip($IP)); if ($host == '') { $host = long2ip($IP); }
 				$update .= ", IP = '".$IP."', host = '".$host."', hosts = CONCAT(hosts,'|".$host."')";
-				if ($_SERVER['HTTP_X_FORWARDED_FOR']) { $update .= ", IP_proxy = '".$_SERVER['HTTP_X_FORWARDED_FOR']."'"; }
+				if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { $update .= ", IP_proxy = '".$_SERVER['HTTP_X_FORWARDED_FOR']."'"; }
 			}
 			if ($fecha_init != '0000-00-00 00:00:00') { $update .= ", online = online + " . (strtotime($fecha_last) - strtotime($fecha_init)); }
 		}

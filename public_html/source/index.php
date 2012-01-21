@@ -1,6 +1,5 @@
 <?php 
 include('inc-login.php');
-$adsense_exclude = true;
 
 $txt_description = $pol['config']['pais_des'].'. '.PAIS.' es una comunidad de VirtualPol. Una comunidad de Internet auto-gestionada democr&aacute;ticamente. Puedes registrarte y ser ciudadano, hablar de politica en nuestros foros, conversar en nuestros chats o una infinidad de actividades.';
 

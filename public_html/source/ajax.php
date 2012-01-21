@@ -113,9 +113,9 @@ LIMIT 1", $link);
 
 	// CHECK MSG
 	$msg_len = strlen($_REQUEST['msg']);
-	if (($msg_len > 0) AND ($msg_len < 400) AND (!$expulsado) AND (acceso_check($chat_ID, 'escribir') === true)) {
+	if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND (acceso_check($chat_ID, 'escribir') === true)) {
 		
-		if ((!$_SESSION['pol']['nick']) AND (substr($_POST['anonimo'], 0, 1) == '-') AND (strlen($_POST['anonimo']) >= 3) AND (strlen($_POST['anonimo']) <= 15) AND (!stristr($_POST['anonimo'], '__'))) { 
+		if ((!isset($_SESSION['pol']['nick'])) AND (substr($_POST['anonimo'], 0, 1) == '-') AND (strlen($_POST['anonimo']) >= 3) AND (strlen($_POST['anonimo']) <= 15) AND (!stristr($_POST['anonimo'], '__'))) { 
 			$result = mysql_query("SELECT nick FROM users WHERE nick='".substr($_POST['anonimo'], 1)."'", $link);
 			if (mysql_fetch_array($result)) { 
 				$borrar_msg = true;
@@ -129,7 +129,7 @@ LIMIT 1", $link);
 
 		// limpia MSG
 		$msg = $_REQUEST['msg'];
-		if ($borrar_msg) { $msg=''; }
+		if (isset($borrar_msg)) { $msg = ''; }
 
 		$msg = str_replace("'", "''", str_replace("\r", "", str_replace("\n", "", strip_tags(trim($msg)))));
 		
@@ -189,7 +189,7 @@ LIMIT 1", $link);
 				case 'aleatorio': $elmsg = '<b>[$] ' . $_SESSION['pol']['nick'] . '</b> aleatorio: <b>' . mt_rand(00000,99999) . '</b>'; break;
 				
 				case 'ciudadano': 
-					if ($_SESSION['pol']['user_ID']) {
+					if (isset($_SESSION['pol']['user_ID'])) {
 						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> te anima a unirte a la comunidad: <a href="http://'.pais.'.virtualpol.com/r/'.strtolower($_SESSION['pol']['nick']).'/" target="_blank"><b>Crear Usuario</b></a>'; 
 					}
 					break;
@@ -214,16 +214,16 @@ LIMIT 1", $link);
 				case 'ayuda': 
 					$tipo = 'm';
 					if (PAIS == 'VP') {
-						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
+						$elmsg = 'ofrece ayuda'.(isset($msg_rest)?' a '.$msg_rest:'').': <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
 					} else {
-						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="http://15m.virtualpol.com/doc/faq---consultas-a-la-ciudadania/" target="_blank"><b>Ayuda y FAQ (Preguntas frecuentes)</b></a> - <a href="http://15m.virtualpol.com/doc/declaracion-de-la-asamblea-virtual-15m/">La Declaraci&oacute;n</a> - <a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
+						$elmsg = 'ofrece ayuda'.(isset($msg_rest)?' a '.$msg_rest:'').': <a href="http://15m.virtualpol.com/doc/faq---consultas-a-la-ciudadania/" target="_blank"><b>Ayuda y FAQ (Preguntas frecuentes)</b></a> - <a href="http://15m.virtualpol.com/doc/declaracion-de-la-asamblea-virtual-15m/">La Declaraci&oacute;n</a> - <a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
 					}
 					break;
 
 				case 'policia': if (nucleo_acceso('cargo', '13 12 6'))  { $elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>'; $tipo = 'm'; } break;
 
 				case 'msg':
-					if ($_SESSION['pol']['user_ID']) {
+					if (isset($_SESSION['pol']['user_ID'])) {
 						$nick_receptor = trim($msg_array[1]);
 						$result = mysql_unbuffered_query("SELECT HIGH_PRIORITY ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1", $link);
 						while($r = mysql_fetch_array($result)){ 
@@ -235,13 +235,13 @@ LIMIT 1", $link);
 					}
 					break;
 			}
-			$msg = null; if ($elmsg) { $msg = $elmsg; }
+			unset($msg); if (isset($elmsg)) { $msg = $elmsg; }
 			
 		} else { $tipo = 'm'; }
 
 		// insert MSG
-		if ($msg) {
-			if (!$elnick) { $elnick = $_SESSION['pol']['nick']; }
+		if (isset($msg)) {
+			if (!isset($elnick)) { $elnick = $_SESSION['pol']['nick']; }
 			if ($_SESSION['pol']['estado'] == 'anonimo') { $sql_ip = 'inet_aton("'.$_SERVER['REMOTE_ADDR'].'")'; } else { $sql_ip = 'NULL'; }
 
 			$elcargo = $_SESSION['pol']['cargo'];
@@ -263,7 +263,7 @@ UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMI
 
 
 		// print refresh
-		if ($_REQUEST['n']) { echo chat_refresh($chat_ID, $_REQUEST['n']); }
+		if (isset($_REQUEST['n'])) { echo chat_refresh($chat_ID, $_REQUEST['n']); }
 
 	} else { echo 'n 0 &nbsp; &nbsp; <b style="color:#FF0000;">No tienes permiso de escritura.</b>'."\n"; }
 
@@ -278,7 +278,7 @@ FROM users WHERE nick = '".mysql_real_escape_string($_REQUEST['nick'])."' LIMIT 
 	while ($r = mysql_fetch_array($res)) { 
 		include('inc-functions.php');
 		if ($r['avatar'] == 'true') { $r['avatar'] = 1; } else { $r['avatar'] = 0; }
-		if (!$r['partido']) { $r['partido'] = '-'; }
+		if (!isset($r['partido'])) { $r['partido'] = '-'; }
 
 		if ($r['estado'] == 'expulsado') {
 			$res2 = mysql_query("SELECT razon FROM expulsiones WHERE user_ID = '".$r['ID']."' AND estado = 'expulsado' ORDER BY expire DESC LIMIT 1", $link);

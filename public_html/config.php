@@ -68,7 +68,7 @@ if (ASAMBLEA) { // PLATAFORMAS ASAMBLEARIAS
 'foro_borrar'=>			array('cargo', '12 13'),
 'control_gobierno'=>	array('cargo', '7 19'),
 'control_sancion'=>		array('cargo', '9'),
-'control_grupos'=>		array('cargo', '7 19'),
+'control_grupos'=>		array('nivel', '90'),
 'examenes_decano'=>		array('cargo', '35 60'),
 'examenes_profesor'=>	array('cargo', '34'),
 'crear_partido'=>		array('antiguedad','0'),

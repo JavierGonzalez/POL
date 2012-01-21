@@ -29,6 +29,28 @@ function nucleo_acceso($tipo, $valor='') {
 	return $rt;
 }
 
+function verbalizar_acceso($tipo, $valor='') {
+	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
+	switch ($tipo) { // ¿Quien tiene acceso?
+		case 'internet': case 'anonimos': $t = 'toda Internet'; break;
+		case 'ciudadanos_global': $t = 'todos los ciudadanos de VirtualPol'; break;
+		case 'ciudadanos': $t = ($valor==''?'todos los ciudadanos de esta plataforma':'todos los ciudadanos de esta plataforma y '.$valor); break;
+		case 'excluir': $t = 'todos los ciudadanos excepto: '.$valor; break;
+		case 'privado': $t = 'los ciudadanos: '.$valor; break;
+		case 'afiliado': $t = 'ciudadanos afiliados al <span title="ID: '.$valor.'">partido</span> (<a href="/partidos/">Ver partidos</a>)'; break;
+		case 'confianza': $t = 'ciudadanos con confianza mayor o igual a '.confianza($valor).' (<a href="/censo/confianza/">Ver confianza</a>)'; break;
+		case 'nivel': $t = 'ciudadanos con nivel mayor o igual a '.$valor.' (<a href="/cargos/">Ver cargos</a>)'; break;
+		case 'cargo': $t = 'ciudadanos con cargo: '.$valor.' (<a href="/cargos/">Ver cargos</a>)'; break;
+		case 'grupos': $t = 'ciudadanos afiliados al grupo: '.$valor.' (<a href="/grupos/">Ver grupos</a>)'; break;
+		case 'monedas': $t = 'ciudadanos con al menos '.$valor.' monedas'; break;
+		case 'autentificados': $t = 'ciudadanos autentificados'; break;
+		case 'supervisores_censo': $t = 'Supervisores del Censo'; break;
+		case 'antiguedad': $t = 'ciudadanos con al menos '.$valor.' dias de antig&uuml;edad';  break;
+	}
+	return $t;
+}
+
+
 
 function timer($t, $es_time=false) {
 	if ($es_time == true) { return '<span class="timer" value="'.$t.'"></span>'; } 

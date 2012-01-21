@@ -5,6 +5,7 @@ if (!$_GET['q']) { $_GET['q'] = 'site:'.strtolower(PAIS).'.virtualpol.com '; }
 
 $txt .= '
 
+<p style="color:#777;">Buscador en fase de desarrollo, pero ya es funcional.</p>
 
 <form action="/buscar/" id="cse-search-box">
 <div> 

@@ -121,7 +121,7 @@ var _sf_async_config={uid:26055,domain:"virtualpol.com"};
 })();
 
 </script>
-<script type="text/javascript" src="<?=IMG?>lib/efectonieve.js"></script>
+<!--<script type="text/javascript" src="<?=IMG?>lib/efectonieve.js"></script>-->
 
 </body>
 </html>

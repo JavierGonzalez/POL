@@ -7,10 +7,10 @@ include('inc-login.php');
 
 
 function test_acceso($tipo, $valor) {
-	return (nucleo_acceso($tipo, $valor)?'<b style="color:blue;">true</b>':'<b style="color:red;">false</b>').' = nucleo_acceso(\''.$tipo.'\', \''.$valor.'\');<br />';
+	return '<tr><td>'.(nucleo_acceso($tipo, $valor)?'<b style="color:blue;">true</b>':'<b style="color:red;">false</b>').'</td><td> = nucleo_acceso(\''.$tipo.'\', \''.$valor.'\');</td><td>('.verbalizar_acceso($tipo, $valor).')</td></tr>';
 }
 
-$txt .= '<h1>Test nucleo_acceso()</h1><hr />';
+$txt .= '<h1>Test nucleo_acceso()</h1><hr /><table>';
 $txt .= test_acceso('privado', 'gonzo');
 $txt .= test_acceso('privado', 'otro gonzoto');
 $txt .= test_acceso('excluir', 'gonzo otro');
@@ -29,12 +29,13 @@ $txt .= test_acceso('nivel', '100');
 $txt .= test_acceso('antiguedad', '1');
 $txt .= test_acceso('antiguedad', '360');
 $txt .= test_acceso('antiguedad', '100000');
-$txt .= test_acceso('antentificados', '');
+$txt .= test_acceso('autentificados', '');
 $txt .= test_acceso('supervisores_censo', '');
 $txt .= test_acceso('ciudadanos', '');
 $txt .= test_acceso('ciudadanos', 'VP 15M');
 $txt .= test_acceso('ciudadanos_global', '');
 $txt .= test_acceso('anonimos', '');
+$txt .= '</table>';
 
 include('theme.php');
 ?>

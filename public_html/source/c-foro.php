@@ -495,16 +495,7 @@ LIMIT 200", $link);
 
 
 } else {						//foro/
-
-	$adsense_exclude = true;
-
-	$txt_title = 'Foro';
-	$txt .= '<div style="float:right;color:green;"><a href="/foro/ultima-actividad/">&Uacute;ltima actividad</a> | <a href="/foro/mis-respuestas/">Tu actividad</a> &nbsp; [<a href="/control/gobierno/foro/">Configuraci&oacute;n foro</a>]</div>
-
-<h1><b>Foro</b>:</h1>
-<br />
-<table border="0" cellpadding="1" cellspacing="0" class="pol_table">';
-
+	$foro_oculto_num = 0;
 	$result = mysql_query("SELECT *,
 (SELECT COUNT(*) FROM ".SQL."foros_hilos WHERE sub_ID = ".SQL."foros.ID LIMIT 1) AS num
 FROM ".SQL."foros
@@ -513,44 +504,46 @@ ORDER BY time ASC", $link);
 	while($r = mysql_fetch_array($result)) {
 		if (nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) {
 
-			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) { $crear_hilo = boton('Crear Hilo', '/foro/' . $r['url'] . '/#enviar'); } else { $crear_hilo = boton('Crear Hilo'); }
-
-			$txt .= '<tr class="amarillo">
+			$txt_table .= '<tr class="amarillo">
 <td nowrap="nowrap" style="padding-right:4px;"><h2><a href="/foro/'.$r['url'].'/" style="font-size:22px;margin-left:8px;"><b>'.$r['title'].'</b></a></h2></td>
 <td align="right"><b style="font-size:19px;">'.$r['num'].'</b></td>
 <td style="color:green;" colspan="2"><span style="float:right;color:grey;">'.$el_acceso.'</span><span style="font-size:18px;">'.$r['descripcion'].'</span></td>
-<td align="right" width="10%">'.$crear_hilo.'</td>
+<td align="right" width="10%">'.(nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?boton('Crear Hilo', '/foro/'.$r['url'].'/#enviar'):boton('Crear Hilo')).'</td>
 </tr>';
-
-			if (!$r['limite']) { $r['limite'] = 8; }
 
 			$result2 = mysql_query("SELECT ID, url, user_ID, title, time, time_last, cargo, num, votos,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
 (SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS estado
 FROM ".SQL."foros_hilos
-WHERE sub_ID = '".$r['ID']."' AND estado = 'ok'
+WHERE sub_ID = '".$r['ID']."' AND estado = 'ok' AND estado != 'expulsado'
 ORDER BY time_last DESC
 LIMIT ".$r['limite'], $link);
 			while($r2 = mysql_fetch_array($result2)) {
-				if ($r2['estado'] != 'expulsado') {
-					$hilo_url[$r2['ID']] = '<a href="/foro/' . $r['url'] . '/' . $r2['url'] . '/">' . $r2['title'] . '</a>';
-					if (strtotime($r2['time']) < (time() - 432000)) { $titulo = $hilo_url[$r2['ID']]; } else { $titulo = '<b>' . $hilo_url[$r2['ID']] . '</b>'; }
-					if (strtotime($r2['time']) > (time() - 86400)) { $titulo = $titulo . ' <sup style="font-size:9px;color:red;">Nuevo!</sup>'; }
-					$txt .= '<tr>
+				$time_hilo = strtotime($r2['time']);
+				$txt_table .= '<tr>
 <td align="right" style="padding-right:4px;" valign="top">'.crear_link($r2['nick']).'</td>
 <td valign="top" align="right"><b>'.$r2['num'].'</b></td>
 <td align="right" style="padding-right:4px;">'.confianza($r2['votos']).'</td>
-<td class="rich">'.$titulo.'</td>
-<td align="right" valign="top" nowrap="nowrap"><span class="timer" value="'.strtotime($r2['time']).'"></span></td>
+<td class="rich"><a'.($time_hilo<(time()-432000)?' style="font-weight:bold;"':'').' href="/foro/'.$r['url'].'/'.$r2['url'].'/">'.$r2['title'].'</a>'.($time_hilo>(time()-86400)?' <sup style="font-size:9px;color:red;">Nuevo!</sup>':'').'</td>
+<td align="right" valign="top" nowrap="nowrap"><span class="timer" value="'.$time_hilo.'"></span></td>
 </tr>';
-				}
 			}
-			$txt .= '<tr><td colspan="4">&nbsp;</td></tr>';
-		}
+			$txt_table .= '<tr><td colspan="4">&nbsp;</td></tr>';
+		} else { $foro_oculto_num++; }
 	}
 
 
-		$txt .= '<tr class="amarillo">
+
+	$txt_title = 'Foro';
+	$txt .= '<div style="float:right;color:green;">Hay otros <b>'.$foro_oculto_num.'</b> foros ocultados <a href="/grupos/">ver grupos</a> | <a href="/foro/ultima-actividad/">&Uacute;ltima actividad</a> | <a href="/foro/mis-respuestas/">Tu actividad</a> &nbsp; [<a href="/control/gobierno/foro/" title="Configuraci&oacute;n del foro">Configuraci&oacute;n</a>]</div>
+
+<h1><b>Foro</b>:</h1>
+<br />
+<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
+
+'.$txt_table.'
+
+<tr class="amarillo">
 <td width="120"><h2><a href="/foro/papelera/" style="font-size:22px;margin-left:8px;">Papelera</a></h2></td>
 <td align="right"><b style="font-size:19px;"></b></td>
 <td style="color:green;" colspan="2">Cuarentena de mensajes, eliminados tras 10 d&iacute;as.</td>

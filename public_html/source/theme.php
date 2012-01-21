@@ -3,11 +3,15 @@ if ($_SERVER['HTTP_HOST'] == 'ninguno.virtualpol.com') { header('HTTP/1.1 301 Mo
 
 if (!isset($txt)) { 
 	header('HTTP/1.1 404 Not Found');
-	$txt .= '<p style="font-size:24px;">ERROR 404: <b>P&aacute;gina inexistente</b>.</p>';
+	$txt = '<p style="font-size:24px;">ERROR 404: <b>P&aacute;gina inexistente</b>.</p>';
+}
+
+if (isset($_GET['error'])) { 
+	header('HTTP/1.1 401 Unauthorized'); 
+	$txt = '<p style="font-size:24px;color:red;">ERROR: <b>'.base64_decode($_GET['error']).'</b>.</p>';
 }
 
 $kw = '';
-
 if (isset($txt_title)) { 
 	$txt_title .= ' | '.PAIS.' | VirtualPol'; 
 } else { 	//home

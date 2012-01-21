@@ -1,5 +1,5 @@
 <?php 
-/* ### Proyecto CHAT 2 ### */
+/* ### CHAT v2 ### */
 
 include('inc-login.php');
 

@@ -653,7 +653,7 @@ ORDER BY siglas ASC", $link);
 	$result = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE time >= '".date('Y-m-d H:i:s', time() - 60*60*2)."'", $link);
 	while($r = mysql_fetch_array($result)) { $votos_por_hora = num($r['num']/2); }
 
-	$txt_title = 'Sistema de Votaciones';
+	$txt_title = 'Votaciones';
 	$txt .= '<h1>Votaciones: &nbsp; &nbsp; '.(isset($pol['user_ID'])?boton('Crear votaci&oacute;n', '/votacion/crear/'):boton('Crear ciudadano', REGISTRAR.'?p='.PAIS)).'</h1>
 
 <span style="float:right;" title="Promedio global de las ultimas 2 horas"><b>'.$votos_por_hora.'</b> votos/hora</span>

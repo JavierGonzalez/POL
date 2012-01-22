@@ -50,7 +50,7 @@ $txt .= '<h1>Bienvenido a VirtualPol</h1>
 
 <li>Algunos datos: '.num($num_votaciones_votos).' votos procesados en '.num($num_votaciones).' votaciones y '.num($num_votos).' votos de otros tipos.</li>
 
-<li>Es <a href="http://code.google.com/p/virtualpol/source/list">Software Libre</a>.</li>
+<li>Es <a href="/codigo">Software Libre</a>.</li>
 </ul>
 
 

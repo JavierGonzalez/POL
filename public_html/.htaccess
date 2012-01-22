@@ -12,3 +12,5 @@ RewriteRule ^(chat)(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a
 
 
 RewriteRule ^(legal|manual)$ /$1.php [L]
+
+redirect 301 /codigo https://github.com/JavierGonzalez/VirtualPol/

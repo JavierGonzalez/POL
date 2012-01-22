@@ -59,6 +59,7 @@ dirección http://www.virtualpol.com/.
 2010-03-12 Eduard - eduardmail(a)gmail.com
 2010-05-12 Bradduk - bradduk(a)gmail.com
 2010-10-26 Brook - zerocool.cmg(a)gmail.com
+2012-01-22 LaSaRuX - lasarux(a)gmail.com
 
 # PARTICIPANTES
 Pablo1 drosan Baldor Johnny_Palillo Troll Naaram al00 Sanchez Zokaar Anto 

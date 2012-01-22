@@ -203,24 +203,23 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 
 	<li id="menu-3">
 		<a href="#">Democracia</a>
-		<ul>
+		<ul style="margin-top:-74px;">
+			<li><a href="/elecciones/"><b>Elecciones</b></a></li>
+			<li><a href="/votacion/">Votaciones <span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
 			<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Gesti&oacute;n</b></a>
 				<ul>
 					<li><a href="/control/gobierno/">Gobierno</a></li>
 					<li><a href="/doc/boletin-oficial-de-vp/">BOE</a></li>
 					<li><a href="/control/kick/">Kicks</a></li>
 					<li><a href="/control/expulsiones/">Expulsiones</a></li>
-					<li><a href="/cargos/">Cargos</a></li>
 					<li><a href="/examenes/">Ex&aacute;menes</a></li>
 					<li><a href="<?=SSL_URL?>dnie.php">Autentificaci&oacute;n</a></li>
 					<li><a href="/poderes/">Poderes</a></li><li><a href="/control/judicial/">Sanciones</a></li>
 				</ul>
 			</li>
 			<li><a href="/partidos/">Partidos <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
-			<li><a href="/grupos/">Grupos</a></li>
-			<li><a href="/elecciones/"><b>Elecciones</b></a></li>
-			<li><a href="/votacion/">Votaciones <span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
-			
+			<li><a href="/grupos/">Grupos</a></li>		
+			<li><a href="/cargos/">Cargos</a></li>
 		</ul>
 	</li>
 
@@ -323,19 +322,19 @@ echo '</div>';
 
 	<li id="menu-3">
 		<a href="#">Democracia</a>
-		<ul>
+		<ul style="margin-top:-74px;">
+			<li><a href="/elecciones/"><b>Elecciones</b></a></li>
+			<li><a href="/votacion/">Votaciones <span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
 			<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Gesti&oacute;n</b></a>
 				<ul>
 					<li title="Control de Gobierno"><a href="/control/gobierno/">Control</a></li>
-					<li><a href="/cargos/">Cargos</a></li>
 					<li title="Bloqueos temporales de usuarios por moderaci&oacute;n"><a href="/control/kick/">Kicks</a></li>
 					<li><a href="/examenes/">Ex&aacute;menes</a></li>
 					<li><a href="<?=SSL_URL?>dnie.php">Autentificaci&oacute;n</a></li>
 				</ul>
 			</li>
 			<li><a href="/grupos/">Grupos</a></li>
-			<li><a href="/elecciones/"><b>Elecciones</b></a></li>
-			<li><a href="/votacion/">Votaciones <span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
+			<li><a href="/cargos/">Cargos</a></li>
 		</ul>
 	</li>
 

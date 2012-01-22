@@ -90,7 +90,7 @@ $txt = '
 
 <p><a href="http://vp.virtualpol.com/doc/autentificacion/">M&aacute;s informaci&oacute;n aqu&iacute;.</a></p>
 
-<p>Puedes ver el c&oacute;digo fuente de <a href="http://code.google.com/p/virtualpol/source/browse/trunk/public_html/dnie.php">esta aplicaci&oacute;n</a>.</p>';
+<p>Puedes ver el c&oacute;digo fuente de <a href="/codigo">esta aplicaci&oacute;n</a>.</p>';
 
 // Carga el dise&ntilde;o completo de VirtualPol. Mucho HTML, CSS y poco m&aacute;s.
 include('theme.php');

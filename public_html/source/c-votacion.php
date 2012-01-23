@@ -272,7 +272,7 @@ LIMIT 1", $link);
 <td><b style="font-size:20px;color:#777;">¡Dif&uacute;nde esta votaci&oacute;n!</b> &nbsp;</td>
 
 <td width="140" height="35">
-<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.strtolower(PAIS).'.virtualpol.com/votacion/'.$r['ID'].'/" data-text="'.($r['estado']=='ok'?'VOTACI&Oacute;N':'RESULTADO').': '.substr($r['pregunta'], 0, 83).'" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="AsambleaVirtual">Twittear</a>
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion/'.$r['ID'].'/" data-text="'.($r['estado']=='ok'?'VOTACI&Oacute;N':'RESULTADO').': '.substr($r['pregunta'], 0, 83).'" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="AsambleaVirtual">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </td>
 
@@ -284,7 +284,7 @@ LIMIT 1", $link);
   js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, \'script\', \'facebook-jssdk\'));</script>
-<div style="display:inline;" class="fb-like" data-href="http://'.strtolower(PAIS).'.virtualpol.com/votacion/'.$r['ID'].'/" data-send="true" data-layout="button_count" data-width="300" data-show-faces="false" data-action="recommend" data-font="verdana"></div></td>
+<div style="display:inline;" class="fb-like" data-href="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion/'.$r['ID'].'/" data-send="true" data-layout="button_count" data-width="300" data-show-faces="false" data-action="recommend" data-font="verdana"></div></td>
 
 </tr></table>':'').'
 ';
@@ -507,7 +507,7 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 				$tiene_acceso_votar = nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']);
 
 
-				$txt .= '<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=votacion&b=votar" method="post">
+				$txt .= '<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=votacion&b=votar" method="post">
 <input type="hidden" name="ref_ID" value="'.$r['ID'].'"  /><p>';
 
 

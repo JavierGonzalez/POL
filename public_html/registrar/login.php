@@ -100,13 +100,13 @@ case 'recuperar-pass':
 <p>No te preocupes, puedes solicitar un reset de la contrase&ntilde;a. Siguiendo estos pasos:</p>
 
 <ol>
-<li><form action="'.REGISTRAR.'login.php?a=start-reset-pass" method="POST">Tu email: <input type="text" name="email" value="" style="width:250px;" /> <input type="submit" value="Iniciar reset" style="font-weight:bold;" onclick="alert(\'Recibir&aacute;s en segundos un email en tu correo.\n\nSi no lo recibes escribe a desarrollo@virtualpol.com\');" /></form></li>
+<li><form action="'.REGISTRAR.'login.php?a=start-reset-pass" method="POST">Tu email: <input type="text" name="email" value="" style="width:250px;" /> <input type="submit" value="Iniciar reset" style="font-weight:bold;" onclick="alert(\'Recibir&aacute;s en segundos un email en tu correo.\n\nSi no lo recibes escribe a '.CONTACTO_EMAIL.'\');" /></form></li>
 <li>Recibir&aacute;s inmediatamente un email con una direcci&oacute;n web que te permitir&aacute; cambiar la contrase&ntilde;a. (Quiz&aacute; est&eacute; en la carpeta spam).</li>
 </ol>
 
 <p>Por seguridad, esta acci&oacute;n <b>solo se puede iniciar una vez cada 24h</b> y el cambio de contrase&ntilde;a ha de realizarse dentro de este periodo.</p>
 
-<p>Si esto no te ayuda a recuperar tu usuario, en ultima instancia, puedes escribirnos un email a <em>desarrollo@virtualpol.com</em></p>
+<p>Si esto no te ayuda a recuperar tu usuario, en ultima instancia, puedes escribirnos un email a <em>'.CONTACTO_EMAIL.'</em></p>
 ';
 	$txt_title = 'Recuperar contrase&ntilde;a';
 	include('../theme.php');
@@ -150,7 +150,7 @@ case 'reset-pass-change':
 	if ($_POST['pass_new'] === $_POST['pass_new2']) {
 		mysql_query("UPDATE users SET pass = '".md5($_POST['pass_new'])."', api_pass = '".rand(1000000,9999999)."', reset_last = '".$date."' WHERE ID = '".$_POST['user_ID']."' AND api_pass = '".$_POST['check']."' AND reset_last >= '".$date."' LIMIT 1", $link);
 	}
-	header('Location: http://www.virtualpol.com/');
+	header('Location: http://www.'.DOMAIN.'/');
 	break;
 
 case 'start-reset-pass':
@@ -174,7 +174,7 @@ Reset de contraseña:<br />
 <p>_________<br />
 VirtualPol</p>";
 
-		mail($r['email'], "[VirtualPol] Cambio de contraseña del usuario: ".$r['nick'], $texto_email, "FROM: VirtualPol <desarrollo@virtualpol.com>\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n"); 
+		mail($r['email'], "[VirtualPol] Cambio de contraseña del usuario: ".$r['nick'], $texto_email, "FROM: VirtualPol <".CONTACTO_EMAIL.">\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n"); 
 	}
 
 	if ($enviado == false) {
@@ -190,7 +190,7 @@ VirtualPol</p>";
 
 
 	} else {
-		header('Location: http://www.virtualpol.com/');
+		header('Location: http://www.'.DOMAIN.'/');
 	}
 	break;
 
@@ -213,7 +213,7 @@ case 'changepass':
 		}
 	}
 
-	header("Location: $url");
+	header('Location: '.$url);
 	break;
 
 case 'changemail':
@@ -226,13 +226,13 @@ case 'changemail':
 		mysql_query("UPDATE users SET email = '".$email."' WHERE ID = '".$pol['user_ID']."' AND fecha_registro < '".date('Y-m-d 20:00:00', time() - 864000)."' LIMIT 1", $link);
 	}
 
-	header("Location: $url");
+	header('Location: '.$url);
 	break;
 
 
 case 'borrar-usuario':
 	if ($_POST['nick'] == $pol['nick']) { mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link); }
-	header("Location: http://www.virtualpol.com");
+	header('Location: http://www.'.DOMAIN.'/');
 	break;
 
 case 'traza':
@@ -271,7 +271,7 @@ case 'login':
 	} elseif ($_REQUEST['url']) { 
 		$url = base64_decode($_REQUEST['url']); 
 	} else {
-		$url = 'http://vp.virtualpol.com/'; 
+		$url = 'http://vp.'.DOMAIN.'/'; 
 	}
 
 	$link = conectar();
@@ -291,7 +291,7 @@ case 'login':
 			echo '<html>
 <header>
 <title></title>
-<meta http-equiv="refresh" content="6;url=http://www.virtualpol.com/">
+<meta http-equiv="refresh" content="6;url=http://www.'.DOMAIN.'/">
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="'.IMG.'evercookie/swfobject-2.2.min.js"></script>
 <script type="text/javascript" src="'.IMG.'evercookie/evercookie.js"></script>
@@ -367,7 +367,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 
 <form action="'.REGISTRAR.'login.php?a=login" method="post">
-<input name="url" value="'.($_GET['r']?$_GET['r']:base64_encode('http://www.virtualpol.com/')).'" type="hidden" />
+<input name="url" value="'.($_GET['r']?$_GET['r']:base64_encode('http://www.'.DOMAIN.'/')).'" type="hidden" />
 
 <table border="0" style="margin:20px auto;">
 
@@ -387,7 +387,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <input type="submit" value="Entrar" onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" style="font-size:25px;color:#777;" /><br /><br />
 <a href="'.REGISTRAR.'login.php?a=recuperar-pass">&iquest;Has olvidado tu contrase&ntilde;a?</a><br /><br />
 <a href="'.REGISTRAR.'">&iquest;A&uacute;n no tienes usuario registrado?</a><br /><br /><br />
-<span style="color:#888;">Contacto: desarrollo@virtualpol.com</span>
+<span style="color:#888;">Contacto: '.CONTACTO_EMAIL.'</span>
 </td>
 </tr>
 

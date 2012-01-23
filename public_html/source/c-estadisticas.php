@@ -210,7 +210,7 @@ $txt .= '
 <br /><b id="2.5">2.5 Confianza general</b> (<a href="/info/confianza/">Ver confianza</a>)<br />
 <img src="'.gen_grafico($d['confianza'], '', true).'" alt="Confianza" border="0" />
 
-<br /><b id="2.6">2.6 Autentificados</b> (<a href="http://www.virtualpol.com/dnie.php">Autentificaci&oacute;n</a>)<br />
+<br /><b id="2.6">2.6 Autentificados</b> (<a href="'.SSL_URL.'dnie.php">Autentificaci&oacute;n</a>)<br />
 <img src="'.gen_grafico($d['autentificados']).'" alt="autentificacion" border="0" />
 </p>';
 

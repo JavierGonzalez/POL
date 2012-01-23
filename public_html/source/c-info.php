@@ -417,7 +417,7 @@ LIMIT 25", $link);
 		$total_pais[$pais] = $r['pols_ciudadanos']+$r['pols_gobierno'];
 
 		$txt .= '<tr>
-<td style="background:'.$vp['bg'][$pais].';"><a href="http://'.strtolower($pais).'.virtualpol.com/"><b>'.$pais.'</b></a></td>
+<td style="background:'.$vp['bg'][$pais].';"><a href="http://'.strtolower($pais).'.'.DOMAIN.'/"><b>'.$pais.'</b></a></td>
 <td align="right"><b>'.$r['num_ciudadanos'].'</b></td>
 <td align="right">'.pols($r['pols_negativo']).'</td>
 

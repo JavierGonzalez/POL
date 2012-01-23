@@ -1,5 +1,5 @@
 <?php 
-if ($_SERVER['HTTP_HOST'] == 'ninguno.virtualpol.com') { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com/'); mysql_close($link); exit; }
+if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.'.DOMAIN.'/'); mysql_close($link); exit; }
 
 if (!isset($txt)) { 
 	header('HTTP/1.1 404 Not Found');
@@ -78,7 +78,7 @@ body { background: <?=$body_bg?>; }
 
 
 <div id="header_vp">
-<a href="http://www.virtualpol.com/" title="VirtualPol"><img src="<?=IMG?>logo-virtualpol-2.png" border="0" alt="VirtualPol" width="162" height="46" /></a>
+<a href="http://www.<?=DOMAIN?>/" title="VirtualPol"><img src="<?=IMG?>logo-virtualpol-2.png" border="0" alt="VirtualPol" width="162" height="46" /></a>
 </div>
 
 <div id="header">
@@ -107,11 +107,11 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 	}
 	if (isset($pol['cargo'])) { $cargo_icono = ' <img src="'.IMG.'cargos/' . $pol['cargo'] . '.gif" border="0" width="16" height="16" />'; } else { $cargo_icono = ''; }
 	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a>'.(ECONOMIA?' | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a>':'').' | <a href="/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a> |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';} elseif ($pol['estado'] == 'extranjero') { // extranjero
-	$txt_perfil = '<a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <img src="'.IMG.'cargos/99.gif" style="margin-bottom:-2px;" border="0" width="16" height="16" /> (<b class="extranjero">Extranjero</b>) |  <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a> | <a href="/accion.php?a=logout">Salir</a>';
+	$txt_perfil = '<a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <img src="'.IMG.'cargos/99.gif" style="margin-bottom:-2px;" border="0" width="16" height="16" /> (<b class="extranjero">Extranjero</b>) |  <a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a> | <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'turista') { // TURISTA
 	$txt_perfil = $pol['nick'] . ' (<b class="turista">Turista</b>) ' . $pol['tiempo_ciudadanizacion'] . ' | ' . boton('Solicitar Ciudadania', REGISTRAR) . ' | <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'kickeado') { // KICKEADO
-	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Kickeado</b>) | <a href="/control/kick/"><b>Ver Kicks</b></a> | <a href="http://'.strtolower($pol['pais']).'.virtualpol.com/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a>';
+	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Kickeado</b>) | <a href="/control/kick/"><b>Ver Kicks</b></a> | <a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a>';
 } elseif ($pol['estado'] == 'expulsado') { // EXPULSADO
 	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Expulsado</b>)';
 } elseif ((isset($pol['nick'])) AND ($pol['estado'] != '')) { // sin identificar, login OK

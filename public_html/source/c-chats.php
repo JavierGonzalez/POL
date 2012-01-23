@@ -6,7 +6,7 @@ include('inc-login.php');
 
 if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 	$txt_title = 'Solicitar chat';
-	if (($pol['pais']) AND ($pol['pais'] != PAIS)) { header('Location: http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/chats/'.$_GET['a'].'/'); exit; }
+	if (($pol['pais']) AND ($pol['pais'] != PAIS)) { header('Location: http://'.strtolower($pol['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'); exit; }
 
 	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
 	while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
@@ -121,10 +121,10 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 		}
 
 		if (($r['estado'] == 'activo') AND ($r['user_ID'] != 0) AND (($r['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= 95) AND ($r['acceso_escribir'] == 'anonimos')))) { 
-			$txt .= boton('Bloquear', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=bloquear&chat_ID='.$r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?');
+			$txt .= boton('Bloquear', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=bloquear&chat_ID='.$r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?');
 		}
 
-		$txt .= '<p>Codigo HTML: <input type="text" style="color:grey;font-weight:normal;" value="&lt;iframe width=&quot;730&quot; height=&quot;480&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; transparency=&quot;transparency&quot; src=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/e/&quot;&gt;&lt;p&gt;&lt;a href=&quot;http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/&quot;&gt;&lt;b&gt;Entra al chat&lt;/b&gt;&lt;/a&gt;&lt;/p&gt;&lt;/iframe&gt;" size="70" /></p>';
+		$txt .= '<p>Codigo HTML: <input type="text" style="color:grey;font-weight:normal;" value="&lt;iframe width=&quot;730&quot; height=&quot;480&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; transparency=&quot;transparency&quot; src=&quot;http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'/e/&quot;&gt;&lt;p&gt;&lt;a href=&quot;http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'/&quot;&gt;&lt;b&gt;Entra al chat&lt;/b&gt;&lt;/a&gt;&lt;/p&gt;&lt;/iframe&gt;" size="70" /></p>';
 	}
 
 
@@ -169,7 +169,7 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 		$txt .= '<tr>
 <td valign="top" align="right">'.($r['estado']=='activo'?'':'<b style="color:#888;">#</b>').'</td>
 <td valign="top" align="right"><b>'.$r['online'].'</b></td>
-<td valign="top" nowrap="nowrap" style="background:'.$vp['bg'][$r['pais']].';" title="'.$r['pais'].'">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/"><b>'.$r['titulo'].'</b></a>':'<b>'.$r['titulo'].'</b>').'</td>
+<td valign="top" nowrap="nowrap" style="background:'.$vp['bg'][$r['pais']].';" title="'.$r['pais'].'">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'/"><b>'.$r['titulo'].'</b></a>':'<b>'.$r['titulo'].'</b>').'</td>
 
 <td valign="top" style="background:#5CB3FF;">'.($r['acceso_cfg_leer']?'<acronym title="['.$r['acceso_cfg_leer'].']">':'').ucfirst($r['acceso_leer']).($r['acceso_cfg_leer']?'</acronym>':'').'</td>
 
@@ -180,11 +180,11 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 <td valign="top">'.($r['user_ID']==0?'<em>Sistema</em>':$r['admin']).'</td>
 
 <td valign="top" align="right" nowrap="nowrap">'.timer($r['fecha_creacion']).'</td>
-<td valign="top" align="right">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$r['url'].'/opciones/">Editar</a>':'').'</td>
+<td valign="top" align="right">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'/opciones/">Editar</a>':'').'</td>
 <td>';
 
-		$txt .= ((($r['estado'] != 'activo') AND ($pol['pais'] == $r['pais']) AND ($pol['nivel'] >= 95))?boton('Activar', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=activar&chat_ID='.$r['chat_ID']):'').
-((($r['estado'] == 'bloqueado') AND ($pol['user_ID'] == $r['user_ID']))?boton('Borrar', 'http://'.strtolower($r['pais']).DEV.'.virtualpol.com/accion.php?a=chat&b=eliminar&chat_ID='.$r['chat_ID']):'').'</td>
+		$txt .= ((($r['estado'] != 'activo') AND ($pol['pais'] == $r['pais']) AND ($pol['nivel'] >= 95))?boton('Activar', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=activar&chat_ID='.$r['chat_ID']):'').
+((($r['estado'] == 'bloqueado') AND ($pol['user_ID'] == $r['user_ID']))?boton('Borrar', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=eliminar&chat_ID='.$r['chat_ID']):'').'</td>
 </tr>';
 }
 

@@ -46,7 +46,7 @@ $txt .= '<h1>Bienvenido a VirtualPol</h1>
 
 <li><b>Herramientas de comunicaci&oacute;n</b>: salas de chat, foros, voz (mumble), mensajes privados, notas...</li>
 
-<li>Custodiado por un <b>avanzado sistema de Supervisi&oacute;n del Censo</b> (<a href="https://virtualpol.com/dnie.php" title="Autentificaci&oacute;n mediante DNIe y otros certificados">DNIe</a>, <abbr title="Avanzado sistema de deteccion mediante factores tecnicos">sistema de detecci&oacute;n</abbr>, supervisores elegidos democr&aacute;ticamente, <a href="http://www.virtualpol.com/legal" title="Condiciones de Uso de VirtualPol">TOS</a>...). M&aacute;s de 3 a&ntilde;os de experiencia funcionando con solidez.</li>
+<li>Custodiado por un <b>avanzado sistema de Supervisi&oacute;n del Censo</b> (<a href="'.SSL_URL.'dnie.php" title="Autentificaci&oacute;n mediante DNIe y otros certificados">DNIe</a>, <abbr title="Avanzado sistema de deteccion mediante factores tecnicos">sistema de detecci&oacute;n</abbr>, supervisores elegidos democr&aacute;ticamente, <a href="http://www.'.DOMAIN.'/legal" title="Condiciones de Uso de VirtualPol">TOS</a>...). M&aacute;s de 3 a&ntilde;os de experiencia funcionando con solidez.</li>
 
 <li>Algunos datos: '.num($num_votaciones_votos).' votos procesados en '.num($num_votaciones).' votaciones y '.num($num_votos).' votos de otros tipos.</li>
 
@@ -85,11 +85,11 @@ foreach ($vp['paises'] AS $pais) {
 	// Presidente
 	$pais_presidente = '';
 	$result = mysql_query("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '7'", $link);
-	while($r = mysql_fetch_array($result)) { $pais_presidente = '<a href="http://'.$pais_low.'.virtualpol.com/perfil/'.strtolower($r['nick']).'/" class="nick"><b style="font-size:18px;">' . $r['nick'] . '</b></a>'; }
+	while($r = mysql_fetch_array($result)) { $pais_presidente = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'/" class="nick"><b style="font-size:18px;">' . $r['nick'] . '</b></a>'; }
 
 	$pais_vice = '';
 	$result = mysql_query("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '19'", $link);
-	while($r = mysql_fetch_array($result)) { $pais_vice = '<a href="http://'.$pais_low.'.virtualpol.com/perfil/'.strtolower($r['nick']).'/" class="nick" style="font-size:18px;">' . $r['nick'] . '</a>'; }
+	while($r = mysql_fetch_array($result)) { $pais_vice = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'/" class="nick" style="font-size:18px;">' . $r['nick'] . '</a>'; }
 
 	// DEFCON
 	$result = mysql_query("SELECT valor, dato FROM ".$pais_low."_config WHERE dato = 'pais_des'", $link);
@@ -112,17 +112,17 @@ foreach ($vp['paises'] AS $pais) {
 
 
 	$txt .= '<tr style="background:'.$vp['bg'][$pais].';">
-<td><a href="http://'.$pais_low.'.virtualpol.com/"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.'" width="60" height="40" /></a></td>
+<td><a href="http://'.$pais_low.'.'.DOMAIN.'/"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.'" width="60" height="40" /></a></td>
 
-<td nowrap="nowrap"><a href="http://'.$pais_low.'.virtualpol.com/"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
+<td nowrap="nowrap"><a href="http://'.$pais_low.'.'.DOMAIN.'/"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
 
 <td align="right"><b style="font-size:22px;">'.num($pais_pob).'</b></td>
 <td nowrap="nowrap" align="right"><b>'.num($pais_dias).'</b> d&iacute;as</td>
 
 <td style="font-size:13px;">
-<a href="http://'.$pais_low.'.virtualpol.com/elecciones/">Elecciones</a><br />
-<a href="http://'.$pais_low.'.virtualpol.com/votacion/">Votaciones</a><br />
-<a href="http://'.$pais_low.'.virtualpol.com/chats/">Chats</a> <a href="http://'.$pais_low.'.virtualpol.com/foro/">Foro</a>
+<a href="http://'.$pais_low.'.'.DOMAIN.'/elecciones/">Elecciones</a><br />
+<a href="http://'.$pais_low.'.'.DOMAIN.'/votacion/">Votaciones</a><br />
+<a href="http://'.$pais_low.'.'.DOMAIN.'/chats/">Chats</a> <a href="http://'.$pais_low.'.'.DOMAIN.'/foro/">Foro</a>
 </td>
 
 <td nowrap="nowrap">'.($pais!='VP'?'':'<img src="'.IMG.'cargos/7.gif" alt="Presidente de '.$pais.'" title="Presidente de '.$pais.'" width="16" height="16" /> '.$pais_presidente.'<br /><img src="'.IMG.'cargos/19.gif" alt="Vicepresidente de '.$pais.'" title="Vicepresidente de '.$pais.'" width="16" height="16" /> '.$pais_vice.'').'</td>
@@ -180,7 +180,7 @@ while($r = mysql_fetch_array($result)){
 
 	$pais_url = strtolower($r['pais']);
 	if ($pais_url == 'ninguno') { $pais_url = 'vp'; }
-	$li_online .= ' <a href="http://'.$pais_url.'.virtualpol.com/perfil/'.$r['nick'].'/" class="nick redondeado '.$r['estado'].'" style="padding:2px;line-height:25px;background:' . $vp['bg'][$r['pais']] . ';">'.$r['nick'].'</a>'; 
+	$li_online .= ' <a href="http://'.$pais_url.'.'.DOMAIN.'/perfil/'.$r['nick'].'/" class="nick redondeado '.$r['estado'].'" style="padding:2px;line-height:25px;background:' . $vp['bg'][$r['pais']] . ';">'.$r['nick'].'</a>'; 
 }
 
 $txt .= '<br />

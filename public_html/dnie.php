@@ -45,7 +45,7 @@ Esta linea final no supone ninguna informaci&oacute;n en claro.
 
 		if ($dnie_clon == true) { 
 			// Persona ya identificada con otro usuario. No realiza la autentificacion. 
-			$txt .= 'Ya estas autentificado con otro usuario. Envia un email a desarrollo@virtualpol.com explicando la situacion. Gracias.';
+			$txt .= 'Ya estas autentificado con otro usuario. Envia un email a '.CONTACTO_EMAIL.' explicando la situacion. Gracias.';
 
 		} else {
 			// Autentificacion correcta. El DNIe es inedito. Procede a guardar el hash en la base de datos.

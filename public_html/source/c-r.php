@@ -18,5 +18,5 @@ VALUES ('" . $r['ID'] . "', '" . $IP . "', '" . $date . "', '" . $_SERVER['HTTP_
 }
 if ($link) { mysql_close($link); }
 header('HTTP/1.1 301 Moved Permanently');
-header('Location: http://www.virtualpol.com/registrar/'.($user_plataforma?'?p='.$user_plataforma:''));
+header('Location: http://www.'.DOMAIN.'/registrar/'.($user_plataforma?'?p='.$user_plataforma:''));
 ?>

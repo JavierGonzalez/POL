@@ -382,7 +382,7 @@ WHERE dnie = 'false' AND estado != 'expulsado' AND
 (estado = 'validar' AND fecha_last <= '".retrasar_t($margen_15dias)."')
 ", $link);
 while($r = mysql_fetch_array($result)) {
-	mail($r['email'], '[VirtualPol] Tu usuario '.$r['nick'].' está a punto de expirar por inactividad', "Hola ciudadano ".$r['nick'].",\n\nEl sistema VirtualPol se esmera en tener un censo limpio y fiel a la realidad, en lugar de tener decenas de miles de usuarios sin actividad. Por ello se eliminan usuarios en tramos desde 15 dias (en el primer mes) hasta 60 dias de inactividad.\n\nDebes entrar lo antes posible en VirtualPol o tu usuario expirará. Con entrar una vez es suficiente.\n\n\nVirtualPol\nhttp://www.virtualpol.com", "FROM: VirtualPol <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
+	mail($r['email'], '[VirtualPol] Tu usuario '.$r['nick'].' está a punto de expirar por inactividad', "Hola ciudadano ".$r['nick'].",\n\nEl sistema VirtualPol se esmera en tener un censo limpio y fiel a la realidad, en lugar de tener decenas de miles de usuarios sin actividad. Por ello se eliminan usuarios en tramos desde 15 dias (en el primer mes) hasta 60 dias de inactividad.\n\nDebes entrar lo antes posible en VirtualPol o tu usuario expirará. Con entrar una vez es suficiente.\n\n\nVirtualPol\nhttp://www.".DOMAIN."", "FROM: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: ".CONTACTO_EMAIL." \nX-Sender: ".CONTACTO_EMAIL." \nMIME-Version: 1.0\n"); 
 }
 
 

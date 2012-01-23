@@ -14,7 +14,7 @@ while($r = mysql_fetch_array($result)){
 
 	$user_ID = $r['ID'];
 	if ((PAIS != $r['pais']) AND ($r['estado'] == 'ciudadano') AND ($r['pais'] != 'ninguno')) {
-		header('HTTP/1.1 301 Moved Permanently'); header('Location: http://'.strtolower($r['pais']).'.virtualpol.com/perfil/'.$r['nick'].'/'); exit;
+		header('HTTP/1.1 301 Moved Permanently'); header('Location: http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'/'); exit;
 	} elseif ($user_ID) { //nick existe
 
 		$nick = $r['nick'];
@@ -25,10 +25,10 @@ while($r = mysql_fetch_array($result)){
 	
 			$extras = '
 <tr>
-<td colspan="2"><input style="float:right;" value="Expulsar" onclick="window.location.href=\'http://'.strtolower($pol['pais']).'.virtualpol.com/control/expulsiones/expulsar/'.$r['nick'].'\';" type="button"'.$exp_disabled.' />('.$r['ID'].', <span title="'.$r['avatar_localdir'].'" style="font-size:12px;">'.$r['email'].'</span>, '.num($r['visitas']).' v, '.num($r['paginas']).' pv,  <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-30,30)).'">'.ocultar_IP($r['host'], 'host').'</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
+<td colspan="2"><input style="float:right;" value="Expulsar" onclick="window.location.href=\'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/control/expulsiones/expulsar/'.$r['nick'].'\';" type="button"'.$exp_disabled.' />('.$r['ID'].', <span title="'.$r['avatar_localdir'].'" style="font-size:12px;">'.$r['email'].'</span>, '.num($r['visitas']).' v, '.num($r['paginas']).' pv,  <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-30,30)).'">'.ocultar_IP($r['host'], 'host').'</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
 <tr><td colspan="3" align="right">
 
-<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post">
+<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post">
 Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="255" value="'.$r['nota_SC'].'" />
 <input type="submit" value="OK" />
 </form>
@@ -174,7 +174,7 @@ $txt .= '
 
 } // fin ECONOMIA
 
-// <p>Clave API: <input class="api_box" type="text" size="12" value="' . $r['api_pass'] . '" readonly="readonly" /> ' . boton('Generar clave', '/accion.php?a=api&b=gen_pass', '&iquest;Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua no funcionar&aacute;.') . ' (Equivale a tu contrase&ntilde;a, mantenla en secreto. M&aacute;s info: <a href="http://www.virtualpol.com/api.php">API</a>)</p>
+// <p>Clave API: <input class="api_box" type="text" size="12" value="' . $r['api_pass'] . '" readonly="readonly" /> ' . boton('Generar clave', '/accion.php?a=api&b=gen_pass', '&iquest;Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua no funcionar&aacute;.') . ' (Equivale a tu contrase&ntilde;a, mantenla en secreto. M&aacute;s info: <a href="'.SSL_URL.'api.php">API</a>)</p>
 
 
 $txt .= '<p>'.boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel').' '.boton('Autentificar con DNIe', SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton('Rechazar Ciudadania', REGISTRAR).' ':'').'</p>
@@ -355,7 +355,7 @@ $result2 = mysql_query("SELECT pais, titulo, url, fecha_creacion, fecha_last
 FROM chats WHERE user_ID = '".$r['ID']."' 
 ORDER BY fecha_creacion ASC", $link);
 while ($r2 = mysql_fetch_array($result2)) { 
-	$txt .= '<li>'.duracion(time() - strtotime($r2['fecha_creacion'])).' <a href="http://'.strtolower($r2['pais']).DEV.'.virtualpol.com/chats/'.$r2['url'].'/"><b>'.$r2['titulo'].'</b></a> (hace '.duracion(time() - strtotime($r2['fecha_last'])).')</li>';
+	$txt .= '<li>'.duracion(time() - strtotime($r2['fecha_creacion'])).' <a href="http://'.strtolower($r2['pais']).'.'.DOMAIN.'/chats/'.$r2['url'].'/"><b>'.$r2['titulo'].'</b></a> (hace '.duracion(time() - strtotime($r2['fecha_last'])).')</li>';
 }
 
 
@@ -365,7 +365,7 @@ $txt .= '</ul>
 
 
 		if ($user_ID != $pol['user_ID']) {
-			$txt .= '<p>' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/msg/' . strtolower($nick) . '/').' &nbsp; '.(ECONOMIA?boton('Transferir '.MONEDA_NOMBRE.'', 'http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/pols/transferir/' . strtolower($nick) . '/'):'').'</p>';
+			$txt .= '<p>' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/' . strtolower($nick) . '/').' &nbsp; '.(ECONOMIA?boton('Transferir '.MONEDA_NOMBRE.'', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/' . strtolower($nick) . '/'):'').'</p>';
 		}
 		$txt .= '</div>';
 

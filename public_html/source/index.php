@@ -42,13 +42,13 @@ ORDER BY fecha_creacion ASC", $link);
 <table border="0"><tr><td width="50%" valign="top">
 
 <h2>&iquest;Qu&eacute; es '.PAIS.'?</h2>
-<p style="text-align:justify;">'.PAIS.' es un Pais auto-gestionado Democr&aacute;ticamente de la comunidad <a href="http://www.virtualpol.com">VirtualPol</a>.</p>
+<p style="text-align:justify;">'.PAIS.' es un Pais auto-gestionado Democr&aacute;ticamente de la comunidad <a href="http://www.'.DOMAIN.'">VirtualPol</a>.</p>
 
 <p style="text-align:justify;">El Gobierno Democr&aacute;tico se compone de un Presidente, Diputados, Jueces, Polic&iacute;as, Leyes, Juicios, Periodistas, Abogados, etc... sin la existencia de usuarios privilegiados (god).</p>
 
 <p style="text-align:justify;">En '.PAIS.' todos los ciudadanos est&aacute;n en absoluta igualdad, con las mismas oportunidades para el liderazgo o el fracaso en la b&uacute;squeda del Poder.</p>
 
-<p>'.boton('Reg&iacute;strate!', 'http://www.virtualpol.com/registrar/').'</p>
+<p>'.boton('Reg&iacute;strate!', REGISTRAR).'</p>
 
 </td><td valign="top">
 	

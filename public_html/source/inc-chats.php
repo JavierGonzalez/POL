@@ -8,7 +8,7 @@ if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['
 $result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
 while ($r = mysql_fetch_array($result)) { 
 	
-	if ($r['pais'] != PAIS) { header('Location: http://'.strtolower($r['pais']).DEV.'.virtualpol.com/chats/'.$_GET['a'].'/'.($_GET['b']?$_GET['b'].'/':'')); exit; }
+	if ($r['pais'] != PAIS) { header('Location: http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'.($_GET['b']?$_GET['b'].'/':'')); exit; }
 
 
 	if ($pol['user_ID']) { mysql_query("UPDATE chats SET stats_visitas = stats_visitas + 1, fecha_last = '".$date."' WHERE chat_ID = ".$r['chat_ID']." LIMIT 1", $link); }
@@ -47,9 +47,9 @@ $txt .= '
 
 if ($externo) {
 	if ($_SESSION['pol']['user_ID']) {
-		$txt .= '<span style="float:right;"><a href="http://www'.DEV.'.virtualpol.com/">Volver a VirtualPOL</a></span>'.$titulo;
+		$txt .= '<span style="float:right;"><a href="http://www.'.DOMAIN.'/">Volver a VirtualPOL</a></span>'.$titulo;
 	} else {
-		$txt .= '<span style="float:right;"><a href="http://www'.DEV.'.virtualpol.com/registrar/">Crear ciudadano</a></span>'.$titulo;
+		$txt .= '<span style="float:right;"><a href="http://www.'.DOMAIN.'/registrar/">Crear ciudadano</a></span>'.$titulo;
 	}
 } else {
 	$txt .= '<span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones/">Opciones</a>] [<a href="/chats/'.$_GET['a'].'/log/">Log</a>]</span><a href="/chats/">Chat</a>: '.$titulo;
@@ -196,7 +196,7 @@ window.onload = function(){
 
 
 if ($externo) {
-	// ES chat externo (incrustado en una web fuera de virtualpol.com)
+	// ES chat externo (incrustado en una web externa)
 	echo '
 <html>
 <body>
@@ -211,7 +211,7 @@ document.write(unescape("%3Cscript src=\'" + gaJsHost + "google-analytics.com/ga
 <script type="text/javascript">
 try {
 var pageTracker = _gat._getTracker("UA-59186-46");
-pageTracker._setDomainName("virtualpol.com");
+pageTracker._setDomainName("'.DOMAIN.'");
 pageTracker._trackPageview();
 } catch(err) {}
 </script>

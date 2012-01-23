@@ -1,6 +1,6 @@
 <?php 
 
-// THEME HOME de www.virtualpol.com
+// THEME HOME
 
 if ($link) { mysql_close($link); }
 if (!$txt) { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://' . HOST . '/'); exit; }
@@ -50,7 +50,7 @@ border-width: 0 2px 2px 0;
 <?php
 unset($txt_header);
 if ($pol['nick']) {
-	$txt_perfil = '<b><a href="http://' . strtolower($pol['pais']) . '.virtualpol.com/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . '</a></b> | <b class="' . $pol['estado'] . '">' . ucfirst($pol['estado']) . '</b> de <b>' . $pol['pais'] . '</b> | '.boton('Salir', REGISTRAR.'login.php?a=logout');
+	$txt_perfil = '<b><a href="http://' . strtolower($pol['pais']) . '.'.DOMAIN.'/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . '</a></b> | <b class="' . $pol['estado'] . '">' . ucfirst($pol['estado']) . '</b> de <b>' . $pol['pais'] . '</b> | '.boton('Salir', REGISTRAR.'login.php?a=logout');
 } else { // sin identificar, sin login
 	$txt_perfil = boton('Crear ciudadano', REGISTRAR).' | '.boton('Entrar', REGISTRAR.'login.php');
 }
@@ -59,7 +59,7 @@ if ($pol['nick']) {
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 
-<td width="208"><span id="homelogo"><a href="http://www.virtualpol.com/" class="gris" title="Home"><img src="<?=IMG?>logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-12px 0 -9px -6px;" border="0" /></a></td><td><span style="color:grey;font-size:20x;">Ecosistema de plataformas democr&aacute;ticas autogestionadas</span></span></td>
+<td width="208"><span id="homelogo"><a href="http://www.<?=DOMAIN?>/" class="gris" title="Home"><img src="<?=IMG?>logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-12px 0 -9px -6px;" border="0" /></a></td><td><span style="color:grey;font-size:20x;">Ecosistema de plataformas democr&aacute;ticas autogestionadas</span></span></td>
 
 <td align="right"><?=$txt_perfil?></td>
 
@@ -82,9 +82,9 @@ if ($pol['nick']) {
 <div class="clear"></div>
 
 
-<center style="margin:5px 0 -2px 0;"><span class="azul" style="padding:6px;color:grey;opacity:0.8;"><a href="http://www.virtualpol.com/"><b>VirtualPol</b></a> | Plataformas: 
-<?php foreach ($vp['paises'] AS $pais) { if (!in_array($pais, $vp['paises_congelados'])) { echo '<a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a> '; } } ?>
- | <a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a> | <!--<a href="http://www.teoriza.com/">Blogs Teoriza</a> |--> <a href="http://www.virtualpol.com/legal"><b>TOS</b></a>
+<center style="margin:5px 0 -2px 0;"><span class="azul" style="padding:6px;color:grey;opacity:0.8;"><a href="/"><b>VirtualPol</b></a> | Plataformas: 
+<?php foreach ($vp['paises'] AS $pais) { if (!in_array($pais, $vp['paises_congelados'])) { echo '<a href="http://'.strtolower($pais).'.'.DOMAIN.'/">'.$pais.'</a> '; } } ?>
+ | <a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a> | <a href="/legal"><b>TOS</b></a>
 </span></center>
 
 </div>

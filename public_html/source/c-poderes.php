@@ -1,6 +1,5 @@
 <?php 
 include('inc-login.php');
-$adsense_exclude = true;
 
 	
 $p['jefegabinete'] = ' ';
@@ -27,7 +26,7 @@ if ($pol['paises']) {
 	foreach ($pol['paises'] AS $pais) {
 		if ($pais != PAIS) {
 			if ($mas_paises) { $mas_paises .= ', '; }
-			$mas_paises .= '<a href="http://'.strtolower($pais).'.virtualpol.com/">'.$pais.'</a>';
+			$mas_paises .= '<a href="http://'.strtolower($pais).'.'.DOMAIN.'/">'.$pais.'</a>';
 		}
 	}
 	if ($mas_paises) { $mas_paises = ' <span style="color:grey;font-size:12px;">(Ver otros pa&iacute;ses: '.$mas_paises.')</span>'; }

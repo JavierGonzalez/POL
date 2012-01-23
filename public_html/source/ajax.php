@@ -190,7 +190,7 @@ LIMIT 1", $link);
 				
 				case 'ciudadano': 
 					if (isset($_SESSION['pol']['user_ID'])) {
-						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> te anima a unirte a la comunidad: <a href="http://'.pais.'.virtualpol.com/r/'.strtolower($_SESSION['pol']['nick']).'/" target="_blank"><b>Crear Usuario</b></a>'; 
+						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> te anima a unirte a la comunidad: <a href="http://'.pais.'.'.DOMAIN.'/r/'.strtolower($_SESSION['pol']['nick']).'/" target="_blank"><b>Crear Usuario</b></a>'; 
 					}
 					break;
 
@@ -204,7 +204,7 @@ LIMIT 1", $link);
 				case 'dnie':
 				case 'autentificado': 
 					if (nucleo_acceso('autentificados')) {
-						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . ' es autentico.</b> (<a href="http://www.virtualpol.com/dnie.php">Autentificado</a>)'; 
+						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . ' es autentico.</b> (<a href="'.SSL_URL.'dnie.php">Autentificado</a>)'; 
 					}
 					break;
 
@@ -214,9 +214,9 @@ LIMIT 1", $link);
 				case 'ayuda': 
 					$tipo = 'm';
 					if (PAIS == 'VP') {
-						$elmsg = 'ofrece ayuda'.(isset($msg_rest)?' a '.$msg_rest:'').': <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
+						$elmsg = 'ofrece ayuda'.(isset($msg_rest)?' a '.$msg_rest:'').': <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
 					} else {
-						$elmsg = 'ofrece ayuda'.(isset($msg_rest)?' a '.$msg_rest:'').': <a href="http://15m.virtualpol.com/doc/faq---consultas-a-la-ciudadania/" target="_blank"><b>Ayuda y FAQ (Preguntas frecuentes)</b></a> - <a href="http://15m.virtualpol.com/doc/declaracion-de-la-asamblea-virtual-15m/">La Declaraci&oacute;n</a> - <a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
+						$elmsg = 'ofrece ayuda'.(isset($msg_rest)?' a '.$msg_rest:'').': <a href="http://15m.'.DOMAIN.'/doc/faq---consultas-a-la-ciudadania/" target="_blank"><b>Ayuda y FAQ (Preguntas frecuentes)</b></a> - <a href="http://15m.'.DOMAIN.'/doc/declaracion-de-la-asamblea-virtual-15m/">La Declaraci&oacute;n</a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
 					}
 					break;
 

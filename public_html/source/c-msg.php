@@ -194,7 +194,7 @@ LIMIT 100", $link);
 }
 
 } else if ($pol['user_ID']) {
-	header('Location: http://'.strtolower($pol['pais']).'.virtualpol.com/msg/'.($_GET['a']?$_GET['a'].'/':''));
+	header('Location: http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.($_GET['a']?$_GET['a'].'/':''));
 	exit;
 }
 

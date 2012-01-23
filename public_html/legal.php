@@ -1,6 +1,5 @@
 <?php
 include('inc-login.php');
-$adsense_exclude = true;
 
 $txt_title = 'CONDICIONES DE USO DE VIRTUALPOL | Informacion legal, contacto';
 $txt_description = 'Condiciones de Uso de VirtualPol. Texto legal, contacto.'; 
@@ -23,7 +22,7 @@ if ($pol['user_ID']) {
 		$txt_legal_botones = '';
 	} else {
 		$txt_legal = 'Como usuario de VirtualPol debes aceptar las siguientes condiciones.<br /><br />';
-		$txt_legal_botones = '<div style="margin:30px 0 0 0;">'.boton('HE LEIDO Y ACEPTO TODAS LAS CONDICIONES.', 'http://'.$pol['pais'].DEV.'.'.URL.'/accion.php?a=aceptar-condiciones').'</div>';
+		$txt_legal_botones = '<div style="margin:30px 0 0 0;">'.boton('HE LEIDO Y ACEPTO TODAS LAS CONDICIONES.', 'http://'.$pol['pais'].'.'.DOMAIN.'/accion.php?a=aceptar-condiciones').'</div>';
 	}
 
 }

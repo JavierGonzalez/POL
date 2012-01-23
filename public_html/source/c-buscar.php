@@ -1,7 +1,7 @@
 <?php
 include('inc-login.php');
 
-if (!$_GET['q']) { $_GET['q'] = 'site:'.strtolower(PAIS).'.virtualpol.com '; } 
+if (!$_GET['q']) { $_GET['q'] = 'site:'.strtolower(PAIS).'.'.DOMAIN.' '; } 
 
 $txt .= '
 

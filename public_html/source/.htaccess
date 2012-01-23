@@ -1,2 +1,4 @@
+redirect 301 /codigo https://github.com/JavierGonzalez/VirtualPol/
+
 RewriteEngine on 
-RewriteRule ^([a-z-A-Z-0-9]{1,20})(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?$ /c-$1.php?a=$3&b=$5&c=$7&d=$9
+RewriteRule ^([a-z-A-Z-0-9]{1,20})(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?$ /c-$1.php?a=$3&b=$5&c=$7&d=$9 [L]

@@ -3,9 +3,9 @@
 function editor_enriquecido($name, $txt='') {
         $GLOBALS['txt_header'] .= '
 <script type="text/javascript">
-document.domain = "virtualpol.com";
+document.domain = "'.DOMAIN.'";
 </script>
-<script type="text/javascript" src="http://www.virtualpol.com/img/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="'.IMG.'tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 
 tinyMCE.init({
@@ -105,7 +105,7 @@ LIMIT 1", $link);
 
 
 function enviar_email($user_ID, $asunto, $mensaje, $email='') {
-        $cabeceras = "From: VirtualPol <desarrollo@virtualpol.com> \nReturn-Path: VirtualPol <desarrollo@virtualpol.com>\n X-Sender: VirtualPol <desarrollo@virtualpol.com>\n From: VirtualPol <desarrollo@virtualpol.com>\n MIME-Version: 1.0\nContent-type: text/html\n";
+        $cabeceras = "From: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: VirtualPol <".CONTACTO_EMAIL.">\n X-Sender: VirtualPol <".CONTACTO_EMAIL.">\n From: VirtualPol <".CONTACTO_EMAIL.">\n MIME-Version: 1.0\nContent-type: text/html\n";
 
         if (($user_ID) AND ($email == '')) {
                 global $link;

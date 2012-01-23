@@ -1,6 +1,5 @@
 <?php
 include('inc-login.php');
-$adsense_exclude = true;
 /*
 #OLD
 elecciones_estado  	elecciones

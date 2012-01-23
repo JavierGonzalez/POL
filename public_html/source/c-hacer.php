@@ -26,7 +26,7 @@ $txt .= '<h1>&iquest;Qu&eacute; puedes hacer en VirtualPol?</h1>
 
 <ol>
 
-<li>'.($_SESSION['pol']['dnie']=='true'?'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Est&aacute;s autentificado correctamente.</b>':'<img src="'.IMG.'ico/no.png" width="32" height="32" /> <b style="color:red;">No has autentificado tu usuario.</b>').' <a href="https://virtualpol.com/dnie.php" target="_blank" style="font-size:19px;">Ver autentificaci&oacute;n</a>.<br />
+<li>'.($_SESSION['pol']['dnie']=='true'?'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Est&aacute;s autentificado correctamente.</b>':'<img src="'.IMG.'ico/no.png" width="32" height="32" /> <b style="color:red;">No has autentificado tu usuario.</b>').' <a href="'.SSL_URL.'dnie.php" target="_blank" style="font-size:19px;">Ver autentificaci&oacute;n</a>.<br />
 Puedes identificarte solidamente con <abbr title="DNI electronico y otros 30 certificados">DNIe</abbr>, contribuir&aacute;s a reforzar la legitimidad de las votaciones y tu usuario nunca se eliminar&aacute;. Es opcional. <!--Autentificarse con un DNIe es gratis, solo necesitas tener un DNIe vigente, conocer su contrase&ntilde;a y disponer de un lector USB DNIe (8-12 euros).--><br /><br /></li>';
 
 
@@ -113,7 +113,7 @@ $txt .= '</ol>
 
 
 if (!$pol['user_ID']) { $txt = '<p>Debes <a href="'.REGISTRAR.'?p='.PAIS.'">registrar un ciudadano</a> para poder ver esta p&aacute;gina.</p>'; } 
-//elseif ($pol['estado'] == 'extranjero') { header('Location: http://'.strtolower($pol['pais']).'.virtualpol.com/hacer/'); exit; }
+//elseif ($pol['estado'] == 'extranjero') { header('Location: http://'.strtolower($pol['pais']).'.'.DOMAIN.'/hacer/'); exit; }
 elseif ($pol['estado'] != 'ciudadano') { $txt = '<p>Debes <a href="'.REGISTRAR.'">solicitar ciudadania</a> en alguna plataforma.</p>'; }
 
 

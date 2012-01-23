@@ -1,5 +1,5 @@
 <?php
-define('URL', 'virtualpol.com');
+define('DOMAIN', 'virtualpol.com');
 define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/real/');
 
 // INICIALIZACION
@@ -77,16 +77,17 @@ if (ASAMBLEA) { // PLATAFORMAS ASAMBLEARIAS
 }
 
 
-define('SSL_URL', 'https://virtualpol.com/'); // SSL_URL | http://www.virtualpol.com/ = https://virtualpol.com/
+define('SSL_URL', 'https://'.DOMAIN.'/'); // SSL_URL | http://www.virtualpol.com/ = https://virtualpol.com/
 if ($_SERVER['HTTPS']) {
-	define('IMG', 'https://virtualpol.com/img/');
+	define('IMG', 'https://'.DOMAIN.'/img/');
 } else {
-	define('IMG', 'http://www.virtualpol.com/img/');;
+	define('IMG', 'http://www.'.DOMAIN.'/img/');;
 }
-define('REGISTRAR', 'https://virtualpol.com/registrar/');
+define('REGISTRAR', 'https://'.DOMAIN.'/registrar/');
 
 // CONFIG SISTEMA
-define('USERCOOKIE', '.virtualpol.com');
+define('CONTACTO_EMAIL', 'desarrollo@virtualpol.com');
+define('USERCOOKIE', '.'.DOMAIN);
 
 define('COLOR_BG', $vp['bg'][PAIS]);
 define('COLOR_BG2', $vp['bg2'][PAIS]);

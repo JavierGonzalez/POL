@@ -2,7 +2,7 @@
 include('inc-login.php');
 
 if (PAIS != 'POL') {
-header('HTTP/1.1 301 Moved Permanently'); header('Location: http://pol.virtualpol.com/geolocalizacion/'); exit;
+header('HTTP/1.1 301 Moved Permanently'); header('Location: http://pol.'.DOMAIN.'/geolocalizacion/'); exit;
 }
 
 $google_maps_api = 'ABQIAAAA3x7avNobQn9IKOcVfx9_jhSEhcFhcQv9ywlyLTKF25AAGEQo5xR0yFjye8cvG2S3VXQayUCrkHGOBQ';
@@ -54,7 +54,7 @@ function initialize() {
 
 <div id="map" style="width:100%;height:550px"></div>
 
-<form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=geolocalizacion&b=add" method="POST">
+<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=geolocalizacion&b=add" method="POST">
 Latitud: <input name="y" size="25" type="text" id="geo_y" value="'.$pol['geo'][1].'" readonly="readonly" /><br />
 Longitud: <input name="x" size="25" type="text" id="geo_x" value="'.$pol['geo'][0].'" readonly="readonly" />
 <br /><input value="Fijar mi localizaci&oacute;n" type="submit">

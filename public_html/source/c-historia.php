@@ -9,9 +9,9 @@ $sc = get_supervisores_del_censo();
 if (isset($sc[$pol['user_ID']])) {
 
 $txt .= '
-<!--<p style="color:#AAA">Solo hechos importantes a nivel general y explicados de forma tan sencilla que cualquiera de fuera lo comprenda. De forma breve y concisa. <a href="http://pol.virtualpol.com/buscar/">buscador</a>. Etiquetas permitidas &lt;b&gt; y &lt;a href=""&gt;&lt;/a&gt;</p>-->
+<!--<p style="color:#AAA">Solo hechos importantes a nivel general y explicados de forma tan sencilla que cualquiera de fuera lo comprenda. De forma breve y concisa. <a href="/buscar/">buscador</a>. Etiquetas permitidas &lt;b&gt; y &lt;a href=""&gt;&lt;/a&gt;</p>-->
 
-<p><form action="http://'.strtolower($pol['pais']).'.virtualpol.com/accion.php?a=historia&b=add" method="POST">
+<p><form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=historia&b=add" method="POST">
 
 
 <select name="year">

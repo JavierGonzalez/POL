@@ -71,7 +71,7 @@ case 'aceptar-condiciones':
 	$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND fecha_legal = '0000-00-00 00:00:00' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
 		mysql_query("UPDATE users SET fecha_legal = '".$date."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		evento_chat('<b>[#] '.crear_link($pol['nick']).'</b> ha aceptado las <a href="http://www'.DEV.'.'.URL.'/legal">Condiciones de Uso de VirtualPol</a>.');
+		evento_chat('<b>[#] '.crear_link($pol['nick']).'</b> ha aceptado las <a href="http://www'.'.'.DOMAIN.'/legal">Condiciones de Uso de VirtualPol</a>.');
 	}
 	$refer_url = '';
 	break;
@@ -243,9 +243,9 @@ case 'pass':
 
 			$asunto = '[VirtualPol] Reseteo de contraseña del usuario: '.$nick;
 
-			$mensaje = "Hola Ciudadano,\n\nSe ha procedido a resetear tu contraseña por razones de seguridad. Por lo tanto tu contraseña ha cambiado.\n\n\nUsuario: ".$nick."\nNueva contraseña: ".$new_pass."\n\nLogin en: http://www.virtualpol.com/\n\nRecuerda que puedes cambiar tu contraseña en cualquier momento, así como iniciar un proceso de recuperación con tu email.\n\nGracias, nos vemos en VirtualPol ;)\n\n\nVirtualPol\nhttp://www.virtualpol.com";
+			$mensaje = "Hola Ciudadano,\n\nSe ha procedido a resetear tu contraseña por razones de seguridad. Por lo tanto tu contraseña ha cambiado.\n\n\nUsuario: ".$nick."\nNueva contraseña: ".$new_pass."\n\nLogin en: http://www.".DOMAIN."/\n\nRecuerda que puedes cambiar tu contraseña en cualquier momento, así como iniciar un proceso de recuperación con tu email.\n\nGracias, nos vemos en VirtualPol ;)\n\n\nVirtualPol\nhttp://www.".DOMAIN;
 
-			mail($email, $asunto, $mensaje, "FROM: VirtualPol <desarrollo@virtualpol.com> \nReturn-Path: VirtualPol <desarrollo@virtualpol.com> \nX-Sender: VirtualPol <desarrollo@virtualpol.com> \nMIME-Version: 1.0\n"); 
+			mail($email, $asunto, $mensaje, "FROM: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: VirtualPol <".CONTACTO_EMAIL."> \nX-Sender: VirtualPol <".CONTACTO_EMAIL."> \nMIME-Version: 1.0\n"); 
 
 			mysql_query("UPDATE users SET pass = '".md5($new_pass)."', reset_last = fecha_registro WHERE ID = '".$user_ID."' LIMIT 1", $link);
 			echo 'OK: '.$_GET['nick'];
@@ -1302,7 +1302,7 @@ case 'votacion':
 				unset($_POST['voto']); unset($_POST['mensaje']); unset($_POST['validez']);
 			}
 
-			header('Location: http://'.strtolower($pais).'.virtualpol.com/votacion/'.$_POST['ref_ID'].'/'); 
+			header('Location: http://'.strtolower($pais).'.'.DOMAIN.'/votacion/'.$_POST['ref_ID'].'/'); 
 			mysql_close($link); exit;
 
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['ID'])) { 
@@ -1574,7 +1574,7 @@ case 'enviar-mensaje':
 					enviar_email($r['ID'], $asunto, $mensaje); 
 					$envio_urgente++;
 				}
-				evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.virtualpol.com/msg/">Nuevo mensaje privado</a> <span style="color:grey;">('.$pol['nick'].')</span>', $r['ID'], -1, false, 'p', $r['pais']); 
+				evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/">Nuevo mensaje privado</a> <span style="color:grey;">('.$pol['nick'].')</span>', $r['ID'], -1, false, 'p', $r['pais']); 
 			}
 
 			if ($envio_urgente > 0) {
@@ -1590,7 +1590,7 @@ case 'enviar-mensaje':
 				if ($user_ID != $pol['user_ID']) {
 					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$user_ID."', '".$date."', '<b>Mensaje multiple: Supervisor del Censo</b><br />".$text."', '0', '".$_POST['calidad']."', 'SC')", $link);
 
-					evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.virtualpol.com/msg/">Nuevo mensaje privado</a> <span style="color:grey;">(multiple)</span>', $user_ID, -1, false, 'p');
+					evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/">Nuevo mensaje privado</a> <span style="color:grey;">(multiple)</span>', $user_ID, -1, false, 'p');
 				}
 			}
 		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'])) {
@@ -1606,7 +1606,7 @@ case 'enviar-mensaje':
 			while($r = mysql_fetch_array($result)){ 
 				if (($r['user_ID'] != $pol['user_ID']) AND ($r['user_ID'] != 0)) {
 					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: ".$cargo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
-					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.URL.'/msg/"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
+					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
 				}
 			}
 		} elseif (($_POST['para'] == 'todos') AND ($pol['pols'] >= $pol['config']['pols_mensajetodos'])) {

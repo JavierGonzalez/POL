@@ -87,7 +87,7 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 
 		// Si no se han aceptado las nuevas condiciones obliga a aceptarlas.
 		/*if (($r['fecha_legal'] == '0000-00-00 00:00:00') AND ($_GET['a'] != 'aceptar-condiciones')) {
-			header('Location: http://www'.DEV.'.'.URL.'/legal');
+			header('Location: http://www.'.DOMAIN.'/legal');
 			if ($link) { mysql_close($link); } exit;
 		}*/
 

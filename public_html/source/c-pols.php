@@ -164,7 +164,7 @@ ORDER BY nivel DESC, pols DESC", $link);
 
 
 	if (PAIS != $pol['pais']) {
-		header('Location: http://'.strtolower($pol['pais']).'.'.URL.'/pols/');
+		header('Location: http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/');
 		exit;
 	}
 

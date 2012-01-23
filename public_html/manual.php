@@ -1,6 +1,5 @@
 <?php
 include('inc-login.php');
-$adsense_exclude = true;
 
 $txt_title = 'Documentaci&oacute;n de VirtualPol | Manual, ayuda'; 
 $txt_header = '<style type="text/css">.content { width:860px; margin: 0 auto; }</style>';

@@ -1,6 +1,5 @@
 <?php
 include('../inc-login.php');
-$adsense_exclude = true;
 
 function comprobar_email($email){
     $mail_correcto = false;
@@ -211,10 +210,10 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . str
 
 
 
-									$texto_email = "Hola $nick\n\n\nAccede a la siguiente direccion, para activar tu usuario y entrar a VirtualPol.\n\n".REGISTRAR."?a=verificar&nick=" . $nick . "&code=" . $api_pass . "\n\nContamos contigo!\n\n\nVirtualPol - http://www.virtualpol.com/";
+									$texto_email = "Hola $nick\n\n\nAccede a la siguiente direccion, para activar tu usuario y entrar a VirtualPol.\n\n".REGISTRAR."?a=verificar&nick=" . $nick . "&code=" . $api_pass . "\n\nContamos contigo!\n\n\nVirtualPol - http://www.".DOMAIN."/";
 
 
-									mail($email, "[VirtualPol] Verificar " . $nick, $texto_email, "FROM: VirtualPol <desarrollo@virtualpol.com> \nReturn-Path: desarrollo@virtualpol.com \nX-Sender: desarrollo@virtualpol.com \nMIME-Version: 1.0\n"); 
+									mail($email, "[VirtualPol] Verificar " . $nick, $texto_email, "FROM: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: ".CONTACTO_EMAIL." \nX-Sender: ".CONTACTO_EMAIL." \nMIME-Version: 1.0\n"); 
 
 									$registro_txt .= '<p><span style="color:blue;"><b>OK</b></span>. El usuario se ha creado correctamente. Su estado actual es: <em>En espera de validaci&oacute;n</em>.</p>';
 									$registro_txt .= '<p><b>Te hemos enviado un email de verificaci&oacute;n</b>, rev&iacute;salo ahora. En el email te hemos indicado una direccion web que debes visitar para as&iacute; verificar tu usuario.</p><p class="gris">(<b>Rescata el email si est&aacute; como no deseado o spam!</b>)</p>';
@@ -247,7 +246,7 @@ case 'verificar': //URL EMAIL
 			$result2 = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$r['pais']."'", $link);
 			while ($r2 = mysql_fetch_array($result2)) { $ciudadanos_num = $r2['num']; }
 
-			evento_chat('<b>[#] <a href="http://'.strtolower($r['pais']).'.virtualpol.com/perfil/'.$r['nick'].'/" class="nick">'.$r['nick'].'</a> acepta la Ciudadania</b> de '.$r['pais'].' <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos)</span>', 0, 0, false, 'e', $r['pais']);
+			evento_chat('<b>[#] <a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'/" class="nick">'.$r['nick'].'</a> acepta la Ciudadania</b> de '.$r['pais'].' <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos)</span>', 0, 0, false, 'e', $r['pais']);
 
 			mysql_query("INSERT INTO ".strtolower($r['pais'])."_log 
 (time, user_ID, user_ID2, accion, dato) 
@@ -256,7 +255,7 @@ VALUES ('".date('Y-m-d H:i:s')."', '".$r['ID']."', '".$r['ID']."', '2', '')", $l
 			unset($_SESSION);
 			session_unset(); session_destroy();
 
-			header("Location: ".REGISTRAR."login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=http://".strtolower($r['pais']).".virtualpol.com/");
+			header("Location: ".REGISTRAR."login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=http://".strtolower($r['pais']).".".DOMAIN."/");
 		}
 
 		mysql_close($link); 
@@ -290,7 +289,7 @@ case 'solicitar-ciudadania':
 		$result2 = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$_POST['pais']."'", $link);
 		while ($r2 = mysql_fetch_array($result2)) { $ciudadanos_num = $r2['num']; }
 
-		evento_chat('<b>[#] <a href="http://'.strtolower($_POST['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'/" class="nick">'.$pol['nick'].'</a> acepta la Ciudadania</b> de '.$_POST['pais'].' <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos'.$trae.')</span>', 0, 0, false, 'e', $_POST['pais']);
+		evento_chat('<b>[#] <a href="http://'.strtolower($_POST['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'/" class="nick">'.$pol['nick'].'</a> acepta la Ciudadania</b> de '.$_POST['pais'].' <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos'.$trae.')</span>', 0, 0, false, 'e', $_POST['pais']);
 
 		mysql_query("INSERT INTO ".strtolower($_POST['pais'])."_log 
 (time, user_ID, user_ID2, accion, dato) 
@@ -299,7 +298,7 @@ VALUES ('".date('Y-m-d H:i:s')."', '".$pol['user_ID']."', '".$pol['user_ID']."',
 		unset($_SESSION);
 		session_unset(); session_destroy();
 
-		header('Location: http://'.strtolower($_POST['pais']).DEV.'.virtualpol.com/');
+		header('Location: http://'.strtolower($_POST['pais']).'.'.DOMAIN.'/');
 	
 	} else { header('Location: '.REGISTRAR); }
 	
@@ -325,7 +324,7 @@ if ($pol['estado'] == 'ciudadano') {
 	$txt .= '<h1><span class="gris">1. Crear usuario | 2. Solicitar Ciudadan&iacute;a</span> | 3. Ser Ciudadano</h1><hr />
 <p><b>Eres ciudadano de ' . $pol['pais'] . '</b>.</p>
 
-<p>Puedes entrar en la <a href="http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/"><b>plataforma '.$pol['pais'].'</b></a> y saluda a tus compa&ntilde;eros ciudadanos!</p>
+<p>Puedes entrar en la <a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/"><b>plataforma '.$pol['pais'].'</b></a> y saluda a tus compa&ntilde;eros ciudadanos!</p>
 
 <br /><br /><hr />
 
@@ -344,7 +343,7 @@ if ($pol['estado'] == 'ciudadano') {
 
 if (strtotime($pol['rechazo_last']) < (time() - 21600)) { // 6 horas
 	$txt .= '
-<form action="http://'.strtolower($pol['pais']).DEV.'.virtualpol.com/accion.php?a=rechazar-ciudadania" method="POST">
+<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=rechazar-ciudadania" method="POST">
 <input type="hidden" name="pais" value="'.$pol['pais'].'" />
 <p><b style="color:red;">[<input type="submit" value="Rechazar ciudadania de la plataforma '.$pol['pais'].'" />]</b></p>
 </form>';
@@ -482,7 +481,7 @@ En caso afirmativo indica el nick: <input type="text" name="nick_clon" value="" 
 	$txt .= '</li>
 
 
-<li><input name="condiciones" value="ok" type="checkbox" /> <b>Aceptas las <a href="http://www'.DEV.'.'.URL.'/legal" target="_blank">Condiciones de Uso de VirtualPol</a>.</b><br /><br /></li>
+<li><input name="condiciones" value="ok" type="checkbox" /> <b>Aceptas las <a href="http://www'.'.'.DOMAIN.'/legal" target="_blank">Condiciones de Uso de VirtualPol</a>.</b><br /><br /></li>
 
 <li><input type="submit" value="Crear ciudadano" style="height:40px;font-size:22px;" onclick="$(\'#pass1\').val(hex_md5($(\'#pass1\').val()));$(\'#pass2\').val(hex_md5($(\'#pass2\').val()));" /></li>
 </form>

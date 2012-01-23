@@ -1,6 +1,5 @@
 <?php 
 include('inc-login.php');
-$adsense_exclude = true;
 
 function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 	global $pol, $link;

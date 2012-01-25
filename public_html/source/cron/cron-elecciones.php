@@ -204,51 +204,58 @@ ORDER BY ID ASC LIMIT 1", $link);
 		if (ASAMBLEA) { $elec_next = '_parl'; } else { $elec_next = '_pres'; }
 
 
+
+
 		// QUITA DIPUTADOS
 		$r2 = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE ID_estudio = '6' AND cargo = '1'", $link);
 		while($row2 = mysql_fetch_array($r2)){
 			cargo_del(6, $row2['user_ID'], true, true);
 		}
 
-
-
-
-		// AÑADE DIPUTADOS
+		// PRE-ESCRUTINIO DIPUTADOS
 		$result = mysql_query("SELECT ID_partido FROM ".SQL."elecciones", $link);
-		while($row = mysql_fetch_array($result)) {
-			$votos_hechos = explode(".", $row['ID_partido']);
-			foreach ($votos_hechos as $diputado_ID) { $votos[$diputado_ID]++; }
+		while($r = mysql_fetch_array($result)) {
+			foreach (explode('.', $r['ID_partido']) as $diputado_ID) { 
+				if ($diputado_ID > 0) { 
+					$votos_pre[] = $diputado_ID; 
+					$votos_array[$diputado_ID]['votos']++;
+				}
+			}
 		}
-		arsort($votos);
-		reset($votos);
-		
+
+		// OBTIENE INFO PARA ORDENAR CORRECTAMENTE
+		$result = mysql_query("SELECT ID, fecha_registro, nick,
+		(SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS partido 
+		FROM users WHERE ID IN (".implode(',', $votos_pre).")", $link);
+		while($r = mysql_fetch_array($result)) {
+			$votos_array[$r['ID']]['registro'] = strtotime($r['fecha_registro']);
+			$votos_array[$r['ID']]['nick'] = $r['nick'];
+			$votos_array[$r['ID']]['user_ID'] = $r['ID'];
+			$votos_array[$r['ID']]['partido'] = $r['partido'];
+		}
+
+		// ORDENA POR VOTOS DESCENDENTE y ANTIGUEDAD
+		foreach ($votos_array as $k => $r) { $lv_array[$k]  = $r['votos']; $lr_array[$k] = $r['registro']; }
+		array_multisort($lv_array, SORT_DESC, $lr_array, SORT_ASC, $votos_array);
+
+		// CONFECCIONA DATOS DE ESCRUTINIO
 		$count = 0;
-		$escrutinio = '';
-		foreach ($votos as $diputado_ID => $votos_num) {
-			$count++;
-			
-			$nick = '';
-			$s_partido = '';
-			$result = mysql_query("SELECT nick, voto_confianza, partido_afiliado,
-(SELECT siglas FROM ".SQL."partidos WHERE ID = ".SQL_USERS.".partido_afiliado LIMIT 1) AS partido
-FROM ".SQL_USERS." WHERE ID = '" . $diputado_ID . "' LIMIT 1", $link);
-			while($row = mysql_fetch_array($result)) { 
-				$nick = $row['nick'];
-				$s_partido = $row['partido'];
-			}
+		$escrutinio = array();
+		foreach ($votos_array as $d) {
 
-			if ($count <= $pol['config']['num_escanos']) { 
-				cargo_add(6, $diputado_ID, true, true);
+			if (isset($d['user_ID'])) { 
+				$count++;
+				if ($count <= $pol['config']['num_escanos']) { 
+					cargo_add(6, $d['user_ID'], true, true);
+				}
+				$escrutinio[] = $d['votos'].':'.$d['partido'].':'.$d['nick'];
 			}
-
-			if ($escrutinio) { $escrutinio .= '|'; }
-			$escrutinio .= $votos_num . ':' . $s_partido . ':' . $nick;
 		}
+		$escrutinio[] = '0:I:0';
+		$escrutinio = implode('|', $escrutinio);
 
-		// 27:PD:nick|19:GP:3|13:B:0|10:PSD:1|8:SP:1|5:ANP:1|3:CS:1|3:NYS:0|2:PLHT:0|1:I:0|1:FA:0
 
-		mysql_query("UPDATE ".SQL."elec SET escrutinio = '" . $escrutinio . "|0:I:0' ORDER BY time DESC LIMIT 1", $link);
-
+		mysql_query("UPDATE ".SQL."elec SET escrutinio = '".$escrutinio."' ORDER BY time DESC LIMIT 1", $link);
 		evento_chat('<b>[ELECCIONES] <a href="/elecciones/">Elecciones FINALIZADAS</a></b>');
 	}
 

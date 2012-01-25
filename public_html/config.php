@@ -2,6 +2,8 @@
 define('DOMAIN', 'virtualpol.com');
 define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/real/');
 
+date_default_timezone_set('Europe/Madrid');
+
 // INICIALIZACION
 $host = explode('.', $_SERVER['HTTP_HOST']); // obtiene $host[0] que es el subdominio
 $host[0] = str_replace('-dev', '', $host[0]); // convierte subdominios "pais-dev" en "pais" para que funcione la version dev

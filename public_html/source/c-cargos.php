@@ -54,9 +54,10 @@ ORDER BY nick ASC", $link);
 
 <table border="0" cellspacing="3" cellpadding="0" class="pol_table">
 <tr>
-<th>Nivel&darr;</th>
+<th>Nivel&nbsp;</th>
 <th>Cargo</th>
 '.(ECONOMIA?'<th><acronym title="Salario por dia trabajado">Salario</acronym></th>':'').'
+<th></th>
 <th>Cargos</th>
 <th colspan="2">Asigna</th>
 <th>ID</th>
@@ -95,20 +96,21 @@ ORDER BY nick ASC", $link);
 
 
 		switch ($r['asigna']) {
-			case -2: $asignado_por = '<acronym title="Votacion Ejecutiva"><b>Votaci&oacute;n</b></acronym>'; break;
-			case 0: $asignado_por = '<acronym title="Elecciones Generales"><b>Elecciones</b></acronym>'; break;
+			case -2: $asignado_por = '<acronym title="Votacion Ejecutiva"><b>V</b></acronym>'; break;
+			case 0: $asignado_por = '<acronym title="Elecciones Generales"><b>E</b></acronym>'; break;
 			default: $asignado_por = '<img src="'.IMG.'cargos/'.$r['asigna'].'.gif" title="" />'; break;
 		}
 
 
-		if ($r['ico'] == true) { $ico = '<img src="'.IMG.'cargos/' . $r['ID'] . '.gif" alt="icono ' . $r['nombre'] . '" border="0" /> '; } else { $ico = ''; }
+		if ($r['ico'] == true) { $ico = '<img src="'.IMG.'cargos/'.$r['ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" /> '; } else { $ico = ''; }
 
 		$txt .= '<tr>
-<td align="right" valign="top">' . $r['nivel'] . '</td>
-<td valign="top" nowrap="nowrap">' . $ico . '<b>' . $r['nombre'] . '</b></td>
-'.(ECONOMIA?'<td align="right" valign="top">' . pols($r['salario']) . '</td>':'').'
-<td valign="top">' . $num . ' <b>' . $c_nicks . '</b></td><td valign="top" nowrap="nowrap">' . $asignado_por . '</td>
-<td valign="top">' . $p_edit . '</td>
+<td align="right" valign="top">'.$r['nivel'].'</td>
+<td valign="top" nowrap="nowrap">'.$ico.'<b style="font-size:20px;">'.$r['nombre'].'</b></td>
+'.(ECONOMIA?'<td align="right" valign="top">'.pols($r['salario']).'</td>':'').'
+<td valign="top" align="right">'.$num.'</td>
+<td>'.$c_nicks.'</td><td valign="top" nowrap="nowrap">' . $asignado_por . '</td>
+<td valign="top">'.$p_edit.'</td>
 <td valign="top" align="right" style="color:grey;">'.$r['ID'].'</td></tr>';
 	}
 	$txt .= '</table>

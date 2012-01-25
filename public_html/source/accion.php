@@ -1739,31 +1739,37 @@ case 'cargo':
 	$b = $_GET['b'];
 	$cargo_ID = $_GET['ID'];
 
-	if (($_GET['b'] == 'dimitir') AND ($_GET['ID']) AND ($_POST['pais'] == PAIS)) {
+	if (($_GET['b'] == 'dimitir') AND ($_GET['ID']) AND (nucleo_acceso('cargo', 6))) {
 
 		cargo_del($_GET['ID'], $pol['user_ID'], false);
 
-		$result2 = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
-		while($r2 = mysql_fetch_array($result2)){ 
-			evento_chat('<b>[CARGO] '.crear_link($pol['nick']).' dimite</b> del cargo <img src="'.IMG.'cargos/'.$_GET['ID'].'.gif" />'.$r2['nombre']);
-		}
-		$refer_url = 'perfil/'.strtolower($pol['nick']).'/';
-
-
-
-	} elseif (($_GET['b'] == 'ceder') AND (false) AND ($_POST['user_ID'])) {
-
-		$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE user_ID = '".$_POST['user_ID']."' AND estado = 'ok' AND cargo = '0' LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)){
-			$diputado_aprobado = true;
-		}
-
-		if (($pol['cargos'][6]) AND ($diputado_aprobado)) { //es diputado de momento
-			cargo_add('6', $_POST['user_ID']); //hace diputado
-			cargo_del('6', $pol['user_ID']); //quita diputado
-		}
+		$result = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)){ $cargo_nom = $r['nombre']; }
 		
-		$refer_url = 'perfil/'.strtolower($pol['nick']).'/';
+		evento_chat('<b>[CARGO] '.crear_link($pol['nick']).' dimite</b> del cargo <img src="'.IMG.'cargos/'.$_GET['ID'].'.gif" />'.$cargo_nom);
+
+		// Elimina examen
+		mysql_query("DELETE FROM ".SQL."estudios_users WHERE ID_estudio = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+
+		// Si es cargo_ID 6 (Diputado o Coordinador), ceder al siguiente en la sucesión
+		if ($_GET['ID'] == 6) {
+			$result = mysql_query("SELECT escrutinio FROM ".SQL."elec WHERE tipo = 'parl' ORDER BY time DESC LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)){ $escrutinio = $r['escrutinio']; }
+
+			foreach(explode('|', $escrutinio) AS $data) {
+				$data = explode(':', $data);
+				$cargo_estado = null;
+				$result = mysql_query("SELECT ID, (SELECT cargo FROM ".SQL."estudios_users WHERE ID_estudio = 6 AND estado = 'ok' AND user_ID = u.ID LIMIT 1) AS cargo_estado FROM users `u` WHERE nick = '".$data[2]."' LIMIT 1", $link);
+				while($r = mysql_fetch_array($result)){ $el_user_ID = $r['ID']; $cargo_estado = $r['cargo_estado']; }
+
+				if ($cargo_estado == '0') {
+					cargo_add(6, $el_user_ID, true, true);
+					break;
+				}
+			}
+		}
+
+		$refer_url = 'perfil/'.$pol['nick'].'/';
 
 	} elseif (($b) AND ($cargo_ID)) {
 		$result = mysql_query("SELECT ID, asigna, nombre FROM ".SQL."estudios WHERE ID = '".$cargo_ID."' LIMIT 1", $link);
@@ -1892,7 +1898,7 @@ case 'afiliarse':
 		mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '".$pol['user_ID']."'", $link);
 		evento_log(9, $_POST['partido']);
 	}
-	$refer_url = 'perfil/'.strtolower($pol['nick']).'/';
+	$refer_url = 'perfil/'.$pol['nick'].'/';
 	break;
 
 case 'crear-partido':

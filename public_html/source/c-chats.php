@@ -94,6 +94,10 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 			$txt_li['escribir'] .= '<input type="radio" name="acceso_escribir" value="'.$at.'"'.($at==$r['acceso_escribir']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_escribir_var\').val(\''.$at_var.'\');"'.($at=='anonimos'?' disabled="disabled"':'').' /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
 		}
 
+		foreach (nucleo_acceso('print') AS $at => $at_var) { 
+			$txt_li['escribir_ex'] .= '<input type="radio" name="acceso_escribir_ex" value="'.$at.'"'.($at==$r['acceso_escribir_ex']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_escribir_ex_var\').val(\''.$at_var.'\');"'.($at=='anonimos'?' disabled="disabled"':'').' /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
+		}
+
 		$txt .= '<h1><a href="/chats/">Chats</a>: <a href="/chats/'.$r['url'].'/">'.$r['titulo'].'</a> | Opciones</h1>
 
 <form action="/accion.php?a=chat&b=editar" method="post">
@@ -103,10 +107,13 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 <br /><table border="0" cellpadding="9">
 <tr>
 <td valign="top"><b>Acceso leer:</b><br />
-'.$txt_li['leer'].' <input type="text" name="acceso_cfg_leer" size="40" maxlength="900" autocomplete="off" id="acceso_cfg_leer_var" value="'.$r['acceso_cfg_leer'].'" /></td>
+'.$txt_li['leer'].' <input type="text" name="acceso_cfg_leer" size="25" maxlength="900" autocomplete="off" id="acceso_cfg_leer_var" value="'.$r['acceso_cfg_leer'].'" /></td>
 
 <td valign="top"><b>Acceso escribir:</b><br />
-'.$txt_li['escribir'].' <input type="text" name="acceso_cfg_escribir" size="40" maxlength="900" autocomplete="off" id="acceso_cfg_escribir_var" value="'.$r['acceso_cfg_escribir'].'" /></td>
+'.$txt_li['escribir'].' <input type="text" name="acceso_cfg_escribir" size="25" maxlength="900" autocomplete="off" id="acceso_cfg_escribir_var" value="'.$r['acceso_cfg_escribir'].'" /></td>
+
+<td valign="top"><b>Acceso escribir extranjeros:</b><br />
+'.$txt_li['escribir_ex'].' <input type="text" name="acceso_cfg_escribir_ex" size="25" maxlength="900" autocomplete="off" id="acceso_cfg_escribir_ex_var" value="'.$r['acceso_cfg_escribir_ex'].'" /></td>
 
 </tr>
 <tr><td colspan="2" align="center"><input type="submit" style="font-size:24px;width:150px;" value="Editar"'.((nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))?'':' disabled="disabled"').' /></td></tr>

@@ -9,7 +9,7 @@ class EtherpadLiteClient {
   const CODE_INVALID_FUNCTION   = 3;
   const CODE_INVALID_API_KEY    = 4;
 
-  protected $apiKey = "AEFev4loiYkXh9TZHPwmTathKYRrTMyQ";
+  protected $apiKey = "";
   protected $baseUrl = "http://www.virtualpol.com:9001/api";
   
   public function __construct($apiKey, $baseUrl = null){

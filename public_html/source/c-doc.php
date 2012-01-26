@@ -6,49 +6,114 @@ if ($_GET['a']) {
 	$result = mysql_query("SELECT * FROM docs WHERE url = '".trim($_GET['a'])."' AND pais = '".PAIS."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
+		include('inc-functions-accion.php');
+
 		if (($_GET['b'] == 'editar') AND (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']))) { //EDITAR!
 
-			$text = $r['text'];
-
-			$confirm_salir = ' onClick="if (!confirm(\'&iquest;Seguro que quieres salir? No se guardar&aacute;n los cambios.\')) { return false; }"';
-			include('inc-functions-accion.php');
-			$txt .= '<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=editar-documento&ID='.$r['ID'].'" method="post">
-<input type="hidden" name="url" value="' . $r['url'] . '"  />
-
-<h1><img src="'.IMG.'documentos/doc-edit.gif" alt="Editar Documento" /> <a href="/doc/">Documento</a>: <input type="text" name="titulo" value="' . $r['title'] . '" size="60" /></h1>
-
-<p>Categor&iacute;a:<br />
-' . form_select_cat('docs', $r['cat_ID']) . '</p>';
-
-
-		foreach (nucleo_acceso('print') AS $at => $at_var) { 
-			$txt_li['leer'] .= '<input type="radio" name="acceso_leer" value="'.$at.'"'.($at==$r['acceso_leer']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_leer_var\').val(\''.$at_var.'\');" /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
-		}
-		foreach (nucleo_acceso('print') AS $at => $at_var) { 
-			$txt_li['escribir'] .= '<input type="radio" name="acceso_escribir" value="'.$at.'"'.($at==$r['acceso_escribir']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_escribir_var\').val(\''.$at_var.'\');" /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
-		}
-
-		$txt .= '<table border="0" cellpadding="9">
-<tr>
-<td><b>Acceso leer:</b><br />
-'.$txt_li['leer'].' <input type="text" name="acceso_cfg_leer" size="18" maxlength="500" id="acceso_cfg_leer_var" value="'.$r['acceso_cfg_leer'].'" /></td>
-
-<td><b>Acceso escribir:</b><br />
-'.$txt_li['escribir'].' <input type="text" name="acceso_cfg_escribir" size="18" maxlength="500" id="acceso_cfg_escribir_var" value="'.$r['acceso_cfg_escribir'].'" /></td>
-</table>
-
-<p>' . editor_enriquecido('text', $text) . '</p>
-
-<p><input type="submit" value="Guardar" /></form></p>';
-
-		} else { 
-
-			$txt .= '<h1><img src="'.IMG.'documentos/doc.gif" alt="Documento" /> <a href="/doc/">Documento</a>: ' . $r['title'] . '</h1><div style="text-align:justify;margin:20px;">'.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])?$r['text']:'<b style="color:red;">No tienes acceso de lectura.</b>').'</div><br /><br /><hr style="width:100%;" />'; 
-
-			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
-				$txt .= '<span style="float:right;"><form><input type="button" value="Eliminar" onClick="if (!confirm(\'&iquest;Estas convencido de que quieres ELIMINAR para siempre este Documento?\')) { return false; } else { window.location.href=\'/accion.php?a=eliminar-documento&url=' . $r['url'] . '\'; }"></form></span>';
+			foreach (nucleo_acceso('print') AS $at => $at_var) { 
+				$txt_li['leer'] .= '<option value="'.$at.'"'.($at==$r['acceso_leer']?' selected="selected"':'').' />'.ucfirst(str_replace("_", " ", $at)).'</option>';
 			}
-			$txt .= '<span><form><input type="button" value="Editar" onclick="window.location.href=\'/doc/'.$r['url'].'/editar/\'"'.(nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?'':' disabled="disabled"').'> Creado el <em>' . explodear(' ',$r['time'], 0) . '</em>, &uacute;ltima edici&oacute;n hace <em>' . duracion(time() - strtotime($r['time_last'])) . '</em>.</form></span>';
+			foreach (nucleo_acceso('print') AS $at => $at_var) { 
+				$txt_li['escribir'] .= '<option value="'.$at.'"'.($at==$r['acceso_escribir']?' selected="selected"':'').'>'.ucfirst(str_replace("_", " ", $at)).'</option>';
+			}
+
+			
+			pad('create', $r['ID'], $r['text']);
+
+			$txt .= '
+<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=editar-documento&ID='.$r['ID'].'" method="POST">
+<input type="hidden" name="url" value="'.$r['url'].'"  />
+
+<span style="float:right;margin-top:-12px;">
+<button onclick="$(\'#doc_opciones\').slideToggle(\'slow\');return false;" style="font-size:16px;color:#666;">Opciones</button>
+</span>
+
+<h1 style="margin-bottom:6px;"><a href="/doc/">Documento</a>: Editar</a></h1>
+
+<div id="doc_opciones" style="display:none;">
+<table border="0" cellpadding="9">
+<tr>
+
+<td valign="bottom">Categor&iacute;a:<br />'.form_select_cat('docs', $r['cat_ID']).'</td>
+
+<td valign="bottom"><b>Acceso leer:</b><br />
+<select name="acceso_leer">'.$txt_li['leer'].'</select><br />
+<input type="text" name="acceso_cfg_leer" size="18" maxlength="900" id="acceso_cfg_leer_var" value="'.$r['acceso_cfg_leer'].'" />
+</td>
+
+<td valign="bottom"><b>Acceso escribir:</b><br />
+<select name="acceso_escribir">'.$txt_li['escribir'].'</select><br />
+<input type="text" name="acceso_cfg_escribir" size="18" maxlength="900" id="acceso_cfg_escribir_var" value="'.$r['acceso_cfg_escribir'].'" />
+</td>
+
+</tr>
+
+<tr><td colspan="2">* El texto del editor se guarda autom&aacute;ticamente como borrador en tiempo real. Para guardar estas opciones y hacer p&uacute;blicos los cambios hay que dar al bot&oacute;n "Publicar".<br /><br />
+* Por razones tecnicas al migrar a la tecnolog&iacute;a de pads se pierde el formato del texto. Para facilitar la recuperación de esta informacion perdida hay una copia del documento antiguo <a href="/doc/'.$r['url'].'/backup/" target="_blank">aqu&iacute;</a>.</td>
+
+<td align="right">
+'.boton('Restaurar &uacute;ltima publicaci&oacute;n', '/accion.php?a=restaurar-documento&ID='.$r['ID'], '&iquest;Estas seguro de RESTAURAR este documento?\n\nATENCION: SE PERDERA EL FORMATO, ADEMAS DE LOS CAMBIOS DESDE LA ULTIMA PUBLICACION.').'<br />
+'.boton('ELIMINAR DOCUMENTO', '/accion.php?a=eliminar-documento&url='.$r['url'], '&iquest;Estas convencido de que quieres ELIMINAR para siempre este Documento?').'</td>
+
+</tr>
+
+
+	
+
+</table>
+</div>
+
+<div>
+<input type="text" name="titulo" value="'.$r['title'].'" size="30" maxlength="50" style="font-size:22px;" /> &nbsp; 
+<input type="submit" value="Publicar" style="font-size:22px;" /> <a href="/doc/'.$r['url'].'/">&Uacute;ltima publicaci&oacute;n hace <span class="timer" value="'.strtotime($r['time_last']).'"></span></a>.</div>
+
+</form>
+
+<iframe src="http://www.virtualpol.com:9001/p/'.$r['ID'].'?userName='.$pol['nick'].'&showEmbedCode=false" width="100%" height="500" frameborder="0" style="background:#FFF;"></iframe>';
+
+		} else { //doc/documento-de-test
+			$boton_editar = boton('Editar', (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?'/doc/'.$r['url'].'/editar/':null));
+
+			if ($_GET['b'] == 'backup') { $r['text'] = $r['text_backup']; }
+
+
+			$txt_header .= '
+<style type="text/css">
+#doc_pad {
+	/*text-align:justify;*/
+	margin:20px;
+}
+
+#doc_pad ul, #doc_pad ol {
+	margin:4px 0 -4px 0;
+}
+#doc_pad li {
+	margin:3px 0 4px 0;
+}
+
+.indent { list-style-type:none; }
+
+</style>';
+
+			$txt .= '<h1><a href="/doc/">Documento</a>: '.$boton_editar.'</h1>
+
+
+<div style="color:#555;">
+<h1 style="color:#444;text-align:center;font-size:28px;">'.$r['title'].' </h1>
+
+<div id="doc_pad">
+'.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])?$r['text']:'<b style="color:red;">No tienes acceso de lectura.</b>').'
+</div>
+
+</div>
+
+<hr />'; 
+
+			$txt .= '<div style="color:#777;">
+'.$boton_editar.' Creado <em>hace '.timer($r['time']).'</em>, &uacute;ltima actualizaci&oacute;n <em>hace '.timer($r['time_last']).'</em>.<br />
+Pueden ver: '.verbalizar_acceso($r['acceso_leer'], $r['acceso_cfg_leer']).'.<br />
+Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']).'.</em>.
+</div>';
 		}
 
 		$txt_title = $r['title'];
@@ -59,9 +124,9 @@ if ($_GET['a']) {
 
 
 	$txt_title = 'Documentos';
-	$txt .= '<h1><img src="'.IMG.'documentos/doc.gif" alt="Documento" /> Documentos:</h1>
+	$txt .= '<h1><img src="'.IMG.'documentos/doc.gif" alt="Documento" width="20" height="22" /> Documentos: &nbsp; '.boton('Crear Documento', '/form/crear-documento/').'</h1>
 
-<p>' . boton('Crear Documento', '/form/crear-documento/') . '</p>
+<br />
 
 <div id="docs">';
 
@@ -71,14 +136,14 @@ if ($_GET['a']) {
 	while($r = mysql_fetch_array($result)){
 
 		// CAT
-		$txt .= '<div class="amarillo"><b style="font-size:20px;padding:15px;color:green;">' . $r['nombre'] . '</b></div>';
+		$txt .= '<div class="amarillo"><b style="font-size:20px;padding:15px;color:green;">'.$r['nombre'].'</b></div>';
 		
 		$txt .= '<table border="0" cellspacing="0" cellpadding="4" class="pol_table" width="100%">
 <tr>
 <th></th>
 <th>Lectura</th>
 <th>Escritura</th>
-<th align="right">Edici&oacute;n</th>
+<th align="right">Publicado</th>
 </tr>';
 		
 		$result2 = mysql_query("SELECT title, url, time, estado, time_last, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir
@@ -88,13 +153,13 @@ ORDER BY title ASC", $link);
 		while($r2 = mysql_fetch_array($result2)){
 
 			$txt .= '<tr>
-<td width="100%">'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])?'<div style="float:right;"><a href="/doc/'.$r2['url'].'/editar/">Editar</a></div>':'').''.(nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])?'<a href="/doc/'.$r2['url'].'/"><b>'.$r2['title'].'</b></a>':'<a href="/doc/'.$r2['url'].'/">'.$r2['title'].'</a>').'</td>
+<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])?'<div style="float:right;">'.boton('Editar', '/doc/'.$r2['url'].'/editar/').'</div>':'').''.(nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])?'<a href="/doc/'.$r2['url'].'/"><b>'.$r2['title'].'</b></a>':'<a href="/doc/'.$r2['url'].'/">'.$r2['title'].'</a>').'</td>
 
-<td valign="top" style="background:#5CB3FF;">'.($r2['acceso_cfg_leer']?'<acronym title="['.$r2['acceso_cfg_leer'].']">':'').ucfirst($r2['acceso_leer']).($r2['acceso_cfg_leer']?'</acronym>':'').'</td>
+<td width="90" valign="top" style="background:#5CB3FF;">'.($r2['acceso_cfg_leer']?'<acronym title="['.$r2['acceso_cfg_leer'].']">':'').ucfirst($r2['acceso_leer']).($r2['acceso_cfg_leer']?'</acronym>':'').'</td>
 
-<td valign="top" style="background:#F97E7B;">'.($r2['acceso_cfg_escribir']?'<acronym title="['.$r2['acceso_cfg_escribir'].']">':'').ucfirst($r2['acceso_escribir']).($r2['acceso_cfg_escribir']?'</acronym>':'').'</td>
+<td width="90" valign="top" style="background:#F97E7B;">'.($r2['acceso_cfg_escribir']?'<acronym title="['.$r2['acceso_cfg_escribir'].']">':'').ucfirst($r2['acceso_escribir']).($r2['acceso_cfg_escribir']?'</acronym>':'').'</td>
 
-<td align="right" nowrap="nowrap"><span class="timer" value="'.strtotime($r2['time_last']).'"></span></td>
+<td width="80" align="right" nowrap="nowrap"><span class="timer" value="'.strtotime($r2['time_last']).'"></span></td>
 </tr>'."\n";
 
 		}

@@ -138,11 +138,16 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 					$_POST['acceso_cfg_escribir'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir'])));
 				}
 
+				if ($_POST['acceso_cfg_escribir_ex']) { 
+					$_POST['acceso_cfg_escribir_ex'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir_ex'])));
+				}
 				mysql_query("UPDATE chats 
 SET acceso_leer = '".$_POST['acceso_leer']."', 
 acceso_escribir = '".$_POST['acceso_escribir']."', 
+acceso_escribir_ex = '".$_POST['acceso_escribir_ex']."', 
 acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', 
-acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."'
+acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."',
+acceso_cfg_escribir_ex = '".$_POST['acceso_cfg_escribir_ex']."'
 WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' LIMIT 1", $link);
 			}
 		}
@@ -1823,7 +1828,17 @@ case 'eliminar-partido':
 
 
 
+case 'restaurar-documento':
+	$result = mysql_query("SELECT ID, url, acceso_escribir, acceso_cfg_escribir FROM docs WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+	while($r = mysql_fetch_array($result)){ 
 
+		if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
+			pad('delete', $r['ID']);
+		}
+		$refer_url = 'doc/'.$r['url'].'/editar/';
+	}
+	
+	break;
 
 case 'eliminar-documento':
 	
@@ -1832,6 +1847,7 @@ case 'eliminar-documento':
 		if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
 			mysql_query("UPDATE docs SET estado = 'del' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 			evento_log(8, $r['ID']);
+			pad('delete', $r['ID']);
 			
 		}
 		$refer_url = 'doc/';
@@ -1846,13 +1862,14 @@ case 'eliminar-documento':
 
 
 case 'editar-documento':
-	if (($_POST['titulo']) AND ($_POST['text']) AND ($_POST['cat'])) {
-		$text = gen_text($_POST['text']);
-		$text = str_replace("../../", "/doc/", $text);
+	if (($_POST['titulo']) AND ($_POST['cat'])) {
 		$_POST['titulo'] = strip_tags($_POST['titulo']);
 
 		$result = mysql_query("SELECT ID, acceso_escribir, acceso_cfg_escribir FROM docs WHERE url = '".$_POST['url']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
+
+			$text = pad('get', $r['ID']);
+
 			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
 
 				if (nucleo_acceso($_POST['acceso_escribir'], $_POST['acceso_cfg_escribir']) == false) { 
@@ -1862,7 +1879,7 @@ case 'editar-documento':
 				}
 
 				mysql_query("UPDATE docs SET cat_ID = '".$_POST['cat']."', text = '".$text."', title = '".$_POST['titulo']."', time_last = '".$date."', acceso_leer = '".$_POST['acceso_leer']."', acceso_escribir = '".$_POST['acceso_escribir']."', acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
-				evento_log(7, $r['ID']);
+				//evento_log(7, $r['ID']);
 			}
 		}
 	}
@@ -1870,14 +1887,13 @@ case 'editar-documento':
 	break;
 
 case 'crear-documento':
-	if ((strlen($_POST['title']) > 3) AND (strlen($_POST['title']) < 200) AND ($_POST['cat'])) {
+	if ((strlen($_POST['title']) > 3) AND (strlen($_POST['title']) < 60) AND ($_POST['cat'])) {
 
 		$url = gen_url($_POST['title']);
-		$text = gen_text($_POST['text']);
 
 		mysql_query("INSERT INTO docs 
 (pais, url, title, text, time, time_last, estado, cat_ID, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir) 
-VALUES ('".PAIS."', '".$url."', '".$_POST['title']."', '".$text."', '".$date."', '".$date."', 'ok', '".$_POST['cat']."', '".$_POST['acceso_leer']."', '".$_POST['acceso_escribir']."', '".$_POST['acceso__cfg_leer']."', '".$_POST['acceso_cfg_escribir']."')", $link);
+VALUES ('".PAIS."', '".$url."', '".$_POST['title']."', '', '".$date."', '".$date."', 'ok', '".$_POST['cat']."', '".$_POST['acceso_leer']."', '".$_POST['acceso_escribir']."', '".$_POST['acceso__cfg_leer']."', '".$_POST['acceso_cfg_escribir']."')", $link);
 		evento_log(6, $url);
 	}
 
@@ -1887,7 +1903,7 @@ VALUES ('".PAIS."', '".$url."', '".$_POST['title']."', '".$text."', '".$date."',
 		mysql_query("UPDATE ".SQL."config SET valor = '".$r['num']."' WHERE dato = 'info_documentos' LIMIT 1", $link);
 	}
 
-	$refer_url = 'doc/'.$url.'/';
+	$refer_url = 'doc/'.$url.'/editar/';
 	break;
 
 

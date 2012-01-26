@@ -32,7 +32,7 @@ function nucleo_acceso($tipo, $valor='') {
 function verbalizar_acceso($tipo, $valor='') {
 	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
 	switch ($tipo) { // ¿Quien tiene acceso?
-		case 'internet': case 'anonimos': $t = 'toda Internet'; break;
+		case 'internet': case 'anonimos': $t = 'todo el mundo'; break;
 		case 'ciudadanos_global': $t = 'todos los ciudadanos de VirtualPol'; break;
 		case 'ciudadanos': $t = ($valor==''?'todos los ciudadanos de esta plataforma':'todos los ciudadanos de esta plataforma y '.$valor); break;
 		case 'excluir': $t = 'todos los ciudadanos excepto: '.$valor; break;

@@ -104,7 +104,7 @@ ORDER BY nivel DESC", $link);
 </select></p>
 </form>
 
-'.($edit?'<hr /><p>'.boton('Eliminar hilo', '/accion.php?a=foro&b=eliminarhilo&ID='.$edit_ID, '&iquest;Est&aacute;s seguro de querer ELIMINAR este HILO DE FORMA IRREVOCABLE?').'</p>':'').'
+'.($edit?'<hr /><p style="text-align:right;">'.boton('Eliminar hilo', '/accion.php?a=foro&b=eliminarhilo&ID='.$edit_ID, '&iquest;Est&aacute;s seguro de querer ELIMINAR este HILO DE FORMA IRREVOCABLE?').'</p>':'').'
 
 </div>';
 		} else {

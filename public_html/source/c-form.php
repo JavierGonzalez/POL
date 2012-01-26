@@ -104,7 +104,7 @@ case 'crear-documento':
 	array('type'=>'hidden', 'name'=>'acceso_cfg_leer', 'value'=>''),
 	array('type'=>'hidden', 'name'=>'acceso_cfg_escribir', 'value'=>strtolower($pol['nick'])),
 	array('type'=>'text', 'name'=>'title', 'size'=>'60', 'maxlegth'=>'200', 'nombre'=>'T&iacute;tulo', 'desc'=>'Frase &uacute;nica a modo de titular del documento.'),
-	array('type'=>'textrico', 'name'=>'text', 'size'=>'10', 'nombre'=>'Documento'),
+	array('type'=>'hidden', 'name'=>'text', 'value'=>''),
 	);
 	$txt .= polform($_GET['a'], $pol_form, 'Crear documento');
 

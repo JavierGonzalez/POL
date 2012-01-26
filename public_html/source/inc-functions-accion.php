@@ -1,5 +1,40 @@
 <?php
 
+
+
+
+
+function pad($control, $ID=false, $txt='') {
+	include('../img/lib/etherpad-lite/etherpad-lite-client.php');
+	$e = new EtherpadLiteClient(CLAVE_API_ETHERPAD, 'http://www.'.DOMAIN.':9001/api');
+
+	switch ($control) {
+
+		case 'create':
+			try {
+				$e->createPad($ID, html_entity_decode(strip_tags(str_replace("<br />", "\n", $txt)), null, 'UTF-8'));
+				return true;
+			} catch (Exception $error) { return false; }
+			break;
+
+		case 'get':
+			try {
+				return $e->getHTML($ID)->html;
+			} catch (Exception $error) { return false; }
+			break;
+
+		case 'delete':
+			try {
+				$e->deletePad($ID);
+				return true;
+			} catch (Exception $error) { return false; }
+			break;
+	}
+}
+
+
+
+// ELIMINACION DE TINYMCE EN CURSO
 function editor_enriquecido($name, $txt='') {
         $GLOBALS['txt_header'] .= '
 <script type="text/javascript">

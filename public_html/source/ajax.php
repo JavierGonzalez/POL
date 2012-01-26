@@ -53,9 +53,9 @@ function nucleo_acceso($tipo, $valor='') {
 
 
 function acceso_check($chat_ID, $ac=null) {
-	global $link, $_SESSION;
-	if (isset($ac)) { $check = array($ac); } else { $check = array('leer','escribir'); }
-	$result = mysql_query("SELECT HIGH_PRIORITY acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir, pais FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
+	global $link;
+	if (isset($ac)) { $check = array($ac); } else { $check = array('leer','escribir','escribir_ex'); }
+	$result = mysql_query("SELECT HIGH_PRIORITY acceso_leer, acceso_escribir, acceso_escribir_ex, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_ex, pais FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
 		foreach ($check AS $a) { $acceso[$a] = nucleo_acceso($r['acceso_'.$a], $r['acceso_cfg_'.$a]); }
 	}
@@ -113,7 +113,7 @@ LIMIT 1", $link);
 
 	// CHECK MSG
 	$msg_len = strlen($_REQUEST['msg']);
-	if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND (acceso_check($chat_ID, 'escribir') === true)) {
+	if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_check($chat_ID, 'escribir')) OR (($_SESSION['pol']['pais'] != PAIS) AND (acceso_check($chat_ID, 'escribir_ex'))))) {
 		
 		if ((!isset($_SESSION['pol']['nick'])) AND (substr($_POST['anonimo'], 0, 1) == '-') AND (strlen($_POST['anonimo']) >= 3) AND (strlen($_POST['anonimo']) <= 15) AND (!stristr($_POST['anonimo'], '__'))) { 
 			$result = mysql_query("SELECT nick FROM users WHERE nick='".substr($_POST['anonimo'], 1)."'", $link);
@@ -131,7 +131,7 @@ LIMIT 1", $link);
 		$msg = $_REQUEST['msg'];
 		if (isset($borrar_msg)) { $msg = ''; }
 
-		$msg = str_replace("'", "''", str_replace("\r", "", str_replace("\n", "", strip_tags(trim($msg)))));
+		$msg = str_replace("'", "''", str_replace("\r", "", str_replace("\n", "", htmlentities(trim($msg), null, 'UTF-8'))));
 		
 		$target_ID = 0;
 		$tipo = 'c';

@@ -4,7 +4,7 @@
 include 'etherpad-lite-client.php';
 
 // Create an instance
-$instance = new EtherpadLiteClient('EtherpadFTW','http://beta.etherpad.org:9001/api'); // Example URL:  http://your.hostname.tld:8080/api
+$instance = new EtherpadLiteClient('EtherpadFTW','http://www.virtualpol.com:9001/api'); // Example URL:  http://your.hostname.tld:8080/api
 
 // All API calls return a JSON value as documented in the API here: https://github.com/Pita/etherpad-lite/wiki/HTTP-API
 

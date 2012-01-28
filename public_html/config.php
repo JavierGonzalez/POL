@@ -1,6 +1,6 @@
 <?php
 define('DOMAIN', 'virtualpol.com');
-define('RAIZ', '/var/www/vhosts/virtualpol.com/httpdocs/real/');
+define('RAIZ', dirname(__FILE__).'/');
 
 date_default_timezone_set('Europe/Madrid');
 
@@ -21,31 +21,20 @@ $vp['paises_chat'] = array('VP'=>4, '15M'=>5, ''=>4);
 $vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'www'=>'#eeeeee');
 $vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'Atlantis'=>'#999999', 'VP'=>'#71D8FF', '15M' => '#FFFF64', 'www'=>'grey');
 
-switch ($host[0]) { 
-	// PLATAFORMAS ACTIVAS
-	case '15m': define('PAIS', '15M'); define('ASAMBLEA', true); break;
-	case 'vp': define('PAIS', 'VP'); define('ASAMBLEA', false); break;
-
-	// PLATAFORMAS INACTIVAS
-	case 'pol': define('PAIS', 'POL'); break;
-	case 'vulcan': define('PAIS', 'Vulcan'); break;
-	case 'hispania': define('PAIS', 'Hispania'); break;
-	case 'atlantis': define('PAIS', 'Atlantis'); break;
-	default: define('PAIS', 'VP'); break;
-}
-
 
 // CONFIGURACION ESPECIFICA DE PLATAFORMAS
-if (ASAMBLEA) { // PLATAFORMAS ASAMBLEARIAS
-	define('ECONOMIA', false);
-	define('NOM_PARTIDOS','Grupos');
-	
-	$vp['acceso'] = array(
+switch ($host[0]) { 
+	case '15m':
+		define('PAIS', '15M'); 
+		define('ASAMBLEA', true); 
+		define('ECONOMIA', false);
+		define('NOM_PARTIDOS','Grupos');
+		$vp['acceso'] = array(
 'sondeo'=>				array('cargo', '6'),
 'referendum'=>			array('cargo', '6'),
 'parlamento'=>			array('cargo', '6'),
 'cargo'=>				array('cargo', '6'),
-'kick'=>				array('cargo', '6 13'),
+'kick'=>				array('cargo', '13'),
 'kick_quitar'=>			array('cargo', '6 13'),
 'foro_borrar'=>			array('cargo', '6 13'),
 'control_gobierno'=>	array('cargo', '6'),
@@ -55,12 +44,15 @@ if (ASAMBLEA) { // PLATAFORMAS ASAMBLEARIAS
 'examenes_profesor'=>	array('cargo', ''),
 'crear_partido'=>		array('cargo', '6'),
 );
+		break;
 
-} else { // PLATAFORMAS ESTANDAR
-	define('ECONOMIA', true); 
-	define('NOM_PARTIDOS','Partidos'); 
-	
-	$vp['acceso'] = array(
+	case 'vp': 
+		define('PAIS', 'VP'); 
+		define('ASAMBLEA', false);
+		define('ECONOMIA', true); 
+		define('NOM_PARTIDOS','Partidos');
+		$columnas = 14; $filas = 18;
+		$vp['acceso'] = array(
 'sondeo'=>				array('cargo', '41 6 16 22 19 7'),
 'referendum'=>			array('nivel', '95'),
 'parlamento'=>			array('cargo', '6 22'),
@@ -75,10 +67,18 @@ if (ASAMBLEA) { // PLATAFORMAS ASAMBLEARIAS
 'examenes_profesor'=>	array('cargo', '34'),
 'crear_partido'=>		array('antiguedad','0'),
 );
-	$columnas = 14; $filas = 18;
+		break;
+
+	// PLATAFORMAS INACTIVAS
+	case 'pol': define('PAIS', 'POL'); break;
+	case 'vulcan': define('PAIS', 'Vulcan'); break;
+	case 'hispania': define('PAIS', 'Hispania'); break;
+	case 'atlantis': define('PAIS', 'Atlantis'); break;
+	default: define('PAIS', 'VP'); break;
 }
 
 
+// URLS (SSL, IMG, REGISTRAR)
 define('SSL_URL', 'https://'.DOMAIN.'/'); // SSL_URL | http://www.virtualpol.com/ = https://virtualpol.com/
 if ($_SERVER['HTTPS']) {
 	define('IMG', 'https://'.DOMAIN.'/img/');
@@ -86,6 +86,7 @@ if ($_SERVER['HTTPS']) {
 	define('IMG', 'http://www.'.DOMAIN.'/img/');;
 }
 define('REGISTRAR', 'https://'.DOMAIN.'/registrar/');
+
 
 // CONFIG SISTEMA
 define('CONTACTO_EMAIL', 'desarrollo@virtualpol.com');

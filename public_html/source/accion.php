@@ -314,8 +314,7 @@ LIMIT 1", $link);
 		unset($_SESSION);
 		session_unset(); session_destroy();
 	}
-	header('Location: '.REGISTRAR);
-	exit;
+	redirect(REGISTRAR);
 	break;
 
 
@@ -1307,8 +1306,7 @@ case 'votacion':
 				unset($_POST['voto']); unset($_POST['mensaje']); unset($_POST['validez']);
 			}
 
-			header('Location: http://'.strtolower($pais).'.'.DOMAIN.'/votacion/'.$_POST['ref_ID'].'/'); 
-			mysql_close($link); exit;
+			redirect('http://'.strtolower($pais).'.'.DOMAIN.'/votacion/'.$_POST['ref_ID'].'/');
 
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['ID'])) { 
 		$result = mysql_query("SELECT ID FROM votacion WHERE estado = 'ok' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
@@ -1575,11 +1573,12 @@ case 'enviar-mensaje':
 				// MENSAJE URGENTE
 				if (($_POST['urgente'] == '1') AND ($pol['pols'] >= $pol['config']['pols_mensajeurgente'])) { 
 					$asunto = '[VirtualPol] Tienes un mensaje urgente de '.$pol['nick'];
-					$mensaje = 'Hola Ciudadano,<br /><br />Has recibido un mensaje urgente enviado por el Ciudadano: '.$pol['nick'].'.<br /><br />Para leerlo has de entrar aquí: <a href="http://'.HOST.'/msg/">http://'.HOST.'/msg/</a><br /><br />Mensaje de '.$pol['nick'].':<hr />'.$text.'<hr /><br /><br />Nota: Si este aviso te ha resultado molesto puedes defender tu derecho apoyandote en la Justicia de '.PAIS.'.<br /><br /><br />VirtualPol<br />http://'.HOST;
+					$mensaje = 'Hola Ciudadano,<br /><br />Has recibido un mensaje urgente enviado por el Ciudadano: '.$pol['nick'].'.<br /><br />Mensaje de '.$pol['nick'].':<hr />'.$text.'<hr /><br /><br />Este mensaje es automatico. Para responder a '.$pol['nick'].' entra aqui:<br /><br />http://'.HOST.'/msg/'.$pol['nick'].'/<br /><br /><br />VirtualPol<br />http://'.HOST;
 					enviar_email($r['ID'], $asunto, $mensaje); 
 					$envio_urgente++;
 				}
-				evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/">Nuevo mensaje privado</a> <span style="color:grey;">('.$pol['nick'].')</span>', $r['ID'], -1, false, 'p', $r['pais']); 
+				evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/">Nuevo mensaje privado</a> <span style="color:grey;">('.$pol['nick'].')</span>', $r['ID'], -1, false, 'p', $r['pais']);
+				notificacion($r['ID'], 'Mensaje privado de '.$pol['nick'], '/msg/');
 			}
 
 			if ($envio_urgente > 0) {
@@ -1596,6 +1595,7 @@ case 'enviar-mensaje':
 					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$user_ID."', '".$date."', '<b>Mensaje multiple: Supervisor del Censo</b><br />".$text."', '0', '".$_POST['calidad']."', 'SC')", $link);
 
 					evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/">Nuevo mensaje privado</a> <span style="color:grey;">(multiple)</span>', $user_ID, -1, false, 'p');
+					notificacion($user_ID, 'Mensaje de SC de '.$pol['nick'], '/msg/');
 				}
 			}
 		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'])) {
@@ -1612,6 +1612,7 @@ case 'enviar-mensaje':
 				if (($r['user_ID'] != $pol['user_ID']) AND ($r['user_ID'] != 0)) {
 					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: ".$cargo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
 					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
+					notificacion($r['user_ID'], 'Mensaje privado de '.$pol['nick'], '/msg/');
 				}
 			}
 		} elseif (($_POST['para'] == 'todos') AND ($pol['pols'] >= $pol['config']['pols_mensajetodos'])) {
@@ -1621,6 +1622,7 @@ case 'enviar-mensaje':
 			$result = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."'", $link);
 			while($r = mysql_fetch_array($result)){ 
 				mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$r['ID']."', '".$date."', '".$text."', '0', '".$_POST['calidad']."')", $link);
+				notificacion($r['ID'], 'Mensaje privado global', '/msg/');
 			}
 		}
 
@@ -1706,7 +1708,7 @@ LIMIT 1", $link);
 		}
 
 	}
-	$refer_url = 'elecciones/';
+	$refer_url = '';
 	
 	break;
 
@@ -1744,7 +1746,7 @@ case 'cargo':
 	$b = $_GET['b'];
 	$cargo_ID = $_GET['ID'];
 
-	if (($_GET['b'] == 'dimitir') AND ($_GET['ID']) AND (nucleo_acceso('cargo', 6))) {
+	if (($_GET['b'] == 'dimitir') AND ($_GET['ID']) AND (nucleo_acceso('cargo', $_GET['ID']))) {
 
 		cargo_del($_GET['ID'], $pol['user_ID'], false);
 
@@ -1865,7 +1867,7 @@ case 'editar-documento':
 	if (($_POST['titulo']) AND ($_POST['cat'])) {
 		$_POST['titulo'] = strip_tags($_POST['titulo']);
 
-		$result = mysql_query("SELECT ID, acceso_escribir, acceso_cfg_escribir FROM docs WHERE url = '".$_POST['url']."' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, pais, url, acceso_escribir, acceso_cfg_escribir FROM docs WHERE url = '".$_POST['url']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 
 			$text = pad('get', $r['ID']);
@@ -1881,13 +1883,14 @@ case 'editar-documento':
 				mysql_query("UPDATE docs SET cat_ID = '".$_POST['cat']."', text = '".$text."', title = '".$_POST['titulo']."', time_last = '".$date."', acceso_leer = '".$_POST['acceso_leer']."', acceso_escribir = '".$_POST['acceso_escribir']."', acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 				//evento_log(7, $r['ID']);
 			}
+			redirect('http://'.strtolower($r['pais']).'.'.DOMAIN.'/doc/'.$r['url'].'/');
 		}
 	}
-	$refer_url = 'doc/'.$_POST['url'].'/';
+
 	break;
 
 case 'crear-documento':
-	if ((strlen($_POST['title']) > 3) AND (strlen($_POST['title']) < 60) AND ($_POST['cat'])) {
+	if ((strlen($_POST['title']) > 1) AND (strlen($_POST['title']) < 80) AND (isset($_POST['cat']))) {
 
 		$url = gen_url($_POST['title']);
 
@@ -1895,14 +1898,13 @@ case 'crear-documento':
 (pais, url, title, text, time, time_last, estado, cat_ID, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir) 
 VALUES ('".PAIS."', '".$url."', '".$_POST['title']."', '', '".$date."', '".$date."', 'ok', '".$_POST['cat']."', '".$_POST['acceso_leer']."', '".$_POST['acceso_escribir']."', '".$_POST['acceso__cfg_leer']."', '".$_POST['acceso_cfg_escribir']."')", $link);
 		evento_log(6, $url);
-	}
 
-	// actualizacion de info en theme
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM docs WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
-	while($r = mysql_fetch_array($result)) {
-		mysql_query("UPDATE ".SQL."config SET valor = '".$r['num']."' WHERE dato = 'info_documentos' LIMIT 1", $link);
+		// actualizacion de info en theme
+		$result = mysql_query("SELECT COUNT(ID) AS num FROM docs WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
+		while($r = mysql_fetch_array($result)) {
+			mysql_query("UPDATE ".SQL."config SET valor = '".$r['num']."' WHERE dato = 'info_documentos' LIMIT 1", $link);
+		}
 	}
-
 	$refer_url = 'doc/'.$url.'/editar/';
 	break;
 
@@ -1955,14 +1957,13 @@ if ($_GET['a'] == 'logout') {
 	setcookie('teorizauser', '', time()-3600, '/', USERCOOKIE);
 	setcookie('teorizapass', '', time()-3600, '/', USERCOOKIE);
 	unset($_SESSION); session_destroy();
-	header('Location: '.REGISTRAR.'login.php?a=logout');
-	mysql_close($link); exit;
+	redirect(REGISTRAR.'login.php?a=logout');
 }
 
 if ($link) { mysql_close($link); }
 if (isset($refer_url)) {
-	header('Location: http://'.HOST.'/'.$refer_url);
+	redirect('http://'.HOST.'/'.$refer_url);
 } else {
-	header('Location: http://'.HOST.'/?error='.base64_encode('Acci&oacute;n no permitida o erronea'));
+	redirect('http://'.HOST.'/?error='.base64_encode('Acci&oacute;n no permitida o erronea (<em>'.$_GET['a'].($_GET['b']?', '.$_GET['b']:'').'</em>)'));
 }
 ?>

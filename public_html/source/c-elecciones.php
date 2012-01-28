@@ -191,7 +191,7 @@ ORDER BY RAND()", $link);
 					}
 				} 
 
-				$txt .= '</table></blockquote></div>
+				$txt .= '</table><p style="color:#777;">* Pasa el ratón por encima o <em>haz clic</em> en los candidatos para ver m&aacute;s informaci&oacute;n.</p></blockquote></div>
 				
 <blockquote><input type="submit" style="font-size:24px;color:green;" value="VOTAR" /> (Una vez ejerzas el voto no podr&aacute;s modificarlo, tomate el tiempo que necesites)</form></blockquote>';
 
@@ -554,7 +554,7 @@ ORDER BY time DESC LIMIT 1", $link);
 		$txt .= '<center><img src="http://chart.apis.google.com/chart?cht=p&chds=a&chd=t:' . $chart_dato . '&chs=362x220&chl=' . $chart_nom . '&chf=bg,s,ffffff01|c,s,ffffff01&chp=3.14" alt="Escrutinio Parlamentarias" />';
 	} else {
 		$txt .= '<center>';
-		//<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato_esca�os . ',' . $chart_dato . '&chs=362x220&chl=|' . $chart_nom . '&chco=FFFFDD,FF8000&chf=bg,s,FFFFDD,0" alt="Esca&ntilde;os Parlamentarias" />
+		//<img src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $chart_dato_escaños . ',' . $chart_dato . '&chs=362x220&chl=|' . $chart_nom . '&chco=FFFFDD,FF8000&chf=bg,s,FFFFDD,0" alt="Esca&ntilde;os Parlamentarias" />
 	}
 	$txt .= '<table border="0" class="pol_table">
 <tr>

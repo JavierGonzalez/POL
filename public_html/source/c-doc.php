@@ -48,10 +48,10 @@ if ($_GET['a']) {
 
 </tr>
 
-<tr><td colspan="2">* El texto del editor se guarda autom&aacute;ticamente como borrador en tiempo real. Para guardar estas opciones y hacer p&uacute;blicos los cambios hay que dar al bot&oacute;n "Publicar".<br /><br />
+<tr><td colspan="2" valign="top">* El texto del editor se guarda autom&aacute;ticamente como borrador en tiempo real. Para guardar estas opciones y hacer p&uacute;blicos los cambios hay que dar al bot&oacute;n "Publicar".<br /><br />
 * Por razones tecnicas al migrar a la tecnolog&iacute;a de pads se pierde el formato del texto. Para facilitar la recuperación de esta informacion perdida hay una copia del documento antiguo <a href="/doc/'.$r['url'].'/backup/" target="_blank">aqu&iacute;</a>.</td>
 
-<td align="right">
+<td align="right" valign="top">
 '.boton('Restaurar &uacute;ltima publicaci&oacute;n', '/accion.php?a=restaurar-documento&ID='.$r['ID'], '&iquest;Estas seguro de RESTAURAR este documento?\n\nATENCION: SE PERDERA EL FORMATO, ADEMAS DE LOS CAMBIOS DESDE LA ULTIMA PUBLICACION.').'<br />
 '.boton('ELIMINAR DOCUMENTO', '/accion.php?a=eliminar-documento&url='.$r['url'], '&iquest;Estas convencido de que quieres ELIMINAR para siempre este Documento?').'</td>
 
@@ -69,7 +69,7 @@ if ($_GET['a']) {
 
 </form>
 
-<iframe src="http://www.virtualpol.com:9001/p/'.$r['ID'].'?userName='.$pol['nick'].'&showEmbedCode=false" width="100%" height="500" frameborder="0" style="background:#FFF;"></iframe>';
+'.pad('print', $r['ID']);
 
 		} else { //doc/documento-de-test
 			$boton_editar = boton('Editar', (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?'/doc/'.$r['url'].'/editar/':null));
@@ -152,8 +152,9 @@ WHERE estado = 'ok' AND cat_ID = '".$r['ID']."' AND pais = '".PAIS."'
 ORDER BY title ASC", $link);
 		while($r2 = mysql_fetch_array($result2)){
 
-			$txt .= '<tr>
-<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])?'<div style="float:right;">'.boton('Editar', '/doc/'.$r2['url'].'/editar/').'</div>':'').''.(nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])?'<a href="/doc/'.$r2['url'].'/"><b>'.$r2['title'].'</b></a>':'<a href="/doc/'.$r2['url'].'/">'.$r2['title'].'</a>').'</td>
+			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {
+				$txt .= '<tr>
+<td><a href="/doc/'.$r2['url'].'/">'.$r2['title'].'</a>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])?' '.boton('Editar', '/doc/'.$r2['url'].'/editar/', 'm'):'').'</td>
 
 <td width="90" valign="top" style="background:#5CB3FF;">'.($r2['acceso_cfg_leer']?'<acronym title="['.$r2['acceso_cfg_leer'].']">':'').ucfirst($r2['acceso_leer']).($r2['acceso_cfg_leer']?'</acronym>':'').'</td>
 
@@ -161,6 +162,7 @@ ORDER BY title ASC", $link);
 
 <td width="80" align="right" nowrap="nowrap"><span class="timer" value="'.strtotime($r2['time_last']).'"></span></td>
 </tr>'."\n";
+			}
 
 		}
 		$txt .= '</table><br />';

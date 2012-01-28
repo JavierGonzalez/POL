@@ -184,7 +184,7 @@ window.onload = function(){
 	  refresh_sin_leer();
 	});
 	delays();
-	$("a").attr("target", "_blank");
+	$("#vp_c a").attr("target", "_blank");
 }
 
 

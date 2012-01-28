@@ -10,7 +10,7 @@ class EtherpadLiteClient {
   const CODE_INVALID_API_KEY    = 4;
 
   protected $apiKey = "";
-  protected $baseUrl = "http://www.virtualpol.com:9001/api";
+  protected $baseUrl = "http://beta.etherpad.org:9001/api";
   
   public function __construct($apiKey, $baseUrl = null){
     $this->apiKey  = $apiKey;

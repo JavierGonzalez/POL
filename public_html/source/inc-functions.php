@@ -52,6 +52,70 @@ function verbalizar_acceso($tipo, $valor='') {
 
 
 
+
+function notificacion($user_ID, $texto='', $url='') {
+	global $pol, $link;
+	switch ($user_ID) {
+
+		case 'print':
+			if (isset($pol['user_ID'])) {
+				$t = '';
+				$total_num = 0;
+
+				// NOTIFICACIONES
+				$result = mysql_query("SELECT noti_ID, visto, texto FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' ORDER BY visto DESC, time DESC LIMIT 6", $link);
+				while($r = mysql_fetch_array($result)) {
+					$total_num++;
+					if ($r['visto'] == 'false') { $nuevos_num++; }
+					$t .= '<li '.($r['visto']=='false'?' class="noti_nuevo"':'').' onclick="window.location.href=\'/?noti='.$r['noti_ID'].'\';"><a href="/?noti='.$r['noti_ID'].'">'.$r['texto'].'</a></li>';
+				}
+
+				// NOTIFICACION ELECCIONES
+				if (($pol['config']['elecciones_estado'] == 'elecciones') AND (isset($pol['user_ID']))) {
+					$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+					while($r = mysql_fetch_array($result)){ $havotado = $r['ID']; }
+					if (!isset($havotado)) { $nuevos_num++; }
+					$total_num++;
+					$elecciones_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']);
+					$t .= '<li'.(!isset($havotado)?' class="noti_nuevo"':'').' onclick="window.location.href=\'/elecciones/votar/\';"><a class="noti_a" href="/elecciones/votar/">&iexcl;Elecciones en curso! <span style="font-weight:normal;">Quedan '.timer($elecciones_quedan, true).'</span></a></li>';
+				}
+
+				// NOTIFICACION VOTACIONES
+				$pol['config']['info_consultas'] = 0;
+				$result = mysql_query("SELECT v.ID, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
+				FROM votacion `v`
+				LEFT OUTER JOIN votacion_votos `vv` ON v.ID = vv.ref_ID AND vv.user_ID = '".$pol['user_ID']."'
+				WHERE v.estado = 'ok' AND v.pais = '".PAIS."' AND vv.ID IS null", $link);
+				while($r = mysql_fetch_array($result)) {
+					if ((nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) { 
+						$pol['config']['info_consultas']++;
+						$nuevos_num++;
+						$total_num++;
+						$t .= '<li class="noti_nuevo" onclick="window.location.href=\'/votacion/'.$r['ID'].'/\';"><a class="noti_a" href="/votacion/'.$r['ID'].'/">Votación: '.$r['pregunta'].'</a></li>';
+					}
+				}
+			} else { $t = '<li><a href="'.REGISTRAR.'">Primer paso: crear tu ciudadano</a></li>'; $total_num = 1; $nuevos_num = 1; }
+			return '<div id="noti" class="noti_'.($nuevos_num==0?'off':'on').'" onclick="$(\'#noti_list\').slideToggle(\'fast\');">'.$nuevos_num.'</div><div id="noti_list"><ul>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'<li onclick="window.location.href=\'/hacer\';" id="noti_hacer"><a href="/hacer">¿Qué más hacer?</a></li></ul></div>';
+			break;
+		
+		case 'visto': 
+			$result = mysql_query("SELECT noti_ID, visto, url FROM notificaciones WHERE noti_ID = '".$texto."' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)) {
+				if ($r['visto'] == 'false') {
+					mysql_query("UPDATE notificaciones SET visto = 'true' WHERE noti_ID = '".$texto."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link); 
+				}
+				redirect($r['url']);
+			}
+			break;
+
+		default: 
+			mysql_query("INSERT INTO notificaciones (user_ID, texto, url) VALUES ('".$user_ID."', '".$texto."', '".$url."')", $link);
+			return true;
+	}
+}
+
+
+
 function timer($t, $es_time=false) {
 	if ($es_time == true) { return '<span class="timer" value="'.$t.'"></span>'; } 
 	else { return '<span class="timer" value="'.strtotime($t).'" title="'.$t.'"></span>'; } 
@@ -72,9 +136,10 @@ function ocultar_IP($IP, $tipo='IP') {
 	}
 }
 
-function r301($url) {
+
+function redirect($url, $r301=true) {
 	global $link;
-	header('HTTP/1.1 301 Moved Permanently'); 
+	if ($r301) { header('HTTP/1.1 301 Moved Permanently'); } 
 	header('Location: '.$url); 
 	mysql_close($link);
 	exit;

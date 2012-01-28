@@ -9,6 +9,7 @@ $host = explode('.', $_SERVER['HTTP_HOST']);
 define('pais', str_replace('-dev', '', $host[0], $dev));
 define('PAIS', strtoupper(pais)); // ARREGLAR: si se crea un pais con minusculas en el nombre esto corrompera el nucleo de acceso
 define('SQL', strtolower(pais).'_');
+define('DOMAIN', 'virtualpol.com');
 
 /*
 ID CARGO 00:00 NICK MSG
@@ -214,9 +215,9 @@ LIMIT 1", $link);
 				case 'ayuda': 
 					$tipo = 'm';
 					if (PAIS == 'VP') {
-						$elmsg = 'ofrece ayuda'.(isset($msg_rest)?' a '.$msg_rest:'').': <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
+						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
 					} else {
-						$elmsg = 'ofrece ayuda'.(isset($msg_rest)?' a '.$msg_rest:'').': <a href="http://15m.'.DOMAIN.'/doc/faq---consultas-a-la-ciudadania/" target="_blank"><b>Ayuda y FAQ (Preguntas frecuentes)</b></a> - <a href="http://15m.'.DOMAIN.'/doc/declaracion-de-la-asamblea-virtual-15m/">La Declaraci&oacute;n</a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
+						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="http://15m.'.DOMAIN.'/doc/faq---consultas-a-la-ciudadania/" target="_blank"><b>Ayuda y FAQ (Preguntas frecuentes)</b></a> - <a href="http://15m.'.DOMAIN.'/doc/declaracion-de-la-asamblea-virtual-15m/">La Declaraci&oacute;n</a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
 					}
 					break;
 

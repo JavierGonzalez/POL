@@ -1,5 +1,9 @@
 <?php 
-if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.'.DOMAIN.'/'); mysql_close($link); exit; }
+if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN.'/'); }
+
+if (isset($_GET['noti'])) {
+	notificacion('visto', $_GET['noti']);
+}
 
 if (!isset($txt)) { 
 	header('HTTP/1.1 404 Not Found');
@@ -26,19 +30,6 @@ if (isset($_GET['bg'])) {
 	$body_bg = COLOR_BG.' url(\''.IMG.'bg/'.$pol['config']['bg'].'\') repeat fixed top left'; 
 } else { $body_bg = COLOR_BG; }
 
-
-
-// MOTOR CONTADOR DE VOTACIONES POR VOTAR
-if (isset($pol['user_ID'])) {
-	$pol['config']['info_consultas'] = 0;
-	$result = mysql_query("SELECT v.ID, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
-	FROM votacion `v`
-	LEFT OUTER JOIN votacion_votos `vv` ON v.ID = vv.ref_ID AND vv.user_ID = '".$pol['user_ID']."'
-	WHERE v.estado = 'ok' AND v.pais = '".PAIS."' AND vv.ID IS null", $link);
-	while($r = mysql_fetch_array($result)) {
-		if ((nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) { $pol['config']['info_consultas']++; }
-	}
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -48,7 +39,7 @@ if (isset($pol['user_ID'])) {
 <meta name="language" content="es_ES" />
 <meta name="description" content="<?=$txt_description?>" />
 
-<link rel="stylesheet" type="text/css" href="<?=IMG?>style2.css" />
+<link rel="stylesheet" type="text/css" href="<?=IMG?>style2.css?v=21" />
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="<?=IMG?>superfish.js"></script> 
@@ -106,12 +97,12 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 		}
 	}
 	if (isset($pol['cargo'])) { $cargo_icono = ' <img src="'.IMG.'cargos/' . $pol['cargo'] . '.gif" border="0" width="16" height="16" />'; } else { $cargo_icono = ''; }
-	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a>'.(ECONOMIA?' | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a>':'').' | <a href="/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a> |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';} elseif ($pol['estado'] == 'extranjero') { // extranjero
-	$txt_perfil = '<a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <img src="'.IMG.'cargos/99.gif" style="margin-bottom:-2px;" border="0" width="16" height="16" /> (<b class="extranjero">Extranjero</b>) |  <a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a> | <a href="/accion.php?a=logout">Salir</a>';
+	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a>'.(ECONOMIA?' | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a>':'').' |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';} elseif ($pol['estado'] == 'extranjero') { // extranjero
+	$txt_perfil = '<a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <img src="'.IMG.'cargos/99.gif" style="margin-bottom:-2px;" border="0" width="16" height="16" /> (<b class="extranjero">Extranjero</b>) | <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'turista') { // TURISTA
 	$txt_perfil = $pol['nick'] . ' (<b class="turista">Turista</b>) ' . $pol['tiempo_ciudadanizacion'] . ' | ' . boton('Solicitar Ciudadania', REGISTRAR) . ' | <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'kickeado') { // KICKEADO
-	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Kickeado</b>) | <a href="/control/kick/"><b>Ver Kicks</b></a> | <a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/" title="Mensajes Privados (MP)">(' . $num_msg . ') <img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a>';
+	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Kickeado</b>) | <a href="/control/kick/"><b>Ver Kicks</b></a>';
 } elseif ($pol['estado'] == 'expulsado') { // EXPULSADO
 	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Expulsado</b>)';
 } elseif ((isset($pol['nick'])) AND ($pol['estado'] != '')) { // sin identificar, login OK
@@ -124,6 +115,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 
+<td><?=notificacion('print')?></td>
 <td nowrap="nowrap" width="80" height="40">
 <a href="/" title="<?=$pol['config']['pais_des'].' de '.PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" width="60" height="40" border="0" /></a>
 </td>
@@ -220,6 +212,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 			<li><a href="/partidos/">Partidos <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
 			<li><a href="/grupos/">Grupos</a></li>		
 			<li><a href="/cargos/">Cargos</a></li>
+			<li><a href="/hacer/">&iquest;Qu&eacute; hacer?</a></li>
 		</ul>
 	</li>
 
@@ -234,21 +227,15 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 			<li><a href="/info/economia/">Econom&iacute;a Global</a></li>
 		</ul>
 	</li>
+	
+	<li id="menu-5" class="menu-5" style="margin:10px 0 0 1px;"><a href="/votacion/">Votaciones</a></li>
 
-<?php 
-
-if ($pol['config']['info_consultas'] > 0) { echo '<li id="menu-5" class="menu-5" style="margin:10px 0 0 1px;"><a href="/votacion/">&iexcl;Votaciones! <span class="md" style="font-size:22px;color:red;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
-} else {
-	echo '<li id="menu-5" class="menu-5" style="margin:10px 0 0 1px;"><a href="/votacion/">Votaciones</a></li>'; 
-}
-
-
-echo '</ul></dd></dl>
+</ul></dd></dl>
 
 <hr style="margin:5px 20px -5px -5px;color:#FF6;" />
 
-<div id="palabras">';
-
+<div id="palabras">
+<?php 
 foreach(explode(";", $pol['config']['palabras']) as $t) {
 	$t = explode(":", $t);
 	if ($t[0] == $pol['user_ID']) { $edit = ' <a href="/subasta/editar/" class="gris">#</a>'; } else { $edit = ''; }
@@ -335,27 +322,15 @@ echo '</div>';
 			</li>
 			<li><a href="/grupos/">Grupos</a></li>
 			<li><a href="/cargos/">Cargos</a></li>
+			<li><a href="/hacer/">&iquest;Qu&eacute; hacer?</a></li>
 		</ul>
 	</li>
+	<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/comunicados/">Comunicados</a></li>
+	<li id="menu-5" class="menu-5"><a href="/foro/">Foro</a></li>
+	<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones</a></li>
+</ul></dd></dl>
 
 <?php
-echo '
-<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/comunicados/">Comunicados</a></li>
-<li id="menu-5" class="menu-5"><a href="/foro/">Foro</a></li>';
-
-if ($pol['config']['info_consultas'] > 0) { 
-	echo '<li id="menu-5" class="menu-5"><a href="/votacion/" style="font-size:19px;">&iexcl;Votaciones! <span class="md" style="font-size:22px;color:red;">'.$pol['config']['info_consultas'].'</span></a></li>'; 
-} else {
-	echo '<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones</a></li>'; 
-}
-echo '</ul></dd></dl>';
-
-if (($pol['config']['elecciones_estado'] == 'elecciones') AND (isset($pol['user_ID']))) {
-	// boton votar
-	$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){ $havotado = $r['ID']; }
-	if (!isset($havotado)) { echo '<span style="margin:0 -10px 0 -10px;"><b>Elecciones</b> '.boton('Votar', '/elecciones/votar/').'</span><br /><br />'; }
-}
 
 echo '<div id="palabras">';
 foreach(explode(";", $pol['config']['palabras']) as $t) {
@@ -375,14 +350,6 @@ echo '</div>
 </div>';
 }
 ?>
-
-
-
-
-<div style="margin:12px 0 -5px 0px;"><a href="/hacer/" style="font-size:20px;"><b>&iquest;Qu&eacute; hacer?</b></a></div>
-
-
-
 </div>
 </div>
 <div class="content">

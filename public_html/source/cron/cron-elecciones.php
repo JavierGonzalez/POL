@@ -140,7 +140,7 @@ if (($pol['config']['elecciones_estado'] == 'normal') AND (time() >= ($eleccione
 
 	// envia emails
 	$asunto = '['.PAIS.'] Comienzan las ' . $empiezan_elecciones . ' de '.PAIS.'';
-	$mensaje = 'Estimados ciudadanos de '.PAIS.',<br /><br />Acaban de comenzar las ' . $empiezan_elecciones . ', en las que tienes el derecho de participar. Tu voto es crucial para la democracia de '.PAIS.'.<br /><br /><a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/elecciones/"><b>http://'.PAIS.'.'.DOMAIN.'/elecciones</b></a><br /><br />VirtualPol<br />http://'.strtolower(PAIS).'.'.DOMAIN.'/';
+	$mensaje = 'Estimados ciudadanos de '.PAIS.',<br /><br />Acaban de comenzar las ' . $empiezan_elecciones . ', en las que tienes el derecho de participar. Tu voto es crucial para la democracia de '.PAIS.'.<br /><br /><a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/"><b>http://'.PAIS.'.'.DOMAIN.'/</b></a><br /><br />VirtualPol<br />http://'.strtolower(PAIS).'.'.DOMAIN.'/';
 
 	$result = mysql_query("SELECT email FROM ".SQL_USERS." WHERE pais = '".PAIS."' AND estado != 'expulsado'", $link);
 	while($row = mysql_fetch_array($result)){ enviar_email(null, $asunto, $mensaje, $row['email']); }

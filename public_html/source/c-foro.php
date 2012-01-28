@@ -157,7 +157,7 @@ WHERE ID = '".$_GET['b']."'
 LIMIT 1", $link);
 $txt .= mysql_error($link);
 	while($r = mysql_fetch_array($result)) {
-		r301('/foro/'.$r['subforo'].'/'.$r['url'].'/');
+		redirect('/foro/'.$r['subforo'].'/'.$r['url'].'/');
 	}
 
 
@@ -304,9 +304,7 @@ LIMIT 1", $link);
 
 		// Foro incorrecto? redireccion.
 		if ($_GET['a'] != $r['foro_url']) { 
-			header('HTTP/1.1 301 Moved Permanently'); 
-			header('Location: http://'.strtolower(PAIS).'.'.DOMAIN.'/foro/'.$r['foro_url'].'/'.$r['url'].'/'); 
-			exit; 
+			redirect('http://'.strtolower(PAIS).'.'.DOMAIN.'/foro/'.$r['foro_url'].'/'.$r['url'].'/');
 		}
 		
 

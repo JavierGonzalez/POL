@@ -80,7 +80,6 @@ body { background: <?=$body_bg?>; }
 // ARREGLAR: este pedazo de trozo de codigo es un lamentable pero histórico trozo primigenio. De las primeras lineas en construirse allá por el 2008. Hay que hacerlo de nuevo.
 
 unset($txt_header);
-if ($pol['msg'] > 0) { $num_msg = '<b style="font-size:18px;">' . $pol['msg'] . '</b>'; } else { $num_msg = $pol['msg']; }
 if ($pol['estado'] == 'ciudadano') { // ciudadano
 	$nick_lower = strtolower($pol['nick']);
 	
@@ -97,7 +96,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 		}
 	}
 	if (isset($pol['cargo'])) { $cargo_icono = ' <img src="'.IMG.'cargos/' . $pol['cargo'] . '.gif" border="0" width="16" height="16" />'; } else { $cargo_icono = ''; }
-	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a>'.(ECONOMIA?' | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a>':'').' |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';} elseif ($pol['estado'] == 'extranjero') { // extranjero
+	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a>'.(ECONOMIA?' | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a>':'').' | <a href="/msg/" title="Mensajes Privados (MP)"><img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a> |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';} elseif ($pol['estado'] == 'extranjero') { // extranjero
 	$txt_perfil = '<a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <img src="'.IMG.'cargos/99.gif" style="margin-bottom:-2px;" border="0" width="16" height="16" /> (<b class="extranjero">Extranjero</b>) | <a href="/accion.php?a=logout">Salir</a>';
 } elseif ($pol['estado'] == 'turista') { // TURISTA
 	$txt_perfil = $pol['nick'] . ' (<b class="turista">Turista</b>) ' . $pol['tiempo_ciudadanizacion'] . ' | ' . boton('Solicitar Ciudadania', REGISTRAR) . ' | <a href="/accion.php?a=logout">Salir</a>';
@@ -115,7 +114,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 
-<td><?=notificacion('print')?></td>
+<td width="50" height="40"><?=notificacion('print')?></td>
 <td nowrap="nowrap" width="80" height="40">
 <a href="/" title="<?=$pol['config']['pais_des'].' de '.PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" width="60" height="40" border="0" /></a>
 </td>
@@ -162,7 +161,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 	<li id="menu-2">
 		<a href="#">Informaci&oacute;n</a>
 			<ul>
-				<li><a href="/info/censo/">Censo <span class="md"><?=$pol['config']['info_censo']?></span></a></li>
+				<li><a href="/info/censo/">Censo <span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
 
 				<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
 
@@ -281,7 +280,7 @@ echo '</div>';
 	<li id="menu-2">
 		<a href="#">Informaci&oacute;n</a>
 			<ul>
-				<li><a href="/info/censo/">Censo <span class="md"><?=$pol['config']['info_censo']?></span></a></li>
+				<li><a href="/info/censo/">Censo <span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
 
 				<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
 
@@ -373,11 +372,12 @@ echo '</div>
 unset($txt);
 echo ($pol['user_ID']==1?round((microtime(true)-TIME_START)*1000).'ms | ':'');
 ?>
-<a href="http://www.virtualpol.com/legal" target="_blank"><abbr title="Condiciones de Uso de VirtualPol">TOS</abbr></a> | <a href="/codigo" title="VirtualPol es software libre">C&oacute;digo</a> | 
-<a href="http://www.virtualpol.com/manual" target="_blank">Ayuda</a> &nbsp; 
-&nbsp; 2008-2012 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b> <sub>Beta</sub></span>
-<b><?=PAIS?></b>
+<a href="http://www.virtualpol.com/legal" target="_blank"><abbr title="Condiciones de Uso">TOS</abbr></a> | 
+<a href="http://www.virtualpol.com/codigo" title="Código fuente, software libre">C&oacute;digo</a> | 
+<a href="http://www.virtualpol.com/manual" target="_blank">Ayuda</a> &nbsp; &nbsp; 
+2008-2012 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b> <sub>Beta</sub></span>
 <?php
+echo '<b>'.PAIS.'</b>';
 if (!ASAMBLEA) {
 	echo ' <span style="font-size:11px;"><abbr title="CONdicion de DEFensa">DEFCON <b>'.$pol['config']['defcon'].'</b></abbr></span> <span class="amarillo" id="pols_frase"><b>'.$pol['config']['pols_frase'].'</b>';
 	if ($pol['config']['pols_fraseedit'] == $pol['user_ID']) { echo ' <a href="/subasta/editar/" class="gris">#</a>'; }

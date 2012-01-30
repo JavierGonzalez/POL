@@ -234,9 +234,11 @@ case 'verificar': //URL EMAIL
 	$result = mysql_query("SELECT ID, nick, pass, pais FROM users WHERE estado = 'validar' AND nick = '".$_GET['nick']."' AND api_pass = '".$_GET['code']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
 
+		notificacion($r['ID'], '&iexcl;bienvenido!', '/doc/bienvenida');
+
 		if ($r['pais'] == 'ninguno') {
 			mysql_query("UPDATE users SET estado = 'turista' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
-			header("Location: ".REGISTRAR."login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=".REGISTRAR);
+			redirect(REGISTRAR."login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=".REGISTRAR);
 		} else {
 			include('../source/inc-functions-accion.php');
 
@@ -254,12 +256,9 @@ VALUES ('".date('Y-m-d H:i:s')."', '".$r['ID']."', '".$r['ID']."', '2', '')", $l
 
 			unset($_SESSION);
 			session_unset(); session_destroy();
-
-			header("Location: ".REGISTRAR."login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=http://".strtolower($r['pais']).".".DOMAIN."/");
+			
+			redirect(REGISTRAR."login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=http://".strtolower($r['pais']).".".DOMAIN."/");
 		}
-
-		mysql_close($link); 
-		exit;
 	}
 
 	break;
@@ -298,9 +297,9 @@ VALUES ('".date('Y-m-d H:i:s')."', '".$pol['user_ID']."', '".$pol['user_ID']."',
 		unset($_SESSION);
 		session_unset(); session_destroy();
 
-		header('Location: http://'.strtolower($_POST['pais']).'.'.DOMAIN.'/');
+		redirect('http://'.strtolower($_POST['pais']).'.'.DOMAIN.'/');
 	
-	} else { header('Location: '.REGISTRAR); }
+	} else { redirect(REGISTRAR); }
 	
 	break;
 

@@ -24,7 +24,7 @@ if ($_GET['b']) {
 
 
 
-	paginacion('eventos', '/log-eventos/', null, $_GET['a'], null, '100');
+	paginacion('eventos', '/log-eventos/', null, $_GET['a'], null, '250');
 
 	$txt .= '<h1>Log de Eventos:</h1>
 

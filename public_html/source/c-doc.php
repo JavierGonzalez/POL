@@ -76,25 +76,6 @@ if ($_GET['a']) {
 
 			if ($_GET['b'] == 'backup') { $r['text'] = $r['text_backup']; }
 
-
-			$txt_header .= '
-<style type="text/css">
-#doc_pad {
-	/*text-align:justify;*/
-	margin:20px;
-}
-
-#doc_pad ul, #doc_pad ol {
-	margin:4px 0 -4px 0;
-}
-#doc_pad li {
-	margin:3px 0 4px 0;
-}
-
-.indent { list-style-type:none; }
-
-</style>';
-
 			$txt .= '<h1><a href="/doc/">Documento</a>: '.$boton_editar.'</h1>
 
 
@@ -154,7 +135,7 @@ ORDER BY title ASC", $link);
 
 			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {
 				$txt .= '<tr>
-<td><a href="/doc/'.$r2['url'].'/">'.$r2['title'].'</a>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])?' '.boton('Editar', '/doc/'.$r2['url'].'/editar/', 'm'):'').'</td>
+<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])?' '.boton('Editar', '/doc/'.$r2['url'].'/editar/', 'm'):'').'<a href="/doc/'.$r2['url'].'/">'.$r2['title'].'</a></td>
 
 <td width="90" valign="top" style="background:#5CB3FF;">'.($r2['acceso_cfg_leer']?'<acronym title="['.$r2['acceso_cfg_leer'].']">':'').ucfirst($r2['acceso_leer']).($r2['acceso_cfg_leer']?'</acronym>':'').'</td>
 

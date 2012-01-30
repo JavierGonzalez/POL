@@ -86,7 +86,7 @@ case 'panel':
 
 
 case 'recuperar-pass':
-	if ($pol['user_ID']) { header('Location: '.REGISTRAR.'login.php?a=panel'); exit; }
+	if ($pol['user_ID']) { redirect(REGISTRAR.'login.php?a=panel'); exit; }
 
 	$txt .= '<h2>&iquest;Has olvidado tu contrase&ntilde;a?</h2>';
 
@@ -150,7 +150,7 @@ case 'reset-pass-change':
 	if ($_POST['pass_new'] === $_POST['pass_new2']) {
 		mysql_query("UPDATE users SET pass = '".md5($_POST['pass_new'])."', api_pass = '".rand(1000000,9999999)."', reset_last = '".$date."' WHERE ID = '".$_POST['user_ID']."' AND api_pass = '".$_POST['check']."' AND reset_last >= '".$date."' LIMIT 1", $link);
 	}
-	header('Location: http://www.'.DOMAIN.'/');
+	redirect('http://www.'.DOMAIN.'/');
 	break;
 
 case 'start-reset-pass':
@@ -183,14 +183,14 @@ VirtualPol</p>";
 		while ($r = mysql_fetch_array($result)) { $nick_existe = true; }
 		
 		if ($nick_existe) {
-			header('Location: '.REGISTRAR.'login.php?a=recuperar-pass&b=no-24h');
+			redirect(REGISTRAR.'login.php?a=recuperar-pass&b=no-24h');
 		} else {
-			header('Location: '.REGISTRAR.'login.php?a=recuperar-pass&b=no-existe');
+			redirect(REGISTRAR.'login.php?a=recuperar-pass&b=no-existe');
 		}
 
 
 	} else {
-		header('Location: http://www.'.DOMAIN.'/');
+		redirect('http://www.'.DOMAIN.'/');
 	}
 	break;
 
@@ -213,7 +213,7 @@ case 'changepass':
 		}
 	}
 
-	header('Location: '.$url);
+	redirect($url);
 	break;
 
 case 'changemail':
@@ -226,13 +226,13 @@ case 'changemail':
 		mysql_query("UPDATE users SET email = '".$email."' WHERE ID = '".$pol['user_ID']."' AND fecha_registro < '".date('Y-m-d 20:00:00', time() - 864000)."' LIMIT 1", $link);
 	}
 
-	header('Location: '.$url);
+	redirect($url);
 	break;
 
 
 case 'borrar-usuario':
 	if ($_POST['nick'] == $pol['nick']) { mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link); }
-	header('Location: http://www.'.DOMAIN.'/');
+	redirect('http://www.'.DOMAIN.'/');
 	break;
 
 case 'traza':
@@ -246,14 +246,14 @@ case 'traza':
 			}
 		}
 	}
-	header("Location: ".$_GET['url']);
+	redirect($_GET['url']);
 	break;
 
 
 
 case 'ser_SC':
 	mysql_query("UPDATE users SET ser_SC = '".($_POST['ser_SC']=='true'?'true':'false')."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-	header("Location: ".REGISTRAR."login.php?a=panel");
+	redirect(REGISTRAR."login.php?a=panel");
 	break;
 
 
@@ -318,7 +318,7 @@ body, a { color:#FFFFFF; }
 &nbsp;
 </body>
 </html>';
-		} else { header('Location: '.$url); } 
+		} else { redirect($url); } 
 	} else { 
 		$result = mysql_query("SELECT estado FROM users WHERE nick = '".$nick."' LIMIT 1", $link);
 		while ($r = mysql_fetch_array($result)) { $nick_estado = $r['estado']; }
@@ -330,7 +330,7 @@ body, a { color:#FFFFFF; }
 			default: $msg_error = 'Usuario inexistente, probablemente expirado por inactividad'; break;
 		}
 
-		header('Location: '.REGISTRAR.'login.php?error='.base64_encode($msg_error));
+		redirect(REGISTRAR.'login.php?error='.base64_encode($msg_error));
 	} 
 	break;
 
@@ -344,7 +344,7 @@ case 'logout':
 
 	if ($_SERVER['HTTP_REFERER']) { $url = $_SERVER['HTTP_REFERER']; }
 	else { $url = 'http://'.HOST.'/'; }
-	header("Location: $url");
+	redirect($url);
 	break;
 
 

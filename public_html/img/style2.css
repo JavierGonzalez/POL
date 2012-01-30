@@ -652,6 +652,7 @@ background-position: -10px 0; /* arrow hovers for modern browsers*/
 	max-width:500px;
 	min-width:100px;
 	overflow:hidden;
+	white-space:nowrap;
 	border:1px solid #FFF;
 	border-top:none;
 	background:#EEE;
@@ -683,3 +684,14 @@ background-position: -10px 0; /* arrow hovers for modern browsers*/
 	font-weight:bold;
 	color:red;
 }
+.noti_rep_num {
+	float:right;
+	margin:-2px 0 0 15px;
+	color:#BBB;
+	font-size:20px;
+}
+
+#doc_pad { margin:20px; }
+#doc_pad ul, #doc_pad ol { margin:4px 0 -4px 0; }
+#doc_pad li { margin:3px 0 4px 0; }
+.indent { list-style-type:none; }

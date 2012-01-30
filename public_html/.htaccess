@@ -8,11 +8,8 @@ Header unset Last-Modified
 </FilesMatch> 
 
 redirect 301 /codigo https://github.com/JavierGonzalez/VirtualPol/
-
+redirect 301 /licencia http://www.gnu.org/licenses/gpl.html
+redirect 301 /contenido http://creativecommons.org/licenses/by-sa/3.0/deed.es_ES
 
 RewriteEngine on 
-RewriteRule ^(chat)(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?([a-z-A-Z-0-9_]{1,90})?(/)?$ /c-$1.php?a=$3&b=$5&c=$7&d=$9
-
-
-RewriteRule ^(legal|manual)$ /$1.php [L]
-
+RewriteRule ^(legal|manual)$ /$1.php

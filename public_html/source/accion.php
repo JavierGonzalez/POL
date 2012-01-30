@@ -15,7 +15,7 @@ foreach ($_POST AS $nom => $val) { $_POST[$nom] = str_replace("'", "&#39;", $val
 foreach ($_GET AS $nom => $val) { $_GET[$nom] = str_replace("'", "&#39;", $val); }
 
 
-$acciones_multiplataforma = array('voto', 'mercado', 'foro');
+$acciones_multiplataforma = array('voto', 'mercado', 'foro', 'votacion');
 
 if (
 ((PAIS == $pol['pais']) AND ($pol['estado'] == 'ciudadano'))
@@ -1196,7 +1196,7 @@ case 'votacion':
 	if (($_GET['b'] == 'crear') AND (in_array($_POST['tipo'], $votaciones_tipo))) {
 		
 
-		if ((nucleo_acceso($vp['acceso'][$_POST['tipo']])) OR (($_POST['tipo'] == 'sondeo') AND (nucleo_acceso('supervisores_censo')))) { 
+		if ((nucleo_acceso($vp['acceso'][$_POST['tipo']])) OR (($_POST['acceso_ver'] == 'supervisores_censo') AND (nucleo_acceso('supervisores_censo')))) { 
 
 			if ($_POST['votos_expire'] > 0) { } else { $_POST['votos_expire'] = 0; }
 
@@ -1208,8 +1208,6 @@ case 'votacion':
 					$respuestas_desc .= trim($_POST['respuesta_desc'.$i]).'][';
 				}
 			}
-
-
 			
 			$_POST['debate_url'] = strip_tags($_POST['debate_url']);
 			$_POST['pregunta'] = strip_tags($_POST['pregunta']);
@@ -1262,11 +1260,11 @@ case 'votacion':
 	} elseif (($_GET['b'] == 'votar') AND ($_POST['ref_ID'])) { 
 
 			// Extrae configuracion de la votación
-			$result = mysql_query("SELECT pais, tipo, pregunta, estado, acceso_votar, acceso_cfg_votar, acceso_ver, num, votos_expire, tipo_voto FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
-			while($r = mysql_fetch_array($result)){ $tipo = $r['tipo']; $pregunta = $r['pregunta']; $estado = $r['estado']; $pais = $r['pais']; $acceso_votar = $r['acceso_votar']; $acceso_cfg_votar = $r['acceso_cfg_votar']; $acceso_ver = $r['acceso_ver']; $num = $r['num']; $votos_expire = $r['votos_expire']; $tipo_voto = $r['tipo_voto']; $num++; }
+			$result = mysql_query("SELECT pais, tipo, pregunta, estado, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, num, votos_expire, tipo_voto FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)){ $tipo = $r['tipo']; $pregunta = $r['pregunta']; $estado = $r['estado']; $pais = $r['pais']; $acceso_votar = $r['acceso_votar']; $acceso_cfg_votar = $r['acceso_cfg_votar']; $acceso_ver = $r['acceso_ver']; $acceso_cfg_ver = $r['acceso_cfg_ver']; $num = $r['num']; $votos_expire = $r['votos_expire']; $tipo_voto = $r['tipo_voto']; $num++; }
 
-			if (($estado == 'ok') AND (in_array($tipo, $votaciones_tipo)) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar))) { 
-				// Votacion activa, tipo correcto, acceso de voto OK
+			// Verifica acceso y estado de votacion
+			if (($estado == 'ok') AND (in_array($tipo, $votaciones_tipo)) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar)) AND (nucleo_acceso($acceso_ver, $acceso_cfg_ver))) {
 				
 				// Extracción y verificación contra inyección de votos malformados
 				switch ($tipo_voto) {
@@ -1288,7 +1286,7 @@ case 'votacion':
 				$_POST['mensaje'] = str_replace('"', "&quot;", ucfirst(trim(strip_tags($_POST['mensaje']))));
 				$_POST['validez'] = ($_POST['validez']=='true'?'true':'false');
 
-				// Comprueba si ha votado o no...
+				// Comprueba si ya ha votado o no
 				$ha_votado = false;
 				$result = mysql_query("SELECT ID FROM votacion_votos WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $ha_votado = true; }
@@ -1533,6 +1531,7 @@ case 'kick':
 case 'mensaje-leido':
 	if ($_GET['ID'] == 'all') {
 		mysql_query("UPDATE ".SQL_MENSAJES." SET leido = '1' WHERE recibe_ID = '".$pol['user_ID']."'", $link);
+		mysql_query("UPDATE notificaciones SET visto = 'true' WHERE user_ID = '".$pol['user_ID']."' AND visto = 'false' AND texto LIKE 'Mensaje %'", $link);
 	} elseif ($_GET['ID']) {
 		mysql_query("UPDATE ".SQL_MENSAJES." SET leido = '1' WHERE ID = '".$_GET['ID']."' AND recibe_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	}
@@ -1579,6 +1578,7 @@ case 'enviar-mensaje':
 				}
 				evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/">Nuevo mensaje privado</a> <span style="color:grey;">('.$pol['nick'].')</span>', $r['ID'], -1, false, 'p', $r['pais']);
 				notificacion($r['ID'], 'Mensaje privado de '.$pol['nick'], '/msg/');
+				$refer_url = 'msg/';
 			}
 
 			if ($envio_urgente > 0) {
@@ -1593,9 +1593,9 @@ case 'enviar-mensaje':
 			foreach ($sc AS $user_ID => $nick) {
 				if ($user_ID != $pol['user_ID']) {
 					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$user_ID."', '".$date."', '<b>Mensaje multiple: Supervisor del Censo</b><br />".$text."', '0', '".$_POST['calidad']."', 'SC')", $link);
-
 					evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/">Nuevo mensaje privado</a> <span style="color:grey;">(multiple)</span>', $user_ID, -1, false, 'p');
 					notificacion($user_ID, 'Mensaje de SC de '.$pol['nick'], '/msg/');
+					$refer_url = 'msg/';
 				}
 			}
 		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'])) {
@@ -1613,6 +1613,7 @@ case 'enviar-mensaje':
 					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: ".$cargo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
 					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
 					notificacion($r['user_ID'], 'Mensaje privado de '.$pol['nick'], '/msg/');
+					$refer_url = 'msg/';
 				}
 			}
 		} elseif (($_POST['para'] == 'todos') AND ($pol['pols'] >= $pol['config']['pols_mensajetodos'])) {
@@ -1623,12 +1624,10 @@ case 'enviar-mensaje':
 			while($r = mysql_fetch_array($result)){ 
 				mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$r['ID']."', '".$date."', '".$text."', '0', '".$_POST['calidad']."')", $link);
 				notificacion($r['ID'], 'Mensaje privado global', '/msg/');
+				$refer_url = 'msg/';
 			}
 		}
-
 	}
-	$refer_url = 'msg/';
-
 	break;
 
 
@@ -1870,7 +1869,7 @@ case 'editar-documento':
 		$result = mysql_query("SELECT ID, pais, url, acceso_escribir, acceso_cfg_escribir FROM docs WHERE url = '".$_POST['url']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 
-			$text = pad('get', $r['ID']);
+			$text = str_replace("'", "&#39;", pad('get', $r['ID']));
 
 			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
 
@@ -1891,8 +1890,13 @@ case 'editar-documento':
 
 case 'crear-documento':
 	if ((strlen($_POST['title']) > 1) AND (strlen($_POST['title']) < 80) AND (isset($_POST['cat']))) {
-
+		
 		$url = gen_url($_POST['title']);
+
+		$result = mysql_query("SELECT ID FROM docs WHERE estado = 'ok' AND pais = '".PAIS."' AND url = '".$url."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) { $doc_existe = true; }
+		
+		if ($doc_existe == true) { $url .= '_'.time(); }
 
 		mysql_query("INSERT INTO docs 
 (pais, url, title, text, time, time_last, estado, cat_ID, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir) 
@@ -1960,10 +1964,7 @@ if ($_GET['a'] == 'logout') {
 	redirect(REGISTRAR.'login.php?a=logout');
 }
 
-if ($link) { mysql_close($link); }
-if (isset($refer_url)) {
-	redirect('http://'.HOST.'/'.$refer_url);
-} else {
-	redirect('http://'.HOST.'/?error='.base64_encode('Acci&oacute;n no permitida o erronea (<em>'.$_GET['a'].($_GET['b']?', '.$_GET['b']:'').'</em>)'));
-}
+
+if (!isset($refer_url)) { $refer_url = '?error='.base64_encode('Acción no permitida o erronea ('.$_GET['a'].')'); }
+redirect('http://'.HOST.'/'.$refer_url);
 ?>

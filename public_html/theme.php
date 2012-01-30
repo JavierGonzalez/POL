@@ -3,7 +3,7 @@
 // THEME HOME
 
 if ($link) { mysql_close($link); }
-if (!$txt) { header('HTTP/1.1 301 Moved Permanently'); header('Location: http://' . HOST . '/'); exit; }
+if (!$txt) { redirect('http://'.HOST.'/'); }
 
 if (!$txt_description) { $txt_description = $txt_title . ' | VirtualPol | ' . PAIS; }
 if ($txt_title) { $txt_title .= ' | VirtualPol'; } else { $txt_title = 'VirtualPol | Simulador Pol&iacute;tico Espa&ntilde;ol'; }

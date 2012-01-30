@@ -35,10 +35,10 @@ El resultado del camino desde entonces hasta hoy es este codigo fuente.
 ################
 ### LICENCIA ###
 ################
-El codigo fuente de VirtualPol está publicado bajo licencia GNU GPL v2. Siendo 
-así software libre. http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+El codigo fuente de VirtualPol está publicado bajo licencia GNU GPL v3. Siendo 
+así software libre. http://www.virtualpol.com/license
 
-Se especifican las dos siguientes condiciones añadidas
+Se especifican las dos siguientes condiciones añadidas:
 
 1. Se debe reconocer los créditos de la obra mediante un enlace web regular en 
 el pie de todas las páginas con el texto “VirtualPol” y llevando hacia la siguiente 
@@ -80,3 +80,4 @@ Oblak67
 ### CONTACTO ###
 ################
 desarrollo@virtualpol.com
+Javier González González - gonzomail@gmail.com

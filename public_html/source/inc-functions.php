@@ -61,13 +61,28 @@ function notificacion($user_ID, $texto='', $url='') {
 			if (isset($pol['user_ID'])) {
 				$t = '';
 				$total_num = 0;
+				
+				// NOTIFICACION VOTACIONES
+				$pol['config']['info_consultas'] = 0;
+				$result = mysql_query("SELECT v.ID, pais, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
+				FROM votacion `v`
+				LEFT OUTER JOIN votacion_votos `vv` ON v.ID = vv.ref_ID AND vv.user_ID = '".$pol['user_ID']."'
+				WHERE v.estado = 'ok' AND (v.pais = '".PAIS."' OR acceso_votar IN ('supervisores_censo', 'privado')) AND vv.ID IS null", $link);
+				while($r = mysql_fetch_array($result)) {
+					if ((nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) { 
+						$pol['config']['info_consultas']++;
+						$nuevos_num++;
+						$total_num++;
+						$t .= '<li class="noti_nuevo" onclick="window.location.href=\'http://'.$r['pais'].'.'.DOMAIN.'/votacion/'.$r['ID'].'/\';"><a class="noti_a" href="http://'.$r['pais'].'.'.DOMAIN.'/votacion/'.$r['ID'].'/">Votación: '.$r['pregunta'].'</a></li>';
+					}
+				}
 
 				// NOTIFICACIONES
-				$result = mysql_query("SELECT noti_ID, visto, texto FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' ORDER BY visto DESC, time DESC LIMIT 6", $link);
+				$result = mysql_query("SELECT noti_ID, visto, texto, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 6", $link);
 				while($r = mysql_fetch_array($result)) {
-					$total_num++;
-					if ($r['visto'] == 'false') { $nuevos_num++; }
-					$t .= '<li '.($r['visto']=='false'?' class="noti_nuevo"':'').' onclick="window.location.href=\'/?noti='.$r['noti_ID'].'\';"><a href="/?noti='.$r['noti_ID'].'">'.$r['texto'].'</a></li>';
+					$total_num += $r['num'];
+					if ($r['visto'] == 'false') { $nuevos_num += $r['num']; }
+					$t .= '<li '.($r['visto']=='false'?' class="noti_nuevo"':'').' onclick="window.location.href=\'/?noti='.$r['noti_ID'].'\';"><a href="/?noti='.$r['noti_ID'].'">'.$r['texto'].'</a>'.($r['num']>1?'<span class="noti_rep_num">'.$r['num'].'</span>':'').'</li>';
 				}
 
 				// NOTIFICACION ELECCIONES
@@ -80,29 +95,15 @@ function notificacion($user_ID, $texto='', $url='') {
 					$t .= '<li'.(!isset($havotado)?' class="noti_nuevo"':'').' onclick="window.location.href=\'/elecciones/votar/\';"><a class="noti_a" href="/elecciones/votar/">&iexcl;Elecciones en curso! <span style="font-weight:normal;">Quedan '.timer($elecciones_quedan, true).'</span></a></li>';
 				}
 
-				// NOTIFICACION VOTACIONES
-				$pol['config']['info_consultas'] = 0;
-				$result = mysql_query("SELECT v.ID, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
-				FROM votacion `v`
-				LEFT OUTER JOIN votacion_votos `vv` ON v.ID = vv.ref_ID AND vv.user_ID = '".$pol['user_ID']."'
-				WHERE v.estado = 'ok' AND v.pais = '".PAIS."' AND vv.ID IS null", $link);
-				while($r = mysql_fetch_array($result)) {
-					if ((nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) { 
-						$pol['config']['info_consultas']++;
-						$nuevos_num++;
-						$total_num++;
-						$t .= '<li class="noti_nuevo" onclick="window.location.href=\'/votacion/'.$r['ID'].'/\';"><a class="noti_a" href="/votacion/'.$r['ID'].'/">Votación: '.$r['pregunta'].'</a></li>';
-					}
-				}
-			} else { $t = '<li><a href="'.REGISTRAR.'">Primer paso: crear tu ciudadano</a></li>'; $total_num = 1; $nuevos_num = 1; }
-			return '<div id="noti" class="noti_'.($nuevos_num==0?'off':'on').'" onclick="$(\'#noti_list\').slideToggle(\'fast\');">'.$nuevos_num.'</div><div id="noti_list"><ul>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'<li onclick="window.location.href=\'/hacer\';" id="noti_hacer"><a href="/hacer">¿Qué más hacer?</a></li></ul></div>';
+			} else { $t = '<li><a href="'.REGISTRAR.'?p='.PAIS.'">Primer paso: crea tu ciudadano</a></li>'; $total_num = 1; $nuevos_num = 1; }
+			return '<div id="noti" class="noti_'.($nuevos_num==0?'off':'on').'" onclick="$(\'#noti_list\').slideToggle(\'fast\');">'.$nuevos_num.'</div><div id="noti_list"><ul>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'<li onclick="window.location.href=\'/hacer\';" id="noti_hacer"><a href="/hacer">¿Qué hacer?</a></li></ul></div>';
 			break;
 		
 		case 'visto': 
-			$result = mysql_query("SELECT noti_ID, visto, url FROM notificaciones WHERE noti_ID = '".$texto."' LIMIT 1", $link);
+			$result = mysql_query("SELECT noti_ID, visto, texto, url FROM notificaciones WHERE noti_ID = '".$texto."' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)) {
 				if ($r['visto'] == 'false') {
-					mysql_query("UPDATE notificaciones SET visto = 'true' WHERE noti_ID = '".$texto."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link); 
+					mysql_query("UPDATE notificaciones SET visto = 'true' WHERE visto = 'false' AND user_ID = '".$pol['user_ID']."' AND texto = '".$r['texto']."'", $link); 
 				}
 				redirect($r['url']);
 			}

@@ -94,7 +94,7 @@ function opcion_nueva() {
 
 	$txt .= '<h1><a href="/votacion/">Votaciones</a>: Crear votaci&oacute;n</h1>
 
-<form action="/accion.php?a=votacion&b=crear" method="post">
+<form action="http://'.strtolower(PAIS).'.'.DOMAIN.'/accion.php?a=votacion&b=crear" method="post">
 
 '.($algun_acceso_voto?'':'<p style="color:red;">No tienes acceso para crear votaciones, pero puedes ver las opciones.</p>').'
 
@@ -666,7 +666,7 @@ ORDER BY siglas ASC", $link);
 	$result = mysql_query("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS ha_votado
 FROM votacion
-WHERE pais = '".PAIS."' AND estado = 'ok'
+WHERE estado = 'ok' AND pais = '".PAIS."'
 ORDER BY time_expire DESC
 LIMIT 500", $link);
 	while($r = mysql_fetch_array($result)) {
@@ -689,7 +689,7 @@ LIMIT 500", $link);
 			$txt .= '<tr>
 <td width="100"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
-<td>'.$votar.'<a href="/votacion/'.$r['ID'].'/"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.$r['pregunta'].'</a>'.($r['acceso_ver']!='anonimos'?' <sup style="color:red;">Privado!</sup>':'').'</td>
+<td>'.$votar.'<a href="/votacion/'.$r['ID'].'/" style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap"><span style="color:blue;" title="Tiempo que falta para el resultado">Faltan <b><span class="timer" value="'.$time_expire.'"></span></b></span></td>
 <td nowrap="nowrap">'.$boton.'</td>
 <td></td>
@@ -729,9 +729,9 @@ $txt .= '<span style="color:#888;"><br /><b>Finalizadas</b>:</span> &nbsp; &nbsp
 	$mostrar_separacion = true;
 	$result = mysql_query("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver
 FROM votacion
-WHERE pais = '".PAIS."' AND estado = 'end'
+WHERE estado = 'end' AND pais = '".PAIS."'
 ORDER BY time_expire DESC
-LIMIT 1000", $link);
+LIMIT 500", $link);
 	while($r = mysql_fetch_array($result)) {
 		$time_expire = strtotime($r['time_expire']);
 		
@@ -739,7 +739,7 @@ LIMIT 1000", $link);
 			$txt .= '<tr class="v_'.$r['tipo'].'"'.(in_array($r['tipo'], array('referendum', 'parlamento', 'sondeo'))?'':' style="display:none;"').'>
 <td width="100"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
-<td><a href="/votacion/'.$r['ID'].'/"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.$r['pregunta'].'</a>'.($r['acceso_ver']!='anonimos'?' <sup style="color:red;">Privado!</sup>':'').'</td>
+<td><a href="/votacion/'.$r['ID'].'/" style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap"><span style="color:grey;">Hace <span class="timer" value="'.$time_expire.'"></span></span></td>
 <td></td>
 </tr>';

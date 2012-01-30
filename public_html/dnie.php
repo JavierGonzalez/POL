@@ -2,7 +2,7 @@
 // Conecta con la base de datos, define constantes, carga el sistema de usuarios de VP, hace un par de gestiones rutinarias.
 include('inc-login.php');
 
-if (!$_SERVER['HTTPS']) { header('Location: '.SSL_URL.'dnie.php'); } // Fuerza el uso de una conexion segura entre navegador y servidor. (https SSL)
+if (!$_SERVER['HTTPS']) { redirect(SSL_URL.'dnie.php'); } // Fuerza el uso de una conexion segura entre navegador y servidor. (https SSL)
 
 // Comprueba si el usuario est&aacute; autentificado o no.
 $dnie_autentificado = false;
@@ -58,8 +58,7 @@ Esta linea final no supone ninguna informaci&oacute;n en claro.
 			evento_chat('<b>[#] '.crear_link($pol['nick']).' se ha <a href="'.SSL_URL.'dnie.php">autentificado</a> correctamente.</b>');
 
 			// Cierra y redirige a esta misma pagina.
-			header('Location: '.SSL_URL.'dnie.php');
-			mysql_close($link); exit;
+			redirect(SSL_URL.'dnie.php');
 		}
 
 	} else { 

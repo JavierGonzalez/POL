@@ -939,13 +939,13 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 <optgroup label="Ataque al sistema">
 	<option value="Ataque al sistema: 2.a">2.a Uso o descubrimiento de bugs del sistema, sea cual fuere su finalidad, sin reportarlo inmediatamente u obrando de mala fe.</option>
 	<option value="Ataque al sistema: 2.b">2.b Ejecutar cualquier tipo de acci&oacute;n que busque causar un perjuicio al mismo.</option>
-	<option value="Ataque al sistema: 2.c">2.c La utilizaci&oacute;n malintencionada del privilegio de expulsi&oacute;n.</option>
+	<option value="Ataque al sistema: 2.c">2.c La utilización malintencionada del privilegio de Supervisor del Censo.</option>
 </optgroup>
 
 
 <optgroup label="Ataque a la comunidad">
 	<option value="Ataque a la comunidad: 3.a">3.a Publicaci&oacute;n de contenido altamente violento, obsceno o, en todo caso, no apto para menores de edad.</option>
-	<option value="Ataque a la comunidad: 3.b">3.b Hacer apolog&iacute;a del terrorismo o ideolog&iacute;as que defiendan el uso de la violencia.</option>
+	<!--<option value="Ataque a la comunidad: 3.b">3.b Hacer apolog&iacute;a del terrorismo o ideolog&iacute;as que defiendan el uso de la violencia.</option>-->
 	<option value="Ataque a la comunidad: 3.c">3.c Amenazar a otros usuarios con repercusiones fuera de la comunidad.</option>
 	<option value="Ataque a la comunidad: 3.d">3.d El uso reiterado o sistem&aacute;tico de “kicks” superiores a 15 minutos sin cobertura legal dentro de la comunidad.</option>
 </optgroup>

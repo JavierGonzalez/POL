@@ -156,6 +156,12 @@ input, area, div.content-in select {
 	color:green; font-size:16px; 
 	font-weight:bold; 
 }
+button {
+	font-size:16px;
+	color:green;
+	font-weight:bold;
+}
+
 
 input[type="submit"][disabled="disabled"], input[type="button"][disabled="disabled"], area[disabled="disabled"], div.content-in select[disabled="disabled"] { 
 	color:gray;
@@ -181,6 +187,8 @@ input[type="submit"][disabled="disabled"], input[type="button"][disabled="disabl
 .pol_table a:hover { 
 	text-decoration:underline; 
 }
+
+/*.content-in hr { border: 1px solid grey; }*/ .flateral { margin:0 0 0 5px; float:right; } .pforo { text-align:justify; margin:2px; }
 
 .pforo { 
 	border-top: 1px solid #D4D4D4; 
@@ -628,8 +636,8 @@ background-position: -10px 0; /* arrow hovers for modern browsers*/
 	cursor:pointer;
 	color:#FFF;
 	text-align:center;
-	text-shadow:2px 2px 7px #000;
-	font-size:25px;
+	text-shadow:2px 2px 7px red;
+	font-size:26px;
 	font-weight:bold;
 	border-radius: 6px;
 	-moz-border-radius: 6px; 
@@ -691,7 +699,9 @@ background-position: -10px 0; /* arrow hovers for modern browsers*/
 	font-size:20px;
 }
 
-#doc_pad { margin:20px; }
+
+#doc_pad { text-align:justify; margin:20px; }
 #doc_pad ul, #doc_pad ol { margin:4px 0 -4px 0; }
-#doc_pad li { margin:3px 0 4px 0; }
+#doc_pad li { text-align:left; margin:3px 0 4px 0; }
+#doc_pad ol ol { list-style-type: lower-roman; }
 .indent { list-style-type:none; }

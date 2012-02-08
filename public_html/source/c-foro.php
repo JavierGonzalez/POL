@@ -193,7 +193,7 @@ $txt .= mysql_error($link);
 
 
 
-	$result = mysql_query("SELECT *, u.nick
+	$result = mysql_query("SELECT h.ID, h.cargo, h.time, h.votos, h.num, h.sub_ID, h.url, h.title, h.text, u.nick
 FROM ".SQL."foros_hilos `h`
 LEFT JOIN users `u` ON (u.ID = h.user_ID)
 WHERE user_ID = '".$el_user_ID."'
@@ -313,22 +313,20 @@ LIMIT 1", $link);
 
 		if ($acceso['leer']) {
 
-			if ($r['estado'] != 'expulsado') {
-
-				$subforo = $_GET['a'];
-				$return_url = 'foro/' . $subforo . '/' . $r['url'] . '/';
-				paginacion('hilo', '/'.$return_url, $r['ID'], $_GET['c'], $r['num']);
-				
-				if ($_GET['c']) { $pag_title = ' - P&aacute;gina: '.$_GET['c']; }
-				$txt_title = $r['title'].' - Foro: '.$r['foro_title'].$pag_title;
-				$txt_description = $r['title'].' - Foro: '.$r['foro_title'].$pag_title;
+			$subforo = $_GET['a'];
+			$return_url = 'foro/' . $subforo . '/' . $r['url'] . '/';
+			paginacion('hilo', '/'.$return_url, $r['ID'], $_GET['c'], $r['num']);
+			
+			if ($_GET['c']) { $pag_title = ' - P&aacute;gina: '.$_GET['c']; }
+			$txt_title = $r['title'].' - Foro: '.$r['foro_title'].$pag_title;
+			$txt_description = $r['title'].' - Foro: '.$r['foro_title'].$pag_title;
 
 
-				// acceso
-				if ($acceso['escribir_msg']) { $crear_hilo = '#enviar'; $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/-'.$r['ID'].'#enviar').'</div>'; } else { $crear_hilo = ''; }
+			// acceso
+			if ($acceso['escribir_msg']) { $crear_hilo = '#enviar'; $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/-'.$r['ID'].'#enviar').'</div>'; } else { $crear_hilo = ''; }
 
 
-				$txt .= '<h1><a href="/foro/">Foro</a>: <a href="/foro/'.$r['foro_url'].'/">'.$r['foro_title'].'</a> (<span style="font-size:18px;">'.$r['descripcion'].'</span>)</h1>
+			$txt .= '<h1><a href="/foro/">Foro</a>: <a href="/foro/'.$r['foro_url'].'/">'.$r['foro_title'].'</a> (<span style="font-size:18px;">'.$r['descripcion'].'</span>)</h1>
 
 <p style="margin-bottom:4px;">'.$p_paginas.' &nbsp; ' . boton('Responder', $crear_hilo) . ' &nbsp; 
 <span style="float:right;">Orden: <a href="/'.$return_url.'/"'.($_GET['c']=='mejores'?'':' style="color:#444;"').'>Fecha</a> | <a href="/'.$return_url.'mejores/"'.($_GET['c']=='mejores'?' style="color:#444;"':'').'>Votos</a></span>
@@ -336,50 +334,48 @@ LIMIT 1", $link);
 
 <table border="0" cellpadding="2" cellspacing="0" class="pol_table">';
 
-				if (($pol['user_ID'] == $r['user_ID']) AND ($subforo != 'notaria')) { 
-					// es tu post
-					$editar = '<span style="float:right;">'.boton('Editar', '/foro/editar/'.$r['ID'].'/').'</span>'; 
-				} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
-					$editar = '<span style="float:right;">'.boton('Mover', '/foro/editar/'.$r['ID'].'/').' '.boton('Papelera', '/accion.php?a=foro&b=borrar&c=hilo&ID='.$r['ID'].'/', '&iquest;Quieres enviar a la PAPELERA este HILO y sus MENSAJES?').'</span>'; 
-				} else { $editar = ''; }
+			if (($pol['user_ID'] == $r['user_ID']) AND ($subforo != 'notaria')) { 
+				// es tu post
+				$editar = '<span style="float:right;">'.boton('Editar', '/foro/editar/'.$r['ID'].'/').'</span>'; 
+			} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
+				$editar = '<span style="float:right;">'.boton('Mover', '/foro/editar/'.$r['ID'].'/').' '.boton('Papelera', '/accion.php?a=foro&b=borrar&c=hilo&ID='.$r['ID'].'/', '&iquest;Quieres enviar a la PAPELERA este HILO y sus MENSAJES?').'</span>'; 
+			} else { $editar = ''; }
 
-				$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['voto'], 'hilos', $r['ID']) . '</td><td class="amarillo redondeado" valign="top" width="80%"><p style="text-align:justify;">'.$citar.$editar.'<h1 style="margin:-6px 0 10px 0;"><a href="/'.$return_url.'" class="rich" style="font-size:20px;">'.$r['title'].'</a></h1>'.reemplazos($r['text']).'</p></td></tr>';
+			$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['voto'], 'hilos', $r['ID']) . '</td><td class="amarillo redondeado" valign="top" width="80%"><p style="text-align:justify;">'.$citar.$editar.'<h1 style="margin:-6px 0 10px 0;"><a href="/'.$return_url.'" class="rich" style="font-size:20px;">'.$r['title'].'</a></h1>'.reemplazos($r['text']).'</p></td></tr>';
 
-				$result2 = mysql_query("SELECT m.ID, hilo_ID, user_ID, m.time, m.text, m.cargo, nick, m.estado AS nick_estado, avatar, votos, v.voto
+			$result2 = mysql_query("SELECT m.ID, hilo_ID, user_ID, m.time, m.text, m.cargo, nick, m.estado AS nick_estado, avatar, votos, v.voto
 FROM ".SQL."foros_msg `m`
 LEFT JOIN users `u` on (u.ID = user_ID)
 LEFT JOIN votos `v` ON (tipo = 'msg' AND v.pais = '".PAIS."' AND item_ID = m.ID AND emisor_ID = '".$pol['user_ID']."')
 WHERE hilo_ID = '".$r['ID']."' AND m.estado = 'ok'
 ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.$p_limit), $link);
-				while($r2 = mysql_fetch_array($result2)) {
+			while($r2 = mysql_fetch_array($result2)) {
 
-					if (($pol['user_ID'] == $r2['user_ID']) AND ($subforo != 'notaria') AND (strtotime($r2['time']) > (time() - 3600))) { 
-						$editar = boton('Editar', '/foro/editar/' . $r2['hilo_ID'] . '/' . $r2['ID'] . '/') . boton('X', '/accion.php?a=foro&b=eliminarreply&ID=' . $r2['ID'] . '&hilo_ID=' . $r2['hilo_ID'], '&iquest;Est&aacute;s seguro de querer ELIMINAR tu MENSAJE?') . ' '; 
-					} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
-						// policia borra
-						$editar = boton('Papelera', '/accion.php?a=foro&b=borrar&c=mensaje&ID=' . $r2['ID'] . '/', '&iquest;Quieres enviar a la PAPELERA este MENSAJE?') . ' '; 
-					} else { $editar = ''; }
-					if ($citar) {
-						 $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/'.$r2['ID'].'#enviar').'</div>'; 
-					}
-
-					$txt .= '<tr id="m-' . $r2['ID'] . '"><td align="right" valign="top">' . print_lateral($r2['nick'], $r2['cargo'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['votos'], $r2['voto'], 'msg', $r2['ID']) . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $r2['ID'] . '">#</a></span>'.($r2['nick_estado']=='expulsado'?'<span style="color:red;">Expulsado.</span>':$citar.reemplazos($r2['text'])).'</p></td></tr>';
+				if (($pol['user_ID'] == $r2['user_ID']) AND ($subforo != 'notaria') AND (strtotime($r2['time']) > (time() - 3600))) { 
+					$editar = boton('Editar', '/foro/editar/' . $r2['hilo_ID'] . '/' . $r2['ID'] . '/') . boton('X', '/accion.php?a=foro&b=eliminarreply&ID=' . $r2['ID'] . '&hilo_ID=' . $r2['hilo_ID'], '&iquest;Est&aacute;s seguro de querer ELIMINAR tu MENSAJE?') . ' '; 
+				} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
+					// policia borra
+					$editar = boton('Papelera', '/accion.php?a=foro&b=borrar&c=mensaje&ID=' . $r2['ID'] . '/', '&iquest;Quieres enviar a la PAPELERA este MENSAJE?') . ' '; 
+				} else { $editar = ''; }
+				if ($citar) {
+					 $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/'.$r2['ID'].'#enviar').'</div>'; 
 				}
-				$txt .= '</table> <p>' . $p_paginas . '</p>';
 
-				if ($acceso['escribir_msg']) { $txt .= foro_enviar($r['sub_ID'], $r['ID'], null, $_GET['d']); }
-
-				if (!$pol['user_ID']) { $txt .= '<p class="azul"><b>Para poder participar en esta conversacion has de <a href="'.REGISTRAR.'?p='.PAIS.'">registrar tu ciudadano</a></b></p>'; }
-				
-				$txt .= '<br /><hr /><p>'.$r['title'].'. M&aacute;s hilos: ';
-				$result2 = mysql_query("SELECT url, title, (SELECT url FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS subforo FROM ".SQL."foros_hilos WHERE estado = 'ok' ORDER BY RAND() LIMIT 8", $link);
-				while($r2 = mysql_fetch_array($result2)) {
-					$txt .= '<a href="/foro/' . $r2['subforo'] . '/' . $r2['url'] . '/">' . $r2['title'] . '</a>, ';
-				}
-				$txt .= '<p>';
-				
-				$txt_header = '<style type="text/css">.content-in hr { border: 1px solid grey; } .flateral { margin:0 0 0 5px; float:right; } .pforo { text-align:justify; margin:2px; }</style>';
+				$txt .= '<tr id="m-' . $r2['ID'] . '"><td align="right" valign="top">' . print_lateral($r2['nick'], $r2['cargo'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['votos'], $r2['voto'], 'msg', $r2['ID']) . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $r2['ID'] . '">#</a></span>'.($r2['nick_estado']=='expulsado'?'<span style="color:red;">Expulsado.</span>':$citar.reemplazos($r2['text'])).'</p></td></tr>';
 			}
+			$txt .= '</table> <p>' . $p_paginas . '</p>';
+
+			if ($acceso['escribir_msg']) { $txt .= foro_enviar($r['sub_ID'], $r['ID'], null, $_GET['d']); }
+
+			if (!$pol['user_ID']) { $txt .= '<p class="azul"><b>Para poder participar en esta conversacion has de <a href="'.REGISTRAR.'?p='.PAIS.'">registrar tu ciudadano</a></b></p>'; }
+			
+			$txt .= '<br /><hr /><p>'.$r['title'].'. M&aacute;s hilos: ';
+			$result2 = mysql_query("SELECT url, title, (SELECT url FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS subforo FROM ".SQL."foros_hilos WHERE estado = 'ok' ORDER BY RAND() LIMIT 8", $link);
+			while($r2 = mysql_fetch_array($result2)) {
+				$txt .= '<a href="/foro/' . $r2['subforo'] . '/' . $r2['url'] . '/">' . $r2['title'] . '</a>, ';
+			}
+			$txt .= '<p>';
+			
 		} else { $txt .= '<p><b style="color:red;">No tienes acceso de lectura a este subforo.</b></p>'; }
 	}
 
@@ -511,20 +507,22 @@ ORDER BY time ASC", $link);
 
 			$result2 = mysql_query("SELECT ID, url, user_ID, title, time, time_last, cargo, num, votos,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
-(SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS estado
+(SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS user_estado
 FROM ".SQL."foros_hilos
-WHERE sub_ID = '".$r['ID']."' AND estado = 'ok' AND estado != 'expulsado'
+WHERE sub_ID = '".$r['ID']."' AND estado = 'ok'
 ORDER BY time_last DESC
 LIMIT ".$r['limite'], $link);
 			while($r2 = mysql_fetch_array($result2)) {
-				$time_hilo = strtotime($r2['time']);
-				$txt_table .= '<tr>
-<td align="right" style="padding-right:4px;" valign="top">'.crear_link($r2['nick']).'</td>
-<td valign="top" align="right"><b>'.$r2['num'].'</b></td>
-<td align="right" style="padding-right:4px;">'.confianza($r2['votos']).'</td>
-<td class="rich"><a'.($time_hilo<(time()-432000)?' style="font-weight:bold;"':'').' href="/foro/'.$r['url'].'/'.$r2['url'].'/">'.$r2['title'].'</a>'.($time_hilo>(time()-86400)?' <sup style="font-size:9px;color:red;">Nuevo!</sup>':'').'</td>
-<td align="right" valign="top" nowrap="nowrap"><span class="timer" value="'.$time_hilo.'"></span></td>
-</tr>';
+				if ($r2['user_estado'] != 'expulsado') {
+					$time_hilo = strtotime($r2['time']);
+					$txt_table .= '<tr>
+	<td align="right" style="padding-right:4px;" valign="top">'.crear_link($r2['nick']).'</td>
+	<td valign="top" align="right"><b>'.$r2['num'].'</b></td>
+	<td align="right" style="padding-right:4px;">'.confianza($r2['votos']).'</td>
+	<td class="rich"><a'.($time_hilo<(time()-432000)?' style="font-weight:bold;"':'').' href="/foro/'.$r['url'].'/'.$r2['url'].'/">'.$r2['title'].'</a>'.($time_hilo>(time()-86400)?' <sup style="font-size:9px;color:red;">Nuevo!</sup>':'').'</td>
+	<td align="right" valign="top" nowrap="nowrap"><span class="timer" value="'.$time_hilo.'"></span></td>
+	</tr>';
+				}
 			}
 			$txt_table .= '<tr><td colspan="4">&nbsp;</td></tr>';
 		} else { $foro_oculto_num++; }

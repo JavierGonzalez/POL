@@ -179,6 +179,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 
 				<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Sobre VirtualPol</b></a>
 					<ul>
+						<li><a href="http://www.virtualpol.com/video" target="_blank">Bienvenido (video)</a></li>
 						<li><a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a></li>
 						<li><a href="/historia/">Hechos hist&oacute;ricos</a></li>
 						<li><a href="http://desarrollo.virtualpol.com/" target="_blank">Blog Desarrollo</a></li>
@@ -297,6 +298,7 @@ echo '</div>';
 
 				<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Sobre VirtualPol</b></a>
 					<ul>
+						<li><a href="http://www.virtualpol.com/video" target="_blank">Bienvenido (video)</a></li>
 						<li><a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a></li>
 						<li><a href="/codigo" target="_blank">C&oacute;digo fuente</a></li>
 						<li title="Estad&iacute;sticas de desarrollo del c&oacute;digo fuente"><a href="https://www.ohloh.net/p/virtualpol/contributors" target="_blank">Info desarrollo</a></li>
@@ -335,7 +337,7 @@ echo '<div id="palabras">';
 foreach(explode(";", $pol['config']['palabras']) as $t) {
 	$t = explode(":", $t);
 	if ($t[0] == $pol['user_ID']) { $edit = ' <a href="/subasta/editar/" class="gris">#</a>'; } else { $edit = ''; }
-	if (isset($t[1])) { echo '<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>'.$edit."<br />\n"; } 
+	if (isset($t[1])) { echo ($t[1]?'<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>':$t[2]).$edit."<br />\n"; } 
 	else { echo $t[2].$edit."<br />\n"; }
 }
 echo '</div>
@@ -343,7 +345,7 @@ echo '</div>
 <div style="margin:12px 0 0 0;">
 <a href="https://www.facebook.com/pages/Asamblea-Virtual/216054178475524"><img src="'.IMG.'ico/2_32.png" alt="Facebook" width="32" height="32" /></a> 
 
-<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://15m.virtualpol.com/" data-text="Participa en la Asamblea Virtual del 15M!" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="AsambleaVirtual">Twittear</a>
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://15m.virtualpol.com/" data-text="Participa en la Asamblea Virtual del 15M! http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="AsambleaVirtual">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 </div>';

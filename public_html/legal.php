@@ -1,18 +1,6 @@
 <?php
 include('inc-login.php');
 
-$txt_title = 'CONDICIONES DE USO DE VIRTUALPOL | Informacion legal, contacto';
-$txt_description = 'Condiciones de Uso de VirtualPol. Texto legal, contacto.'; 
-
-$txt_header .= '<meta name="robots" content="noindex,nofollow" />
-<style type="text/css">
-.content { width:700px; margin: 0 auto; padding: 2px 12px 30px 12px; }
-
-
-ol{margin:0;padding:0}p{margin:0}.c1{padding-left:0pt;direction:ltr;margin-left:72pt}.c17{list-style-type:lower-roman;margin:0;padding:0}.c2{height:11pt;direction:ltr;margin-left:36pt}.c8{list-style-type:lower-latin;margin:0;padding:0}.c5{list-style-type:decimal;margin:0;padding:0}.c14{width:468pt;background-color:#ffffff;padding:72pt 72pt 72pt 72pt}.c16{padding-left:0pt;margin-left:108pt}.c10{color:inherit;text-decoration:inherit}.c13{font-size:24pt;font-weight:bold}.c3{font-size:14pt;font-weight:bold}.c11{font-size:18pt;font-weight:bold}.c12{margin:5px;border:1px solid black}.c15{color:#000099;text-decoration:underline}.c0{text-align:center;direction:ltr}.c6{padding-left:0pt;margin-left:36pt}.c4{direction:ltr}.c9{height:11pt}.c7{line-height:1.0}body{color:#000000;font-size:11pt;font-family:Arial}h1{padding-top:24pt;color:#000000;font-size:24pt;font-family:Arial;font-weight:bold;padding-bottom:6pt}h2{padding-top:18pt;color:#000000;font-size:18pt;font-family:Arial;font-weight:bold;padding-bottom:4pt}h3{padding-top:14pt;color:#000000;font-size:14pt;font-family:Arial;font-weight:bold;padding-bottom:4pt}h4{padding-top:12pt;color:#000000;font-size:12pt;font-family:Arial;font-weight:bold;padding-bottom:2pt}h5{padding-top:11pt;color:#000000;font-size:11pt;font-family:Arial;font-weight:bold;padding-bottom:2pt}h6{padding-top:10pt;color:#000000;font-size:10pt;font-family:Arial;font-weight:bold;padding-bottom:2pt}
-</style>';
-
-
 if ($pol['user_ID']) {
 	$result = mysql_query("SELECT fecha_legal FROM users WHERE ID = '".$pol['user_ID']."' AND fecha_legal != '0000-00-00 00:00:00'", $link);
 	while($r = mysql_fetch_array($result)) { $fecha_legal = $r['fecha_legal']; }
@@ -24,20 +12,36 @@ if ($pol['user_ID']) {
 		$txt_legal = 'Como usuario de VirtualPol debes aceptar las siguientes condiciones.<br /><br />';
 		$txt_legal_botones = '<div style="margin:30px 0 0 0;">'.boton('HE LEIDO Y ACEPTO TODAS LAS CONDICIONES.', 'http://'.$pol['pais'].'.'.DOMAIN.'/accion.php?a=aceptar-condiciones').'</div>';
 	}
-
 }
 
 
+$result = mysql_query("SELECT title, text FROM docs WHERE ID = '1' LIMIT 1", $link); // doc_ID 1 = TOS
+while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
 
-/* NO TOCAR ABAJO */
+
+$txt_title = 'CONDICIONES DE USO DE VIRTUALPOL | Informacion legal, contacto';
+$txt_description = 'Condiciones de Uso de VirtualPol. Texto legal, contacto.'; 
+
+$txt_header .= '
+<meta name="robots" content="noindex,nofollow" />
+<style type="text/css">
+.content { width:800px; margin: 0 auto; }
+</style>';
 
 $txt .= '<em>'.$txt_legal.'</em>
 
-<h1 class="c0"><a name="h.amj0xd8jynq4"></a><span class="c13">CONDICIONES DE USO DE VIRTUALPOL</span></h1><p class="c4 c9"><span></span></p><h3 class="c4"><a name="h.qowhj4l5s8w2"></a><span class="c3">MOTIVOS DE </span><span class="c3">EXPULSI&Oacute;N</span></h3><p class="c4"><span>Infringir cualquiera de las siguientes reglas tendr&aacute; como consecuencia la expulsi&oacute;n permanente de VirtualPol, sin la necesidad de un previo aviso y sin posibilidad de ning&uacute;n tipo de juicio</span><span>.</span></p><p class="c4 c9"><span></span></p><ol class="c5" start="1"><li class="c6 c4"><span>Clones:</span></li></ol><ol class="c8" start="1"><li class="c1"><span>Creaci&oacute;n de </span><span>m&uacute;ltiples usuarios</span><span>&nbsp;por parte de una sola persona.</span></li><li class="c1"><span>Uso de una direcci&oacute;n de email temporal o de uso no habitual.</span></li><li class="c1"><span>Uso de cualquier m&eacute;todo cuyo fin sea ocultar la conexi&oacute;n a Internet</span><span>.</span></li><li class="c1"><span>Compartir la misma conexi&oacute;n a Internet con otro usuario y no notificarlo en el formulario de registro.</span></li><li class="c1"><span>Compartir la misma conexi&oacute;n a Internet con otro usuario expulsado por incumplimiento de estas Condiciones de Uso.</span></li></ol><p class="c4 c9"><span></span></p><ol class="c5" start="2"><li class="c6 c4"><span>Ataques al sistema:</span></li></ol><ol class="c8" start="1"><li class="c1"><span>Uso o descubrimiento de bugs del sistema, sea cual fuere su finalidad, sin reportarlo inmediatamente </span><span>u obrando de mala fe</span><span>.</span></li></ol><ol class="c17" start="1"><li class="c16 c4"><span>Inyecci&oacute;n de c&oacute;digo malicioso.</span></li><li class="c4 c16"><span>Ejecutar cualquier acci&oacute;n no permitida por el sistema en condiciones normales.</span></li></ol><ol class="c8" start="2"><li class="c1"><span>Ejecutar cualquier acci&oacute;n que impida el normal funcionamiento del sistema.</span></li><li class="c1"><span>La utilizaci&oacute;n malintencionada del privilegio de expulsi&oacute;n.</span></li></ol><p class="c2"><span></span></p><ol class="c5" start="3"><li class="c6 c4"><span>Ataques a la comunidad:</span></li></ol><ol class="c8" start="1"><li class="c1"><span>Publicaci&oacute;n de contenido altamente violento, obsceno o, en todo caso, no apto para menores de edad.</span></li><li class="c1"><span>Hacer apolog&iacute;a del terrorismo o ideolog&iacute;as que defiendan el uso de la violencia.</span></li><li class="c1"><span>Amenazar a otros usuarios con repercusiones fuera de la comunidad. </span></li><li class="c1"><span>El uso reiterado o sistem&aacute;tico de &ldquo;kicks&rdquo; superiores a 15 minutos sin cobertura legal dentro de la comunidad.</span></li></ol><p class="c4 c9"><span></span></p><p class="c4"><span>La aplicaci&oacute;n de las expulsiones queda a cargo de los Supervisores del Censo, con la supervisi&oacute;n en &uacute;ltima instancia del </span><span>Administrador</span><span>. Se aplicar&aacute;n con la flexibilidad apropiada y la posibilidad del indulto, valorando criterios como la ausencia de mala intenci&oacute;n o el arrepentimiento</span><span>.</span></p><p class="c4 c9"><span></span></p><h3 class="c4"><a name="h.4c64wznv92bz"></a><span class="c3">EL C&Oacute;DIGO FUENTE</span></h3><p class="c4"><span>El c&oacute;digo fuente y la estructura de la base de datos est&aacute;n publicados bajo licencia </span><span class="c15"><a class="c10" href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GNU GPL v2</a></span><span>&nbsp;y es publicado en </span><span class="c15"><a class="c10" href="/codigo">esta direcci&oacute;n</a></span><span>.</span><span>&nbsp;</span></p><p class="c4 c9"><span></span></p><p class="c4"><span>Tambi&eacute;n se especifica las siguientes condiciones a&ntilde;adidas:</span></p><ol class="c5" start="1"><li class="c6 c4"><span>Se debe reconocer los cr&eacute;ditos de la obra mediante un enlace web regular en el pie de todas las p&aacute;ginas con el texto &ldquo;VirtualPol&rdquo; y llevando hacia la siguiente direcci&oacute;n &ldquo;http://www.virtualpol.com/&rdquo;.</span></li><li class="c6 c4"><span>Se debe reportar cualquier fallo de seguridad encontrado en el c&oacute;digo fuente.</span></li></ol><p class="c4 c9"><span></span></p><h3 class="c4"><a name="h.1kseqem9ogqz"></a><span class="c3">DESARROLLO DEL C&Oacute;DIGO FUENTE</span></h3><p class="c4"><span>La modificaci&oacute;n del c&oacute;digo fuente y las decisiones intr&iacute;nsecas del sistema son competencia exclusiva de los desarrolladores, (personas que contribuyen a modificar el c&oacute;digo de forma libre y desinteresada) con la supervisi&oacute;n en &uacute;ltima instancia del Administrador.</span></p><p class="c4 c9"><span></span></p><h3 class="c4"><a name="h.srrws82imer2"></a><span class="c3">PROPIEDAD INTELECTUAL</span></h3><p class="c4"><span>Toda contribuci&oacute;n hecha en el sistema que resulte difundida de forma p&uacute;blica pasar&aacute; a ser propiedad intelectual de VirtualPol, conservando el creador original el derecho de autor&iacute;a, pero prescindiendo del derecho de propiedad sobre el contenido. </span></p><p class="c4 c9"><span></span></p><p class="c4"><span>Todo el contenido es publicado bajo licencia </span><span class="c15"><a class="c10" href="http://creativecommons.org/licenses/by-sa/3.0/deed.es_ES">Creative Commons BY-SA 3.0</a></span><span>. Siguiendo los siguientes principios:</span></p><p class="c4 c9"><span></span></p><p class="c4"><span>Usted es libre de:</span></p><ol class="c5" start="1"><li class="c6 c4"><span>Copiar, distribuir y comunicar p&uacute;blicamente la obra.</span></li><li class="c4 c6"><span>Remezclar. Transformar la obra.</span></li></ol><p class="c4 c9"><span></span></p><p class="c4"><span>Bajo las condiciones siguientes:</span></p><ol class="c5" start="1"><li class="c6 c4"><span>Reconocimiento. Debe reconocer los cr&eacute;ditos de la obra mediante un enlace web regular.</span></li><li class="c6 c4"><span>Compartir bajo la misma licencia. Si altera o transforma esta obra, o genera una obra derivada, s&oacute;lo puede distribuir la obra generada bajo una licencia id&eacute;ntica a la indicada.</span></li></ol><p class="c4 c9"><span></span></p><h3 class="c4"><a name="h.dncosafwg08m"></a><span class="c3">COMUNICACI&Oacute;N</span></h3><p class="c4"><span>El m&eacute;todo de contacto principal es: desarrollo@virtualpol.com. Debe ser usado en caso de no haber otro medio m&aacute;s adecuado para la comunicaci&oacute;n.</span></p><p class="c4 c9"><span></span></p><h3 class="c4"><a name="h.85zu5dlguxc7"></a><span class="c3">PRIVACIDAD</span></h3><p class="c4"><span>Cualquier usuario puede ser voluntariamente eliminado. Tras el correspondiente proceso se dejar&aacute; de almacenar toda su informaci&oacute;n, exceptuando la informaci&oacute;n de car&aacute;cter p&uacute;blico.</span></p><p class="c4 c9"><span></span></p><h3 class="c4"><a name="h.1oiavdh6qp6b"></a><span class="c3">DESCARGA DE RESPONSABILIDAD</span></h3><p class="c4"><span>El administrador del proyecto no se declara responsable de las acciones u opiniones vertidas por terceras personas. VirtualPol est&aacute; en fase de desarrollo (Beta).</span></p><p class="c4 c9"><span></span></p><p class="c4"><span>El Administrador principal y propietario de &ldquo;virtualpol.com&rdquo; es Javier Gonz&aacute;lez Gonz&aacute;lez con domicilio en Vinaroz (Espa&ntilde;a).</span></p><p class="c4 c9"><span></span></p><p class="c4"><span>Para la resoluci&oacute;n de cualquier controversia relacionada con VirtualPol ser&aacute; aplicable la ley espa&ntilde;ola y los Juzgados y Tribunales competentes de Vinaroz (Espa&ntilde;a).</span></p><p class="c4 c9"><span></span></p><h2 class="c0"><a name="h.aho4mu6mdzba"></a><span class="c11">FIN DE LAS CONDICIONES DE USO DE VIRTUALPOL</span></h2>
+<div style="color:#555;">
+<h1 style="color:#444;text-align:center;font-size:28px;">'.$title.'</h1>
+
+<div id="doc_pad">
+'.$text.'
+</div>
+
+</div>
+
 
 '.$txt_legal_botones;
 
-/* NO TOCAR ARRIBA */
 
 include('theme.php');
 ?>

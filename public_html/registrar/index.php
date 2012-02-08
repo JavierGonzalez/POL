@@ -248,7 +248,7 @@ case 'verificar': //URL EMAIL
 			$result2 = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$r['pais']."'", $link);
 			while ($r2 = mysql_fetch_array($result2)) { $ciudadanos_num = $r2['num']; }
 
-			evento_chat('<b>[#] <a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'/" class="nick">'.$r['nick'].'</a> acepta la Ciudadania</b> de '.$r['pais'].' <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos)</span>', 0, 0, false, 'e', $r['pais']);
+			evento_chat('<b>[#] Nuevo ciudadano</b> de <b>'.$r['pais'].'</b> <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos, <b><a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'/" class="nick">'.$r['nick'].'</a></b>)</span>', 0, 0, false, 'e', $r['pais']);
 
 			mysql_query("INSERT INTO ".strtolower($r['pais'])."_log 
 (time, user_ID, user_ID2, accion, dato) 
@@ -288,7 +288,7 @@ case 'solicitar-ciudadania':
 		$result2 = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$_POST['pais']."'", $link);
 		while ($r2 = mysql_fetch_array($result2)) { $ciudadanos_num = $r2['num']; }
 
-		evento_chat('<b>[#] <a href="http://'.strtolower($_POST['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'/" class="nick">'.$pol['nick'].'</a> acepta la Ciudadania</b> de '.$_POST['pais'].' <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos'.$trae.')</span>', 0, 0, false, 'e', $_POST['pais']);
+		evento_chat('<b>[#] Nuevo ciudadano</b> de <b>'.$_POST['pais'].'</b> <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos, <b><a href="http://'.strtolower($_POST['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'/" class="nick">'.$pol['nick'].'</a></b>)</span>', 0, 0, false, 'e', $_POST['pais']);
 
 		mysql_query("INSERT INTO ".strtolower($_POST['pais'])."_log 
 (time, user_ID, user_ID2, accion, dato) 

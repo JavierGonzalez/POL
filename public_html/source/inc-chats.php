@@ -130,7 +130,6 @@ input, area, div.content-in select { color:green; font-size:16px; font-weight:bo
 .vpc_yo { color:#2D2D2D; }
 </style>
 
-
 <script type="text/javascript"> 
 msg_ID = -1;
 elnick = "'.$_SESSION['pol']['nick'].'";

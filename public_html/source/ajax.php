@@ -132,7 +132,7 @@ LIMIT 1", $link);
 		$msg = $_REQUEST['msg'];
 		if (isset($borrar_msg)) { $msg = ''; }
 
-		$msg = str_replace("'", "''", str_replace("\r", "", str_replace("\n", "", htmlentities(trim($msg), null, 'UTF-8'))));
+		$msg = str_replace("ส็็็็็็็็", "", str_replace("ส็็็็็็็็็็็็็็็็็็็็็็็็็", "", str_replace("'", "''", str_replace("\r", "", str_replace("\n", "", htmlentities(trim($msg), null, 'UTF-8'))))));
 		
 		$target_ID = 0;
 		$tipo = 'c';
@@ -214,10 +214,10 @@ LIMIT 1", $link);
 				case 'sombras': $elmsg = '<span style="margin-left:20px;color:#585858;"><b>' . $_SESSION['pol']['nick'] . '</b> se retira a las sombras...</span>'; break;
 				case 'ayuda': 
 					$tipo = 'm';
-					if (PAIS == 'VP') {
-						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="http://docs.google.com/present/view?id=ddfcnxdb_15fqwwcpct" target="_blank"><b>Gu&iacute;a Inicial</b></a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
+					if (PAIS == '15M') {
+						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="http://www.virtualpol.com/video" target="_blank"><b>Bienvenida</b> (video)</a> - <a href="http://15m.'.DOMAIN.'/doc/faq---consultas-a-la-ciudadania/" target="_blank"><b>Ayuda y FAQ</b> (Preguntas frecuentes)</a> - <a href="http://15m.'.DOMAIN.'/doc/declaracion-de-la-asamblea-virtual-15m/">La Declaraci&oacute;n</a>.</a>';
 					} else {
-						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="http://15m.'.DOMAIN.'/doc/faq---consultas-a-la-ciudadania/" target="_blank"><b>Ayuda y FAQ (Preguntas frecuentes)</b></a> - <a href="http://15m.'.DOMAIN.'/doc/declaracion-de-la-asamblea-virtual-15m/">La Declaraci&oacute;n</a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
+						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="http://www.virtualpol.com/video" target="_blank"><b>Bienvenida (video)</b></a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
 					}
 					break;
 

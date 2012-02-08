@@ -169,6 +169,12 @@ $txt .= '
 <option value="true" selected="selected">Secreto (est&aacute;ndar)</option>
 <option value="false">P&uacute;blico</option>
 </select></span>
+
+
+<br />
+
+<b>Orden de opciones:</b> <input type="checkbox" name="aleatorio" value="true" /> Aleatorio.
+
 </p>
 
 
@@ -259,7 +265,7 @@ LIMIT 1", $link);
 		} else { $tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; }
 
 
-		$txt .= '<h1><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).' | '.num($votos_total).' votos | '.$tiempo_queda.'</h1>
+		$txt .= '<h1><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).' &nbsp; &nbsp; &nbsp; '.num($votos_total).' votos | '.$tiempo_queda.'</h1>
 
 <div class="amarillo" style="margin:20px 0 5px 0;padding:20px 10px 0 10px;">
 <h1>'.$r['pregunta'].'</h1>
@@ -323,7 +329,7 @@ LIMIT 1", $link);
 
 					$txt .= '<tr>
 <td>'.($r2['user_ID']==0?'*':crear_link($r2['nick'])).'</td>
-<td nowrap="nowrap"><b>'.($r['privacidad']=='false'?$respuestas[$r2['voto']]:'*').'</b></td>
+<td nowrap="nowrap"><b>'.($r['privacidad']=='false'&&$r['estado']=='end'?$respuestas[$r2['voto']]:'*').'</b></td>
 <td>'.($r2['autentificado']=='true'?'<span style="color:blue;"><b>SI</b></span>':'<span style="color:grey;">NO</span>').'</td>
 </tr>';
 				}
@@ -523,7 +529,7 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 								$votos_array[] = '<option value="'.$i.'"'.($respuestas[$i]=='En Blanco'?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
 						} }
 					}
-					if (count($votos_array) > 7) { shuffle($votos_array); }
+					if ($r['aleatorio'] == 'true') { shuffle($votos_array); }
 					$txt .= '<select name="voto" style="font-size:22px;">'.implode('', $votos_array).'</select>';
 
 				} elseif (($r['tipo_voto'] == '3puntos') OR ($r['tipo_voto'] == '5puntos') OR ($r['tipo_voto'] == '8puntos')) {
@@ -564,7 +570,7 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 <td'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'" class="punteado"':'').'>'.($respuestas[$i]==='En Blanco'?'<em title="Equivale a No sabe/No contesta. No computable.">En Blanco</em>':$respuestas[$i]).'</td>
 </tr>';
 					} }
-					if (count($votos_array) > 7) { shuffle($votos_array); }
+					if ($r['aleatorio'] == 'true') { shuffle($votos_array); }
 					$txt .= implode('', $votos_array).'
 <tr>
 <th align="center">1</th>
@@ -597,7 +603,7 @@ Validez de esta votaci&oacute;n: '.($validez?'<span style="color:#2E64FE;"><b>OK
 <td'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'" class="punteado"':'').'>'.$respuestas[$i].'</td>
 </tr>';
 					} }
-					if (count($votos_array) > 7) { shuffle($votos_array); }
+					if ($r['aleatorio'] == 'true') { shuffle($votos_array); }
 					$txt .= implode('', $votos_array).'<tr>
 <th>SI</th>
 <th>NO</th>

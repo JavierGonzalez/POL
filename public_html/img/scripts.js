@@ -19,7 +19,7 @@ $(document).ready(function(){
 	});
 
 	search_timers();
-	setInterval("search_timers()", 1000);
+	setInterval("search_timers()", 60000);
 
 	$("#pnick").css("display","none").css("position","absolute");
 
@@ -122,7 +122,11 @@ function hace(cuando, ts, num, pre) {
 		sec = periods_sec[n];
 		if ((nm < num) && ((tiempo_cont >= (sec*2)) || (n == 4))) {
 			period = Math.floor(tiempo_cont / sec);
-			duracion += period + " " + periods_txt[n];
+			if (n == 4) { 
+				duracion += "pocos segundos";
+			} else {
+				duracion += period + " " + periods_txt[n];
+			}
 			if ((num != 1) && (n != 4)) { if (n != 3) { duracion += ", "; } else { duracion += " y "; } }
 			tiempo_cont = tiempo_cont - (period * sec);
 			nm++;
@@ -319,7 +323,7 @@ function print_msg(data) {
 
 function merge_list() {
 	var unix_timestamp = parseInt(new Date().getTime().toString().substring(0, 10));
-	var times_exp = parseInt(unix_timestamp - 900); //15min
+	var times_exp = parseInt(unix_timestamp - 1500); //25min
 	
 	array_list = new Array();
 	for (elnick in al) {

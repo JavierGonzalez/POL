@@ -3,12 +3,13 @@ include('inc-login.php');
 
 if ($_GET['a']) {
 
-	$result = mysql_query("SELECT * FROM docs WHERE url = '".trim($_GET['a'])."' AND pais = '".PAIS."' LIMIT 1", $link);
+	$result = mysql_query("SELECT * FROM docs WHERE url = '".$_GET['a']."' AND pais = '".PAIS."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
 		include('inc-functions-accion.php');
 
-		if (($_GET['b'] == 'editar') AND (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']))) { //EDITAR!
+		if (($_GET['b'] == 'editar') AND (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']))) { 
+			// EDITAR!
 
 			foreach (nucleo_acceso('print') AS $at => $at_var) { 
 				$txt_li['leer'] .= '<option value="'.$at.'"'.($at==$r['acceso_leer']?' selected="selected"':'').' />'.ucfirst(str_replace("_", " ", $at)).'</option>';
@@ -23,6 +24,7 @@ if ($_GET['a']) {
 			$txt .= '
 <form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=editar-documento&ID='.$r['ID'].'" method="POST">
 <input type="hidden" name="url" value="'.$r['url'].'"  />
+<input type="hidden" name="doc_ID" value="'.$r['ID'].'"  />
 
 <span style="float:right;margin-top:-12px;">
 <button onclick="$(\'#doc_opciones\').slideToggle(\'slow\');return false;" style="font-size:16px;color:#666;">Opciones</button>
@@ -91,9 +93,9 @@ if ($_GET['a']) {
 <hr />'; 
 
 			$txt .= '<div style="color:#777;">
-'.$boton_editar.' Creado <em>hace '.timer($r['time']).'</em>, &uacute;ltima actualizaci&oacute;n <em>hace '.timer($r['time_last']).'</em>.<br />
+'.$boton_editar.' Creado hace '.timer($r['time']).'. Última publicación hace '.timer($r['time_last']).', versión: '.$r['version'].'.<br />
 Pueden ver: '.verbalizar_acceso($r['acceso_leer'], $r['acceso_cfg_leer']).'.<br />
-Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']).'.</em>.
+Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']).'.
 </div>';
 		}
 

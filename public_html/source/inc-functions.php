@@ -86,7 +86,7 @@ function notificacion($user_ID, $texto='', $url='') {
 				}
 
 				// NOTIFICACION ELECCIONES
-				if (($pol['config']['elecciones_estado'] == 'elecciones') AND (isset($pol['user_ID']))) {
+				if (($pol['config']['elecciones_estado'] == 'elecciones') AND ($pol['estado'] == 'ciudadano')) {
 					$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 					while($r = mysql_fetch_array($result)){ $havotado = $r['ID']; }
 					if (!isset($havotado)) { $nuevos_num++; }
@@ -137,6 +137,9 @@ function ocultar_IP($IP, $tipo='IP') {
 	}
 }
 
+function error($txt='Acción no permitida o erronea') {
+	redirect('http://'.HOST.'/?error='.base64_encode($txt));
+}
 
 function redirect($url, $r301=true) {
 	global $link;
@@ -155,7 +158,7 @@ function get_supervisores_del_censo() {
 
 function duracion($t) {
 	if ($t > 5356800) { $d = round($t / 2626560) . ' meses'; }
-	elseif ($t > 129600) { $d = round($t / 86400) . ' d&iacute;as'; }
+	elseif ($t > 129600) { $d = round($t / 86400) . ' días'; }
 	elseif ($t > 86400) { $d = '1 d&iacute;a'; }
 	elseif ($t > 7200) { $d = round($t / 3600) . ' horas'; }
 	elseif ($t > 3600) { $d = '1 hora'; }

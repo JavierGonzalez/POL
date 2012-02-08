@@ -21,17 +21,17 @@ if ((isset($pol['user_ID'])) AND ($dnie_autentificado == false)) {
 
 /* LA SIGUIENTE LINEA ES EL QUID DE LA CUESTION
 
-Consiste en una miniaturizaci&oacute;n irreversible de la informaci&oacute;n extraida del DNIe (proveeida por la pasarela de Tractis), junto con otra informaci&oacute;n est&aacute;tica para evitar ataques por diccionario y hacer in&eacute;ditos los hash. Se hace mediante el algoritmo de hash sha256.
+Consiste en una miniaturización irreversible de la información extraida del DNIe (proveeida por la pasarela de Tractis), junto con otra información estatica para evitar ataques por diccionario y hacer inéditos los hash. Se hace mediante el algoritmo de hash "sha256".
 
-EJEMPLO: 
+Por ejemplo, este código: 
 
-hash('sha256', '.VirtualPol.clave_del_sistema.72135000A.JAVIER RUBALCABA RAJOY.')
+	hash('sha256', '.VirtualPol.clave_del_sistema.72135000A.JAVIER RUBALCABA RAJOY.')
 
 Se convierte en:
 
-da39a3ee5e6b4b0d3255bfef95606b4b0d3255bfef95601890afdd80709
+	da39a3ee5e6b4b0d3255bfef95606b4b0d3255bfef95601890afdd80709
 
-Esta linea final no supone ninguna informaci&oacute;n en claro.
+Este resultado final no supone ninguna información en claro.
 */
 		$dnie_check = hash('sha256', '.VirtualPol.'.CLAVE_DNIE.'.'.strtoupper($data['tractis:attribute:dni']).'.'.str_replace('+', ' ', strtoupper($data['tractis:attribute:name'])).'.'); // Generacion del hash anteriormente explicado.
 		

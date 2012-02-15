@@ -345,9 +345,21 @@ $txt .= '</table>
 
 <p style="margin-bottom:0px;">Cargos y Examenes: <b>' . $estudios_num . '</b> (<a href="/examenes/">Ver examenes</a>)</p>
 ' . $estudios . '
+<br />
+GRUPOS AFILIADOS:<br>';
+$grupos = mysql_query ("select grupos from users where ID =".$user_ID);
+$grupos = mysql_fetch_array($grupos);
+$grupos = str_replace(" ", ",", $grupos[0]);
+$txt .= '<ul>';
+$resultq2 = mysql_query("select nombre from grupos where grupo_id in (".$grupos.")");
+while ($rq2 = mysql_fetch_array($resultq2)) {
+  
+  $txt .= '<li>'.$rq2['nombre'].'</li>';
+}
+echo '<ul>';
 
-<ul>
-';
+
+
 
 
 

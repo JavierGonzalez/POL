@@ -286,32 +286,30 @@ function gen_text($text, $type='') {
 }
 
 function imageCompression($imgfile='',$thumbsize=0,$savePath=NULL,$format) {
-    list($width,$height) = getimagesize($imgfile);
+	list($width,$height) = getimagesize($imgfile);
+	$newwidth = $thumbsize;
+	$newheight = $thumbsize;
 
-        $newwidth = $thumbsize;
-        $newheight = $thumbsize;
-
-    $thumb = imagecreatetruecolor($newwidth,$newheight);
-        if ($format == 'gif') {
-                $source = imagecreatefromgif($imgfile);
-        } elseif ($format == 'png') {
-                imagealphablending($thumb, false);
-                imagesavealpha($thumb, true);
-                $source = imagecreatefrompng($imgfile);
-        } else {
-                $source = imagecreatefromjpeg($imgfile); 
-        }
-    imagecopyresampled($thumb,$source,0,0,0,0,$newwidth,$newheight,$width,$height);
-    if ($format == 'png') {
-       imagepng($thumb,$savePath,80);
-    }
-    else {
-       imagejpeg($thumb,$savePath,80);
-    }
+	$thumb = imagecreatetruecolor($newwidth,$newheight);
+	if ($format == 'gif') {
+		$source = imagecreatefromgif($imgfile);
+	} elseif ($format == 'png') {
+		imagealphablending($thumb, false);
+		imagesavealpha($thumb, true);
+		$source = imagecreatefrompng($imgfile);
+	} else {
+		$source = imagecreatefromjpeg($imgfile); 
+	}
+	imagecopyresampled($thumb,$source,0,0,0,0,$newwidth,$newheight,$width,$height);
+	if ($format == 'png') {
+		imagepng($thumb,$savePath,80);
+	} else {
+		imagejpeg($thumb,$savePath,80);
+	}
 }
 
 function filtro_sql($a) {
-        return mysql_real_escape_string($a);
+	return mysql_real_escape_string($a);
 }
 
 ?>

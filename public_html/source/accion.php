@@ -1532,17 +1532,17 @@ case 'kick':
 
 case 'mensaje-leido':
 	if ($_GET['ID'] == 'all') {
-		mysql_query("UPDATE ".SQL_MENSAJES." SET leido = '1' WHERE recibe_ID = '".$pol['user_ID']."'", $link);
+		mysql_query("UPDATE mensajes SET leido = '1' WHERE recibe_ID = '".$pol['user_ID']."'", $link);
 		mysql_query("UPDATE notificaciones SET visto = 'true' WHERE user_ID = '".$pol['user_ID']."' AND visto = 'false' AND texto LIKE 'Mensaje %'", $link);
 	} elseif ($_GET['ID']) {
-		mysql_query("UPDATE ".SQL_MENSAJES." SET leido = '1' WHERE ID = '".$_GET['ID']."' AND recibe_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("UPDATE mensajes SET leido = '1' WHERE ID = '".$_GET['ID']."' AND recibe_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	}
 	$refer_url = 'msg/';
 	break;
 
 case 'borrar-mensaje':
 	if (($_GET['ID'])) {
-		mysql_query("DELETE FROM ".SQL_MENSAJES." WHERE ID = '".$_GET['ID']."' AND recibe_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("DELETE FROM mensajes WHERE ID = '".$_GET['ID']."' AND recibe_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		$refer_url = 'msg/';
 	}
 	break;
@@ -1569,7 +1569,7 @@ case 'enviar-mensaje':
 			
 			$result = mysql_query("SELECT ID, pais FROM users WHERE nick IN (".$enviar_nicks.") AND estado != 'expulsado'", $link);
 			while($r = mysql_fetch_array($result)){ 
-				mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$r['ID']."', '".$date."', '".$text."', '0', '".$_POST['calidad']."')", $link);
+				mysql_query("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$r['ID']."', '".$date."', '".$text."', '0', '".$_POST['calidad']."')", $link);
 				
 				// MENSAJE URGENTE
 				if (($_POST['urgente'] == '1') AND ($pol['pols'] >= $pol['config']['pols_mensajeurgente'])) { 
@@ -1594,7 +1594,7 @@ case 'enviar-mensaje':
 
 			foreach ($sc AS $user_ID => $nick) {
 				if ($user_ID != $pol['user_ID']) {
-					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$user_ID."', '".$date."', '<b>Mensaje multiple: Supervisor del Censo</b><br />".$text."', '0', '".$_POST['calidad']."', 'SC')", $link);
+					mysql_query("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$user_ID."', '".$date."', '<b>Mensaje multiple: Supervisor del Censo</b><br />".$text."', '0', '".$_POST['calidad']."', 'SC')", $link);
 					evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/">Nuevo mensaje privado</a> <span style="color:grey;">(multiple)</span>', $user_ID, -1, false, 'p');
 					notificacion($user_ID, 'Mensaje de SC de '.$pol['nick'], '/msg/');
 					$refer_url = 'msg/';
@@ -1606,25 +1606,43 @@ case 'enviar-mensaje':
 			while($r = mysql_fetch_array($result)){ $cargo_nombre = $r['nombre']; }
 
 			if ($_POST['cargo_ID'] == '55') {
-				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1' AND estado = 'ok' AND ID_estudio IN (55, 56, 57) LIMIT 80", $link);
+				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1' AND estado = 'ok' AND ID_estudio IN (55, 56, 57) LIMIT 1000", $link);
 			} else {
-				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1' AND estado = 'ok' AND ID_estudio = '".$_POST['cargo_ID']."' LIMIT 80", $link);
+				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1' AND estado = 'ok' AND ID_estudio = '".$_POST['cargo_ID']."' LIMIT 1000", $link);
 			}
 			while($r = mysql_fetch_array($result)){ 
 				if (($r['user_ID'] != $pol['user_ID']) AND ($r['user_ID'] != 0)) {
-					mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: ".$cargo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
+					mysql_query("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: ".$cargo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
 					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
 					notificacion($r['user_ID'], 'Mensaje privado de '.$pol['nick'], '/msg/');
 					$refer_url = 'msg/';
 				}
 			}
+		} elseif (($_POST['para'] == 'grupos') AND ($_POST['grupo_ID'])) {
+
+			$result = mysql_query("SELECT nombre FROM grupos WHERE grupo_ID = '".$_POST['grupo_ID']."' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)){ $grupo_nombre = $r['nombre']; }
+
+			$result = mysql_query("SELECT ID AS user_ID FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND grupos != '' AND grupos LIKE '%".$_POST['grupo_ID']."%' LIMIT 1000", $link);
+			while($r = mysql_fetch_array($result)){ 
+				if (($r['user_ID'] != $pol['user_ID']) AND (in_array($_POST['grupo_ID'], explode(' ', $pol['grupos'])))) {
+					
+					mysql_query("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: grupo ".$grupo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
+					
+					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
+					
+					notificacion($r['user_ID'], 'Mensaje privado del grupo '.$grupo_nombre, '/msg/');
+					
+				}
+			}
+			$refer_url = 'msg/';
 		} elseif (($_POST['para'] == 'todos') AND ($pol['pols'] >= $pol['config']['pols_mensajetodos'])) {
 			// MENSAJE GLOBAL
 			$text = '<b>Mensaje Global:</b> ('.pols($pol['config']['pols_mensajetodos']).' '.MONEDA.')<hr />'.$text;
 			pols_transferir($pol['config']['pols_mensajetodos'], $pol['user_ID'], '-1', 'Mensaje Global');
 			$result = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."'", $link);
 			while($r = mysql_fetch_array($result)){ 
-				mysql_query("INSERT INTO ".SQL_MENSAJES." (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$r['ID']."', '".$date."', '".$text."', '0', '".$_POST['calidad']."')", $link);
+				mysql_query("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$r['ID']."', '".$date."', '".$text."', '0', '".$_POST['calidad']."')", $link);
 				notificacion($r['ID'], 'Mensaje privado global', '/msg/');
 				$refer_url = 'msg/';
 			}

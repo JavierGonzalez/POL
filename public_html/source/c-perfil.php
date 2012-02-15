@@ -297,7 +297,7 @@ $txt .= 'Registrado hace: <b><acronym title="' . $r['fecha_registro'] . '">'.rou
 ';
 
 
-/* Tramos de expiraci�n
+/* Tramos de expiraci?n
 	< 30d	- 15 dias
 30d < 90d	- 30 dias 
 90d >		- 60 dias
@@ -345,9 +345,21 @@ $txt .= '</table>
 
 <p style="margin-bottom:0px;">Cargos y Examenes: <b>' . $estudios_num . '</b> (<a href="/examenes/">Ver examenes</a>)</p>
 ' . $estudios . '
+<br />
 
-<ul>
-';
+GRUPOS AFILIADOS:<br>';
+
+$grupos = str_replace(" ", ",", $r['grupos']);
+$txt .= '<ul>';
+$result2 = mysql_query("select nombre from grupos where grupo_id in (".$grupos.")");
+while ($r2 = mysql_fetch_array($result2)) {
+  
+  $txt .= '<li>'.$r2['nombre'].'</li>';
+}
+echo '<ul>';
+
+
+
 
 
 

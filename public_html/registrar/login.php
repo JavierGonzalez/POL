@@ -293,8 +293,8 @@ case 'login':
 <title></title>
 <meta http-equiv="refresh" content="6;url=http://www.'.DOMAIN.'/">
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script type="text/javascript" src="'.IMG.'evercookie/swfobject-2.2.min.js"></script>
-<script type="text/javascript" src="'.IMG.'evercookie/evercookie.js"></script>
+<script type="text/javascript" src="'.IMG.'lib/evercookie/swfobject-2.2.min.js"></script>
+<script type="text/javascript" src="'.IMG.'lib/evercookie/evercookie.js"></script>
 <script type="text/javascript">
 var ec = new evercookie();
 ec_url = "'.$url.'";
@@ -325,7 +325,7 @@ body, a { color:#FFFFFF; }
 
 		switch ($nick_estado) {
 			case 'turista': case 'ciudadano': $msg_error = 'Contrase&ntilde;a incorrecta'; break;
-			case 'expulsado': $msg_error = 'Est&aacute;s expulsado de VirtualPol por infracci&oacute;n del <a href="/legal">TOS</a>'; break;
+			case 'expulsado': $msg_error = 'Est&aacute;s expulsado de VirtualPol por infracci&oacute;n del <a href="/TOS">TOS</a>'; break;
 			case 'validar': $msg_error = 'Usuario no validado, revisa tu email'; break;
 			default: $msg_error = 'Usuario inexistente, probablemente expirado por inactividad'; break;
 		}

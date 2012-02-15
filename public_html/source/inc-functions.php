@@ -59,9 +59,20 @@ function notificacion($user_ID, $texto='', $url='') {
 
 		case 'print':
 			if (isset($pol['user_ID'])) {
-				$t = '';
-				$total_num = 0;
+				$t = ''; $total_num = 0;
 				
+
+				// NOTIFICACION ELECCIONES
+				if (($pol['config']['elecciones_estado'] == 'elecciones') AND ($pol['estado'] == 'ciudadano')) {
+					$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+					while($r = mysql_fetch_array($result)){ $havotado = $r['ID']; }
+					if (!isset($havotado)) { $nuevos_num++; }
+					$total_num++;
+					$elecciones_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']);
+					$t .= '<li'.(!isset($havotado)?' class="noti_nuevo"':'').' onclick="window.location.href=\'/elecciones/votar/\';"><a class="noti_a" href="/elecciones/votar/">&iexcl;Elecciones en curso! <span style="font-weight:normal;">Quedan '.timer($elecciones_quedan, true).'</span></a></li>';
+				}
+
+
 				// NOTIFICACION VOTACIONES
 				$pol['config']['info_consultas'] = 0;
 				$result = mysql_query("SELECT v.ID, pais, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
@@ -77,6 +88,7 @@ function notificacion($user_ID, $texto='', $url='') {
 					}
 				}
 
+
 				// NOTIFICACIONES
 				$result = mysql_query("SELECT noti_ID, visto, texto, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 6", $link);
 				while($r = mysql_fetch_array($result)) {
@@ -85,15 +97,6 @@ function notificacion($user_ID, $texto='', $url='') {
 					$t .= '<li '.($r['visto']=='false'?' class="noti_nuevo"':'').' onclick="window.location.href=\'/?noti='.$r['noti_ID'].'\';"><a href="/?noti='.$r['noti_ID'].'">'.$r['texto'].'</a>'.($r['num']>1?'<span class="noti_rep_num">'.$r['num'].'</span>':'').'</li>';
 				}
 
-				// NOTIFICACION ELECCIONES
-				if (($pol['config']['elecciones_estado'] == 'elecciones') AND ($pol['estado'] == 'ciudadano')) {
-					$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-					while($r = mysql_fetch_array($result)){ $havotado = $r['ID']; }
-					if (!isset($havotado)) { $nuevos_num++; }
-					$total_num++;
-					$elecciones_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']);
-					$t .= '<li'.(!isset($havotado)?' class="noti_nuevo"':'').' onclick="window.location.href=\'/elecciones/votar/\';"><a class="noti_a" href="/elecciones/votar/">&iexcl;Elecciones en curso! <span style="font-weight:normal;">Quedan '.timer($elecciones_quedan, true).'</span></a></li>';
-				}
 
 			} else { $t = '<li><a href="'.REGISTRAR.'?p='.PAIS.'">Primer paso: crea tu ciudadano</a></li>'; $total_num = 1; $nuevos_num = 1; }
 			return '<div id="noti" class="noti_'.($nuevos_num==0?'off':'on').'" onclick="$(\'#noti_list\').slideToggle(\'fast\');">'.$nuevos_num.'</div><div id="noti_list"><ul>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'<li onclick="window.location.href=\'/hacer\';" id="noti_hacer"><a href="/hacer">¿Qué hacer?</a></li></ul></div>';

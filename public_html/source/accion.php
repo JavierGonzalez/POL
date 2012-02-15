@@ -71,7 +71,7 @@ case 'aceptar-condiciones':
 	$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND fecha_legal = '0000-00-00 00:00:00' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
 		mysql_query("UPDATE users SET fecha_legal = '".$date."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		evento_chat('<b>[#] '.crear_link($pol['nick']).'</b> ha aceptado las <a href="http://www'.'.'.DOMAIN.'/legal">Condiciones de Uso de VirtualPol</a>.');
+		evento_chat('<b>[#] '.crear_link($pol['nick']).'</b> ha aceptado las <a href="http://www'.'.'.DOMAIN.'/TOS">Condiciones de Uso de VirtualPol</a>.');
 	}
 	$refer_url = '';
 	break;
@@ -325,7 +325,7 @@ case 'expulsar':
 		while ($r = mysql_fetch_array($result)) {
 			mysql_query("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$r['user_ID']."' LIMIT 1", $link);
 			mysql_query("UPDATE expulsiones SET estado = 'cancelado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
-			evento_chat('<span class="expulsado"><img src="'.IMG.'varios/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
+			//evento_chat('<span class="expulsado"><img src="'.IMG.'varios/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
 		}
 
 	} elseif ((isset($sc[$pol['user_ID']])) AND ($_POST['razon']) AND ($_POST['nick']) AND (!in_array($_POST['nick'], $sc))) { 
@@ -352,7 +352,7 @@ case 'expulsar':
 			
 			mysql_query("INSERT INTO expulsiones (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
 
-			evento_chat('<span class="expulsado"><img src="'.IMG.'varios/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['nick'].'</b> ha sido expulsado de VirtualPol. Razon: <b>'.$_POST['razon'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
+			//evento_chat('<span class="expulsado"><img src="'.IMG.'varios/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['nick'].'</b> ha sido expulsado de VirtualPol. Razon: <b>'.$_POST['razon'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
 		}
 	}
 	$refer_url = 'control/expulsiones/';
@@ -1209,6 +1209,8 @@ case 'votacion':
 				}
 			}
 			
+			$_POST['time_expire'] = round($_POST['time_expire']*$_POST['time_expire_tipo']);
+
 			$_POST['debate_url'] = strip_tags($_POST['debate_url']);
 			$_POST['pregunta'] = strip_tags($_POST['pregunta']);
 			$_POST['descripcion'] = gen_text($_POST['descripcion'], 'plain');

@@ -271,6 +271,7 @@ function print_msg(data) {
 					case "c":
 					case "e":
 						list += "<li id=\"" + m_ID + "\" class=\"cf_" + m_tipo + "\">" + m_time + " <span class=\"vpc_accion\">" + txt + "</span></li>\n";
+						m_tipo = "0";
 						break;
 
 					case "p":
@@ -301,9 +302,9 @@ function print_msg(data) {
 				}
 
 				if (((msg_num - 1) == i) && (msg_num != "n") && (m_nick != "&nbsp;")) { msg_ID = m_ID; }
-				if ((m_tipo != "e") && (m_tipo != "c")) { 
+				if ((m_tipo != "c") && (m_nick != "_") && (m_nick != "")) { 
 					al[m_nick] = parseInt(new Date().getTime().toString().substring(0, 10));
-					al_cargo[m_nick] = m_tipo;
+					if ((al_cargo[m_nick] == "0") || (!al_cargo[m_nick])) { al_cargo[m_nick] = m_tipo; }
 				}
 
 				var idx = array_ignorados.indexOf(m_nick);
@@ -347,14 +348,17 @@ function merge_list() {
 				js_kick = "";
 			}
 
-			array_list[cargo_ID] += "<li>" + js_kick + " <img src=\""+IMG+"cargos/" + cargo_ID + ".gif\" title=\"" + array_cargos[cargo_ID] + "\" /> <a href=\"/perfil/" + elnick  + "/\" class=\"nick\" onClick=\"return siControlPulsado(event,\'"+ elnick +"\');\">" + nick_tachado + "</a></li>\n";
+			array_list[cargo_ID] += "<li>" + js_kick + " <img src=\""+IMG+"cargos/" + cargo_ID + ".gif\" title=\"" + array_cargos[cargo_ID] + "\" /> <a href=\"/perfil/" + elnick  + "/\" class=\"nick\" onClick=\"siControlPulsado(event,\'"+ elnick +"\');\" target=\"_blank\">" + nick_tachado + "</a></li>\n";
 		}
 	}
 
 	var list = "";
 
 	for (cargo_ID in array_cargos) {
-		if (array_list[cargo_ID] !== undefined) { list += array_list[cargo_ID]; }
+		if ((array_list[cargo_ID] !== undefined) && (cargo_ID > 0)) { list += array_list[cargo_ID]; }
+	}
+	for (cargo_ID in array_cargos) {
+		if ((array_list[cargo_ID] !== undefined) && (cargo_ID == 0)) { list += array_list[cargo_ID]; }
 	}
 
 	$("#chat_list").html(list);

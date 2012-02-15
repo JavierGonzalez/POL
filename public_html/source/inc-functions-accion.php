@@ -70,16 +70,19 @@ theme_advanced_resizing : true,
 }
 
 // -1 en chat_ID para publicar el mensaje en las dos plazas (Hispania y Pol)
-function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', $pais='') {
+function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', $pais='', $nick=false) {
         global $pol, $link, $vp;
-        if ($secret) { $nick = '_'; } else { $nick = $pol['nick']; }
+		if (!$nick) { $nick = $pol['nick']; }
         if (!$pais) { $pais = PAIS; }
-        
-		switch ($pais) {
+		
+		/*switch ($pais) {
 			case 'VP': $chat_ID = 4; break;
 			case '15M': $chat_ID = 5; break;
 			default: $chat_ID = 4;
-		}
+		}*/
+
+		$chat_ID = $vp['paises_chat'][$pais];
+
 
         mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('".$chat_ID."', '".$nick."', '".$msg."', '0', '".$user_ID."', '".$tipo."')", $link);
 }

@@ -87,9 +87,9 @@ $txt = '
 
 <p><em>Seguridad:</em> no se almacenar&aacute; ning&uacute;n dato proporcionado por el DNIe u otro certificado en ninguna parte del sistema. Tan s&oacute;lo se almacena una miniaturizaci&oacute;n irreversible de esta informaci&oacute;n. De esta forma incluso ante el peor ataque posible (acceso a contrase&ntilde;as, claves y base de datos) no se podr&iacute;a obtener informaci&oacute;n alguna. La pasarela de autentificaci&oacute;n se conf&iacute;a totalmente a una empresa importante del sector llamada <a href="http://www.tractis.com/">Tractis</a>.</p>
 
-<p><a href="http://vp.virtualpol.com/doc/autentificacion/">M&aacute;s informaci&oacute;n aqu&iacute;.</a></p>
+<p><a href="/documentacion">M&aacute;s informaci&oacute;n aqu&iacute;.</a></p>
 
-<p>Puedes ver el c&oacute;digo fuente de <a href="/codigo">esta aplicaci&oacute;n</a>.</p>';
+<p>Puedes ver el c&oacute;digo fuente de <a href="/desarrollo">esta aplicaci&oacute;n</a>.</p>';
 
 // Carga el dise&ntilde;o completo de VirtualPol. Mucho HTML, CSS y poco m&aacute;s.
 include('theme.php');

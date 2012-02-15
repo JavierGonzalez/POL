@@ -119,17 +119,13 @@ function opcion_nueva() {
 $txt .= '</span><br />
 
 <span id="time_expire">
-<b>Duraci&oacute;n</b>: 
-<select name="time_expire">
-<option value="300">5 minutos</option>
-<option value="600">10 minutos</option>
-<option value="1800">30 minutos</option>
-<option value="3600">1 hora</option>
-<option value="86400" selected="selected">24 horas</option>
-<option value="172800">2 d&iacute;as</option>
-<option value="259200">3 d&iacute;as</option>
-<option value="345600">4 d&iacute;as</option>
-'.(ASAMBLEA?'<option value="604800">7 d&iacute;as</option><option value="864000">10 d&iacute;as</option>':'').'
+<b>Duraci&oacute;n</b>:
+
+<input type="text" name="time_expire" value="24" style="text-align:right;width:50px;" />
+
+<select name="time_expire_tipo">
+<option value="3600" selected="selected">horas</option>
+<option value="86400">días</option>
 </select></span>
 
 
@@ -329,7 +325,7 @@ LIMIT 1", $link);
 
 					$txt .= '<tr>
 <td>'.($r2['user_ID']==0?'*':crear_link($r2['nick'])).'</td>
-<td nowrap="nowrap"><b>'.($r['privacidad']=='false'&&$r['estado']=='end'?$respuestas[$r2['voto']]:'*').'</b></td>
+<td nowrap="nowrap"><b>'.($r['privacidad']=='false'&&$r['estado']=='end'?($r['tipo_voto']=='estandar'?$respuestas[$r2['voto']]:$r2['voto']):'*').'</b></td>
 <td>'.($r2['autentificado']=='true'?'<span style="color:blue;"><b>SI</b></span>':'<span style="color:grey;">NO</span>').'</td>
 </tr>';
 				}

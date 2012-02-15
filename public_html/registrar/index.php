@@ -248,7 +248,7 @@ case 'verificar': //URL EMAIL
 			$result2 = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$r['pais']."'", $link);
 			while ($r2 = mysql_fetch_array($result2)) { $ciudadanos_num = $r2['num']; }
 
-			evento_chat('<b>[#] Nuevo ciudadano</b> de <b>'.$r['pais'].'</b> <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos, <b><a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'/" class="nick">'.$r['nick'].'</a></b>)</span>', 0, 0, false, 'e', $r['pais']);
+			evento_chat('<b>[#] Nuevo ciudadano</b> de <b>'.$r['pais'].'</b> <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos, <b><a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'/" class="nick">'.$r['nick'].'</a></b>)</span>', 0, 0, true, 'e', $r['pais'], $r['nick']);
 
 			mysql_query("INSERT INTO ".strtolower($r['pais'])."_log 
 (time, user_ID, user_ID2, accion, dato) 
@@ -288,7 +288,7 @@ case 'solicitar-ciudadania':
 		$result2 = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$_POST['pais']."'", $link);
 		while ($r2 = mysql_fetch_array($result2)) { $ciudadanos_num = $r2['num']; }
 
-		evento_chat('<b>[#] Nuevo ciudadano</b> de <b>'.$_POST['pais'].'</b> <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos, <b><a href="http://'.strtolower($_POST['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'/" class="nick">'.$pol['nick'].'</a></b>)</span>', 0, 0, false, 'e', $_POST['pais']);
+		evento_chat('<b>[#] Nuevo ciudadano</b> de <b>'.$_POST['pais'].'</b> <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> ciudadanos, <b><a href="http://'.strtolower($_POST['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'/" class="nick">'.$pol['nick'].'</a></b>)</span>', 0, 0, false, 'e', $_POST['pais'], $r['nick']);
 
 		mysql_query("INSERT INTO ".strtolower($_POST['pais'])."_log 
 (time, user_ID, user_ID2, accion, dato) 
@@ -368,7 +368,6 @@ $txt .= '</blockquote></div>';
 
 
 	$txt .= '
-<blockquote class="azul" style="width:650px;">
 <form action="?a=solicitar-ciudadania" method="post">
 <h1>Solicitar ciudadania:</h1>
 <p style="text-align:left;">Dentro de VirtualPol hay diversas plataformas democraticas que son 100% independientes entre s&iacute;. Elige en la que quieres participar.</p>
@@ -387,18 +386,17 @@ $txt .= '</blockquote></div>';
 		$txt .= ($pais=='VP'?'<tr><td>&nbsp;</td></tr>':'').'
 <tr style="font-size:19px;">
 <td><input type="radio" name="pais" id="pr_'.$pais.'" value="'.$pais.'"'.($pais=='15M'?' checked="checked"':'').' /></td>
-<td><b>Plataforma '.$pais.'</b></td>
-<td>'.$pais_des.'</td>
+<td nowrap="nowrap">'.$pais_des.' de <b>'.$pais.'</b></td>
+<td></td>
 <td align="right">'.$ciudadanos_num.' ciudadanos</td>
 </tr>';
 	}
 
 
 	$txt .= '</table>
-<input value="Solicitar Ciudadania" style="color:blue;font-size:20px;margin:30px 0 0 0;" type="submit" onClick="javascript:pageTracker._trackPageview(\'/atrack/registro/ciudadano.html\');" /> 
+<input value="Solicitar Ciudadania" style="font-size:20px;margin:30px 0 0 0;" type="submit" onClick="javascript:pageTracker._trackPageview(\'/atrack/registro/ciudadano.html\');" /> 
 
-</form>
-</blockquote>';
+</form>';
 
 } elseif ($registro_txt) {
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';
@@ -480,7 +478,7 @@ En caso afirmativo indica el nick: <input type="text" name="nick_clon" value="" 
 	$txt .= '</li>
 
 
-<li><input name="condiciones" value="ok" type="checkbox" /> <b>Aceptas las <a href="http://www'.'.'.DOMAIN.'/legal" target="_blank">Condiciones de Uso de VirtualPol</a>.</b><br /><br /></li>
+<li><input name="condiciones" value="ok" type="checkbox" /> <b>Aceptas las <a href="http://www'.'.'.DOMAIN.'/TOS" target="_blank">Condiciones de Uso de VirtualPol</a>.</b><br /><br /></li>
 
 <li><input type="submit" value="Crear ciudadano" style="height:40px;font-size:22px;" onclick="$(\'#pass1\').val(hex_md5($(\'#pass1\').val()));$(\'#pass2\').val(hex_md5($(\'#pass2\').val()));" /></li>
 </form>

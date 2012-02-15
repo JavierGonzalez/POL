@@ -4,7 +4,7 @@ include('inc-login.php');
 
 // HERRAMIENTA DE DESARROLLO PARA VERIFICAR EL IMPORTANTE NUCLEO DE ACCESO.
 
-$votaciones = array(1616, 1617, 1618, 1648, 1650);
+$votaciones = array(1668,1692,1685,1686,1701);
 
 $result = mysql_query("SELECT ID AS user_ID, nick, email FROM users WHERE estado = 'ciudadano' AND email != '' ORDER BY fecha_registro ASC LIMIT 1", $link);
 while($r = mysql_fetch_array($result)) {
@@ -20,13 +20,13 @@ while($r = mysql_fetch_array($result)) {
 	if (count($falta_votar_en) > 0) {
 
 		// print
-		$txt .= $r['nick'].': '.count($falta_votar_en).' ('.implode(', ', $falta_votar_en).')<br />';
+		$txt .= count($falta_votar_en).' '.$r['nick'].' ('.implode(', ', $falta_votar_en).')<br />';
 		$contador++;
 
 		$votaciones_li = '';
 		$numm = 1;
 		foreach ($falta_votar_en AS $id => $dato) {
-			$votaciones_li .= $numm++.". http://15m.".DOMAIN."/votacion/".$dato."/\n";
+			$votaciones_li .= "     ".$numm++.". http://15m.".DOMAIN."/votacion/".$dato."/\n";
 		}
 
 		$texto_email = "Hola ciudadano ".$r['nick']."!\n\nEste email es para avisarte de que aún no has votado en los siguientes sondeos de la Asamblea Virtual 15M:\n\n".$votaciones_li."\nVotar es importante, cuantos más votos más legitimidad. Tu opinión cuenta. Puedes votar \"En Blanco\" si no lo tienes claro, así también participarás. Recuerda que puedes modificar tu voto las veces que quieras mientras la votación esté activa.\n\n¿Como participar más a fondo? http://15m.".DOMAIN."/hacer/\n\nAyúdanos a difundir, unidos somos fuertes!\n\n_________\nAsamblea Virtual 15M\nhttp://15m.".DOMAIN."/";
@@ -38,7 +38,6 @@ while($r = mysql_fetch_array($result)) {
 			$r['email'] = "gonzomail@gmail.com"; // PROTECCION
 			mail($r['email'], (count($falta_votar_en)>1?"[15M] Hay ".count($falta_votar_en)." votaciones en las que aún no has votado!":"[15M] Hay una votación en la que aún no has votado!"), $texto_email, "FROM: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: VirtualPol <".CONTACTO_EMAIL."> \nX-Sender: VirtualPol <".CONTACTO_EMAIL."> \nMIME-Version: 1.0\n"); 
 		}
-		//$txt .= $texto_email;
 	}
 }
 

@@ -913,7 +913,7 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 	if (isset($sc[$pol['user_ID']])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
 	$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'varios/expulsar.gif" alt="Expulsion" border="0" /> <a href="/control/expulsiones/">Expulsiones</a> | Expulsar</h1>
 
-<p>Las expulsiones son efectuadas por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminaci&oacute;n forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.'.DOMAIN.'/legal">Condiciones de Uso</a> (con la excepci&oacute;n de Registro erroneo y Test de desarrollo).</p>
+<p>Las expulsiones son efectuadas por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminaci&oacute;n forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.'.DOMAIN.'/TOS">Condiciones de Uso</a> (con la excepci&oacute;n de Registro erroneo y Test de desarrollo).</p>
 
 <form action="/accion.php?a=expulsar" method="post">
 
@@ -990,7 +990,7 @@ WHERE ID = '".$_GET['c']."' LIMIT 1", $link);
 	$txt_title = 'Control:  Expulsiones';
 	$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'varios/expulsar.gif" alt="Expulsado" border="0" /> Expulsiones | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p>Las expulsiones son efectuadas por los Supervisores del Censo (SC). Consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminaci&oacute;n forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.'.DOMAIN.'/legal">Condiciones de Uso</a> (con la excepci&oacute;n de Registro erroneo y Test de desarrollo). Los Supervisores del Censo son ciudadanos con m&aacute;s de 1 a&ntilde;o de antiguedad y elegidos por democracia directa, mediante el "voto de confianza", actualizado cada Domingo a las 20:00.</p>
+<p>Las expulsiones son efectuadas por los Supervisores del Censo (SC). Consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminaci&oacute;n forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.'.DOMAIN.'/TOS">Condiciones de Uso</a> (con la excepci&oacute;n de Registro erroneo y Test de desarrollo). Los Supervisores del Censo son ciudadanos con m&aacute;s de 1 a&ntilde;o de antiguedad y elegidos por democracia directa, mediante el "voto de confianza", actualizado cada Domingo a las 20:00.</p>
 
 <table border="0" cellspacing="1" cellpadding="" class="pol_table">
 <tr>

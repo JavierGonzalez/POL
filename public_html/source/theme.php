@@ -183,9 +183,9 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 						<li><a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a></li>
 						<li><a href="/historia/">Hechos hist&oacute;ricos</a></li>
 						<li><a href="http://desarrollo.virtualpol.com/" target="_blank">Blog Desarrollo</a></li>
-						<li><a href="/codigo" target="_blank">C&oacute;digo fuente</a></li>
+						<li><a href="/desarrollo" target="_blank">C&oacute;digo fuente</a></li>
 						<li><a href="https://www.ohloh.net/p/virtualpol/contributors" target="_blank">Info desarrollo</a></li>
-						<li><a href="http://www.virtualpol.com/legal" target="_blank" title="Condiciones de Uso de VirtualPol">TOS</a></li>
+						<li><a href="http://www.virtualpol.com/TOS" target="_blank" title="Condiciones de Uso de VirtualPol">TOS</a></li>
 					</ul>
 				</li>
 
@@ -300,9 +300,9 @@ echo '</div>';
 					<ul>
 						<li><a href="http://www.virtualpol.com/video" target="_blank">Bienvenido (video)</a></li>
 						<li><a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a></li>
-						<li><a href="/codigo" target="_blank">C&oacute;digo fuente</a></li>
+						<li><a href="http://www.virtualpol.com/desarrollo" target="_blank">C&oacute;digo fuente</a></li>
 						<li title="Estad&iacute;sticas de desarrollo del c&oacute;digo fuente"><a href="https://www.ohloh.net/p/virtualpol/contributors" target="_blank">Info desarrollo</a></li>
-						<li title="Condiciones de Uso de VirtualPol"><a href="http://www.virtualpol.com/legal" target="_blank">TOS</a></li>
+						<li title="Condiciones de Uso de VirtualPol"><a href="http://www.virtualpol.com/TOS" target="_blank">TOS</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -374,9 +374,9 @@ echo '</div>
 unset($txt);
 echo ($pol['user_ID']==1?round((microtime(true)-TIME_START)*1000).'ms | ':'');
 ?>
-<a href="http://www.virtualpol.com/legal" target="_blank"><abbr title="Condiciones de Uso">TOS</abbr></a> | 
-<a href="http://www.virtualpol.com/codigo" title="Código fuente, software libre">C&oacute;digo</a> | 
-<a href="http://www.virtualpol.com/manual" target="_blank">Ayuda</a> &nbsp; &nbsp; 
+<a href="http://www.virtualpol.com/TOS" target="_blank"><abbr title="Condiciones de Uso">TOS</abbr></a> | 
+<a href="http://www.virtualpol.com/desarrollo" title="Código fuente, software libre">Desarrollo</a> | 
+<a href="http://www.virtualpol.com/documentacion" target="_blank">Documentación</a> &nbsp; &nbsp; 
 2008-2012 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b> <sub>Beta</sub></span>
 <?php
 echo '<b>'.PAIS.'</b>';

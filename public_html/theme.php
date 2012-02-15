@@ -84,7 +84,7 @@ if ($pol['nick']) {
 
 <center style="margin:5px 0 -2px 0;"><span class="azul" style="padding:6px;color:grey;opacity:0.8;"><a href="/"><b>VirtualPol</b></a> | Plataformas: 
 <?php foreach ($vp['paises'] AS $pais) { if (!in_array($pais, $vp['paises_congelados'])) { echo '<a href="http://'.strtolower($pais).'.'.DOMAIN.'/">'.$pais.'</a> '; } } ?>
- | <a href="http://desarrollo.virtualpol.com/">Blog Desarrollo</a> | <a href="/legal"><b>TOS</b></a>
+ | <a href="/desarrollo">Desarrollo</a> | <a href="/TOS"><b>TOS</b></a>
 </span></center>
 
 </div>

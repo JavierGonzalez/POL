@@ -42,7 +42,7 @@ echo <<< print
 <url>http://www.virtualpol.com/img/banderas/{$plataformaSQL}60.gif</url>
 </image>
 <description>
-Comunidad de usuarios sin admins, gestionada democráticamente por un simulador político.
+Red social democrática
 </description>
 <pubDate>$fecha</pubDate>
 <generator>http://desarrollo.virtualpol.com/</generator>

@@ -6,7 +6,7 @@ if ($link) { mysql_close($link); }
 if (!$txt) { redirect('http://'.HOST.'/'); }
 
 if (!$txt_description) { $txt_description = $txt_title . ' | VirtualPol | ' . PAIS; }
-if ($txt_title) { $txt_title .= ' | VirtualPol'; } else { $txt_title = 'VirtualPol | Simulador Pol&iacute;tico Espa&ntilde;ol'; }
+if ($txt_title) { $txt_title .= ' | VirtualPol'; } else { $txt_title = 'VirtualPol | Red social democrática | Simulador Político Español'; }
 
 
 
@@ -59,7 +59,7 @@ if ($pol['nick']) {
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 
-<td width="208"><span id="homelogo"><a href="http://www.<?=DOMAIN?>/" class="gris" title="Home"><img src="<?=IMG?>logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-12px 0 -9px -6px;" border="0" /></a></td><td><span style="color:grey;font-size:20x;">Ecosistema de plataformas democr&aacute;ticas autogestionadas</span></span></td>
+<td width="208"><span id="homelogo"><a href="http://www.<?=DOMAIN?>/" class="gris" title="Home"><img src="<?=IMG?>logo-virtualpol-1.gif" width="205" height="60" alt="VirtualPol" style="margin:-12px 0 -9px -6px;" border="0" /></a></td><td><span style="color:grey;font-size:20x;">Red social democrática</span></span></td>
 
 <td align="right"><?=$txt_perfil?></td>
 

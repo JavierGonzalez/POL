@@ -96,7 +96,7 @@ ORDER BY ID ASC LIMIT 1", $link);
 
 	// envia emails
 	$asunto = '['.PAIS.'] Comienza la Segunda Vuelta de las Elecciones Presidenciales de '.PAIS.'';
-	$mensaje = 'Estimados ciudadanos de VirtualPol,<br /><br />Acaba de comenzar la Segunda Vuelta de las Elecciones Presidenciales, en las que tienes el derecho y deber de participar. Tu participacion es vital para que '.PAIS.' avance.<br /><br /><a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/elecciones/votar/"><b>http://'.PAIS.'.'.DOMAIN.'/elecciones/votar/</b></a><br /><br />VirtualPol, ecosistema de plataformas democráticas autogestionadas.<br />';
+	$mensaje = 'Estimados ciudadanos de VirtualPol,<br /><br />Acaba de comenzar la Segunda Vuelta de las Elecciones Presidenciales, en las que tienes el derecho y deber de participar. Tu participacion es vital para que '.PAIS.' avance.<br /><br /><a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/elecciones/votar/"><b>http://'.PAIS.'.'.DOMAIN.'/elecciones/votar/</b></a><br /><br />VirtualPol | Red social democrática.<br />';
 	$result = mysql_query("SELECT email FROM ".SQL_USERS." WHERE pais = '".PAIS."' AND estado != 'expulsado'", $link);
 	while($row = mysql_fetch_array($result)){ enviar_email(null, $asunto, $mensaje, $row['email']); }
 }

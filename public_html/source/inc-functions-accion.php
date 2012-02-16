@@ -1,9 +1,51 @@
 <?php
 
-function pad($control, $ID=false, $txt='') {
-	include('../img/lib/etherpad-lite/etherpad-lite-client.php');
-	$e = new EtherpadLiteClient(CLAVE_API_ETHERPAD, 'http://www.'.DOMAIN.':9001/api');
 
+function presentacion($titulo, $html) {
+	global $link;
+	echo '
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>'.ucfirst($titulo).'</title>
+
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" />
+
+<link rel="stylesheet" href="'.IMG.'lib/impress/css/impress-demo.css" />
+</head>
+<body>
+
+<div id="impress" class="impress-not-supported">
+
+<div class="fallback-message">
+<p>Tu navegador <b>no soporta las caracteristicas requeridas</b> de impress.js, por lo tanto esta es una versión simplificada de esta presentación.</p>
+<p>Para una mejor experiencia por favor usa la ultima versión del navegador <b>Chrome</b> o <b>Safari</b>. Firefox 10 (proximamente) tambien será soportado.</p>
+</div>
+
+'.str_replace('&quot;', '"', str_replace('&gt;', '>', str_replace('&lt;', '<', strip_tags($html)))).'
+
+
+<div class="hint">
+<p>Usa las teclas de <em>espacio</em> o <em>flechas</em> para navegar</p>
+</div>
+
+</div>
+
+
+<script src="'.IMG.'lib/impress/js/impress.js"></script>
+</body>
+</html>';
+	mysql_close($link);
+	exit;
+}
+
+
+function pad($control, $ID=false, $txt='') {
+	if ($control != 'print') {
+		include('../img/lib/etherpad-lite/etherpad-lite-client.php');
+		$e = new EtherpadLiteClient(CLAVE_API_ETHERPAD, 'http://www.'.DOMAIN.':9001/api');
+	}
 	switch ($control) {
 
 		case 'print':

@@ -1623,9 +1623,9 @@ case 'enviar-mensaje':
 			$result = mysql_query("SELECT nombre FROM grupos WHERE grupo_ID = '".$_POST['grupo_ID']."' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $grupo_nombre = $r['nombre']; }
 
-			$result = mysql_query("SELECT ID AS user_ID FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND grupos != '' AND grupos LIKE '%".$_POST['grupo_ID']."%' LIMIT 1000", $link);
+			$result = mysql_query("SELECT ID AS user_ID, grupos FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND grupos != '' AND grupos LIKE '%".$_POST['grupo_ID']."%' LIMIT 1000", $link);
 			while($r = mysql_fetch_array($result)){ 
-				if (($r['user_ID'] != $pol['user_ID']) AND (in_array($_POST['grupo_ID'], explode(' ', $pol['grupos'])))) {
+				if (($r['user_ID'] != $pol['user_ID']) AND (in_array($_POST['grupo_ID'], explode(' ', $r['grupos'])))) {
 					
 					mysql_query("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: grupo ".$grupo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
 					

@@ -51,7 +51,7 @@ if ($_GET['a']) {
 </tr>
 
 <tr><td colspan="2" valign="top">* El texto del editor se guarda autom&aacute;ticamente como borrador en tiempo real. Para guardar estas opciones y hacer p&uacute;blicos los cambios hay que dar al bot&oacute;n "Publicar".<br /><br />
-* <a href="/doc/'.$r['url'].'/presentacion" target="_blank"><b>Presentación</b></a> (Funciona con HTML para <a href="https://github.com/bartaz/impress.js" target="_blank">impress.js</a>, <a href="https://github.com/bartaz/impress.js/blob/master/index.html" target="_blank">código de ejemplo</a>) - <a href="/doc/'.$r['url'].'/backup/" target="_blank">Backup</a> (enero 2012).</td>
+* <a href="/doc/'.$r['url'].'/presentacion" target="_blank"><b>Presentación</b></a> (Funciona con HTML para <a href="https://github.com/bartaz/impress.js" target="_blank">impress.js</a>, <a href="https://github.com/bartaz/impress.js/blob/master/index.html" target="_blank">código de ejemplo</a>)</td>
 
 <td align="right" valign="top">
 '.boton('Restaurar &uacute;ltima publicaci&oacute;n', '/accion.php?a=restaurar-documento&ID='.$r['ID'], '&iquest;Estas seguro de RESTAURAR este documento?\n\nATENCION: SE PERDERA EL FORMATO, ADEMAS DE LOS CAMBIOS DESDE LA ULTIMA PUBLICACION.').'<br />

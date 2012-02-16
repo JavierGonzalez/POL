@@ -288,9 +288,10 @@ function gen_title($title) {
 	return $title;
 }
 function gen_url($url) {
-	if (mb_detect_encoding($url) != 'UTF-8') { $url = utf8_encode($url); }
+	if (mb_detect_encoding($url) != 'UTF-8') { $url = utf8_decode($url); }
 	$url = trim($url);
-	$url = strtr($url, " áéíóúñçÁÉÍÓÚÑÇüÜ", "-aeiouncaeiouncuU");
+	$url = strtr(utf8_decode($url), utf8_decode(' àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'),
+utf8_decode('-aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
 	$url = ereg_replace("[^A-Za-z0-9-]", "", $url);
 	$url = substr($url, 0, 90);
 	$url = strip_tags($url);

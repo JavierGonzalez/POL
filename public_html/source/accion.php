@@ -1339,7 +1339,7 @@ case 'foro':
 	if ((($_GET['b'] == 'reply') OR ($_GET['b'] == 'hilo')) AND (strlen($_POST['text']) > 1) AND ($_POST['subforo'])) {
 
 		if ($_POST['subforo'] == -1) { 
-			$acceso = true;
+			$acceso['escribir_msg'] = true;
 		}
  		else { 
 			$acceso = false;

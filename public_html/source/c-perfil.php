@@ -1,8 +1,6 @@
 <?php 
 include('inc-login.php');
 
-$sc = get_supervisores_del_censo();
-
 $result = mysql_query("SELECT *, 
 (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS partido,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
@@ -21,7 +19,7 @@ while($r = mysql_fetch_array($result)){
 		if ($r['avatar'] == 'true') { $p_avatar = '<span width="120" height="120"><img src="'.IMG.'a/' . $r['ID'] . '.jpg" alt="'.$nick.'" /></span>'; }
 
 		$extras = '';
-		if (isset($sc[$pol['user_ID']])) {
+		if (nucleo_acceso('supervisores_censo')) {
 	
 			$extras = '
 <tr>
@@ -344,20 +342,16 @@ while($r2 = mysql_fetch_array($result2)){
 $txt .= '</table>
 
 <p style="margin-bottom:0px;">Cargos y Examenes: <b>' . $estudios_num . '</b> (<a href="/examenes/">Ver examenes</a>)</p>
-' . $estudios . '
-<br />
+'.$estudios.'<br />';
 
-GRUPOS AFILIADOS:<br>';
-
-$grupos = str_replace(" ", ",", $r['grupos']);
-$txt .= '<ul>';
-$result2 = mysql_query("select nombre from grupos where grupo_id in (".$grupos.")");
-while ($r2 = mysql_fetch_array($result2)) {
-  
-  $txt .= '<li>'.$r2['nombre'].'</li>';
+if ($r['grupos'] != '') {
+	$txt .= '<b>Grupos</b>:<ul>';
+	$result2 = mysql_query("SELECT nombre FROM grupos WHERE grupo_ID IN (".str_replace(' ', ',', $r['grupos']).")");
+	while ($r2 = mysql_fetch_array($result2)) {
+	  $txt .= '<li><a href="/grupos">'.$r2['nombre'].'</a></li>';
+	}
+	$txt .= '</ul>';
 }
-echo '<ul>';
-
 
 
 

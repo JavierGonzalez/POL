@@ -9,6 +9,13 @@ case 'donaciones':
 	break;
 
 
+case 'presentacion':
+	include_once('source/inc-functions-accion.php');
+	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 577 LIMIT 1", $link); // doc_ID 577 = Test
+	while($r = mysql_fetch_array($result)) { presentacion($r['title'], $r['text']); }
+	break;
+
+
 case 'desarrollo':
 	$txt_title = 'Desarrollo de VirtualPol | Codigo fuente, Software libre, descargar'; 
 	$txt_header = '<style type="text/css">.content { width:860px; margin: 0 auto; }</style>';

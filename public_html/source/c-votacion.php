@@ -269,9 +269,9 @@ LIMIT 1", $link);
 '.(substr($r['debate_url'], 0, 4)=='http'?'<hr /><p><b>Debate de esta votación: <a href="'.$r['debate_url'].'">aqu&iacute;</a>.</b></p>':'').'
 </div>
 
-'.($r['acceso_ver']=='anonimos'?'<table border="0" style="margin-bottom:15px;"><tr>
+'.($r['acceso_ver']=='anonimos'&&((!isset($pol['user_ID'])) || ($r['ha_votado']) || ($r['estado']=='end'))?'<table border="0" style="margin-bottom:15px;"><tr>
 <td width="20"></td>
-<td><b style="font-size:20px;color:#777;">¡Dif&uacute;nde esta votaci&oacute;n!</b> &nbsp;</td>
+<td><b style="font-size:20px;color:#777;">¡Difúnde esta votación!</b> &nbsp;</td>
 
 <td width="140" height="35">
 <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion/'.$r['ID'].'/" data-text="'.($r['estado']=='ok'?'VOTACI&Oacute;N':'RESULTADO').': '.substr($r['pregunta'], 0, 83).'" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="AsambleaVirtual">Twittear</a>

@@ -13,4 +13,4 @@ redirect 301 /contenido http://creativecommons.org/licenses/by-sa/3.0/deed.es_ES
 redirect 301 /video http://www.youtube.com/watch?v=WZhkO5E2nL0
 
 RewriteEngine on 
-RewriteRule ^(TOS|legal|manual|documentacion|donaciones|donar|desarrollo)$ /pages.php?a=$1 [L]
+RewriteRule ^(TOS|legal|manual|documentacion|donaciones|donar|desarrollo|presentacion)$ /pages.php?a=$1 [L]

@@ -51,7 +51,7 @@ if ($_GET['a']) {
 </tr>
 
 <tr><td colspan="2" valign="top">* El texto del editor se guarda autom&aacute;ticamente como borrador en tiempo real. Para guardar estas opciones y hacer p&uacute;blicos los cambios hay que dar al bot&oacute;n "Publicar".<br /><br />
-* Por razones tecnicas al migrar a la tecnolog&iacute;a de pads se pierde el formato del texto. Para facilitar la recuperación de esta informacion perdida hay una copia del documento antiguo <a href="/doc/'.$r['url'].'/backup/" target="_blank">aqu&iacute;</a>.</td>
+* <a href="/doc/'.$r['url'].'/presentacion" target="_blank"><b>Presentación</b></a> (Funciona con HTML para <a href="https://github.com/bartaz/impress.js" target="_blank">impress.js</a>, <a href="https://github.com/bartaz/impress.js/blob/master/index.html" target="_blank">código de ejemplo</a>) - <a href="/doc/'.$r['url'].'/backup/" target="_blank">Backup</a> (enero 2012).</td>
 
 <td align="right" valign="top">
 '.boton('Restaurar &uacute;ltima publicaci&oacute;n', '/accion.php?a=restaurar-documento&ID='.$r['ID'], '&iquest;Estas seguro de RESTAURAR este documento?\n\nATENCION: SE PERDERA EL FORMATO, ADEMAS DE LOS CAMBIOS DESDE LA ULTIMA PUBLICACION.').'<br />
@@ -73,10 +73,30 @@ if ($_GET['a']) {
 
 '.pad('print', $r['ID']);
 
+		} elseif ($_GET['b'] == 'presentacion') { //doc/documento-de-test/presentacion
+
+			if (nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) {
+
+
+$r['text'] .= '
+&lt;div style="position: fixed; bottom: 10px; left: 10px;"&gt;
+&lt;a href="https://twitter.com/share" class="twitter-share-button" data-text="Presentación http://'.strtolower(PAIS).'.'.DOMAIN.'/doc/'.$r['url'].'/presentacion VirtualPol" data-lang="es" data-size="large" data-related="VirtualPol"&gt;Twittear&lt;/a&gt;
+&lt;script&gt;!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");&lt;/script&gt;
+&lt;/div&gt;
+
+&lt;a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/doc/'.$r['url'].'"&gt;&lt;img style="position: absolute; top: -3px; left: -3px; border: 0; border-bottom-right-radius:12px; -moz-border-radius-bottomright:12px; -webkit-border-bottom-right-radius:12px; opacity:0.5;filter:alpha(opacity=50)" src="'.IMG.'logo-virtualpol-1.gif" alt="VirtualPol"&gt;&lt;/a&gt;';
+
+
+
+				presentacion($r['title'], $r['text']);
+			} else { $txt .= '<b style="color:red;">No tienes acceso de lectura.</b>'; }
+
 		} else { //doc/documento-de-test
 			$boton_editar = boton('Editar', (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?'/doc/'.$r['url'].'/editar/':null));
 
 			if ($_GET['b'] == 'backup') { $r['text'] = $r['text_backup']; }
+
+			if (strpos($r['text'], '&lt;/div&gt;')) { $r['text'] = '<p style="font-size:25px;"><a href="/doc/'.$r['url'].'/presentacion"><b>Ver presentación</b></a></p>'; }
 
 			$txt .= '<h1><a href="/doc/">Documento</a>: '.$boton_editar.'</h1>
 

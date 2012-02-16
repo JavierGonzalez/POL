@@ -1338,14 +1338,18 @@ case 'foro':
 	// añadir, editar
 	if ((($_GET['b'] == 'reply') OR ($_GET['b'] == 'hilo')) AND (strlen($_POST['text']) > 1) AND ($_POST['subforo'])) {
 
-		$acceso = false;
-		$result = mysql_query("SELECT acceso_leer, acceso_escribir, acceso_cfg_escribir, acceso_escribir_msg, acceso_cfg_escribir_msg FROM ".SQL."foros WHERE ID = '".$_POST['subforo']."' LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)) { 
-			$acceso_leer = $r['acceso_leer']; 
-			$acceso['escribir'] = nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']); 
-			$acceso['escribir_msg'] = nucleo_acceso($r['acceso_escribir_msg'], $r['acceso_cfg_escribir_msg']);
+		if ($_POST['subforo'] == -1) { 
+			$acceso = true;
 		}
-
+ 		else { 
+			$acceso = false;
+			$result = mysql_query("SELECT acceso_leer, acceso_escribir, acceso_cfg_escribir, acceso_escribir_msg, acceso_cfg_escribir_msg FROM ".SQL."foros WHERE ID = '".$_POST['subforo']."' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)) { 
+				$acceso_leer = $r['acceso_leer']; 
+				$acceso['escribir'] = nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']); 
+				$acceso['escribir_msg'] = nucleo_acceso($r['acceso_escribir_msg'], $r['acceso_cfg_escribir_msg']);
+			}
+		}
 
 		$text = gen_text(trim($_POST['text']), 'plain');
 		$time = $date;

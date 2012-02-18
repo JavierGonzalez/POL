@@ -243,16 +243,16 @@ case 'pass':
 			$nick = $r['nick'];
 		}
 
-		if ($user_ID) {
-			$new_pass = rand(100000,999999);
+		if ($_GET['nick'] == $nick) {
+			$new_pass = rand(1000000,9999999);
+			mysql_query("UPDATE users SET pass = '".pass_key($new_pass, 'md5')."', pass2 = '".pass_key($new_pass)."', reset_last = fecha_registro WHERE ID = '".$user_ID."' LIMIT 1", $link);
 
-			$asunto = '[VirtualPol] Reseteo de contraseña del usuario: '.$nick;
-
-			$mensaje = "Hola Ciudadano,\n\nSe ha procedido a resetear tu contraseña por razones de seguridad. Por lo tanto tu contraseña ha cambiado.\n\n\nUsuario: ".$nick."\nNueva contraseña: ".$new_pass."\n\nLogin en: http://www.".DOMAIN."/\n\nRecuerda que puedes cambiar tu contraseña en cualquier momento, así como iniciar un proceso de recuperación con tu email.\n\nGracias, nos vemos en VirtualPol ;)\n\n\nVirtualPol\nhttp://www.".DOMAIN;
-
+			$asunto = 'Nueva contraseña para el usuario: '.$nick;
+			$mensaje = "Hola Ciudadano,\n\nSe ha procedido a resetear tu contraseña por razones de seguridad. Por lo tanto tu contraseña ha cambiado.\n\n\nUsuario: ".$nick."\nNueva contraseña: ".$new_pass."\n\nPara entrar: ".REGISTRAR."login.php\n\nEs recomendado que cambies tu contraseña. También puedes iniciar un proceso de recuperación con tu email.\n\nGracias, nos vemos en VirtualPol ;)\n\n\nVirtualPol\nhttp://www.".DOMAIN;
 			mail($email, $asunto, $mensaje, "FROM: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: VirtualPol <".CONTACTO_EMAIL."> \nX-Sender: VirtualPol <".CONTACTO_EMAIL."> \nMIME-Version: 1.0\n"); 
+			
+			unset($new_pass);
 
-			mysql_query("UPDATE users SET pass = '".md5($new_pass)."', reset_last = fecha_registro WHERE ID = '".$user_ID."' LIMIT 1", $link);
 			echo 'OK: '.$_GET['nick'];
 		} else { echo 'Error.'; }
 		exit;
@@ -1894,10 +1894,14 @@ case 'editar-documento':
 		while($r = mysql_fetch_array($result)){ 
 
 			$text = str_replace("'", "&#39;", pad('get', $r['ID']));
+			
+			// Prevent SSX basic
+			$text = str_replace("<script", "nojs", $text);
+			$text = str_replace("&lt;script", "nojs", $text);
 
 			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
 
-				// Fuerza que se posée el acceso a modificar.
+				// Impide fijar acceso que no tienes.
 				if (nucleo_acceso($_POST['acceso_escribir'], $_POST['acceso_cfg_escribir']) == false) { 
 					$_POST['acceso_escribir'] = $r['acceso_escribir']; 
 					$_POST['acceso_cfg_escribir'] = $r['acceso_cfg_escribir']; 
@@ -1905,7 +1909,7 @@ case 'editar-documento':
 
 				mysql_query("UPDATE docs SET cat_ID = '".$_POST['cat']."', text = '".$text."', title = '".$_POST['titulo']."', time_last = '".$date."', acceso_leer = '".$_POST['acceso_leer']."', acceso_escribir = '".$_POST['acceso_escribir']."', acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."', version = version + 1 WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 			}
-			redirect('http://'.strtolower($r['pais']).'.'.DOMAIN.'/doc/'.$r['url']);
+			redirect('http://'.strtolower($r['pais']).'.'.DOMAIN.'/doc/'.$r['url'].'/editar');
 		}
 	}
 

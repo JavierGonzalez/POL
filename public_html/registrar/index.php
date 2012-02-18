@@ -195,11 +195,14 @@ FROM ".SQL_REFERENCIAS." WHERE IP = '".$longip."' LIMIT 1", $link);
 									$api_pass = substr(md5(mt_rand(1000000000,9999999999)), 0, 12);
 
 									//crea el ciudadano
-									if (strlen($pass1) != 32) { $pass1 = md5($pass1); }
+									if (strlen($pass1) != 32) { 
+										$pass1 = pass_key($pass1, 'md5');
+										$pass_sha = pass_key($pass1);
+									}
 									
 									mysql_query("INSERT INTO users 
-(nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, pais, pass, host, IP_proxy, geo, dnie_check, bando, nota_SC, fecha_legal) 
-VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '".(in_array($_GET['p'], $vp['paises'])?$_GET['p']:'ninguno')."', '".$pass1."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')", $link);
+(nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, pais, pass, pass2, host, IP_proxy, geo, dnie_check, bando, nota_SC, fecha_legal) 
+VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '".(in_array($_GET['p'], $vp['paises'])?$_GET['p']:'ninguno')."', '".$pass1."', '".$pass_sha."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')", $link);
 
 									if ($ref) {
 										$result = mysql_query("SELECT ID FROM users WHERE nick = '" . $nick . "' LIMIT 1", $link);

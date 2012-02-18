@@ -1,7 +1,7 @@
 <?php
 
 
-function presentacion($titulo, $html) {
+function presentacion($titulo, $html, $url='http://www.virtualpol.com') {
 	global $link;
 	echo '
 <!doctype html>
@@ -31,6 +31,15 @@ function presentacion($titulo, $html) {
 </div>
 
 </div>
+
+
+
+<div style="position: fixed; bottom: 10px; left: 10px;">
+<a href="https://twitter.com/share" class="twitter-share-button" data-text="Presentación '.$url.'/presentacion VirtualPol" data-lang="es" data-size="large" data-related="VirtualPol">Twittear</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+
+<a href="'.$url.'"><img style="position: absolute; top: -3px; left: -3px; border: 0; border-bottom-right-radius:12px; -moz-border-radius-bottomright:12px; -webkit-border-bottom-right-radius:12px; opacity:0.5;filter:alpha(opacity=50)" src="'.IMG.'logo-virtualpol-1.gif" alt="VirtualPol"></a>
 
 
 <script src="'.IMG.'lib/impress/js/impress.js"></script>

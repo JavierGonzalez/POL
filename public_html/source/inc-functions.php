@@ -115,7 +115,12 @@ function notificacion($user_ID, $texto='', $url='') {
 	}
 }
 
-
+function pass_key($t, $type='sha') {
+	switch ($type) {
+		case 'md5': return hash('md5', $t); break;
+		default: return hash('sha256', CLAVE_SHA.$t);
+	}
+}
 
 function timer($t, $es_time=false) {
 	if ($es_time == true) { return '<span class="timer" value="'.$t.'"></span>'; } 

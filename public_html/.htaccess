@@ -8,7 +8,7 @@ Header unset Last-Modified
 </FilesMatch> 
 
 redirect 301 /codigo https://github.com/JavierGonzalez/VirtualPol/
-redirect 301 /licencia http://www.gnu.org/licenses/gpl.html
+redirect 301 /license http://www.gnu.org/licenses/gpl.html
 redirect 301 /contenido http://creativecommons.org/licenses/by-sa/3.0/deed.es_ES
 redirect 301 /video http://www.youtube.com/watch?v=WZhkO5E2nL0
 

@@ -40,7 +40,7 @@ LIMIT 50", $link);
 
 <br />
 
-<div><button onclick="$(\'#box_msg\').toggle(\'slow\');">Enviar mensaje</button> &nbsp; <span class="gris">Tienes <b>'.$pol['msg'].'</b> mensajes sin leer</span> <button onClick="window.location.href=\'/accion.php?a=mensaje-leido&ID=all\';" style="font-weight:normal;color:#666;" />Marcar todo como leído</button></div>';
+<div><button onclick="$(\'#box_msg\').toggle(\'slow\');">Escribir mensaje</button> &nbsp; <span class="gris">Tienes <b>'.$pol['msg'].'</b> mensajes sin leer</span> <button onClick="window.location.href=\'/accion.php?a=mensaje-leido&ID=all\';" style="font-weight:normal;color:#666;" />Marcar todo como leído</button></div>';
 
 
 

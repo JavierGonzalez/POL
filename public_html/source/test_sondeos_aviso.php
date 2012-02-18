@@ -4,7 +4,7 @@ include('inc-login.php');
 
 // HERRAMIENTA DE DESARROLLO PARA VERIFICAR EL IMPORTANTE NUCLEO DE ACCESO.
 
-$votaciones = array(1668,1692,1685,1686,1701);
+$votaciones = array(1701, 1735, 1734, 1740);
 
 $result = mysql_query("SELECT ID AS user_ID, nick, email FROM users WHERE estado = 'ciudadano' AND email != '' ORDER BY fecha_registro ASC LIMIT 1", $link);
 while($r = mysql_fetch_array($result)) {
@@ -29,7 +29,7 @@ while($r = mysql_fetch_array($result)) {
 			$votaciones_li .= "     ".$numm++.". http://15m.".DOMAIN."/votacion/".$dato."/\n";
 		}
 
-		$texto_email = "Hola ciudadano ".$r['nick']."!\n\nEste email es para avisarte de que aún no has votado en los siguientes sondeos de la Asamblea Virtual 15M:\n\n".$votaciones_li."\nVotar es importante, cuantos más votos más legitimidad. Tu opinión cuenta. Puedes votar \"En Blanco\" si no lo tienes claro, así también participarás. Recuerda que puedes modificar tu voto las veces que quieras mientras la votación esté activa.\n\n¿Como participar más a fondo? http://15m.".DOMAIN."/hacer/\n\nAyúdanos a difundir, unidos somos fuertes!\n\n_________\nAsamblea Virtual 15M\nhttp://15m.".DOMAIN."/";
+		$texto_email = "Hola ".$r['nick']."!\n\nAún no has votado en los siguientes sondeos de Asamblea Virtual 15M:\n\n".$votaciones_li."\nCuantos más votos más legitimidad. Tu opinión cuenta. Puedes votar \"En Blanco\" si no lo tienes claro y así participar. Recuerda que puedes modificar mientras la votación está activa.\n\n¿Como participar? http://15m.".DOMAIN."/hacer/\n\nAyúdanos a difundir! Una asamblea para todos\n\n_________\nAsamblea Virtual 15M\nhttp://15m.".DOMAIN."/";
 
 
 		// \n\nSigue los sondeos desde redes sociales:\nhttps://www.facebook.com/pages/Asamblea-Virtual/216054178475524\nhttps://twitter.com/#!/AsambleaVirtuaI

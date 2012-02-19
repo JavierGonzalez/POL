@@ -237,7 +237,8 @@ case 'changenick':
 		$pre_login = true;
 	
 		if ($pol['user_ID']) {
-			$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+			$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND WHERE TO_DAYS(NOW()) - TO_DAYS(last_nickchange) <= 365;  LIMIT 1", $link);
+			$userID = null;
 			while ($r = mysql_fetch_array($result)) {
 				$userID = $r['ID'];
 			}

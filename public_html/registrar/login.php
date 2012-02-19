@@ -35,6 +35,17 @@ case 'panel':
 
 <br />
 
+<li class="azul"><b>Cambio de nombre de usuario</b><br />
+<form action="'.REGISTRAR.'login.php?a=changenick" method="POST">
+<input type="hidden" name="url" value="' . base64_encode(REGISTRAR.'login.php?a=panel') . '" />
+<table border="0" cellpadding="2" cellspacing="0" width="100%">
+<tr>
+<td align="center" valign="top">Nuevo nombre de usuario:<br /><input type="text" name="newnick" value="" maxlength="30" /></td>
+<td align="center" valign="top"><input type="submit" value="Cambiar nombre de usuario" style="font-weight:bold;font-size:15px;color:green;" />
+</td></tr></table></form></li>
+
+<br />
+
 
 <li class="azul"><b>Cambio de email:</b><br />
 <form action="'.REGISTRAR.'login.php?a=changemail" method="POST">
@@ -162,19 +173,19 @@ case 'start-reset-pass':
 		mysql_query("UPDATE users SET api_pass = '".$reset_pass."', reset_last = '".date('Y-m-d H:00:00', time() + (86400*1))."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
 		$texto_email = "<p>Hola ".$r['nick']."!</p>
-<p>Ha solicitado un reset de la contraseña, con la intención de efectuar una recuperación y posterior cambio de contraseña.</p>
+<p>Ha solicitado un reset de la contraseï¿½a, con la intenciï¿½n de efectuar una recuperaciï¿½n y posterior cambio de contraseï¿½a.</p>
 
-<p>Si has solicitado esta acción, continúa entrando en el siguiente enlace. <b>De lo contrario ignora este email</b>.</p>
+<p>Si has solicitado esta acciï¿½n, continï¿½a entrando en el siguiente enlace. <b>De lo contrario ignora este email</b>.</p>
 
 <blockquote>
-Reset de contraseña:<br />
+Reset de contraseï¿½a:<br />
 <a href=\"".REGISTRAR."login.php?a=reset-pass&user_ID=".$r['ID']."&check=".$reset_pass."\"><b>".REGISTRAR."login.php?a=reset-pass&user_ID=".$r['ID']."&check=".$reset_pass."</b></a>
 </blockquote>
 
 <p>_________<br />
 VirtualPol</p>";
 
-		mail($r['email'], "[VirtualPol] Cambio de contraseña del usuario: ".$r['nick'], $texto_email, "FROM: VirtualPol <".CONTACTO_EMAIL.">\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n"); 
+		mail($r['email'], "[VirtualPol] Cambio de contraseï¿½a del usuario: ".$r['nick'], $texto_email, "FROM: VirtualPol <".CONTACTO_EMAIL.">\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n"); 
 	}
 
 	if ($enviado == false) {
@@ -215,7 +226,31 @@ case 'changepass':
 
 	redirect($url);
 	break;
-
+	
+case 'changenick':
+		$newnick = trim($_POST['newnick']);
+		if (substr($_POST['url'], 0, 4) == 'http') {
+			$url = $_POST['url'];
+		} else { $url = base64_decode($_POST['url']);
+		}
+	
+		$pre_login = true;
+	
+		if ($pol['user_ID']) {
+			$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND WHERE TO_DAYS(NOW()) - TO_DAYS(nickchange_last) <= 365;  LIMIT 1", $link);
+			$userID = null;
+			while ($r = mysql_fetch_array($result)) {
+				$userID = $r['ID'];
+			}
+			if (($pol['user_ID'] == $userID)) {
+				mysql_query("UPDATE users SET nick = '" . $newnick . "', nickchange_last = now() WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+			}
+		}
+	
+		redirect($url);
+		break;
+	
+	
 case 'changemail':
 	$email = trim($_POST['email']);
 	$url = base64_decode($_POST['url']);

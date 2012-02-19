@@ -147,6 +147,12 @@ teoriza
 god
 dios
 policia
+15m
+dry
+acampadas
+occupy
+coordinador
+diputado
 ';
 	$nicks_prohibidos = explode("\n", $nicks_prohibidos);
 	$crono = $_POST['crono'];

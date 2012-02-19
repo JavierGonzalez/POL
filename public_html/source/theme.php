@@ -201,7 +201,7 @@ if ($pol['estado'] == 'ciudadano') { // ciudadano
 			<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Gesti&oacute;n</b></a>
 				<ul>
 					<li><a href="/control/gobierno/">Gobierno</a></li>
-					<li><a href="/doc/boletin-oficial-de-vp/">BOE</a></li>
+					<li><a href="/doc/boletin-oficial-del-estado/">BOE</a></li>
 					<li><a href="/control/kick/">Kicks</a></li>
 					<li><a href="/control/expulsiones/">Expulsiones</a></li>
 					<li><a href="/examenes/">Ex&aacute;menes</a></li>

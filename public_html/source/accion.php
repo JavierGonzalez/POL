@@ -1,6 +1,6 @@
 <?php 
 include('inc-login.php');
-include('inc-functions-accion.php'); // functions extra
+include('inc-functions-accion.php');
 
 // load config full
 $result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
@@ -9,24 +9,21 @@ while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor
 // load user cargos
 $pol['cargos'] = cargos();
 
-// prevent SSX
+// prevent XSS
 if ($_GET['ID']) { $_GET['ID'] = mysql_real_escape_string($_GET['ID']); }
 foreach ($_POST AS $nom => $val) { $_POST[$nom] = str_replace("'", "&#39;", $val); }
 foreach ($_GET AS $nom => $val) { $_GET[$nom] = str_replace("'", "&#39;", $val); }
 
 
-$acciones_multiplataforma = array('voto', 'mercado', 'foro', 'votacion');
-
 if (
-((PAIS == $pol['pais']) AND ($pol['estado'] == 'ciudadano'))
-OR (($pol['estado'] == 'kickeado') AND ($_GET['a'] == 'rechazar-ciudadania'))
-OR (($pol['estado'] == 'kickeado') AND ($_GET['a'] == 'elecciones-generales'))
-OR (($pol['estado'] == 'extranjero') AND (in_array($_GET['a'], $acciones_multiplataforma)))
+(nucleo_acceso('ciudadanos'))
+OR (($pol['estado'] == 'kickeado') AND (in_array($_GET['a'], array('rechazar-ciudadania', 'elecciones-generales', 'votacion'))))
+OR (($pol['estado'] == 'extranjero') AND (in_array($_GET['a'], array('voto', 'mercado', 'foro', 'votacion'))))
 ) {
 
 
 switch ($_GET['a']) { 
-// ######################### EL GRAN SWITCH DE ACCIONES ############
+// ######################### BIG ACTION SWITCH ############
 
 
 case 'grupos';
@@ -1193,74 +1190,106 @@ case 'pols':
 
 case 'votacion':
 	$votaciones_tipo = array('referendum', 'parlamento', 'sondeo', 'cargo');
-	if (($_GET['b'] == 'crear') AND (in_array($_POST['tipo'], $votaciones_tipo))) {
+	if (($_GET['b'] == 'crear') AND (in_array($_POST['tipo'], $votaciones_tipo)) AND (nucleo_acceso($vp['acceso']['votacion_borrador']))) {
 		
+		if ($_POST['votos_expire'] > 0) { } else { $_POST['votos_expire'] = 0; }
 
-		if ((nucleo_acceso($vp['acceso'][$_POST['tipo']])) OR (($_POST['acceso_ver'] == 'supervisores_censo') AND (nucleo_acceso('supervisores_censo')))) { 
+		if ($_POST['tipo_voto'] == 'multiple') { unset($_POST['respuesta0']); }
 
-			if ($_POST['votos_expire'] > 0) { } else { $_POST['votos_expire'] = 0; }
-
-			if ($_POST['tipo_voto'] == 'multiple') { unset($_POST['respuesta0']); }
-
-			for ($i=0;$i<100;$i++) { 
-				if (trim($_POST['respuesta'.$i]) != '') { 
-					$respuestas .= trim($_POST['respuesta'.$i]).'|';
-					$respuestas_desc .= trim($_POST['respuesta_desc'.$i]).'][';
-				}
+		for ($i=0;$i<100;$i++) { 
+			if (trim($_POST['respuesta'.$i]) != '') { 
+				$respuestas .= trim($_POST['respuesta'.$i]).'|';
+				$respuestas_desc .= trim($_POST['respuesta_desc'.$i]).'][';
 			}
+		}
+		
+		$_POST['time_expire'] = round($_POST['time_expire']*$_POST['time_expire_tipo']);
+
+		$_POST['debate_url'] = strip_tags($_POST['debate_url']);
+		$_POST['pregunta'] = strip_tags($_POST['pregunta']);
+		$_POST['descripcion'] = nl2br(strip_tags($_POST['descripcion']));
+		if ($_POST['aleatorio'] != 'true') { $_POST['aleatorio'] = 'false'; }
+
+		// Protección contra inyección de configuraciones prohibidas de votaciones especiales
+		switch ($_POST['tipo']) {
+			case 'parlamento':
+				$_POST['privacidad'] = 'false';
+				$_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22';
+				$_POST['acceso_ver'] = 'anonimos'; $_POST['acceso_cfg_ver'] = '';
+				$_POST['votos_expire'] = $pol['config']['num_escanos'];
+				break;
+
+			case 'cargo':
+				
+				$result = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '".$_POST['cargo']."' LIMIT 1", $link);
+				while($r = mysql_fetch_array($result)){ $cargo_nombre = $r['nombre']; }
+
+				$result = mysql_query("SELECT ID, nick FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' LIMIT 1", $link);
+				while($r = mysql_fetch_array($result)){ $cargo_user_ID = $r['ID']; $_POST['nick'] = $r['nick']; }
+
+				if (($cargo_nombre) AND ($cargo_user_ID)) { // fuerza configuracion
+					$_POST['tipo_voto'] = 'estandar';
+					$_POST['time_expire'] = 86400;
+					if ($_POST['cargo'] == 7) { $_POST['time_expire'] = (86400*2); }
+					if ((!ASAMBLEA) OR ($_POST['cargo'] == 6)) {
+						$_POST['acceso_votar'] = 'ciudadanos'; $_POST['acceso_cfg_votar'] = '';
+						$_POST['acceso_ver'] = 'anonimos'; $_POST['acceso_cfg_ver'] = '';
+					}
+					$ejecutar = $_POST['cargo'].'|'.$cargo_user_ID;
+					$_POST['pregunta'] = '&iquest;Apruebas que el ciudadano '.$_POST['nick'].' ostente el cargo '.$cargo_nombre.'?';
+					$_POST['descripcion'] .= '<hr />&iquest;Estas a favor que <b>'.crear_link($_POST['nick']).'</b> tenga el cargo <b>'.$cargo_nombre.'</b>?<br /><br />Al finalizar esta votaci&oacute;n, si el resultado por mayor&iacute;a es a favor, se otorgar&aacute; el cargo autom&aacute;ticamente, si por el contrario el resultado es en contra se le destituir&aacute; del cargo.';
+					$respuestas = 'En Blanco|SI|NO|';
+					$_POST['votos_expire'] = 0;
+					if ($_POST['cargo'] == 22) { $_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22'; $_POST['votos_expire'] = $pol['config']['num_escanos']; }	
+				} else { exit; }
+				break;
+		}
+
+		if (is_numeric($_POST['ref_ID'])) {
+			mysql_query("UPDATE votacion SET 
+pregunta = '".$_POST['pregunta']."', 
+descripcion = '".$_POST['descripcion']."', 
+respuestas = '".$respuestas."', 
+respuestas_desc = '".$respuestas_desc."', 
+time_expire = '".$date."', 
+tipo = '".$_POST['tipo']."', 
+acceso_votar = '".$_POST['acceso_votar']."', 
+acceso_cfg_votar = '".$_POST['acceso_cfg_votar']."', 
+acceso_ver = '".$_POST['acceso_ver']."', 
+acceso_cfg_ver = '".$_POST['acceso_cfg_ver']."', 
+ejecutar = '".$ejecutar."', 
+votos_expire = '".$_POST['votos_expire']."', 
+tipo_voto = '".$_POST['tipo_voto']."', 
+privacidad = '".$_POST['privacidad']."', 
+debate_url = '".$_POST['debate_url']."', 
+aleatorio = '".$_POST['aleatorio']."', 
+duracion = '".$_POST['time_expire']."'
+WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
+			$ref_ID = $_POST['ref_ID'];
+		} else {
 			
-			$_POST['time_expire'] = round($_POST['time_expire']*$_POST['time_expire_tipo']);
-
-			$_POST['debate_url'] = strip_tags($_POST['debate_url']);
-			$_POST['pregunta'] = strip_tags($_POST['pregunta']);
-			$_POST['descripcion'] = gen_text($_POST['descripcion'], 'plain');
-			if ($_POST['aleatorio'] != 'true') { $_POST['aleatorio'] = 'false'; }
-
-			// Protección contra inyección de configuraciones prohibidas de votaciones especiales
-			switch ($_POST['tipo']) {
-				case 'parlamento':
-					$_POST['privacidad'] = 'false';
-					$_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22';
-					$_POST['acceso_ver'] = 'anonimos'; $_POST['acceso_cfg_ver'] = '';
-					$_POST['votos_expire'] = $pol['config']['num_escanos'];
-					break;
-
-				case 'cargo':
-					
-					$result = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '".$_POST['cargo']."' LIMIT 1", $link);
-					while($r = mysql_fetch_array($result)){ $cargo_nombre = $r['nombre']; }
-
-					$result = mysql_query("SELECT ID, nick FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' LIMIT 1", $link);
-					while($r = mysql_fetch_array($result)){ $cargo_user_ID = $r['ID']; $_POST['nick'] = $r['nick']; }
-
-					if (($cargo_nombre) AND ($cargo_user_ID)) { // fuerza configuracion
-						$_POST['tipo_voto'] = 'estandar';
-						$_POST['time_expire'] = 86400;
-						if ($_POST['cargo'] == 7) { $_POST['time_expire'] = (86400*2); }
-						if ((!ASAMBLEA) OR ($_POST['cargo'] == 6)) {
-							$_POST['acceso_votar'] = 'ciudadanos'; $_POST['acceso_cfg_votar'] = '';
-							$_POST['acceso_ver'] = 'anonimos'; $_POST['acceso_cfg_ver'] = '';
-						}
-						$ejecutar = $_POST['cargo'].'|'.$cargo_user_ID;
-						$_POST['pregunta'] = '&iquest;Apruebas que el ciudadano '.$_POST['nick'].' ostente el cargo '.$cargo_nombre.'?';
-						$_POST['descripcion'] .= '<hr />&iquest;Estas a favor que <b>'.crear_link($_POST['nick']).'</b> tenga el cargo <b>'.$cargo_nombre.'</b>?<br /><br />Al finalizar esta votaci&oacute;n, si el resultado por mayor&iacute;a es a favor, se otorgar&aacute; el cargo autom&aacute;ticamente, si por el contrario el resultado es en contra se le destituir&aacute; del cargo.';
-						$respuestas = 'En Blanco|SI|NO|';
-						$_POST['votos_expire'] = 0;
-						if ($_POST['cargo'] == 22) { $_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22'; $_POST['votos_expire'] = $pol['config']['num_escanos']; }	
-					} else { exit; }
-					break;
-			}
-
-			mysql_query("INSERT INTO votacion (pais, pregunta, descripcion, respuestas, respuestas_desc, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, ejecutar, votos_expire, tipo_voto, privacidad, debate_url, aleatorio) VALUES ('".PAIS."', '".$_POST['pregunta']."', '".$_POST['descripcion']."', '".$respuestas."', '".$respuestas_desc."', '".$date."', '".date('Y-m-d H:i:s', time() + $_POST['time_expire'])."', '".$pol['user_ID']."', 'ok', '".$_POST['tipo']."', '".$_POST['acceso_votar']."', '".$_POST['acceso_cfg_votar']."', '".$_POST['acceso_ver']."', '".$_POST['acceso_cfg_ver']."', '".$ejecutar."', '".$_POST['votos_expire']."', '".$_POST['tipo_voto']."', '".$_POST['privacidad']."', '".$_POST['debate_url']."', '".$_POST['aleatorio']."')", $link);
+			mysql_query("INSERT INTO votacion (pais, pregunta, descripcion, respuestas, respuestas_desc, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, ejecutar, votos_expire, tipo_voto, privacidad, debate_url, aleatorio, duracion) VALUES ('".PAIS."', '".$_POST['pregunta']."', '".$_POST['descripcion']."', '".$respuestas."', '".$respuestas_desc."', '".$date."', '".$date."', '".$pol['user_ID']."', 'borrador', '".$_POST['tipo']."', '".$_POST['acceso_votar']."', '".$_POST['acceso_cfg_votar']."', '".$_POST['acceso_ver']."', '".$_POST['acceso_cfg_ver']."', '".$ejecutar."', '".$_POST['votos_expire']."', '".$_POST['tipo_voto']."', '".$_POST['privacidad']."', '".$_POST['debate_url']."', '".$_POST['aleatorio']."', '".$_POST['time_expire']."')", $link);
 
 			$result = mysql_query("SELECT ID FROM votacion WHERE user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' ORDER BY ID DESC LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $ref_ID = $r['ID']; }
+		}
+		redirect('/votacion/borradores');
 
-			if ($_POST['acceso_ver'] == 'anonimos') {
-				evento_chat('<b>['.strtoupper($_POST['tipo']).'] <a href="/votacion/'.$ref_ID.'/">'.$_POST['pregunta'].'</a></b> <span style="color:grey;">('.duracion($_POST['time_expire']).', creado por '.$pol['nick'].')</span>');
+	} elseif (($_GET['b'] == 'iniciar') AND (is_numeric($_GET['ref_ID']))) {
+		
+		$result = mysql_query("SELECT * FROM votacion WHERE ID = '".$_GET['ref_ID']."' AND estado = 'borrador' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)){
+			if (nucleo_acceso($vp['acceso'][$r['tipo']])) {
+				$r['time_expire'] = date('Y-m-d H:i:s', time() + $r['duracion']); 
+				mysql_query("UPDATE votacion SET estado = 'ok', user_ID = '".$pol['user_ID']."', time = '".$date."', time_expire = '".$r['time_expire']."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+
+				if ($r['acceso_ver'] == 'anonimos') {
+					evento_chat('<b>['.strtoupper($r['tipo']).'] <a href="/votacion/'.$r['ID'].'">'.$r['pregunta'].'</a></b> <span style="color:grey;">('.duracion($r['time_expire']).')</span>');
+				}
 			}
 		}
-	} elseif (($_GET['b'] == 'votar') AND ($_POST['ref_ID'])) { 
+
+	} elseif (($_GET['b'] == 'votar') AND (is_numeric($_POST['ref_ID']))) { 
 
 			// Extrae configuracion de la votación
 			$result = mysql_query("SELECT pais, tipo, pregunta, estado, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, num, votos_expire, tipo_voto FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
@@ -1309,13 +1338,15 @@ case 'votacion':
 
 			redirect('http://'.strtolower($pais).'.'.DOMAIN.'/votacion/'.$_POST['ref_ID'].'/');
 
-	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['ID'])) { 
-		$result = mysql_query("SELECT ID FROM votacion WHERE estado = 'ok' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+	} elseif (($_GET['b'] == 'eliminar') AND (is_numeric($_GET['ID']))) { 
+		$result = mysql_query("SELECT ID, user_ID, estado, tipo FROM votacion WHERE estado != 'end' AND ID = '".$_GET['ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) {
-			mysql_query("DELETE FROM votacion WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
-			mysql_query("DELETE FROM votacion_votos WHERE ref_ID = '".$_GET['ID']."'", $link);
+			if (($r['user_ID'] == $pol['user_ID']) OR (($r['estado'] == 'borrador') AND (nucleo_acceso($vp['acceso'][$r['tipo']])))) {
+				mysql_query("DELETE FROM votacion WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+				mysql_query("DELETE FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
+			}
 		}
-	} elseif (($_GET['b'] == 'concluir') AND ($_GET['ID'])) { 
+	} elseif (($_GET['b'] == 'concluir') AND (is_numeric($_GET['ID']))) { 
 		mysql_query("UPDATE votacion SET time_expire = '".$date."' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' AND tipo != 'cargo' LIMIT 1", $link);
 	}
 

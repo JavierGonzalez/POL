@@ -5,10 +5,11 @@ else { include('../config-pwd.php'); $link = @conectar(); } // Conecta MySQL sol
 header('connection: close');
 header('Content-Type: text/plain');
 
+// ARREGLAR: reemplazar esta zona por un include a un config.php ligero
 $host = explode('.', $_SERVER['HTTP_HOST']);
-define('pais', str_replace('-dev', '', $host[0], $dev));
-define('PAIS', strtoupper(pais)); // ARREGLAR: si se crea un pais con minusculas en el nombre esto corrompera el nucleo de acceso
-define('SQL', strtolower(pais).'_');
+if ($host[0] == 'hispania') { $host[0] = 'Hispania'; } else { $host[0] = strtoupper($host[0]); }
+define('PAIS', $host[0]); 
+define('SQL', strtolower($host[0]).'_');
 define('DOMAIN', 'virtualpol.com');
 
 /*
@@ -191,12 +192,12 @@ LIMIT 1", $link);
 				
 				case 'ciudadano': 
 					if (isset($_SESSION['pol']['user_ID'])) {
-						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> te anima a unirte a la comunidad: <a href="http://'.pais.'.'.DOMAIN.'/r/'.strtolower($_SESSION['pol']['nick']).'/" target="_blank"><b>Crear Usuario</b></a>'; 
+						$elmsg = '<b>[#] ' . $_SESSION['pol']['nick'] . '</b> te anima a unirte a la comunidad: <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/r/'.strtolower($_SESSION['pol']['nick']).'/" target="_blank"><b>Crear Usuario</b></a>'; 
 					}
 					break;
 
 				case 'trabaja': 
-					if (pais == 'vp') {
+					if (PAIS != '15M') {
 						$elmsg = 'la econom&iacute;a te necesita! <button style="font-weight:bold;margin:0;">Trabaja</button> :troll:'; 
 						$tipo = 'm';
 					}
@@ -221,6 +222,7 @@ LIMIT 1", $link);
 					}
 					break;
 
+				case 'moderador': 
 				case 'policia': if (nucleo_acceso('cargo', '13 12 6'))  { $elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>'; $tipo = 'm'; } break;
 
 				case 'msg':
@@ -246,7 +248,7 @@ LIMIT 1", $link);
 			if ($_SESSION['pol']['estado'] == 'anonimo') { $sql_ip = 'inet_aton("'.$_SERVER['REMOTE_ADDR'].'")'; } else { $sql_ip = 'NULL'; }
 
 			$elcargo = $_SESSION['pol']['cargo'];
-			if ((strtolower($_SESSION['pol']['pais']) != pais) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { 
+			if (($_SESSION['pol']['pais'] != PAIS) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { 
 				if ($_SESSION['pol']['cargo'] != 42) { $elcargo = 99; }
 			} elseif (substr($elnick, 0, 1) == '-') {
 				$elcargo = 98;

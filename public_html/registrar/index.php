@@ -196,13 +196,13 @@ FROM ".SQL_REFERENCIAS." WHERE IP = '".$longip."' LIMIT 1", $link);
 
 									//crea el ciudadano
 									if (strlen($pass1) != 32) { 
-										$pass1 = pass_key($pass1, 'md5');
+										$pass_md5 = pass_key($pass1, 'md5');
 										$pass_sha = pass_key($pass1);
 									}
 									
 									mysql_query("INSERT INTO users 
 (nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, pais, pass, pass2, host, IP_proxy, geo, dnie_check, bando, nota_SC, fecha_legal) 
-VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '".(in_array($_GET['p'], $vp['paises'])?$_GET['p']:'ninguno')."', '".$pass1."', '".$pass_sha."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')", $link);
+VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '".(in_array($_GET['p'], $vp['paises'])?$_GET['p']:'ninguno')."', '".$pass_md5."', '".$pass_sha."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', '', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')", $link);
 
 									if ($ref) {
 										$result = mysql_query("SELECT ID FROM users WHERE nick = '" . $nick . "' LIMIT 1", $link);
@@ -464,30 +464,18 @@ $(document).ready(function() {
 
 <li><b>&iquest;Compartes conexi&oacute;n a Internet con otro usuario de VirtualPol?</b><br /> 
 En caso afirmativo indica el nick: <input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (en caso negativo deja vac&iacute;o)<br /><br />
-
-';
-
-/*
-<select name="nick_clon">
-<option value="" selected="selected">NO.</option>
-<optgroup label="Usuarios:">
-	$result = mysql_query("SELECT nick FROM users WHERE estado != 'expulsado' ORDER BY nick ASC", $link);
-	while($r = mysql_fetch_array($result)) { 
-		$txt .= '<option value="'.$r['nick'].'">'.$r['nick'].'</option>'."\n"; 
-	}
-</optgroup></select>	
-*/
-
-	$txt .= '</li>
+</li>
 
 
 <li><input name="condiciones" value="ok" type="checkbox" /> <b>Aceptas las <a href="http://www'.'.'.DOMAIN.'/TOS" target="_blank">Condiciones de Uso de VirtualPol</a>.</b><br /><br /></li>
 
-<li><input type="submit" value="Crear ciudadano" style="height:40px;font-size:22px;" onclick="$(\'#pass1\').val(hex_md5($(\'#pass1\').val()));$(\'#pass2\').val(hex_md5($(\'#pass2\').val()));" /></li>
+<li><input type="submit" value="Crear ciudadano" style="height:40px;font-size:22px;" /></li>
 </form>
 </ol>
 <script type="text/javascript" src="'.IMG.'lib/md5.js"></script>
 <br />';
+//  onclick="$(\'#pass1\').val(hex_md5($(\'#pass1\').val()));$(\'#pass2\').val(hex_md5($(\'#pass2\').val()));"
+
 }
 
 include('../theme.php');

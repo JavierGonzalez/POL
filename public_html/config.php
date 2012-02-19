@@ -1,12 +1,9 @@
 <?php
 date_default_timezone_set('Europe/Madrid');
 
+// INICIALIZACION
 define('DOMAIN', 'virtualpol.com');
 define('RAIZ', dirname(__FILE__).'/');
-
-
-
-// INICIALIZACION
 $host = explode('.', $_SERVER['HTTP_HOST']); // obtiene $host[0] que es el subdominio
 $host[0] = str_replace('-dev', '', $host[0]); // convierte subdominios "pais-dev" en "pais" para que funcione la version dev
 
@@ -32,6 +29,7 @@ switch ($host[0]) {
 		define('ECONOMIA', false);
 		define('NOM_PARTIDOS','Grupos');
 		$vp['acceso'] = array(
+'votacion_borrador'=>	array('ciudadanos', ''),
 'sondeo'=>				array('cargo', '6'),
 'referendum'=>			array('cargo', '6'),
 'parlamento'=>			array('cargo', '6'),
@@ -55,6 +53,7 @@ switch ($host[0]) {
 		define('NOM_PARTIDOS','Partidos');
 		$columnas = 14; $filas = 18;
 		$vp['acceso'] = array(
+'votacion_borrador'=>	array('ciudadanos_global', ''),
 'sondeo'=>				array('cargo', '41 6 16 22 19 7'),
 'referendum'=>			array('nivel', '95'),
 'parlamento'=>			array('cargo', '6 22'),
@@ -78,6 +77,7 @@ switch ($host[0]) {
 		define('NOM_PARTIDOS','Partidos');
 		$columnas = 14; $filas = 18;
 		$vp['acceso'] = array(
+'votacion_borrador'=>	array('ciudadanos_global', ''),
 'sondeo'=>				array('cargo', '41 6 16 22 19 7'),
 'referendum'=>			array('nivel', '95'),
 'parlamento'=>			array('cargo', '6 22'),

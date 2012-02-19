@@ -5,22 +5,27 @@ if ($pol['user_ID'] != 1) { exit; }
 $txt .= '<h1>TEST DE DESARROLLO</h1><hr />';
 
 
-function gen_url2($url) {
-	if (mb_detect_encoding($url) != 'UTF-8') { $url = utf8_decode($url); }
+
+$result = mysql_query("SELECT ID, descripcion FROM votacion", $link);
+while($r = mysql_fetch_array($result)) {
+	$txt .= 'votacion: '.$r['ID'].'<br />';
 	
-	$url = trim($url);
-	$url = strtr(utf8_decode($url), utf8_decode(' àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'),
-utf8_decode('-aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
-	$url = ereg_replace("[^A-Za-z0-9-]", "", $url);
-	$url = substr($url, 0, 90);
-	$url = strip_tags($url);
-	$url = strtolower($url);
-	return $url;
+	$r['descripcion'] = str_replace('<b>', '[b]', $r['descripcion']);
+	$r['descripcion'] = str_replace('</b>', '[/b]', $r['descripcion']);
+	
+	$r['descripcion'] = str_replace('<em>', '[em]', $r['descripcion']);
+	$r['descripcion'] = str_replace('</em>', '[/em]', $r['descripcion']);
+
+	$r['descripcion'] = str_replace('<i>', '[em]', $r['descripcion']);
+	$r['descripcion'] = str_replace('</i>', '[/em]', $r['descripcion']);
+
+	$r['descripcion'] = str_replace('<s>', '[s]', $r['descripcion']);
+	$r['descripcion'] = str_replace('</s>', '[/s]', $r['descripcion']);
+
+	$r['descripcion'] = strip_tags($r['descripcion'], '<br>');
+
+	//mysql_query("UPDATE votacion SET descripcion = '".$r['descripcion']."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 }
-
-$test = 'Holá mundo Ñé';
-
-$txt .= $test.' ('.mb_detect_encoding($test).')<br /> '.gen_url2($test).' ('.mb_detect_encoding(gen_url2($test)).')';
 
 
 

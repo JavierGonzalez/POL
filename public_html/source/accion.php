@@ -1988,10 +1988,12 @@ case 'crear-partido':
 	$result = mysql_query("SELECT ID FROM ".SQL."partidos WHERE ID_presidente = '".$pol['user_ID']."'", $link);
 	while($r = mysql_fetch_array($result)){ $ya_es_presidente = true; }
 
-	if (($pol['config']['elecciones_estado'] != 'elecciones') AND (strlen($_POST['siglas']) <= 12) AND (strlen($_POST['siglas']) >= 2) AND (nucleo_acceso($vp['acceso']['crear_partido'])) AND ($_POST['nombre']) AND ($ya_es_presidente == false)) {
+	if (($pol['config']['elecciones_estado'] != 'elecciones') AND (strlen($_POST['siglas']) <= 12) AND ($pol['pols'] >= $pol['config']['pols_partido']) AND (strlen($_POST['siglas']) >= 2) AND (nucleo_acceso($vp['acceso']['crear_partido'])) AND ($_POST['nombre']) AND ($ya_es_presidente == false)) {
 
 		$_POST['descripcion'] = gen_text($_POST['descripcion']);
-
+		
+		pols_transferir($pol['config']['pols_partido'], $pol['user_ID'], '-1', 'Creacion nuevo partido: '.$nombre);
+		
 		mysql_query("INSERT INTO ".SQL."partidos 
 (ID_presidente, fecha_creacion, siglas, nombre, descripcion, estado) 
 VALUES ('".$pol['user_ID']."', '".$date."', '".strtoupper($_POST['siglas'])."', '".$_POST['nombre']."', '".$_POST['descripcion']."', 'ok')

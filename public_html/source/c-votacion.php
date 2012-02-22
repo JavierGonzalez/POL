@@ -330,12 +330,12 @@ LIMIT 1", $link);
 
 		if ($r['estado'] == 'ok') { 
 			$tiempo_queda =  '<span style="color:blue;">Quedan <span class="timer" value="'.$time_expire.'"></span>.</span>'; 
+		} elseif ($r['estado'] == 'borrador') {
+			$tiempo_queda =  '<span style="color:red;">Borrador <span style="font-weight:normal;">(Previsualización de votación)</span></span> ';
 		} else { $tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; }
 
 
 		$txt .= '<h1><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).' &nbsp; &nbsp; &nbsp; '.num($votos_total).' votos | '.$tiempo_queda.'</h1>
-
-'.($r['estado']=='borrador'?'<div style="color:red;margin:20px 0 0 0;">'.boton('Editar', '/votacion/crear/'.$r['ID']).' Esto es un borrador de votación.</div>':'').'
 
 <div class="amarillo" style="margin:20px 0 5px 0;padding:20px 10px 0 10px;">
 <h1>'.$r['pregunta'].'</h1>

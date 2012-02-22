@@ -6,26 +6,7 @@ $txt .= '<h1>TEST DE DESARROLLO</h1><hr />';
 
 
 
-$result = mysql_query("SELECT ID, descripcion FROM votacion", $link);
-while($r = mysql_fetch_array($result)) {
-	$txt .= 'votacion: '.$r['ID'].'<br />';
-	
-	$r['descripcion'] = str_replace('<b>', '[b]', $r['descripcion']);
-	$r['descripcion'] = str_replace('</b>', '[/b]', $r['descripcion']);
-	
-	$r['descripcion'] = str_replace('<em>', '[em]', $r['descripcion']);
-	$r['descripcion'] = str_replace('</em>', '[/em]', $r['descripcion']);
-
-	$r['descripcion'] = str_replace('<i>', '[em]', $r['descripcion']);
-	$r['descripcion'] = str_replace('</i>', '[/em]', $r['descripcion']);
-
-	$r['descripcion'] = str_replace('<s>', '[s]', $r['descripcion']);
-	$r['descripcion'] = str_replace('</s>', '[/s]', $r['descripcion']);
-
-	$r['descripcion'] = strip_tags($r['descripcion'], '<br>');
-
-	//mysql_query("UPDATE votacion SET descripcion = '".$r['descripcion']."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
-}
+mysql_query("DELETE FROM notificaciones WHERE time < '".date('Y-m-d 20:00:00', time() - 864000)."'", $link); // 
 
 
 

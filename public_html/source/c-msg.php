@@ -29,7 +29,7 @@ LIMIT 50", $link);
 	while($r = mysql_fetch_array($result)){
 
 
-		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>' . crear_link($r['nick_envia']) . '</b><br /><b>' . str_replace(' ', '&nbsp;', $r['cargo']) . '</b><acronym title="' . $r['time'] . '" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top" class="rich">' . $r['text'] . '<hr /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($r['nick_envia']) . '/') . '</td><td valign="top">' . boton('X', '/accion.php?a=borrar-mensaje&ID=' . $r['ID']) . '</td></tr>' . "\n";
+		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>' . crear_link($r['nick_envia']) . '</b><br /><b>' . str_replace(' ', '&nbsp;', $r['cargo']) . '</b><acronym title="' . $r['time'] . '" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top" class="rich">' . $r['text'] . '<hr /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($r['nick_envia']) . '/') . '</td><td valign="top"></td></tr>' . "\n";
 	}
 
 	$txt .= '</table><p><b>(*)</b> <em>Esta p&aacute;gina est&aacute; en versi&oacute;n ALPHA, el motivo es que cabe la "extra&ntilde;a" posibilidad de que falten algunos mensajes. Esto suceder&aacute; cuando el RECEPTOR elimine tu mensaje enviado (ya que el mensaje se borra de la base de datos). Puede resultar incoherente la ausencia de algun mensaje enviado.</em></p>';

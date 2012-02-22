@@ -1207,7 +1207,7 @@ case 'votacion':
 
 		$_POST['debate_url'] = strip_tags($_POST['debate_url']);
 		$_POST['pregunta'] = strip_tags($_POST['pregunta']);
-		$_POST['descripcion'] = nl2br(strip_tags($_POST['descripcion']));
+		$_POST['descripcion'] = nl2br(strip_tags(trim($_POST['descripcion'])));
 		if ($_POST['aleatorio'] != 'true') { $_POST['aleatorio'] = 'false'; }
 
 		// Protección contra inyección de configuraciones prohibidas de votaciones especiales
@@ -1568,16 +1568,17 @@ case 'kick':
 case 'mensaje-leido':
 	if ($_GET['ID'] == 'all') {
 		mysql_query("UPDATE mensajes SET leido = '1' WHERE recibe_ID = '".$pol['user_ID']."'", $link);
-		mysql_query("UPDATE notificaciones SET visto = 'true' WHERE user_ID = '".$pol['user_ID']."' AND visto = 'false' AND texto LIKE 'Mensaje %'", $link);
 	} elseif ($_GET['ID']) {
 		mysql_query("UPDATE mensajes SET leido = '1' WHERE ID = '".$_GET['ID']."' AND recibe_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	}
+	mysql_query("UPDATE notificaciones SET visto = 'true' WHERE user_ID = '".$pol['user_ID']."' AND visto = 'false' AND texto LIKE 'Mensaje %'", $link);
 	$refer_url = 'msg/';
 	break;
 
 case 'borrar-mensaje':
-	if (($_GET['ID'])) {
+	if (is_numeric($_GET['ID'])) {
 		mysql_query("DELETE FROM mensajes WHERE ID = '".$_GET['ID']."' AND recibe_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("UPDATE notificaciones SET visto = 'true' WHERE user_ID = '".$pol['user_ID']."' AND visto = 'false' AND texto LIKE 'Mensaje %'", $link);
 		$refer_url = 'msg/';
 	}
 	break;

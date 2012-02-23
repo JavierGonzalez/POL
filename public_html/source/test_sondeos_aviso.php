@@ -1,10 +1,12 @@
 <?php 
 include('inc-login.php');
+include('inc-functions-accion.php');
 
+// ENVIO DE EMAILS DE AVISO
 
-// HERRAMIENTA DE DESARROLLO PARA VERIFICAR EL IMPORTANTE NUCLEO DE ACCESO.
+$votaciones = array(1735, 1754, 1734, 1740, 1792, 1768, 1794);
 
-$votaciones = array(1701, 1735, 1734, 1740);
+evento_chat('<b>[#] Comienzo de envio de emails</b> de aviso de votaciones <span style="color:grey;">('.count($votaciones).' votaciones)</span>.');
 
 $result = mysql_query("SELECT ID AS user_ID, nick, email FROM users WHERE estado = 'ciudadano' AND email != '' ORDER BY fecha_registro ASC LIMIT 1", $link);
 while($r = mysql_fetch_array($result)) {
@@ -40,6 +42,8 @@ while($r = mysql_fetch_array($result)) {
 		}
 	}
 }
+
+evento_chat('<b>[#] Terminado el envio de emails</b> de aviso de votaciones <span style="color:grey;">('.num($contador).' emails enviados, '.round(microtime(true)-TIME_START).' seg de proceso)</span>.');
 
 $txt .= '<hr />'.$contador;
 include('theme.php');

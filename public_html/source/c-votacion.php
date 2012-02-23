@@ -374,7 +374,7 @@ LIMIT 1", $link);
 			$result2 = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
 			while($r2 = mysql_fetch_array($result2)) { $comentarios_num = $r2['num']; }
 
-			$txt .= '<h2 style="margin-top:18px;">Comentarios anónimos ('.($r['estado']=='end'?$comentarios_num:'*').')</h2>';
+			$txt .= '<h2 style="margin-top:18px;">Comentarios anónimos ('.($r['estado']=='end'?$comentarios_num.' comentarios, '.num(($comentarios_num*100)/$votos_total, 1).'%':'*').')</h2>';
 			if (nucleo_acceso('ciudadanos_global')) {
 				if ($r['estado'] == 'end') { 
 					$result2 = mysql_query("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != '' ORDER BY RAND()", $link);
@@ -446,6 +446,7 @@ $txt .= '</ul>
 
 		} else {
 
+			// Muestra información de votación (a la derecha)
 			$txt .= '<span style="float:right;text-align:right;">
 Creador <b>' . crear_link($r['nick']) . '</b>. Duración <b>'.$duracion.'</b>.<br />
 Acceso de voto: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</acronym>.<br /> 
@@ -456,6 +457,8 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 <a href="/votacion/'.$r['ID'].'/info/#ver_info">Más información</a>.
 </span>';
 
+
+
 			if ($r['estado'] == 'end') {  // VOTACION FINALIZADA: Mostrar escrutinio. 
 
 				// Conteo/Proceso de votos (ESCRUTINIO)
@@ -464,11 +467,14 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 				$escrutinio['votos_total'] = 0;
 				$escrutinio['validez']['true'] = 0; $escrutinio['validez']['false'] = 0;
 				$puntos_total = ($r['tipo_voto']=='estandar'?$votos_total:0);
+
 				$result2 = mysql_query("SELECT voto, validez, autentificado, mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
 				while($r2 = mysql_fetch_array($result2)) {
 					
 					switch ($r['tipo_voto']) {
+
 						case 'estandar': $escrutinio['votos'][$r2['voto']]++; break;
+
 						case '3puntos': case '5puntos': case '8puntos': 
 							$voto_array = explode(' ', $r2['voto']); $puntos = 1;
 							foreach ($voto_array AS $elvoto) {
@@ -479,6 +485,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 								}
 							}
 							break;
+
 						case 'multiple':
 							$voto_array = explode(' ', $r2['voto']);
 							foreach ($voto_array AS $voto_ID => $elvoto) {
@@ -494,19 +501,25 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 					if ($r2['autentificado'] == 'true') { $escrutinio['votos_autentificados']++; }
 				}
 
+				// Ordena escrutinio multiple por porcentaje de SI.
+				if ($r['tipo_voto'] == 'multiple') { 
+					foreach ($escrutinio['votos_full'] AS $voto_ID => $voto_array) {
+						$escrutinio['votos'][$voto_ID] = round(($voto_array[1]>0?($voto_array[1]*100)/($voto_array[1] + $voto_array[2])*100:0));
+					}
+				}
+
 				// Determina validez (por mayoria simple)
 				$nulo_limite = ceil(($votos_total)/2);
 				if ($escrutinio['validez']['false'] < $escrutinio['validez']['true']) { $validez = true; } else { $validez = false; }
 
+				// Opciones del escrutinio en orden descendente.
 				arsort($escrutinio['votos']);
 
-
 				// Imprime escrutinio en texto.
-				$txt .= '<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top"><b>Resultados:</b><br />';
+				$txt .= '<table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">';
 
 				// Imprime escrutinio en grafico.
-				if ($validez == true) {
-					
+				if ($validez == true) { // Solo si el resultado es válido (menos de 50% de votos nulos).
 					foreach ($escrutinio['votos'] AS $voto => $num) {
 						if ($respuestas[$voto] != 'En Blanco') {
 							$grafico_array_votos[] = $num;
@@ -514,17 +527,15 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 						}
 					}
 
-					if ((count($respuestas) <= 10) AND ($r['tipo_voto'] != 'multiple')) { $txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chp=4.71&chd=t:'.implode(',', $grafico_array_votos).'&chs=350x175&chl='.implode('|', $grafico_array_respuestas).'&chf=bg,s,ffffff01|c,s,ffffff01&chco=FF9900|FFBE5E|FFD08A|FFDBA6" alt="Escrutinio" width="350" height="175" />'; }
+					if ((count($respuestas) <= 8) AND ($r['tipo_voto'] != 'multiple')) { 
+						$txt .= '<img src="http://chart.apis.google.com/chart?cht=p&chds=a&chp=4.71&chd=t:'.implode(',', $grafico_array_votos).'&chs=350x175&chl='.implode('|', $grafico_array_respuestas).'&chf=bg,s,ffffff01|c,s,ffffff01&chco=FF9900|FFBE5E|FFD08A|FFDBA6" alt="Escrutinio" width="350" height="175" /><br />'; 
+					}
 				}
 
-				$txt .= '<br />';
-
-				if ($validez==true) {
+				if ($validez == true) {
 
 					if ($r['tipo_voto'] == 'multiple') {
 						$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th>Escrutinio &nbsp; </th><th>SI</th><th>NO</th><th></th></tr>';
-						
-						// Obtener ID del voto "En Blanco"
 						
 						$puntos_total_sin_en_blanco = $puntos_total - $escrutinio['votos'][$en_blanco_ID];
 
@@ -539,7 +550,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 <td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'" class="punteado"':'').'>'.$respuestas[$voto].'</td>
 <td align="right"><b>'.$voto_si.'</b></td>
 <td align="right">'.$voto_no.'</td>
-<td align="right"><b title="Votos computables: '.num($voto_si+$voto_no).', Balance: '.num($num).', En Blanco: '.$voto_en_blanco.'">'.num(($voto_si>0?($voto_si*100)/($voto_si + $voto_no):0),1).'%</b></td>
+<td align="right"><b title="Votos computables: '.num($voto_si+$voto_no).', En Blanco: '.$voto_en_blanco.'">'.num(($voto_si>0?($voto_si*100)/($voto_si + $voto_no):0),1).'%</b></td>
 </tr>';
 
 								} else { $votos_en_blanco = $num; }
@@ -564,10 +575,8 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 						}
 						$txt .= '<tr><td nowrap="nowrap" title="Voto no computable. Equivale a: No sabe/No contesta."><em>En Blanco</em></td><td align="right" title="'.num(($votos_en_blanco*100)/$puntos_total, 1).'%"><b>'.num($votos_en_blanco).'</b></td><td></td></tr></table>';
 					}
-
 				}
 				
-
 
 				// Imprime datos de legitimidad y validez
 				$txt .= '</td>
@@ -578,7 +587,7 @@ Validez de esta votación: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&n
 </tr></table>';
 
 
-			} else { // VOTACION EN CURSO: Votar.
+			} else { // VOTACION EN CURSO: VOTAR.
 
 				$tiene_acceso_votar = nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']);
 

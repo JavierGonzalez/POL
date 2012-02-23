@@ -28,7 +28,7 @@ if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { //
 <form action="/accion.php?a=foro&b=reply" method="post">
 <input type="hidden" name="subforo" value="-1"  />
 <input type="hidden" name="hilo" value="-1"  />
-<input type="hidden" name="return_url" value="/notas/"  />
+<input type="hidden" name="return_url" value="notas/"  />
 <input type="hidden" name="encalidad" value="0"  />
 
 <tr>

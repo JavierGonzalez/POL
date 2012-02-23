@@ -53,6 +53,9 @@ LIMIT 50", $link);
 		$pre_cargo = $_GET['b'];
 	} else if ($_GET['a'] != 'enviar') { 
 		$pre_nick = strtolower($_GET['a']); 
+		if ($pre_nick=='') {
+			$ocultar_formulario = 'style="display:none;"';
+		}
 	}
 
 	$result = mysql_query("SELECT ID, nombre,
@@ -115,7 +118,7 @@ function click_form(tipo) {
 	$disabled_todos = '';
 	if ($pol['config']['pols_mensajetodos'] > $pol['pols']) { $disabled_todos = ' disabled="disabled"'; }
 	$txt .= '
-<div id="box_msg" style="display:none;">
+<div id="box_msg"'.$ocultar_formulario.'>
 
 <form action="/accion.php?a=enviar-mensaje" method="post">
 

@@ -1,2 +1,4 @@
 public_html/config-pwd.php
 public_html/source/devel/*
+public_html/source/test.php
+public_html/source/test*.php

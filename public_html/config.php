@@ -90,7 +90,7 @@ switch ($host[0]) {
 'control_grupos'=>		array('nivel', '90'),
 'examenes_decano'=>		array('cargo', '35 60'),
 'examenes_profesor'=>	array('cargo', '34'),
-'crear_partido'=>		array('cargo','7'),
+'crear_partido'=>		array('cargo','7 19'),
 );
 		break;
 

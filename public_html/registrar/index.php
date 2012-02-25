@@ -243,7 +243,7 @@ case 'verificar': //URL EMAIL
 	$result = mysql_query("SELECT ID, nick, pass, pais FROM users WHERE estado = 'validar' AND nick = '".$_GET['nick']."' AND api_pass = '".$_GET['code']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
 
-		notificacion($r['ID'], '&iexcl;bienvenido!', '/doc/bienvenida');
+		notificacion($r['ID'], 'Bienvenido!', '/doc/bienvenida');
 
 		if ($r['pais'] == 'ninguno') {
 			mysql_query("UPDATE users SET estado = 'turista' WHERE ID = '".$r['ID']."' LIMIT 1", $link);

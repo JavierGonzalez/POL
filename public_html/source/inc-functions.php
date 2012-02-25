@@ -50,7 +50,7 @@ function verbalizar_acceso($tipo, $valor='') {
 	return $t;
 }
 
-function notificacion($user_ID, $texto='', $url='') {
+function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 	global $pol, $link;
 	switch ($user_ID) {
 
@@ -110,7 +110,7 @@ function notificacion($user_ID, $texto='', $url='') {
 			break;
 
 		default: 
-			mysql_query("INSERT INTO notificaciones (user_ID, texto, url) VALUES ('".$user_ID."', '".$texto."', '".$url."')", $link);
+			mysql_query("INSERT INTO notificaciones (user_ID, texto, url, emisor) VALUES ('".$user_ID."', '".$texto."', '".$url."', '".$emisor."')", $link);
 			return true;
 	}
 }

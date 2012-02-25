@@ -788,55 +788,55 @@ $dato_array = array(
 'chat_diasexpira'=>'Dias expiracion chat',
 );
 
-foreach ($vp['paises'] AS $pais) {
-	if (PAIS != $pais) {
-			$dato_array['frontera_con_' . $pais] = 'Frontera con ' . $pais;
-	}
-}
-
-foreach ($_POST AS $dato => $valor) {
-	if ((substr($dato, 0, 8) != 'salario_') AND ($dato != 'palabra_gob1')) {
-
-
-		if ($dato == 'online_ref') {
-			$valor = round($_POST['online_ref']*60);
-			mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
-		} elseif ($dato == 'palabra_gob0') {
-			$dato = 'palabra_gob';
-			$valor = strip_tags($_POST['palabra_gob0']).":".strip_tags($_POST['palabra_gob1']);
-			mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
-		} elseif ($dato == 'num_escanos') {
-			if ($pol['config']['elecciones_estado'] != 'elecciones') {
-				mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
+		foreach ($vp['paises'] AS $pais) {
+			if (PAIS != $pais) {
+					$dato_array['frontera_con_' . $pais] = 'Frontera con ' . $pais;
 			}
-		} else {
-			mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
 		}
 
-		if ($pol['config'][$dato] != $valor) { 
-			if ($valor == '') { $valor = '<em>null</em>'; }
-			if ($dato == 'online_ref') {
-				$valor = intval($valor)/60; 
-				$pol['config'][$dato] = $pol['config'][$dato]/60;
+		foreach ($_POST AS $dato => $valor) {
+			if ((substr($dato, 0, 8) != 'salario_') AND ($dato != 'palabra_gob1')) {
+
+
+				if ($dato == 'online_ref') {
+					$valor = round($_POST['online_ref']*60);
+					mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
+				} elseif ($dato == 'palabra_gob0') {
+					$dato = 'palabra_gob';
+					$valor = strip_tags($_POST['palabra_gob0']).":".strip_tags($_POST['palabra_gob1']);
+					mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
+				} elseif ($dato == 'num_escanos') {
+					if ($pol['config']['elecciones_estado'] != 'elecciones') {
+						mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
+					}
+				} else {
+					mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
+				}
+
+				if ($pol['config'][$dato] != $valor) { 
+					if ($valor == '') { $valor = '<em>null</em>'; }
+					if ($dato == 'online_ref') {
+						$valor = intval($valor)/60; 
+						$pol['config'][$dato] = $pol['config'][$dato]/60;
+					}
+					evento_chat('<b>[GOBIERNO]</b> Configuraci&oacute;n ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/gobierno/">Gobierno</a>)'); 
+				}
+			
 			}
-			evento_chat('<b>[GOBIERNO]</b> Configuraci&oacute;n ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/gobierno/">Gobierno</a>)'); 
 		}
-	
-	}
-}
 
 
-	// Salarios
-	$result = mysql_query("SELECT ID, salario, nombre FROM ".SQL."estudios", $link);
-	while($r = mysql_fetch_array($result)){
-		$salario = $_POST['salario_'.$r['ID']];
-		if (($salario >= 0) AND ($salario <= 1000)) {
-			if ($salario != $r['salario']) { evento_chat('<b>[GOBIERNO]</b> El salario de <img src="'.IMG.'cargos/'.$r['ID'].'.gif" /><b>'.$r['nombre'].'</b> se ha cambiado de '.pols($r['salario']).' '.MONEDA.' a '.pols($salario).' '.MONEDA.' ('.crear_link($pol['nick']).', <a href="/control/gobierno/">Gobierno</a>)');  }
-			mysql_query("UPDATE ".SQL."estudios SET salario = '".$salario."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+		// Salarios
+		$result = mysql_query("SELECT ID, salario, nombre FROM ".SQL."estudios", $link);
+		while($r = mysql_fetch_array($result)){
+			$salario = $_POST['salario_'.$r['ID']];
+			if (($salario >= 0) AND ($salario <= 1000)) {
+				if ($salario != $r['salario']) { evento_chat('<b>[GOBIERNO]</b> El salario de <img src="'.IMG.'cargos/'.$r['ID'].'.gif" /><b>'.$r['nombre'].'</b> se ha cambiado de '.pols($r['salario']).' '.MONEDA.' a '.pols($salario).' '.MONEDA.' ('.crear_link($pol['nick']).', <a href="/control/gobierno/">Gobierno</a>)');  }
+				mysql_query("UPDATE ".SQL."estudios SET salario = '".$salario."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+			}
 		}
-	}
 
-	$refer_url = 'control/gobierno/';
+		$refer_url = 'control/gobierno/';
 
 	// FORO
 	} elseif (($_GET['b'] == 'subforo') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
@@ -860,10 +860,28 @@ VALUES ('".gen_url($_POST['nombre'])."', '".$_POST['nombre']."', '', '1', '10', 
 		mysql_query("UPDATE ".SQL."foros SET estado = 'eliminado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
 
 		$refer_url = 'control/gobierno/foro/';
+	
+	} elseif (($_GET['b'] == 'notificaciones') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
+
+		if (($_GET['c'] == 'add') AND ($_POST['texto']) AND ($_POST['url'])) {
+			$_POST['texto'] = ucfirst(substr(strip_tags($_POST['texto']), 0, 50));
+			$_POST['url'] = str_replace('http://'.strtolower(PAIS).DOMAIN, '', substr(strip_tags($_POST['url']), 0, 60));
+
+			$result = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."'", $link);
+			while($r = mysql_fetch_array($result)){
+				notificacion($r['ID'], $_POST['texto'], $_POST['url'], PAIS);
+			}
+		} elseif (($_GET['c'] == 'borrar') AND (is_numeric($_GET['noti_ID']))) {
+
+			$result = mysql_query("SELECT texto FROM notificaciones WHERE noti_ID = '".$_GET['noti_ID']."' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)){
+				mysql_query("DELETE FROM notificaciones WHERE texto = '".$r['texto']."' AND emisor = '".PAIS."'", $link);
+			}
+		}
+
+		$refer_url = 'control/gobierno/notificaciones';
 	}
-
 	break;
-
 
 
 case 'api':
@@ -873,26 +891,24 @@ case 'api':
 	}
 	break;
 
-case 'empresa':
 
+case 'empresa':
 	if (($_GET['b'] == 'crear') AND ($pol['pols'] >= $pol['config']['pols_empresa']) AND (ctype_digit($_POST['cat'])) AND ($_POST['nombre'])) {
 
 		$nombre = $_POST['nombre'];
 		$url = gen_url($nombre);
 
-		
 		$result = mysql_query("SELECT ID, url FROM ".SQL."cat WHERE ID = '".$_POST['cat']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ $cat_url = $r['url']; $cat_ID = $r['ID']; }
 
-		mysql_query("INSERT INTO ".SQL."empresas (url, nombre, user_ID, descripcion, web, cat_ID, time) 
-VALUES ('".$url."', '".$nombre."', '".$pol['user_ID']."', 'Editar...', '', '".$cat_ID."', '".$date."')", $link);
+		mysql_query("INSERT INTO ".SQL."empresas (url, nombre, user_ID, descripcion, web, cat_ID, time) VALUES ('".$url."', '".$nombre."', '".$pol['user_ID']."', 'Editar...', '', '".$cat_ID."', '".$date."')", $link);
 
-	  mysql_query("SELECT ID FROM ".SQL."vp_empresas WHERE nombre='$nombre'",$link);
-	  $nick = $_SESSION['pol']['nick'];
-	  $acciones = 100;
+		mysql_query("SELECT ID FROM ".SQL."vp_empresas WHERE nombre='$nombre'",$link);
+		$nick = $_SESSION['pol']['nick'];
+		$acciones = 100;
 
-	  $acciones=mysql_query("INSERT INTO ".SQL."acciones (nick, nombre_empresa, acciones, pais, ID_empresa) 
-VALUES ('".$nick."', '".$nombre."', '".$acciones."', '".$PAIS."')", $link);
+		$acciones=mysql_query("INSERT INTO ".SQL."acciones (nick, nombre_empresa, acciones, pais, ID_empresa) 
+		VALUES ('".$nick."', '".$nombre."', '".$acciones."', '".$PAIS."')", $link);
 
 
 		mysql_query("UPDATE ".SQL."cat SET num = num + 1 WHERE ID = '".$cat_ID."' LIMIT 1", $link);
@@ -900,46 +916,38 @@ VALUES ('".$nick."', '".$nombre."', '".$acciones."', '".$PAIS."')", $link);
 		pols_transferir($pol['config']['pols_empresa'], $pol['user_ID'], '-1', 'Creacion nueva empresa: '.$nombre);
 
 		$return = $cat_url.'/'.$url.'/';
-      
-		    } elseif (($_GET['b'] == 'acciones') AND ($_GET['ID']) AND ($_POST['nick'] AND ($_POST['cantidad']))) {
 
-	  $id = $_GET['ID'];
+	} elseif (($_GET['b'] == 'acciones') AND ($_GET['ID']) AND ($_POST['nick'] AND ($_POST['cantidad']))) {
 
-	  $result = mysql_query("SELECT nombre, ID, user_ID FROM vp_empresas WHERE ID='$id', $link");
+		$id = $_GET['ID'];
 
-	  if ($r=mysql_fetch_array($result)) {
+		$result = mysql_query("SELECT nombre, ID, user_ID FROM vp_empresas WHERE ID='$id', $link");
 
-	  $id = $r['ID'];
-	  $nick = $_POST['nick'];
-	  $cantidad = $_POST['cantidad'];
-	  $id_user = $r['user_ID'];
+		if ($r=mysql_fetch_array($result)) {
 
-	  $acciones = mysql_query("INSERT INTO acciones (ID_empresa, num_acciones, nick, pais) 
-VALUES ('".$id."', '".$cantidad."', '".$nick."', '".$PAIS."')", $link);
+			$id = $r['ID'];
+			$nick = $_POST['nick'];
+			$cantidad = $_POST['cantidad'];
+			$id_user = $r['user_ID'];
 
+			$acciones = mysql_query("INSERT INTO acciones (ID_empresa, num_acciones, nick, pais) 
+			VALUES ('".$id."', '".$cantidad."', '".$nick."', '".$PAIS."')", $link);
 
+			$usuario = mysql_query("SELECT nick FROM vp_users WHERE ID = '$id_user', $link");
+			if ($r=mysql_fetch_array($usuario)) {
+				$nick = $r['nick'];
 
-	  $usuario = mysql_query("SELECT nick FROM vp_users WHERE ID = '$id_user', $link");
+				$cantidadacciones = mysql_query("SELECT acciones, nick, nombre_empresa FROM acciones WHERE nick = '$nick' and ID_empresa = '$id', $link");
+				if ($r=mysql_fetch_array($cantidadacciones)) {
 
-	  if ($r=mysql_fetch_array($usuario)) {
+					$susacciones = $r['acciones'];
+					$totalacciones = $susacciones - $cantidad;
 
-	  $nick = $r['nick'];
+					$accionesresultantes = mysql_query("update acciones set acciones='$totalacciones' where nick='$nick' and ID_empresa='$id'",$link);
 
-	  $cantidadacciones = mysql_query("SELECT acciones, nick, nombre_empresa FROM acciones WHERE nick = '$nick' and ID_empresa = '$id', $link");
-
-	  if ($r=mysql_fetch_array($cantidadacciones)) {
-
-	  $susacciones = $r['acciones'];
-	  $totalacciones = $susacciones - $cantidad;
-
-	  $accionesresultantes = mysql_query("update acciones set acciones='$totalacciones' where nick='$nick' and ID_empresa='$id'",$link);
-
-}
-}
-}
-
-
-
+				}
+			}
+		}
 	} elseif (($_GET['b'] == 'ceder') AND ($_GET['ID']) AND ($_POST['nick'])) {
 
 		$result = mysql_query("SELECT ID, user_ID, 

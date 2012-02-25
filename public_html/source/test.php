@@ -6,7 +6,8 @@ $txt .= '<h1>TEST DE DESARROLLO</h1><hr />';
 
 
 
-mysql_query("DELETE FROM notificaciones WHERE time < '".date('Y-m-d 20:00:00', time() - 864000)."'", $link); // 
+mysql_query("UPDATE notificaciones SET texto = '¡Bienvenido!' WHERE texto = '&iexcl;bienvenido!'", $link);
+
 
 
 

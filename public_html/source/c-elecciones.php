@@ -224,9 +224,9 @@ window.onload = function(){
 
 
 		} else	if ($pol['config']['elecciones_estado'] == 'normal') { 
-			$txt .= '<p class="amarillo">Lo siento, a&uacute;n no puedes ejercer el derecho a voto.</p>';
+			$txt .= '<p class="amarillo">Lo siento, aún no puedes votar. Podrás votar en las próximas elecciones.</p>';
 		}
-	} else { $txt .= '<p class="amarillo">Solo los Ciudadanos de '.PAIS.' tienen derecho a voto en estas Elecciones.</p>'; }
+	} else { redirect(REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].'/elecciones/votar/')); }
 
 
 
@@ -241,7 +241,6 @@ window.onload = function(){
 <table border="0" width="100%" cellspacing="8">
 <tr><td colspan="2" class="amarillo" valign="top">
 
-<h2>Calendario</h2>
 <p>Pr&oacute;ximas elecciones: <b>'.explodear(' ', $pol['config']['elecciones_inicio'], 0).'</b> (siempre a las 20:00h). Duraci&oacute;n: <b>48h</b>. Periodicidad: <b>cada 2 semanas</b>.'.(ASAMBLEA?' Coordinadores a elegir: <b>'.$pol['config']['num_escanos'].'</b>.':'').'</p>
 <table border="0" width="100%" height="50" cellpadding="2" cellspacing="0">
 <tr>';
@@ -271,7 +270,7 @@ window.onload = function(){
 	$hoy = date('j');
 	for ($i=1;$i<=28;$i++) {
 		$dia = date('j', $next_inicio + (86400 * $i));
-		if ($dia == $hoy) { $dia = '<b style="font-size:20px;color:#333;">&rarr;<br />' . $dia . '</b>';  }
+		if ($dia == $hoy) { $dia = '<b style="font-size:24px;color:#333;">' . $dia . '</b>';  }
 		if (($i == 13) OR ($i == 14)) { $dia = '<span style="color:red;">' . $dia . '</span>'; }
 		if (($i == 27) OR ($i == 28)) { $dia = '<span style="color:blue;">' . $dia . '</span>'; }
 		$txt .= '<td align="center" class="dia" valign="bottom" style="font-size:16px;color:#999;">' . $dia . '</td>';

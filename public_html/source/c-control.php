@@ -599,7 +599,65 @@ case 'gobierno':
 
 
 
-	if ($_GET['b'] == 'foro') {
+	if ($_GET['b'] == 'notificaciones') {
+
+		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/gobierno/">Gobierno</a> | Notificaciones</h1>
+		
+<br />
+
+<form action="/accion.php?a=gobierno&b=notificaciones&c=add" method="post">
+
+<table border="0">
+<tr>
+<td>Texto: </td>
+<td><input type="text" name="texto" value="" size="54" maxlength="50" /></td>
+</tr>
+<tr>
+<td>URL: </td>
+<td><input type="text" name="url" value="" size="64" maxlength="60" /> (si no cabe usa un acortador)</td>
+</tr>
+
+<tr>
+<td></td>
+<td><input type="submit" value="Crear notificación"'.(nucleo_acceso($vp['acceso']['control_gobierno'])?'':' disabled="disabled"').' /> <span style="color:red;"><b>Cuidado.</b> Lo recibirán todos los ciudadanos de '.PAIS.'.</span></td>
+</tr>
+</table>
+
+
+<hr />
+
+</form>
+
+<table border="0" cellspacing="0" cellpadding="4" class="pol_table">
+
+
+<tr>
+<th>Cuando</th>
+<th>Mensaje</th>
+<th>Emitidas</th>
+<th colspan="2">Leídas/clics</th>
+<th></th>
+</tr>';
+		$result = mysql_query("SELECT *, COUNT(*) AS num FROM notificaciones WHERE emisor = '".PAIS."' GROUP BY texto ORDER BY time DESC", $link);
+		while($r = mysql_fetch_array($result)){
+
+			$leido = 0;
+			$result2 = mysql_query("SELECT COUNT(*) AS num FROM notificaciones WHERE texto = '".$r['texto']."' AND visto = 'true'", $link);
+			while($r2 = mysql_fetch_array($result2)){ $leido = $r2['num']; }
+
+			$txt .= '<tr>
+<td align="right">'.timer($r['time']).'</td>
+<td><a href="'.$r['url'].'">'.$r['texto'].'</a></td>
+<td align="right"><b>'.$r['num'].'</b></td>
+<td align="right">'.$leido.'</td>
+<td align="right">'.num($leido*100/$r['num'], 2).'%</td>
+<td>'.(nucleo_acceso($vp['acceso']['control_gobierno'])?boton('X', '/accion.php?a=gobierno&b=notificaciones&c=borrar&noti_ID='.$r['noti_ID']):boton('X')).'</td>
+</tr>';
+		}
+
+		$txt .= '</table>';
+
+	} elseif ($_GET['b'] == 'foro') {
 
 		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/gobierno/">Gobierno</a> | Control Foro</h1>
 		
@@ -733,7 +791,7 @@ $(function() {
 
 
 
-	$txt .= '<h1><a href="/control/">Control</a>: Gobieno | <a href="/control/gobierno/foro/">Control Foro</a></h1>
+	$txt .= '<h1><a href="/control/">Control</a>: Gobieno | <a href="/control/gobierno/foro/">Control Foro</a>  <a href="/control/gobierno/notificaciones">Notificaciones</a></h1>
 
 <br />
 <form action="/accion.php?a=gobierno&b=config" method="post">

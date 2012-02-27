@@ -43,350 +43,380 @@ if (isset($_GET['bg'])) {
 } else { $body_bg = COLOR_BG; }
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
 <title><?=$txt_title?></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="language" content="es_ES" />
 <meta name="description" content="<?=$txt_description?>" />
 
-<link rel="stylesheet" type="text/css" href="<?=IMG?>style2.css?v=21" />
-
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script type="text/javascript" src="<?=IMG?>superfish.js"></script> 
-
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime()
 defcon = <?=$pol['config']['defcon']?>;
 IMG = "<?=IMG?>";
-window.google_analytics_uacct = "UA-59186-46";
 </script>
 
+<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<link rel="stylesheet" type="text/css" href="<?=IMG?>lib/kickstart/css/kickstart.css" media="all" />
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<!--<link rel="stylesheet" type="text/css" href="<?=IMG?>style2.css?v=21" />-->
 <style type="text/css">
-body { background: <?=$body_bg?>; }
-.sf-menu li, .sf-menu a, .sf-menu a:visited  { color:#555; text-shadow:1px 1px 4px #FFF; }
-.md { color:#888; float:right; font-size:14px; }
+
+/*** ESTRUCTURA ***/
+#content-left { 
+	position:fixed;
+	left:0px;
+	top:0px;
+	width:200px;
+	min-height:600px;
+}
+
+#content-right {
+	position:absolute;
+	left:200px;
+	padding:0 10px 0 20px;
+	top:0px;
+
+}
+
+#header {
+	height:60px;
+}
+
+#content {
+	
+}
+
+#footer {
+	height:50px;
+}
+
+
+/*** GENERAL ***/
+/*div { border:1px dashed #444; }*/
+body {
+	cursor:default;
+	color: #333;
+	font-family: "Arial", "Helvetica", sans-serif;
+	font-size:16px;
+}
+
+*[title] { cursor: help; }
+abbr, .punteado { border-bottom:1px dotted #999; }
+#vpc img { margin-bottom:-2px; }
+ul.breadcrumbs { margin-top:3px; margin-left:-22px; }
+
+
+/*** MENU ***/
+.menu li {
+	white-space:nowrap;
+	font-size: 22px;
+}
+.menu ul {
+	box-shadow: 6px 6px 15px #888;
+}
+
+.menu li { padding-left:8px; }
+.menu li ul li ul { margin-left:-8px; }
+.menu li ul li ul li ul { margin-left:-8px; }
+#menu-comunicacion.hover, #menu-comunicacion .hover		{ border-left:8px solid #FF6262; padding-left:0px; /* background:#FFB1B1; */ }
+#menu-informacion.hover, #menu-informacion .hover		{ border-left:8px solid #00DF00; padding-left:0px; /* background:#80EF80; */ }
+#menu-democracia.hover, #menu-democracia .hover			{ border-left:8px solid #66BEFF; padding-left:0px; /* background:#B3DFFF; */ }
+#menu-economia.hover, #menu-economia .hover				{ border-left:8px solid #FFFF51; padding-left:0px; /* background:#FFFFA8; */ }
+#menu-notificaciones.hover, #menu-notificaciones .hover	{ border-left:8px solid grey; padding-left:0px; /* background:#FFD391; */ }
+#menu-extra.hover, #menu-extra .hover					{ border-left:8px solid #FF9900; padding-left:0px; /* background:#FFD391; */ }
+
+.md { 
+	float:right;
+	color:#808080; 
+	font-size:16px;
+	margin: 0 0 0 3px; 
+}
+#menu-next {
+	min-height:350px;
+	border-right:1px solid #CCC;
+	padding:15px 5px 40px 8px;
+}
+
+
+/*** _____ ***/
+
+
+
+
+/*** NOTIFICACIONES ***/
+#noti {
+	margin:-3px -2px -3px -14px;
+	padding:8px 0 0 0;
+	width:46px;
+	height:38px;
+	overflow:hidden;
+	cursor:pointer;
+	color:#FFF;
+	text-align:center;
+	text-shadow:2px 2px 7px red;
+	font-size:26px;
+	font-weight:bold;
+	border-radius: 6px;
+	-moz-border-radius: 6px; 
+	-webkit-border-radius: 6px;
+}
+#noti:hover {
+	background-color:#FFF;
+}
+.noti_on { background: url('ico/noti_on.png') no-repeat; }
+.noti_off { background: url('ico/noti_off.png') no-repeat; }
+#noti_list {
+	box-shadow: 6px 6px 15px #888;
+	margin:0 0 0 -15px;
+	padding:0 20px 0 0;
+	position:absolute;
+	display:none;
+	max-width:500px;
+	min-width:100px;
+	overflow:hidden;
+	white-space:nowrap;
+	border:1px solid #FFF;
+	border-top:none;
+	background:#EEE;
+	border-bottom-left-radius:8px; -moz-border-radius-bottomleft:8px; -webkit-border-bottom-left-radius:8px;
+	border-bottom-right-radius:8px; -moz-border-radius-bottomright:8px; -webkit-border-bottom-right-radius:8px;
+}
+#noti_hacer { border-top:1px solid #FFF; }
+#noti_hacer a {
+	float:right;
+	color:#999;
+	margin:-2px 0 0 0;
+}
+#noti_list li:hover {
+	text-decoration:underline;
+}
+#noti_list li {
+	cursor:pointer;
+	font-size:18px;
+	list-style-type:none;
+	margin:-18px -20px 18px -40px;
+	padding:10px 15px;
+	border-top:1px solid #F8F8F8;
+}
+.noti_nuevo {
+	background:#FFF;
+	font-weight:bold;
+}
+.noti_nuevo a {
+	font-weight:bold;
+	color:red;
+}
+.noti_rep_num {
+	float:right;
+	margin:-2px 0 0 15px;
+	color:#BBB;
+	font-size:20px;
+}
+
+
+/*** VIRTUALPOL CONTENT ***/
+#doc_pad { text-align:justify; margin:20px; }
+#doc_pad ul, #doc_pad ol { margin:4px 0 -4px 0; }
+#doc_pad li { text-align:left; margin:3px 0 4px 0; }
+#doc_pad ol ol { list-style-type: lower-roman; }
+.indent { list-style-type:none; }
+
+
+
+
+
+
+/*** HACKS ***/
+strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza de kickstart */
+
 </style>
 
-
 <?=$txt_header?>
-<link rel="shortcut icon" href="/favicon.ico" /> 
-
-
 </head>
-
-<body class="fullwidth">
-<div id="container">
+<body>
 
 
-<div id="header_vp">
-<a href="http://www.<?=DOMAIN?>/" title="VirtualPol"><img src="<?=IMG?>logo-virtualpol-2.png" border="0" alt="VirtualPol" width="162" height="46" /></a>
-</div>
-
-<div id="header">
-<div id="header-in">
-
-<?php
-
-// ARREGLAR: este pedazo de trozo de codigo es un lamentable pero histórico trozo primigenio. De las primeras lineas en construirse allá por el 2008. Hay que hacerlo de nuevo.
-
-unset($txt_header);
-if ($pol['estado'] == 'ciudadano') { // ciudadano
-	$nick_lower = strtolower($pol['nick']);
+<div id="content-left">
 	
-	$elecciones = '';
-	if ($pol['config']['elecciones_estado'] == 'normal') {  
-		//$elecciones_quedan = duracion(strtotime($pol['config']['elecciones_inicio']) - time());
-		$elecciones = ' <a href="/elecciones/">Elecciones en <b style="font-size:18px;"><span class="timer" value="'.strtotime($pol['config']['elecciones_inicio']).'"></span></b></a> |'; 
-	} elseif ($pol['config']['elecciones_estado'] == 'elecciones') {  
-		$elecciones_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']);
-		switch ($pol['config']['elecciones']) {
-			case 'pres1': $elecciones = ' <a href="/elecciones/" style="color:red;"><b>1&ordf; Vuelta en curso</b>, queda <b style="font-size:18px;">'.timer(($elecciones_quedan - 86400), true).'</b></a> |';  break;
-			case 'pres2': $elecciones = ' <a href="/elecciones/" style="color:red;"><b>2&ordf; Vuelta en curso</b>, queda <b style="font-size:18px;">'.timer($elecciones_quedan, true).'</b></a> |'; break;
-			case 'parl': $elecciones = ' <a href="/elecciones/" style="color:blue;"><b>Elecciones en curso</b>, queda <b style="font-size:18px;">'.timer($elecciones_quedan, true).'</b></a> |';  break;
-		}
-	}
-	if (isset($pol['cargo'])) { $cargo_icono = ' <img src="'.IMG.'cargos/' . $pol['cargo'] . '.gif" border="0" width="16" height="16" />'; } else { $cargo_icono = ''; }
-	$txt_perfil = '<a href="/perfil/' . $pol['nick'] . '/">' . $pol['nick'] . ' ' . $cargo_icono . '</a>'.(ECONOMIA?' | <a href="/pols/"><b>' . pols($pol['pols']) . '</b> ' . MONEDA . '</a>':'').' | <a href="/msg/" title="Mensajes Privados (MP)"><img src="'.IMG.'varios/email.gif" alt="Mensajes" border="0" width="25" height="20" style="margin-bottom:-5px;" /></a> |' . $elecciones . ' <a href="/accion.php?a=logout">Salir</a>';} elseif ($pol['estado'] == 'extranjero') { // extranjero
-	$txt_perfil = '<a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <img src="'.IMG.'cargos/99.gif" style="margin-bottom:-2px;" border="0" width="16" height="16" /> (<b class="extranjero">Extranjero</b>) | <a href="/accion.php?a=logout">Salir</a>';
-} elseif ($pol['estado'] == 'turista') { // TURISTA
-	$txt_perfil = $pol['nick'] . ' (<b class="turista">Turista</b>) ' . $pol['tiempo_ciudadanizacion'] . ' | ' . boton('Solicitar Ciudadania', REGISTRAR) . ' | <a href="/accion.php?a=logout">Salir</a>';
-} elseif ($pol['estado'] == 'kickeado') { // KICKEADO
-	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Kickeado</b>) | <a href="/control/kick/"><b>Ver Kicks</b></a>';
-} elseif ($pol['estado'] == 'expulsado') { // EXPULSADO
-	$txt_perfil = $pol['nick'] . ' (<b class="expulsado">Expulsado</b>)';
-} elseif ((isset($pol['nick'])) AND ($pol['estado'] != '')) { // sin identificar, login OK
-	$txt_perfil = '<b>'.$pol['nick'].'</b> (<span class="infog"><b>Turista</b></span>) <span class="azul">' . boton('Solicitar Ciudadania', REGISTRAR) . '</span> | <a href="/accion.php?a=logout">Salir</a>';
-} else { // sin identificar, sin login
-	$txt_perfil = boton('Crear ciudadano', REGISTRAR.'?p='.PAIS).' | '.boton('Entrar', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
-}
-?>
+	<a href="http://www.virtualpol.com"><img src="<?=IMG?>media/logo-virtualpol-1_200.gif"></a>
+	
 
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-<tr>
+	<ul class="menu vertical">
 
-<td width="50" height="40"><?=notificacion('print')?></td>
-<td nowrap="nowrap" width="80" height="40">
-<a href="/" title="<?=$pol['config']['pais_des'].' de '.PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" width="60" height="40" border="0" /></a>
-</td>
-
-<td nowrap="nowrap"><span style="color:#888;font-size:18px;"><?=$pol['config']['pais_des'].' de '.PAIS?></span></td>
-
-<td align="right" valign="middle" nowrap="nowrap"><?=$txt_perfil?></td>
-
-</tr>
-</table>
-
-
-
-</div>
-</div>
-<div id="content-wrap" class="clear lcol">
-<div class="column">
-<div class="column-in">
-
-
-
-
-<?php if (ECONOMIA) { // menu VP ?>
-
-
-<dl id="menu">
-<ul class="sf-menu sf-vertical">
-	<li id="menu-1">
-		<a href="/">Comunicaci&oacute;n</a>
-		<ul style="margin-top:-38px;">
+	<li id="menu-comunicacion"><a href="/">Comunicación</a>
+		<ul>
 			<li><a href="/chats/">Chats</a></li>
-			<li><a href="/foro/"><span style="float:right;">&#9658;</span>Foros</a>
+			<li><a href="/foro/">Foros</a>
 				<ul>
-					<li><a href="/foro/ultima-actividad/">&Uacute;ltima actividad</a>
+					<li><a href="/foro/ultima-actividad/">Última actividad</a>
 					<?=(isset($pol['user_ID'])?'<li><a href="/foro/mis-respuestas/">Tu actividad</a></li>':'')?>
 				</ul>
 			</li>
-			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
-			<li><a href="/notas/">Notas</a></li>
+			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0">Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
 			<li><a href="/msg/">Mensajes Privados</a></li>
 		</ul>
 	</li>
 
-	<li id="menu-2">
-		<a href="#">Informaci&oacute;n</a>
+	<li id="menu-informacion"><a href="#">Información</a>
 			<ul>
 				<li><a href="/info/censo/">Censo <span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
-
 				<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
-
-				<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span>Registros</a>
+				<li><a href="#" style="cursor:default;">Datos</a>
 					<ul>
-						<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
-						<li><a href="http://chartbeat.com/dashboard2/?url=virtualpol.com&k=ecc15496e00f415838f6912422024d06" target="_blank" title="Estadisticas de ChartBeat">Estad&iacute;sticas extra</a></li>
-						<!--<li><a href="/geolocalizacion/">GeoLocalizaci&oacute;n</a></li>-->
-						<li><a href="/log-eventos/" title="Registro de eventos">Log de eventos</a></li>
+						<li><a href="/estadisticas/">Estadísticas</a></li>
+						<!--<li><a href="http://chartbeat.com/dashboard2/?url=virtualpol.com&k=ecc15496e00f415838f6912422024d06" target="_blank" title="Estadísticas de ChartBeat">Estadísticas web</a></li>-->
+						<li><a href="/log-eventos/">Log acciones</a></li>
 					</ul>
 				</li>
-
-
-				<li><a href="/buscar/">Buscador</a></li>
-
-				<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Sobre VirtualPol</b></a>
+				<li><a href="/buscar/">Buscar</a></li>
+				<li><a href="#" style="cursor:default;">Sobre VirtualPol...</a>
 					<ul>
 						<li><a href="http://www.virtualpol.com/video" target="_blank">Bienvenido (video)</a></li>
-						<li><a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a></li>
-						<li><a href="/historia/">Hechos hist&oacute;ricos</a></li>
-						<li><a href="http://desarrollo.virtualpol.com/" target="_blank">Blog Desarrollo</a></li>
-						<li><a href="/desarrollo" target="_blank">C&oacute;digo fuente</a></li>
-						<li><a href="https://www.ohloh.net/p/virtualpol/contributors" target="_blank">Info desarrollo</a></li>
-						<li><a href="http://www.virtualpol.com/TOS" target="_blank" title="Condiciones de Uso de VirtualPol">TOS</a></li>
+						<li><a href="http://www.virtualpol.com/manual" target="_blank">Documentación</a></li>
+						<li><a href="http://www.virtualpol.com/desarrollo" target="_blank">Desarrollo</a></li>
+						<li title="Condiciones de Uso"><a href="http://www.virtualpol.com/TOS" target="_blank">TOS</a></li>
 					</ul>
 				</li>
-
-				
 			</ul>
-	</li>
+		</li>
 
-	<li id="menu-3">
-		<a href="#">Democracia</a>
-		<ul style="margin-top:-74px;">
+	<li id="menu-democracia"><a href="#">Democracia</a>
+		<ul>
 			<li><a href="/elecciones/"><b>Elecciones</b></a></li>
 			<li><a href="/votacion/">Votaciones <span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
-			<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Gesti&oacute;n</b></a>
+			<li><a href="/control/"><b>Gestión</b></a>
 				<ul>
-					<li><a href="/control/gobierno/">Gobierno</a></li>
-					<li><a href="/doc/boletin-oficial-del-estado/">BOE</a></li>
-					<li><a href="/control/kick/">Kicks</a></li>
-					<li><a href="/control/expulsiones/">Expulsiones</a></li>
-					<li><a href="/examenes/">Ex&aacute;menes</a></li>
-					<li><a href="<?=SSL_URL?>dnie.php">Autentificaci&oacute;n</a></li>
-					<li><a href="/poderes/">Poderes</a></li><li><a href="/control/judicial/">Sanciones</a></li>
+					<li title="Control de Gobierno"><a href="/control/gobierno/">Control</a></li>
+					<li title="Bloqueos de moderación"><a href="/control/kick/">Kicks</a></li>
+					<li><a href="/examenes/">Exámenes</a></li>
+					<li><a href="<?=SSL_URL?>dnie.php">Autentificación</a></li>
 				</ul>
 			</li>
-			<li><a href="/partidos/">Partidos <span class="md"><?=$pol['config']['info_partidos']?></span></a></li>
-			<li><a href="/grupos/">Grupos</a></li>		
+			<li><a href="/grupos/">Grupos</a></li>
 			<li><a href="/cargos/">Cargos</a></li>
-			<li><a href="/hacer/">&iquest;Qu&eacute; hacer?</a></li>
+			<li><a href="/hacer/">¿Qué hacer?</a></li>
 		</ul>
 	</li>
 
-	<li id="menu-4">
-		<a href="#">Econom&iacute;a</a>
+	<?php if (ECONOMIA) { ?>
+	<li id="menu-economia"><a href="#">Economía</a>
 		<ul>
 			<?=($pol['pais']==PAIS?'<li><a href="/pols/"><b>Tus monedas</b></a></li>':'')?>
 			<li><a href="/empresas/"><b>Empresas</b></a></li>
 			<li><a href="/pols/cuentas/">Cuentas</a></li>
 			<li><a href="/subasta/">Subastas</a></li>
 			<li><a href="/mapa/">Mapa</a></li>
-			<li><a href="/info/economia/">Econom&iacute;a Global</a></li>
+			<li><a href="/info/economia/">Economía Global</a></li>
 		</ul>
 	</li>
-	
-	<li id="menu-5" class="menu-5" style="margin:10px 0 0 1px;"><a href="/votacion/">Votaciones</a></li>
+	<?php } ?>
 
-</ul></dd></dl>
-
-<hr style="margin:5px 20px -5px -5px;color:#FF6;" />
-
-<div id="palabras">
-<?php 
-foreach(explode(";", $pol['config']['palabras']) as $t) {
-	$t = explode(":", $t);
-	if ($t[0] == $pol['user_ID']) { $edit = ' <a href="/subasta/editar/" class="gris">#</a>'; } else { $edit = ''; }
-	if (isset($t[1])) { echo '<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>'.$edit."<br />\n"; } 
-	else { echo $t[2].$edit."<br />\n"; }
-}
-
-
-echo '<a href="/mapa/" class="gris" style="float:right;margin:0 11px 0 0;">Mapa</a><a href="/subasta/" class="gris" style="margin:0 0 0 -3px;">Subasta</a>';
-
-if (!isset($cuadrado_size)) {
-	$cuadrado_size = 10;
-	include('inc-mapa.php');
-	echo '<div style="margin:0 0 0 -4px;">'.$txt_mapa.'</div>';
-}
-
-
-echo '</div>';
-?>
-
-
-
-
-<?php } else { // MENU ASAMBLEARIO v3 ?>
-
-<dl id="menu">
-<ul class="sf-menu sf-vertical">
-	<li id="menu-1">
-		<a href="/">Comunicaci&oacute;n</a>
-		<ul style="margin-top:-38px;">
-			<li><a href="/chats/">Chats</a></li>
-			<li><a href="/foro/"><span style="float:right;">&#9658;</span>Foros</a>
-				<ul>
-					<li><a href="/foro/ultima-actividad/">&Uacute;ltima actividad</a>
-					<?=(isset($pol['user_ID'])?'<li><a href="/foro/mis-respuestas/">Tu actividad</a></li>':'')?>
-				</ul>
-			</li>
-			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0"><span style="float:right;">&#9658;</span>Voz</a><ul><li><a href="/info/voz/">Config. Mumble</a></li></ul></li>':'')?>
-			<li><a href="/msg/">Mensajes Privados</a></li>
+	<li id="menu-notificaciones"><a href="/">Notificaciones</a>
+		<ul>
+			<li onclick="window.location.href='/?noti=8037';"><a href="/?noti=8037">Mensaje privado de FritzDiogenes</a><span class="noti_rep_num">5</span></li>
+			<li onclick="window.location.href='/?noti=16415';"><a href="/?noti=16415">Ya puedes afiliarte a un nuevo grupo: PARLAMENTO.</a></li>
+			<li onclick="window.location.href='/?noti=16414';"><a href="/?noti=16414">Mensaje privado de ethos</a></li>
+			<li onclick="window.location.href='/?noti=8004';"><a href="/?noti=8004">Mensaje privado de GONZO</a><span class="noti_rep_num">9</span></li>
+			<li onclick="window.location.href='/?noti=11858';"><a href="/?noti=11858">Mensaje privado de Koba</a></li>
+			<li onclick="window.location.href='/?noti=11841';"><a href="/?noti=11841">Mensaje privado de kir</a></li>
+			<li onclick="window.location.href='/hacer';" id="noti_hacer"><a href="/hacer">¿Qué hacer?</a></li>
 		</ul>
 	</li>
 
-	<li id="menu-2">
-		<a href="#">Informaci&oacute;n</a>
-			<ul>
-				<li><a href="/info/censo/">Censo <span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
-
-				<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
-
-				<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span>Registros</a>
-					<ul>
-						<li><a href="/estadisticas/">Estad&iacute;sticas</a></li>
-						<li><a href="http://chartbeat.com/dashboard2/?url=virtualpol.com&k=ecc15496e00f415838f6912422024d06" target="_blank" title="Estadisticas de ChartBeat">Estad&iacute;sticas extra</a></li>
-						<li><a href="/log-eventos/">Log de eventos</a></li>
-					</ul>
-				</li>
+</ul>
 
 
-				<li><a href="/buscar/">Buscar</a></li>
+	<div id="menu-next">
+		<p>Más elementos en menu.</p>
 
-				<li><a href="#" style="cursor:default;"><span style="float:right;">&#9658;</span><b>Sobre VirtualPol</b></a>
-					<ul>
-						<li><a href="http://www.virtualpol.com/video" target="_blank">Bienvenido (video)</a></li>
-						<li><a href="http://www.virtualpol.com/manual" target="_blank">Documentaci&oacute;n</a></li>
-						<li><a href="http://www.virtualpol.com/desarrollo" target="_blank">C&oacute;digo fuente</a></li>
-						<li title="Estad&iacute;sticas de desarrollo del c&oacute;digo fuente"><a href="https://www.ohloh.net/p/virtualpol/contributors" target="_blank">Info desarrollo</a></li>
-						<li title="Condiciones de Uso de VirtualPol"><a href="http://www.virtualpol.com/TOS" target="_blank">TOS</a></li>
-					</ul>
-				</li>
-			</ul>
-	</li>
-
-	<li id="menu-3">
-		<a href="#">Democracia</a>
-		<ul style="margin-top:-74px;">
-			<li><a href="/elecciones/"><b>Elecciones</b></a></li>
-			<li><a href="/votacion/">Votaciones <span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
-			<li><a href="/control/"><span style="float:right;">&#9658;</span><b>Gesti&oacute;n</b></a>
-				<ul>
-					<li title="Control de Gobierno"><a href="/control/gobierno/">Control</a></li>
-					<li title="Bloqueos temporales de usuarios por moderaci&oacute;n"><a href="/control/kick/">Kicks</a></li>
-					<li><a href="/examenes/">Ex&aacute;menes</a></li>
-					<li><a href="<?=SSL_URL?>dnie.php">Autentificaci&oacute;n</a></li>
-				</ul>
-			</li>
-			<li><a href="/grupos/">Grupos</a></li>
-			<li><a href="/cargos/">Cargos</a></li>
-			<li><a href="/hacer/">&iquest;Qu&eacute; hacer?</a></li>
-		</ul>
-	</li>
-	<li id="menu-5" class="menu-5" style="margin-top:12px;"><a href="/foro/comunicados/">Comunicados</a></li>
-	<li id="menu-5" class="menu-5"><a href="/foro/">Foro</a></li>
-	<li id="menu-5" class="menu-5"><a href="/votacion/">Votaciones</a></li>
-</ul></dd></dl>
-
+		<div id="palabras">
 <?php
-
-echo '<div id="palabras">';
-foreach(explode(";", $pol['config']['palabras']) as $t) {
-	$t = explode(":", $t);
-	if ($t[0] == $pol['user_ID']) { $edit = ' <a href="/subasta/editar/" class="gris">#</a>'; } else { $edit = ''; }
-	if (isset($t[1])) { echo ($t[1]?'<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>':$t[2]).$edit."<br />\n"; } 
-	else { echo $t[2].$edit."<br />\n"; }
-}
-echo '</div>
-
-<div style="margin:12px 0 0 0;">
-<a href="https://www.facebook.com/pages/Asamblea-Virtual/216054178475524"><img src="'.IMG.'ico/2_32.png" alt="Facebook" width="32" height="32" /></a> 
-
-<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://15m.virtualpol.com/" data-text="Participa en la Asamblea Virtual del 15M! http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="AsambleaVirtual">Twittear</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-
-</div>';
+foreach(explode(';', $pol['config']['palabras']) as $t) {
+	$t = explode(':', $t);
+	echo ($t[1]!=''?'<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>':$t[2]).($pol['user_ID']==$t[0]?' <a href="/subasta/editar/" class="gris">#</a>':'')."<br />\n";
 }
 ?>
+		</div>
+
+	</div>
 </div>
-</div>
-<div class="content">
-<div class="content-in">
-
-
-<?=$txt.$kw?>
-
-</div>
-</div>
-</div>
-<div class="clear"></div>
-<div id="footer">
-<div id="footer-in">
 
 
 
-<div>
-<span style="float:right;font-size:14px;">
+
+<div id="content-right">
+
+	<div id="header">
+
+		<!--<?=notificacion('print')?>-->
+		<a href="/" title="<?=$pol['config']['pais_des'].' de '.PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" width="60" height="40" border="0" /></a>
+		<span style="color:#888;font-size:18px;"><?=$pol['config']['pais_des'].' de '.PAIS?></span>
+
+		<div style="float:right;">
+<?php
+/*
+} elseif ($pol['estado'] == 'extranjero') { // extranjero
+	echo '<a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <span class="icon blue medium" data-icon="@"></span> (<b class="extranjero">Extranjero</b>) | <a href="/accion.php?a=logout">Salir</a>';
+} elseif ($pol['estado'] == 'turista') { // TURISTA
+	echo $pol['nick'] . ' (<b class="turista">Turista</b>) ' . $pol['tiempo_ciudadanizacion'] . ' | ' . boton('Solicitar Ciudadania', REGISTRAR) . ' | <a href="/accion.php?a=logout">Salir</a>';
+} elseif ($pol['estado'] == 'kickeado') { // KICKEADO
+	echo $pol['nick'] . ' (<b class="expulsado">Kickeado</b>) | <a href="/control/kick/"><b>Ver Kicks</b></a>';
+} elseif ($pol['estado'] == 'expulsado') { // EXPULSADO
+	echo $pol['nick'] . ' (<b class="expulsado">Expulsado</b>)';
+} elseif ((isset($pol['nick'])) AND ($pol['estado'] != '')) { // sin identificar, login OK
+	echo '<b>'.$pol['nick'].'</b> (<span class="infog"><b>Turista</b></span>) <span class="azul">' . boton('Solicitar Ciudadania', REGISTRAR) . '</span> | <a href="/accion.php?a=logout">Salir</a>';
+} else { // sin identificar, sin login
+	echo boton('Crear ciudadano', REGISTRAR.'?p='.PAIS).' | '.boton('Entrar', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
+}
+*/
+
+
+unset($txt_header);
+if (isset($pol['user_ID'])) {
+	if ($pol['config']['elecciones_estado'] == 'normal') {  
+		$txt_elec = ' <a href="/elecciones/">Elecciones en <b style="font-size:18px;"><span class="timer" value="'.strtotime($pol['config']['elecciones_inicio']).'"></span></b></a> |'; 
+	} elseif ($pol['config']['elecciones_estado'] == 'elecciones') {  
+		$elec_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']);
+		switch ($pol['config']['elecciones']) {
+			case 'pres1': $txt_elec = ' <a href="/elecciones/" style="color:red;"><b>1&ordf; Vuelta en curso</b>, queda <b style="font-size:18px;">'.timer(($elec_quedan - 86400), true).'</b></a> |';  break;
+			case 'pres2': $txt_elec = ' <a href="/elecciones/" style="color:red;"><b>2&ordf; Vuelta en curso</b>, queda <b style="font-size:18px;">'.timer($elec_quedan, true).'</b></a> |'; break;
+			case 'parl': $txt_elec = ' <a href="/elecciones/" style="color:blue;"><b>Elecciones en curso</b>, queda <b style="font-size:18px;">'.timer($elec_quedan, true).'</b></a> |';  break;
+		}
+	}
+	echo '<a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(ECONOMIA?' | <a href="/pols/"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="/msg/" title="Mensajes Privados (MP)"><span class="icon blue medium" data-icon="@"></span></a> |'.$txt_elec.' <a href="/accion.php?a=logout">Salir</a>';
+} else {
+	echo boton('Crear ciudadano', REGISTRAR.'?p='.PAIS).' | '.boton('Entrar', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
+}
+
+?>
+		</div>
+	</div>
+
+
+	<div id="content">
+
+
+		<!-- Alternative Style -->
+		<ul class="breadcrumbs alt1">
+			<li><a href="/"><span class="icon" data-icon="I" style="margin:-3px;"></span></a></li>
+			<li><a href="">Chats</a></li>
+			<li><a href="">Plaza de 15M</a></li>
+		</ul>
+
+		<?=$txt?>
+	</div>
+
+
+
+	<div id="footer">
+		<span style="float:right;font-size:14px;">
 <?php
 unset($txt);
 echo ($pol['user_ID']==1?round((microtime(true)-TIME_START)*1000).'ms | ':'');
 ?>
-NUEVO DISEÑO | 
 <a href="http://www.virtualpol.com/TOS" target="_blank"><abbr title="Condiciones de Uso">TOS</abbr></a> | 
 <a href="http://www.virtualpol.com/desarrollo" title="Código fuente, software libre">Desarrollo</a> | 
 <a href="http://www.virtualpol.com/documentacion" target="_blank">Documentación</a> &nbsp; &nbsp; 
@@ -398,17 +428,17 @@ if (!ASAMBLEA) {
 	if ($pol['config']['pols_fraseedit'] == $pol['user_ID']) { echo ' <a href="/subasta/editar/" class="gris">#</a>'; }
 }
 ?>
-</span>
+		</span>
+	</div>
 
-</div>
-</div>
-</div>
-</div>
-
-<div id="pnick" class="azul" style="display:none;opacity:0.9;"></div>
+<div>
 
 
-<script type="text/javascript" src="<?=IMG?>scripts.js?v=23"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script type="text/javascript" src="<?=IMG?>lib/kickstart/js/prettify.js"></script>                                   <!-- PRETTIFY -->
+<script type="text/javascript" src="<?=IMG?>lib/kickstart/js/kickstart.js"></script>                                  <!-- KICKSTART -->
+
+<script type="text/javascript" src="<?=IMG?>scripts2.js?v=23"></script>
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-59186-46']);

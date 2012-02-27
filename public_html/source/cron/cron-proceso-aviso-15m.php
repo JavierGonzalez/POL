@@ -12,7 +12,7 @@ $link = conectar();
 
 foreach ($vp['paises'] AS $pais) {
 	if ($pais != '15M') {
-		evento_chat('<b>[PROCESO] Quedan <span style="color:#666;">15 minutos</span>...</b>', '0', 0, false, 'e', $pais);
+		evento_chat('<b>[#]</b> Quedan <b>15 minutos</b> para el proceso diario.', '0', 0, false, 'e', $pais);
 	}
 }
 

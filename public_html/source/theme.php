@@ -1,5 +1,5 @@
 <?php 
-if (isset($_GET['v'])) { include('theme2.php'); exit; }
+if ((isset($_GET['v'])) OR ($pol['user_ID'] == -1)) { include('theme2.php'); exit; }
 
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN.'/'); }
 
@@ -337,11 +337,9 @@ echo '</div>';
 <?php
 
 echo '<div id="palabras">';
-foreach(explode(";", $pol['config']['palabras']) as $t) {
-	$t = explode(":", $t);
-	if ($t[0] == $pol['user_ID']) { $edit = ' <a href="/subasta/editar/" class="gris">#</a>'; } else { $edit = ''; }
-	if (isset($t[1])) { echo ($t[1]?'<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>':$t[2]).$edit."<br />\n"; } 
-	else { echo $t[2].$edit."<br />\n"; }
+foreach(explode(';', $pol['config']['palabras']) as $t) {
+	$t = explode(':', $t);
+	echo ($t[1]!=''?'<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>':$t[2]).($pol['user_ID']==$t[0]?' <a href="/subasta/editar/" class="gris">#</a>':'')."<br />\n";
 }
 echo '</div>
 

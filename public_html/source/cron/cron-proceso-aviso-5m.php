@@ -13,7 +13,7 @@ $link = conectar();
 
 
 foreach ($vp['paises'] AS $pais) {
-	evento_chat('<b>[PROCESO] Quedan <span style="color:#666;">5 minutos</span>...</b>', '0', 0, false, 'e', $pais);
+	evento_chat('<b>[#]</b> Quedan <b>5 minutos</b> para el proceso diario.', '0', 0, false, 'e', $pais);
 }
 
 mysql_close($link);

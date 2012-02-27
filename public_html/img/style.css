@@ -644,7 +644,6 @@ background-position: -10px 0; /* arrow hovers for modern browsers*/
 	-webkit-border-radius: 6px;
 }
 #noti:hover {
-	background: url('ico/noti_on.png') no-repeat;
 	background-color:#FFF;
 }
 .noti_on { background: url('ico/noti_on.png') no-repeat; }

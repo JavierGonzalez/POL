@@ -499,7 +499,7 @@ ORDER BY time ASC", $link);
 		if (nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) {
 
 			$txt_table .= '<tr class="amarillo">
-<td nowrap="nowrap" style="padding-right:4px;"><h2><a href="/foro/'.$r['url'].'/" style="font-size:22px;margin-left:8px;"><b>'.$r['title'].'</b></a></h2></td>
+<td style="padding-right:4px;"><h2><a href="/foro/'.$r['url'].'/" style="font-size:22px;margin-left:8px;"><b>'.$r['title'].'</b></a></h2></td>
 <td align="right"><b style="font-size:19px;">'.$r['num'].'</b></td>
 <td style="color:green;" colspan="2"><span style="float:right;color:grey;">'.$el_acceso.'</span><span style="font-size:18px;">'.$r['descripcion'].'</span></td>
 <td align="right" width="10%">'.(nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?boton('Crear Hilo', '/foro/'.$r['url'].'/#enviar'):boton('Crear Hilo')).'</td>
@@ -516,11 +516,13 @@ LIMIT ".$r['limite'], $link);
 				if ($r2['user_estado'] != 'expulsado') {
 					$time_hilo = strtotime($r2['time']);
 					$txt_table .= '<tr>
-	<td align="right" style="padding-right:4px;" valign="top">'.crear_link($r2['nick']).'</td>
-	<td valign="top" align="right"><b>'.$r2['num'].'</b></td>
+	<td align="right" style="padding-right:4px;">'.crear_link($r2['nick']).'</td>
+	<td align="right"><b>'.$r2['num'].'</b></td>
 	<td align="right" style="padding-right:4px;">'.confianza($r2['votos']).'</td>
-	<td class="rich"><a'.($time_hilo<(time()-432000)?' style="font-weight:bold;"':'').' href="/foro/'.$r['url'].'/'.$r2['url'].'/">'.$r2['title'].'</a>'.($time_hilo>(time()-86400)?' <sup style="font-size:9px;color:red;">Nuevo!</sup>':'').'</td>
-	<td align="right" valign="top" nowrap="nowrap"><span class="timer" value="'.$time_hilo.'"></span></td>
+	
+	<td><a'.($time_hilo>(time()-432000)?' style="font-weight:bold;"':'').' href="/foro/'.$r['url'].'/'.$r2['url'].'/" class="rich">'.$r2['title'].'</a>'.($time_hilo>(time()-86400)?' <sup style="font-size:9px;color:red;">Nuevo!</sup>':'').'</td>
+	
+	<td align="right" nowrap="nowrap"><span class="timer" value="'.$time_hilo.'"></span></td>
 	</tr>';
 				}
 			}

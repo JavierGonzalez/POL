@@ -1,7 +1,7 @@
 <?php
 session_start(); 
-if ((isset($_COOKIE['teorizauser'])) AND (!isset($_SESSION['pol']['user_ID']))) { include('inc-login.php'); } // Si no hay login, hace login basico
-else { include('../config-pwd.php'); $link = @conectar(); } // Conecta MySQL solo
+if ((!isset($_SESSION['pol']['user_ID'])) AND (isset($_COOKIE['teorizauser']))) { include('inc-login.php'); // Si no hay login, hace login basico
+} else { include('../config-pwd.php'); $link = @conectar(); } // Conecta MySQL solo
 header('connection: close');
 header('Content-Type: text/plain');
 
@@ -77,7 +77,6 @@ msg_ID > '".$msg_ID."' AND
 ORDER BY msg_ID DESC LIMIT 50", $link);
 		while ($r = @mysql_fetch_array($res)) { 
 			if ($r['tipo'] != 'm') { $r['cargo'] = $r['tipo']; }
-			if ($r['cargo'] == 98) { $r['cargo'] .= '_'.$r['IP']; }
 			$t = $r['msg_ID'].' '.$r['cargo'].' '.date('H:i', strtotime($r['time'])).' '.$r['nick'].' '.$r['msg']."\n".$t; 
 		}
 		return $t;

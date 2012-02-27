@@ -865,7 +865,7 @@ VALUES ('".gen_url($_POST['nombre'])."', '".$_POST['nombre']."', '', '1', '10', 
 
 		if (($_GET['c'] == 'add') AND ($_POST['texto']) AND ($_POST['url'])) {
 			$_POST['texto'] = ucfirst(substr(strip_tags($_POST['texto']), 0, 50));
-			$_POST['url'] = str_replace('http://'.strtolower(PAIS).DOMAIN, '', substr(strip_tags($_POST['url']), 0, 60));
+			$_POST['url'] = str_replace('http://'.strtolower(PAIS).'.'.DOMAIN, '', substr(strip_tags($_POST['url']), 0, 60));
 
 			$result = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."'", $link);
 			while($r = mysql_fetch_array($result)){

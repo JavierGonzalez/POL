@@ -11,6 +11,8 @@ if ($_GET['a'] == 'mmm') {
 
 } else {						// NOTAS HOME
 	$txt_title = 'Notas';
+	$txt_nav = array('/notas'=>'Notas');
+
 	$notame_max = 160;			// Restaurados los 160 caracteres
 
 	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."foros_msg WHERE hilo_ID = '-1'", $link);
@@ -110,5 +112,6 @@ window.onload = function(){
 
 //THEME
 $txt_title = 'Notas - Tablon de anuncios';
+$txt_menu = 'comu';
 include('theme.php');
 ?>

@@ -35,7 +35,9 @@ LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
 		$txt_title = 'Mapa: Comprar propiedad';
-		$txt .= '<h1><a href="/mapa/">Mapa</a>: Comprar propiedad ' . $_GET['b'] . '</h1>
+		$txt_nav = array('/mapa'=>'Mapa', 'Comprar propiedad '.$_GET['b']);
+
+		$txt .= '<h1 class="quitar"><a href="/mapa/">Mapa</a>: Comprar propiedad ' . $_GET['b'] . '</h1>
 
 <ol>
 
@@ -60,7 +62,8 @@ LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
 		$txt_title = 'Mapa: Vender propiedad';
-		$txt .= '<h1><a href="/mapa/">Mapa</a>: Vender propiedad ' . $_GET['b'] . '</h1>
+		$txt_nav = array('/mapa'=>'Mapa', 'Vender propiedad '.$_GET['b']);
+		$txt .= '<h1 class="quitar"><a href="/mapa/">Mapa</a>: Vender propiedad ' . $_GET['b'] . '</h1>
 
 
 <form action="/accion.php?a=mapa&b=vender&ID=' . $_GET['b'] . '" method="post">
@@ -85,6 +88,7 @@ Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * 
 
 } elseif (($_GET['a'] == 'editar') AND ($_GET['b'])) { // EDITAR
 	$txt_title = 'Mapa: Editar propiedad';
+	$txt_nav = array('/mapa'=>'Mapa', 'Editar propiedad');
 
 	$result = mysql_query("SELECT *
 FROM ".SQL."mapa
@@ -135,7 +139,9 @@ Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * 
 } elseif ($_GET['a'] == 'propiedades') { //Propiedades
 
 	$txt_title = 'Mapa: Tus propiedades';
-	$txt .= '<h1><a href="/mapa/">Mapa</a>: Tus propiedades (<a href="/doc/mapa-de-vp/">Ayuda</a>)</h1>
+	$txt_nav = array('/mapa'=>'Mapa', 'Tus propiedades');
+
+	$txt .= '<h1 class="quitar"><a href="/mapa/">Mapa</a>: Tus propiedades (<a href="/doc/mapa-de-vp/">Ayuda</a>)</h1>
 
 <br />
 
@@ -332,6 +338,8 @@ ORDER BY estado ASC, time ASC", $link);
 } elseif (($_GET['a'] == 'comprar') AND ($_GET['b'])) { //Comprar
 
 	$txt_title = 'Mapa: Comprar propiedad';
+	$txt_nav = array('/mapa'=>'Mapa', 'Comprar propiedad');
+
 	for ($n=1;$n <=15;$n++) {
 		$color = generar_color();
 		$colores .= '<option value="' . $color . '" style="background:#' . $color . ';width:60px;">' . $color . '</option>';
@@ -445,6 +453,7 @@ while ($row = mysql_fetch_array($result)) {
 
 
 //THEME
-if (!$txt_title) { $txt_title = 'Mapa'; }
+if (!$txt_title) { $txt_title = 'Mapa'; $txt_nav = array('/mapa'=>'Mapa'); }
+$txt_menu = 'econ';
 include('theme.php');
 ?>

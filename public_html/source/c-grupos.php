@@ -6,8 +6,9 @@ switch ($_GET['a']) {
 
 case 'crear':
 	$txt_title = 'Crear grupo';
+	$txt_nav = array('/grupos'=>'Grupos', 'Crear grupo');
 
-	$txt .= '<h1>Crear grupo</h1>
+	$txt .= '<h1 class="quitar">Crear grupo</h1>
 
 <form action="/accion.php?a=grupos&b=crear" method="POST">
 
@@ -20,7 +21,9 @@ case 'crear':
 	break;
 
 default:
-	$txt .= '<h1>Grupos</h1>
+	$txt_nav = array('/grupos'=>'Grupos');
+
+	$txt .= '<h1 class="quitar">Grupos</h1>
 
 <p>Afiliandote a grupos podr&aacute;s acceder a sus foros, documentos, chats y votaciones. Puedes afiliarte a m&uacute;ltiples grupos.</p>
 
@@ -69,6 +72,6 @@ default:
 
 
 
-
+$txt_menu = 'demo';
 include('theme.php');
 ?>

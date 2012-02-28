@@ -108,6 +108,7 @@ Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribi
 		}
 
 		$txt_title = $r['title'];
+		$txt_nav = array('/doc'=>'Documentos', $r['title']);
 	}
 
 
@@ -115,6 +116,8 @@ Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribi
 
 
 	$txt_title = 'Documentos';
+	$txt_nav = array('/doc'=>'Documentos');
+
 	$txt .= '<h1><img src="'.IMG.'documentos/doc.gif" alt="Documento" width="20" height="22" /> Documentos: &nbsp; '.boton('Crear Documento', '/form/crear-documento/').'</h1>
 
 <br />
@@ -169,6 +172,6 @@ ORDER BY title ASC", $link);
 
 
 //THEME
-
+$txt_menu = 'info';
 include('theme.php');
 ?>

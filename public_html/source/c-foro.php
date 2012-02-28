@@ -181,6 +181,8 @@ $txt .= mysql_error($link);
 	if (!isset($el_user_ID)) { exit; }
 
 	$txt_title = 'Foro - Actividad';
+	$txt_nav = array('/foro'=>'Foro', 'Tu actividad');
+
 	$txt .= '<h1><a href="/foro/">Foro</a>: <b>'.($_GET['b']?'Actividad de '.$el_nick:'Tu actividad').'</b></h1>
 <br />';
 
@@ -247,6 +249,8 @@ LIMIT 50", $link);
 
 
 	$txt_title = 'Foro - Ultima actividad';
+	$txt_nav = array('/foro'=>'Foro', 'Última actividad');
+
 	$txt .= '<h1><a href="/foro/">Foro</a>: <b>Ultima actividad</b></h1>
 <br />
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">
@@ -318,7 +322,10 @@ LIMIT 1", $link);
 			paginacion('hilo', '/'.$return_url, $r['ID'], $_GET['c'], $r['num']);
 			
 			if ($_GET['c']) { $pag_title = ' - P&aacute;gina: '.$_GET['c']; }
+			
 			$txt_title = $r['title'].' - Foro: '.$r['foro_title'].$pag_title;
+			$txt_nav = array('/foro'=>'Foro', '/foro/'.$r['foro_url']=>$r['foro_title'], $r['title']);
+
 			$txt_description = $r['title'].' - Foro: '.$r['foro_title'].$pag_title;
 
 
@@ -382,6 +389,8 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.$p_li
 } elseif ($_GET['a'] == 'papelera') { //foro/papelera/
 
 	$txt_title = 'Papelera';
+	$txt_nav = array('/foro'=>'Foro', '/foro/papelera'=>'Papelera');
+
 	$txt .= '<h1><a href="/foro/">Foro</a>: Papelera</h1>
 <br />
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">
@@ -436,6 +445,7 @@ ORDER BY time2 DESC", $link);
 			$return_url = 'foro/'.$r['url'].'/';
 			
 			$txt_title = 'Foro: '.$r['title'].' - '.$r['descripcion'];
+			$txt_nav = array('/foro'=>'Foro', $r['title']);
 
 			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) { $crear_hilo = '#enviar'; } else { $crear_hilo = ''; }
 
@@ -533,6 +543,7 @@ LIMIT ".$r['limite'], $link);
 
 
 	$txt_title = 'Foro';
+	$txt_nav = array('/foro'=>'Foro');
 	$txt .= '<div style="float:right;color:green;">Hay otros <b>'.$foro_oculto_num.'</b> foros ocultados <a href="/grupos/">ver grupos</a> | <a href="/foro/ultima-actividad/">&Uacute;ltima actividad</a> | <a href="/foro/mis-respuestas/">Tu actividad</a> &nbsp; [<a href="/control/gobierno/foro/" title="Configuraci&oacute;n del foro">Configuraci&oacute;n</a>]</div>
 
 <h1><b>Foro</b>:</h1>
@@ -553,5 +564,6 @@ LIMIT ".$r['limite'], $link);
 
 
 //THEME
+$txt_menu = 'comu';
 include('theme.php');
 ?>

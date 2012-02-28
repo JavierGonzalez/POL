@@ -1,6 +1,16 @@
 <?php 
 include('inc-login.php');
 
+
+/*
+
+HAY QUE REEMPLAZAR Y ELIMINAR ESTE TROZO DE CODIGO CUANTO ANTES. 
+
+ES UN FRACASO ESPERPENTICO. UN HORROR.
+
+*/
+
+
 function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 	global $pol, $link;
 

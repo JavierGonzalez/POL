@@ -167,5 +167,7 @@ $txt_header .= '
 
 //THEME
 $txt_title = 'Poderes de '.PAIS.': Ejecutivo, Legislativo, Judicial, Economico, Terratenientes';
+$txt_nav = array('Poderes');
+$txt_menu = 'info';
 include('theme.php');
 ?>

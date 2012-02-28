@@ -18,6 +18,8 @@ function red_social($red, $ID) {
 }
 
 $txt_title = 'Sala de seguir';
+$txt_nav = array('Seguir');
+
 $txt .= '<h1>Sala de Seguir</h1>
 <br />
 <table border="0">';
@@ -171,6 +173,7 @@ case 'voz':
 
 
 	$txt_title = 'Chat de Voz';
+	$txt_nav = array('Chat de voz');
 	break;
 
 
@@ -337,6 +340,7 @@ FROM users ".$order_by." LIMIT ".$p_limit, $link);
 	$txt .= '</table><p>' . $p_paginas . '</p>';
 	
 	$txt_title = 'Censo de Ciudadanos';
+	$txt_nav = array('/info/censo'=>'Censo');
 	break;
 
 
@@ -347,6 +351,8 @@ case 'estadisticas':
 case 'economia':
 	$txt .= '<h1>'.MONEDA.' Econom&iacute;a Global:</h1>';
 	$txt_title = 'Economia Global';
+	$txt_nav = array('/info/economia'=>'Economía global');
+	$txt_menu = 'econ';
 
 
 
@@ -434,7 +440,7 @@ if ($r['impuestos'] > 0) {
 $txt .= '<td align="right">'.pols($r['inem']).'</td>
 
 <td align="right">'.pols($r['salario_medio']).'</td>
-<td align="right">'.pols(round($r['pols_ciudadanos']/$r['num_ciudadanos'])).'</td>
+<td align="right">'.($r['num_ciudadanos']>0?pols(round($r['pols_ciudadanos']/$r['num_ciudadanos'])):0).'</td>
 
 <td align="right">'.pols($r['pols_ciudadanos']).'</td>
 <td>+</td>
@@ -525,7 +531,7 @@ $txt .= '</ol>
 
 <td align="center" colspan="6" valign="top">
 <h2>Reparto econ&oacute;mico:</h2><br />
-<img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.round(($total_pais['POL']*100)/$total_moneda).','.round(($total_pais['Hispania']*100)/$total_moneda).'&chs=300x190&chl=POL|Hispania&chco='.substr($vp['bg']['POL'],1).','.substr($vp['bg']['Hispania'],1).'" alt="Reparto economico." />
+<img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.round(($total_pais['RSSV']*100)/$total_moneda).','.round(($total_pais['Hispania']*100)/$total_moneda).'&chs=300x190&chl=RSSV|Hispania&chco='.substr($vp['bg']['RSSV'],1).','.substr($vp['bg']['Hispania'],1).'" alt="Reparto economico." />
 
 <br /><br />
 
@@ -534,8 +540,8 @@ $txt .= '</ol>
 <img src="http://chart.apis.google.com/chart?cht=lc
 &chs=330x350
 &cht=bvs
-&chco='.substr($vp['bg']['POL'],1).','.substr($vp['bg']['Hispania'],1).'
-&chd=t:'.$gph['POL'].','.$total_pais['POL'].'|'.$gph['Hispania'].','.$total_pais['Hispania'].'
+&chco='.substr($vp['bg']['RSSV'],1).','.substr($vp['bg']['Hispania'],1).'
+&chd=t:'.$gph['RSSV'].','.$total_pais['RSSV'].'|'.$gph['Hispania'].','.$total_pais['Hispania'].'
 &chds=0,'.$moneda_mundial.'
 &chxt=r
 &chxl=0:||'.round($moneda_mundial / 2).'|'.$moneda_mundial.'
@@ -562,5 +568,6 @@ $txt .= '</ol>
 
 
 //THEME
+if (!isset($txt_menu)) { $txt_menu = 'info'; }
 include('theme.php');
 ?>

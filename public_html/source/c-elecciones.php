@@ -51,6 +51,8 @@ if ($_GET['a'] == 'votar') {
 		}
 
 		$txt_title = $elec_nombre;
+		$txt_nav = array('/elecciones'=>'Elecciones', $elec_nombre);
+
 		$txt .= '<h1>' . (ASAMBLEA?'Elecciones de Coordinadores':$elec_nombre) . '</h1>';
 		
 
@@ -630,5 +632,7 @@ $txt_header .= '<style type="text/css">#elec table { table-layout:fixed; } #elec
 
 //THEME
 $txt_title = 'Elecciones';
+$txt_nav = array('/elecciones'=>'Elecciones');
+$txt_menu = 'demo';
 include('theme.php');
 ?>

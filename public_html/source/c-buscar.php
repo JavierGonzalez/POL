@@ -34,5 +34,6 @@ $txt .= '
 
 //THEME
 $txt_title = 'Buscar';
+$txt_menu = 'info';
 include('theme.php');
 ?>

@@ -118,6 +118,8 @@ elseif ($pol['estado'] != 'ciudadano') { $txt = '<p>Debes <a href="'.REGISTRAR.'
 
 
 //THEME
-$txt_title = '&iquest;Qu&eacute; puedes hacer?';
+$txt_title = '¿Qué puedes hacer?';
+$txt_nav = array('/hacer'=>'¿Qué hacer?');
+$txt_menu = 'info';
 include('theme.php');
 ?>

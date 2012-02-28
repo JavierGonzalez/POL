@@ -122,5 +122,6 @@ ORDER BY nick ASC", $link);
 
 //THEME
 $txt_title = 'Cargos';
+$txt_menu = 'demo';
 include('theme.php');
 ?>

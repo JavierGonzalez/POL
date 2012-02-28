@@ -110,6 +110,8 @@ switch ($r['accion']) {
 
 
 //THEME
-$txt_title = 'Log de Eventos';
+$txt_title = 'Log de eventos';
+$txt_nav = array('Log de eventos');
+$txt_menu = 'info';
 include('theme.php');
 ?>

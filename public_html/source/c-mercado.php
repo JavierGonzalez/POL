@@ -66,5 +66,7 @@ LIMIT 15", $link);
 
 //THEME
 $txt_title = 'Mercado - ' . $_GET['a'];
+$txt_nav = array('Mercado');
+$txt_menu = 'econ';
 include('theme.php');
 ?>

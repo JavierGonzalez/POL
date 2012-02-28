@@ -8,6 +8,8 @@ if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['
 $result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
 while ($r = mysql_fetch_array($result)) { 
 	
+	$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo']);
+
 	if ($r['pais'] != PAIS) { header('Location: http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'.($_GET['b']?$_GET['b'].'/':'')); exit; }
 
 
@@ -52,7 +54,7 @@ if ($externo) {
 		$txt .= '<span style="float:right;"><a href="http://www.'.DOMAIN.'/registrar/">Crear ciudadano</a></span>'.$titulo;
 	}
 } else {
-	$txt .= '<span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones/">Opciones</a>] [<a href="/chats/'.$_GET['a'].'/log/">Log</a>]</span><a href="/chats/">Chat</a>: '.$titulo;
+	$txt .= '<span class="quitar"><span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones/">Opciones</a>] [<a href="/chats/'.$_GET['a'].'/log/">Log</a>]</span><a href="/chats/">Chat</a>: '.$titulo.'</span>';
 }
 
 

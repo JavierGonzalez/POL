@@ -57,6 +57,7 @@ while($r = mysql_fetch_array($result)){
 
 if ($_GET['a'] == 'crear') {
 	$txt_title = 'Borrador de votación';
+	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores', 'Crear borrador');
 
 	// EDITAR
 	if (is_numeric($_GET['b'])) {
@@ -253,6 +254,7 @@ function opcion_nueva() {
 } elseif ($_GET['a'] == 'borradores') { // VER BORRADORES
 
 	$txt_title = 'Borradores de votaciones';
+	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores');
 	
 	$txt .= '<h1><a href="/votacion">Votaciones</a>:</h1>
 
@@ -326,7 +328,9 @@ LIMIT 1", $link);
 		$respuestas = explode("|", $r['respuestas']);
 		$respuestas_desc = explode("][", $r['respuestas_desc']);
 		$respuestas_num = count($respuestas) - 1;
+		
 		$txt_title = 'Votacion: ' . strtoupper($r['tipo']) . ' | ' . $r['pregunta'];
+		$txt_nav = array('/votacion'=>'Votaciones', strtoupper($r['tipo']), $r['pregunta']);
 
 		if ($r['estado'] == 'ok') { 
 			$tiempo_queda =  '<span style="color:blue;">Quedan <span class="timer" value="'.$time_expire.'"></span>.</span>'; 
@@ -742,6 +746,7 @@ ORDER BY siglas ASC", $link);
 	while($r = mysql_fetch_array($result)) { $borradores_num = $r['num']; }
 
 	$txt_title = 'Votaciones';
+	$txt_nav = array('/votacion'=>'Votaciones');
 	
 	$txt .= '
 <span style="float:right;text-align:right;">
@@ -845,5 +850,6 @@ LIMIT 500", $link);
 
 
 //THEME
+$txt_menu = 'demo';
 include('theme.php');
 ?>

@@ -70,27 +70,38 @@ IMG = "<?=IMG?>";
 	left:0px;
 	top:0px;
 	width:200px;
-	min-height:600px;
+}
+#menu-next {
+	min-height:280px;
+	border-right:1px solid #CCC;
+	padding:10px 5px 10px 8px;
+	box-shadow:inset 0px 10px 20px #EEE;
 }
 
 #content-right {
 	position:absolute;
 	left:200px;
+	right:0;
 	padding:0 10px 0 20px;
 	top:0px;
+	min-width:760px;
 
 }
-
 #header {
 	height:60px;
 }
-
-#content {
-	
+#header-left {
+}
+#header-right {
+	float:right;
 }
 
+#content {
+	min-height:500px;
+}
 #footer {
 	height:50px;
+	margin-top:20px;
 }
 
 
@@ -101,13 +112,34 @@ body {
 	color: #333;
 	font-family: "Arial", "Helvetica", sans-serif;
 	font-size:16px;
+	min-width:900px;
+}
+.quitar { display:none; }
+
+a { 
+	text-decoration:none;
+}
+a:hover {
+	text-decoration:underline;
 }
 
 *[title] { cursor: help; }
 abbr, .punteado { border-bottom:1px dotted #999; }
 #vpc img { margin-bottom:-2px; }
 ul.breadcrumbs { margin-top:3px; margin-left:-22px; }
+#txt-tab {
+	margin:-45px 0 0 0;
+}
+h1 { font-size:28px; }
+h2 { font-size:22px; }
+h3 { font-size:18px; }
 
+#vpc { box-shadow:inset -10px 5px 20px #EEE; padding-left:15px; }
+#vp_c { margin: -19px 0 0 -20px; }
+.tabs a { 
+	border-top-left-radius: 10px; -moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px;
+	border-top-right-radius:10px; -moz-border-radius-topright:10px; -webkit-border-top-right-radius:10px;
+}
 
 /*** MENU ***/
 .menu li {
@@ -121,23 +153,19 @@ ul.breadcrumbs { margin-top:3px; margin-left:-22px; }
 .menu li { padding-left:8px; }
 .menu li ul li ul { margin-left:-8px; }
 .menu li ul li ul li ul { margin-left:-8px; }
-#menu-comunicacion.hover, #menu-comunicacion .hover		{ border-left:8px solid #FF6262; padding-left:0px; /* background:#FFB1B1; */ }
-#menu-informacion.hover, #menu-informacion .hover		{ border-left:8px solid #00DF00; padding-left:0px; /* background:#80EF80; */ }
-#menu-democracia.hover, #menu-democracia .hover			{ border-left:8px solid #66BEFF; padding-left:0px; /* background:#B3DFFF; */ }
-#menu-economia.hover, #menu-economia .hover				{ border-left:8px solid #FFFF51; padding-left:0px; /* background:#FFFFA8; */ }
-#menu-notificaciones.hover, #menu-notificaciones .hover	{ border-left:8px solid grey; padding-left:0px; /* background:#FFD391; */ }
-#menu-extra.hover, #menu-extra .hover					{ border-left:8px solid #FF9900; padding-left:0px; /* background:#FFD391; */ }
+#menu-noti li { overflow:hidden; }
+#menu-comu.hover, #menu-comu .hover, #menu-comu.menu-sector { border-left:8px solid #FF6262; padding-left:0px; }
+#menu-info.hover, #menu-info .hover, #menu-info.menu-sector { border-left:8px solid #00DF00; padding-left:0px; }
+#menu-demo.hover, #menu-demo .hover, #menu-demo.menu-sector { border-left:8px solid #66BEFF; padding-left:0px; }
+#menu-econ.hover, #menu-econ .hover, #menu-econ.menu-sector { border-left:8px solid #FFFF51; padding-left:0px; }
+#menu-noti.hover, #menu-noti .hover, #menu-noti.menu-sector { border-left:8px solid orange;    padding-left:0px; }
+#menu-extra.hover, #menu-extra .hover { border-left:8px solid #FF9900; padding-left:0px; }
 
 .md { 
 	float:right;
 	color:#808080; 
 	font-size:16px;
 	margin: 0 0 0 3px; 
-}
-#menu-next {
-	min-height:350px;
-	border-right:1px solid #CCC;
-	padding:15px 5px 40px 8px;
 }
 
 
@@ -226,13 +254,23 @@ ul.breadcrumbs { margin-top:3px; margin-left:-22px; }
 
 
 
-
-
-
 /*** HACKS ***/
 strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza de kickstart */
-
+#content-header.fixed {
+	position:fixed;
+	top:-4px;
+	left:220px;
+	right:0;
+	padding:0 10px 0 0;
+	margin:0;
+	height:40px;
+	background:#FFF;
+	z-index:25;
+	box-shadow:-15px 3px 6px #EEE;
+}
 </style>
+
+
 
 <?=$txt_header?>
 </head>
@@ -241,12 +279,11 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 
 <div id="content-left">
 	
-	<a href="http://www.virtualpol.com"><img src="<?=IMG?>media/logo-virtualpol-1_200.gif"></a>
+	<a href="http://www.virtualpol.com"><img src="<?=IMG?>media/logo-virtualpol-1_200.gif" alt="VirtualPol" /></a>
 	
-
 	<ul class="menu vertical">
 
-	<li id="menu-comunicacion"><a href="/">Comunicación</a>
+	<li id="menu-comu"<?=($txt_menu=='comu'?' class="menu-sector"':'')?>><a href="/">Comunicación</a>
 		<ul>
 			<li><a href="/chats/">Chats</a></li>
 			<li><a href="/foro/">Foros</a>
@@ -260,7 +297,7 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 		</ul>
 	</li>
 
-	<li id="menu-informacion"><a href="#">Información</a>
+	<li id="menu-info"<?=($txt_menu=='info'?' class="menu-sector"':'')?>><a href="#">Información</a>
 			<ul>
 				<li><a href="/info/censo/">Censo <span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
 				<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
@@ -283,7 +320,7 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 			</ul>
 		</li>
 
-	<li id="menu-democracia"><a href="#">Democracia</a>
+	<li id="menu-demo"<?=($txt_menu=='demo'?' class="menu-sector"':'')?>><a href="#">Democracia</a>
 		<ul>
 			<li><a href="/elecciones/"><b>Elecciones</b></a></li>
 			<li><a href="/votacion/">Votaciones <span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
@@ -301,8 +338,8 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 		</ul>
 	</li>
 
-	<?php if (ECONOMIA) { ?>
-	<li id="menu-economia"><a href="#">Economía</a>
+<?php if (ECONOMIA) { ?>
+	<li id="menu-econ"<?=($txt_menu=='econ'?' class="menu-sector"':'')?>><a href="#">Economía</a>
 		<ul>
 			<?=($pol['pais']==PAIS?'<li><a href="/pols/"><b>Tus monedas</b></a></li>':'')?>
 			<li><a href="/empresas/"><b>Empresas</b></a></li>
@@ -312,9 +349,9 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 			<li><a href="/info/economia/">Economía Global</a></li>
 		</ul>
 	</li>
-	<?php } ?>
+<?php } ?>
 
-	<li id="menu-notificaciones"><a href="/">Notificaciones</a>
+	<li id="menu-noti"><a href="/">Notificaciones</a>
 		<ul>
 			<li onclick="window.location.href='/?noti=8037';"><a href="/?noti=8037">Mensaje privado de FritzDiogenes</a><span class="noti_rep_num">5</span></li>
 			<li onclick="window.location.href='/?noti=16415';"><a href="/?noti=16415">Ya puedes afiliarte a un nuevo grupo: PARLAMENTO.</a></li>
@@ -326,20 +363,23 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 		</ul>
 	</li>
 
-</ul>
+	</ul>
 
 
 	<div id="menu-next">
-		<p>Más elementos en menu.</p>
 
-		<div id="palabras">
+		<p id="palabras">
 <?php
 foreach(explode(';', $pol['config']['palabras']) as $t) {
 	$t = explode(':', $t);
 	echo ($t[1]!=''?'<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>':$t[2]).($pol['user_ID']==$t[0]?' <a href="/subasta/editar/" class="gris">#</a>':'')."<br />\n";
 }
 ?>
-		</div>
+		</p>
+
+		<p>Más elementos en menu.</p>
+
+		<span class="icon gray large" data-icon="F"></span>
 
 	</div>
 </div>
@@ -352,28 +392,11 @@ foreach(explode(';', $pol['config']['palabras']) as $t) {
 	<div id="header">
 
 		<!--<?=notificacion('print')?>-->
-		<a href="/" title="<?=$pol['config']['pais_des'].' de '.PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" width="60" height="40" border="0" /></a>
-		<span style="color:#888;font-size:18px;"><?=$pol['config']['pais_des'].' de '.PAIS?></span>
+		<a href="/" title="<?=$pol['config']['pais_des'].' de '.PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" height="50" border="0" /></a>
+		<span id="header-left"><?=$pol['config']['pais_des'].' de '.PAIS?></span>
 
-		<div style="float:right;">
+		<span id="header-right">
 <?php
-/*
-} elseif ($pol['estado'] == 'extranjero') { // extranjero
-	echo '<a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'/">'.$pol['nick'].'</a> <span class="icon blue medium" data-icon="@"></span> (<b class="extranjero">Extranjero</b>) | <a href="/accion.php?a=logout">Salir</a>';
-} elseif ($pol['estado'] == 'turista') { // TURISTA
-	echo $pol['nick'] . ' (<b class="turista">Turista</b>) ' . $pol['tiempo_ciudadanizacion'] . ' | ' . boton('Solicitar Ciudadania', REGISTRAR) . ' | <a href="/accion.php?a=logout">Salir</a>';
-} elseif ($pol['estado'] == 'kickeado') { // KICKEADO
-	echo $pol['nick'] . ' (<b class="expulsado">Kickeado</b>) | <a href="/control/kick/"><b>Ver Kicks</b></a>';
-} elseif ($pol['estado'] == 'expulsado') { // EXPULSADO
-	echo $pol['nick'] . ' (<b class="expulsado">Expulsado</b>)';
-} elseif ((isset($pol['nick'])) AND ($pol['estado'] != '')) { // sin identificar, login OK
-	echo '<b>'.$pol['nick'].'</b> (<span class="infog"><b>Turista</b></span>) <span class="azul">' . boton('Solicitar Ciudadania', REGISTRAR) . '</span> | <a href="/accion.php?a=logout">Salir</a>';
-} else { // sin identificar, sin login
-	echo boton('Crear ciudadano', REGISTRAR.'?p='.PAIS).' | '.boton('Entrar', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
-}
-*/
-
-
 unset($txt_header);
 if (isset($pol['user_ID'])) {
 	if ($pol['config']['elecciones_estado'] == 'normal') {  
@@ -390,21 +413,28 @@ if (isset($pol['user_ID'])) {
 } else {
 	echo boton('Crear ciudadano', REGISTRAR.'?p='.PAIS).' | '.boton('Entrar', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
 }
-
 ?>
-		</div>
+		</span>
 	</div>
 
 
 	<div id="content">
 
+<?php 
+// CONTROLES PROVISIONALES - BORRAR
+$txt_tab = array('Chat', 'Opciones', 'Log');	
+?>
 
-		<!-- Alternative Style -->
-		<ul class="breadcrumbs alt1">
-			<li><a href="/"><span class="icon" data-icon="I" style="margin:-3px;"></span></a></li>
-			<li><a href="">Chats</a></li>
-			<li><a href="">Plaza de 15M</a></li>
-		</ul>
+		<div id="content-header">
+			<ul class="breadcrumbs alt1">
+				<li><a href="/"><span class="icon" data-icon="I" style="margin:-3px;"></span></a></li>
+				<?php foreach ($txt_nav AS $u => $a) { echo '<li><a href="'.(!is_numeric($u)?$u:'#').'">'.$a.'</a></li>'; } ?>
+			</ul>
+
+			<ul id="txt-tab" class="tabs right">
+				<?php foreach ($txt_tab AS $u => $a) { echo '<li><a href="'.(!is_numeric($u)?$u:'#').'">'.$a.'</a></li>'; } ?>
+			</ul>
+		</div>
 
 		<?=$txt?>
 	</div>
@@ -435,11 +465,31 @@ if (!ASAMBLEA) {
 
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script type="text/javascript" src="<?=IMG?>lib/kickstart/js/prettify.js"></script>                                   <!-- PRETTIFY -->
-<script type="text/javascript" src="<?=IMG?>lib/kickstart/js/kickstart.js"></script>                                  <!-- KICKSTART -->
+<script type="text/javascript" src="<?=IMG?>lib/kickstart/js/prettify.js"></script>
+<script type="text/javascript" src="<?=IMG?>lib/kickstart/js/kickstart.js"></script>
 
 <script type="text/javascript" src="<?=IMG?>scripts2.js?v=23"></script>
 <script type="text/javascript">
+/*
+$(function () {
+	var msie6 = $.browser == 'msie' && $.browser.version < 7;
+	if (!msie6) {
+		var top = $('#content-header').offset().top - parseFloat($('#content-header').css('margin-top').replace(/auto/, 0));
+		$(window).scroll(function (event) {
+			if ($(this).scrollTop() >= top) {
+				$('#content-header').addClass('fixed');
+			} else {
+				$('#content-header').removeClass('fixed');
+			}
+		});
+	}
+});
+*/
+
+
+
+
+/* GA */
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-59186-46']);
 _gaq.push(['_setDomainName', '.virtualpol.com']);
@@ -449,9 +499,8 @@ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async
 ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
-</script>
 
-<script type="text/javascript">
+/* CHARTBEAT */
 var _sf_async_config={uid:26055,domain:"virtualpol.com"};
 (function(){
   function loadChartbeat() {

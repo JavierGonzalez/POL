@@ -376,6 +376,7 @@ $txt .= '</ul>
 		$txt .= '</div>';
 
 		$txt_title = $nick.' - '.ucfirst($r['estado']) . ' de '.$r['pais'];
+		$txt_nav = array('/info/censo'=>'Censo', '/perfil/'.$nick=>$nick);
 		$txt_description = $txt_title . ' ' . str_replace("\"", "", strip_tags($r['text']));
 
 	} else { header("HTTP/1.0 404 Not Found"); exit; }
@@ -412,5 +413,6 @@ window.onload = function(){
 ';
 
 //THEME
+$txt_menu = 'info';
 include('theme.php');
 ?>

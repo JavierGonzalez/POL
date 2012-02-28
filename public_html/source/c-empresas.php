@@ -15,9 +15,12 @@ WHERE ID = '" . $_GET['b'] . "'
 AND user_ID = '" . $pol['user_ID'] . "'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
+		
 		$txt_title = 'Empresa: ' . $r['nombre'] . ' - Sector: ' . $r['cat_nom'];
+		$txt_nav = array('/empresas'=>'Empresas', '/empresas/'.$r['url']=>$r['cat_nom'], $r['nombre'], 'Editar');
+
 		include('inc-functions-accion.php');
-		$txt .= '<h1>Editar: ' . $r['nombre'] . '</h1>
+		$txt .= '<h1 class="quitar">Editar: ' . $r['nombre'] . '</h1>
 
 <form action="/accion.php?a=empresa&b=editar&ID=' . $r['ID'] . '" method="post">
 <input type="hidden" name="return" value="' . $r['cat_url'] . '/' . $r['url'] . '/" />
@@ -42,7 +45,7 @@ ORDER BY num DESC", $link);
 		$txt_li .= '<option value="' . $r['ID'] . '">' . $r['nombre'] . '</option>';
 	}
 
-	$txt .= '<h1><a href="/empresas/">Empresas</a>: Crear Empresa</h1>
+	$txt .= '<h1 class="quitar"><a href="/empresas/">Empresas</a>: Crear Empresa</h1>
 
 <form action="/accion.php?a=empresa&b=crear" method="post">
 
@@ -68,7 +71,10 @@ ORDER BY num DESC", $link);
 		$cat_nom = $r['nombre'];
 		$cat_num = $r['num'];
 	}
-	$txt .= '<h1><a href="/empresas/">Empresas</a>: ' . $cat_nom . '</h1>
+	
+	$txt_nav = array('/empresas'=>'Empresas', $cat_nom);
+
+	$txt .= '<h1 class="quitar"><a href="/empresas/">Empresas</a>: ' . $cat_nom . '</h1>
 <br />
 <table border="0" cellspacing="0" cellpadding="2" class="pol_table">';
 
@@ -104,8 +110,10 @@ LIMIT 1", $link);
 		$r['pv']++;
 
 		$txt_title = 'Empresa: ' . $r['nombre'] . ' - Sector: ' . $r['cat_nom'];
+		$txt_nav = array('/empresas'=>'Empresas', '/empresas/'.$_GET['a']=>$r['cat_nom'], $r['nombre']);
+
 		if ($pol['user_ID'] == $r['user_ID']) { $editar .= boton('Editar', '/empresas/editar/' . $r['ID'] . '/'); }
-		$txt .= '<h1><a href="/empresas/">Empresas</a>: <a href="/empresas/' . $r['cat_url'] . '/">' . $r['cat_nom'] . '</a> | ' . $r['nombre'] . ' ' . $editar . '</h1>
+		$txt .= '<h1 class="quitar"><a href="/empresas/">Empresas</a>: <a href="/empresas/' . $r['cat_url'] . '/">' . $r['cat_nom'] . '</a> | ' . $r['nombre'] . ' ' . $editar . '</h1>
 <br />
 
 <div class="amarillo">' . $r['descripcion'] . '</div>
@@ -125,7 +133,10 @@ Cantidad de acciones: <input type="text" name="cantidad" size="8" maxlength="3" 
 	}
 
 } else { // #EMPRESAS
-	$txt .= '<h1>Empresas:</h1>
+	
+	$txt_nav = array('/empresas'=>'Empresas');
+
+	$txt .= '<h1 class="quitar">Empresas:</h1>
 
 <p>' . boton('Crear Empresa', '/empresas/crear-empresa/', false, '', $pol['config']['pols_empresa']) . '</p>
 
@@ -153,5 +164,6 @@ ORDER BY orden ASC", $link);
 
 //THEME
 if (!$txt_title) { $txt_title = 'Empresas'; }
+$txt_menu = 'econ';
 include('theme.php');
 ?>

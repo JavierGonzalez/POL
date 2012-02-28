@@ -24,7 +24,8 @@ function gen_datos($datos, $cero=false, $datos2=false) {
 	return '&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|__|'.$dato_last.'&chd=s:'.$datos;
 }
 
-$txt_title = 'Estad&iacute;sticas';
+$txt_title = 'Estadísticas';
+$txt_nav = array('Estadísticas');
 
 
 if ($_GET['a'] == 'full-tab') {
@@ -299,5 +300,6 @@ $txt_header .= '<style type="text/css">#stats p { margin:4px; }</style>';
 
 
 //THEME
+$txt_menu = 'info';
 include('theme.php');
 ?>

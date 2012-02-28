@@ -1,5 +1,5 @@
 <?php 
-if ((isset($_GET['v'])) OR ($pol['user_ID'] == -1)) { include('theme2.php'); exit; }
+if ((isset($_GET['v'])) OR ($pol['user_ID'] == 1)) { include('theme2.php'); exit; }
 
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN.'/'); }
 

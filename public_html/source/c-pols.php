@@ -7,6 +7,7 @@ pol_cuentas			(ID, nombre, user_ID, pols, nivel, time)
 
 if (($_GET['a'] == 'cuentas') AND ($_GET['b'] == 'crear')) {
 	$txt_title = 'Crear nueva cuenta bancaria';
+	$txt_nav = array('/pols'=>'Economía', 'Crear cuenta bancaria');
 
 	$txt .= '<h1>Crear nueva Cuenta Bancaria</h1>
 
@@ -36,6 +37,7 @@ LIMIT 1", $link);
 
 	if ($ID) { //existe cuenta
 		$txt_title = 'Cuenta bancaria: ' . $nombre;
+		$txt_nav = array('/pols'=>'Economía', '/pols/cuentas'=>'Cuenta bancaria', $nombre);
 
 		$result = mysql_unbuffered_query("SELECT COUNT(*) AS num FROM ".SQL."transacciones WHERE emisor_ID = '-" . $ID . "' OR receptor_ID = '-" . $ID . "'", $link);
 		while($row = mysql_fetch_array($result)){ $total = $row['num']; }
@@ -113,6 +115,7 @@ LIMIT " . $p_limit, $link);
 	}
 	$txt .= '<form action="/accion.php?a=exencion_impuestos" method="post">';
 	$txt_title = 'Cuentas Bancarias';
+	$txt_nav = array('/pols'=>'Economía', 'Cuentas bancarias');
 	$txt .= '<h1>Cuentas:</h1>
 
 <p>' . boton('Crear Cuenta', '/pols/cuentas/crear/', false, false, $pol['config']['pols_cuentas']) . '</p>
@@ -200,6 +203,7 @@ ORDER BY nivel DESC, nombre ASC", $link);
 	if ($select_origen) { $select_origen = '<optgroup label="Cuentas">' . $select_origen . '</optgroup>'; }
 
 	$txt_title = 'Moneda';
+	$txt_nav = array('/pols'=>'Economía');
 
 if ($_GET['c']) { $focus = 'concepto'; } elseif ($_GET['b']) { $focus = 'pols'; } else { $focus = 'ciudadano'; }
 $txt_header .= '
@@ -326,5 +330,6 @@ LIMIT " . $p_limit, $link);
 
 
 //THEME
+$txt_menu = 'econ';
 include('theme.php');
 ?>

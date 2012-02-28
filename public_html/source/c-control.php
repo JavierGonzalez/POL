@@ -51,7 +51,9 @@ if (isset($sc[$pol['user_ID']])) {
 	if ($_GET['b'] == 'nuevos-ciudadanos') {
 
 			$txt_title = 'Control: SC | Nuevos ciudadanos';
-			$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+			$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC', 'Nuevos ciudadanos');
+
+			$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
@@ -138,7 +140,9 @@ LIMIT 60", $link);
 
 
 	$txt_title = 'Control: SC | Confianza mutua';
-	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | Confianza | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC', 'Confianza mutua');
+
+	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | Confianza | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
@@ -229,7 +233,9 @@ $txt .= '<h1>Grafico confianza</h1>
 
 
 	$txt_title = 'Control: SC | Extras';
-	$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Extras | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC', 'Extras');
+
+	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Extras | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
@@ -396,7 +402,9 @@ ORDER BY factor DESC LIMIT 30", $link);
 	} else { // principal
 
 	$txt_title = 'Control: SC';
-	$txt .= '<h1><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC');
+
+	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>'.$supervisores.'</b></p>'.$nomenclatura;
 
@@ -585,6 +593,8 @@ ORDER BY fecha_registro DESC", $link);
 
 case 'gobierno':
 	$txt_title = 'Control: Gobierno';
+	$txt_nav = array('/control'=>'Control', '/control/gobierno'=>'Gobierno');
+
 	if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
 
 	$result = mysql_query("SELECT (SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS elnick
@@ -600,8 +610,10 @@ case 'gobierno':
 
 
 	if ($_GET['b'] == 'notificaciones') {
-
-		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/gobierno/">Gobierno</a> | Notificaciones</h1>
+		
+		$txt_nav = array('/control'=>'Control', '/control/gobierno'=>'Gobierno', 'Notificaciones');
+		
+		$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/gobierno/">Gobierno</a> | Notificaciones</h1>
 		
 <br />
 
@@ -658,8 +670,10 @@ case 'gobierno':
 		$txt .= '</table>';
 
 	} elseif ($_GET['b'] == 'foro') {
+		
+		$txt_nav = array('/control'=>'Control', '/control/gobierno'=>'Gobierno', 'Configuración foro');
 
-		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/gobierno/">Gobierno</a> | Control Foro</h1>
+		$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/gobierno/">Gobierno</a> | Control Foro</h1>
 		
 <br />
 <form action="/accion.php?a=gobierno&b=subforo" method="post">
@@ -791,7 +805,7 @@ $(function() {
 
 
 
-	$txt .= '<h1><a href="/control/">Control</a>: Gobieno | <a href="/control/gobierno/foro/">Control Foro</a>  <a href="/control/gobierno/notificaciones">Notificaciones</a></h1>
+	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: Gobieno | <a href="/control/gobierno/foro/">Control Foro</a>  <a href="/control/gobierno/notificaciones">Notificaciones</a></h1>
 
 <br />
 <form action="/accion.php?a=gobierno&b=config" method="post">
@@ -966,10 +980,11 @@ case 'expulsiones':
 if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 
 	$txt_title = 'Control:  Expulsiones | Expulsar';
+	$txt_nav = array('/control'=>'Control', '/control/expulsiones'=>'Expulsiones', 'Expulsar');
 
 
 	if (isset($sc[$pol['user_ID']])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
-	$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'varios/expulsar.gif" alt="Expulsion" border="0" /> <a href="/control/expulsiones/">Expulsiones</a> | Expulsar</h1>
+	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <img src="'.IMG.'varios/expulsar.gif" alt="Expulsion" border="0" /> <a href="/control/expulsiones/">Expulsiones</a> | Expulsar</h1>
 
 <p>Las expulsiones son efectuadas por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminaci&oacute;n forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.'.DOMAIN.'/TOS">Condiciones de Uso</a> (con la excepci&oacute;n de Registro erroneo y Test de desarrollo).</p>
 
@@ -1032,7 +1047,7 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 FROM expulsiones
 WHERE ID = '".$_GET['c']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){
-			$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/expulsiones/">Expulsiones</a> | #'.$_GET['c'].'</h1>
+			$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/expulsiones/">Expulsiones</a> | #'.$_GET['c'].'</h1>
 
 <p><b>'.crear_link($r['expulsado'], 'nick', $r['expulsado_estado']).'</b> fue expulsado por <b>'.crear_link($r['nick_autor']).'</b>.</p>
 
@@ -1046,7 +1061,9 @@ WHERE ID = '".$_GET['c']."' LIMIT 1", $link);
 
 
 	$txt_title = 'Control:  Expulsiones';
-	$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'varios/expulsar.gif" alt="Expulsado" border="0" /> Expulsiones | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt_nav = array('/control'=>'Control', '/control/expulsiones'=>'Expulsiones');
+
+	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <img src="'.IMG.'varios/expulsar.gif" alt="Expulsado" border="0" /> Expulsiones | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p>Las expulsiones son efectuadas por los Supervisores del Censo (SC). Consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminaci&oacute;n forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.'.DOMAIN.'/TOS">Condiciones de Uso</a> (con la excepci&oacute;n de Registro erroneo y Test de desarrollo). Los Supervisores del Censo son ciudadanos con m&aacute;s de 1 a&ntilde;o de antiguedad y elegidos por democracia directa, mediante el "voto de confianza", actualizado cada Domingo a las 20:00.</p>
 
@@ -1096,6 +1113,7 @@ ORDER BY expire DESC", $link);
 
 case 'kick':
 	$txt_title = 'Control: Kicks';
+	$txt_nav = array('/control'=>'Control', 'Kicks');
 	
 	if (($_GET['b'] == 'info') AND ($_GET['c'])) {
 
@@ -1106,16 +1124,19 @@ case 'kick':
 FROM ".SQL."ban
 WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){
-			$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/kick/">Kicks</a> | info '.$_GET['c'].'</h1>
+			$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/kick/">Kicks</a> | info '.$_GET['c'].'</h1>
 <p>Motivo: <b>'.$r['razon'].'</b></p>
 
 <p>Pruebas:</p><p class="azul">'.str_replace("\n","<br />", $r['motivo']).'</p>';
 		}
 
 	} elseif ($_GET['b']) {
+		
+		$txt_nav = array('/control'=>'Control', '/control/kicks'=>'Kicks', 'Kickear');
+
 		if ($_GET['b'] == 'expulsar') { $_GET['b'] = ''; }
 		if (nucleo_acceso($vp['acceso']['kick'])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
-		$txt .= '<h1><a href="/control/">Control</a>: <a href="/control/kick/">Kicks</a> | <img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> Kickear</h1><p>Esta acci&oacute;n privilegiada bloquea totalmente las acciones de un Ciudadano y los que comparten su IP.</p>
+		$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/kick/">Kicks</a> | <img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> Kickear</h1><p>Esta acci&oacute;n privilegiada bloquea totalmente las acciones de un Ciudadano y los que comparten su IP.</p>
 
 <form action="/accion.php?a=kick" method="post">
 '.($_GET['c']?'<input type="hidden" name="chat_ID" value="'.$_GET['c'].'" />':'').'
@@ -1154,7 +1175,7 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 			
 ';
 	} else {
-		$txt .= '<h1><a href="/control/">Control</a>: <img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> Kicks</h1><p>' . boton('KICK', '/control/kick/expulsar/') . ' Un kick bloquea temporalmente a un Ciudadano y su IP de todas las acciones en '.PAIS.'.</p>
+		$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> Kicks</h1><p>' . boton('KICK', '/control/kick/expulsar/') . ' Un kick bloquea temporalmente a un Ciudadano y su IP de todas las acciones en '.PAIS.'.</p>
 
 <table border="0" cellspacing="1" cellpadding="" class="pol_table">
 <tr>
@@ -1202,9 +1223,10 @@ ORDER BY expire DESC", $link);
 
 case 'judicial':
 	$txt_title = 'Control: Judicial';
+	$txt_nav = array('/control'=>'Control', 'Judicial');
 
 	
-	$txt .= '<h1><a href="/control/">Control</a>: Judicial</h1><p>Panel Judicial para Jueces.</p>
+	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: Judicial</h1><p>Panel Judicial para Jueces.</p>
 
 <h2>1. Sanciones</h2><hr />
 
@@ -1253,14 +1275,16 @@ $txt .= '</table><br />
 
 	default:
 		$txt_title = 'Control';
-		$txt .= '<h1>Control:</h1>
+		$txt_nav = array('/control'=>'Control');
+
+		$txt .= '<h1 class="quitar">Control:</h1>
 <p class="amarillo" style="color:red;">Zonas de control cuyo acceso est&aacute; reservado a los ciudadanos que ejercen estos cargos.</p>
 
 <table border="0" cellspacing="6">
 
-<tr><td nowrap="nowrap"><a class="abig" href="/control/gobierno/"><b>Control</b></a></td>
+<tr><td nowrap="nowrap"><a class="abig" href="/control/gobierno/"><b>Gobierno</b></a></td>
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/7.gif" title="Presidente" /> <img src="'.IMG.'cargos/19.gif" title="Vicepresidente" /></td>
-<td>Panel de configuraci&oacute;n principal.</td></tr>
+<td>Opciones de configuración de gobierno.</td></tr>
 
 <tr>
 <td nowrap="nowrap"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <a class="abig" href="/control/kick/"><b>Kicks</b></a></td>

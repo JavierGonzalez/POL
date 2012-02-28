@@ -1,8 +1,8 @@
 <?php 
 include('inc-login.php');
 
-$txt .= '<h1>Historia de VirtualPol</h1>
-';
+$txt_nav = array('/historia'=>'Historia de VirtualPol');
+$txt .= '<h1 class="quitar">Historia de VirtualPol</h1>';
 
 $sc = get_supervisores_del_censo();
 
@@ -91,5 +91,6 @@ $txt .= '</table>';
 
 //THEME
 $txt_title = 'Historia de VirtualPol';
+$txt_menu = 'info';
 include('theme.php');
 ?>

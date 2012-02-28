@@ -114,5 +114,7 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	if ($pol['estado'] == 'expulsado') {  session_unset(); session_destroy(); }
 }
 
+$txt_nav = array(); 
+$txt_tab = array();
 unset($fecha_init, $fecha_last);
 ?>

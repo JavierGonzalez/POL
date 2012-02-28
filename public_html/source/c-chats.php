@@ -6,6 +6,7 @@ include('inc-login.php');
 
 if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 	$txt_title = 'Solicitar chat';
+	$txt_nav = array('/chats'=>'Chats', 'Solicitar chat');
 	if (($pol['pais']) AND ($pol['pais'] != PAIS)) { header('Location: http://'.strtolower($pol['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'); exit; }
 
 	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
@@ -27,6 +28,7 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 } elseif (($_GET['a'] == 'turistas') AND ($pol['estado'] == 'ciudadano')) {
 
 	$txt_title = 'Turistas';
+	$txt_nav = array('/chats'=>'Chats', 'Turistas');
 
 	$txt .= '<h1><a href="/chats/">Chats</a>: Turistas</h1>
 
@@ -65,6 +67,7 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 	while ($r = mysql_fetch_array($result)) { 
 
 		$txt_title = 'Chat: '.$r['titulo'].' | log';
+		$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo'], 'Log');
 		
 		$txt .= '<h1><a href="/chats/">Chats</a>: <a href="/chats/'.$r['url'].'/">'.$r['titulo'].'</a> | log</h1>';
 
@@ -86,6 +89,7 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 	while ($r = mysql_fetch_array($result)) { 
 
 		$txt_title = 'Chat: '.$r['titulo'].' | Opciones';
+		$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo'], 'Opciones');
 
 		foreach (nucleo_acceso('print') AS $at => $at_var) { 
 			$txt_li['leer'] .= '<input type="radio" name="acceso_leer" value="'.$at.'"'.($at==$r['acceso_leer']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_leer_var\').val(\''.$at_var.'\');" /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
@@ -139,6 +143,7 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 	include('inc-chats.php');
 } else { // Listado de chats
 	$txt_title = 'Chats';
+	$txt_nav = array('/chats'=>'Chats');
 
 	$result = mysql_query("SELECT COUNT(*) AS num FROM chats_msg WHERE time > '".date('Y-m-d H:i:s', time() - 600)."'", $link);
 	while ($r = mysql_fetch_array($result)) { 
@@ -205,5 +210,6 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 // Limpiar logs de 24h
 mysql_query("DELETE FROM chats_msg WHERE time < '".date('Y-m-d H:i:s', time() - (60*60*24))."'", $link);
 
+$txt_menu = 'comu';
 if (!$externo) { include('theme.php'); }
 ?>

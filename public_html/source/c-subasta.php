@@ -209,5 +209,7 @@ LIMIT 10", $link);
 
 //THEME
 $txt_title = 'Subastas';
+$txt_nav = array('Subastas');
+$txt_menu = 'econ';
 include('theme.php');
 ?>

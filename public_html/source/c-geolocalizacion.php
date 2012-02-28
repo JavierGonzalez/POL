@@ -145,5 +145,6 @@ function initialize() {
 
 //THEME
 $txt_title = 'GeoLocalizacion';
+$txt_menu = 'info';
 include('theme.php');
 ?>

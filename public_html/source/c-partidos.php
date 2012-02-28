@@ -15,6 +15,8 @@ LIMIT 1", $link);
 		if (($_GET['b'] == 'editar')) { //edit/  AND ($r['ID_presidente'] == $pol['user_ID'])
 
 			$txt_title = 'Editar '.NOM_PARTIDOS;
+			$txt_nav = array('/partidos'=>'Partidos', '/partidos/'.$_GET['a']=>$r['siglas'].' ('.$r['nombre'].')', 'Editar');
+
 			//print listas
 			$candidatos_num = 0;
 			$result2 = mysql_query("SELECT user_ID, orden, 
@@ -50,7 +52,7 @@ ORDER BY nick DESC", $link);
 			if ($ciudadanos_num == 0) { $disabled = ' disabled="disabled"'; } else { $disabled = ''; }
 
 			include('inc-functions-accion.php');
-			$txt .= '<h1><img src="'.IMG.'doc-edit.gif" alt="Editar" /> <a href="/partidos/">'.NOM_PARTIDOS.'</a>: ' . $r['siglas'] . ' (' . $r['nombre'] . ')</h1>
+			$txt .= '<h1><a href="/partidos/">'.NOM_PARTIDOS.'</a>: ' . $r['siglas'] . ' (' . $r['nombre'] . ')</h1>
 <ul id="partido">
 
 <li><form action="/accion.php?a=partido-lista&b=add&ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos . '</select> <input type="submit" value="A&ntilde;adir a la lista"' . $disabled . ' /> (afiliados a tu '.NOM_PARTIDOS.')</form><br /></li>
@@ -106,6 +108,7 @@ ORDER BY fecha_registro ASC", $link);
 				}
 
 			$txt_title = $r['siglas'] . ' - ' . $r['nombre'];
+			$txt_nav = array('/partidos'=>'Partidos', '/partidos/'.$_GET['a']=>$r['siglas'].' ('.$r['nombre'].')');
 
 			$txt .= '<h1><a href="/partidos/">'.NOM_PARTIDOS.'</a>: ' . $r['siglas'] . ' | ' . $r['nombre'] . '</h1>
 
@@ -178,11 +181,13 @@ ORDER BY num_lista DESC, afiliados DESC, nombre DESC", $link);
 
 <p>'.(nucleo_acceso($vp['acceso']['crear_partido'])?boton('Crear '.NOM_PARTIDOS, '/form/crear-partido/'):'').'</p>';
 	$txt_title = NOM_PARTIDOS;
+	$txt_nav = array('/partidos'=>'Partidos');
 }
 
 
 
 
 //THEME
+$txt_menu = 'demo';
 include('theme.php');
 ?>

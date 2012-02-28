@@ -175,8 +175,10 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
 	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
 	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
-	$txt_title = 'Mis examenes';
-	$txt .= '<h1><a href="/examenes/">Examenes</a>: Mis examenes</h1>
+	$txt_title = 'Mis exámenes';
+	$txt_nav = array('/examenes'=>'Exámenes', 'Mis exámenes');
+
+	$txt .= '<h1 class="quitar"><a href="/examenes/">Examenes</a>: Mis examenes</h1>
 
 <br />
 
@@ -379,7 +381,9 @@ LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
 		$txt_title = 'Examen de ' . $r['titulo'];
-		$txt .= '<h1>' . $r['titulo'] . ' (<a href="/examenes/">Ver examenes</a>)</h1>
+		$txt_nav = array('/examenes'=>'Exámenes', $r['titulo']);
+
+		$txt .= '<h1 class="quitar">' . $r['titulo'] . ' (<a href="/examenes/">Ver examenes</a>)</h1>
 <table border="0" width="100%"><tr><td valign="top" width="60%">
 
 <p class="amarillo"><b>Temario:</b><br />' . $r['descripcion'] . '</p>
@@ -425,8 +429,10 @@ FROM ".SQL."estudios_users WHERE ID_estudio = '" . $r['cargo_ID'] . "' AND nota 
 
 } else {							// VER LISTA EXAMENES
 
-	$txt_title = 'Mis examenes';
-	$txt .= '<h1>Examenes: <a href="/examenes/mis-examenes/">Mis examenes</a></h1>';
+	$txt_title = 'Exámenes';
+	$txt_nav = array('/examenes'=>'Exámenes');
+
+	$txt .= '<h1 class="quitar">Examenes: <a href="/examenes/mis-examenes/">Mis examenes</a></h1>';
 
 
 	$result = mysql_query("SELECT examen_ID FROM ".SQL."examenes_preg", $link);
@@ -503,5 +509,6 @@ ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 
 //THEME
 if (!$txt_title) { $txt_title = 'Examenes'; }
+$txt_menu = 'demo';
 include('theme.php');
 ?>

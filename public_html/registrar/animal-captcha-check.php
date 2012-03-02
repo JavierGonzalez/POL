@@ -8,18 +8,76 @@ Blogs Teoriza (www.Teoriza.com)
 ###
 */
 
+
+function animal_captcha_quitar_acentos($text) {
+	$text = htmlentities($text, ENT_QUOTES, 'UTF-8');
+	$text = strtolower($text);
+	$patron = array (
+		'/[\.,]+/' => '',
+
+		// Vocales
+		'/&agrave;/' => 'a',
+		'/&egrave;/' => 'e',
+		'/&igrave;/' => 'i',
+		'/&ograve;/' => 'o',
+		'/&ugrave;/' => 'u',
+
+		'/&aacute;/' => 'a',
+		'/&eacute;/' => 'e',
+		'/&iacute;/' => 'i',
+		'/&oacute;/' => 'o',
+		'/&uacute;/' => 'u',
+
+		'/&acirc;/' => 'a',
+		'/&ecirc;/' => 'e',
+		'/&icirc;/' => 'i',
+		'/&ocirc;/' => 'o',
+		'/&ucirc;/' => 'u',
+
+		'/&atilde;/' => 'a',
+		'/&etilde;/' => 'e',
+		'/&itilde;/' => 'i',
+		'/&otilde;/' => 'o',
+		'/&utilde;/' => 'u',
+
+		'/&auml;/' => 'a',
+		'/&euml;/' => 'e',
+		'/&iuml;/' => 'i',
+		'/&ouml;/' => 'o',
+		'/&uuml;/' => 'u',
+
+		'/&auml;/' => 'a',
+		'/&euml;/' => 'e',
+		'/&iuml;/' => 'i',
+		'/&ouml;/' => 'o',
+		'/&uuml;/' => 'u',
+
+		// Otras letras y caracteres especiales
+		'/&aring;/' => 'a',
+		'/&ntilde;/' => 'n',
+
+		// Agregar aqui mas caracteres si es necesario
+
+	);
+
+	$text = preg_replace(array_keys($patron),array_values($patron),$text);
+	return $text;
+}
+
+
 function animal_captcha_check($try) {
 	if (!isset($_SESSION)) { session_start(); }
 	if (isset($_SESSION['animalcaptcha'])) {
+		$try = animal_captcha_quitar_acentos($try);
 		$try = trim(strip_tags($try));
-		$try = ereg_replace("[áàâãÁÀÂÃ]", "a", $try);
-		$try = ereg_replace("[éèêÉÈÊ]", "e", $try);
-		$try = ereg_replace("[íìîÍÌÎ]", "i", $try);
-		$try = ereg_replace("[ÓÒÔÕóòôõ]", "o", $try);
-		$try = ereg_replace("[ÚÙÛÜúùûü]", "u", $try);
-		$try = ereg_replace("[çÇ]", "c", $try);
-		$try = ereg_replace("[ñÑ]", "n", $try);
-		$delete = array('²', '¡', 'º', 'ª', '“', '”', '„', '"', '\'', '.', ',', '_', ':',';','.', '´','!','¿','?','[',']','{','}','(',')','/','%','&','$','@');
+		$try = ereg_replace("[Ã¡Ã Ã¢Ã£ÃÃ€Ã‚Ãƒ]", "a", $try);
+		$try = ereg_replace("[Ã©Ã¨ÃªÃ‰ÃˆÃŠ]", "e", $try);
+		$try = ereg_replace("[Ã­Ã¬Ã®ÃÃŒÃ]", "i", $try);
+		$try = ereg_replace("[Ã“Ã’Ã”Ã•Ã³Ã²Ã´Ãµ]", "o", $try);
+		$try = ereg_replace("[ÃšÃ™Ã›ÃœÃºÃ¹Ã»Ã¼]", "u", $try);
+		$try = ereg_replace("[Ã§Ã‡]", "c", $try);
+		$try = ereg_replace("[Ã±Ã‘]", "n", $try);
+		$delete = array('Â²', 'Â¡', 'Âº', 'Âª', 'â€œ', 'â€', 'â€', '"', '\'', '.', ',', '_', ':',';','.', 'Â´','!','Â¿','?','[',']','{','}','(',')','/','%','&','$','@');
 		$try = str_replace($delete, "", $try);
 		$try = utf8_encode(strtolower($try));
 		$trys = explode(" ", $try);

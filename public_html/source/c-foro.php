@@ -162,7 +162,8 @@ $txt .= mysql_error($link);
 
 
 } elseif ($_GET['a'] == 'editar') {
-	$txt .= '<h1><a href="/foro/">Foro</a>: editar</h1>';
+	$txt .= '<h1 class="quitar"><a href="/foro/">Foro</a>: editar</h1>';
+	$txt_nav = array('/foro'=>'Foro', 'Editar');
 
 	$txt .= foro_enviar($_GET['b'], $_GET['c'], true);
 
@@ -182,8 +183,9 @@ $txt .= mysql_error($link);
 
 	$txt_title = 'Foro - Actividad';
 	$txt_nav = array('/foro'=>'Foro', 'Tu actividad');
+	$txt_tab = array('/foro/'=>'Foro', '/foro/ultima-actividad/'=>'Última actividad', '/control/gobierno/foro/'=>'Configuración foro', );
 
-	$txt .= '<h1><a href="/foro/">Foro</a>: <b>'.($_GET['b']?'Actividad de '.$el_nick:'Tu actividad').'</b></h1>
+	$txt .= '<h1 class="quitar"><a href="/foro/">Foro</a>: <b>'.($_GET['b']?'Actividad de '.$el_nick:'Tu actividad').'</b></h1>
 <br />';
 
 	$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
@@ -250,8 +252,9 @@ LIMIT 50", $link);
 
 	$txt_title = 'Foro - Ultima actividad';
 	$txt_nav = array('/foro'=>'Foro', 'Última actividad');
+	$txt_tab = array('/foro/'=>'Foro', '/foro/ultima-actividad/'=>'Última actividad', '/control/gobierno/foro/'=>'Configuración foro', );
 
-	$txt .= '<h1><a href="/foro/">Foro</a>: <b>Ultima actividad</b></h1>
+	$txt .= '<h1 class="quitar"><a href="/foro/">Foro</a>: <b>Ultima actividad</b></h1>
 <br />
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 
@@ -333,7 +336,7 @@ LIMIT 1", $link);
 			if ($acceso['escribir_msg']) { $crear_hilo = '#enviar'; $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/-'.$r['ID'].'#enviar').'</div>'; } else { $crear_hilo = ''; }
 
 
-			$txt .= '<h1><a href="/foro/">Foro</a>: <a href="/foro/'.$r['foro_url'].'/">'.$r['foro_title'].'</a> (<span style="font-size:18px;">'.$r['descripcion'].'</span>)</h1>
+			$txt .= '<h1 class="quitar"><a href="/foro/">Foro</a>: <a href="/foro/'.$r['foro_url'].'/">'.$r['foro_title'].'</a> (<span style="font-size:18px;">'.$r['descripcion'].'</span>)</h1>
 
 <p style="margin-bottom:4px;">'.$p_paginas.' &nbsp; ' . boton('Responder', $crear_hilo) . ' &nbsp; 
 <span style="float:right;">Orden: <a href="/'.$return_url.'/"'.($_GET['c']=='mejores'?'':' style="color:#444;"').'>Fecha</a> | <a href="/'.$return_url.'mejores/"'.($_GET['c']=='mejores'?' style="color:#444;"':'').'>Votos</a></span>
@@ -390,8 +393,9 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.$p_li
 
 	$txt_title = 'Papelera';
 	$txt_nav = array('/foro'=>'Foro', '/foro/papelera'=>'Papelera');
+	$txt_tab = array('/foro/'=>'Foro', '/foro/ultima-actividad/'=>'Última actividad', '/control/gobierno/foro/'=>'Configuración foro', );
 
-	$txt .= '<h1><a href="/foro/">Foro</a>: Papelera</h1>
+	$txt .= '<h1 class="quitar"><a href="/foro/">Foro</a>: Papelera</h1>
 <br />
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 <tr class="azul"><td colspan="4"><h2 style="color:red;font-size:22px;padding:8px;">Hilos</h2></tr>';
@@ -446,12 +450,15 @@ ORDER BY time2 DESC", $link);
 			
 			$txt_title = 'Foro: '.$r['title'].' - '.$r['descripcion'];
 			$txt_nav = array('/foro'=>'Foro', $r['title']);
+			$txt_tab = array('/foro/'=>'Foro', '/foro/ultima-actividad/'=>'Última actividad', '/control/gobierno/foro/'=>'Configuración foro', );
+
+			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) { $txt_tab = array('#enviar'=>'Crear hilo'); }
 
 			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) { $crear_hilo = '#enviar'; } else { $crear_hilo = ''; }
 
-			$txt .= '<h1><a href="/foro/">Foro</a>: <a href="/foro/'.$r['url'].'/">'.$r['title'].'</a> (<span style="font-size:18px;">'.$r['descripcion'].'</span>)</h1>
+			$txt .= '<h1 class="quitar"><a href="/foro/">Foro</a>: <a href="/foro/'.$r['url'].'/">'.$r['title'].'</a> (<span style="font-size:18px;">'.$r['descripcion'].'</span>)</h1>
 
-<p style="margin-bottom:0;">'.boton('Crear Hilo', $crear_hilo).'</p>
+<p style="margin-bottom:0;" class="quitar">'.boton('Crear Hilo', $crear_hilo).'</p>
 
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 <tr>
@@ -544,9 +551,11 @@ LIMIT ".$r['limite'], $link);
 
 	$txt_title = 'Foro';
 	$txt_nav = array('/foro'=>'Foro');
-	$txt .= '<div style="float:right;color:green;">Hay otros <b>'.$foro_oculto_num.'</b> foros ocultados <a href="/grupos/">ver grupos</a> | <a href="/foro/ultima-actividad/">&Uacute;ltima actividad</a> | <a href="/foro/mis-respuestas/">Tu actividad</a> &nbsp; [<a href="/control/gobierno/foro/" title="Configuraci&oacute;n del foro">Configuraci&oacute;n</a>]</div>
+	$txt_tab = array('/grupos/'=>'Foros ocultos ('.$foro_oculto_num.')', '/foro/ultima-actividad/'=>'Última actividad', '/control/gobierno/foro/'=>'Configuración foro', );
 
-<h1><b>Foro</b>:</h1>
+	$txt .= '<div style="float:right;color:green;" class="quitar">Hay otros <b>'.$foro_oculto_num.'</b> foros ocultados <a href="/grupos/">ver grupos</a> | <a href="/foro/ultima-actividad/">Última actividad</a> | <a href="/foro/mis-respuestas/">Tu actividad</a> &nbsp; [<a href="/control/gobierno/foro/" title="Configuraci&oacute;n del foro">Configuraci&oacute;n</a>]</div>
+
+<h1 class="quitar"><b>Foro</b>:</h1>
 <br />
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">
 
@@ -555,7 +564,7 @@ LIMIT ".$r['limite'], $link);
 <tr class="amarillo">
 <td width="120"><h2><a href="/foro/papelera/" style="font-size:22px;margin-left:8px;">Papelera</a></h2></td>
 <td align="right"><b style="font-size:19px;"></b></td>
-<td style="color:green;" colspan="2">Cuarentena de mensajes, eliminados tras 10 d&iacute;as.</td>
+<td style="color:green;" colspan="2">Cuarentena de mensajes, eliminados tras 10 días.</td>
 <td align="right" width="10%"></td>
 </tr>
 </table>';

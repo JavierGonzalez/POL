@@ -58,6 +58,7 @@ while($r = mysql_fetch_array($result)){
 if ($_GET['a'] == 'crear') {
 	$txt_title = 'Borrador de votación';
 	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores', 'Crear borrador');
+	$txt_tab = array('/votacion/borradores'=>'Ver borradores', '/votacion/'.$_GET['b']=>'Previsualizar', '/votacion/crear/'.$_GET['b']=>'Editar borrador');
 
 	// EDITAR
 	if (is_numeric($_GET['b'])) {
@@ -77,7 +78,7 @@ if ($_GET['a'] == 'crear') {
 	$sel['acceso_votar'][$edit['acceso_votar']] = ' selected="selected"';
 	$sel['acceso_ver'][$edit['acceso_ver']] = ' selected="selected"';
 
-	$txt .= '<h1><a href="/votacion/">Votaciones</a>: Borrador de votación</h1>
+	$txt .= '<h1 class="quitar"><a href="/votacion/">Votaciones</a>: Borrador de votación</h1>
 
 <form action="http://'.strtolower(PAIS).'.'.DOMAIN.'/accion.php?a=votacion&b=crear" method="post">
 '.(isset($edit['ID'])?'<input type="hidden" name="ref_ID" value="'.$_GET['b'].'" />':'').'
@@ -255,6 +256,7 @@ function opcion_nueva() {
 
 	$txt_title = 'Borradores de votaciones';
 	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores');
+	$txt_tab = array('/votacion/crear'=>'Crear votación');
 	
 	$txt .= '<h1><a href="/votacion">Votaciones</a>:</h1>
 
@@ -330,16 +332,27 @@ LIMIT 1", $link);
 		$respuestas_num = count($respuestas) - 1;
 		
 		$txt_title = 'Votacion: ' . strtoupper($r['tipo']) . ' | ' . $r['pregunta'];
-		$txt_nav = array('/votacion'=>'Votaciones', strtoupper($r['tipo']), $r['pregunta']);
+		$txt_nav = array('/votacion'=>'Votaciones', strtoupper($r['tipo']));
 
 		if ($r['estado'] == 'ok') { 
+			$txt_nav[] = 'En curso...';
+			$txt_tab = array('/votacion/'=>'Ver otros resultados');
+
 			$tiempo_queda =  '<span style="color:blue;">Quedan <span class="timer" value="'.$time_expire.'"></span>.</span>'; 
 		} elseif ($r['estado'] == 'borrador') {
+			$txt_nav[] = 'Borrador';
+			$txt_tab = array('/votacion/borradores'=>'Ver borradores', '/votacion/'.$r['ID']=>'Previsualizar', '/votacion/crear/'.$r['ID']=>'Editar borrador');
+
 			$tiempo_queda =  '<span style="color:red;">Borrador <span style="font-weight:normal;">(Previsualización de votación)</span></span> ';
-		} else { $tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; }
+		} else { 
+			$txt_nav[] = 'Finalizado';
+			$tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; 
+		}
 
 
-		$txt .= '<h1><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).' &nbsp; &nbsp; &nbsp; '.num($votos_total).' votos | '.$tiempo_queda.'</h1>
+		$txt .= '<span style="float:right;"><b>'.num($votos_total).' votos</b> | '.$tiempo_queda.'</span>
+		
+<h1 class="quitar"><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).'</h1>
 
 <div class="amarillo" style="margin:20px 0 5px 0;padding:20px 10px 0 10px;">
 <h1>'.$r['pregunta'].'</h1>
@@ -747,13 +760,14 @@ ORDER BY siglas ASC", $link);
 
 	$txt_title = 'Votaciones';
 	$txt_nav = array('/votacion'=>'Votaciones');
+	$txt_tab = array('/votacion/borradores'=>'Borradores ('.$borradores_num.')', '/votacion/crear'=>'Crear votación');
 	
 	$txt .= '
 <span style="float:right;text-align:right;">
-<a href="/votacion/borradores">Borradores de votación ('.$borradores_num.')</a> | '.(isset($pol['user_ID'])?boton('Crear votación', '/votacion/crear'):boton('Crear ciudadano', REGISTRAR.'?p='.PAIS)).'<br />
+<span class="quitar"><a href="/votacion/borradores">Borradores de votación ('.$borradores_num.')</a> | '.(isset($pol['user_ID'])?boton('Crear votación', '/votacion/crear'):boton('Crear ciudadano', REGISTRAR.'?p='.PAIS)).'<br /></span>
 <b title="Promedio global de las ultimas 2 horas">'.$votos_por_hora.'</b> votos/hora</span>
 
-<h1>Votaciones:</h1>
+<h1 class="quitar">Votaciones:</h1>
 
 <span style="color:#888;"><br /><b>En curso</b>:</span><hr />
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">';

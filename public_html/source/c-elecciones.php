@@ -238,7 +238,7 @@ window.onload = function(){
 	$txt .= '
 <div id="elec">
 
-<h1>Elecciones</h1>
+<h1 class="quitar">Elecciones</h1>
 
 <table border="0" width="100%" cellspacing="8">
 <tr><td colspan="2" class="amarillo" valign="top">

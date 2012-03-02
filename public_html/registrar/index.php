@@ -166,7 +166,7 @@ diputado
 			//CONTROL: solo letras y numeros en nick
 			if ((onlynumbers($nick) == true) AND (!in_array($nick, $nicks_prohibidos))) { 
 
-				//CONTROL: contraseñas
+				//CONTROL: contraseÃ±as
 				$rn = $_POST['repid'];
 				if (($pass1) && ($pass1 === $pass2)) {
 					if (comprobar_email($email) == true) {

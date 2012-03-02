@@ -26,11 +26,7 @@ if ($_GET['a']) {
 <input type="hidden" name="url" value="'.$r['url'].'"  />
 <input type="hidden" name="doc_ID" value="'.$r['ID'].'"  />
 
-<span style="float:right;margin-top:-12px;">
-<button onclick="$(\'#doc_opciones\').slideToggle(\'slow\');return false;" style="font-size:16px;color:#666;">Opciones</button>
-</span>
-
-<h1 style="margin-bottom:6px;"><a href="/doc/">Documento</a>: Editar</a></h1>
+<h1 class="quitar" style="margin-bottom:6px;"><a href="/doc/">Documento</a>: Editar</a></h1>
 
 <div id="doc_opciones" style="display:none;">
 <table border="0" cellpadding="9">
@@ -65,13 +61,17 @@ if ($_GET['a']) {
 </table>
 </div>
 
-<div>
+<div style="margin:5px 0;">
 <input type="text" name="titulo" value="'.$r['title'].'" size="30" maxlength="50" style="font-size:22px;" /> &nbsp; 
+<button onclick="$(\'#doc_opciones\').slideToggle(\'slow\');return false;" style="font-size:16px;color:#666;">Opciones</button> &nbsp; 
 <input type="submit" value="Publicar" style="font-size:22px;" /> <a href="/doc/'.$r['url'].'/">&Uacute;ltima publicaci&oacute;n hace <span class="timer" value="'.strtotime($r['time_last']).'"></span></a>.</div>
 
 </form>
 
 '.pad('print', $r['ID']);
+			$txt_nav = array('/doc'=>'Documentos', $r['title'], 'Editar');
+			$txt_tab['/doc/'.$r['url']] = 'Ver documento';
+			$txt_tab['/doc/'.$r['url'].'/editar/'] = 'Editar';
 
 		} elseif ($_GET['b'] == 'presentacion') { //doc/documento-de-test/presentacion
 
@@ -86,7 +86,7 @@ if ($_GET['a']) {
 
 			if (strpos($r['text'], '&lt;/div&gt;')) { $r['text'] = '<p style="font-size:25px;"><a href="/doc/'.$r['url'].'/presentacion"><b>Ver presentación</b></a></p>'; }
 
-			$txt .= '<h1><a href="/doc/">Documento</a>: '.$boton_editar.'</h1>
+			$txt .= '<h1 class="quitar"><a href="/doc/">Documento</a>: '.$boton_editar.'</h1>
 
 
 <div style="color:#555;">
@@ -105,10 +105,11 @@ if ($_GET['a']) {
 Pueden ver: '.verbalizar_acceso($r['acceso_leer'], $r['acceso_cfg_leer']).'.<br />
 Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']).'.
 </div>';
+			$txt_nav = array('/doc'=>'Documentos', $r['title']);
+			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) { $txt_tab['/doc/'.$r['url'].'/editar/'] = 'Editar'; }
 		}
 
 		$txt_title = $r['title'];
-		$txt_nav = array('/doc'=>'Documentos', $r['title']);
 	}
 
 
@@ -117,10 +118,9 @@ Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribi
 
 	$txt_title = 'Documentos';
 	$txt_nav = array('/doc'=>'Documentos');
+	$txt_tab = array('/form/crear-documento/'=>'Crear documento');
 
-	$txt .= '<h1><img src="'.IMG.'documentos/doc.gif" alt="Documento" width="20" height="22" /> Documentos: &nbsp; '.boton('Crear Documento', '/form/crear-documento/').'</h1>
-
-<br />
+	$txt .= '<h1 class="quitar"><img src="'.IMG.'documentos/doc.gif" alt="Documento" width="20" height="22" /> Documentos: &nbsp; '.boton('Crear Documento', '/form/crear-documento/').'</h1>
 
 <div id="docs">';
 

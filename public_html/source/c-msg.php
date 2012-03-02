@@ -6,11 +6,12 @@ if (($pol['user_ID']) AND ($pol['pais'] == PAIS)) {
 if ($_GET['a'] == 'mensajes-enviados') {
 
 	$txt_title = 'Tus mensajes enviados';
-	$txt_nav = array('/msg'=>'Mensajes Privados', 'Mensajes enviados');
+	$txt_nav = array('/msg'=>'Mensajes Privados', 'Enviados');
+	$txt_tab = array('/msg'=>'Recibidos', '/msg/mensajes-enviados'=>'Enviados');
 
 	$txt .= '<h1 class="quitar"><img src="'.IMG.'varios/email.gif" alt="Msg" /> <a href="/msg/">Mensajes privados</a>: Mensajes enviados</h1>';
 	
-	$txt .= '<p>' . boton('Enviar mensaje', '/msg/enviar/') . ' &nbsp; <span class="gris">Mensajes enviados por ti.</span></p>';
+	$txt .= '<p>'.boton('Enviar mensaje', '/msg/enviar/').' &nbsp; <span class="gris">Mensajes enviados por ti.</span></p>';
 
 	$txt .= '<table border="0" cellspacing="0" cellpadding="0" width="100%" class="pol_table" id="msg_table">
 <tr>
@@ -38,9 +39,10 @@ LIMIT 50", $link);
 
 } else {
 	$txt_title = $pol['msg'] . ' mensajes recibidos';
-	$txt_nav = array('/msg'=>'Mensajes Privados', 'Mensajes recibidos ('.$pol['msg'].')');
+	$txt_nav = array('/msg'=>'Mensajes Privados', 'Recibidos');
+	$txt_tab = array('/msg'=>'Recibidos', '/msg/mensajes-enviados'=>'Enviados');
 
-	$txt .= '<h1><img src="'.IMG.'varios/email.gif" alt="Msg" /> Mensajes privados: <a href="/msg/mensajes-enviados/">Mensajes enviados</a></h1>
+	$txt .= '<h1 class="quitar"><img src="'.IMG.'varios/email.gif" alt="Msg" /> Mensajes privados: <a href="/msg/mensajes-enviados/">Mensajes enviados</a></h1>
 
 <br />
 
@@ -51,9 +53,6 @@ LIMIT 50", $link);
 	// load config
 	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
 	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
-
-	$txt_title = 'Enviar mensaje';
-	$txt_nav = array('/msg'=>'Mensajes Privados', 'Enviar mensaje');
 
 	if ($_GET['a'] == 'cargos') {
 		$pre_cargo = $_GET['b'];

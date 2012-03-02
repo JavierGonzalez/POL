@@ -48,6 +48,8 @@ if (isset($sc[$pol['user_ID']])) {
 	$result = mysql_query("SELECT ID, siglas FROM ".SQL."partidos", $link);
 	while($r = mysql_fetch_array($result)) { $siglas[$r['ID']] = $r['siglas']; }
 
+	$txt_tab = array('/control/supervisor-censo/'=>'Principal', '/control/supervisor-censo/factores-secundarios/'=>'Extra', '/control/supervisor-censo/nuevos-ciudadanos/'=>'Nuevos ciudadanos', '/control/expulsiones/'=>'Expulsiones');
+
 	if ($_GET['b'] == 'nuevos-ciudadanos') {
 
 			$txt_title = 'Control: SC | Nuevos ciudadanos';
@@ -594,6 +596,7 @@ ORDER BY fecha_registro DESC", $link);
 case 'gobierno':
 	$txt_title = 'Control: Gobierno';
 	$txt_nav = array('/control'=>'Control', '/control/gobierno'=>'Gobierno');
+	$txt_tab = array('/control/gobierno/'=>'Gobierno', '/control/gobierno/notificaciones'=>'Notificaciones', '/control/gobierno/foro'=>'Configuración foro');
 
 	if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
 
@@ -1114,6 +1117,7 @@ ORDER BY expire DESC", $link);
 case 'kick':
 	$txt_title = 'Control: Kicks';
 	$txt_nav = array('/control'=>'Control', 'Kicks');
+	$txt_tab = array('/control/kick/expulsar/'=>'Kickear');
 	
 	if (($_GET['b'] == 'info') AND ($_GET['c'])) {
 
@@ -1175,7 +1179,9 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 			
 ';
 	} else {
-		$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> Kicks</h1><p>' . boton('KICK', '/control/kick/expulsar/') . ' Un kick bloquea temporalmente a un Ciudadano y su IP de todas las acciones en '.PAIS.'.</p>
+		$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> Kicks</h1>
+
+<p><span class="quitar">'.boton('KICK', '/control/kick/expulsar/').' </span>Un kick bloquea temporalmente a un Ciudadano y su IP de todas las acciones en '.PAIS.'.</p>
 
 <table border="0" cellspacing="1" cellpadding="" class="pol_table">
 <tr>

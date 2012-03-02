@@ -54,7 +54,7 @@
 	
 	$.validator.passwordRating.messages = {
 		"similar-to-username": "Contraseña similar al usuario",
-		"too-short": "Contraseña muy corta",
+		"too-short": "Introduce una contraseña más larga",
 		"very-weak": "Contraseña muy debil",
 		"weak": "Contraseña débil",
 		"good": "Contraseña buena",
@@ -80,7 +80,7 @@
 		.text($.validator.passwordRating.messages[rating.messageKey]);
 		// display process bar instead of error message
 		
-		return rating.rate > 2;
+		return rating.rate > 0;
 	}, "&nbsp;");
 	// manually add class rule, to make username param optional
 	$.validator.classRuleSettings.password = { password: true };

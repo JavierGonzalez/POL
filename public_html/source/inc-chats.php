@@ -9,6 +9,7 @@ $result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".
 while ($r = mysql_fetch_array($result)) { 
 	
 	$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo']);
+	$txt_tab = array('/chats/'.$r['url'].'/log'=>'Log', '/chats/'.$r['url'].'/opciones'=>'Opciones');
 
 	if ($r['pais'] != PAIS) { header('Location: http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'.($_GET['b']?$_GET['b'].'/':'')); exit; }
 

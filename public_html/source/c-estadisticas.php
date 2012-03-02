@@ -26,6 +26,7 @@ function gen_datos($datos, $cero=false, $datos2=false) {
 
 $txt_title = 'Estadísticas';
 $txt_nav = array('Estadísticas');
+$txt_tab = array('/estadisticas/'=>'VirtualPol');
 
 
 if ($_GET['a'] == 'full-tab') {
@@ -162,24 +163,22 @@ $d['paises'][0] = 0;
 
 
 
-$txt .= '<h1>';
+$txt .= '<span style="float:right;font-size:12px;">('.$i.' días, '.round($i/365, 2).' años)</span>
 
-
-$txt .= '<b>Estad&iacute;sticas</b>: ';
+<h1 class="quitar">Estadísticas: ';
 foreach ($vp['paises'] AS $pais) { 
 	if ($_GET['a'] == $pais) {  
 		$txt .= '<b>'.$pais.'</b> | '; 
 	} else { $txt .= '<a href="/estadisticas/'.$pais.'/">'.$pais.'</a> | '; }
+	$txt_tab['/estadisticas/'.$pais.'/'] = $pais;
 }
+$txt .= '</h1>
 
 
-
-$txt .= ' <span style="font-size:12px;">('.$i.' d&iacute;as, '.round($i/365, 2).' a&ntilde;os)</span></h1>
-
-<div id="stats" style="margin-left:-10px;">
+<div id="stats">
 
 
-<h2 style="margin-top:35px;">1. DEMOGRAF&Iacute;A</h2>
+<h2 style="margin-top:35px;">1. DEMOGRAFÍA</h2>
 <p class="amarillo">
 
 <b id="1.1">1.1 <span style="color:#0000FF;">Ciudadanos</span>/<span style="color:#FF0000;">paises</span></b> (<a href="/info/censo/">Ver censo</a>)<br />
@@ -296,7 +295,6 @@ $txt .= '</tr></table>';
 $txt_header .= '<style type="text/css">#stats p { margin:4px; }</style>';
 
 }
-
 
 
 //THEME

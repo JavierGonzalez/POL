@@ -10,7 +10,7 @@ chat_msg_ID = new Array();
 // ON LOAD
 $(document).ready(function(){
 
-	//$("ul.sfn-menu, ul.sf-menu").superfish(); 
+	$("ul.sfn-menu, ul.sf-menu").superfish(); 
 
 	$("dt a").click(function(){
 		$("dd:visible").slideUp("normal");
@@ -407,7 +407,7 @@ function delays() {
 
 function chat_close() {
 	clearTimeout(refresh);
-	$("body").before("<div id=\"chat_alert\" style=\"position:absolute;top:40%;left:40%;\"><button onclick=\"chat_enabled();\" style=\"font-weight:bold;font-size:28px;color:#888;\">Volver al chat...</button></div>");
+	$("body").before("<div id=\"chat_alert\" style=\"position:absolute;top:40%;left:40%;\"><button onclick=\"chat_enabled();\" style=\"font-weight:bold;font-size:28px;color:#888;z-index:20px;\">Volver al chat...</button></div>");
 }
 
 function chat_enabled() {

@@ -49,8 +49,10 @@ ORDER BY nick ASC", $link);
 	}
 
 } else { // VER CARGOS
+	$txt_nav = array('Cargos');
+	$txt_tab = array('/examenes/'=>'Examenes');
 
-	$txt .= '<h1>Cargos</h1><br />
+	$txt .= '<h1 class="quitar">Cargos</h1><br />
 
 <table border="0" cellspacing="3" cellpadding="0" class="pol_table">
 <tr>
@@ -115,7 +117,7 @@ ORDER BY nick ASC", $link);
 	}
 	$txt .= '</table>
 	
-<p><a href="/examenes/">Ver <b>Examenes</b></a></p>';
+<p class="quitar"><a href="/examenes/">Ver <b>Examenes</b></a></p>';
 
 }
 

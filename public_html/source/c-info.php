@@ -20,7 +20,7 @@ function red_social($red, $ID) {
 $txt_title = 'Sala de seguir';
 $txt_nav = array('Seguir');
 
-$txt .= '<h1>Sala de Seguir</h1>
+$txt .= '<h1 class="quitar">Sala de Seguir</h1>
 <br />
 <table border="0">';
 
@@ -94,7 +94,7 @@ case 'expiracion':
 	$margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); // 30 dias
 	$margen_90dias	= date('Y-m-d 20:00:00', time() - 7776000); // 90 dias
 
-	$txt .= '<h1>Expiracion:</h1><br />
+	$txt .= '<h1 class="quitar">Expiracion:</h1><br />
 
 <table><tr><td valign="top"><h2>30 dias</h2>
 
@@ -148,7 +148,7 @@ ORDER BY fecha_last DESC", $link);
 	break;
 
 case 'voz':
-	$txt .= '<h1>Chat de voz:</h1>
+	$txt .= '<h1 class="quitar">Chat de voz:</h1>
 <p>El chat de voz de VirtualPol funciona mediante un programa externo llamado Mumble. Es un programa de escritorio gratuito, f&aacute;cil de instalar, compatible con todos los sistemas, software libre y con encriptaci&oacute;n de las comunicaciones. Es la mejor formula disponible para proveer a VirtualPol de una opcion de comunicaci&oacute;n por voz.</p>
 
 <p><b>&iquest;Como usar el chat de Voz?</b></p>
@@ -234,9 +234,9 @@ case 'censo':
 
 
 	if ($_GET['b']) {
-		$txt .= '<h1><a href="/info/censo/">Censo</a>: ' . ucfirst($_GET['b']) . '</h1>';
+		$txt .= '<h1 class="quitar"><a href="/info/censo/">Censo</a>: ' . ucfirst($_GET['b']) . '</h1>';
 	} else {
-		$txt .= '<h1>Censo:</h1>';
+		$txt .= '<h1 class="quitar">Censo:</h1>';
 	}
 
 	if ($_GET['b'] == 'busqueda') {
@@ -248,7 +248,7 @@ case 'censo':
 $txt .= '
 <div style="float:right;">
 <input name="qcmq" size="10" value="'.$busqueda.'" type="text" id="cmq">
-<input value="Buscador de perfil" type="submit" onclick="var cmq = $(\'#cmq\').attr(\'value\'); window.location.href=\'/info/censo/busqueda/\'+cmq+\'/\'; return false;">
+<input value="Buscador de perfiles" type="submit" onclick="var cmq = $(\'#cmq\').attr(\'value\'); window.location.href=\'/info/censo/busqueda/\'+cmq+\'/\'; return false;">
 </div>
 
 <p>'.$p_paginas.'</p>
@@ -341,6 +341,7 @@ FROM users ".$order_by." LIMIT ".$p_limit, $link);
 	
 	$txt_title = 'Censo de Ciudadanos';
 	$txt_nav = array('/info/censo'=>'Censo');
+	$txt_tab = array('/info/censo/SC/'=>'Censo VirtualPol');
 	break;
 
 
@@ -349,7 +350,7 @@ case 'estadisticas':
 	break;
 
 case 'economia':
-	$txt .= '<h1>'.MONEDA.' Econom&iacute;a Global:</h1>';
+	$txt .= '<h1 class="quitar">'.MONEDA.' Econom&iacute;a Global:</h1>';
 	$txt_title = 'Economia Global';
 	$txt_nav = array('/info/economia'=>'Economía global');
 	$txt_menu = 'econ';

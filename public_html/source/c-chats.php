@@ -7,12 +7,14 @@ include('inc-login.php');
 if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 	$txt_title = 'Solicitar chat';
 	$txt_nav = array('/chats'=>'Chats', 'Solicitar chat');
+	$txt_tab = array('/chats/solicitar-chat/'=>'Solicitar chat');
+
 	if (($pol['pais']) AND ($pol['pais'] != PAIS)) { header('Location: http://'.strtolower($pol['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'); exit; }
 
 	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
 	while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
 
-	$txt .= '<h1><a href="/chats/">Chats</a>: Solicitar chat</h1>
+	$txt .= '<h1 class="quitar"><a href="/chats/">Chats</a>: Solicitar chat</h1>
 
 <form action="/accion.php?a=chat&b=solicitar" method="post">
 
@@ -25,41 +27,6 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 </ol>
 </form>';
 
-} elseif (($_GET['a'] == 'turistas') AND ($pol['estado'] == 'ciudadano')) {
-
-	$txt_title = 'Turistas';
-	$txt_nav = array('/chats'=>'Chats', 'Turistas');
-
-	$txt .= '<h1><a href="/chats/">Chats</a>: Turistas</h1>
-
-<br /><h2>Ultimos mensajes de Turistas:</h2><br />
-
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<th align="right">IP</th>
-<th></th>
-<th align="right">Hace</th>
-<th align="right">Nick</th>
-<th>&nbsp; Mensaje</th>
-</tr>';
-
-	$result = mysql_query("SELECT *,
-(SELECT pais FROM chats WHERE chat_ID = chats_msg.chat_ID LIMIT 1) AS pais,
-(SELECT url FROM chats WHERE chat_ID = chats_msg.chat_ID LIMIT 1) AS url
-FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $link);
-	while ($r = mysql_fetch_array($result)) { 
-		
-		$mip = explode('.', long2ip($r['IP']));
-		$txt .= '<tr>
-<td align="right" nowrap="nowrap" style="font-size:12px;">'.$mip[0].'.'.$mip[1].'.'.$mip[2].'.* &nbsp;</td>
-<td nowrap="nowrap"><a href="/chats/'.$r['url'].'/">Ir</a>'.(((($pol['cargo'] == 12) OR ($pol['cargo'] == 13)) AND ($r['pais'] == $pol['pais']))?' <a href="/control/kick/ip-'.$r['IP'].'/'.$r['chat_ID'].'/" style="color:red;"><img src="'.IMG.'varios/kick.gif" border="0" alt="KICK" title="KICK" /></a> &nbsp;':'').'</td>
-<td align="right" nowrap="nowrap" style="font-size:14px;">'.timer($r['time']).'</td>
-<td align="right" nowrap="nowrap" style="color:#666;" style="font-size:15px;"><b>'.$r['nick'].'</b>:</td>
-<td style="color:#AAA;font-size:15px;" width="100%">&nbsp; '.$r['msg'].'</td>
-</tr>';
-	}
-
-	$txt .= '</table>';
 
 } elseif ($_GET['b'] == 'log') { // Ultimo.
 
@@ -68,8 +35,9 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 
 		$txt_title = 'Chat: '.$r['titulo'].' | log';
 		$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo'], 'Log');
+		$txt_tab = array('/chats/'.$r['url']=>'Chat', '/chats/'.$r['url'].'/log'=>'Log', '/chats/'.$r['url'].'/opciones'=>'Opciones');
 		
-		$txt .= '<h1><a href="/chats/">Chats</a>: <a href="/chats/'.$r['url'].'/">'.$r['titulo'].'</a> | log</h1>';
+		$txt .= '<h1 class="quitar"><a href="/chats/">Chats</a>: <a href="/chats/'.$r['url'].'/">'.$r['titulo'].'</a> | log</h1>';
 
 		if ((nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) AND (isset($pol['user_ID']))) {
 			$txt .= '<p>Log de las ultimas 24 horas:</p><p class="rich" style="background:#FFFFFF;padding:15px;font-size:14px;text-align:left;">VirtualPol: Plataforma '.PAIS.'. Sala: '.$r['titulo'].'. A fecha de '.date('Y-m-d').'.<br />...<br />';
@@ -90,6 +58,7 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 
 		$txt_title = 'Chat: '.$r['titulo'].' | Opciones';
 		$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo'], 'Opciones');
+		$txt_tab = array('/chats/'.$r['url']=>'Chat', '/chats/'.$r['url'].'/log'=>'Log', '/chats/'.$r['url'].'/opciones'=>'Opciones');
 
 		foreach (nucleo_acceso('print') AS $at => $at_var) { 
 			$txt_li['leer'] .= '<input type="radio" name="acceso_leer" value="'.$at.'"'.($at==$r['acceso_leer']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_leer_var\').val(\''.$at_var.'\');" /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
@@ -102,7 +71,7 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 			$txt_li['escribir_ex'] .= '<input type="radio" name="acceso_escribir_ex" value="'.$at.'"'.($at==$r['acceso_escribir_ex']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_escribir_ex_var\').val(\''.$at_var.'\');"'.($at=='anonimos'?' disabled="disabled"':'').' /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
 		}
 
-		$txt .= '<h1><a href="/chats/">Chats</a>: <a href="/chats/'.$r['url'].'/">'.$r['titulo'].'</a> | Opciones</h1>
+		$txt .= '<h1 class="quitar"><a href="/chats/">Chats</a>: <a href="/chats/'.$r['url'].'/">'.$r['titulo'].'</a> | Opciones</h1>
 
 <form action="/accion.php?a=chat&b=editar" method="post">
 <input type="hidden" name="chat_ID" value="'.$r['chat_ID'].'" />
@@ -144,6 +113,7 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 } else { // Listado de chats
 	$txt_title = 'Chats';
 	$txt_nav = array('/chats'=>'Chats');
+	$txt_tab = array('/chats/solicitar-chat/'=>'Solicitar chat');
 
 	$result = mysql_query("SELECT COUNT(*) AS num FROM chats_msg WHERE time > '".date('Y-m-d H:i:s', time() - 600)."'", $link);
 	while ($r = mysql_fetch_array($result)) { 
@@ -152,7 +122,9 @@ FROM chats_msg WHERE IP != '' AND tipo = 'm' ORDER BY msg_ID DESC LIMIT 50", $li
 
 
 	
-	$txt .= '<span style="float:right;color:#888;font-size:18px;"><b>'.round(($msgnum_10min / 10), 1).'</b> msg/min</span><h1><a href="/chats/">Chats</a>:</h1>
+	$txt .= '<span style="float:right;color:#888;font-size:18px;"><b>'.round(($msgnum_10min / 10), 1).'</b> msg/min</span>
+	
+<h1 class="quitar"><a href="/chats/">Chats</a>:</h1>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="4">
 <tr>
@@ -187,12 +159,12 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 
 <td valign="top" style="background:#F97E7B;">'.($r['acceso_cfg_escribir']?'<acronym title="['.$r['acceso_cfg_escribir'].']">':'').ucfirst($r['acceso_escribir']).($r['acceso_cfg_escribir']?'</acronym>':'').'</td>
 
-<td valign="top" align="right">'.$r['stats_visitas'].'</td>
+<td valign="top" align="right">'.num($r['stats_visitas']).'</td>
 
 <td valign="top">'.($r['user_ID']==0?'<em>Sistema</em>':$r['admin']).'</td>
 
 <td valign="top" align="right" nowrap="nowrap">'.timer($r['fecha_creacion']).'</td>
-<td valign="top" align="right">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'/opciones/">Editar</a>':'').'</td>
+<td valign="top" align="right"></td>
 <td>';
 
 		$txt .= ((($r['estado'] != 'activo') AND ($pol['pais'] == $r['pais']) AND ($pol['nivel'] >= 95))?boton('Activar', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=activar&chat_ID='.$r['chat_ID']):'').
@@ -202,7 +174,7 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 
 // '.($pol['estado'] == 'ciudadano'?'<p style="float:right;"><a href="/chats/turistas/"><b>Turistas</b></a></p>':'').'
 	$txt .= '</table>
-<p>'.boton('Solicitar chat', '/chats/solicitar-chat/').' <span style="font-size:12px;"></span></p>';
+<p class="quitar">'.boton('Solicitar chat', '/chats/solicitar-chat/').' <span style="font-size:12px;"></span></p>';
 
 
 }

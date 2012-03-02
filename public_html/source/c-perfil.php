@@ -371,12 +371,24 @@ $txt .= '</ul>
 
 
 		if ($user_ID != $pol['user_ID']) {
-			$txt .= '<p>' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/' . strtolower($nick) . '/').' &nbsp; '.(ECONOMIA?boton('Transferir '.MONEDA_NOMBRE.'', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/' . strtolower($nick) . '/'):'').'</p>';
+			$txt .= '<p class="quitar">' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/' . strtolower($nick) . '/').' &nbsp; '.(ECONOMIA?boton('Transferir '.MONEDA_NOMBRE.'', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/' . strtolower($nick) . '/'):'').'</p>';
 		}
 		$txt .= '</div>';
 
 		$txt_title = $nick.' - '.ucfirst($r['estado']) . ' de '.$r['pais'];
 		$txt_nav = array('/info/censo'=>'Censo', '/perfil/'.$nick=>$nick);
+
+		if ($user_ID != $pol['user_ID']) {
+			$txt_tab['http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$nick.'/'] = 'Enviar mensaje';
+			if (ECONOMIA) { $txt_tab['http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/' . strtolower($nick) . '/'] = 'Transferir'; }
+		} else {
+			
+		}
+
+		
+		$txt .= '<p class="quitar">' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$nick.'/').' &nbsp; '.(ECONOMIA?boton('Transferir '.MONEDA_NOMBRE.'', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/' . strtolower($nick) . '/'):'').'</p>';
+
+
 		$txt_description = $txt_title . ' ' . str_replace("\"", "", strip_tags($r['text']));
 
 	} else { header("HTTP/1.0 404 Not Found"); exit; }

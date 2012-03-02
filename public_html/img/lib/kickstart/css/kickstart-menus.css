@@ -76,7 +76,7 @@ z-index:600;
 		.menu li.current>a,
 		.menu li.current>a:hover,
 		.menu li.current.hover>a{
-		background: rgb(122,188,255); /* Old browsers */
+		background: rgb(122,188,255); /* Old browsers */z
 		background: -moz-linear-gradient(top, rgba(122,188,255,1) 0%, rgba(96,171,248,1) 44%, rgba(64,150,238,1) 100%); /* FF3.6+ */
 		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(122,188,255,1)), color-stop(44%,rgba(96,171,248,1)), color-stop(100%,rgba(64,150,238,1))); /* Chrome,Safari4+ */
 		background: -webkit-linear-gradient(top, rgba(122,188,255,1) 0%,rgba(96,171,248,1) 44%,rgba(64,150,238,1) 100%); /* Chrome10+,Safari5.1+ */

@@ -4,7 +4,7 @@ include('inc-functions-accion.php');
 
 // ENVIO DE EMAILS DE AVISO
 
-$votaciones = array(1735, 1754, 1734, 1740, 1792, 1768, 1794);
+$votaciones = array(1821, 1794, 1795, 1832);
 
 evento_chat('<b>[#] Comienzo de envio de emails</b> de aviso de votaciones <span style="color:grey;">('.count($votaciones).' votaciones)</span>.');
 
@@ -31,7 +31,7 @@ while($r = mysql_fetch_array($result)) {
 			$votaciones_li .= "     ".$numm++.". http://15m.".DOMAIN."/votacion/".$dato."/\n";
 		}
 
-		$texto_email = "Hola ".$r['nick']."!\n\nAún no has votado en los siguientes sondeos de Asamblea Virtual 15M:\n\n".$votaciones_li."\nCuantos más votos más legitimidad. Tu opinión cuenta. Puedes votar \"En Blanco\" si no lo tienes claro y así participar. Recuerda que puedes modificar mientras la votación está activa.\n\n¿Como participar? http://15m.".DOMAIN."/hacer/\n\nAyúdanos a difundir! Una asamblea para todos\n\n_________\nAsamblea Virtual 15M\nhttp://15m.".DOMAIN."/";
+		$texto_email = "Hola ".$r['nick']."!\n\nAún no has votado en los siguientes sondeos de Asamblea Virtual 15M:\n\n".$votaciones_li."\nCuantos más votos más legitimidad. Tu opinión cuenta. Puedes votar \"En Blanco\" si no lo tienes claro y así participar. Recuerda que puedes modificar mientras la votación está activa.\n\n¿Como participar? http://15m.virtualpol.com/hacer/\n\nVer resultados: http://15m.virtualpol.com/votacion/\n\n\nDifundimos entre todos! Una asamblea para todos\n\n_________\nAsamblea Virtual 15M\nhttp://15m.virtualpol.com/";
 
 
 		// \n\nSigue los sondeos desde redes sociales:\nhttps://www.facebook.com/pages/Asamblea-Virtual/216054178475524\nhttps://twitter.com/#!/AsambleaVirtuaI

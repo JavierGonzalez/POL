@@ -1,5 +1,5 @@
 <?php 
-if (!in_array($pol['nick'], array('GONZO', 'ZeroCool', 'oportunista', 'bradduk', 'lasarux'))) { redirect('http://www.'.DOMAIN.'/'); }
+if (!nucleo_acceso('privado', 'GONZO ZeroCool oportunista bradduk lasarux ddo mia')) { redirect('http://www.'.DOMAIN.'/'); }
 /* DESARROLLO DEL NUEVO DISEÑO 
 
 PODEMOS MODIFICAR LIBREMENTE:
@@ -82,27 +82,56 @@ IMG = "<?=IMG?>";
 	position:absolute;
 	left:200px;
 	right:0;
-	padding:0 10px 0 20px;
 	top:0px;
 	min-width:760px;
+}
 
-}
+
 #header {
-	height:60px;
+	height:99px;
+	border-bottom:1px solid #CCC;
+	box-shadow:inset -8px -8px 15px #EEE;
+	background: #FFF none repeat fixed top left;
 }
-#header-left {
+ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
+
+#header-logo {
+	position:absolute;
+	top:6px;
+	left:5px;
+	color:#999;
+	text-shadow:1px 1px 8px #CCC;
+	font-size:18px;
 }
 #header-right {
-	float:right;
+	position:absolute;
+	top:5px;
+	right:10px;
+}
+#header-breadcrumbs {
+	position:absolute;
+	left:-2px;
+	top:53px;
+}
+.breadcrumbs li { background:#FFF; }
+.breadcrumbs .last { font-weight:bold; }
+#header-tab {
+	position:absolute;
+	right:5px;
+	top:56px;
 }
 
 #content {
+	padding:0 10px 0 20px;
 	min-height:500px;
 }
+
 #footer {
 	height:50px;
 	margin-top:20px;
 }
+
+
 
 
 /*** GENERAL ***/
@@ -126,41 +155,40 @@ a:hover {
 *[title] { cursor: help; }
 abbr, .punteado { border-bottom:1px dotted #999; }
 #vpc img { margin-bottom:-2px; }
-ul.breadcrumbs { margin-top:3px; margin-left:-22px; }
-#txt-tab {
-	margin:-45px 0 0 0;
-}
+
 h1 { font-size:28px; }
 h2 { font-size:22px; }
 h3 { font-size:18px; }
 
 #vpc { box-shadow:inset -10px 5px 20px #EEE; padding-left:15px; }
-#vp_c { margin: -19px 0 0 -20px; }
-.tabs a { 
-	border-top-left-radius: 10px; -moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px;
-	border-top-right-radius:10px; -moz-border-radius-topright:10px; -webkit-border-top-right-radius:10px;
-}
+#vp_c { margin: -18px 0 0 -20px; }
+
+
+
 
 /*** MENU ***/
 .menu li {
 	white-space:nowrap;
 	font-size: 22px;
+	padding-left:8px;
+	min-width:180px;
 }
-.menu ul {
-	box-shadow: 6px 6px 15px #888;
-}
+.menu ul { box-shadow: 6px 6px 15px #888; }
 
-.menu li { padding-left:8px; }
 .menu li ul li ul { margin-left:-8px; }
-.menu li ul li ul li ul { margin-left:-8px; }
-#menu-noti li { overflow:hidden; }
+
+.menu a:hover { margin-right:8px; }
+
 #menu-comu.hover, #menu-comu .hover, #menu-comu.menu-sector { border-left:8px solid #FF6262; padding-left:0px; }
 #menu-info.hover, #menu-info .hover, #menu-info.menu-sector { border-left:8px solid #00DF00; padding-left:0px; }
 #menu-demo.hover, #menu-demo .hover, #menu-demo.menu-sector { border-left:8px solid #66BEFF; padding-left:0px; }
 #menu-econ.hover, #menu-econ .hover, #menu-econ.menu-sector { border-left:8px solid #FFFF51; padding-left:0px; }
-#menu-noti.hover, #menu-noti .hover, #menu-noti.menu-sector { border-left:8px solid orange;    padding-left:0px; }
-#menu-extra.hover, #menu-extra .hover { border-left:8px solid #FF9900; padding-left:0px; }
+#menu-noti.hover, #menu-noti .hover, #menu-noti.menu-sector { border-left:8px solid orange;  padding-left:0px; }
+#menu-noti li { overflow:hidden; }
+#menu-noti li.menu-sector { background:red; }
 
+#menu-extra.hover, #menu-extra .hover { border-left:8px solid #FF9900; padding-left:0px; }
+/* box-shadow:inset 8px 0px 0px #FF6262; */
 .md { 
 	float:right;
 	color:#808080; 
@@ -169,8 +197,64 @@ h3 { font-size:18px; }
 }
 
 
-/*** _____ ***/
 
+/*** TTABS ***/
+ul.ttabs{
+	margin:10px 0 -1px 0;
+	padding:0;
+	width:100%;
+	float:left;
+	height:33px;
+}
+
+ul.ttabs.left{text-align:left;}
+ul.ttabs.center{text-align:center;}
+ul.ttabs.right{text-align:right;}
+
+ul.ttabs li{
+	list-style-type:none;
+	margin:0 2px 0 0;
+	padding:0;
+	display:inline-block;
+	*display:inline;/*IE ONLY*/
+	position:relative;
+	top:0;
+	left:0;
+	*top:1px;/*IE 7 ONLY*/
+	zoom:1;
+}
+	
+ul.ttabs li a{
+	text-decoration:none;
+	color:#666;
+	display:inline-block;
+	padding:9px 15px;
+	position: relative;
+	top:0;
+	left:0;
+	line-height:100%;
+	background:#f5f5f5;
+	box-shadow: inset 0px -3px 3px rgba(0,0,0,0.03);
+	border:1px solid #e5e5e5;
+	border-bottom:0;
+	font-size:0.9em;
+	zoom:1;
+	border-top-left-radius: 10px; -moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px;
+	border-top-right-radius:10px; -moz-border-radius-topright:10px; -webkit-border-top-right-radius:10px;
+}
+	
+ul.ttabs li a:hover{
+	background:#fff;
+}
+	
+ul.ttabs li.current a{
+	position:relative;
+	top:1px;
+	left:0;
+	background:#fff;
+	box-shadow: none;
+	color:#222;
+}
 
 
 
@@ -256,18 +340,6 @@ h3 { font-size:18px; }
 
 /*** HACKS ***/
 strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza de kickstart */
-#content-header.fixed {
-	position:fixed;
-	top:-4px;
-	left:220px;
-	right:0;
-	padding:0 10px 0 0;
-	margin:0;
-	height:40px;
-	background:#FFF;
-	z-index:25;
-	box-shadow:-15px 3px 6px #EEE;
-}
 </style>
 
 
@@ -279,7 +351,7 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 
 <div id="content-left">
 	
-	<a href="http://www.virtualpol.com"><img src="<?=IMG?>media/logo-virtualpol-1_200.gif" alt="VirtualPol" /></a>
+	<a href="http://www.virtualpol.com"><img src="<?=IMG?>media/logo-virtualpol-1_200.gif" width="200" height="60" alt="VirtualPol" /></a>
 	
 	<ul class="menu vertical">
 
@@ -350,7 +422,6 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 		</ul>
 	</li>
 <?php } ?>
-
 	<li id="menu-noti"><a href="/">Notificaciones</a>
 		<ul>
 			<li onclick="window.location.href='/?noti=8037';"><a href="/?noti=8037">Mensaje privado de FritzDiogenes</a><span class="noti_rep_num">5</span></li>
@@ -377,9 +448,7 @@ foreach(explode(';', $pol['config']['palabras']) as $t) {
 ?>
 		</p>
 
-		<p>Más elementos en menu.</p>
-
-		<span class="icon gray large" data-icon="F"></span>
+		<p>Más elementos en menú...</p>
 
 	</div>
 </div>
@@ -391,11 +460,12 @@ foreach(explode(';', $pol['config']['palabras']) as $t) {
 
 	<div id="header">
 
-		<!--<?=notificacion('print')?>-->
-		<a href="/" title="<?=$pol['config']['pais_des'].' de '.PAIS?>"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" height="50" border="0" /></a>
-		<span id="header-left"><?=$pol['config']['pais_des'].' de '.PAIS?></span>
+		<div id="header-logo">
+			<a href="/"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" height="50" border="0" /></a>
+			<span style="position:absolute;top:0;left:100px;white-space:nowrap;"><?=$pol['config']['pais_des'].', '.PAIS?></span>
+		</div>
 
-		<span id="header-right">
+		<div id="header-right">
 <?php
 unset($txt_header);
 if (isset($pol['user_ID'])) {
@@ -414,31 +484,27 @@ if (isset($pol['user_ID'])) {
 	echo boton('Crear ciudadano', REGISTRAR.'?p='.PAIS).' | '.boton('Entrar', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
 }
 ?>
-		</span>
-	</div>
+		</div>
 
-
-	<div id="content">
-
-<?php 
-// CONTROLES PROVISIONALES - BORRAR
-$txt_tab = array('Chat', 'Opciones', 'Log');	
-?>
-
-		<div id="content-header">
+		<div id="header-breadcrumbs">
 			<ul class="breadcrumbs alt1">
 				<li><a href="/"><span class="icon" data-icon="I" style="margin:-3px;"></span></a></li>
 				<?php foreach ($txt_nav AS $u => $a) { echo '<li><a href="'.(!is_numeric($u)?$u:'#').'">'.$a.'</a></li>'; } ?>
 			</ul>
+		</div>
 
-			<ul id="txt-tab" class="tabs right">
-				<?php foreach ($txt_tab AS $u => $a) { echo '<li><a href="'.(!is_numeric($u)?$u:'#').'">'.$a.'</a></li>'; } ?>
+		<div id="header-tab">
+			<ul class="ttabs right">
+				<?php foreach ($txt_tab AS $u => $a) { echo '<li'.(!is_numeric($u)&&$_SERVER['REQUEST_URI']==$u?' class="current"':'').'><a href="'.(!is_numeric($u)?$u:'#').'">'.$a.'</a></li>'; } ?>
 			</ul>
 		</div>
 
-		<?=$txt?>
 	</div>
 
+
+	<div id="content">
+		<?=$txt?>
+	</div>
 
 
 	<div id="footer">
@@ -470,25 +536,6 @@ if (!ASAMBLEA) {
 
 <script type="text/javascript" src="<?=IMG?>scripts2.js?v=23"></script>
 <script type="text/javascript">
-/*
-$(function () {
-	var msie6 = $.browser == 'msie' && $.browser.version < 7;
-	if (!msie6) {
-		var top = $('#content-header').offset().top - parseFloat($('#content-header').css('margin-top').replace(/auto/, 0));
-		$(window).scroll(function (event) {
-			if ($(this).scrollTop() >= top) {
-				$('#content-header').addClass('fixed');
-			} else {
-				$('#content-header').removeClass('fixed');
-			}
-		});
-	}
-});
-*/
-
-
-
-
 /* GA */
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-59186-46']);

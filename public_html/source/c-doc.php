@@ -101,7 +101,7 @@ if ($_GET['a']) {
 <hr />'; 
 
 			$txt .= '<div style="color:#777;">
-'.$boton_editar.' Creado hace '.timer($r['time']).'. Última publicación hace '.timer($r['time_last']).', versión: '.$r['version'].'.<br />
+<span class="quitar">'.$boton_editar.' </span>Creado hace '.timer($r['time']).'. Última publicación hace '.timer($r['time_last']).', versión: '.$r['version'].'.<br />
 Pueden ver: '.verbalizar_acceso($r['acceso_leer'], $r['acceso_cfg_leer']).'.<br />
 Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']).'.
 </div>';

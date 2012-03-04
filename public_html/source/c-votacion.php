@@ -346,6 +346,7 @@ LIMIT 1", $link);
 			$tiempo_queda =  '<span style="color:red;">Borrador <span style="font-weight:normal;">(Previsualización de votación)</span></span> ';
 		} else { 
 			$txt_nav[] = 'Finalizado';
+			$txt_tab = array('/votacion/'.$r['ID']=>'Resultado', '/votacion/'.$r['ID'].'/info'=>'Más información');
 			$tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; 
 		}
 
@@ -356,7 +357,7 @@ LIMIT 1", $link);
 
 <div class="amarillo" style="margin:20px 0 5px 0;padding:20px 10px 0 10px;">
 <h1>'.$r['pregunta'].'</h1>
-<p style="text-align:left;'.($r['estado']=='end'?'max-height:300px;overflow-y:auto;':'').'" class="rich">'.$r['descripcion'].'</p>
+<p class="rich'.($r['estado']=='end'?' votacion_desc_min':'').'">'.$r['descripcion'].'</p>
 '.(substr($r['debate_url'], 0, 4)=='http'?'<hr /><p><b>Debate de esta votación: <a href="'.$r['debate_url'].'">aquí</a>.</b></p>':'').'
 </div>
 
@@ -679,10 +680,9 @@ Validez de esta votación: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&n
 </table>';
 				} elseif ($r['tipo_voto'] == 'multiple') { // VOTAR MULTIPLE
 
-					if ($r['ha_votado']) { $txt .= 'Tus votos han sido recogidos <b>correctamente</b>. '; }
+					if ($r['ha_votado']) { $txt .= 'Tus votos múltiples han sido recogidos <b>correctamente</b>. '; }
 
-					$txt .= 'Esta votación es múltiple.
-<table border="0">
+					$txt .= '<table border="0">
 <tr>
 <th>SI</th>
 <th>NO</th>

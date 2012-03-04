@@ -74,7 +74,7 @@ include('inc-chats.php');
 
 if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != ':') AND ($pol['config']['palabra_gob'] != '')) {
 	$palabra_gob = explode(':', $pol['config']['palabra_gob']);
-	$txt .= '<div style="margin:10px 0 0 0;"><div class="azul"><b><a href="http://'.$palabra_gob[1].'">'.$palabra_gob[0].'</a></b></div></div>';
+	$txt .= '<div style="margin:10px 0 0 0;" class="quitar"><div class="azul"><b><a href="http://'.$palabra_gob[1].'">'.$palabra_gob[0].'</a></b></div></div>';
 }
 
 $txt_menu = 'comu';

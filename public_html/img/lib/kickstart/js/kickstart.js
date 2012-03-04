@@ -15,11 +15,11 @@ $(document).ready(function(){
 	});
 	
 	$('ul.menu li').hover(function(){
-		$(this).find('ul:first').stop(true, true).fadeIn('fast');
+		$(this).find('ul:first').stop(true, true).show();
 		$(this).addClass('hover');
 	},
 	function(){
-		$(this).find('ul').stop(true, true).fadeOut('slow');
+		$(this).find('ul').stop(true, true).fadeOut('fast');
 		$(this).removeClass('hover');
 	});
 	

@@ -1,5 +1,5 @@
 <?php 
-if ((isset($_GET['v'])) OR ($pol['user_ID'] == 1)) { include('theme2.php'); exit; }
+if ((isset($_GET['v'])) OR (nucleo_acceso('privado', 'gonzo'))) { include('theme2.php'); exit; }
 
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN.'/'); }
 
@@ -41,7 +41,7 @@ if (isset($_GET['bg'])) {
 <meta name="language" content="es_ES" />
 <meta name="description" content="<?=$txt_description?>" />
 
-<link rel="stylesheet" type="text/css" href="<?=IMG?>style.css?v=22" />
+<link rel="stylesheet" type="text/css" href="<?=IMG?>style.css?v=25" />
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="<?=IMG?>superfish.js"></script> 

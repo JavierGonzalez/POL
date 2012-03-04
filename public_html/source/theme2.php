@@ -1,27 +1,13 @@
 <?php 
-if (!nucleo_acceso('privado', 'GONZO ZeroCool oportunista bradduk lasarux ddo mia')) { redirect('http://www.'.DOMAIN.'/'); }
-/* DESARROLLO DEL NUEVO DISEÑO 
-
-PODEMOS MODIFICAR LIBREMENTE:
-public_html/source/theme2.php (es este archivo)
-public_html/img/style2.css (aunque lo más comodo es poner el nuevo CSS aqui mismo, en el <HEAD> y cuando esté, lo pasamos al style2.css)
-
-El resto de archivos... poco a poco
-*/
-
-
+if (!nucleo_acceso('privado', 'GONZO ZeroCool oportunista bradduk lasarux')) { redirect('http://www.'.DOMAIN.'/'); }
+/******* DESARROLLO DEL NUEVO DISEÑO *******/
 
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN.'/'); }
-
-if (isset($_GET['noti'])) {
-	notificacion('visto', $_GET['noti']);
-}
-
+if (isset($_GET['noti'])) { notificacion('visto', $_GET['noti']); }
 if (!isset($txt)) { 
 	header('HTTP/1.1 404 Not Found');
 	$txt = '<p style="font-size:24px;">ERROR 404: <b>P&aacute;gina inexistente</b>.</p>';
 }
-
 if (isset($_GET['error'])) { 
 	header('HTTP/1.1 401 Unauthorized'); 
 	$txt = '<p style="font-size:24px;color:red;">ERROR: <b>'.base64_decode($_GET['error']).'</b>.</p>';
@@ -35,13 +21,6 @@ if (isset($txt_title)) {
 }
 if (!isset($txt_description)) { $txt_description = $txt_title.' - '.$kw.PAIS.' | VirtualPol'; }
 
-
-if (isset($_GET['bg'])) { 
-	$body_bg = COLOR_BG.' url(\'http://'.$_GET['bg'].'\') repeat fixed top left';
-} else if (isset($pol['config']['bg'])) { 
-	$body_bg = COLOR_BG.' url(\''.IMG.'bg/'.$pol['config']['bg'].'\') repeat fixed top left'; 
-} else { $body_bg = COLOR_BG; }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,9 +31,9 @@ if (isset($_GET['bg'])) {
 <meta name="description" content="<?=$txt_description?>" />
 
 <script type="text/javascript">
-var _sf_startpt=(new Date()).getTime()
+var _sf_startpt=(new Date()).getTime();
 defcon = <?=$pol['config']['defcon']?>;
-IMG = "<?=IMG?>";
+IMG = '<?=IMG?>';
 </script>
 
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -64,6 +43,12 @@ IMG = "<?=IMG?>";
 <!--<link rel="stylesheet" type="text/css" href="<?=IMG?>style2.css?v=21" />-->
 <style type="text/css">
 
+/*** PROVISIONAL ***/
+.quitar { display:none; } /* Elimina elementos del diseño antiguo para la transición */
+/*div { border:1px dashed #444; }*/
+
+
+
 /*** ESTRUCTURA ***/
 #content-left { 
 	position:fixed;
@@ -72,10 +57,10 @@ IMG = "<?=IMG?>";
 	width:200px;
 }
 #menu-next {
-	min-height:280px;
+	height:550px;
 	border-right:1px solid #CCC;
-	padding:10px 5px 10px 8px;
-	box-shadow:inset 0px 10px 20px #EEE;
+	padding:4px 5px 10px 8px;
+	box-shadow:inset -3px 11px 20px #EEE;
 }
 
 #content-right {
@@ -84,25 +69,25 @@ IMG = "<?=IMG?>";
 	right:0;
 	top:0px;
 	min-width:760px;
+	max-width:1300px;
 }
-
 
 #header {
 	height:99px;
 	border-bottom:1px solid #CCC;
-	box-shadow:inset -8px -8px 15px #EEE;
+	box-shadow:inset -6px -8px 15px #EEE;
 	background: #FFF none repeat fixed top left;
 }
-ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 
 #header-logo {
 	position:absolute;
 	top:6px;
 	left:5px;
-	color:#999;
-	text-shadow:1px 1px 8px #CCC;
+	color:#AAA;
+	text-shadow:1px 1px 1px #FFF;
 	font-size:18px;
 }
+#header-logo-p { background-color:#FFF; opacity: 0.5; position:absolute; top:15px; left:100px; white-space:nowrap; }
 #header-right {
 	position:absolute;
 	top:5px;
@@ -113,29 +98,39 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 	left:-2px;
 	top:53px;
 }
-.breadcrumbs li { background:#FFF; }
-.breadcrumbs .last { font-weight:bold; }
 #header-tab {
 	position:absolute;
-	right:5px;
 	top:56px;
+	right:5px;
 }
 
 #content {
-	padding:0 10px 0 20px;
-	min-height:500px;
+	padding:0 10px 5px 20px;
+	min-height:480px;
 }
 
 #footer {
-	height:50px;
-	margin-top:20px;
+	min-height:152px;
+	margin:0 0 0 -200px;
+	padding:2px 20px 5px 20px;
+	border-top:1px solid #CCC;
+	box-shadow:inset 0px 10px 20px #EEE;
+	background:#FFF;
+}
+#footer-left {
+	margin-right:300px;
+	max-width:850px;
+}
+#footer-right {
+	position:absolute;
+	right:20px;
+	text-align:right;
 }
 
 
 
 
 /*** GENERAL ***/
-/*div { border:1px dashed #444; }*/
 body {
 	cursor:default;
 	color: #333;
@@ -143,25 +138,17 @@ body {
 	font-size:16px;
 	min-width:900px;
 }
-.quitar { display:none; }
 
-a { 
-	text-decoration:none;
-}
-a:hover {
-	text-decoration:underline;
-}
+
+a { text-decoration:none; }
+a:hover { text-decoration:underline; }
 
 *[title] { cursor: help; }
 abbr, .punteado { border-bottom:1px dotted #999; }
-#vpc img { margin-bottom:-2px; }
 
 h1 { font-size:28px; }
 h2 { font-size:22px; }
 h3 { font-size:18px; }
-
-#vpc { box-shadow:inset -10px 5px 20px #EEE; padding-left:15px; }
-#vp_c { margin: -18px 0 0 -20px; }
 
 
 
@@ -169,32 +156,29 @@ h3 { font-size:18px; }
 /*** MENU ***/
 .menu li {
 	white-space:nowrap;
-	font-size: 22px;
-	padding-left:8px;
-	min-width:180px;
+	font-size: 21px;
 }
-.menu ul { box-shadow: 6px 6px 15px #888; }
+.menu li a { padding: 10px 0 10px 20px; }
+.menu ul { max-width:500px; box-shadow: 6px 6px 15px #888; }
 
-.menu li ul li ul { margin-left:-8px; }
+#menu-comu.hover, #menu-comu .hover, #menu-comu.menu-sel { box-shadow:inset 8px 0px 0px #FF6262; }
+#menu-info.hover, #menu-info .hover, #menu-info.menu-sel { box-shadow:inset 8px 0px 0px #00DF00; }
+#menu-demo.hover, #menu-demo .hover, #menu-demo.menu-sel { box-shadow:inset 8px 0px 0px #66BEFF; }
+#menu-econ.hover, #menu-econ .hover, #menu-econ.menu-sel { box-shadow:inset 8px 0px 0px #FFFF51; }
+#menu-noti.hover, #menu-noti .hover { box-shadow:inset 8px 0px 0px orange; }
 
-.menu a:hover { margin-right:8px; }
+#menu-noti.menu-sel a { color:#CCC; }
+#menu-noti.menu-sel {
+	text-shadow: 2px 1px 11px #FFF;
+	background:url('http://www.virtualpol.com/img/ico/noti_alert.png'); 
+}
 
-#menu-comu.hover, #menu-comu .hover, #menu-comu.menu-sector { border-left:8px solid #FF6262; padding-left:0px; }
-#menu-info.hover, #menu-info .hover, #menu-info.menu-sector { border-left:8px solid #00DF00; padding-left:0px; }
-#menu-demo.hover, #menu-demo .hover, #menu-demo.menu-sector { border-left:8px solid #66BEFF; padding-left:0px; }
-#menu-econ.hover, #menu-econ .hover, #menu-econ.menu-sector { border-left:8px solid #FFFF51; padding-left:0px; }
-#menu-noti.hover, #menu-noti .hover, #menu-noti.menu-sector { border-left:8px solid orange;  padding-left:0px; }
-#menu-noti li { overflow:hidden; }
-#menu-noti li.menu-sector { background:red; }
-
-#menu-extra.hover, #menu-extra .hover { border-left:8px solid #FF9900; padding-left:0px; }
-/* box-shadow:inset 8px 0px 0px #FF6262; */
 .md { 
-	float:right;
-	color:#808080; 
-	font-size:16px;
-	margin: 0 0 0 3px; 
+	position:absolute;
+	right:8px;
 }
+#menu-noti.menu-sel .md { right:20px; }
+
 
 
 
@@ -206,11 +190,9 @@ ul.ttabs{
 	float:left;
 	height:33px;
 }
-
 ul.ttabs.left{text-align:left;}
 ul.ttabs.center{text-align:center;}
 ul.ttabs.right{text-align:right;}
-
 ul.ttabs li{
 	list-style-type:none;
 	margin:0 2px 0 0;
@@ -222,8 +204,7 @@ ul.ttabs li{
 	left:0;
 	*top:1px;/*IE 7 ONLY*/
 	zoom:1;
-}
-	
+}	
 ul.ttabs li a{
 	text-decoration:none;
 	color:#666;
@@ -242,11 +223,9 @@ ul.ttabs li a{
 	border-top-left-radius: 10px; -moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px;
 	border-top-right-radius:10px; -moz-border-radius-topright:10px; -webkit-border-top-right-radius:10px;
 }
-	
 ul.ttabs li a:hover{
 	background:#fff;
 }
-	
 ul.ttabs li.current a{
 	position:relative;
 	top:1px;
@@ -256,6 +235,9 @@ ul.ttabs li.current a{
 	color:#222;
 }
 
+.breadcrumbs li { background:#FFF; }
+.breadcrumbs .last { font-weight:bold; }
+ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 
 
 /*** NOTIFICACIONES ***/
@@ -329,8 +311,156 @@ ul.ttabs li.current a{
 }
 
 
-/*** VIRTUALPOL CONTENT ***/
-#doc_pad { text-align:justify; margin:20px; }
+
+
+/*** CONTENIDO GENERAL ***/
+
+.votacion_desc_min {
+	max-height:200px;
+	padding-bottom:40px;
+	overflow-y:auto;
+	box-shadow:inset -8px -8px 15px #FFF;
+}
+
+.vcc, .vc, .vcn, .vcnn { 
+	background-color:#EEE;
+	font-weight:bold;  
+	font-size:18px;
+	padding: 2px 5px 1px 4px;
+	border-radius: 6px;
+	-moz-border-radius: 6px; 
+	-webkit-border-radius: 6px;
+}
+
+.vcc { 
+	color:#EA9800; 
+}
+
+.vc { 
+	color:orange; 
+}
+
+.vcn { 
+	color:#FF3E43; 
+}
+
+.vcnn { 
+	color:#D20000; 
+}
+
+.form_textarea {
+	min-width:475px;
+	width:90%;
+	height:350px;
+	color:green;
+	font-weight:bold;
+}
+
+.amarillo, .azul {
+	background:#FFFFDD;
+	border:1px solid #FFD700;
+	padding:5px 10px 5px 10px; 
+	border-radius: 6px; 
+	-moz-border-radius: 6px; 
+	-webkit-border-radius: 6px;
+}
+.azul { 
+	border:1px solid #00CCFF;
+	background:#D3F7FE; 
+}
+
+.gris { 
+	color:#808080; 
+}
+
+#pnick { 
+	min-width:280px;
+	text-align:left; 
+	box-shadow: 6px 6px 15px #888;
+}
+#pnick b { 
+	color:green; 
+}
+
+.pols { color:#ECC900; }
+
+.ciudadano, .desarrollador { color:#06f; }
+.turista { color:#66B3FF; }
+.validar { color:#96B7CF; }
+.expulsado { color:#FF8A8A; }
+.extrangero { color:#CCC; }
+
+
+
+/*** CONTENIDO CHAT ***/
+#vpc img { margin-bottom:-2px; }
+#vpc { box-shadow:inset -10px 5px 20px #EEE; padding-left:15px; vertical-align:bottom; height:450px; overflow:auto; overflow-x:hidden; }
+#vpc ul { padding:0; margin:0; position:static; }
+#vpc ul li { padding:0; margin:0; color:#666666; background:none; font-size:15px; list-style:none;}
+#vpc .oldc { color:#A3A3A3; }
+#vpc_msg { margin:0 0 0 30px; font-size:16px; font-weight:bold; color:black; border: 1px solid #808080; }
+.vpc_accion { color:#F09100; font-size:16px; }
+.vpc_priv { color:#9F009F; font-size:16px; }
+.vpc_yo { color:#2D2D2D; }
+
+/* Mensajes de chat */
+#vp_c {  margin: -18px 0 0 -20px; font-family: "Arial", "Helvetica", sans-serif; font-size:17px; }
+#vp_c h1 { font-size:19px; color:green; margin:0; padding:0; line-height:12px; }
+#vp_c a { color:#06f;text-decoration:none; }
+#vp_c a:hover { text-decoration:underline; }
+#vp_c h1 a { color:#4BB000; } 
+
+/* Lista de usuarios */
+#vpc_u { float:right; width:180px; height:450px; white-space:nowrap; overflow:auto; overflow-x:hidden; margin-left:20px; }
+#vpc_u ul { padding:15px 0; margin:0; position:static; }
+#vpc_u ul li { padding:0; margin:0; color:#666666; background:none; font-size:18px; font-weight:bold; list-style:none;}
+#vpc_u li { font-weight:bold; }
+#vpc_u a { color:#808080; text-decoration:none; }
+#vpc_u a:hover { text-decoration:underline; }
+
+
+
+
+/*** CONTENIDO FORO ***/
+.code {
+	background-color:#000;
+	color: #5F5;
+	font-family:monospace;
+}
+
+.quote {
+	background: url(bg75.png) repeat;
+	border: #000000 solid thin;
+	border-radius: 12px; 
+	font-family:serif;
+	font-style:italic;
+	padding: 6px;
+}
+
+blockquote cite {
+	font-style: normal;
+	font-weight: bold;
+	display: block;
+	font-size: 0.9em;
+	margin-bottom: 0;
+}
+
+.citar {
+	float: right;
+}
+.citar input {
+	font-size: 0.7em;
+}
+
+.pforo { 
+	border-top: 1px solid #D4D4D4; 
+}
+
+
+
+
+/*** CONTENIDO DOCS ***/
+#doc_pad { text-align:justify; margin:20px; } /* Conjunto de hacks para normalizar el codigo html generado por Etherpad-lite */
 #doc_pad ul, #doc_pad ol { margin:4px 0 -4px 0; }
 #doc_pad li { text-align:left; margin:3px 0 4px 0; }
 #doc_pad ol ol { list-style-type: lower-roman; }
@@ -338,12 +468,40 @@ ul.ttabs li.current a{
 
 
 
-/*** HACKS ***/
+/*** CONTENIDO AYUDA ***/
+.ayuda {
+display:inline-block;
+cursor:help;
+background-image:url('varios/help.png');
+width:22px;
+height:22px;
+}
+
+.ayudap {
+margin:-10px 0 0 -90px;
+position:absolute;
+background:#FFFF95;
+font-size:14px;
+color:#666;
+border:2px solid #FFFFFF;
+cursor:help;
+max-width:350px;
+min-height:50px;
+padding:6px 8px;
+z-index:10;
+}
+.ayudap {
+border-radius:6px;
+-moz-border-radius:6px;
+-webkit-border-radius:6px;
+}
+
+
+
+/*** HACKS (DOCUMENTAR) ***/
 strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza de kickstart */
+
 </style>
-
-
-
 <?=$txt_header?>
 </head>
 <body>
@@ -355,7 +513,7 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 	
 	<ul class="menu vertical">
 
-	<li id="menu-comu"<?=($txt_menu=='comu'?' class="menu-sector"':'')?>><a href="/">Comunicación</a>
+	<li id="menu-comu"<?=($txt_menu=='comu'?' class="menu-sel"':'')?>><a href="/">Comunicación</a>
 		<ul>
 			<li><a href="/chats/">Chats</a></li>
 			<li><a href="/foro/">Foros</a>
@@ -369,10 +527,10 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 		</ul>
 	</li>
 
-	<li id="menu-info"<?=($txt_menu=='info'?' class="menu-sector"':'')?>><a href="#">Información</a>
+	<li id="menu-info"<?=($txt_menu=='info'?' class="menu-sel"':'')?>><a href="#">Información</a>
 			<ul>
-				<li><a href="/info/censo/">Censo <span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
-				<li><a href="/doc/">Documentos <span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
+				<li><a href="/info/censo/">Censo<span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
+				<li><a href="/doc/">Documentos<span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
 				<li><a href="#" style="cursor:default;">Datos</a>
 					<ul>
 						<li><a href="/estadisticas/">Estadísticas</a></li>
@@ -392,11 +550,11 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 			</ul>
 		</li>
 
-	<li id="menu-demo"<?=($txt_menu=='demo'?' class="menu-sector"':'')?>><a href="#">Democracia</a>
+	<li id="menu-demo"<?=($txt_menu=='demo'?' class="menu-sel"':'')?>><a href="/votacion/">Democracia</a>
 		<ul>
 			<li><a href="/elecciones/"><b>Elecciones</b></a></li>
-			<li><a href="/votacion/">Votaciones <span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
-			<li><a href="/control/"><b>Gestión</b></a>
+			<li><a href="/votacion/"><b>Votaciones</b><span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
+			<li><a href="/control/">Gestión</a>
 				<ul>
 					<li title="Control de Gobierno"><a href="/control/gobierno/">Control</a></li>
 					<li title="Bloqueos de moderación"><a href="/control/kick/">Kicks</a></li>
@@ -411,7 +569,7 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 	</li>
 
 <?php if (ECONOMIA) { ?>
-	<li id="menu-econ"<?=($txt_menu=='econ'?' class="menu-sector"':'')?>><a href="#">Economía</a>
+	<li id="menu-econ"<?=($txt_menu=='econ'?' class="menu-sel"':'')?>><a href="#">Economía</a>
 		<ul>
 			<?=($pol['pais']==PAIS?'<li><a href="/pols/"><b>Tus monedas</b></a></li>':'')?>
 			<li><a href="/empresas/"><b>Empresas</b></a></li>
@@ -422,15 +580,15 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 		</ul>
 	</li>
 <?php } ?>
-	<li id="menu-noti"><a href="/">Notificaciones</a>
+	<li id="menu-noti" class="menu-sel"><a href="/">Notificaciones<span class="md">2</span></a>
 		<ul>
-			<li onclick="window.location.href='/?noti=8037';"><a href="/?noti=8037">Mensaje privado de FritzDiogenes</a><span class="noti_rep_num">5</span></li>
-			<li onclick="window.location.href='/?noti=16415';"><a href="/?noti=16415">Ya puedes afiliarte a un nuevo grupo: PARLAMENTO.</a></li>
-			<li onclick="window.location.href='/?noti=16414';"><a href="/?noti=16414">Mensaje privado de ethos</a></li>
-			<li onclick="window.location.href='/?noti=8004';"><a href="/?noti=8004">Mensaje privado de GONZO</a><span class="noti_rep_num">9</span></li>
-			<li onclick="window.location.href='/?noti=11858';"><a href="/?noti=11858">Mensaje privado de Koba</a></li>
-			<li onclick="window.location.href='/?noti=11841';"><a href="/?noti=11841">Mensaje privado de kir</a></li>
-			<li onclick="window.location.href='/hacer';" id="noti_hacer"><a href="/hacer">¿Qué hacer?</a></li>
+			<li><a href="/?noti=8037">Mensaje privado de FritzDiogenes<span class="md">5</span></a></li>
+			<li><a href="/?noti=16415">Ya puedes afiliarte a un nuevo grupo: PARLAMENTO.</a></li>
+			<li><a href="/?noti=16414">Mensaje privado de ethos</a></li>
+			<li><a href="/?noti=8004">Mensaje privado de GONZO<span class="md">9</span></a></li>
+			<li><a href="/?noti=11858">Mensaje privado de Koba</a></li>
+			<li><a href="/?noti=11841">Mensaje privado de kir</a></li>
+			<li><a href="/hacer">¿Qué hacer?</a></li>
 		</ul>
 	</li>
 
@@ -448,7 +606,16 @@ foreach(explode(';', $pol['config']['palabras']) as $t) {
 ?>
 		</p>
 
-		<p>Más elementos en menú...</p>
+<?php
+if (ECONOMIA) {
+	echo '<a href="/mapa/" class="gris" style="float:right;">Mapa</a><a href="/subasta/" class="gris">Subasta</a>';
+	if (!isset($cuadrado_size)) {
+		$cuadrado_size = 12;
+		include('inc-mapa.php');
+		echo '<div style="margin:0 auto;">'.$txt_mapa.'</div>';
+	}
+}
+?>
 
 	</div>
 </div>
@@ -462,7 +629,7 @@ foreach(explode(';', $pol['config']['palabras']) as $t) {
 
 		<div id="header-logo">
 			<a href="/"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" height="50" border="0" /></a>
-			<span style="position:absolute;top:0;left:100px;white-space:nowrap;"><?=$pol['config']['pais_des'].', '.PAIS?></span>
+			<span id="header-logo-p"><?=$pol['config']['pais_des'].', '.PAIS?></span>
 		</div>
 
 		<div id="header-right">
@@ -479,7 +646,7 @@ if (isset($pol['user_ID'])) {
 			case 'parl': $txt_elec = ' <a href="/elecciones/" style="color:blue;"><b>Elecciones en curso</b>, queda <b style="font-size:18px;">'.timer($elec_quedan, true).'</b></a> |';  break;
 		}
 	}
-	echo '<a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(ECONOMIA?' | <a href="/pols/"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="/msg/" title="Mensajes Privados (MP)"><span class="icon blue medium" data-icon="@"></span></a> |'.$txt_elec.' <a href="/accion.php?a=logout">Salir</a>';
+	echo '<a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(ECONOMIA?' | <a href="/pols/"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="/msg/" title="Mensajes Privados (MP)"><span class="icon blue medium" data-icon="@"></span></a> |'.$txt_elec.' <a href="/accion.php?a=logout">Salir</a>';
 } else {
 	echo boton('Crear ciudadano', REGISTRAR.'?p='.PAIS).' | '.boton('Entrar', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
 }
@@ -502,38 +669,48 @@ if (isset($pol['user_ID'])) {
 	</div>
 
 
+
 	<div id="content">
 		<?=$txt?>
 	</div>
 
 
+
 	<div id="footer">
-		<span style="float:right;font-size:14px;">
+
+		<div id="footer-right">
+			<p><b><a href="http://www.virtualpol.com/">VirtualPol</a> &nbsp; Red Social Democrática</b></p>
+			<p>
+			<a target="_blank" href="http://www.virtualpol.com/video">Video</a> | <a target="_blank" href="http://www.virtualpol.com/desarrollo">Desarrollo</a> | <a target="_blank" href="http://www.virtualpol.com/documentacion">Documentación</a><br />
+			<a target="_blank" href="http://www.virtualpol.com/TOS">Condiciones de Uso / Información legal</a><br /> 
 <?php
 unset($txt);
-echo ($pol['user_ID']==1?round((microtime(true)-TIME_START)*1000).'ms | ':'');
+echo ($pol['user_ID']==1?'<b>'.num((microtime(true)-TIME_START)*1000).'</b>ms '.num(memory_get_usage()/1000).'kb | ':'');
 ?>
-<a href="http://www.virtualpol.com/TOS" target="_blank"><abbr title="Condiciones de Uso">TOS</abbr></a> | 
-<a href="http://www.virtualpol.com/desarrollo" title="Código fuente, software libre">Desarrollo</a> | 
-<a href="http://www.virtualpol.com/documentacion" target="_blank">Documentación</a> &nbsp; &nbsp; 
-2008-2012 <b><a href="http://www.virtualpol.com/" style="font-size:16px;">VirtualPol</a></b> <sub>Beta</sub></span>
+			2008-2012</p>
+		</div>
+		
+		<div id="footer-left">
 <?php
-echo '<b>'.PAIS.'</b>';
+echo '<p><b>'.PAIS.', '.$pol['config']['pais_des'].'</b></p>';
+
+if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != ':') AND ($pol['config']['palabra_gob'] != '')) {
+	echo '<div class="azul"><b><a href="http://'.explodear(':', $pol['config']['palabra_gob'], 1).'">'.explodear(':', $pol['config']['palabra_gob'], 0).'</a></b></div>';
+}
+
 if (!ASAMBLEA) {
-	echo ' <span style="font-size:11px;"><abbr title="CONdicion de DEFensa">DEFCON <b>'.$pol['config']['defcon'].'</b></abbr></span> <span class="amarillo" id="pols_frase"><b>'.$pol['config']['pols_frase'].'</b>';
+	echo '<br /><br /><div class="amarillo" id="pols_frase"><b>'.$pol['config']['pols_frase'].'</b></div>';
 	if ($pol['config']['pols_fraseedit'] == $pol['user_ID']) { echo ' <a href="/subasta/editar/" class="gris">#</a>'; }
 }
-?>
-		</span>
+?>	
+		</div>
 	</div>
-
 <div>
 
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="<?=IMG?>lib/kickstart/js/prettify.js"></script>
 <script type="text/javascript" src="<?=IMG?>lib/kickstart/js/kickstart.js"></script>
-
 <script type="text/javascript" src="<?=IMG?>scripts2.js?v=23"></script>
 <script type="text/javascript">
 /* GA */
@@ -564,9 +741,7 @@ var _sf_async_config={uid:26055,domain:"virtualpol.com"};
   window.onload = (typeof window.onload != 'function') ?
      loadChartbeat : function() { oldonload(); loadChartbeat(); };
 })();
-
 </script>
-
 </body>
 </html>
 <?php if ($link) { mysql_close($link); } ?>

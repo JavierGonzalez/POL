@@ -10,7 +10,7 @@ chat_msg_ID = new Array();
 // ON LOAD
 $(document).ready(function(){
 
-	$("ul.sfn-menu, ul.sf-menu").superfish(); 
+	//$("ul.sfn-menu, ul.sf-menu").superfish(); 
 
 	$("dt a").click(function(){
 		$("dd:visible").slideUp("normal");

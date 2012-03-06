@@ -498,6 +498,8 @@ VALUES ('".PAIS."', '".date('Y-m-d 20:00:00')."', '".$st['ciudadanos']."', '".$s
 // ¿ELECCIONES?
 include($root_dir.'source/cron/cron-elecciones.php');
 
+// Unifica y comprime archivos CSS y JS
+include($root_dir.'source/cron/cron-compress-all.php');
 
 // Calcula el tiempo de proceso
 $mtime = explode(' ', microtime()); 

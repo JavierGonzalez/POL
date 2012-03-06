@@ -1,5 +1,5 @@
 <?php 
-if (!nucleo_acceso('privado', 'GONZO ZeroCool oportunista bradduk lasarux')) { redirect('http://www.'.DOMAIN); }
+if (!nucleo_acceso('privado', 'GONZO ZeroCool oportunista bradduk lasarux victorgc')) { redirect('http://www.'.DOMAIN); }
 /******* DESARROLLO DEL NUEVO DISEÑO *******/
 
 // Errores y redirecciones.
@@ -84,14 +84,13 @@ function pscr_close() { p_scroll = false; }
 </script>
 
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<link rel="stylesheet" type="text/css" href="<?=IMG?>lib/kickstart/css/kickstart.css" media="all" />
+<link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css" media="all" />
 <link rel="shortcut icon" href="/favicon.ico" />
 <style type="text/css">
 #header { background:#FFF <?=$body_bg?> repeat scroll top left; }
 </style>
 
 
-<!--<link rel="stylesheet" type="text/css" href="<?=IMG?>style2.css?v=21" />-->
 <style type="text/css">
 
 /*** PROVISIONAL ***/
@@ -119,6 +118,7 @@ body {
 	height:550px;
 	border-right:1px solid #CCC;
 	padding:4px 5px 10px 8px;
+	background:#F9F9F9;
 	box-shadow:inset -3px 11px 20px #EEE;
 }
 
@@ -222,7 +222,7 @@ h3 { font-size:18px; }
 	font-size: 21px;
 }
 .menu li a { padding: 10px 0 10px 20px; }
-.menu ul { max-width:400px; box-shadow: 6px 6px 15px #888; }
+.menu ul { max-width:440px; box-shadow: 6px 6px 15px #888; }
 .menu li ul li { min-width:200px; }
 .menu li ul { margin-top:-40px; }
 .menu li ul li ul { margin-top:0; }
@@ -553,7 +553,7 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 			<li><a href="/votacion"><b>Votaciones</b><span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
 			<li><a href="/control">Gestión</a>
 				<ul>
-					<li title="Control de Gobierno"><a href="/control/gobierno">Control</a></li>
+					<li><a href="/control/gobierno">Gobierno</a></li>
 					<li title="Bloqueos de moderación"><a href="/control/kick">Kicks</a></li>
 					<li><a href="/examenes">Exámenes</a></li>
 					<li><a href="<?=SSL_URL?>dnie.php">Autentificación</a></li>
@@ -659,7 +659,7 @@ if (isset($pol['user_ID'])) {
 			<p><b><a href="http://www.virtualpol.com">VirtualPol</a> &nbsp; Red Social Democrática</b></p>
 			<p>
 			<a target="_blank" href="http://www.virtualpol.com/video">Video</a> | <a target="_blank" href="http://www.virtualpol.com/desarrollo">Desarrollo</a> | <a target="_blank" href="http://www.virtualpol.com/documentacion">Documentación</a><br />
-			<a href="http://www.virtualpol.com/donaciones">Donaciones</a> | <a target="_blank" href="http://www.virtualpol.com/TOS">Condiciones de Uso / Información legal</a><br /> 
+			<a href="http://www.virtualpol.com/donaciones">Donaciones</a> | <a target="_blank" href="http://www.virtualpol.com/TOS">Condiciones de Uso / Legal</a><br /> 
 <?php
 unset($txt);
 echo ($pol['user_ID']==1?'<b>'.num((microtime(true)-TIME_START)*1000).'</b>ms '.num(memory_get_usage()/1000).'kb | ':'');
@@ -686,9 +686,7 @@ if (!ASAMBLEA) {
 
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script type="text/javascript" src="<?=IMG?>lib/kickstart/js/prettify.js"></script>
-<script type="text/javascript" src="<?=IMG?>lib/kickstart/js/kickstart.js"></script>
-<script type="text/javascript" src="<?=IMG?>scripts2.js?v=23"></script>
+<script type="text/javascript" src="<?=IMG?>scripts_all.js"></script>
 <script type="text/javascript">
 /* GA */
 var _gaq = _gaq || [];

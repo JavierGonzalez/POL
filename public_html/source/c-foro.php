@@ -551,7 +551,7 @@ LIMIT ".$r['limite'], $link);
 
 	$txt_title = 'Foro';
 	$txt_nav = array('/foro'=>'Foro');
-	$txt_tab = array('/grupos/'=>'Foros ocultos ('.$foro_oculto_num.')', '/foro/ultima-actividad/'=>'Última actividad', '/control/gobierno/foro/'=>'Configuración foro', );
+	$txt_tab = array('/grupos/'=>'Foros de grupos ('.$foro_oculto_num.')', '/foro/ultima-actividad/'=>'Última actividad', '/control/gobierno/foro/'=>'Configuración foro', );
 
 	$txt .= '<div style="float:right;color:green;" class="quitar">Hay otros <b>'.$foro_oculto_num.'</b> foros ocultados <a href="/grupos/">ver grupos</a> | <a href="/foro/ultima-actividad/">Última actividad</a> | <a href="/foro/mis-respuestas/">Tu actividad</a> &nbsp; [<a href="/control/gobierno/foro/" title="Configuraci&oacute;n del foro">Configuraci&oacute;n</a>]</div>
 

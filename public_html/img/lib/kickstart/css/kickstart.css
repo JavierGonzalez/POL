@@ -100,7 +100,7 @@ margin:10px 0 5px 0;
 	PARAGRAPHS
 -----------------------------------*/
 p{
-line-height:150%;
+/*line-height:150%;*/
 color:#666;
 margin:10px 0;
 }

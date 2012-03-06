@@ -19,7 +19,7 @@ $(document).ready(function(){
 		$(this).addClass('hover');
 	},
 	function(){
-		$(this).find('ul').stop(true, true).fadeOut('fast');
+		$(this).find('ul').stop(true, true).hide();
 		$(this).removeClass('hover');
 	});
 	

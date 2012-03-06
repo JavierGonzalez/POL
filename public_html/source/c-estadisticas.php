@@ -282,15 +282,9 @@ ORDER BY num DESC", $link);
 $txt .= '</tr></table>';
 }
 	
-	$txt .= '
-</div>
-</div>
+	$txt .= '</div>
 
-<p><a href="/estadisticas/full/">Ver datos en bruto</a></p>
-
-</div>
-
-<p>'.$p_paginas.'</p>';
+<p><a href="/estadisticas/full/">Ver datos en bruto</a></p>';
 
 $txt_header .= '<style type="text/css">#stats p { margin:4px; }</style>';
 

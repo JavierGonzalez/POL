@@ -1,4 +1,4 @@
-/* VirtualPol js */
+/* VirtualPol JS */
 
 
 // VARIABLES
@@ -10,21 +10,25 @@ chat_msg_ID = new Array();
 // ON LOAD
 $(document).ready(function(){
 
-	//$("ul.sfn-menu, ul.sf-menu").superfish(); 
-
-	$("dt a").click(function(){
-		$("dd:visible").slideUp("normal");
-		$(this).parent().next().slideDown("normal");
-		return false;
-	});
+	// Efecto scroll horizontal de Notificaciones.
+	if (p_scroll == true) { 
+		p_st = '';
+		p_r = false;
+		pl = 0;
+		if (Math.floor(Math.random()*2) == 1) { p_r = true; } // Deslizado izquierda/derecha aleatorio.
+		var p_st = setInterval("pscr()", 95); // Inicia deslizado cada 95ms.
+		var p_st_close = setTimeout("pscr_close()", 180000); // Detiene deslizado tras 3 min.
+	}
 
 	search_timers();
-	setInterval("search_timers()", 60000);
+	setInterval("search_timers()", 60000); // Actualiza temporizadores ".timer" cada minuto.
 
-	$("#pnick").css("display","none").css("position","absolute");
+	//$("#pnick").css("display","none").css("position","absolute");
 
+	// Reemplazo de emoticonos, etc.
 	$(".rich").each(function (i) { $(this).html(enriquecer($(this).html(), true)); });
 
+	// Botones HTML de votos +1 -1
 	$(".votar").each(function (i) {
 		var tipo = $(this).attr("type");
 		var item_ID = $(this).attr("name");
@@ -35,6 +39,7 @@ $(document).ready(function(){
 		$(this).html("+<input type=\"radio\" class=\"radio_" + radio_ID + "\" name=\"radio_" + radio_ID + "\" onclick=\"votar(1, '" + tipo + "', '" + item_ID + "');\"" + c_mas + " /><input type=\"radio\" class=\"radio_" + radio_ID + "\" name=\"radio_" + radio_ID + "\" onclick=\"votar(-1, '" + tipo + "', '" + item_ID + "');\"" + c_menos + " />&#8211;"); 
 	});
 
+	// Popup de info de ciudadanos.
 	$(".nick").mouseover(function(){
 		var wnick = $(this).text();
 		if (!whois_cache[wnick]) { pnick = setTimeout(function(){ $.post("/ajax.php", { a: "whois", nick: wnick }, function(data){ $("#pnick").css("display","none"); whois_cache[wnick] = data; print_whois(data, wnick); }); }, 500);
@@ -42,14 +47,13 @@ $(document).ready(function(){
 	}).mouseout(function(){ clearTimeout(pnick); pnick = ""; $("#pnick").css("display","none"); });
 	$(document).mousemove(function(e){ $("#pnick").css({top: e.pageY + "px", left: e.pageX + 15 + "px"}); });
 
+	// Mensajes emergentes de ayuda.
 	$(".ayuda").hover(
 		function () {
 			var txt = $(this).attr("value");
 			$(this).append('<span class="ayudap">' + txt + '</span>');
 		}, 
-		function () {
-			$(".ayudap").remove();
-		}
+		function () { $(".ayudap").remove(); }
 	);
 
 });
@@ -57,6 +61,19 @@ $(document).ready(function(){
 
 
 // FUNCIONES
+
+/* Esta funcion es critica, debe optimizarse al máximo. Se ejecuta 10 veces por segundo. */
+function pscr() {
+	if (p_scroll == true) {
+		if (p_r == true) { pl++; } else { pl--; }
+		document.getElementById('menu-noti').style.backgroundPosition = pl + 'px 0';
+	} else { if (p_st) { clearInterval(p_st); } }
+}
+function pscr_close() { p_scroll = false; }
+
+
+
+
 function votar(voto, tipo, item_ID) {
 	var radio_ID = tipo + item_ID;
 	$(".radio_" + radio_ID).blur();

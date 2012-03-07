@@ -48,7 +48,7 @@ LIMIT 1", $link);
 		paginacion('censo', '/pols/cuentas/' . $ID . '/', null, $ahora, $total, 200);
 
 
-		$txt .= '<h1><span class="amarillo">' . pols($pols) . ' '.MONEDA.'</span> &nbsp; CUENTA: ' . $nombre . ' <span style="color:grey;">(ID: ' . $ID . ')</span> ' . boton('&rarr;', '/pols/transferir/-' . $ID  . '/', 'm') . '</h1>
+		$txt .= '<h1><span class="amarillo">'.pols($pols).' '.MONEDA.'</span> &nbsp; CUENTA: '.$nombre.' <span style="color:grey;">(ID: '.$ID.')</span> '.boton('&rarr;', '/pols/transferir/-'.$ID, false, 'small') . '</h1>
 <br />
 <p>' . $p_paginas . '</p>
 <table border="0" cellspacing="3" cellpadding="0" class="pol_table">
@@ -95,10 +95,10 @@ LIMIT " . $p_limit, $link);
 
 
 
-		$txt .= '<tr><td align="right" valign="top"><b>' . pols($pols) . '</b></td><td valign="top">' . $transf . '</td><td>' . $row['concepto'] . '</td><td valign="top" align="right"><acronym title="' . $row['time'] . '">' . str_replace(" ", "&nbsp;", duracion(time() - strtotime($row['time']))) . '</acronym></td><td valign="top" align="right">' . boton('&rarr;', '/pols/transferir/' . strtolower($transferir_nick)  . '/', 'm') . '</td></tr>';
+		$txt .= '<tr><td align="right" valign="top"><b>' . pols($pols) . '</b></td><td valign="top">' . $transf . '</td><td>' . $row['concepto'] . '</td><td valign="top" align="right"><acronym title="' . $row['time'] . '">' . str_replace(" ", "&nbsp;", duracion(time() - strtotime($row['time']))) . '</acronym></td><td valign="top" align="right">'.boton('&rarr;', '/pols/transferir/'.strtolower($transferir_nick), false, 'small').'</td></tr>';
 	}
 
-	$txt .= '</table><p>' . $p_paginas . '</p><p><a href="/pols/cuentas/"><b>Ver Cuentas</b></a> &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>';
+	$txt .= '</table><p>'.$p_paginas.'</p><p><a href="/pols/cuentas/"><b>Ver Cuentas</b></a> &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>';
 
 
 
@@ -150,7 +150,7 @@ ORDER BY nivel DESC, pols DESC", $link);
 		if (($row['pols'] == '0') AND ($row['user_ID'] == $pol['user_ID']) AND ($row['nivel'] == '0')) {
 			$boton = boton('X', '/accion.php?a=pols&b=eliminar-cuenta&ID=' . $row['ID'], '&iquest;Seguro que quieres ELIMINAR tu cuenta Bancaria?');
 		} else { $boton = ''; }
-		$txt .= '<tr><td align="right">' . pols($row['pols']) . '</td><td><a href="/pols/cuentas/' . $row['ID'] . '/"><b>' . $row['nombre'] . '</b></a></td><td>' . $propietario . '</td><td align="center">'.$checkbox.'</td><td>' . boton('&rarr;', '/pols/transferir/-' . $row['ID']  . '/', 'm') . $boton . '</td></tr>';
+		$txt .= '<tr><td align="right">' . pols($row['pols']) . '</td><td><a href="/pols/cuentas/' . $row['ID'] . '/"><b>' . $row['nombre'] . '</b></a></td><td>' . $propietario . '</td><td align="center">'.$checkbox.'</td><td>'.boton('&rarr;', '/pols/transferir/-'.$row['ID'], false, 'small').$boton.'</td></tr>';
 	}
 	$txt .= '</table><p>' . boton('Crear Cuenta', '/pols/cuentas/crear/', false, false, $pol['config']['pols_cuentas']) . ' &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>';
 
@@ -321,9 +321,9 @@ LIMIT " . $p_limit, $link);
 		} 
 
 
-		$txt .= '<tr><td align="right" valign="top"><b>' . pols($pols) . '</b></td><td valign="top">' . $transf . '</td><td>' . $row['concepto'] . '</td><td valign="top" align="right"><acronym title="' . $row['time'] . '">' . str_replace(" ", "&nbsp;", duracion(time() - strtotime($row['time']))) . '</acronym></td><td valign="top" align="right">' . boton('&rarr;', '/pols/transferir/' . strtolower($transferir_nick)  . '/', 'm') . '</td></tr>';
+		$txt .= '<tr><td align="right" valign="top"><b>'.pols($pols).'</b></td><td valign="top">'.$transf.'</td><td>'.$row['concepto'].'</td><td valign="top" align="right"><acronym title="'.$row['time'].'">'.str_replace(" ", "&nbsp;", duracion(time() - strtotime($row['time']))).'</acronym></td><td valign="top" align="right">'.boton('&rarr;', '/pols/transferir/'.strtolower($transferir_nick), false, 'small').'</td></tr>';
 	}
-	$txt .= '</table><p>' . $p_paginas . '</p>';
+	$txt .= '</table><p>'.$p_paginas.'</p>';
 
 }
 

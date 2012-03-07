@@ -14,7 +14,7 @@ while($r = mysql_fetch_array($result)){
 	include_once('inc-functions-accion.php');
 
 	if ($r['acceso_ver'] == 'anonimos') {
-		evento_chat('<b>['.strtoupper($r['tipo']).']</b> Finalizado, resultados: <a href="/votacion/'.$r['ID'].'/"><b>'.$r['pregunta'].'</b></a> <span style="color:grey;">(votos: <b>'.$r['num'].'</b>)</span>');
+		evento_chat('<b>['.strtoupper($r['tipo']).']</b> Finalizado, resultados: <a href="/votacion/'.$r['ID'].'"><b>'.$r['pregunta'].'</b></a> <span style="color:grey;">(votos: <b>'.$r['num'].'</b>)</span>');
 	}
 
 	if ($r['ejecutar'] != '') { // EJECUTAR ACCIONES
@@ -78,7 +78,7 @@ if ($_GET['a'] == 'crear') {
 	$sel['acceso_votar'][$edit['acceso_votar']] = ' selected="selected"';
 	$sel['acceso_ver'][$edit['acceso_ver']] = ' selected="selected"';
 
-	$txt .= '<h1 class="quitar"><a href="/votacion/">Votaciones</a>: Borrador de votación</h1>
+	$txt .= '<h1 class="quitar"><a href="/votacion">Votaciones</a>: Borrador de votación</h1>
 
 <form action="http://'.strtolower(PAIS).'.'.DOMAIN.'/accion.php?a=votacion&b=crear" method="post">
 '.(isset($edit['ID'])?'<input type="hidden" name="ref_ID" value="'.$_GET['b'].'" />':'').'
@@ -258,7 +258,7 @@ function opcion_nueva() {
 	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores');
 	$txt_tab = array('/votacion/crear'=>'Crear votación');
 	
-	$txt .= '<h1><a href="/votacion">Votaciones</a>:</h1>
+	$txt .= '<h1 class="quitar"><a href="/votacion">Votaciones</a>:</h1>
 
 <span style="color:#888;"><br /><b>Borradores de votación</b>:</span><hr />
 <table border="0" cellpadding="1" cellspacing="0" class="pol_table">';
@@ -271,34 +271,21 @@ ORDER BY time DESC
 LIMIT 500", $link);
 	while($r = mysql_fetch_array($result)) {
 
-		$boton = '';
-		if ($r['user_ID'] == $pol['user_ID']) {
-			if ($r['estado'] == 'ok') {
-				if ($r['tipo'] != 'cargo') { $boton .= boton('Finalizar', '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '&iquest;Seguro que quieres FINALIZAR esta votacion?'); }
-				$boton .= boton('X', '/accion.php?a=votacion&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta votacion?');
-			}
-		}
-
 		if (nucleo_acceso($vp['acceso'][$r['tipo']])) {
-			$boton_borrar = boton('X', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Estás seguro de querer ELIMINAR este borrador de votación?');
-			$boton_iniciar = boton('Iniciar', '/accion.php?a=votacion&b=iniciar&ref_ID='.$r['ID'], '¿Estás seguro de querer INICIAR esta votación?');
+			$boton_borrar = boton('X', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Estás seguro de querer ELIMINAR este borrador de votación?', false, 'small');
+			$boton_iniciar = boton('Iniciar', '/accion.php?a=votacion&b=iniciar&ref_ID='.$r['ID'], '¿Estás seguro de querer INICIAR esta votación?', false, 'small');
 		} else {
-			$boton_borrar = boton('X');
-			$boton_iniciar = boton('Iniciar');
+			$boton_borrar = boton('X', false, false, 'small');
+			$boton_iniciar = boton('Iniciar', false, false, 'small');
 		}
 		
 		$txt .= '<tr>
-<td valign="middle" align="right" rowspan="2" nowrap="nowrap"><b>'.ucfirst($r['tipo']).'</b><br />'.$boton_borrar.$boton_iniciar.'</td>
-<td><a href="/votacion/crear/'.$r['ID'].'"><b>'.$r['pregunta'].'</b></a> (<a href="/votacion/'.$r['ID'].'">previsualizar</a>)</td>
-</tr>
-<tr>
-<td style="color:grey;">
+<td valign="top" align="right" nowrap="nowrap"><b>'.ucfirst($r['tipo']).'</b><br />'.$boton_borrar.$boton_iniciar.'<br />'.boton('Previsualizar', '/votacion/'.$r['ID'], false, 'small').'</td>
+<td><a href="/votacion/crear/'.$r['ID'].'"><b style="font-size:18px;">'.$r['pregunta'].'</b></a><br />
 Creado hace <b><span class="timer" value="'.strtotime($r['time']).'"></span></b> por '.crear_link($r['nick']).', editado hace <span class="timer" value="'.strtotime($r['time_expire']).'"></span>
 <br />
 Ver: <em title="'.$r['acceso_cfg_ver'].'">'.$r['acceso_ver'].'</em>, votar: <em title="'.$r['acceso_cfg_votar'].'">'.$r['acceso_votar'].'</em>, tipo voto: <em>'.$r['tipo_voto'].'</em>, duración: <em>'.duracion($r['duracion']).'</em></td>
-</tr>
-<tr><td><br /></td></tr>
-';
+</tr>';
 	}
 	$txt .= '</table>';
 
@@ -338,22 +325,22 @@ LIMIT 1", $link);
 			$txt_nav[] = 'En curso...';
 			$txt_tab = array('/votacion/'=>'Ver otros resultados');
 
-			$tiempo_queda =  '<span style="color:blue;">Quedan <span class="timer" value="'.$time_expire.'"></span>.</span>'; 
+			$tiempo_queda =  '<span style="color:blue;">Quedan '.timer($time_expire, true).'.</span>'; 
 		} elseif ($r['estado'] == 'borrador') {
 			$txt_nav[] = 'Borrador';
 			$txt_tab = array('/votacion/borradores'=>'Ver borradores', '/votacion/'.$r['ID']=>'Previsualizar', '/votacion/crear/'.$r['ID']=>'Editar borrador');
 
 			$tiempo_queda =  '<span style="color:red;">Borrador <span style="font-weight:normal;">(Previsualización de votación)</span></span> ';
 		} else { 
-			$txt_nav[] = 'Finalizado';
+			$txt_nav[] = 'Finalizado ('.num($votos_total).' votos)';
 			$txt_tab = array('/votacion/'.$r['ID']=>'Resultado', '/votacion/'.$r['ID'].'/info'=>'Más información');
 			$tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; 
 		}
 
 
-		$txt .= '<span style="float:right;"><b>'.num($votos_total).' votos</b> | '.$tiempo_queda.'</span>
+		$txt .= '<span style="float:right;" class="quitar"><b>'.num($votos_total).' votos</b> | '.$tiempo_queda.'</span>
 		
-<h1 class="quitar"><a href="/votacion/">Votaciones</a>: '.strtoupper($r['tipo']).'</h1>
+<h1 class="quitar"><a href="/votacion">Votaciones</a>: '.strtoupper($r['tipo']).'</h1>
 
 <div class="amarillo" style="margin:20px 0 5px 0;padding:20px 10px 0 10px;">
 <h1>'.$r['pregunta'].'</h1>
@@ -366,7 +353,7 @@ LIMIT 1", $link);
 <td><b style="font-size:20px;color:#777;">¡Difúnde esta votación!</b> &nbsp;</td>
 
 <td width="140" height="35">
-<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion/'.$r['ID'].'/" data-text="'.($r['estado']=='ok'?'VOTACIóN':'RESULTADO').': '.substr($r['pregunta'], 0, 83).'" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="AsambleaVirtual">Twittear</a>
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion/'.$r['ID'].'" data-text="'.($r['estado']=='ok'?'VOTACIóN':'RESULTADO').': '.substr($r['pregunta'], 0, 83).'" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="AsambleaVirtual">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </td>
 
@@ -378,7 +365,7 @@ LIMIT 1", $link);
   js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, \'script\', \'facebook-jssdk\'));</script>
-<div style="display:inline;" class="fb-like" data-href="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion/'.$r['ID'].'/" data-send="true" data-layout="button_count" data-width="300" data-show-faces="false" data-action="recommend" data-font="verdana"></div></td>
+<div style="display:inline;" class="fb-like" data-href="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion/'.$r['ID'].'" data-send="true" data-layout="button_count" data-width="300" data-show-faces="false" data-action="recommend" data-font="verdana"></div></td>
 
 </tr></table>':'').'
 ';
@@ -386,7 +373,7 @@ LIMIT 1", $link);
 
 		if ($_GET['b'] == 'info') {
 			
-			$txt .= '<span id="ver_info"></span><span style="float:right;text-align:right;"><a href="/votacion/'.$r['ID'].'/"><b>Volver a la votación</b></a></span><table border="0" width="100%"><tr><td valign="top">';
+			$txt .= '<span id="ver_info"></span><span style="float:right;text-align:right;"><a href="/votacion/'.$r['ID'].'"><b>Volver a la votación</b></a></span><table border="0" width="100%"><tr><td valign="top">';
 			
 			
 			$result2 = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
@@ -783,14 +770,14 @@ LIMIT 500", $link);
 		$time_expire = strtotime($r['time_expire']);
 
 		if ((!isset($pol['user_ID'])) OR ((!$r['ha_votado']) AND ($r['estado'] == 'ok') AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])))) { 
-			$votar = boton('Votar', '/votacion/'.$r['ID'].'/');
+			$votar = boton('Votar', '/votacion/'.$r['ID'], false, 'small').' ';
 		} else { $votar = ''; }
 
 		$boton = '';
 		if ($r['user_ID'] == $pol['user_ID']) {
 			if ($r['estado'] == 'ok') {
-				if ($r['tipo'] != 'cargo') { $boton .= boton('Finalizar', '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '&iquest;Seguro que quieres FINALIZAR esta votacion?'); }
-				$boton .= boton('X', '/accion.php?a=votacion&b=eliminar&ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta votacion?');
+				if ($r['tipo'] != 'cargo') { $boton .= boton('Finalizar', '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '¿Seguro que quieres FINALIZAR esta votacion?'); }
+				$boton .= boton('X', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Seguro que quieres ELIMINAR esta votacion?');
 			}
 		}
 
@@ -799,7 +786,7 @@ LIMIT 500", $link);
 			$txt .= '<tr>
 <td width="100"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
-<td>'.$votar.'<a href="/votacion/'.$r['ID'].'/" style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
+<td>'.$votar.'<a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap"><span style="color:blue;" title="Tiempo que falta para el resultado">Faltan <b><span class="timer" value="'.$time_expire.'"></span></b></span></td>
 <td nowrap="nowrap">'.$boton.'</td>
 <td></td>
@@ -849,7 +836,7 @@ LIMIT 500", $link);
 			$txt .= '<tr class="v_'.$r['tipo'].'"'.(in_array($r['tipo'], array('referendum', 'parlamento', 'sondeo'))?'':' style="display:none;"').'>
 <td width="100"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
-<td><a href="/votacion/'.$r['ID'].'/" style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
+<td><a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap"><span style="color:grey;">Hace <span class="timer" value="'.$time_expire.'"></span></span></td>
 <td></td>
 </tr>';

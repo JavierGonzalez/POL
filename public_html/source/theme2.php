@@ -1,28 +1,13 @@
-<?php 
-if (!nucleo_acceso('privado', 'GONZO ZeroCool oportunista bradduk lasarux victorgc')) { redirect('http://www.'.DOMAIN); }
-/******* DESARROLLO DEL NUEVO DISEÑO *******/
+<?php /******* NUEVO DISEÑO *******/
 
 // Errores y redirecciones.
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN); }
 if (isset($_GET['noti'])) { notificacion('visto', $_GET['noti']); }
-if (!isset($txt)) { 
-	header('HTTP/1.1 404 Not Found');
-	$txt = '<h1 style="font-weight:normal;">ERROR 404: <b>Página inexistente</b></h1>';
-}
-if (isset($_GET['error'])) { 
-	header('HTTP/1.1 401 Unauthorized'); 
-	$txt = '<h1 style="font-weight:normal;color:red;">ERROR: <b>'.base64_decode($_GET['error']).'</b></h1>';
-}
+if (!isset($txt)) { header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">ERROR 404: <b>Página inexistente</b></h1>'; }
+if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<h1 style="font-weight:normal;color:red;">ERROR: <b>'.base64_decode($_GET['error']).'</b></h1>'; }
 
-// Genera los META title y description.
-$kw = '';
-if (isset($txt_title)) { 
-	$txt_title .= ' | '.PAIS.' | VirtualPol'; 
-} else { 	//home
-	$txt_title = (isset($pol['config']['pais_des'])?$pol['config']['pais_des'].' de '.PAIS.' '.$kw.'| VirtualPol':PAIS.' '.$kw.'| VirtualPol');
-}
-if (!isset($txt_description)) { $txt_description = $txt_title.' - '.$kw.PAIS.' | VirtualPol'; }
-
+if (isset($txt_title)) { $txt_title .= ' | '.PAIS.' | VirtualPol'; }
+else { $txt_title = (isset($pol['config']['pais_des'])?$pol['config']['pais_des'].' de '.PAIS.' '.$kw.'| VirtualPol':PAIS.' '.$kw.'| VirtualPol'); }
 
 // Genera info de elecciones.
 if ($pol['config']['elecciones_estado'] == 'normal') {
@@ -52,52 +37,29 @@ $body_bg = 'url(\'http://www.virtualpol.com/img/bg/tapiz-lineas-verdes.jpg\')';
 <title><?=$txt_title?></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="language" content="es_ES" />
-<meta name="description" content="<?=$txt_description?>" />
-
-<script type="text/javascript">
-var _sf_startpt=(new Date()).getTime();
-IMG = '<?=IMG?>';
-
-
-// Variables del deslizado noti.
-p_st = '';
-p_r = false;
-pl = 0;
-p_scroll = true;
-
-// Ejecución onload.
-if (p_scroll == true) { 
-	if (Math.floor(Math.random()*2) == 1) { p_r = true; } // Deslizado izquierda/derecha aleatorio.
-	var p_st = setInterval("pscr()", 95); // Inicia deslizado cada 95ms.
-	var p_st_close = setTimeout("pscr_close()", 180000); // Detiene deslizado tras 3 min.
-}
-
-/* Esta funcion debe optimizarse al máximo. Se ejecuta 10 veces por segundo. */
-function pscr() {
-	if (p_scroll == true) {
-		if (p_r == true) { pl++; } else { pl--; }
-		document.getElementById('menu-noti').style.backgroundPosition = pl + 'px 0';
-	} else { if (p_st) { clearInterval(p_st); } }
-}
-function pscr_close() { p_scroll = false; }
-
-</script>
-
-<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css" media="all" />
+<meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS.' | VirtualPol')?>" />
 <link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css" media="all" />
 <style type="text/css">
 #header { background:#FFF <?=$body_bg?> repeat scroll top left; }
 </style>
+
+<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script type="text/javascript" src="<?=IMG?>scripts_all.js"></script>
+<script type="text/javascript">
+var _sf_startpt=(new Date()).getTime();
+IMG = '<?=IMG?>';
+p_scroll = true;
+</script>
+
 
 
 <style type="text/css">
 
 /*** PROVISIONAL ***/
 .quitar { display:none; } /* Elimina elementos del diseño antiguo para la transición */
-/*div { border:1px dashed #444; }*/
-
-
 
 /*** ESTRUCTURA ***/
 body {
@@ -168,7 +130,7 @@ body {
 	padding:2px 20px 5px 20px;
 	border-top:1px solid #CCC;
 	box-shadow:inset 0px 10px 20px #EEE;
-	background:#FFF;
+	background:#F9F9F9;
 }
 #footer-left {
 	margin-right:300px;
@@ -214,7 +176,7 @@ h3 { font-size:18px; }
 	-webkit-border-radius: 6px;
 	box-shadow: 0px 0px 15px #FFF;
 }
-.htxt:hover { opacity: 0.99; }
+.htxt:hover { opacity: 1; }
 
 /*** MENU ***/
 .menu li {
@@ -304,7 +266,6 @@ ul.ttabs li.current a{
 	box-shadow: none;
 	color:#222;
 }
-
 .breadcrumbs li { background:#FFF; }
 .breadcrumbs .last { font-weight:bold; }
 ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
@@ -312,14 +273,12 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 
 
 /*** CONTENIDO GENERAL ***/
-
 .votacion_desc_min {
 	max-height:200px;
 	padding-bottom:40px;
 	overflow-y:auto;
-	box-shadow:inset -8px -8px 15px #FFF;
+	box-shadow:inset -8px -8px 15px #EEE;
 }
-
 .vcc, .vc, .vcn, .vcnn { 
 	background-color:#EEE;
 	font-weight:bold;  
@@ -329,22 +288,10 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 	-moz-border-radius: 6px; 
 	-webkit-border-radius: 6px;
 }
-
-.vcc { 
-	color:#EA9800; 
-}
-
-.vc { 
-	color:orange; 
-}
-
-.vcn { 
-	color:#FF3E43; 
-}
-
-.vcnn { 
-	color:#D20000; 
-}
+.vcc { color:#EA9800; }
+.vc { color:orange; }
+.vcn { color:#FF3E43; }
+.vcnn { color:#D20000; }
 
 .form_textarea {
 	min-width:475px;
@@ -366,19 +313,14 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 	border:1px solid #00CCFF;
 	background:#D3F7FE; 
 }
-
-.gris { 
-	color:#808080; 
-}
+.gris { color:#808080; }
 
 #pnick { 
 	min-width:280px;
 	text-align:left; 
 	box-shadow: 6px 6px 15px #888;
 }
-#pnick b { 
-	color:green; 
-}
+#pnick b { color:green; }
 
 .pols { color:#ECC900; }
 
@@ -425,7 +367,6 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 	color: #5F5;
 	font-family:monospace;
 }
-
 .quote {
 	background: url(bg75.png) repeat;
 	border: #000000 solid thin;
@@ -434,7 +375,6 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 	font-style:italic;
 	padding: 6px;
 }
-
 blockquote cite {
 	font-style: normal;
 	font-weight: bold;
@@ -442,19 +382,8 @@ blockquote cite {
 	font-size: 0.9em;
 	margin-bottom: 0;
 }
-
-.citar {
-	float: right;
-}
-.citar input {
-	font-size: 0.7em;
-}
-
-.pforo { 
-	border-top: 1px solid #D4D4D4; 
-}
-
-
+.citar { float: right; }
+.citar input { font-size: 0.7em; }
 
 
 /*** CONTENIDO DOCS ***/
@@ -474,7 +403,6 @@ blockquote cite {
 	width:22px;
 	height:22px;
 }
-
 .ayudap {
 	margin:-10px 0 0 -90px;
 	position:absolute;
@@ -487,13 +415,10 @@ blockquote cite {
 	min-height:50px;
 	padding:6px 8px;
 	z-index:10;
-}
-.ayudap {
 	border-radius:6px;
 	-moz-border-radius:6px;
 	-webkit-border-radius:6px;
 }
-
 
 
 /*** HACKS (DOCUMENTAR) ***/
@@ -519,7 +444,14 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 					<?=(isset($pol['user_ID'])?'<li><a href="/foro/mis-respuestas">Tu actividad</a></li>':'')?>
 				</ul>
 			</li>
-			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0">Voz</a><ul><li><a href="/info/voz">Config. Mumble</a></li></ul></li>':'')?>
+			<li><a href="#" style="cursor:default;">Redes sociales</a>
+				<ul>
+					<li><a href="<?=(ASAMBLEA?'https://twitter.com/#!/AsambleaVirtuaI':'https://twitter.com/#!/VirtualPol')?>">Twitter</a>
+					<?=(ASAMBLEA?'<li><a href="https://www.facebook.com/AsambleaVirtual">Facebook</a>':'')?>
+					<li><a href="/info/seguir">Seguir...</a>
+				</ul>
+			</li>
+			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0">Voz</a><ul><li><a href="/info/voz">Configurar <em>Mumble</em></a></li></ul></li>':'')?>
 			<li><a href="/msg">Mensajes Privados</a></li>
 		</ul>
 	</li>
@@ -528,11 +460,11 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 		<ul>
 			<li><a href="/info/censo">Censo<span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
 			<li><a href="/doc"><b>Documentos</b><span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
-			<li><a href="#" style="cursor:default;">Datos</a>
+			<li><a href="#" style="cursor:default;">Estadísticas</a>
 				<ul>
 					<li><a href="/estadisticas">Estadísticas</a></li>
 					<!--<li><a href="http://chartbeat.com/dashboard2/?url=virtualpol.com&k=ecc15496e00f415838f6912422024d06" target="_blank" title="Estadísticas de ChartBeat">Estadísticas web</a></li>-->
-					<li><a href="/log-eventos">Log acciones</a></li>
+					<li><a href="/log-eventos">Log de acciones</a></li>
 				</ul>
 			</li>
 			<li><a href="/buscar">Buscar</a></li>
@@ -594,11 +526,9 @@ echo '</p>';
 
 if (ECONOMIA) {
 	echo '<a href="/mapa" class="gris" style="float:right;">Mapa</a><a href="/subasta" class="gris">Subasta</a>';
-	if (!isset($cuadrado_size)) {
-		$cuadrado_size = 12;
-		include('inc-mapa.php');
-		echo '<div style="margin:0 auto;">'.$txt_mapa.'</div>';
-	}
+	if (!isset($cuadrado_size)) { $cuadrado_size = 12; }
+	include('inc-mapa.php');
+	echo '<div style="margin:4px 0 0 6px;">'.$txt_mapa.'</div>';
 }
 ?>
 
@@ -656,20 +586,33 @@ if (isset($pol['user_ID'])) {
 	<div id="footer">
 
 		<div id="footer-right">
-			<p><b><a href="http://www.virtualpol.com">VirtualPol</a> &nbsp; Red Social Democrática</b></p>
+			<p><b><a href="http://www.virtualpol.com">VirtualPol</a></b>, la primera <b>Red Social Democrática</b> <?=boton('Donar', 'http://www.virtualpol.com/donaciones', false, 'small pill orange')?></p>
 			<p>
 			<a target="_blank" href="http://www.virtualpol.com/video">Video</a> | <a target="_blank" href="http://www.virtualpol.com/desarrollo">Desarrollo</a> | <a target="_blank" href="http://www.virtualpol.com/documentacion">Documentación</a><br />
-			<a href="http://www.virtualpol.com/donaciones">Donaciones</a> | <a target="_blank" href="http://www.virtualpol.com/TOS">Condiciones de Uso / Legal</a><br /> 
+			<a target="_blank" href="http://www.virtualpol.com/TOS">Condiciones de Uso / Legal</a><br /> 
 <?php
 unset($txt);
-echo ($pol['user_ID']==1?'<b>'.num((microtime(true)-TIME_START)*1000).'</b>ms '.num(memory_get_usage()/1000).'kb | ':'');
+if ($pol['user_ID'] == 1) { echo '<b>'.num((microtime(true)-TIME_START)*1000).'</b>ms '.num(memory_get_usage()/1000).'kb | '; }
+if (!isset($pol['user_ID'])) { echo '<a target="_blank" href="http://gonzo.teoriza.com" title="GONZO">Javier González</a> (<a target="_blank" href="http://www.teoriza.com" title="Blogs">Teoriza</a>, <a target="_blank" href="http://www.eventuis.com" title="Eventos">eventuis</a>, <a target="_blank" href="http://www.perfectcine.com" title="Cine">PerfectCine</a>) | '; }
 ?>
 			2008-2012</p>
 		</div>
 		
 		<div id="footer-left">
 <?php
-echo '<p><b>'.PAIS.', '.$pol['config']['pais_des'].'</b></p>';
+echo '<p><b>'.PAIS.', '.$pol['config']['pais_des'].'</b> ';
+
+if (ASAMBLEA) {
+	echo '<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://15m.virtualpol.com/" data-text="Participa en Asamblea Virtual 15M! http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="AsambleaVirtual">Twittear</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script> 
+<a href="https://www.facebook.com/AsambleaVirtual"><img src="'.IMG.'ico/2_32.png" alt="Facebook" width="32" height="32" /></a>';
+} else {
+	echo '<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.virtualpol.com/" data-text="VirtualPol, la primera red democrática virtual http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">Twittear</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>';
+}
+
+echo '</p>';
+
 
 if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != ':') AND ($pol['config']['palabra_gob'] != '')) {
 	echo '<div class="azul"><b><a href="http://'.explodear(':', $pol['config']['palabra_gob'], 1).'">'.explodear(':', $pol['config']['palabra_gob'], 0).'</a></b></div>';
@@ -684,9 +627,8 @@ if (!ASAMBLEA) {
 	</div>
 <div>
 
+<div id="pnick" class="azul" style="display:none;"></div>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script type="text/javascript" src="<?=IMG?>scripts_all.js"></script>
 <script type="text/javascript">
 /* GA */
 var _gaq = _gaq || [];

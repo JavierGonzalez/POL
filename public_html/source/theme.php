@@ -1,21 +1,13 @@
 <?php 
-if ((isset($_GET['v'])) OR (nucleo_acceso('privado', 'gonzo'))) { include('theme2.php'); exit; }
+if (nucleo_acceso('privado', 'gonzo zerocool bradduk ethos vara oportunista')) { include('theme2.php'); exit; }
 
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN.'/'); }
 
-if (isset($_GET['noti'])) {
-	notificacion('visto', $_GET['noti']);
-}
+if (isset($_GET['noti'])) { notificacion('visto', $_GET['noti']); }
 
-if (!isset($txt)) { 
-	header('HTTP/1.1 404 Not Found');
-	$txt = '<p style="font-size:24px;">ERROR 404: <b>P&aacute;gina inexistente</b>.</p>';
-}
+if (!isset($txt)) { header('HTTP/1.1 404 Not Found'); $txt = '<p style="font-size:24px;">ERROR 404: <b>Página inexistente</b>.</p>'; }
 
-if (isset($_GET['error'])) { 
-	header('HTTP/1.1 401 Unauthorized'); 
-	$txt = '<p style="font-size:24px;color:red;">ERROR: <b>'.base64_decode($_GET['error']).'</b>.</p>';
-}
+if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<p style="font-size:24px;color:red;">ERROR: <b>'.base64_decode($_GET['error']).'</b>.</p>'; }
 
 $kw = '';
 if (isset($txt_title)) { 

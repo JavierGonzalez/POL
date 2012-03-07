@@ -7,7 +7,7 @@ include('inc-login.php');
 if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 	$txt_title = 'Solicitar chat';
 	$txt_nav = array('/chats'=>'Chats', 'Solicitar chat');
-	$txt_tab = array('/chats/solicitar-chat/'=>'Solicitar chat');
+	$txt_tab = array('/chats/solicitar-chat'=>'Solicitar chat');
 
 	if (($pol['pais']) AND ($pol['pais'] != PAIS)) { header('Location: http://'.strtolower($pol['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'); exit; }
 
@@ -37,7 +37,7 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 		$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo'], 'Log');
 		$txt_tab = array('/chats/'.$r['url']=>'Chat', '/chats/'.$r['url'].'/log'=>'Log', '/chats/'.$r['url'].'/opciones'=>'Opciones');
 		
-		$txt .= '<h1 class="quitar"><a href="/chats/">Chats</a>: <a href="/chats/'.$r['url'].'/">'.$r['titulo'].'</a> | log</h1>';
+		$txt .= '<h1 class="quitar"><a href="/chats/">Chats</a>: <a href="/chats/'.$r['url'].'">'.$r['titulo'].'</a> | log</h1>';
 
 		if ((nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) AND (isset($pol['user_ID']))) {
 			$txt .= '<p>Log de las ultimas 24 horas:</p><p class="rich" style="background:#FFFFFF;padding:15px;font-size:14px;text-align:left;">VirtualPol: Plataforma '.PAIS.'. Sala: '.$r['titulo'].'. A fecha de '.date('Y-m-d').'.<br />...<br />';

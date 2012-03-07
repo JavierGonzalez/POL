@@ -136,7 +136,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 
 			} else { $t = '<li><a href="'.REGISTRAR.'?p='.PAIS.'" class="noti-nuevo">Primer paso: crea tu ciudadano</a></li>'; $total_num = 1; $nuevos_num = 1; }
 			global $txt_elec_time;
-			return '<li id="menu-noti"'.($nuevos_num!=0?' class="menu-sel"':'').'><a href="/hacer">Notificaciones<span class="md">'.$nuevos_num.'</span></a><ul><li><a href="/elecciones">Elecciones en <b>'.$txt_elec_time.'</b>, proceso en <b>'.timer(date('Y-m-d 20:00:00')).'</b></a></li>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'</ul></li>';
+			return '<li id="menu-noti"'.($nuevos_num!=0?' class="menu-sel"':'').'><a href="/hacer">Notificaciones<span class="md">'.$nuevos_num.'</span></a><ul><li style="border-bottom:1px dotted #DDD;"><a href="/elecciones">Elecciones en <b>'.$txt_elec_time.'</b>, proceso en <b>'.timer(date('Y-m-d 20:00:00')).'.</b></a></li>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'</ul></li>';
 			break;
 
 
@@ -244,24 +244,15 @@ function num($num, $dec=0) { return number_format(round($num, $dec), $dec, ',', 
 function explodear($pat, $str, $num) { $exp = explode($pat, $str); return $exp[$num]; }
 function implodear($pat, $str, $num) { $exp = implode($pat, $str); return $exp[$num]; }
 
-function boton($value, $url='', $confirm=false, $m='', $pols='') {
-	if ($pols != '') {
-		global $pol;
-		if ($pol['pols'] >= $pols) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
-		if ($url) {
-			return '<span class="amarillo"><input type="button" value="' . $value . '"' . $disabled . ' onClick="window.location.href=\'' . $url . '\';" /> &nbsp; ' . pols($pols) . ' ' . MONEDA . '</span>';
-		} else {
-			return '<span class="amarillo"><input type="submit" value="' . $value . '"' . $disabled . ' /> &nbsp; ' . pols($pols) . ' ' . MONEDA . '</span>';
-		}
-	} elseif (($confirm) AND ($confirm != 'm')) { 
-		return '<input type="button" value="' . $value . '" onClick="if (!confirm(\'' . $confirm . '\')) { return false; } else { window.location.href=\'' . $url . '\'; }" />';
-	} elseif (!$url) {
-		return '<input type="button" value="' . $value . '" disabled="disabled" />';
+function boton($texto, $url=false, $confirm=false, $size=false, $pols=false) {
+	if ($pols==false) {
+		return '<button'.($url==false?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').'window.location.href=\''.$url.'\';return false;"').($size!=false?' class="'.$size.'"':'').'>'.$texto.'</button>';
 	} else {
-		if ($confirm == 'm') { $style = ' style="margin-bottom:-16px;"'; }
-		return '<input type="button" value="' . $value . '" onClick="window.location.href=\'' . $url . '\';"' . $style . ' />'; 
+		global $pol;
+		return '<span class="amarillo"><input type="submit" value="'.$texto.'"'.($url==false?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').'window.location.href=\''.$url.'\';"').' /> &nbsp; '.pols($pols).' '.MONEDA.'</span>';
 	}
 }
+
 
 function form_select_nivel($nivel_select='') {
 	global $pol, $link;

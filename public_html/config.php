@@ -100,7 +100,7 @@ switch ($host[0]) {
 	case 'vulcan': define('PAIS', 'Vulcan'); break;
 	case 'atlantis': define('PAIS', 'Atlantis'); break;
 	case 'vp': define('PAIS', 'VP'); break;
-	default: define('PAIS', 'VP'); break;
+	default: define('PAIS', 'Hispania'); break;
 }
 
 

@@ -55,7 +55,7 @@ if (isset($sc[$pol['user_ID']])) {
 			$txt_title = 'Control: SC | Nuevos ciudadanos';
 			$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC', 'Nuevos ciudadanos');
 
-			$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+			$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisión del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
@@ -63,7 +63,7 @@ if (isset($sc[$pol['user_ID']])) {
 <table border="0" cellspacing="0" cellpadding="2">
 <tr>
 <th></th>
-<th align="right" colspan="2"><acronym title="Tiempo desde que se registr&oacute;">Registro</acronym></th>
+<th align="right" colspan="2"><acronym title="Tiempo desde que se registró">Registro</acronym></th>
 <th align="right">Online</th>
 <th align="right"><acronym title="Tiempo desde el ultimo acceso">Ultimo</acronym></th>
 <th align="right"><acronym title="Plataforma">P</acronym></th>
@@ -144,7 +144,7 @@ LIMIT 60", $link);
 	$txt_title = 'Control: SC | Confianza mutua';
 	$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC', 'Confianza mutua');
 
-	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | Confianza | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisión del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | Confianza | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
@@ -237,7 +237,7 @@ $txt .= '<h1>Grafico confianza</h1>
 	$txt_title = 'Control: SC | Extras';
 	$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC', 'Extras');
 
-	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisi&oacute;n del Censo</a> | Extras | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisión del Censo</a> | Extras | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
@@ -293,7 +293,7 @@ WHERE ref = '" . $r['ID'] . "'", $link);
 );
 
 
-	$txt .= '<br /><h1>6. Emails at&iacute;picos</h1><hr /><table border="0" cellspacing="4">';
+	$txt .= '<br /><h1>6. Emails atípicos</h1><hr /><table border="0" cellspacing="4">';
 	$result = mysql_query("SELECT email, nick, ref, ref_num, estado FROM users ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 
@@ -336,7 +336,7 @@ ORDER BY num DESC", $link);
 
 
 
-	$txt .= '<br /><h1>8. M&aacute;s votos y menos actividad</h1><hr /><table border="0" cellspacing="4">
+	$txt .= '<br /><h1>8. Más votos y menos actividad</h1><hr /><table border="0" cellspacing="4">
 <tr>
 <th></th>
 <th><acronym title="Numero de elecciones">N</acronym></th>
@@ -380,7 +380,7 @@ ORDER BY num ASC", $link);
 	$txt .= '</table>';
 
 
-	$txt .= '<br /><h1>10. M&aacute;s antiguedad y menos online (ALPHA)</h1><hr /><table border="0" cellspacing="4">
+	$txt .= '<br /><h1>10. Más antiguedad y menos online (ALPHA)</h1><hr /><table border="0" cellspacing="4">
 <tr>
 <th></th>
 <th>Antiguedad</th>
@@ -406,7 +406,7 @@ ORDER BY factor DESC LIMIT 30", $link);
 	$txt_title = 'Control: SC';
 	$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC');
 
-	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: Supervisi&oacute;n del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
+	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: Supervisión del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
 <p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>'.$supervisores.'</b></p>'.$nomenclatura;
 
@@ -510,7 +510,7 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 	$txt .= '</table>';
 
 
-	$txt .= '<br /><h1>4. Ocultaci&oacute;n de conexi&oacute;n (proxys, TOR...)<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
+	$txt .= '<br /><h1>4. Ocultación de conexión (proxys, TOR...)<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
 	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%proxy%');
 	$sql_anon = '';
 	foreach ($array_searchtor AS $filtro) { if ($sql_anon != '') { $sql_anon .= ' OR ';  } $sql_anon .= "hosts LIKE '".$filtro."'"; }
@@ -666,7 +666,7 @@ case 'gobierno':
 <td align="right"><b>'.$r['num'].'</b></td>
 <td align="right">'.$leido.'</td>
 <td align="right">'.num($leido*100/$r['num'], 2).'%</td>
-<td>'.(nucleo_acceso($vp['acceso']['control_gobierno'])?boton('X', '/accion.php?a=gobierno&b=notificaciones&c=borrar&noti_ID='.$r['noti_ID']):boton('X')).'</td>
+<td>'.(nucleo_acceso($vp['acceso']['control_gobierno'])?boton('X', '/accion.php?a=gobierno&b=notificaciones&c=borrar&noti_ID='.$r['noti_ID'], false, 'small'):boton('X', false, false, 'small')).'</td>
 </tr>';
 		}
 
@@ -789,7 +789,7 @@ ORDER BY time ASC", $link);
 $txt_header .= '
 <script type="text/javascript">
 function change_bg(img) {
-	$("body").css("background","#FFFFFF url(\''.IMG.'bg/"+img+"\') repeat top left");
+	$("#header").css("background","#FFFFFF url(\''.IMG.'bg/"+img+"\') repeat top left");
 }
 
 $(function() {
@@ -821,7 +821,7 @@ $(function() {
 <tr><td align="right">Descripcion:</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'"'.$dis.' /></td></tr>
 <tr><td align="right">DEFCON:</td><td>' . $defcon . '</td></tr>
 <tr><td align="right">Referencia tras:</td><td><input style="text-align:right;" type="text" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '"'.$dis.' /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td></tr>
-<tr><td align="right">Esca&ntilde;os:</td><td><input style="text-align:right;" type="text" name="num_escanos" size="3" maxlength="10" value="' . $pol['config']['num_escanos'] . '"'.$dis.' /> Diputados</td></tr>';
+<tr><td align="right">Escaños:</td><td><input style="text-align:right;" type="text" name="num_escanos" size="3" maxlength="10" value="' . $pol['config']['num_escanos'] . '"'.$dis.' /> Diputados</td></tr>';
 
 $palabra_gob = explode(':', $pol['config']['palabra_gob']);
 
@@ -845,11 +845,11 @@ http://<input type="text" name="palabra_gob1" size="19" maxlength="200" value="'
 
 $txt .= '
 
-<tr><td align="right">Expiraci&oacute;n chats:</td><td><input type="text" name="chat_diasexpira" size="2" maxlength="6" value="'.$pol['config']['chat_diasexpira'].'"'.$dis.' /> <acronym title="Dia inactivos">Dias</acronym></td></tr
+<tr><td align="right">Expiración chats:</td><td><input type="text" name="chat_diasexpira" size="2" maxlength="6" value="'.$pol['config']['chat_diasexpira'].'"'.$dis.' /> <acronym title="Dia inactivos">Dias</acronym></td></tr
 
 
 
-<tr><td colspan="2"><br /><b>Dise&ntilde;o:</b></td></tr>
+<tr><td colspan="2"><br /><b>Diseño:</b></td></tr>
 <tr><td align="right">Imagen tapiz:</td>
 <td>
 <select id="fondos" name="bg">
@@ -877,11 +877,11 @@ $txt .= '</select>
 
 <tr><td colspan="2"></td></tr>
 
-<tr><td colspan="2" class="amarillo"><b class="big">Econom&iacute;a</b> '.MONEDA.'</td></tr>
+<tr><td colspan="2" class="amarillo"><b class="big">Economía</b> '.MONEDA.'</td></tr>
 
 
 
-<tr><td align="right">Inem'.PAIS.':</td><td><input style="text-align:right;" class="pols" type="text" name="pols_inem" size="3" maxlength="6" value="' . $pol['config']['pols_inem'] . '"'.$dis.' /> '.MONEDA.' por d&iacute;a activo</td></tr>
+<tr><td align="right">Inem'.PAIS.':</td><td><input style="text-align:right;" class="pols" type="text" name="pols_inem" size="3" maxlength="6" value="' . $pol['config']['pols_inem'] . '"'.$dis.' /> '.MONEDA.' por día activo</td></tr>
 <tr><td align="right">Referencia:</td><td><input style="text-align:right;" class="pols" type="text" name="pols_afiliacion" size="3" maxlength="6" value="' . $pol['config']['pols_afiliacion'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
 <tr><td align="right">Crear empresa:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_empresa" size="3" maxlength="6" value="' . $pol['config']['pols_empresa'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
 <tr><td align="right">Crear cuenta bancaria:</td><td><input class="pols" style="text-align:right;" type="text" name="pols_cuentas" size="3" maxlength="6" value="' . $pol['config']['pols_cuentas'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
@@ -896,7 +896,7 @@ $txt .= '</select>
 
 
 <tr><td colspan="2"><br /><b>Impuestos diarios:</b></td></tr>
-<tr><td align="right"><acronym title="Porcentaje que se impondr&aacute; al patrimonio de cada ciudadano que supere el limite. Se redondea. Incluye cuentas y personal.">Impuesto de patrimonio</acronym>:</td><td><input style="text-align:right;" type="text" name="impuestos" size="3" maxlength="6" value="' . $pol['config']['impuestos'] . '"'.$dis.' /><b>%</b></td></tr>
+<tr><td align="right"><acronym title="Porcentaje que se impondrá al patrimonio de cada ciudadano que supere el limite. Se redondea. Incluye cuentas y personal.">Impuesto de patrimonio</acronym>:</td><td><input style="text-align:right;" type="text" name="impuestos" size="3" maxlength="6" value="' . $pol['config']['impuestos'] . '"'.$dis.' /><b>%</b></td></tr>
 <tr><td align="right"><acronym title="Limite minimo de patrimonio para recibir impuestos.">Minimo patrimonio</acronym>:</td><td><input class="pols" style="text-align:right;" type="text" name="impuestos_minimo" size="3" maxlength="6" value="' . $pol['config']['impuestos_minimo'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
 <tr><td align="right"><acronym title="Impuesto fijo diario por cada empresa.">Impuesto de empresa</acronym>:</td><td><input class="pols" style="text-align:right;" type="text" name="impuestos_empresa" size="3" maxlength="6" value="' . $pol['config']['impuestos_empresa'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
 
@@ -989,7 +989,7 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 	if (isset($sc[$pol['user_ID']])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
 	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <img src="'.IMG.'varios/expulsar.gif" alt="Expulsion" border="0" /> <a href="/control/expulsiones/">Expulsiones</a> | Expulsar</h1>
 
-<p>Las expulsiones son efectuadas por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminaci&oacute;n forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.'.DOMAIN.'/TOS">Condiciones de Uso</a> (con la excepci&oacute;n de Registro erroneo y Test de desarrollo).</p>
+<p>Las expulsiones son efectuadas por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminación forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.'.DOMAIN.'/TOS">Condiciones de Uso</a>.</p>
 
 <form action="/accion.php?a=expulsar" method="post">
 
@@ -998,13 +998,13 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 <input type="text" value="'.$_GET['c'].'" name="nick" size="20" maxlength="20" />
 <br /><br /></li>
 
-<li><b>Motivo de expulsi&oacute;n:</b> si son varios elegir el mas claro.<br />
+<li><b>Motivo de expulsión:</b> si son varios elegir el mas claro.<br />
 <select name="razon">
 
 <optgroup label="Clones">
 	<option value="Clones: 1.a" selected="selected">1.a Clones:</option>
-	<option value="Clones: 1.b">1.b Uso de una direcci&oacute;n de email temporal o de uso no habitual.</option>
-	<option value="Clones: 1.c">1.c Uso de cualquier m&eacute;todo cuyo fin sea ocultar la conexi&oacute;n a Internet.</option>
+	<option value="Clones: 1.b">1.b Uso de una dirección de email temporal o de uso no habitual.</option>
+	<option value="Clones: 1.c">1.c Uso de cualquier método cuyo fin sea ocultar la conexión a Internet.</option>
 </optgroup>
 
 <optgroup label="Mantenimiento">
@@ -1014,16 +1014,16 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 
 <optgroup label="Ataque al sistema">
 	<option value="Ataque al sistema: 2.a">2.a Uso o descubrimiento de bugs del sistema, sea cual fuere su finalidad, sin reportarlo inmediatamente u obrando de mala fe.</option>
-	<option value="Ataque al sistema: 2.b">2.b Ejecutar cualquier tipo de acci&oacute;n que busque causar un perjuicio al mismo.</option>
+	<option value="Ataque al sistema: 2.b">2.b Ejecutar cualquier tipo de acción que busque causar un perjuicio al mismo.</option>
 	<option value="Ataque al sistema: 2.c">2.c La utilización malintencionada del privilegio de Supervisor del Censo.</option>
 </optgroup>
 
 
 <optgroup label="Ataque a la comunidad">
-	<option value="Ataque a la comunidad: 3.a">3.a Publicaci&oacute;n de contenido altamente violento, obsceno o, en todo caso, no apto para menores de edad.</option>
-	<!--<option value="Ataque a la comunidad: 3.b">3.b Hacer apolog&iacute;a del terrorismo o ideolog&iacute;as que defiendan el uso de la violencia.</option>-->
+	<option value="Ataque a la comunidad: 3.a">3.a Publicación de contenido altamente violento, obsceno o, en todo caso, no apto para menores de edad.</option>
+	<!--<option value="Ataque a la comunidad: 3.b">3.b Hacer apología del terrorismo o ideologías que defiendan el uso de la violencia.</option>-->
 	<option value="Ataque a la comunidad: 3.c">3.c Amenazar a otros usuarios con repercusiones fuera de la comunidad.</option>
-	<option value="Ataque a la comunidad: 3.d">3.d El uso reiterado o sistem&aacute;tico de “kicks” superiores a 15 minutos sin cobertura legal dentro de la comunidad.</option>
+	<option value="Ataque a la comunidad: 3.d">3.d El uso reiterado o sistemático de “kicks” superiores a 15 minutos sin cobertura legal dentro de la comunidad.</option>
 </optgroup>
 
 
@@ -1054,7 +1054,7 @@ WHERE ID = '".$_GET['c']."' LIMIT 1", $link);
 
 <p><b>'.crear_link($r['expulsado'], 'nick', $r['expulsado_estado']).'</b> fue expulsado por <b>'.crear_link($r['nick_autor']).'</b>.</p>
 
-<p>Raz&oacute;n: <b>'.$r['razon'].'</b></p>
+<p>Razón: <b>'.$r['razon'].'</b></p>
 
 <p>Fecha: '.$r['expire'].'</p>
 
@@ -1068,7 +1068,7 @@ WHERE ID = '".$_GET['c']."' LIMIT 1", $link);
 
 	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <img src="'.IMG.'varios/expulsar.gif" alt="Expulsado" border="0" /> Expulsiones | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
 
-<p>Las expulsiones son efectuadas por los Supervisores del Censo (SC). Consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminaci&oacute;n forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.'.DOMAIN.'/TOS">Condiciones de Uso</a> (con la excepci&oacute;n de Registro erroneo y Test de desarrollo). Los Supervisores del Censo son ciudadanos con m&aacute;s de 1 a&ntilde;o de antiguedad y elegidos por democracia directa, mediante el "voto de confianza", actualizado cada Domingo a las 20:00.</p>
+<p>Las expulsiones son efectuadas por los Supervisores del Censo (SC). Consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminación forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.'.DOMAIN.'/TOS">Condiciones de Uso</a> (con la excepción de Registro erroneo y Test de desarrollo). Los Supervisores del Censo son ciudadanos con más de 1 año de antiguedad y elegidos por democracia directa, mediante el "voto de confianza", actualizado cada Domingo a las 20:00.</p>
 
 <table border="0" cellspacing="1" cellpadding="" class="pol_table">
 <tr>
@@ -1140,14 +1140,14 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 
 		if ($_GET['b'] == 'expulsar') { $_GET['b'] = ''; }
 		if (nucleo_acceso($vp['acceso']['kick'])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
-		$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/kick/">Kicks</a> | <img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> Kickear</h1><p>Esta acci&oacute;n privilegiada bloquea totalmente las acciones de un Ciudadano y los que comparten su IP.</p>
+		$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/kick/">Kicks</a> | <img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> Kickear</h1><p>Esta acción privilegiada bloquea totalmente las acciones de un Ciudadano y los que comparten su IP.</p>
 
 <form action="/accion.php?a=kick" method="post">
 '.($_GET['c']?'<input type="hidden" name="chat_ID" value="'.$_GET['c'].'" />':'').'
 <ol>
 <li><b>Nick:</b> el Ciudadano.<br /><input type="text" value="' . $_GET['b'] . '" name="nick" size="20" maxlength="20" /><br /><br /></li>
 
-<li><b>Duraci&oacute;n:</b> duraci&oacute;n temporal de este kick.<br />
+<li><b>Duración:</b> duración temporal de este kick.<br />
 <select name="expire">
 <option value="120">2 minutos</option>
 <option value="300">5 minutos</option>
@@ -1161,11 +1161,11 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 <option value="5400">1.5 horas</option>
 <option value="7200">2 horas</option>
 <option value="18000">5 horas</option>
-<option value="86400">1 d&iacute;a</option>
-<option value="172800">2 d&iacute;as</option>
-<option value="259200">3 d&iacute;as</option>
-<option value="518400">6 d&iacute;as</option>
-<option value="777600">9 d&iacute;as</option>
+<option value="86400">1 día</option>
+<option value="172800">2 días</option>
+<option value="259200">3 días</option>
+<option value="518400">6 días</option>
+<option value="777600">9 días</option>
 </select><br /><br /></li>
 
 <li><b>Motivo breve:</b> frase con el motivo de este kick. Se preciso.<br /><input type="text" name="razon" size="60" maxlength="255" /><br /><br /></li>
@@ -1190,7 +1190,7 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 <th>Autor</th>
 <th>Cuando</th>
 <th>Tiempo</th>
-<th>Raz&oacute;n</th>
+<th>Razón</th>
 <th></th>
 </tr>';
 
@@ -1219,7 +1219,7 @@ ORDER BY expire DESC", $link);
 
 		$txt .= '<tr><td valign="top"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /></td><td valign="top"><b>' . $estado . '</b></td><td valign="top"><b>'.($r['user_ID'] == 0?'Anonimo':crear_link($r['expulsado'], 'nick', $r['expulsado_estado'])).'</b></td><td valign="top" nowrap="nowrap"><img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" border="0" /> ' . crear_link($r['nick_autor']) . '</td><td align="right" valign="top" nowrap="nowrap"><acronym title="' . $r['expire'] . '">'.timer($r['expire']).'</acronym></td><td align="right" valign="top" nowrap="nowrap">' . duracion($r['tiempo']+1) . '</td><td><b style="font-size:13px;">'.($r['motivo']?'<a href="/control/kick/info/'.$r['ID'].'/">'.$r['razon'].'</a>':$r['razon']).'</b></td><td>'.$expulsar.'</td></tr>' . "\n";
 	}
-	$txt .= '</table>'.(ASAMBLEA?'':'<p>Los kicks solo pueden ser revocadas por un Comisario de Policia, un Juez Supremo o el Polic&iacute;a autor de la expulsi&oacute;n.</p>');
+	$txt .= '</table>'.(ASAMBLEA?'':'<p>Los kicks solo pueden ser revocadas por un Comisario de Policia, un Juez Supremo o el Policía autor de la expulsión.</p>');
 
 
 	}
@@ -1265,13 +1265,13 @@ $txt .= '</table><br />
 <form action="/accion.php?a=sancion" method="post">
 
 <ol>
-<li><b>Nick:</b> el Ciudadano de '.PAIS.' que recibir&aacute; la sanci&oacute;n.<br /><input type="text" value="" name="nick" size="20" maxlength="20" /><br /><br /></li>
+<li><b>Nick:</b> el Ciudadano de '.PAIS.' que recibirá la sanción.<br /><input type="text" value="" name="nick" size="20" maxlength="20" /><br /><br /></li>
 
-<li><b>'.MONEDA.' de multa:</b> el importe de la sanci&oacute;n, maximo 5000 '.MONEDA.' (en caso de no tener la cantidad requerida, se quedar&aacute; en negativo).<br /><input style="color:blue;text-align:right;" type="text" name="pols" size="4" value="1" maxlength="4" /> '.MONEDA.'<br /><br /></li>
+<li><b>'.MONEDA.' de multa:</b> el importe de la sanción, maximo 5000 '.MONEDA.' (en caso de no tener la cantidad requerida, se quedará en negativo).<br /><input style="color:blue;text-align:right;" type="text" name="pols" size="4" value="1" maxlength="4" /> '.MONEDA.'<br /><br /></li>
 
-<li><b>Concepto:</b> breve frase con la raz&oacute;n de la sanci&oacute;n.<br /><input type="text" name="concepto" size="50" maxlength="100" /><br /><br /></li>
+<li><b>Concepto:</b> breve frase con la razón de la sanción.<br /><input type="text" name="concepto" size="50" maxlength="100" /><br /><br /></li>
 
-<li><input type="submit" style="color:red;" value="Efectuar sanci&oacute;n"' . $disabled . ' /> &nbsp; <span style="color:red;"><b>[acci&oacute;n irreversible]</b></span></li></ol></form>
+<li><input type="submit" style="color:red;" value="Efectuar sanción"' . $disabled . ' /> &nbsp; <span style="color:red;"><b>[acción irreversible]</b></span></li></ol></form>
 			
 ';
 	break;
@@ -1284,7 +1284,7 @@ $txt .= '</table><br />
 		$txt_nav = array('/control'=>'Control');
 
 		$txt .= '<h1 class="quitar">Control:</h1>
-<p class="amarillo" style="color:red;">Zonas de control cuyo acceso est&aacute; reservado a los ciudadanos que ejercen estos cargos.</p>
+<p class="amarillo" style="color:red;">Zonas de control cuyo acceso está reservado a los ciudadanos que ejercen estos cargos.</p>
 
 <table border="0" cellspacing="6">
 
@@ -1308,21 +1308,21 @@ $txt .= '</table><br />
 
 
 if (isset($sc[$pol['user_ID']])) {
-	$txt .= '<td nowrap="nowrap"><a class="abig" href="/control/supervisor-censo/"><b>Supervisi&oacute;n del Censo</b></a></td>';
+	$txt .= '<td nowrap="nowrap"><a class="abig" href="/control/supervisor-censo/"><b>Supervisión del Censo</b></a></td>';
 } else {
-	$txt .= '<td nowrap="nowrap"><b class="abig gris">Supervisi&oacute;n del Censo</b></td>';
+	$txt .= '<td nowrap="nowrap"><b class="abig gris">Supervisión del Censo</b></td>';
 }
 
 foreach ($sc AS $user_ID => $nick) { $supervisores .= crear_link($nick).' '; }
 
 $txt .= '
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/21.gif" title="Supervisor del Censo" /></td>
-<td>Informaci&oacute;n sobre el censo y control de clones.<br />
-Supervisores del Censo: <b>'.$supervisores.'</b> (los 7 ciudadanos con m&aacute;s votos de confianza)</td></tr>';
+<td>Información sobre el censo y control de clones.<br />
+Supervisores del Censo: <b>'.$supervisores.'</b><br />(los '.count($sc).' ciudadanos con más votos de confianza)</td></tr>';
 
 if (ECONOMIA) {
 
-$txt .= '
+	$txt .= '
 <tr><td nowrap="nowrap"><a class="abig" href="/control/judicial/"><b>Judicial</b></a></td>
 <td align="right" nowrap="nowrap"><img src="'.IMG.'cargos/9.gif" title="Judicial" /></td>
 <td>El panel judicial que permite efectuar sanciones.</td></tr>
@@ -1337,10 +1337,8 @@ $txt .= '
 $txt .= '</table>';
 
 		break;
-
-
-
 }
+
 $txt_header .= '<style type="text/css">h1 a { color:#4BB000; } .abig { font-size:20px; }</style>';
 
 

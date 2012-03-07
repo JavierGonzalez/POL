@@ -1344,7 +1344,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 				unset($_POST['voto']); unset($_POST['mensaje']); unset($_POST['validez']);
 			}
 
-			redirect('http://'.strtolower($pais).'.'.DOMAIN.'/votacion/'.$_POST['ref_ID'].'/');
+			redirect('http://'.strtolower($pais).'.'.DOMAIN.'/votacion/'.$_POST['ref_ID']);
 
 	} elseif (($_GET['b'] == 'eliminar') AND (is_numeric($_GET['ID']))) { 
 		$result = mysql_query("SELECT ID, user_ID, estado, tipo FROM votacion WHERE estado != 'end' AND ID = '".$_GET['ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
@@ -1364,7 +1364,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 		mysql_query("UPDATE ".SQL."config SET valor = '".$r['num']."' WHERE dato = 'info_consultas' LIMIT 1", $link);
 	}
 
-	$refer_url = 'votacion/';
+	$refer_url = 'votacion';
 	break;
 
 

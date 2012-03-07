@@ -32,7 +32,7 @@ LIMIT 50", $link);
 	while($r = mysql_fetch_array($result)){
 
 
-		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>' . crear_link($r['nick_envia']) . '</b><br /><b>' . str_replace(' ', '&nbsp;', $r['cargo']) . '</b><acronym title="' . $r['time'] . '" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top" class="rich">' . $r['text'] . '<hr /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($r['nick_envia']) . '/') . '</td><td valign="top"></td></tr>' . "\n";
+		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>' . crear_link($r['nick_envia']) . '</b><br /><b>' . str_replace(' ', '&nbsp;', $r['cargo']) . '</b><acronym title="' . $r['time'] . '" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top" class="rich">' . $r['text'] . '<hr class="quitar" /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($r['nick_envia']) . '/') . '</td><td valign="top"></td></tr>' . "\n";
 	}
 
 	$txt .= '</table><p><b>(*)</b> <em>Esta p&aacute;gina est&aacute; en versi&oacute;n ALPHA, el motivo es que cabe la "extra&ntilde;a" posibilidad de que falten algunos mensajes. Esto suceder&aacute; cuando el RECEPTOR elimine tu mensaje enviado (ya que el mensaje se borra de la base de datos). Puede resultar incoherente la ausencia de algun mensaje enviado.</em></p>';
@@ -46,7 +46,7 @@ LIMIT 50", $link);
 
 <br />
 
-<div><button onclick="$(\'#box_msg\').toggle(\'slow\');">Escribir mensaje</button> &nbsp; <span class="gris">Tienes <b>'.$pol['msg'].'</b> mensajes sin leer</span> <button onClick="window.location.href=\'/accion.php?a=mensaje-leido&ID=all\';" style="font-weight:normal;color:#666;" />Marcar todo como leído</button></div>';
+<div><button onclick="$(\'#box_msg\').toggle(\'slow\');">Escribir mensaje</button> &nbsp; <span class="gris">Tienes <b>'.$pol['msg'].'</b> mensajes sin leer</span> '.boton('Marcar todo como leído', '/accion.php?a=mensaje-leido&ID=all', false, 'small').'</div>';
 
 
 
@@ -161,7 +161,7 @@ function click_form(tipo) {
 
 <input type="hidden" name="calidad" value="0" />
 
-<p><input type="submit" value="Enviar" style="font-size:24px;" /> &nbsp; <input type="checkbox" name="urgente" value="1" id="urgente" /> Env&iacute;o urgente. (el receptor recibir&aacute; un email)'.(ECONOMIA?' '.pols($pol['config']['pols_mensajeurgente']) . ' '.MONEDA:'').'</form></p>
+<p><input type="submit" value="Enviar" style="font-size:24px;" class="large" /> &nbsp; <input type="checkbox" name="urgente" value="1" id="urgente" /> Env&iacute;o urgente. (el receptor recibir&aacute; un email)'.(ECONOMIA?' '.pols($pol['config']['pols_mensajeurgente']) . ' '.MONEDA:'').'</form></p>
 <hr />
 <br /><br />
 </div>
@@ -195,9 +195,15 @@ LIMIT 100", $link);
 		}
 
 
-		if ($r['cargo'] != '0') { $cargo = ' <img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" title="' . $r['cargo_nom'] . '" />'; } else { $cargo = ''; }
+		if ($r['cargo'] != '0') { $cargo = ' <img src="'.IMG.'cargos/'.$r['cargo'].'.gif" title="'.$r['cargo_nom'].'" />'; } else { $cargo = ''; }
 
-		$txt .= '<tr' . $fondo . '><td valign="top">' . $boton . '</td><td valign="top" align="right" nowrap="nowrap"><b>' . crear_link($r['nick_envia']) . '</b>' . $cargo . '<br /><acronym title="' . $r['time'] . '" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top" class="rich">'.$r['text'].'<hr /></td><td valign="top"><button onclick="$(\'#ciudadano\').val(\''.$r['nick_envia'].'\');$(\'#box_msg\').toggle(\'slow\');">Responder</button></td><td valign="top">' . boton('X', '/accion.php?a=borrar-mensaje&ID=' . $r['ID']) . '</td></tr>' . "\n";
+		$txt .= '<tr'.$fondo.'>
+<td valign="top">'.$boton.'</td>
+<td valign="top" align="right" nowrap="nowrap"><b>'.crear_link($r['nick_envia']).'</b>'.$cargo.'<br /><acronym title="'.$r['time'].'" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td>
+<td valign="top" class="rich">'.$r['text'].'<hr class="quitar" /></td>
+<td valign="top"><button onclick="$(\'#ciudadano\').val(\''.$r['nick_envia'].'\');$(\'#box_msg\').toggle(\'slow\');">Responder</button></td>
+<td valign="top">'.boton('X', '/accion.php?a=borrar-mensaje&ID='.$r['ID'], false, 'small').'</td>
+</tr>'."\n";
 	}
 
 	if (!$boton) { $txt .= '<tr><td colspan="5"><b>No tienes ning&uacute;n mensaje.</b></td></tr>'; }

@@ -20,6 +20,7 @@ input[type="button"]{
 position:relative;
 top:0;
 left:0;
+white-space:nowrap;
 vertical-align: middle;
 margin:0;
 padding:10px 15px;
@@ -71,7 +72,7 @@ input[type="button"]{*padding:7px 15px;}/*IE 7 ONLY*/
 	button.medium, a.btn.medium, a.button.medium{}/*default*/
 	button.large, a.btn.large, a.button.large{font-size:1.3em;padding:10px 20px;}
 	button.disabled, a.btn.disabled, a.button.disabled{color:#ccc;cursor:default;background:#efefef;}
-	button.disabled:hover, a.btn.disabled:hover, a.button.disabled:hover{border:1px solid #ccc;background:#efefef;}
+	/*button.disabled:hover, a.btn.disabled:hover, a.button.disabled:hover{border:1px solid #ccc;background:#efefef;}*/
 	
 	button:hover,
 	a.btn:hover,

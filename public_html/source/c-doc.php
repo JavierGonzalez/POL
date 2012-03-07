@@ -32,7 +32,7 @@ if ($_GET['a']) {
 <table border="0" cellpadding="9">
 <tr>
 
-<td valign="bottom">Categor&iacute;a:<br />'.form_select_cat('docs', $r['cat_ID']).'</td>
+<td valign="bottom">Categoría:<br />'.form_select_cat('docs', $r['cat_ID']).'</td>
 
 <td valign="bottom"><b>Acceso leer:</b><br />
 <select name="acceso_leer">'.$txt_li['leer'].'</select><br />
@@ -46,12 +46,12 @@ if ($_GET['a']) {
 
 </tr>
 
-<tr><td colspan="2" valign="top">* El texto del editor se guarda autom&aacute;ticamente como borrador en tiempo real. Para guardar estas opciones y hacer p&uacute;blicos los cambios hay que dar al bot&oacute;n "Publicar".<br /><br />
+<tr><td colspan="2" valign="top">* El texto del editor se guarda automáticamente como borrador en tiempo real. Para guardar estas opciones y hacer públicos los cambios hay que dar al botón "Publicar".<br /><br />
 * <a href="/doc/'.$r['url'].'/presentacion" target="_blank"><b>Presentación</b></a> (Funciona con HTML para <a href="https://github.com/bartaz/impress.js" target="_blank">impress.js</a>, <a href="https://github.com/bartaz/impress.js/blob/master/index.html" target="_blank">código de ejemplo</a>)</td>
 
 <td align="right" valign="top">
-'.boton('Restaurar &uacute;ltima publicaci&oacute;n', '/accion.php?a=restaurar-documento&ID='.$r['ID'], '&iquest;Estas seguro de RESTAURAR este documento?\n\nATENCION: SE PERDERA EL FORMATO, ADEMAS DE LOS CAMBIOS DESDE LA ULTIMA PUBLICACION.').'<br />
-'.boton('ELIMINAR DOCUMENTO', '/accion.php?a=eliminar-documento&url='.$r['url'], '&iquest;Estas convencido de que quieres ELIMINAR para siempre este Documento?').'</td>
+'.boton('Restaurar última publicación', '/accion.php?a=restaurar-documento&ID='.$r['ID'], '¿Estas seguro de RESTAURAR este documento?\n\nATENCION: SE PERDERA EL FORMATO, ADEMAS DE LOS CAMBIOS DESDE LA ULTIMA PUBLICACION.', 'small').'<br />
+'.boton('ELIMINAR DOCUMENTO', '/accion.php?a=eliminar-documento&url='.$r['url'], '¿Estas convencido de que quieres ELIMINAR para siempre este Documento?', 'small').'</td>
 
 </tr>
 
@@ -64,7 +64,7 @@ if ($_GET['a']) {
 <div style="margin:5px 0;">
 <input type="text" name="titulo" value="'.$r['title'].'" size="30" maxlength="50" style="font-size:22px;" /> &nbsp; 
 <button onclick="$(\'#doc_opciones\').slideToggle(\'slow\');return false;" style="font-size:16px;color:#666;">Opciones</button> &nbsp; 
-<input type="submit" value="Publicar" style="font-size:22px;" /> <a href="/doc/'.$r['url'].'/">&Uacute;ltima publicaci&oacute;n hace <span class="timer" value="'.strtotime($r['time_last']).'"></span></a>.</div>
+<input type="submit" value="Publicar" style="font-size:22px;" /> <a href="/doc/'.$r['url'].'/">última publicación hace <span class="timer" value="'.strtotime($r['time_last']).'"></span></a>.</div>
 
 </form>
 
@@ -148,13 +148,13 @@ ORDER BY title ASC", $link);
 
 			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {
 				$txt .= '<tr>
-<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])?' '.boton('Editar', '/doc/'.$r2['url'].'/editar/', 'm'):'').'<a href="/doc/'.$r2['url'].'/">'.$r2['title'].'</a></td>
+<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])?' '.boton('Editar', '/doc/'.$r2['url'].'/editar', false, 'small').' ':'').'<a href="/doc/'.$r2['url'].'">'.$r2['title'].'</a></td>
 
 <td width="90" valign="top" style="background:#5CB3FF;">'.($r2['acceso_cfg_leer']?'<acronym title="['.$r2['acceso_cfg_leer'].']">':'').ucfirst($r2['acceso_leer']).($r2['acceso_cfg_leer']?'</acronym>':'').'</td>
 
 <td width="90" valign="top" style="background:#F97E7B;">'.($r2['acceso_cfg_escribir']?'<acronym title="['.$r2['acceso_cfg_escribir'].']">':'').ucfirst($r2['acceso_escribir']).($r2['acceso_cfg_escribir']?'</acronym>':'').'</td>
 
-<td width="80" align="right" nowrap="nowrap"><span class="timer" value="'.strtotime($r2['time_last']).'"></span></td>
+<td width="80" align="right" nowrap="nowrap">'.timer($r2['time_last']).'</td>
 </tr>'."\n";
 			}
 
@@ -165,7 +165,7 @@ ORDER BY title ASC", $link);
 
 	$txt .= '</div>
 
-<p>' . boton('Crear Documento', '/form/crear-documento/') . '</p>';
+<p class="quitar">'.boton('Crear Documento', '/form/crear-documento/').'</p>';
 
 }
 

@@ -440,7 +440,7 @@ FROM ".SQL."estudios_users WHERE ID_estudio = '" . $r['cargo_ID'] . "' AND nota 
 		 if ($r['examen_ID'] == 0) { $num_generales++; } else { $num_especificas++; }
 	}
 	
-	if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) { $boton = boton('Editar', '/examenes/editar/', 'm'); } 
+	if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) { $boton = boton('Editar', '/examenes/editar', false, 'small'); } 
 	$txt .= '<p><b class="big">' . ($num_generales + $num_especificas) . '</b> preguntas: <b>' . $num_especificas . '</b> especificas + <b>' . $num_generales . '</b> generales ' . $boton . '</p>'; 
 	$boton = '';
 
@@ -472,7 +472,7 @@ ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 			while($r2 = mysql_fetch_array($result2)){ $cargo = '<img src="'.IMG.'cargos/' . $r['cargo_ID'] . '.gif" title="' . $r2['nombre'] . '" />'; }
 		} else { $cargo = ''; }
 
-		if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) { $boton = boton('Editar', '/examenes/editar/' . $r['ID'] . '/', 'm'); } 
+		if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) { $boton = boton('Editar', '/examenes/editar/'.$r['ID'], false, 'small'); } 
 		else { $boton = ''; }
 
 		if ($r['aprobados'] > 0) {

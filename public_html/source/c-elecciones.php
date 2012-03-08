@@ -31,14 +31,6 @@ while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor
 
 
 if ($_GET['a'] == 'votar') {
-	//elecciones/votar/
-
-
-
-	//$pol['config']['elecciones'] = 'parl';
-	//$pol['config']['elecciones_estado'] = 'elecciones';
-
-
 
 	if ($pol['estado'] == 'ciudadano') { 
 		// ciudadano
@@ -51,9 +43,9 @@ if ($_GET['a'] == 'votar') {
 		}
 
 		$txt_title = $elec_nombre;
-		$txt_nav = array('/elecciones'=>'Elecciones', $elec_nombre);
+		$txt_nav = array('/elecciones'=>'Elecciones', 'Votar en '.(ASAMBLEA?'Elecciones a Coordinador':$elec_nombre));
 
-		$txt .= '<h1>' . (ASAMBLEA?'Elecciones de Coordinadores':$elec_nombre) . '</h1>';
+		$txt .= '<h1 class="quitar">'.(ASAMBLEA?'Elecciones a Coordinador':$elec_nombre).'</h1>';
 		
 
 
@@ -71,7 +63,7 @@ if ($_GET['a'] == 'votar') {
 			while($r = mysql_fetch_array($result)){ $ha_votado = $r['ID']; }
 
 			if ($fecha_registro >= $fecha_24_antes) {
-				$txt .= '<p class="amarillo" style="color:red;">No puedes ejercer el voto por falta de antiguedad, podr&aacute;s en las pr&oacute;ximas elecciones!</p>';
+				$txt .= '<p class="amarillo" style="color:red;">No puedes ejercer el voto por falta de antiguedad, podrás en las próximas elecciones!</p>';
 			} elseif ($ha_votado) { //ya ha votado
 				$txt .= '<p class="amarillo"><b>Voto correcto!</b> Felicidades.</p>';
 			} else {
@@ -79,7 +71,7 @@ if ($_GET['a'] == 'votar') {
 <ul>
 <li>Debes ejercer tu derecho a voto, como Ciudadano de '.PAIS.'.</li>
 <li>El voto es siempre libre, anonimo y unipersonal.</li>
-'.(ECONOMIA?'<li>Puedes ver las <a href="/partidos/"><b>listas</b> y <b>candidatos</b> aqu&iacute;</a>.</li>':'').'
+'.(ECONOMIA?'<li>Puedes ver las <a href="/partidos/"><b>listas</b> y <b>candidatos</b> aquí</a>.</li>':'').'
 </ul>';
 
 
@@ -147,7 +139,7 @@ LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $ha_votado = $r['ID']; }
 
 			if ($fecha_registro >= $fecha_24_antes) {
-				$txt .= '<p class="amarillo" style="color:red;">No puedes ejercer el voto por falta de antiguedad, podr&aacute;s en las pr&oacute;ximas elecciones!</p>';
+				$txt .= '<p class="amarillo" style="color:red;">No puedes ejercer el voto por falta de antiguedad, podrás en las próximas elecciones!</p>';
 			} elseif ($ha_votado) { //ya ha votado
 				$txt .= '<p class="amarillo"><b>Voto correcto!</b> Felicidades.</p>';
 			} else {
@@ -156,7 +148,7 @@ LIMIT 1", $link);
 <ul>
 <li>Debes ejercer tu derecho a voto, como ciudadano de '.PAIS.' cada 2 semanas.</li>
 <li>El voto es siempre libre, anonimo y unipersonal.</li>
-'.(ECONOMIA?'<li>Puedes ver las <a href="/partidos/"><b>listas</b> y <b>candidatos</b> aqu&iacute;</a>.</li>':'').'
+'.(ECONOMIA?'<li>Puedes ver las <a href="/partidos/"><b>listas</b> y <b>candidatos</b> aquí</a>.</li>':'').'
 <li>Puedes conceder hasta <b>'.$pol['config']['num_escanos'].' votos</b> a tus candidatos favoritos. Puedes dejar los votos que quieras en Blanco.</li>
 </ul>
 
@@ -193,9 +185,9 @@ ORDER BY RAND()", $link);
 					}
 				} 
 
-				$txt .= '</table><p style="color:#777;">* Pasa el ratón por encima o <em>haz clic</em> en los candidatos para ver m&aacute;s informaci&oacute;n.</p></blockquote></div>
+				$txt .= '</table><p style="color:#777;">* Pasa el ratón por encima o <em>haz clic</em> en los candidatos para ver más información.</p></blockquote></div>
 				
-<blockquote><input type="submit" style="font-size:24px;color:green;" value="VOTAR" /> (Una vez ejerzas el voto no podr&aacute;s modificarlo, tomate el tiempo que necesites)</form></blockquote>';
+<blockquote><input type="submit" style="font-size:24px;color:green;" value="VOTAR" /> (Una vez ejerzas el voto no podrás modificarlo, tomate el tiempo que necesites)</form></blockquote>';
 
 
 
@@ -241,9 +233,9 @@ window.onload = function(){
 <h1 class="quitar">Elecciones</h1>
 
 <table border="0" width="100%" cellspacing="8">
-<tr><td colspan="2" class="amarillo" valign="top">
+<tr><td colspan="2" valign="top">
 
-<p>Pr&oacute;ximas elecciones: <b>'.explodear(' ', $pol['config']['elecciones_inicio'], 0).'</b> (siempre a las 20:00h). Duraci&oacute;n: <b>48h</b>. Periodicidad: <b>cada 2 semanas</b>.'.(ASAMBLEA?' Coordinadores a elegir: <b>'.$pol['config']['num_escanos'].'</b>.':'').'</p>
+<p>Próximas elecciones: <b>'.explodear(' ', $pol['config']['elecciones_inicio'], 0).'</b> (siempre a las 20:00h). Duración: <b>48h</b>. Periodicidad: <b>cada 2 semanas</b>.'.(ASAMBLEA?' Coordinadores a elegir: <b>'.$pol['config']['num_escanos'].'</b>.':'').'</p>
 <table border="0" width="100%" height="50" cellpadding="2" cellspacing="0">
 <tr>';
 
@@ -320,7 +312,7 @@ ORDER BY time DESC LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){
 			$votos_total = $r['num_votos'];
 
-			$txt .= '<p style="text-align:center;margin-top:8px;"><b>'.num($votos_total).'</b> votos de <em>'.num($r['num_votantes']).'</em>, participaci&oacute;n: <b>'.num(($votos_total*100)/$r['num_votantes'], 2).'%</b></p>';
+			$txt .= '<p style="text-align:center;margin-top:8px;"><b>'.num($votos_total).'</b> votos de <em>'.num($r['num_votantes']).'</em>, participación: <b>'.num(($votos_total*100)/$r['num_votantes'], 2).'%</b></p>';
 
 
 			// formato: candidato1|candidato1#escrutinio
@@ -390,8 +382,8 @@ ORDER BY time DESC LIMIT 1", $link);
 }
 
 $txt .= '
-<td class="amarillo" width="50%" valign="top"'.(ASAMBLEA?' colspan="2"':'').'>
-<h1 style="color:blue;">'.$queda['parl'].'</h1>';
+<td class="amarillo" width="50%" align="center" valign="top"'.(ASAMBLEA?' colspan="2"':'').'>
+<h1 style="color:blue;">'.(ASAMBLEA?'Elecciones a Coordinador en ':'Legislativas en ').$queda['parl'].'</h1>';
 
 
 
@@ -406,7 +398,7 @@ ORDER BY time DESC LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 		$votos_total = $r['num_votos'];
 
-		$txt .= '<p style="text-align:center;margin-top:8px;"><b>'.num($votos_total).'</b> votos de <em>'.num($r['num_votantes']).'</em>, participaci&oacute;n: <b>'.num(($votos_total * 100) / $r['num_votantes'], 2).'%</b></p>';
+		$txt .= '<p style="text-align:center;margin-top:8px;"><b>'.num($votos_total).'</b> votos de <em>'.num($r['num_votantes']).'</em>, participación: <b>'.num(($votos_total * 100) / $r['num_votantes'], 2).'%</b></p>';
 		
 		if ($pol['config']['elecciones'] != 'parl') {
 			$m = explode("|", $r['escrutinio']);
@@ -437,9 +429,9 @@ ORDER BY time DESC LIMIT 1", $link);
 
 					if ($t[1]) {
 						if ($cargo == '1') {
-							$tabla .= '<tr><td align="right">'.(ASAMBLEA?'':crear_link($t[1], 'partido')).'</td><td><img src="'.IMG.'cargos/6.gif" alt="Diputado" title="Diputado" border="0" /> <b>' . crear_link($t[2], 'nick', $nestado) . '</b></td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';
+							$tabla .= '<tr><td align="right">'.(ASAMBLEA?'':crear_link($t[1], 'partido')).'</td><td><img src="'.IMG.'cargos/6.gif" alt="Diputado" title="Diputado" border="0" width="16" height="16" /> <b>' . crear_link($t[2], 'nick', $nestado) . '</b></td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';
 						} else {
-							$tabla .= '<tr><td align="right">'.(ASAMBLEA?'':crear_link($t[1], 'partido')).'</td><td>' . crear_link($t[2], 'nick', $nestado) . '</td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';
+							$tabla .= '<tr><td align="right">'.(ASAMBLEA?'':crear_link($t[1], 'partido')).'</td><td><img src="'.IMG.'cargos/0.gif" border="0" width="16" height="16" /> ' . crear_link($t[2], 'nick', $nestado) . '</td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';
 						}
 					}
 
@@ -615,7 +607,7 @@ ORDER BY time DESC LIMIT 1", $link);
 
 
 
-<h1 style="margin-bottom:5px;">Participaci&oacute;n</h1>
+<h1 style="margin-bottom:5px;">Participación</h1>
 <center>
 
 <img src="http://chart.apis.google.com/chart?cht=lc&chs=740x250&chls=3,1,0|3,1,0&chxt=y,r,x&chxl=0:|Votos|' . round($historial_v_max / 2) . '|' . $historial_v_max . '|1:|Participacion|50%|100%|2:|' . $historial_tipo . '&chds=0,' . $historial_v_max . ',0,100&chd=t:' . $historial_v . '|' . $historial_p . '&chf=bg,s,ffffff01|c,s,ffffff01&chco=0066FF,FF0000&chm=B,FFFFFF,0,0,0&chxs=0,0066FF,14|1,FF0000,14" alt="Historial de participacion"  /></center>
@@ -626,7 +618,12 @@ ORDER BY time DESC LIMIT 1", $link);
 
 $txt .= '</table></div>';
 
-$txt_header .= '<style type="text/css">#elec table { table-layout:fixed; } #elec td { color:grey; } #elec .dia { color:#D2D2D2; margin:0; padding:0; font-size:12px; } #elec { margin:-10px 0 0 -10px; } #elec p { margin:5px 0 2px 0; }</style>';
+$txt_header .= '<style type="text/css">
+#elec table { table-layout:fixed; } 
+#elec td { color:grey; } 
+#elec .dia { color:#D2D2D2; margin:0; padding:0; font-size:12px; } 
+#elec p { margin:5px 0 2px 0; }
+</style>';
 
 }
 

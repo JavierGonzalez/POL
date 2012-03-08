@@ -76,6 +76,9 @@ FROM ".SQL."examenes
 WHERE ID = '" . $_GET['b'] . "'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
+		
+		$txt_title = 'Editar exámen';
+		$txt_nav = array('/examenes'=>'Exámenes', 'Editar exámen');
 
 		$txt .= '<h1>Editar examen: ' . $r['titulo'] . ' (<a href="/examenes/">Ver examenes</a>)</h1>
 
@@ -95,7 +98,7 @@ LIMIT 1", $link);
 
 <li><b>Tiempo preciso para responder:</b> <input type="text" name="tiempo" value="6" size="1" maxlength="3" style="text-align:right;" /> segundos</li>
 
-<li>' . boton_cargo('A&ntilde;adir pregunta', false, 34) . '</li>
+<li>' . boton_cargo('Añadir pregunta', false, 34) . '</li>
 </ol>
 </form>
 
@@ -263,7 +266,11 @@ VALUES ('" . $r['cargo_ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', 'e
 
 
 			// EMPIEZA EXAMEN
-			$txt .= '<h1>Examen: ' . $r['titulo'] . '</h1>
+
+			$txt_title = 'Exámen';
+			$txt_nav = array('/examenes'=>'Exámenes', $r['titulo']);
+
+			$txt .= '<h1 class="quitar">Examen: '.$r['titulo'].'</h1>
 
 <p>Tienes <b><span class="seg"></span></b> segundos.</p>
 

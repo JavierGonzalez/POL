@@ -244,12 +244,12 @@ function num($num, $dec=0) { return number_format(round($num, $dec), $dec, ',', 
 function explodear($pat, $str, $num) { $exp = explode($pat, $str); return $exp[$num]; }
 function implodear($pat, $str, $num) { $exp = implode($pat, $str); return $exp[$num]; }
 
-function boton($texto, $url=false, $confirm=false, $size=false, $pols=false) {
-	if ($pols==false) {
+function boton($texto, $url=false, $confirm=false, $size=false, $pols='') {
+	if ($pols=='') {
 		return '<button'.($url==false?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').'window.location.href=\''.$url.'\';return false;"').($size!=false?' class="'.$size.'"':'').'>'.$texto.'</button>';
 	} else {
 		global $pol;
-		return '<span class="amarillo"><input type="submit" value="'.$texto.'"'.($url==false?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').'window.location.href=\''.$url.'\';"').' /> &nbsp; '.pols($pols).' '.MONEDA.'</span>';
+		return '<span class="amarillo"><input type="submit" value="'.$texto.'"'.($pol['pols']<$pols?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').'window.location.href=\''.$url.'\';"').' /> &nbsp; '.pols($pols).' '.MONEDA.'</span>';
 	}
 }
 

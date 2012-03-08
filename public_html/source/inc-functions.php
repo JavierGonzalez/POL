@@ -122,7 +122,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 						$pol['config']['info_consultas']++;
 						$nuevos_num++;
 						$total_num++;
-						$t .= '<li><a href="http://'.$r['pais'].'.'.DOMAIN.'/votacion/'.$r['ID'].'/" class="noti-nuevo">Votación: '.$r['pregunta'].'</a></li>';
+						$t .= '<li><a href="http://'.$r['pais'].'.'.DOMAIN.'/votacion/'.$r['ID'].'" class="noti-nuevo">Votación: '.$r['pregunta'].'</a></li>';
 					}
 				}
 

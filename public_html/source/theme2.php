@@ -12,13 +12,13 @@ else { $txt_title = (isset($pol['config']['pais_des'])?$pol['config']['pais_des'
 // Genera info de elecciones.
 if ($pol['config']['elecciones_estado'] == 'normal') {
 	$txt_elec_time = timer(strtotime($pol['config']['elecciones_inicio']), true); 
-	$txt_elec = ' <a href="/elecciones">Elecciones en <b>'.$txt_elec_time.'</b></a> |'; 
+	$txt_elec = ''; 
 } elseif ($pol['config']['elecciones_estado'] == 'elecciones') {  
 	$elec_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']);
 	switch ($pol['config']['elecciones']) {
 		case 'pres1': $txt_elec_time = timer(($elec_quedan - 86400), true); $txt_elec = ' <a href="/elecciones" style="color:red;"><b>1&ordf; Vuelta en curso</b>, queda <b>'.$txt_elec_time.'</b></a> |';  break;
 		case 'pres2': $txt_elec_time = timer($elec_quedan, true); $txt_elec = ' <a href="/elecciones" style="color:red;"><b>2&ordf; Vuelta en curso</b>, queda <b>'.$txt_elec_time.'</b></a> |'; break;
-		case 'parl': $txt_elec_time = timer($elec_quedan, true); $txt_elec = ' <a href="/elecciones" style="color:blue;"><b>Elecciones en curso</b>, queda <b>'.$txt_elec_time.'</b></a> |';  break;
+		case 'parl': $txt_elec_time = timer($elec_quedan, true); $txt_elec = ' <a href="/elecciones" style="color:blue;"><b>Elecciones'.(ASAMBLEA?' a Coordinador':'').' en curso</b>, queda <b>'.$txt_elec_time.'</b></a> |';  break;
 	}
 }
 
@@ -444,6 +444,8 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 					<?=(isset($pol['user_ID'])?'<li><a href="/foro/mis-respuestas">Tu actividad</a></li>':'')?>
 				</ul>
 			</li>
+			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0">Voz</a><ul><li><a href="/info/voz">Configurar <em>Mumble</em></a></li></ul></li>':'')?>
+			<li><a href="/msg">Mensajes Privados</a></li>
 			<li><a href="#" style="cursor:default;">Redes sociales</a>
 				<ul>
 					<li><a href="<?=(ASAMBLEA?'https://twitter.com/#!/AsambleaVirtuaI':'https://twitter.com/#!/VirtualPol')?>">Twitter</a>
@@ -451,8 +453,6 @@ strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza
 					<li><a href="/info/seguir">Seguir...</a>
 				</ul>
 			</li>
-			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0">Voz</a><ul><li><a href="/info/voz">Configurar <em>Mumble</em></a></li></ul></li>':'')?>
-			<li><a href="/msg">Mensajes Privados</a></li>
 		</ul>
 	</li>
 
@@ -552,7 +552,7 @@ if (ECONOMIA) {
 <?php
 unset($txt_header);
 if (isset($pol['user_ID'])) {
-	echo '<b><a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(ECONOMIA?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="/accion.php?a=logout">Salir</a></b>';
+	echo '<b><a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(ECONOMIA?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' |'.$txt_elec.' <a href="/accion.php?a=logout">Salir</a></b>';
 } else {
 	echo boton('Crear ciudadano', REGISTRAR.'?p='.PAIS).' | '.boton('Entrar', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
 }
@@ -588,8 +588,8 @@ if (isset($pol['user_ID'])) {
 		<div id="footer-right">
 			<p><b><a href="http://www.virtualpol.com">VirtualPol</a></b>, la primera <b>Red Social Democrática</b> <?=boton('Donar', 'http://www.virtualpol.com/donaciones', false, 'small pill orange')?></p>
 			<p>
-			<a target="_blank" href="http://www.virtualpol.com/video">Video</a> | <a target="_blank" href="http://www.virtualpol.com/desarrollo">Desarrollo</a> | <a target="_blank" href="http://www.virtualpol.com/documentacion">Documentación</a><br />
-			<a target="_blank" href="http://www.virtualpol.com/TOS">Condiciones de Uso / Legal</a><br /> 
+			<a target="_blank" href="http://www.virtualpol.com/video">Vídeo</a> | <a target="_blank" href="http://www.virtualpol.com/documentacion">Documentación y ayuda</a><br />
+			<a target="_blank" href="http://www.virtualpol.com/TOS">Condiciones de Uso / Legal</a> | <a target="_blank" href="http://www.virtualpol.com/desarrollo">Desarrollo</a><br /> 
 <?php
 unset($txt);
 if ($pol['user_ID'] == 1) { echo '<b>'.num((microtime(true)-TIME_START)*1000).'</b>ms '.num(memory_get_usage()/1000).'kb | '; }
@@ -600,12 +600,12 @@ if (!isset($pol['user_ID'])) { echo '<a target="_blank" href="http://gonzo.teori
 		
 		<div id="footer-left">
 <?php
-echo '<p><b>'.PAIS.', '.$pol['config']['pais_des'].'</b> ';
+echo '<p><b>'.PAIS.', '.$pol['config']['pais_des'].'</b> &nbsp; ';
 
 if (ASAMBLEA) {
 	echo '<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://15m.virtualpol.com/" data-text="Participa en Asamblea Virtual 15M! http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="AsambleaVirtual">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script> 
-<a href="https://www.facebook.com/AsambleaVirtual"><img src="'.IMG.'ico/2_32.png" alt="Facebook" width="32" height="32" /></a>';
+<a href="https://www.facebook.com/AsambleaVirtual"><img src="'.IMG.'ico/2_32.png" alt="Facebook" width="32" height="32" style="margin-bottom:-4px;" /></a>';
 } else {
 	echo '<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.virtualpol.com/" data-text="VirtualPol, la primera red democrática virtual http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>';

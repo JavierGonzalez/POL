@@ -607,7 +607,7 @@ if (ASAMBLEA) {
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script> 
 <a href="https://www.facebook.com/AsambleaVirtual"><img src="'.IMG.'ico/2_32.png" alt="Facebook" width="32" height="32" style="margin-bottom:-4px;" /></a>';
 } else {
-	echo '<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.virtualpol.com/" data-text="VirtualPol, la primera red democrática virtual http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">Twittear</a>
+	echo '<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.virtualpol.com/" data-text="VirtualPol, la primera red democrática virtual http://www.virtualpol.com/video" data-lang="es" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>';
 }
 

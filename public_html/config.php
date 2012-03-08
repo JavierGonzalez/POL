@@ -51,7 +51,7 @@ switch ($host[0]) {
 		define('ASAMBLEA', false);
 		define('ECONOMIA', true); 
 		define('NOM_PARTIDOS','Partidos');
-		$columnas = 14; $filas = 18;
+		$columnas = 14; $filas = 14;
 		$vp['acceso'] = array(
 'votacion_borrador'=>	array('ciudadanos_global', ''),
 'sondeo'=>				array('cargo', '41 6 16 22 19 7'),
@@ -75,7 +75,7 @@ switch ($host[0]) {
 		define('ASAMBLEA', false);
 		define('ECONOMIA', true); 
 		define('NOM_PARTIDOS','Partidos');
-		$columnas = 14; $filas = 18;
+		$columnas = 14; $filas = 14;
 		$vp['acceso'] = array(
 'votacion_borrador'=>	array('ciudadanos_global', ''),
 'sondeo'=>				array('cargo', '41 6 16 22 19 7'),

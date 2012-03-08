@@ -151,7 +151,7 @@ ORDER BY nivel DESC, pols DESC", $link);
 		if (($row['pols'] == '0') AND ($row['user_ID'] == $pol['user_ID']) AND ($row['nivel'] == '0')) {
 			$boton = boton('X', '/accion.php?a=pols&b=eliminar-cuenta&ID=' . $row['ID'], '&iquest;Seguro que quieres ELIMINAR tu cuenta Bancaria?');
 		} else { $boton = ''; }
-		$txt .= '<tr><td align="right">' . pols($row['pols']) . '</td><td><a href="/pols/cuentas/' . $row['ID'] . '/"><b>' . $row['nombre'] . '</b></a></td><td>' . $propietario . '</td><td align="center">'.$checkbox.'</td><td>'.boton('&rarr;', '/pols/transferir/-'.$row['ID'], false, 'small').$boton.'</td></tr><';
+		$txt .= '<tr><td align="right">' . pols($row['pols']) . '</td><td><a href="/pols/cuentas/' . $row['ID'] . '/"><b>' . $row['nombre'] . '</b></a></td><td>' . $propietario . '</td><td align="center">'.$checkbox.'</td><td>'.boton('&rarr;', '/pols/transferir/-'.$row['ID'], false, 'small').$boton.'</td></tr>';
 	}
         $txt .= '</table>';
 	if ($pol['nivel'] >= 98) {

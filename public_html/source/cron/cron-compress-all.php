@@ -47,17 +47,17 @@ function compress_file($file, $tipo='js') {
 echo '<h2>Minify CSS</h2>
 
 <table>';
-$txt_css .= compress_file('style2.css', 'css');
 $txt_css .= compress_file('lib/kickstart/css/kickstart.css', 'css');
 $txt_css .= compress_file('lib/kickstart/css/kickstart-buttons.css', 'css');
 $txt_css .= compress_file('lib/kickstart/css/kickstart-forms.css', 'css');
 $txt_css .= compress_file('lib/kickstart/css/kickstart-menus.css', 'css');
 //$txt_css .= compress_file('lib/kickstart/css/kickstart-grid.css', 'css');
 //$txt_css .= compress_file('lib/kickstart/css/kickstart-icons.css', 'css');
-//$txt_css .= compress_file('lib/kickstart/css/jquery.fancybox-1.3.4.css', 'css');
-//$txt_css .= compress_file('lib/kickstart/css/prettify.css', 'css');
+$txt_css .= compress_file('lib/kickstart/css/jquery.fancybox-1.3.4.css', 'css');
+$txt_css .= compress_file('lib/kickstart/css/prettify.css', 'css');
 //$txt_css .= compress_file('lib/kickstart/css/chosen.css', 'css');
 //$txt_css .= compress_file('lib/kickstart/css/tiptip.css', 'css');
+$txt_css .= compress_file('style2.css', 'css');
 file_put_contents($root_dir.'img/style_all.css', $txt_css);
 echo '</table>';
 

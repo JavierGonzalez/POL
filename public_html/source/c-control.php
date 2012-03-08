@@ -598,7 +598,7 @@ case 'gobierno':
 	$txt_nav = array('/control'=>'Control', '/control/gobierno'=>'Gobierno');
 	$txt_tab = array('/control/gobierno/'=>'Gobierno', '/control/gobierno/notificaciones'=>'Notificaciones', '/control/gobierno/foro'=>'Configuración foro');
 
-	if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
+	if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $dis = null; } else { $dis = ' disabled="disabled"'; }
 
 	$result = mysql_query("SELECT (SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS elnick
 	 FROM ".SQL."estudios_users WHERE ID_estudio = '7' AND cargo = '1' LIMIT 1", $link);
@@ -944,7 +944,7 @@ ORDER BY salario DESC", $link);
 
 
 
-<p style="text-align:center;"><input value="EJECUTAR" style="font-size:20px;" type="submit"'.$dis.' /></p>
+<p style="text-align:center;">'.boton('EJECUTAR', ($dis?false:'submit'), false, 'large red').'</p>
 
 </form>
 <br/>

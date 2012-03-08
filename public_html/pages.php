@@ -5,7 +5,40 @@ include('inc-login.php');
 switch ($_GET['a']) {
 
 case 'donaciones':
-	$txt .= 'en construccion...';
+	$txt_title = 'Donaciones a VirtualPol'; 
+	$txt_header = '<style type="text/css">.content { width:700px; margin: 0 auto; }</style>';
+
+	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 752 LIMIT 1", $link); // doc_ID 752 = Donaciones
+	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
+
+	$text = str_replace(':botones_donar:', '
+<table border="0" width="100%" style="margin-bottom:-25px;">
+<tr>
+	<td align="center" valign="top">
+		<span class="gris">PayPal / Tarjeta de crédito</span>
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+			<input type="hidden" name="cmd" value="_s-xclick">
+			<input type="hidden" name="hosted_button_id" value="A6JJDTXA44V9Q">
+			<input type="image" src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal. La forma rápida y segura de pagar en Internet.">
+			<img alt="" border="0" src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif" width="1" height="1">
+		</form>
+	</td>
+	<td align="center" valign="top">
+		<span class="gris">Transferencia bancaria:</span><br />
+		Próximamente...
+	</td>
+</tr>
+</table>', $text);
+
+	$txt .= '
+<div style="color:#555;">
+<h1 style="color:#444;text-align:center;font-size:28px;">'.$title.'</h1>
+
+<div id="doc_pad">
+'.$text.'
+</div>
+
+</div>';
 	break;
 
 

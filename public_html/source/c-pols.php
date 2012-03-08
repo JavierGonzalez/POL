@@ -113,12 +113,13 @@ LIMIT " . $p_limit, $link);
 	else {
 		$disabled = '';
 	}
-	$txt .= '<form action="/accion.php?a=exencion_impuestos" method="post">';
 	$txt_title = 'Cuentas Bancarias';
 	$txt_nav = array('/pols'=>'Economía', 'Cuentas bancarias');
 	$txt .= '<h1>Cuentas:</h1>
 
 <p>' . boton('Crear Cuenta', '/pols/cuentas/crear/', false, false, $pol['config']['pols_cuentas']) . '</p>
+
+<form action="/accion.php?a=exencion_impuestos" method="post">
 
 <table border="0" cellspacing="2" cellpadding="0" class="pol_table">
 <tr>
@@ -150,14 +151,12 @@ ORDER BY nivel DESC, pols DESC", $link);
 		if (($row['pols'] == '0') AND ($row['user_ID'] == $pol['user_ID']) AND ($row['nivel'] == '0')) {
 			$boton = boton('X', '/accion.php?a=pols&b=eliminar-cuenta&ID=' . $row['ID'], '&iquest;Seguro que quieres ELIMINAR tu cuenta Bancaria?');
 		} else { $boton = ''; }
-		$txt .= '<tr><td align="right">' . pols($row['pols']) . '</td><td><a href="/pols/cuentas/' . $row['ID'] . '/"><b>' . $row['nombre'] . '</b></a></td><td>' . $propietario . '</td><td align="center">'.$checkbox.'</td><td>'.boton('&rarr;', '/pols/transferir/-'.$row['ID'], false, 'small').$boton.'</td></tr>';
+		$txt .= '<tr><td align="right">' . pols($row['pols']) . '</td><td><a href="/pols/cuentas/' . $row['ID'] . '/"><b>' . $row['nombre'] . '</b></a></td><td>' . $propietario . '</td><td align="center">'.$checkbox.'</td><td>'.boton('&rarr;', '/pols/transferir/-'.$row['ID'], false, 'small').$boton.'</td></tr></table>';
 	}
-	$txt .= '</table><p>' . boton('Crear Cuenta', '/pols/cuentas/crear/', false, false, $pol['config']['pols_cuentas']) . ' &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>';
-
 	if ($pol['nivel'] >= 98) {
 		$txt .= '<input type="submit" value="Cambiar exención de impuestos" /></form>';
 	}
-
+	$txt .= '<p>' . boton('Crear Cuenta', '/pols/cuentas/crear/', false, false, $pol['config']['pols_cuentas']) . ' &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>';
 
 
 

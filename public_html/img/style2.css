@@ -1,0 +1,367 @@
+
+/*** PROVISIONAL ***/
+.quitar { display:none; } /* Elimina elementos del diseño antiguo para la transición */
+
+/*** ESTRUCTURA ***/
+body {
+	min-width:1000px;
+	max-width:1600px;
+	cursor:default;
+	color: #333;
+	font-size:16px;
+	font-family: "Arial", "Helvetica", sans-serif;
+}
+#content-left { 
+	position:fixed;
+	left:0px;
+	top:0px;
+	width:200px;
+}
+#menu-next {
+	height:550px;
+	border-right:1px solid #CCC;
+	padding:4px 5px 10px 8px;
+	background:#F9F9F9;
+	box-shadow:inset -3px 11px 20px #EEE;
+}
+
+#content-right {
+	position:absolute;
+	left:200px;
+	right:0;
+	top:0px;
+	min-width:760px;
+}
+
+#header {
+	height:99px;
+	border-bottom:1px solid #CCC;
+	box-shadow:inset -6px -6px 15px #F5F5F5;
+}
+#header-logo {
+	position:absolute;
+	top:6px;
+	left:5px;
+}
+#header-logo-p { position:absolute; top:15px; left:100px; white-space:nowrap; }
+#header-right {
+	position:absolute;
+	top:3px;
+	right:10px;
+}
+#header-breadcrumbs {
+	position:absolute;
+	left:-2px;
+	top:53px;
+}
+#header-tab {
+	position:absolute;
+	top:56px;
+	right:5px;
+}
+
+#content {
+	padding:0 10px 5px 20px;
+	min-height:480px;
+}
+
+#footer {
+	min-height:200px;
+	margin:0 0 0 -200px;
+	padding:2px 20px 5px 20px;
+	border-top:1px solid #CCC;
+	box-shadow:inset 0px 10px 20px #EEE;
+	background:#F9F9F9;
+}
+#footer-left {
+	margin-right:300px;
+	max-width:850px;
+}
+#footer-right {
+	position:absolute;
+	right:20px;
+	text-align:right;
+}
+
+
+
+
+/*** GENERAL ***/
+a { text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+*[title] { cursor: help; }
+abbr, .punteado { border-bottom:1px dotted #999; }
+
+h1 { font-size:28px; }
+h2 { font-size:22px; }
+h3 { font-size:18px; }
+
+.redondeado {
+	padding-left:2px;
+	padding-right:2px;
+	border-radius: 6px;
+	-moz-border-radius: 6px; 
+	-webkit-border-radius: 6px;
+}
+
+.htxt {
+	padding:0 4px;
+	color:#AAA;
+	font-size:18px;
+	white-space:nowrap;
+	text-shadow:1px 1px 1px #FFF;
+	background-color:#FFF;
+	opacity: 0.7;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	box-shadow: 0px 0px 15px #FFF;
+}
+.htxt:hover { opacity: 1; }
+
+/*** MENU ***/
+.menu li {
+	white-space:nowrap;
+	font-size: 21px;
+}
+.menu li a { padding: 10px 0 10px 20px; }
+.menu ul { max-width:500px; box-shadow: 6px 6px 15px #888; }
+.menu li ul li { min-width:200px; }
+.menu li ul { margin-top:-40px; }
+.menu li ul li ul { margin-top:0; }
+
+#menu-comu.hover, #menu-comu .hover, #menu-comu.menu-sel { box-shadow:inset 8px 0 0 #FF6262; }
+#menu-info.hover, #menu-info .hover, #menu-info.menu-sel { box-shadow:inset 8px 0 0 #00DF00; }
+#menu-demo.hover, #menu-demo .hover, #menu-demo.menu-sel { box-shadow:inset 8px 0 0 #66BEFF; }
+#menu-econ.hover, #menu-econ .hover, #menu-econ.menu-sel { box-shadow:inset 8px 0 0 #FFFF51; }
+#menu-noti.hover, #menu-noti .hover { box-shadow:inset 8px 0 0 #DA7777; }
+
+
+#menu-noti ul li a { color:#CCC; overflow:hidden; }
+#menu-noti ul li a.noti-nuevo { color:red; }
+
+#menu-noti.menu-sel {
+	text-shadow: 1px 1px 6px #FFF;
+	background:url('http://www.virtualpol.com/img/ico/noti_alert.png'); 
+}
+#menu-noti.menu-sel .md { right:20px; font-size:22px; font-weight:bold; }
+.md {
+	color:#AAA;
+	font-size:18px;
+	position:absolute;
+	right:8px;
+}
+
+
+
+
+/*** TTABS ***/
+ul.ttabs{
+	margin:10px 0 -1px 0;
+	padding:0;
+	width:100%;
+	float:left;
+	height:33px;
+}
+ul.ttabs.left{text-align:left;}
+ul.ttabs.center{text-align:center;}
+ul.ttabs.right{text-align:right;}
+ul.ttabs li{
+	list-style-type:none;
+	margin:0 2px 0 0;
+	padding:0;
+	display:inline-block;
+	*display:inline;/*IE ONLY*/
+	position:relative;
+	top:0;
+	left:0;
+	*top:1px;/*IE 7 ONLY*/
+	zoom:1;
+}	
+ul.ttabs li a{
+	text-decoration:none;
+	color:#666;
+	display:inline-block;
+	padding:9px 15px;
+	position: relative;
+	top:0;
+	left:0;
+	line-height:100%;
+	background:#f5f5f5;
+	box-shadow: inset 0px -3px 3px rgba(0,0,0,0.03);
+	border:1px solid #e5e5e5;
+	border-bottom:0;
+	font-size:0.9em;
+	zoom:1;
+	border-top-left-radius: 10px; -moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px;
+	border-top-right-radius:10px; -moz-border-radius-topright:10px; -webkit-border-top-right-radius:10px;
+}
+ul.ttabs li a:hover{
+	background:#fff;
+}
+ul.ttabs li.current a{
+	position:relative;
+	top:1px;
+	left:0;
+	background:#fff;
+	box-shadow: none;
+	color:#222;
+}
+.breadcrumbs li { background:#FFF; }
+.breadcrumbs .last { font-weight:bold; }
+ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
+
+
+
+/*** CONTENIDO GENERAL ***/
+.votacion_desc_min {
+	max-height:200px;
+	padding-bottom:40px;
+	overflow-y:auto;
+	box-shadow:inset -8px -8px 15px #EEE;
+}
+.vcc, .vc, .vcn, .vcnn { 
+	background-color:#EEE;
+	font-weight:bold;  
+	font-size:18px;
+	padding: 2px 5px 1px 4px;
+	border-radius: 6px;
+	-moz-border-radius: 6px; 
+	-webkit-border-radius: 6px;
+}
+.vcc { color:#EA9800; }
+.vc { color:orange; }
+.vcn { color:#FF3E43; }
+.vcnn { color:#D20000; }
+
+.form_textarea {
+	min-width:475px;
+	width:90%;
+	height:350px;
+	color:green;
+	font-weight:bold;
+}
+
+.amarillo, .azul {
+	background:#FFFFDD;
+	border:1px solid #FFD700;
+	padding:5px 10px 5px 10px; 
+	border-radius: 6px; 
+	-moz-border-radius: 6px; 
+	-webkit-border-radius: 6px;
+}
+.azul { 
+	border:1px solid #00CCFF;
+	background:#D3F7FE; 
+}
+.gris { color:#808080; }
+
+#pnick { 
+	min-width:280px;
+	text-align:left; 
+	box-shadow: 6px 6px 15px #888;
+}
+#pnick b { color:green; }
+
+.pols { color:#ECC900; }
+
+.ciudadano, .desarrollador { color:#06f; }
+.turista { color:#66B3FF; }
+.validar { color:#96B7CF; }
+.expulsado { color:#FF8A8A; }
+.extrangero { color:#CCC; }
+
+
+
+/*** CONTENIDO CHAT ***/
+#vpc img { margin-bottom:-2px; }
+#vpc { box-shadow:inset -10px 5px 20px #EEE; padding-left:15px; vertical-align:bottom; height:450px; overflow:auto; overflow-x:hidden; }
+#vpc ul { padding:0; margin:0; position:static; }
+#vpc ul li { padding:0; margin:0; color:#666666; background:none; font-size:15px; list-style:none;}
+#vpc .oldc { color:#A3A3A3; }
+#vpc_msg { margin:0 0 0 30px; font-size:16px; font-weight:bold; color:black; border: 1px solid #808080; }
+.vpc_accion { color:#F09100; font-size:16px; }
+.vpc_priv { color:#9F009F; font-size:16px; }
+.vpc_yo { color:#2D2D2D; }
+
+/* Mensajes de chat */
+#vp_c {  margin: -18px 0 0 -20px; font-family: "Arial", "Helvetica", sans-serif; font-size:17px; }
+#vp_c h1 { font-size:19px; color:green; margin:0; padding:0; line-height:12px; }
+#vp_c a { color:#06f;text-decoration:none; }
+#vp_c a:hover { text-decoration:underline; }
+#vp_c h1 a { color:#4BB000; } 
+
+/* Lista de usuarios */
+#vpc_u { float:right; width:180px; height:450px; white-space:nowrap; overflow:auto; overflow-x:hidden; margin-left:20px; }
+#vpc_u ul { padding:15px 0; margin:0; position:static; }
+#vpc_u ul li { padding:0; margin:0; color:#666666; background:none; font-size:18px; font-weight:bold; list-style:none;}
+#vpc_u li { font-weight:bold; }
+#vpc_u a { color:#808080; text-decoration:none; }
+#vpc_u a:hover { text-decoration:underline; }
+
+
+
+
+/*** CONTENIDO FORO ***/
+.code {
+	background-color:#000;
+	color: #5F5;
+	font-family:monospace;
+}
+.quote {
+	background: url(bg75.png) repeat;
+	border: #000000 solid thin;
+	border-radius: 12px; 
+	font-family:serif;
+	font-style:italic;
+	padding: 6px;
+}
+blockquote cite {
+	font-style: normal;
+	font-weight: bold;
+	display: block;
+	font-size: 0.9em;
+	margin-bottom: 0;
+}
+.citar { float: right; }
+.citar input { font-size: 0.7em; }
+
+
+/*** CONTENIDO DOCS ***/
+#doc_pad { text-align:justify; margin:20px; } /* Conjunto de hacks para normalizar el codigo html generado por Etherpad-lite */
+#doc_pad ul, #doc_pad ol { margin:4px 0 -4px 0; }
+#doc_pad li { text-align:left; margin:3px 0 4px 0; }
+#doc_pad ol ol { list-style-type: lower-roman; }
+.indent { list-style-type:none; }
+
+
+
+/*** CONTENIDO AYUDA ***/
+.ayuda {
+	display:inline-block;
+	cursor:help;
+	background-image:url('varios/help.png');
+	width:22px;
+	height:22px;
+}
+.ayudap {
+	margin:-10px 0 0 -90px;
+	position:absolute;
+	background:#FFFF95;
+	font-size:14px;
+	color:#666;
+	border:2px solid #FFFFFF;
+	cursor:help;
+	max-width:350px;
+	min-height:50px;
+	padding:6px 8px;
+	z-index:10;
+	border-radius:6px;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+}
+
+
+/*** HACKS (DOCUMENTAR) ***/
+strong, b {color:inherit;background:none;padding:0px;} /* Para anular una rareza de kickstart */

@@ -59,7 +59,7 @@ function pad($control, $ID=false, $txt='') {
 
 		case 'print':
 			global $pol;
-			return '<iframe src="http://www.virtualpol.com:9001/p/'.$ID.'?userName='.$pol['nick'].'" width="100%" height="500" frameborder="0" style="background:#FFF;"></iframe>';
+			return '<iframe src="http://www.virtualpol.com:9001/p/'.$ID.'?userName='.$pol['nick'].'" width="100%" height="500" frameborder="0" style="background:#FFF;margin:0 0 -9px -20px;"></iframe>';
 			break;
 
 		case 'create':

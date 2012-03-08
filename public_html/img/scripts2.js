@@ -9,22 +9,7 @@ chat_msg_ID = new Array();
 
 // ON LOAD
 $(document).ready(function(){
-
-	// Efecto scroll horizontal de Notificaciones.
-	if (p_scroll == true) { 
-		p_st = '';
-		p_r = false;
-		pl = 0;
-		if (Math.floor(Math.random()*2) == 1) { p_r = true; } // Deslizado izquierda/derecha aleatorio.
-		var p_st = setInterval("pscr()", 95); // Inicia deslizado cada 95ms.
-		var p_st_close = setTimeout("pscr_close()", 180000); // Detiene deslizado tras 3 min.
-	}
-
-	search_timers();
-	setInterval("search_timers()", 60000); // Actualiza temporizadores ".timer" cada minuto.
-
-	//$("#pnick").css("display","none").css("position","absolute");
-
+	
 	// Reemplazo de emoticonos, etc.
 	$(".rich").each(function (i) { $(this).html(enriquecer($(this).html(), true)); });
 
@@ -38,6 +23,21 @@ $(document).ready(function(){
 		var radio_ID = tipo + item_ID;
 		$(this).html("+<input type=\"radio\" class=\"radio_" + radio_ID + "\" name=\"radio_" + radio_ID + "\" onclick=\"votar(1, '" + tipo + "', '" + item_ID + "');\"" + c_mas + " /><input type=\"radio\" class=\"radio_" + radio_ID + "\" name=\"radio_" + radio_ID + "\" onclick=\"votar(-1, '" + tipo + "', '" + item_ID + "');\"" + c_menos + " />&#8211;"); 
 	});
+
+	search_timers();
+	setInterval("search_timers()", 60000); // Actualiza temporizadores ".timer" cada minuto.
+
+	// Efecto scroll horizontal de Notificaciones.
+	if (p_scroll == true) { 
+		p_st = '';
+		p_r = false;
+		pl = 0;
+		if (Math.floor(Math.random()*2) == 1) { p_r = true; } // Deslizado izquierda/derecha aleatorio.
+		var p_st = setInterval("pscr()", 95); // Inicia deslizado cada 95ms.
+		var p_st_close = setTimeout("pscr_close()", 180000); // Detiene deslizado tras 3 min.
+	}
+
+	//$("#pnick").css("display","none").css("position","absolute");
 
 	// Popup de info de ciudadanos.
 	$(".nick").mouseover(function(){

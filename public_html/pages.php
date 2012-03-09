@@ -25,7 +25,8 @@ case 'donaciones':
 	</td>
 	<td align="center" valign="top">
 		<span class="gris">Transferencia bancaria:</span><br />
-		Próximamente...
+		0049 3968 91 2114060824<br /> 
+		Banco Santander, Javier González
 	</td>
 </tr>
 </table>', $text);

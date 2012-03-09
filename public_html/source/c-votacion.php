@@ -272,8 +272,8 @@ LIMIT 500", $link);
 	while($r = mysql_fetch_array($result)) {
 
 		if (nucleo_acceso($vp['acceso'][$r['tipo']])) {
-			$boton_borrar = boton('X', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Estás seguro de querer ELIMINAR este borrador de votación?', false, 'small');
-			$boton_iniciar = boton('Iniciar', '/accion.php?a=votacion&b=iniciar&ref_ID='.$r['ID'], '¿Estás seguro de querer INICIAR esta votación?', false, 'small');
+			$boton_borrar = boton('X', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Estás seguro de querer ELIMINAR este borrador de votación?', 'small');
+			$boton_iniciar = boton('Iniciar', '/accion.php?a=votacion&b=iniciar&ref_ID='.$r['ID'], '¿Estás seguro de querer INICIAR esta votación?', 'small');
 		} else {
 			$boton_borrar = boton('X', false, false, 'small');
 			$boton_iniciar = boton('Iniciar', false, false, 'small');

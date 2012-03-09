@@ -129,8 +129,8 @@ p_scroll = true;
 	<li id="menu-econ"<?=($txt_menu=='econ'?' class="menu-sel"':'')?>><a href="/pols">Economía</a>
 		<ul>
 			<?=($pol['pais']==PAIS?'<li><a href="/pols"><b>Tus monedas</b></a></li>':'')?>
-			<li><a href="/empresas"><b>Empresas</b></a></li>
 			<li><a href="/pols/cuentas">Cuentas</a></li>
+			<li><a href="/empresas"><b>Empresas</b></a></li>
 			<li><a href="/subasta">Subastas</a></li>
 			<li><a href="/mapa">Mapa</a></li>
 			<li><a href="/info/economia">Economía Global</a></li>

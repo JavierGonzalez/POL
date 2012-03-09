@@ -255,13 +255,10 @@ function opcion_nueva() {
 } elseif ($_GET['a'] == 'borradores') { // VER BORRADORES
 
 	$txt_title = 'Borradores de votaciones';
-	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores');
+	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores de votación');
 	$txt_tab = array('/votacion/crear'=>'Crear votación');
 	
-	$txt .= '<h1 class="quitar"><a href="/votacion">Votaciones</a>:</h1>
-
-<span style="color:#888;"><br /><b>Borradores de votación</b>:</span><hr />
-<table border="0" cellpadding="1" cellspacing="0" class="pol_table">';
+	$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table">';
 
 	$result = mysql_query("SELECT ID, duracion, tipo_voto, pregunta, time, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
 (SELECT nick FROM users WHERE ID = votacion.user_ID LIMIT 1) AS nick

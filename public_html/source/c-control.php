@@ -859,7 +859,7 @@ $sel2[$pol['config']['bg']] = ' selected="selected"';
 
 $directorio = opendir(RAIZ.'/img/bg/'); 
 while ($archivo = readdir($directorio)) {
-	if (($archivo != '.') AND ($archivo != '..') AND (substr($archivo,0,1) != '.') AND ($archivo != 'index.php')) {
+	if (($archivo != 'borrados') AND ($archivo != '.') AND ($archivo != '..') AND (substr($archivo,0,1) != '.') AND ($archivo != 'index.php')) {
 		$txt .= '<option value="'.$archivo.'"'.$sel2[$archivo].' onclick="change_bg(\''.$archivo.'\')"  onmouseover="change_bg(\''.$archivo.'\')">'.$archivo.'</option>';
 	}
 }
@@ -1090,7 +1090,7 @@ ORDER BY expire DESC", $link);
 	while($r = mysql_fetch_array($result)){
 		
 		if ((isset($sc[$pol['user_ID']])) AND ($r['expulsado_pais']) AND ($r['estado'] == 'expulsado')) { 
-			$expulsar = boton('Cancelar', '/accion.php?a=expulsar&b=desexpulsar&ID=' . $r['ID'], '&iquest;Seguro que quieres CANCELAR la EXPULSION del usuario: '.$r['tiempo'].'?'); 
+			$expulsar = boton('Cancelar', '/accion.php?a=expulsar&b=desexpulsar&ID=' . $r['ID'], '&iquest;Seguro que quieres CANCELAR la EXPULSION del usuario: '.$r['tiempo'].'?', 'small red'); 
 		} elseif ($r['estado'] == 'cancelado') { $expulsar = '<b style="font-weight:bold;">Cancelado</b>'; } else { $expulsar = ''; }
 
 		if (!$r['expulsado_estado']) { $r['expulsado_estado'] = 'expulsado'; }

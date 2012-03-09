@@ -34,7 +34,7 @@ while($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
 
 $txt .= '<h1>Bienvenido a VirtualPol</h1>
 
-<p>VirtualPol es una <b>red social democrática</b>.</p>
+<p>VirtualPol es la primera <b>red social democrática</b>.</p>
 
 <p><b>En VirtualPol no hay administrador.</b> Se ha automatizado la democracia. Todo se decide con pilares democr&aacute;ticos (1 ciudadano 1 voto). En VirtualPol hay diferentes plataformas independientes entre s&iacute; que comparten este sistema como base.</p>
 

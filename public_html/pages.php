@@ -6,12 +6,12 @@ switch ($_GET['a']) {
 
 case 'donaciones':
 	$txt_title = 'Donaciones a VirtualPol'; 
-	$txt_header = '<style type="text/css">.content { width:700px; margin: 0 auto; }</style>';
+	$txt_header = '<style type="text/css">.content { width:800px; margin: 0 auto; }</style>';
 
 	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 752 LIMIT 1", $link); // doc_ID 752 = Donaciones
 	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
 
-	$text = str_replace(':botones_donar:', '
+/*
 <table border="0" width="100%" style="margin-bottom:-25px;">
 <tr>
 	<td align="center" valign="top">
@@ -29,13 +29,20 @@ case 'donaciones':
 		Banco Santander, Javier González
 	</td>
 </tr>
-</table>', $text);
+</table>
+*/
+
+	$text = str_replace(':botones_donar:', '', $text);
+
 
 	$txt .= '
 <div style="color:#555;">
 <h1 style="color:#444;text-align:center;font-size:28px;">'.$title.'</h1>
 
 <div id="doc_pad">
+
+<div style="float:right;margin-left:10px;"><iframe frameborder="0" width="250px" height="480px" src="http://www.goteo.org/widget/project/expansion-de-virtualpol" scrolling="no"></iframe></div>
+
 '.$text.'
 </div>
 

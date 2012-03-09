@@ -234,7 +234,7 @@ case 'censo':
 
 
 	if ($_GET['b']) {
-		$txt .= '<h1 class="quitar"><a href="/info/censo/">Censo</a>: ' . ucfirst($_GET['b']) . '</h1>';
+		$txt .= '<h1 class="quitar"><a href="/info/censo">Censo</a>: ' . ucfirst($_GET['b']) . '</h1>';
 	} else {
 		$txt .= '<h1 class="quitar">Censo:</h1>';
 	}
@@ -255,22 +255,22 @@ $txt .= '
 
 <p><abbr title="Numero de ciudadanos en la plataforma '.PAIS.'"><b>'.num($pol['config']['info_censo']).'</b> ciudadanos de '.PAIS.'</abbr> (<abbr title="Ciudadanos -no nuevos- que entraron en las últimas 24h, en la plataforma '.PAIS.'">activos <b>'.$censo_activos.'</b></abbr>,  <abbr title="Ciudadanos activos en todo VirtualPol">activos global <b>'.$censo_activos_vp.'</b></abbr>)
 
-'.(ECONOMIA?' | <a href="/control/expulsiones/" class="expulsado">Expulsados</a>: <b>'.$censo_expulsados.'</b> | <a href="/info/censo/riqueza/" title="Los ciudadanos con m&aacute;s monedas.">Ricos</a>':'').' | <a href="/info/censo/SC/" title="Todos los ciudadanos registrados en VirtualPol globalmente">Censo de VirtualPol</a> &nbsp; 
+'.(ECONOMIA?' | <a href="/control/expulsiones" class="expulsado">Expulsados</a>: <b>'.$censo_expulsados.'</b> | <a href="/info/censo/riqueza" title="Los ciudadanos con m&aacute;s monedas.">Ricos</a>':'').' | <a href="/info/censo/SC" title="Todos los ciudadanos registrados en VirtualPol globalmente">Censo de VirtualPol</a> &nbsp; 
 </p>
 
 <table border="0" cellspacing="2" cellpadding="0" class="pol_table">
 <tr>
 <th></th>
-'.(ASAMBLEA?'':'<th style="padding:8px;" class="azul"><a href="/info/censo/nivel/">Nivel</a></th>').'
+'.(ASAMBLEA?'':'<th style="font-size:18px;"><a href="/info/censo/nivel">Nivel</a></th>').'
 <th></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/nombre/">Nick</a></th>
-<th style="padding:8px;" class="azul" colspan="2"><a href="/info/censo/confianza/">Confianza</a></th>
-'.(ASAMBLEA?'':'<th style="padding:8px;" class="azul"><a href="/info/censo/afiliacion/">Afil</a></th>').'
-<th style="padding:8px;" class="azul"><a href="/info/censo/online/">Online</a></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/' . $old . '/">Antig&uuml;edad</a></th>
-<!--<th style="padding:8px;" class="azul"><a href="/info/censo/elec/"><abbr title="Elecciones en las que ha participado">Elec</abbr></a></th>-->
-<th style="padding:8px;" class="azul"><a href="/info/censo/">&Uacute;ltimo&nbsp;acceso&darr;</a></th>
-<th style="padding:8px;" class="azul"><a href="/info/censo/perfiles/">Perfiles</a></th>
+<th style="font-size:18px;"><a href="/info/censo/nombre">Nick</a></th>
+<th style="font-size:18px;" colspan="2"><a href="/info/censo/confianza">Confianza</a></th>
+'.(ASAMBLEA?'':'<th style="font-size:18px;"><a href="/info/censo/afiliacion">Afil</a></th>').'
+<th style="font-size:18px;"><a href="/info/censo/online">Online</a></th>
+<th style="font-size:18px;"><a href="/info/censo/'.$old.'">Antigüedad</a></th>
+<!--<th style="font-size:18px;"><a href="/info/censo/elec"><abbr title="Elecciones en las que ha participado">Elec</abbr></a></th>-->
+<th style="font-size:18px;"><a href="/info/censo">Último&nbsp;acceso&darr;</a></th>
+<th style="font-size:18px;"><a href="/info/censo/perfiles">Perfiles</a></th>
 </tr>';
 
 	switch ($_GET['b']) {

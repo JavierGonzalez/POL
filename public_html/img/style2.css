@@ -257,8 +257,10 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 .gris { color:#808080; }
 
 #pnick { 
+	position:absolute;
 	min-width:280px;
 	text-align:left; 
+	margin-left:-200px;
 	box-shadow: 6px 6px 15px #888;
 }
 #pnick b { color:green; }

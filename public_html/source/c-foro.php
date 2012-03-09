@@ -77,6 +77,9 @@ ORDER BY nivel DESC", $link);
 // <input type="hidden" name="return_url" value="' . $return_url . '"  />
 
 			$html .= '<div id="enviar" class="redondeado">
+
+<hr />
+
 <h2>Nuevo hilo</h2>
 
 
@@ -97,10 +100,10 @@ ORDER BY nivel DESC", $link);
 <input name="title" size="60" maxlength="80" type="text" value="'.str_replace('"', '&#34;', $edit_title).'" /></p>
 
 <p'.($edit&&$edit_user_ID!=$pol['user_ID']?' style="display:none;"':'').'>Mensaje:<br />
-<textarea name="text" style="color: green; font-weight: bold; width: 570px; height: 250px;">' . $edit_text . '</textarea><br />
+<textarea name="text" style="color:#999;font-weight:bold;width:600px;height:260px;">' . $edit_text . '</textarea><br />
 <span style="color:grey;font-size:12px;">Etiquetas: [b]...[/b] [em]...[/em] [quote]...[/quote] [img]url[/img] [youtube]url-youtube[/youtube], auto-enlaces.</span></p>
 
-<p><input value="Enviar" type="submit" style="font-size:22px;" /> En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
+<p>'.boton('Enviar', 'submit', false, 'large blue').' En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
 </select></p>
 </form>
 
@@ -115,13 +118,13 @@ ORDER BY nivel DESC", $link);
 <input type="hidden" name="hilo" value="' . $hilo . '"  />
 <input type="hidden" name="return_url" value="' . $return_url . '"  />
 
-<h2>Respuesta</h2>
+<hr />
 
-<p>Mensaje:<br />
-<textarea name="text" style="color: green; font-weight: bold; width: 570px; height: 250px;">' . $edit_text . '</textarea><br />
+<p>Mensaje en hilo:<br />
+<textarea name="text" style="color:#999;font-weight:bold;width:570px;height:250px;">' . $edit_text . '</textarea><br />
 <span style="color:grey;font-size:12px;">Etiquetas: [b]...[/b] [em]...[/em] [quote]...[/quote] [img]url[/img] [youtube]url-youtube[/youtube], auto-enlaces.</span></p>
 
-<p><input value="Enviar" type="submit" style="font-size:22px;" /> En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
+<p>'.boton('Enviar', 'submit', false, 'blue').' En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
 </select></p>
 
 </form>
@@ -333,28 +336,33 @@ LIMIT 1", $link);
 
 
 			// acceso
-			if ($acceso['escribir_msg']) { $crear_hilo = '#enviar'; $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/-'.$r['ID'].'#enviar', false, 'small').'</div>'; } else { $crear_hilo = ''; }
+			if ($acceso['escribir_msg']) { $crear_hilo = '#enviar'; $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/-'.$r['ID'].'#enviar', false, 'small pill').'</div>'; } else { $crear_hilo = ''; }
 
 
 			$txt .= '<h1 class="quitar"><a href="/foro/">Foro</a>: <a href="/foro/'.$r['foro_url'].'/">'.$r['foro_title'].'</a> (<span style="font-size:18px;">'.$r['descripcion'].'</span>)</h1>
 
-<p style="margin-bottom:4px;">'.$p_paginas.' &nbsp; ' . boton('Responder', $crear_hilo) . ' &nbsp; 
-<span style="float:right;">Orden: <a href="/'.$return_url.'/"'.($_GET['c']=='mejores'?'':' style="color:#444;"').'>Fecha</a> | <a href="/'.$return_url.'mejores/"'.($_GET['c']=='mejores'?' style="color:#444;"':'').'>Votos</a></span>
-<b>'.$r['num'].'</b> mensajes en este hilo creado hace <acronym title="'.$r['time'].'"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym>.</p>
-
-<table border="0" cellpadding="2" cellspacing="0" class="pol_table">';
+<table border="0" cellpadding="2" cellspacing="0" style="margin-top:5px;">';
 
 			if (($pol['user_ID'] == $r['user_ID']) AND ($subforo != 'notaria')) { 
 				// es tu post
-				$editar = '<span style="float:right;">'.boton('Editar', '/foro/editar/'.$r['ID'].'/').'</span>'; 
+				$editar = '<span style="float:right;">'.boton('Editar', '/foro/editar/'.$r['ID'], false, 'small').'</span>'; 
 			} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
-				$editar = '<span style="float:right;">'.boton('Mover', '/foro/editar/'.$r['ID'].'/').' '.boton('Papelera', '/accion.php?a=foro&b=borrar&c=hilo&ID='.$r['ID'].'/', '¿Quieres enviar a la PAPELERA este HILO y sus MENSAJES?').'</span>'; 
+				$editar = '<span style="float:right;">'.boton('Mover', '/foro/editar/'.$r['ID'], false, 'small').' '.boton('Papelera', '/accion.php?a=foro&b=borrar&c=hilo&ID='.$r['ID'], '¿Quieres enviar a la PAPELERA este HILO y sus MENSAJES?', 'small').'</span>'; 
 			} else { $editar = ''; }
 
 			$txt .= '<tr>
-<td align="right" valign="top">'.print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['voto'], 'hilos', $r['ID']).'</td>
+<td align="right" valign="top" style="border-bottom:none;">'.print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['voto'], 'hilos', $r['ID']).'</td>
 <td class="amarillo redondeado" valign="top" width="80%"><p style="text-align:justify;">'.$citar.$editar.'<h1 style="margin:-6px 0 10px 0;"><a href="/'.$return_url.'" class="rich" style="font-size:20px;">'.$r['title'].'</a></h1>'.reemplazos($r['text']).'</p></td>
-</tr>';
+</tr>
+
+
+<tr>
+<td colspan="2" valign="middle" class="gris">
+'.$p_paginas.' &nbsp; ' . boton('Responder', $crear_hilo, false, 'large blue') . ' &nbsp; 
+<span style="float:right;margin-top:20px;">Orden: <a href="/'.$return_url.'/"'.($_GET['c']=='mejores'?'':' style="color:#444;"').'>Fecha</a> | <a href="/'.$return_url.'mejores/"'.($_GET['c']=='mejores'?' style="color:#444;"':'').'>Votos</a></span>
+<b>'.$r['num'].'</b> mensajes en este hilo creado hace <acronym title="'.$r['time'].'"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym>.
+</td>
+</td>';
 
 			$result2 = mysql_query("SELECT m.ID, hilo_ID, user_ID, m.time, m.text, m.cargo, nick, m.estado AS nick_estado, avatar, votos, v.voto
 FROM ".SQL."foros_msg `m`
@@ -365,13 +373,13 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.$p_li
 			while($r2 = mysql_fetch_array($result2)) {
 
 				if (($pol['user_ID'] == $r2['user_ID']) AND ($subforo != 'notaria') AND (strtotime($r2['time']) > (time() - 3600))) { 
-					$editar = boton('Editar', '/foro/editar/' . $r2['hilo_ID'] . '/' . $r2['ID'] . '/') . boton('X', '/accion.php?a=foro&b=eliminarreply&ID=' . $r2['ID'] . '&hilo_ID=' . $r2['hilo_ID'], '¿Estás seguro de querer ELIMINAR tu MENSAJE?', 'small') . ' '; 
+					$editar = boton('Editar', '/foro/editar/'.$r2['hilo_ID'].'/'.$r2['ID'], false, 'small') . boton('X', '/accion.php?a=foro&b=eliminarreply&ID='.$r2['ID'].'&hilo_ID='.$r2['hilo_ID'], '¿Estás seguro de querer ELIMINAR tu MENSAJE?', 'small') . ' '; 
 				} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
 					// policia borra
 					$editar = boton('Papelera', '/accion.php?a=foro&b=borrar&c=mensaje&ID=' . $r2['ID'] . '/', '¿Quieres enviar a la PAPELERA este MENSAJE?', 'small') . ' '; 
 				} else { $editar = ''; }
 				if ($citar) {
-					 $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/'.$r2['ID'].'#enviar', false, 'small').'</div>'; 
+					 $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/'.$r2['ID'].'#enviar', false, 'small pill').'</div>'; 
 				}
 
 				$txt .= '<tr id="m-' . $r2['ID'] . '"><td align="right" valign="top">' . print_lateral($r2['nick'], $r2['cargo'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['votos'], $r2['voto'], 'msg', $r2['ID']) . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $r2['ID'] . '">#</a></span>'.($r2['nick_estado']=='expulsado'?'<span style="color:red;">Expulsado.</span>':$citar.reemplazos($r2['text'])).'</p></td></tr>';

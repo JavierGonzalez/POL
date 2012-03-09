@@ -1,4 +1,3 @@
-
 /*** PROVISIONAL ***/
 .quitar { display:none; } /* Elimina elementos del diseño antiguo para la transición */
 
@@ -120,6 +119,7 @@ h3 { font-size:18px; }
 }
 .htxt:hover { opacity: 1; }
 
+
 /*** MENU ***/
 .menu li {
 	white-space:nowrap;
@@ -143,7 +143,7 @@ h3 { font-size:18px; }
 
 #menu-noti.menu-sel {
 	text-shadow: 1px 1px 6px #FFF;
-	background:url('http://www.virtualpol.com/img/ico/noti_alert.png'); 
+	background:url('ico/noti_alert.png'); 
 }
 #menu-noti.menu-sel .md { right:20px; font-size:22px; font-weight:bold; }
 .md {
@@ -216,10 +216,9 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 
 /*** CONTENIDO GENERAL ***/
 .votacion_desc_min {
-	max-height:200px;
-	padding-bottom:40px;
+	max-height:180px;
 	overflow-y:auto;
-	box-shadow:inset -8px -8px 15px #EEE;
+	box-shadow:inset -8px -8px 15px #FEFEFE;
 }
 .vcc, .vc, .vcn, .vcnn { 
 	background-color:#EEE;

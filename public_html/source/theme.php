@@ -1,5 +1,5 @@
 <?php 
-if (nucleo_acceso('privado', 'gonzo zerocool bradduk ethos vara oportunista peny')) { include('theme2.php'); exit; }
+if (nucleo_acceso('privado', 'gonzo zerocool bradduk ethos vara oportunista peny votaaotros')) { include('theme2.php'); exit; }
 
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN.'/'); }
 

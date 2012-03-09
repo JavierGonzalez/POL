@@ -342,9 +342,11 @@ LIMIT 1", $link);
 		
 <h1 class="quitar"><a href="/votacion">Votaciones</a>: '.strtoupper($r['tipo']).'</h1>
 
-<div class="amarillo" style="margin:20px 0 5px 0;padding:20px 10px 0 10px;">
+<br class="quitar" />
+
+<div class="amarillo" style="margin-top:5px;">
 <h1>'.$r['pregunta'].'</h1>
-<p class="rich'.($r['estado']=='end'?' votacion_desc_min':'').'">'.$r['descripcion'].'</p>
+<div class="rich'.($r['estado']=='end'?' votacion_desc_min':'').'">'.$r['descripcion'].'</div>
 '.(substr($r['debate_url'], 0, 4)=='http'?'<hr /><p><b>Debate de esta votación: <a href="'.$r['debate_url'].'">aquí</a>.</b></p>':'').'
 </div>
 

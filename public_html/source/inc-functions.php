@@ -226,16 +226,16 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 					$add_class .= ' redondeado';
 				}
 				if (($estado) && ($estado != 'ciudadano')) { 
-					return '<a href="/perfil/'.$a.'/" class="nick'.$add_class.' '.$estado.'"'.$bg.'>'.$a.'</a>';
+					return '<a href="/perfil/'.$a.'" class="nick'.$add_class.' '.$estado.'"'.$bg.'>'.$a.'</a>';
 				} else {
-					return '<a href="/perfil/'.$a.'/" class="nick'.$add_class.'"'.$bg.'>'.$a.'</a>';
+					return '<a href="/perfil/'.$a.'" class="nick'.$add_class.'"'.$bg.'>'.$a.'</a>';
 				}
 			} else { 
 				return '<span title="Usuario expirado">&dagger;</span>'; 
 			} 
 			break;
-		case 'partido': if ($a) { return '<a href="/partidos/' . strtolower($a) . '/">' . $a . '</a>'; } else { return 'Ninguno'; } break;
-		case 'documento': return '<a href="/doc/' . $a . '/">/doc/' . $a . '/</a>'; break;
+		case 'partido': if ($a) { return '<a href="/partidos/' . strtolower($a) . '">' . $a . '</a>'; } else { return 'Ninguno'; } break;
+		case 'documento': return '<a href="/doc/' . $a . '">/doc/' . $a . '</a>'; break;
 	}
 }
 
@@ -350,7 +350,6 @@ function paginacion($type, $url, $ID, $num_ahora=null, $num_total=null, $num='10
 				$html .= '<a href="' . $el_url . '">' . $i . '</a> ';
 			}
 		}
-
 		$p_init = (($num_ahora - 1) * $num);
 		if ($p_init < 0) { $p_init = 0; }
 		$p_limit = $p_init . ', ' . $num;
@@ -385,7 +384,6 @@ function confianza($num, $size=false) {
 	else { return '<span class="vcnn"'.$s.'>'.$num.'</span>'; }
 }
 
-
 function direccion_IP($tipo='') {
 	$IP = $_SERVER['REMOTE_ADDR'];
 	if ($tipo == 'longip') { $IP = ip2long($IP); }
@@ -396,6 +394,5 @@ function avatar($user_ID, $size='') {
 	if ($size) { $extra = '_' . $size; } else { $extra = ''; }
 	return '<img src="'.IMG.'a/' . $user_ID . $extra . '.jpg" alt="' . $user_ID . '"'.($size!=''?' width="'.$size.'" height="'.$size.'" class="redondeado"':'').' />'; 
 }
-
 
 ?>

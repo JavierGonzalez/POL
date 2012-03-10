@@ -4,18 +4,15 @@ include('inc-login.php');
 $votaciones_tipo = array('sondeo', 'referendum', 'parlamento', 'cargo');
 
 
-// ¡¡¡FINALIZAR VOTACIONES!!!
+// ¡FINALIZA VOTACIONES!
 $result = mysql_query("SELECT ID, tipo, num, pregunta, ejecutar, privacidad, acceso_ver FROM votacion 
 WHERE estado = 'ok' AND pais = '".PAIS."' AND (time_expire <= '".$date."' OR ((votos_expire != 0) AND (num >= votos_expire)))", $link);
 while($r = mysql_fetch_array($result)){
 	
+	// Detiene la votación.
 	mysql_query("UPDATE votacion SET estado = 'end', time_expire = '".$date."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
 	include_once('inc-functions-accion.php');
-
-	if ($r['acceso_ver'] == 'anonimos') {
-		evento_chat('<b>['.strtoupper($r['tipo']).']</b> Finalizado, resultados: <a href="/votacion/'.$r['ID'].'"><b>'.$r['pregunta'].'</b></a> <span style="color:grey;">(votos: <b>'.$r['num'].'</b>)</span>');
-	}
 
 	if ($r['ejecutar'] != '') { // EJECUTAR ACCIONES
 
@@ -39,23 +36,33 @@ while($r = mysql_fetch_array($result)){
 	}
 	
 	if ($r['privacidad'] == 'true') {
-		// Elimina la relacion entre USUARIO y VOTO una vez finaliza. Por privacidad.
+		// Elimina la relación USUARIO-VOTO una vez finalizada. Por privacidad.
 		mysql_query("UPDATE votacion_votos SET user_ID = '0', time = NULL WHERE ref_ID = '".$r['ID']."'", $link); 
 	}
 
-	// actualizar info en theme
+	// Actualiza numero de votaciones en theme
 	$result2 = mysql_query("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
 	while($r2 = mysql_fetch_array($result2)) {
 		mysql_query("UPDATE ".SQL."config SET valor = '".$r2['num']."' WHERE dato = 'info_consultas' LIMIT 1", $link);
 	}
+
+	if ($r['acceso_ver'] == 'anonimos') {
+		evento_chat('<b>['.strtoupper($r['tipo']).']</b> Finalizado, resultados: <a href="/votacion/'.$r['ID'].'"><b>'.$r['pregunta'].'</b></a> <span style="color:grey;">(votos: <b>'.$r['num'].'</b>)</span>');
+	}
 }
+// ¡FINALIZA VOTACIONES!
 
 
 
 
+if (($_GET['a'] == 'verificacion') AND ($_GET['b'])) {
+	$comprobante_full = $_GET['b'];
+	$ref_ID = explodear('-', $comprobante_full, 0);
+	$comprobante = explodear('-', $comprobante_full, 1);
 
+	redirect('/votacion/'.$ref_ID.'/verificacion#'.$comprobante);
 
-if ($_GET['a'] == 'crear') {
+} elseif ($_GET['a'] == 'crear') {
 	$txt_title = 'Borrador de votación';
 	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores', 'Crear borrador');
 	$txt_tab = array('/votacion/borradores'=>'Ver borradores', '/votacion/'.$_GET['b']=>'Previsualizar', '/votacion/crear/'.$_GET['b']=>'Editar borrador');
@@ -295,7 +302,8 @@ Ver: <em title="'.$r['acceso_cfg_ver'].'">'.$r['acceso_ver'].'</em>, votar: <em 
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado,
 (SELECT voto FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado,
 (SELECT validez FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado_validez,
-(SELECT mensaje FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_mensaje
+(SELECT mensaje FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_mensaje,
+(SELECT comprobante FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS comprobante
 FROM votacion
 WHERE ID = '".$_GET['a']."' AND pais = '".PAIS."'
 LIMIT 1", $link);
@@ -319,8 +327,8 @@ LIMIT 1", $link);
 		$txt_nav = array('/votacion'=>'Votaciones', strtoupper($r['tipo']));
 
 		if ($r['estado'] == 'ok') { 
-			$txt_nav[] = 'En curso...';
-			$txt_tab = array('/votacion/'=>'Ver otros resultados');
+			$txt_nav[] = 'En curso... ('.num($votos_total).' votos)';
+			$txt_tab = array('/votacion'=>'Ver otros resultados');
 
 			$tiempo_queda =  '<span style="color:blue;">Quedan '.timer($time_expire, true).'.</span>'; 
 		} elseif ($r['estado'] == 'borrador') {
@@ -330,18 +338,12 @@ LIMIT 1", $link);
 			$tiempo_queda =  '<span style="color:red;">Borrador <span style="font-weight:normal;">(Previsualización de votación)</span></span> ';
 		} else { 
 			$txt_nav[] = 'Finalizado ('.num($votos_total).' votos)';
-			$txt_tab = array('/votacion/'.$r['ID']=>'Resultado', '/votacion/'.$r['ID'].'/info'=>'Más información');
+			$txt_tab = array('/votacion/'.$r['ID']=>'Resultado', '/votacion/'.$r['ID'].'/info'=>'Más información', '/votacion/'.$r['ID'].'/verificacion'=>'Verificación');
 			$tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; 
 		}
 
 
-		$txt .= '<span style="float:right;" class="quitar"><b>'.num($votos_total).' votos</b> | '.$tiempo_queda.'</span>
-		
-<h1 class="quitar"><a href="/votacion">Votaciones</a>: '.strtoupper($r['tipo']).'</h1>
-
-<br class="quitar" />
-
-<div class="amarillo" style="margin-top:5px;">
+		$txt .= '<div class="amarillo" style="margin-top:5px;">
 <h1>'.$r['pregunta'].'</h1>
 <div class="rich'.($r['estado']=='end'?' votacion_desc_min':'').'">'.$r['descripcion'].'</div>
 '.(substr($r['debate_url'], 0, 4)=='http'?'<hr /><p><b>Debate de esta votación: <a href="'.$r['debate_url'].'">aquí</a>.</b></p>':'').'
@@ -372,7 +374,7 @@ LIMIT 1", $link);
 
 		if ($_GET['b'] == 'info') {
 			
-			$txt .= '<span id="ver_info"></span><span style="float:right;text-align:right;"><a href="/votacion/'.$r['ID'].'"><b>Volver a la votación</b></a></span><table border="0" width="100%"><tr><td valign="top">';
+			$txt .= '<table border="0" width="100%"><tr><td valign="top">';
 			
 			
 			$result2 = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
@@ -426,7 +428,7 @@ LIMIT 1", $link);
 
 <li><b title="Privacy: el sentido del voto es secreto.">Privacidad:</b> Si, siempre que el servidor no se comprometa mientras la votación está activa.</li>
 
-<li><b title="Veriability: capacidad publica de comprobar el recuento de votos.">Verificación:</b> Se permite verificar el sentido del propio voto mientras la votación está activa. Y se hace publico CUANDO vota QUIEN.</li>
+<li><b title="Veriability: capacidad publica de comprobar el recuento de votos.">Verificación:</b> Muy alta. Se permite verificar el sentido del propio voto mientras la votación está activa, se hace publico CUANDO vota QUIEN y hay un sistema de comprobantes que permite verificar el sentido del voto.</li>
 
 <li><b title="Posibilidad de modificar el sentido del voto propio en una votación activa.">Rectificación</b> Si.</li>';
 } else { // Privacidad NO, voto publico, verificabilidad
@@ -447,6 +449,29 @@ $txt .= '</ul>
 
 </td></tr></table>';
 
+
+		} elseif ($_GET['b'] == 'verificacion') {
+
+			$txt .= '<h2>Verificación de votación</h2>
+
+<p>La información presentada a continuación es la tabla de comprobantes que muestra el escrutinio completo y la relación Voto-Comprobante de esta votación. Esto permite a cualquier votante comprobar el sentido de su voto ejercido más allá de toda duda, utilizando el código aleatorio llamado comprobante.<br />Cuando finalizan las votaciones se elimina la relación Usuario-Voto y Usuario-Comprobante, por lo tanto no será posible saber de quien es cada comprobante.</p>
+
+<table border="0">
+<tr>
+<th>Contador</th>
+<th>Sentido de voto</th>
+<th>Comprobante</th>
+</tr>';
+			if ($r['estado'] == 'end') {
+				$contador_votos = 0;
+				$result2 = mysql_query("SELECT voto, comprobante FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL ORDER BY voto ASC, RAND()", $link);
+				while($r2 = mysql_fetch_array($result2)) { $contador_votos++; $txt .= '<tr id="c'.$r2['comprobante'].'"><td align="right">'.++$contador[$r2['voto']].'.</td><td align="right">'.($r['tipo_voto']=='estandar'?'<b>'.$respuestas[$r2['voto']].'</b>':'<em>'.$r2['voto'].'</em>').'</td><td>'.$r['ID'].'-'.$r2['comprobante'].'</td></tr>'; }
+				if ($contador_votos == 0) { $txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>Esta votación es anterior al sistema de comprobantes, por lo tanto esta comprobación no es posible.</b></td></tr>'; }
+			} else {
+				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>Esta votación aún no ha finalizado. Cuando finalice se mostrará aquí la tabla de votos-comprobantes.</b></td></tr>';
+			}
+
+			$txt .= '</table>';
 
 		} else {
 
@@ -709,8 +734,11 @@ Validez de esta votación: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&n
 
 <p>Comentario (opcional, secreto y público al finalizar la votación).<br />
 <input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="60" maxlength="160" /></p>
+</form>
 
-</form>';
+'.($r['ha_votado']?'<p style="margin-top:30px;">Comprobante de voto:<br />
+<input type="text" value="'.$r['ID'].'-'.$r['comprobante'].'" size="60" readonly="readonly" style="color:#AAA;" />'.boton('Enviar al email', '/accion.php?a=votacion&b=enviar_comprobante&comprobante='.$r['ID'].'-'.$r['comprobante']).'</p>':'');
+
 			}
 
 			// Añade tabla de escrutinio publico si es votacion tipo parlamento.

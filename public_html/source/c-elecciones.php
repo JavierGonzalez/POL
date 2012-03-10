@@ -158,7 +158,7 @@ LIMIT 1", $link);
 <form action="/accion.php?a=elecciones-generales" method="post">
 
 
-<blockquote>
+
 <table border="0">
 <tr><td colspan="6" align="center"><b style="font-size:18px;"><span style="font-size:22px;" id="votos_num">' . $votos_num . '</span> votos en Blanco</b></td></tr>';
 
@@ -185,9 +185,12 @@ ORDER BY RAND()", $link);
 					}
 				} 
 
-				$txt .= '</table><p style="color:#777;">* Pasa el ratón por encima o <em>haz clic</em> en los candidatos para ver más información.</p></blockquote></div>
+				$txt .= '</table><p style="color:#777;">* Pasa el ratón por encima o <em>haz clic</em> en los candidatos para ver más información.</p>
+</div>
 				
-<blockquote><input type="submit" style="font-size:24px;color:green;" value="VOTAR" /> (Una vez ejerzas el voto no podrás modificarlo, tomate el tiempo que necesites)</form></blockquote>';
+<p>'.boton('VOTAR', 'submit', false, 'large blue').' &nbsp; [Una vez ejerzas el voto no podrás modificarlo, tomate el tiempo que necesites]</p>
+
+</form>';
 
 
 

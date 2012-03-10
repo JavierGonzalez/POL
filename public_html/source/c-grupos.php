@@ -7,7 +7,7 @@ switch ($_GET['a']) {
 case 'crear':
 	$txt_title = 'Crear grupo';
 	$txt_nav = array('/grupos'=>'Grupos', 'Crear grupo');
-	$txt_tab = array('/grupos/'=>'Ver grupos', '/grupos/crear/'=>'Crear grupo');
+	$txt_tab = array('/grupos'=>'Ver grupos', '/grupos/crear'=>'Crear grupo');
 
 	$txt .= '<h1 class="quitar">Crear grupo</h1>
 
@@ -15,7 +15,7 @@ case 'crear':
 
 <p>Nombre del grupo: <input type="text" name="nombre" size="20" maxlength="40" /> <input type="submit" value="Crear grupo"'.(nucleo_acceso($vp['acceso']['control_grupos'])?'':' disabled="disabled"').' /> (Pueden crear grupos: '.verbalizar_acceso($vp['acceso']['control_grupos']).')
 
-<p class="quitar"><a href="/grupos/"><b>Ver Grupos</b></a></p>
+<p class="quitar"><a href="/grupos"><b>Ver Grupos</b></a></p>
 
 </form>
 ';	
@@ -23,7 +23,7 @@ case 'crear':
 
 default:
 	$txt_nav = array('/grupos'=>'Grupos');
-	$txt_tab = array('/grupos/crear/'=>'Crear grupo');
+	$txt_tab = array('/grupos/crear'=>'Crear grupo');
 
 	$txt .= '<h1 class="quitar">Grupos</h1>
 
@@ -65,9 +65,7 @@ default:
 
 	$txt .= '</table>
 
-<span style="float:right;" class="quitar">'.boton('Crear grupo', '/grupos/crear/').'</span>
-
-<p><input type="submit" value="Afiliarse a grupos"'.($pol['user_ID']?'':' disabled="disabled"').' /></p>
+<p><input type="submit" value="Guardar afiliación"'.($pol['user_ID']?'':' disabled="disabled"').' /></p>
 	
 </form>';
 }

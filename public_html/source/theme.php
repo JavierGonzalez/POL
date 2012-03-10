@@ -16,9 +16,9 @@ if ($pol['config']['elecciones_estado'] == 'normal') {
 } elseif ($pol['config']['elecciones_estado'] == 'elecciones') {  
 	$elec_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']);
 	switch ($pol['config']['elecciones']) {
-		case 'pres1': $txt_elec_time = timer(($elec_quedan - 86400), true); $txt_elec = ' <a href="/elecciones" style="color:red;"><b>1&ordf; Vuelta en curso</b>, queda <b>'.$txt_elec_time.'</b></a> |';  break;
-		case 'pres2': $txt_elec_time = timer($elec_quedan, true); $txt_elec = ' <a href="/elecciones" style="color:red;"><b>2&ordf; Vuelta en curso</b>, queda <b>'.$txt_elec_time.'</b></a> |'; break;
-		case 'parl': $txt_elec_time = timer($elec_quedan, true); $txt_elec = ' <a href="/elecciones" style="color:blue;"><b>Elecciones'.(ASAMBLEA?' a Coordinador':'').' en curso</b>, queda <b>'.$txt_elec_time.'</b></a> |';  break;
+		case 'pres1': $txt_elec_time = timer(($elec_quedan - 86400), true); $txt_elec = ' <a href="/elecciones" style="color:red;font-weight:normal;">1&ordf; Vuelta en curso, queda <b>'.$txt_elec_time.'</b></a> |';  break;
+		case 'pres2': $txt_elec_time = timer($elec_quedan, true); $txt_elec = ' <a href="/elecciones" style="color:red;font-weight:normal;">2&ordf; Vuelta en curso, queda <b>'.$txt_elec_time.'</b></a> |'; break;
+		case 'parl': $txt_elec_time = timer($elec_quedan, true); $txt_elec = ' <a href="/elecciones" style="font-weight:normal;">Elecciones'.(ASAMBLEA?' a Coordinador':'').', queda <b>'.$txt_elec_time.'</b></a> |';  break;
 	}
 }
 
@@ -119,6 +119,7 @@ p_scroll = true;
 					<li><a href="<?=SSL_URL?>dnie.php">Autentificación</a></li>
 				</ul>
 			</li>
+			<?=(ASAMBLEA?'':'<li><a href="/partidos">Partidos <span class="md">'.$pol['config']['info_partidos'].'</span></a></li>')?>
 			<li><a href="/grupos">Grupos</a></li>
 			<li><a href="/cargos">Cargos</a></li>
 		</ul>
@@ -170,7 +171,7 @@ if (ECONOMIA) {
 	<div id="header">
 
 		<div id="header-logo">
-			<a href="/"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" height="50" border="0" /></a>
+			<?=(ASAMBLEA?'':'<a href="/"><img src="'.IMG.'banderas/'.PAIS.'_60.gif" height="50" border="0" /></a>')?>
 			<span class="htxt" id="header-logo-p"><?=$pol['config']['pais_des'].', '.PAIS?></span>
 		</div>
 
@@ -194,7 +195,7 @@ if (isset($pol['user_ID'])) {
 
 		<div id="header-tab">
 			<ul class="ttabs right">
-				<?php if (substr($_SERVER['REQUEST_URI'], -1, 1) == '/') { $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 0, -1); } foreach ($txt_tab AS $u => $a) { echo '<li'.(!is_numeric($u)&&$_SERVER['REQUEST_URI']==$u?' class="current"':'').'><a href="'.(!is_numeric($u)?$u:'#').'">'.$a.'</a></li>'; } ?>
+				<?php foreach ($txt_tab AS $u => $a) { echo '<li'.(!is_numeric($u)&&$_SERVER['REQUEST_URI']==$u?' class="current"':'').'><a href="'.(!is_numeric($u)?$u:'#').'">'.$a.'</a></li>'; } ?>
 			</ul>
 		</div>
 

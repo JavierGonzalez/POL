@@ -596,7 +596,7 @@ ORDER BY fecha_registro DESC", $link);
 case 'gobierno':
 	$txt_title = 'Control: Gobierno';
 	$txt_nav = array('/control'=>'Control', '/control/gobierno'=>'Gobierno');
-	$txt_tab = array('/control/gobierno/'=>'Gobierno', '/control/gobierno/notificaciones'=>'Notificaciones', '/control/gobierno/foro'=>'Configuración foro');
+	$txt_tab = array('/control/gobierno'=>'Gobierno', '/control/gobierno/notificaciones'=>'Notificaciones', '/control/gobierno/foro'=>'Configuración foro');
 
 	if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $dis = null; } else { $dis = ' disabled="disabled"'; }
 
@@ -616,7 +616,7 @@ case 'gobierno':
 		
 		$txt_nav = array('/control'=>'Control', '/control/gobierno'=>'Gobierno', 'Notificaciones');
 		
-		$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/gobierno/">Gobierno</a> | Notificaciones</h1>
+		$txt .= '<h1 class="quitar"><a href="/control">Control</a>: <a href="/control/gobierno">Gobierno</a> | Notificaciones</h1>
 		
 <br />
 
@@ -653,7 +653,7 @@ case 'gobierno':
 <th colspan="2">Leídas/clics</th>
 <th></th>
 </tr>';
-		$result = mysql_query("SELECT *, COUNT(*) AS num FROM notificaciones WHERE emisor = '".PAIS."' GROUP BY texto ORDER BY time DESC", $link);
+		$result = mysql_query("SELECT *, COUNT(*) AS num FROM notificaciones WHERE emisor = '".PAIS."' GROUP BY emisor, texto ORDER BY time DESC", $link);
 		while($r = mysql_fetch_array($result)){
 
 			$leido = 0;

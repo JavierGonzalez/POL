@@ -65,7 +65,9 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 					if (!isset($havotado)) { $nuevos_num++; }
 					$total_num++;
 					$elecciones_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']);
-					$t .= '<li><a href="/elecciones/votar/"'.(!isset($havotado)?' class="noti-nuevo"':'').'>&iexcl;Elecciones en curso!<span class="md">Quedan '.timer($elecciones_quedan, true).'</span></a></li>';
+					if (!isset($havotado)) {
+						$t .= '<li><a href="/elecciones/votar" class="noti-nuevo">&iexcl;Elecciones en curso!<span class="md">Quedan '.timer($elecciones_quedan, true).'</span></a></li>';
+					}
 				}
 
 				// NOTIFICACION VOTACIONES
@@ -84,11 +86,11 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 				}
 
 				// NOTIFICACIONES
-				$result = mysql_query("SELECT noti_ID, visto, texto, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 6", $link);
+				$result = mysql_query("SELECT noti_ID, visto, texto, url, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 6", $link);
 				while($r = mysql_fetch_array($result)) {
 					$total_num += $r['num'];
 					if ($r['visto'] == 'false') { $nuevos_num += $r['num']; }
-					$t .= '<li><a href="/?noti='.$r['noti_ID'].'"'.($r['visto']=='false'?' class="noti-nuevo"':'').'>'.$r['texto'].($r['num']>1?'<span class="md">'.$r['num'].'</span>':'').'</a></li>';
+					$t .= '<li><a href="'.($r['visto']=='false'?'/?noti='.$r['noti_ID']:$r['url']).'"'.($r['visto']=='false'?' class="noti-nuevo"':'').(substr($r['url'], 0, 4)=='http'?' target="_blank"':'').'>'.$r['texto'].($r['num']>1?'<span class="md">'.$r['num'].'</span>':'').'</a></li>';
 				}
 
 			} else { $t = '<li><a href="'.REGISTRAR.'?p='.PAIS.'" class="noti-nuevo">Primer paso: Crea tu ciudadano</a></li>'; $total_num = 1; $nuevos_num = 1; }

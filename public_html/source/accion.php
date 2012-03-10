@@ -1334,7 +1334,8 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 				if ($ha_votado) {	// MODIFICAR VOTO
 					mysql_query("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".$_POST['validez']."', mensaje = '".$_POST['mensaje']."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 				} else {			// INSERTAR VOTO
-					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".$_POST['validez']."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."')", $link);
+					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje, comprobante) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".$_POST['validez']."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."', '".sha1(time().'-'.mt_rand(100,99999999999999999999))."')", $link);
+
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 					
 					if ($acceso_ver == 'anonimos') {
@@ -1354,8 +1355,16 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 				mysql_query("DELETE FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
 			}
 		}
+
 	} elseif (($_GET['b'] == 'concluir') AND (is_numeric($_GET['ID']))) { 
 		mysql_query("UPDATE votacion SET time_expire = '".$date."' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' AND tipo != 'cargo' LIMIT 1", $link);
+
+	} elseif (($_GET['b'] == 'enviar_comprobante') AND ($_GET['comprobante'])) {
+		$votacion_ID = explodear('-', $_GET['comprobante'], 0);
+		$asunto = 'Comprobante de voto: votación '.$votacion_ID;
+		$mensaje = 'Hola Ciudadano,<br /><br />Este email es para guardar tu comprobante de voto. Te permitirá comprobar el sentido de tu voto cuando la votacion finaliza y así aportar verificabilidad a la votación.<br /><br /><blockquote>Comprobante: <b>'.$_GET['comprobante'].'</b><br />Comprobar: http://'.HOST.'/votacion/verificacion/'.$_GET['comprobante'].'<br />Votación: http://'.HOST.'/votacion/'.$votacion_ID.'</blockquote><br /><br />No debes entregar a nadie esta información, de lo contrario podrían saber qué has votado.<br /><br />Atentamente.<br /><br /><br />VirtualPol - http://'.HOST;
+		enviar_email($pol['user_ID'], $asunto, $mensaje); 
+		redirect('/votacion/'.$votacion_ID);
 	}
 
 	// actualizar info en theme
@@ -1580,14 +1589,14 @@ case 'mensaje-leido':
 		mysql_query("UPDATE mensajes SET leido = '1' WHERE ID = '".$_GET['ID']."' AND recibe_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	}
 	mysql_query("UPDATE notificaciones SET visto = 'true' WHERE user_ID = '".$pol['user_ID']."' AND visto = 'false' AND texto LIKE 'Mensaje %'", $link);
-	$refer_url = 'msg/';
+	$refer_url = 'msg';
 	break;
 
 case 'borrar-mensaje':
 	if (is_numeric($_GET['ID'])) {
 		mysql_query("DELETE FROM mensajes WHERE ID = '".$_GET['ID']."' AND recibe_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		mysql_query("UPDATE notificaciones SET visto = 'true' WHERE user_ID = '".$pol['user_ID']."' AND visto = 'false' AND texto LIKE 'Mensaje %'", $link);
-		$refer_url = 'msg/';
+		$refer_url = 'msg';
 	}
 	break;
 
@@ -1618,12 +1627,12 @@ case 'enviar-mensaje':
 				// MENSAJE URGENTE
 				if (($_POST['urgente'] == '1') AND ($pol['pols'] >= $pol['config']['pols_mensajeurgente'])) { 
 					$asunto = '[VirtualPol] Tienes un mensaje urgente de '.$pol['nick'];
-					$mensaje = 'Hola Ciudadano,<br /><br />Has recibido un mensaje urgente enviado por el Ciudadano: '.$pol['nick'].'.<br /><br />Mensaje de '.$pol['nick'].':<hr />'.$text.'<hr /><br /><br />Este mensaje es automatico. Para responder a '.$pol['nick'].' entra aqui:<br /><br />http://'.HOST.'/msg/'.$pol['nick'].'/<br /><br /><br />VirtualPol<br />http://'.HOST;
+					$mensaje = 'Hola Ciudadano,<br /><br />Has recibido un mensaje urgente enviado por el Ciudadano: '.$pol['nick'].'.<br /><br />Mensaje de '.$pol['nick'].':<hr />'.$text.'<hr /><br /><br />Este mensaje es automatico. Para responder a '.$pol['nick'].' entra aqui:<br /><br />http://'.HOST.'/msg/'.$pol['nick'].'<br /><br /><br />VirtualPol<br />http://'.HOST;
 					enviar_email($r['ID'], $asunto, $mensaje); 
 					$envio_urgente++;
 				}
-				evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/">Nuevo mensaje privado</a> <span style="color:grey;">('.$pol['nick'].')</span>', $r['ID'], -1, false, 'p', $r['pais']);
-				notificacion($r['ID'], 'Mensaje privado de '.$pol['nick'], '/msg/');
+				evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg">Nuevo mensaje privado</a> <span style="color:grey;">('.$pol['nick'].')</span>', $r['ID'], -1, false, 'p', $r['pais']);
+				notificacion($r['ID'], 'Mensaje privado de '.$pol['nick'], '/msg');
 				$refer_url = 'msg/';
 			}
 
@@ -1639,9 +1648,9 @@ case 'enviar-mensaje':
 			foreach ($sc AS $user_ID => $nick) {
 				if ($user_ID != $pol['user_ID']) {
 					mysql_query("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$user_ID."', '".$date."', '<b>Mensaje multiple: Supervisor del Censo</b><br />".$text."', '0', '".$_POST['calidad']."', 'SC')", $link);
-					evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/">Nuevo mensaje privado</a> <span style="color:grey;">(multiple)</span>', $user_ID, -1, false, 'p');
-					notificacion($user_ID, 'Mensaje de SC de '.$pol['nick'], '/msg/');
-					$refer_url = 'msg/';
+					evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg">Nuevo mensaje privado</a> <span style="color:grey;">(multiple)</span>', $user_ID, -1, false, 'p');
+					notificacion($user_ID, 'Mensaje de SC de '.$pol['nick'], '/msg');
+					$refer_url = 'msg';
 				}
 			}
 		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'])) {
@@ -1657,8 +1666,8 @@ case 'enviar-mensaje':
 			while($r = mysql_fetch_array($result)){ 
 				if (($r['user_ID'] != $pol['user_ID']) AND ($r['user_ID'] != 0)) {
 					mysql_query("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: ".$cargo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
-					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
-					notificacion($r['user_ID'], 'Mensaje privado de '.$pol['nick'], '/msg/');
+					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
+					notificacion($r['user_ID'], 'Mensaje privado de '.$pol['nick'], '/msg');
 					$refer_url = 'msg/';
 				}
 			}
@@ -1673,9 +1682,9 @@ case 'enviar-mensaje':
 					
 					mysql_query("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: grupo ".$grupo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
 					
-					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg/"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
+					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
 					
-					notificacion($r['user_ID'], 'Mensaje privado del grupo '.$grupo_nombre, '/msg/');
+					notificacion($r['user_ID'], 'Mensaje privado del grupo '.$grupo_nombre, '/msg');
 					
 				}
 			}
@@ -1687,8 +1696,8 @@ case 'enviar-mensaje':
 			$result = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."'", $link);
 			while($r = mysql_fetch_array($result)){ 
 				mysql_query("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$r['ID']."', '".$date."', '".$text."', '0', '".$_POST['calidad']."')", $link);
-				notificacion($r['ID'], 'Mensaje privado global', '/msg/');
-				$refer_url = 'msg/';
+				notificacion($r['ID'], 'Mensaje privado global', '/msg');
+				$refer_url = 'msg';
 			}
 		}
 	}

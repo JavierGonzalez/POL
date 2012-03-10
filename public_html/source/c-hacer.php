@@ -112,9 +112,8 @@ $txt .= '</ol>
 <p>Por orden de importancia.</p>';
 
 
-if (!$pol['user_ID']) { $txt = '<p>Debes <a href="'.REGISTRAR.'?p='.PAIS.'">registrar un ciudadano</a> para poder ver esta p&aacute;gina.</p>'; } 
-//elseif ($pol['estado'] == 'extranjero') { header('Location: http://'.strtolower($pol['pais']).'.'.DOMAIN.'/hacer/'); exit; }
-elseif ($pol['estado'] != 'ciudadano') { $txt = '<p>Debes <a href="'.REGISTRAR.'">solicitar ciudadania</a> en alguna plataforma.</p>'; }
+if (!$pol['user_ID']) { redirect(REGISTRAR.'?p='.PAIS); } 
+elseif ($pol['estado'] != 'ciudadano') { redirect(REGISTRAR.'?p='.PAIS); }
 
 
 //THEME

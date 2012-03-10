@@ -129,7 +129,7 @@ function hace(cuando, ts, num, pre) {
 	tiempo = Math.abs(tiempo);
 	
 	var periods_sec = new Array(2419200, 86400, 3600, 60, 1);
-	var periods_txt = new Array("meses", "días", "horas", "minutos", "segundos");
+	var periods_txt = new Array("meses", "días", "horas", "min", "seg");
 
 	if (pre) { var duracion = pre + " "; } else { var duracion = ""; }
 
@@ -282,7 +282,7 @@ function print_msg(data) {
 				
 				chat_msg_ID[m_ID] = true;
 
-				if (chat_time == m_time) { m_time = "<span style=\"color:#fff;\">" + m_time + "</span>"; } else { chat_time = m_time; }
+				if (chat_time == m_time) { m_time = "<span style=\"color:#eee;\">" + m_time + "</span>"; } else { chat_time = m_time; }
 
 				switch(m_tipo) {
 					case "c":
@@ -360,12 +360,12 @@ function merge_list() {
 			if (array_list[cargo_ID] === undefined) { array_list[cargo_ID] = ""; }
 
 			if (hace_kick) {
-				js_kick = "<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"" + IMG + "varios/kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a>";
+				js_kick = "<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "\" target=\"_blank\"><img src=\"" + IMG + "varios/kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a>";
 			} else {
 				js_kick = "";
 			}
 
-			array_list[cargo_ID] += "<li>" + js_kick + " <img src=\""+IMG+"cargos/" + cargo_ID + ".gif\" title=\"" + array_cargos[cargo_ID] + "\" /> <a href=\"/perfil/" + elnick  + "/\" class=\"nick\" onClick=\"siControlPulsado(event,\'"+ elnick +"\');\" target=\"_blank\">" + nick_tachado + "</a></li>\n";
+			array_list[cargo_ID] += "<li>" + js_kick + " <img src=\""+IMG+"cargos/" + cargo_ID + ".gif\" title=\"" + array_cargos[cargo_ID] + "\" /> <a href=\"/perfil/" + elnick  + "\" class=\"nick\" onClick=\"siControlPulsado(event,\'"+ elnick +"\');\" target=\"_blank\">" + nick_tachado + "</a></li>\n";
 		}
 	}
 

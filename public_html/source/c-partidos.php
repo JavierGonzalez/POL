@@ -52,7 +52,7 @@ ORDER BY nick DESC", $link);
 			if ($ciudadanos_num == 0) { $disabled = ' disabled="disabled"'; } else { $disabled = ''; }
 
 			include('inc-functions-accion.php');
-			$txt .= '<h1><a href="/partidos/">'.NOM_PARTIDOS.'</a>: ' . $r['siglas'] . ' (' . $r['nombre'] . ')</h1>
+			$txt .= '<h1><a href="/partidos">'.NOM_PARTIDOS.'</a>: ' . $r['siglas'] . ' (' . $r['nombre'] . ')</h1>
 <ul id="partido">
 
 <li><form action="/accion.php?a=partido-lista&b=add&ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos . '</select> <input type="submit" value="A&ntilde;adir a la lista"' . $disabled . ' /> (afiliados a tu '.NOM_PARTIDOS.')</form><br /></li>
@@ -137,9 +137,8 @@ ORDER BY fecha_registro ASC", $link);
 	$txt_header .= '<style type="text/css">#partido li { margin-top:5px; }</style>';
 } else {
 
-	$txt .= '<h1>'.NOM_PARTIDOS.':</h1>
-<br />
-<table border="0" class="pol_table">
+	$txt .= '
+<table border="0">
 <tr>
 <th>Siglas</th>
 <th>Nombre</th>
@@ -177,11 +176,10 @@ ORDER BY num_lista DESC, afiliados DESC, nombre DESC", $link);
 	$txt .= '</table><p style="width:700px;">'.NOM_PARTIDOS.' que no participan en elecciones:<br />
 <b>'.$txt_otros.'</b></p>';
 
-	$txt .= (ECONOMIA?'<p>* Para poder participar en las Elecciones ha de tener al menos un candidato en su lista. Para poder a&ntilde;adir candidatos en la lista, se ha de ser el Presidente, el candidato ha de estar afiliado y con el examen de Diputado aprobado.</p>':'').'
-
-<p>'.(nucleo_acceso($vp['acceso']['crear_partido'])?boton('Crear '.NOM_PARTIDOS, '/form/crear-partido/'):'').'</p>';
+	$txt .= (ECONOMIA?'<p>* Para poder participar en las Elecciones ha de tener al menos un candidato en su lista. Para poder a&ntilde;adir candidatos en la lista, se ha de ser el Presidente, el candidato ha de estar afiliado y con el examen de Diputado aprobado.</p>':'');
 	$txt_title = NOM_PARTIDOS;
 	$txt_nav = array('/partidos'=>'Partidos');
+	if (nucleo_acceso($vp['acceso']['crear_partido'])) { $txt_tab = array('/form/crear-partido'=>'Crear '.NOM_PARTIDOS); }
 }
 
 

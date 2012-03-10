@@ -448,17 +448,16 @@ FROM ".SQL."estudios_users WHERE ID_estudio = '" . $r['cargo_ID'] . "' AND nota 
 	}
 	
 	if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) { $boton = boton('Editar', '/examenes/editar', false, 'small'); } 
-	$txt .= '<p><b class="big">' . ($num_generales + $num_especificas) . '</b> preguntas: <b>' . $num_especificas . '</b> especificas + <b>' . $num_generales . '</b> generales ' . $boton . '</p>'; 
 	$boton = '';
 
-$txt .= '
+	$txt .= '
 <table border="0" cellspacing="0" cellpadding="2" class="pol_table">
 <tr>
 <th>Preguntas</th>
-<th><acronym title="Nota para aprobar">Nota</acronym></th>
-<th colspan="2"><acronym title="Porcentaje de aprobados">Aprob</acronym></th>
+<th>Nota</th>
+<th colspan="2">Aprobados</th>
 <th></th>
-<th>Examen</th>
+<th>Exámen</th>
 <th></th>
 </tr>';
 // ".SQL."examenes 		(ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas)
@@ -508,9 +507,9 @@ ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 
 	$txt .= '</table>';
 
-	if (nucleo_acceso($vp['acceso']['examenes_decano'])) {
-		$txt .= '<p>' . boton_cargo('Crear examen', '/examenes/crear/', 35) . '</p>';
-	}
+	$txt .= '<p><b class="big">' . ($num_generales + $num_especificas) . '</b> preguntas: <b>' . $num_especificas . '</b> especificas + <b>' . $num_generales . '</b> generales ' . $boton . '</p>'; 
+
+	if (nucleo_acceso($vp['acceso']['examenes_decano'])) { $txt_tab = array('/examenes/crear'=>'Crear exámen'); }
 
 }
 

@@ -26,7 +26,7 @@ function gen_datos($datos, $cero=false, $datos2=false) {
 
 $txt_title = 'Estadísticas';
 $txt_nav = array('Estadísticas');
-$txt_tab = array('/estadisticas/'=>'VirtualPol');
+$txt_tab = array('/estadisticas'=>'VirtualPol');
 
 
 if ($_GET['a'] == 'full-tab') {
@@ -169,8 +169,8 @@ $txt .= '<span style="float:right;font-size:12px;">('.$i.' días, '.round($i/365
 foreach ($vp['paises'] AS $pais) { 
 	if ($_GET['a'] == $pais) {  
 		$txt .= '<b>'.$pais.'</b> | '; 
-	} else { $txt .= '<a href="/estadisticas/'.$pais.'/">'.$pais.'</a> | '; }
-	$txt_tab['/estadisticas/'.$pais.'/'] = $pais;
+	} else { $txt .= '<a href="/estadisticas/'.$pais.'">'.$pais.'</a> | '; }
+	$txt_tab['/estadisticas/'.$pais] = $pais;
 }
 $txt .= '</h1>
 
@@ -284,7 +284,7 @@ $txt .= '</tr></table>';
 	
 	$txt .= '</div>
 
-<p><a href="/estadisticas/full/">Ver datos en bruto</a></p>';
+<p><a href="/estadisticas/full">Ver datos en bruto</a></p>';
 
 $txt_header .= '<style type="text/css">#stats p { margin:4px; }</style>';
 

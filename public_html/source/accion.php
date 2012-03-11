@@ -452,7 +452,7 @@ case 'avatar':
 		$_POST['desc'] = gen_text($_POST['desc'], 'plain');
 		mysql_query("UPDATE users SET text = '".$_POST['desc']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	}
-	$refer_url = 'perfil/'.strtolower($pol['nick']).'/';
+	$refer_url = 'perfil/'.strtolower($pol['nick']);
 	break;
 
 
@@ -462,7 +462,7 @@ case 'examenes':
 		mysql_query("INSERT INTO ".SQL."examenes (titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas) VALUES ('" . $_POST['titulo'] . "', 'Editar...', '" . $pol['user_ID'] . "', '" . $date . "', '" . $_POST['cargo_ID'] . "', '5.0', 10)", $link);
 		$new_ID = mysql_insert_id($link);
 		mysql_query("UPDATE ".SQL."examenes SET cargo_ID = '-" . $new_ID . "' WHERE ID = '" . $new_ID . "' LIMIT 1", $link);
-		$refer_url = 'examenes/';
+		$refer_url = 'examenes';
 
 	} elseif (($_GET['b'] == 'nueva-pregunta') AND ($_GET['ID'] != null) AND ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) AND ($_POST['pregunta']) AND ($_POST['respuesta0'] != null) AND ($_POST['respuesta1'] != null) AND ($_POST['tiempo'])) {
 		for ($i=0;$i<10;$i++) { 
@@ -474,16 +474,16 @@ case 'examenes':
 		$pregunta = ucfirst($_POST['pregunta']);
 		mysql_query("INSERT INTO ".SQL."examenes_preg (examen_ID, user_ID, time, pregunta, respuestas, tiempo) VALUES ('" . $_GET['ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', '" . $pregunta . "', '" . $respuestas . "', " . $_POST['tiempo'] . ")", $link);
 		
-		$refer_url = 'examenes/editar/' . $_GET['ID'] . '/';
+		$refer_url = 'examenes/editar/' . $_GET['ID'];
 
 	} elseif (($_GET['b'] == 'eliminar-pregunta') AND ($_GET['ID'] != null) AND ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor'])))) {
 		mysql_query("DELETE FROM ".SQL."examenes_preg WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
-		$refer_url = 'examenes/editar/' . $_GET['re_ID'] . '/';
+		$refer_url = 'examenes/editar/' . $_GET['re_ID'];
 
 	} elseif (($_GET['b'] == 'editar-examen') AND ($_GET['ID'] != null) AND (nucleo_acceso($vp['acceso']['examenes_decano'])) AND ($_POST['titulo']) AND ($_POST['descripcion']) AND ($_POST['nota'] >= 0) AND ($_POST['num_preguntas'] >= 0)) {
 		$_POST['descripcion'] = gen_text($_POST['descripcion'], 'plain');
 		mysql_query("UPDATE ".SQL."examenes SET titulo = '".$_POST['titulo']."', descripcion = '".$_POST['descripcion'] . "', nota = '".$_POST['nota']."', num_preguntas = '".$_POST['num_preguntas']."' WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
-		$refer_url = 'examenes/editar/' . $_GET['ID'] . '/';
+		$refer_url = 'examenes/editar/' . $_GET['ID'];
 	} elseif (($_GET['b'] == 'examinar') AND ($_GET['ID'] != null) AND ($_POST['pregs']) AND (($_POST['tlgs'] + 10) > time())) {
 
 		$result = mysql_query("SELECT cargo_ID, titulo, ID, nota, num_preguntas,
@@ -524,7 +524,7 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 
 				mysql_query("UPDATE ".SQL."estudios_users SET time = '" . $date . "', nota = '" . $nota['nota'] . "'" . $estado . " WHERE user_ID = '" . $pol['user_ID'] . "' AND ID_estudio = '" . $cargo_ID . "' LIMIT 1", $link);
 
-				$refer_url = 'examenes/mis-examenes/';
+				$refer_url = 'examenes/mis-examenes';
 			}
 			unset($_SESSION['examen']);
 		}
@@ -536,14 +536,14 @@ FROM ".SQL."examenes WHERE ID = '" . $_POST['ID'] . "' LIMIT 1", $link);
 			if (($r['cargo_ID'] < 0) AND ($r['num_depreguntas'] == 0)) {
 				mysql_query("DELETE FROM ".SQL."examenes WHERE ID = '".$_POST['ID']."'", $link);
 				mysql_query("DELETE FROM ".SQL."estudios_users WHERE ID_estudio = '".$r['cargo_ID']."'", $link);
-				$refer_url = 'examenes/';
+				$refer_url = 'examenes';
 			}
 		}
 	} elseif (($_GET['b'] == 'caducar_examen') AND ($_GET['ID'] != null)) {
 	
 		if ($_POST['pais'] == PAIS) {
 			mysql_query("DELETE FROM ".SQL."estudios_users WHERE ID = '".$_GET['ID']."' AND user_ID = '". $pol['user_ID']."' AND time < '".date('Y-m-d 20:00:00', time() - $pol['config']['examen_repe']*6)."' AND ID_estudio <= 0", $link);
-			$refer_url = 'examenes/mis-examenes/';
+			$refer_url = 'examenes/mis-examenes';
 		}
 	}
 
@@ -571,18 +571,18 @@ case 'mapa':
 	} elseif (($_GET['b'] == 'cancelar-venta') AND ($_GET['ID'])) {
 
 		mysql_query("UPDATE ".SQL."mapa SET estado = 'p' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		$refer_url = 'mapa/propiedades/';
+		$refer_url = 'mapa/propiedades';
 
 	} elseif (($_GET['b'] == 'vender') AND ($_GET['ID']) AND ($_POST['pols'] > 0)) {
 
 		mysql_query("UPDATE ".SQL."mapa SET pols = '".$_POST['pols']."', estado = 'v' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		$refer_url = 'mapa/propiedades/';
+		$refer_url = 'mapa/propiedades';
 
 
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['ID'])) {
 
 		mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargos'][40]."')) LIMIT 1", $link);
-		$refer_url = 'mapa/propiedades/';
+		$refer_url = 'mapa/propiedades';
 
 
 
@@ -599,7 +599,7 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = '
 			}
 		}
 
-		$refer_url = 'mapa/propiedades/';
+		$refer_url = 'mapa/propiedades';
 
 	} elseif (($_GET['b'] == 'separar') AND ($_GET['ID'])) {
 
@@ -625,7 +625,7 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = '
 		}
 		
 		
-		$refer_url = 'mapa/propiedades/';
+		$refer_url = 'mapa/propiedades';
 
 	} elseif (($_GET['b'] == 'fusionar') AND ($_GET['ID']) AND ($_GET['f'])) {
 
@@ -661,7 +661,7 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargo
 
 			}
 		}
-		$refer_url = 'mapa/propiedades/';
+		$refer_url = 'mapa/propiedades';
 
 
 	} elseif (($_GET['b'] == 'editar') AND ($_GET['ID']) AND ($_POST['color']) AND ($_POST['link'] != 'e') AND ($_POST['link'] != 'v')) {
@@ -694,7 +694,7 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargo
 		$_POST['link'] = str_replace(HOST, "", $_POST['link']);
 		if (strlen($_POST['color']) == 3) {
 			mysql_query("UPDATE ".SQL."mapa SET color = '".$_POST['color']."', text = '".$_POST['text']."', link = '".$_POST['link']."' WHERE ID = '" .	$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargos'][40]."')) LIMIT 1", $link);
-			$refer_url = 'mapa/propiedades/';
+			$refer_url = 'mapa/propiedades';
 		}
 
 
@@ -731,7 +731,7 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargo
 			}
 		}
 
-		$refer_url = 'mapa/';
+		$refer_url = 'mapa';
 
 	}
 	break;
@@ -836,7 +836,7 @@ $dato_array = array(
 			}
 		}
 
-		$refer_url = 'control/gobierno/';
+		$refer_url = 'control/gobierno';
 
 	// FORO
 	} elseif (($_GET['b'] == 'subforo') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
@@ -847,19 +847,19 @@ $dato_array = array(
 			mysql_query("UPDATE ".SQL."foros SET descripcion = '".$_POST[$subforo_ID.'_descripcion']."', time = '".$_POST[$subforo_ID.'_time']."', acceso_leer = '".$_POST[$subforo_ID.'_acceso_leer']."', acceso_escribir = '".$_POST[$subforo_ID.'_acceso_escribir']."', acceso_escribir_msg = '".$_POST[$subforo_ID.'_acceso_escribir_msg']."', acceso_cfg_leer = '".$_POST[$subforo_ID.'_acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST[$subforo_ID.'_acceso_cfg_escribir']."', acceso_cfg_escribir_msg = '".$_POST[$subforo_ID.'_acceso_cfg_escribir_msg']."', limite = '".$_POST[$subforo_ID.'_limite']."' WHERE ID = '".$subforo_ID."' LIMIT 1", $link);
 		}
 
-		$refer_url = 'control/gobierno/foro/';
+		$refer_url = 'control/gobierno/foro';
 	} elseif (($_GET['b'] == 'crearsubforo') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 
 		mysql_query("INSERT INTO ".SQL."foros (url, title, descripcion, acceso, time, estado, acceso_msg) 
 VALUES ('".gen_url($_POST['nombre'])."', '".$_POST['nombre']."', '', '1', '10', 'ok', '0')", $link);
 
-		$refer_url = 'control/gobierno/foro/';
+		$refer_url = 'control/gobierno/foro';
 
 	} elseif (($_GET['b'] == 'eliminarsubforo') AND (nucleo_acceso($vp['acceso']['control_gobierno'])) AND ($_GET['ID'])) {
 
 		mysql_query("UPDATE ".SQL."foros SET estado = 'eliminado' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
 
-		$refer_url = 'control/gobierno/foro/';
+		$refer_url = 'control/gobierno/foro';
 	
 	} elseif (($_GET['b'] == 'notificaciones') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 
@@ -887,7 +887,7 @@ VALUES ('".gen_url($_POST['nombre'])."', '".$_POST['nombre']."', '', '1', '10', 
 case 'api':
 	if (($pol['user_ID']) AND ($_GET['b'] == 'gen_pass')) {
 		mysql_query("UPDATE users SET api_pass = '".substr(md5(mt_rand(1000000000,9999999999)), 0, 12)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		$refer_url = 'perfil/'.strtolower($pol['nick']).'/';
+		$refer_url = 'perfil/'.strtolower($pol['nick']);
 	}
 	break;
 
@@ -915,7 +915,7 @@ case 'empresa':
 
 		pols_transferir($pol['config']['pols_empresa'], $pol['user_ID'], '-1', 'Creacion nueva empresa: '.$nombre);
 
-		$return = $cat_url.'/'.$url.'/';
+		$return = $cat_url.'/'.$url;
 
 	} elseif (($_GET['b'] == 'acciones') AND ($_GET['ID']) AND ($_POST['nick'] AND ($_POST['cantidad']))) {
 
@@ -960,7 +960,7 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link
 				evento_log(15, $r['ID'], $r['ceder_user_ID']); // Ceder empresa
 			}
 		}
-		$refer_url = 'empresas/';
+		$refer_url = 'empresas';
 
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['txt'])) {
 
@@ -994,7 +994,7 @@ ORDER BY pols DESC LIMIT 1", $link);
 			evento_chat('<b>[#]</b> puja '.pols($pols).' '.MONEDA.' de <em>'.$pol['nick'].'</em> (<a href="/subasta/">Subasta</a>)'); 
 		}
 
-		$refer_url = 'subasta/';
+		$refer_url = 'subasta';
 	
 	} elseif (($_GET['b'] == 'editarfrase') AND ($pol['config']['pols_fraseedit'] == $pol['user_ID'])) {
 
@@ -1002,7 +1002,7 @@ ORDER BY pols DESC LIMIT 1", $link);
 		$url = '<a href="http://'.strip_tags($_POST['url']).'">'.ucfirst(strip_tags($_POST['frase'])).'</a>';
 		mysql_query("UPDATE ".SQL."config SET valor = '".$url."' WHERE dato = 'pols_frase' LIMIT 1", $link);
 		
-		$refer_url = 'subasta/editar/';
+		$refer_url = 'subasta/editar';
 
 	} elseif (($_GET['b'] == 'cederfrase') AND ($pol['config']['pols_fraseedit'] == $pol['user_ID']) AND ($pol['nick'] != $_POST['nick'])) {
 
@@ -1013,7 +1013,7 @@ ORDER BY pols DESC LIMIT 1", $link);
 			evento_chat('<b>[#] '.crear_link($pol['nick']).' cede</b> "la frase" a <b>'.crear_link($r['nick']).'</b>'); 
 		}
 		
-		$refer_url = 'subasta/editar/';
+		$refer_url = 'subasta/editar';
 
 	} elseif (($_GET['b'] == 'editarpalabra') AND ($_GET['ID'] != null) AND (strlen($_POST['text']) <= 10)) {
 		
@@ -1038,7 +1038,7 @@ ORDER BY pols DESC LIMIT 1", $link);
 		}
 		mysql_query("UPDATE ".SQL."config SET valor = '".$dato."' WHERE dato = 'palabras' LIMIT 1", $link);
 		
-		$refer_url = 'subasta/editar/';
+		$refer_url = 'subasta/editar';
 
 	} elseif (($_GET['b'] == 'cederpalabra') AND ($_GET['ID'] >= 0) AND ($pol['nick'] != $_POST['nick'])) {
 		
@@ -1059,11 +1059,11 @@ ORDER BY pols DESC LIMIT 1", $link);
 			evento_chat('<b>[#] '.crear_link($pol['nick']).' cede</b> la "palabra '.($_GET['ID'] + 1).'" a <b>'.crear_link($r['nick']).'</b>');
 		}
 		
-		$refer_url = 'subasta/editar/';
+		$refer_url = 'subasta/editar';
 	}
 
 
-	if (!$refer_url) { $refer_url = 'subasta/'; }
+	if (!$refer_url) { $refer_url = 'subasta'; }
 	break;
 
 
@@ -1075,7 +1075,7 @@ case 'pols':
 
 	$_POST['pols'] = strval($_POST['pols']);
 
-	$refer_url = 'pols/#error';
+	$refer_url = 'pols#error';
 
 	if (($_GET['b'] == 'transferir') AND (ctype_digit($_POST['pols'])) AND ($_POST['pols'] > 0) AND ($_POST['concepto'])) {
 
@@ -1172,7 +1172,7 @@ case 'pols':
 					mysql_query("INSERT INTO ".strtolower($pais_destino)."_transacciones (pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".$pols."', '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".$date."')", $link);
 				}
 
-				$refer_url = 'pols/#ok';
+				$refer_url = 'pols#ok';
 			}
 
 
@@ -1186,11 +1186,11 @@ case 'pols':
 		pols_transferir($pol['config']['pols_cuentas'], $pol['user_ID'], '-1', 'Creacion nueva cuenta bancaria: '.$_POST['nombre']);
 		mysql_query("INSERT INTO ".SQL."cuentas (nombre, user_ID, pols, nivel, time) VALUES ('".$_POST['nombre']."', '".$pol['user_ID']."', 0, 0, '".$date."')", $link);
 
-		$refer_url = 'pols/cuentas/';
+		$refer_url = 'pols/cuentas';
 
 	} elseif (($_GET['b'] == 'eliminar-cuenta') AND ($_GET['ID'])) {
 		mysql_query("DELETE FROM ".SQL."cuentas WHERE ID = '".$_GET['ID']."' AND pols = '0' AND nivel = '0' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		$refer_url = 'pols/cuentas/';
+		$refer_url = 'pols/cuentas';
 	}
 
 	break;
@@ -1201,18 +1201,16 @@ case 'votacion':
 	if (($_GET['b'] == 'crear') AND (in_array($_POST['tipo'], $votaciones_tipo)) AND (nucleo_acceso($vp['acceso']['votacion_borrador']))) {
 		
 		if ($_POST['votos_expire'] > 0) { } else { $_POST['votos_expire'] = 0; }
-
 		if ($_POST['tipo_voto'] == 'multiple') { unset($_POST['respuesta0']); }
 
-		for ($i=0;$i<100;$i++) { 
-			if (trim($_POST['respuesta'.$i]) != '') { 
-				$respuestas .= trim($_POST['respuesta'.$i]).'|';
+		for ($i=0;$i<100;$i++) {
+			if (trim($_POST['respuesta'.$i]) != '') {
+				$respuestas .= trim(str_replace('|', '-', $_POST['respuesta'.$i])).'|';
 				$respuestas_desc .= trim($_POST['respuesta_desc'.$i]).'][';
 			}
 		}
 		
 		$_POST['time_expire'] = round($_POST['time_expire']*$_POST['time_expire_tipo']);
-
 		$_POST['debate_url'] = strip_tags($_POST['debate_url']);
 		$_POST['pregunta'] = strip_tags($_POST['pregunta']);
 		$_POST['descripcion'] = nl2br(strip_tags(trim($_POST['descripcion'])));
@@ -1228,7 +1226,6 @@ case 'votacion':
 				break;
 
 			case 'cargo':
-				
 				$result = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '".$_POST['cargo']."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $cargo_nombre = $r['nombre']; }
 
@@ -1333,18 +1330,20 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 
 				if ($ha_votado) {	// MODIFICAR VOTO
 					mysql_query("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".$_POST['validez']."', mensaje = '".$_POST['mensaje']."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+				
 				} else {			// INSERTAR VOTO
-					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje, comprobante) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".$_POST['validez']."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."', '".sha1(time().'-'.mt_rand(100,99999999999999999999))."')", $link);
-
+					$comprobante = sha1(DOMAIN.'-'.$_POST['ref_ID'].'-'.time().'-'.microtime().'-'.$_POST['voto'].'-'.mt_rand(1000,99999999999999999999));
+					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje, comprobante) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".$_POST['validez']."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."', '".$comprobante."')", $link);
+					unset($comprobante);
+					
 					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
 					
 					if ($acceso_ver == 'anonimos') {
 						evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
 					}
 				}
-				unset($_POST['voto']); unset($_POST['mensaje']); unset($_POST['validez']);
+				unset($_POST['voto'], $_POST['mensaje'], $_POST['validez']);
 			}
-
 			redirect('http://'.strtolower($pais).'.'.DOMAIN.'/votacion/'.$_POST['ref_ID']);
 
 	} elseif (($_GET['b'] == 'eliminar') AND (is_numeric($_GET['ID']))) { 
@@ -1362,7 +1361,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 	} elseif (($_GET['b'] == 'enviar_comprobante') AND ($_GET['comprobante'])) {
 		$votacion_ID = explodear('-', $_GET['comprobante'], 0);
 		$asunto = 'Comprobante de voto: votación '.$votacion_ID;
-		$mensaje = 'Hola Ciudadano,<br /><br />Este email es para guardar tu comprobante de voto. Te permitirá comprobar el sentido de tu voto cuando la votacion finaliza y así aportar verificabilidad a la votación.<br /><br /><blockquote>Comprobante: <b>'.$_GET['comprobante'].'</b><br />Comprobar: http://'.HOST.'/votacion/verificacion/'.$_GET['comprobante'].'<br />Votación: http://'.HOST.'/votacion/'.$votacion_ID.'</blockquote><br /><br />No debes entregar a nadie esta información, de lo contrario podrían saber qué has votado.<br /><br />Atentamente.<br /><br /><br />VirtualPol - http://'.HOST;
+		$mensaje = 'Hola Ciudadano,<br /><br />Este email es para guardar tu comprobante de voto. Te permitirá comprobar el sentido de tu voto cuando la votacion finaliza y así aportar verificabilidad a la votación.<br /><br /><blockquote>Comprobante: <b>'.$_GET['comprobante'].'</b><br />Comprobar: http://'.HOST.'/votacion/'.$votacion_ID.'/verificacion#'.$_GET['comprobante'].'<br />Votación: http://'.HOST.'/votacion/'.$votacion_ID.'</blockquote><br /><br />No debes entregar a nadie esta información, de lo contrario podrían saber qué has votado.<br /><br />Atentamente.<br /><br /><br />VirtualPol - http://'.HOST;
 		enviar_email($pol['user_ID'], $asunto, $mensaje); 
 		redirect('/votacion/'.$votacion_ID);
 	}
@@ -1428,8 +1427,6 @@ case 'foro':
 				if (in_array($acceso_leer, array('anonimos', 'ciudadanos', 'ciudadanos_global'))) {
 					evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'].'">'.$title.'</a> <span style="color:grey;">('.$pol['nick'].')</span>');
 				}
-			} else {
-				//$text = strip_tags($text);
 			}
 			
 			mysql_query("INSERT INTO ".SQL."foros_msg (hilo_ID, user_ID, time, text, cargo) VALUES ('".$_POST['hilo']."', '".$pol['user_ID']."', '".$time."', '".$text."', '".$_POST['encalidad']."')", $link);
@@ -1458,7 +1455,7 @@ case 'foro':
 
 		evento_log(17, $_GET['ID'], $el_user_ID);
 
-		$refer_url = 'foro/papelera/';
+		$refer_url = 'foro/papelera';
 
 	} elseif (($_GET['b'] == 'restaurar') AND ($_GET['ID']) AND ($_GET['c']) AND (nucleo_acceso($vp['acceso']['foro_borrar']))) {
 
@@ -1467,7 +1464,7 @@ case 'foro':
 		} elseif ($_GET['c'] == 'mensaje') {
 			mysql_query("UPDATE ".SQL."foros_msg SET estado = 'ok', time2 = '0000-00-00 00:00:00' WHERE ID = '".$_GET['ID']."' AND estado = 'borrado' LIMIT 1", $link);
 		}
-		$refer_url = 'foro/papelera/';
+		$refer_url = 'foro/papelera';
 
 
 	} elseif (($_GET['b'] == 'eliminarhilo') AND ($_GET['ID'])) {
@@ -1476,7 +1473,7 @@ case 'foro':
 			mysql_query("DELETE FROM ".SQL."foros_hilos WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 			mysql_query("DELETE FROM ".SQL."foros_msg WHERE hilo_ID = '".$r['ID']."'", $link);
 		}
-		$refer_url = 'foro/';
+		$refer_url = 'foro';
 
 	} elseif (($_GET['b'] == 'eliminarreply') AND ($_GET['hilo_ID']) AND ($_GET['ID'])) {
 
@@ -1488,9 +1485,9 @@ case 'foro':
 			mysql_query("UPDATE ".SQL."foros_hilos SET num = num-1 WHERE ID = '".$_GET['hilo_ID']."' LIMIT 1", $link);
 		}
 		if ($_GET['hilo_ID'] == '-1') {
-			$refer_url = 'notas/';
+			$refer_url = 'notas';
 		} else {
-			$refer_url = 'foro/';
+			$refer_url = 'foro';
 		}
 
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['text']) AND ($_POST['subforo'])) {
@@ -1535,7 +1532,7 @@ case 'kick':
 				evento_chat('<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[KICK]</b> El kick a <b>'.$kickeado_nick.'</b> ha sido cancelado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>.</span>');
 			}
 		}
-		$refer_url = 'control/kick/';
+		$refer_url = 'control/kick';
 
 	} elseif ($_POST['nick']) {
 		if ((substr($_POST['nick'], 0, 3) == 'ip-') AND (is_numeric(substr($_POST['nick'], 3)))) {
@@ -1576,7 +1573,7 @@ case 'kick':
 
 			evento_chat('<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>');
 		}
-		$refer_url = 'control/kick/';
+		$refer_url = 'control/kick';
 	}
 	break;
 
@@ -1633,7 +1630,7 @@ case 'enviar-mensaje':
 				}
 				evento_chat('<b>[MP]</b> <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg">Nuevo mensaje privado</a> <span style="color:grey;">('.$pol['nick'].')</span>', $r['ID'], -1, false, 'p', $r['pais']);
 				notificacion($r['ID'], 'Mensaje privado de '.$pol['nick'], '/msg');
-				$refer_url = 'msg/';
+				$refer_url = 'msg';
 			}
 
 			if ($envio_urgente > 0) {
@@ -1668,7 +1665,7 @@ case 'enviar-mensaje':
 					mysql_query("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo) VALUES ('".$pol['user_ID']."', '".$r['user_ID']."', '".$date."', '<b>Mensaje multiple: ".$cargo_nombre."</b><br />".$text."', '0', '".$_POST['calidad']."', '".$_POST['cargo_ID']."')", $link);
 					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
 					notificacion($r['user_ID'], 'Mensaje privado de '.$pol['nick'], '/msg');
-					$refer_url = 'msg/';
+					$refer_url = 'msg';
 				}
 			}
 		} elseif (($_POST['para'] == 'grupos') AND ($_POST['grupo_ID'])) {

@@ -1,4 +1,4 @@
-<?php /******* NUEVO DISEÑO *******/
+<?php /******* THEME *******/
 
 // Errores y redirecciones.
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN); }

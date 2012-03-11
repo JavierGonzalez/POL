@@ -185,11 +185,10 @@ LIMIT 1", $link);
 
 
 function enviar_email($user_ID, $asunto, $mensaje, $email='') {
-        $cabeceras = "From: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: VirtualPol <".CONTACTO_EMAIL.">\n X-Sender: VirtualPol <".CONTACTO_EMAIL.">\n From: VirtualPol <".CONTACTO_EMAIL.">\n MIME-Version: 1.0\nContent-type: text/html\n";
-
+        $cabeceras = "From: VirtualPol <".CONTACTO_EMAIL.">;\n MIME-Version: 1.0;\nContent-type: text/html; charset=UTF-8\n";
         if (($user_ID) AND ($email == '')) {
                 global $link;
-                $result = mysql_unbuffered_query("SELECT email FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
+                $result = mysql_query("SELECT email FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
                 while($r = mysql_fetch_array($result)){ $email = $r['email']; }
         }
         mail($email, $asunto, $mensaje, $cabeceras);

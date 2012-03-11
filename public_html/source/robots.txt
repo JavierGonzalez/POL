@@ -4,3 +4,4 @@ Disallow: /accion.php*
 Disallow: /ajax.php*
 Disallow: /api.php*
 Disallow: /legal
+Disallow: /TOS

@@ -350,7 +350,7 @@ mysql_query("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '
 
 
 
-/* Tramos de expiración:
+/* Tramos de expiraciÃ³n:
 0d	< 30d	- 15 dias
 30d < 90d	- 30 dias 
 90d >		- 60 dias
@@ -371,7 +371,7 @@ while($r = mysql_fetch_array($result)) {
 }
 
 
-// Avisos por email 48h antes de la eliminación
+// Avisos por email 48h antes de la eliminaciÃ³n
 function retrasar_t($t) { return date('Y-m-d 20:00:00', (strtotime($t)+(86400*2))); }
 $result = mysql_query("SELECT ID, nick, email FROM users
 WHERE dnie = 'false' AND estado != 'expulsado' AND 
@@ -382,7 +382,7 @@ WHERE dnie = 'false' AND estado != 'expulsado' AND
 (estado = 'validar' AND fecha_last <= '".retrasar_t($margen_15dias)."')
 ", $link);
 while($r = mysql_fetch_array($result)) {
-	mail($r['email'], '[VirtualPol] Tu usuario '.$r['nick'].' está a punto de expirar por inactividad', "Hola ciudadano ".$r['nick'].",\n\nEl sistema VirtualPol se esmera en tener un censo limpio y fiel a la realidad, en lugar de tener decenas de miles de usuarios sin actividad. Por ello se eliminan usuarios en tramos desde 15 dias (en el primer mes) hasta 60 dias de inactividad.\n\nDebes entrar lo antes posible en VirtualPol o tu usuario expirará. Con entrar una vez es suficiente.\n\n\nVirtualPol\nhttp://www.".DOMAIN."", "FROM: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: ".CONTACTO_EMAIL." \nX-Sender: ".CONTACTO_EMAIL." \nMIME-Version: 1.0\n"); 
+	mail($r['email'], '[VirtualPol] Tu usuario '.$r['nick'].' estÃ¡ a punto de expirar por inactividad', "Hola ciudadano ".$r['nick'].",\n\nEl sistema VirtualPol se esmera en tener un censo limpio y fiel a la realidad, en lugar de tener decenas de miles de usuarios sin actividad. Por ello se eliminan usuarios en tramos desde 15 dias (en el primer mes) hasta 60 dias de inactividad.\n\nDebes entrar lo antes posible en VirtualPol o tu usuario expirarÃ¡. Con entrar una vez es suficiente.\n\n\nVirtualPol\nhttp://www.".DOMAIN."", "FROM: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: ".CONTACTO_EMAIL." \nX-Sender: ".CONTACTO_EMAIL." \nMIME-Version: 1.0\n"); 
 }
 
 
@@ -413,7 +413,7 @@ if (date('N') == 7) { // SOLO DOMINGO
 
 
 
-// STATS (1º obtener variables estadísticas, 2º insertar los datos en la tabla stats)
+// STATS (1Âº obtener variables estadÃ­sticas, 2Âº insertar los datos en la tabla stats)
 
 // ciudadanos
 $result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."'", $link);
@@ -470,7 +470,7 @@ if (ECONOMIA) {
 	}
 	$st['mapa'] = round(($sup_vende * 100) / $superficie_total);
 
-	// mapa_vende: el precio de venta más bajo de una propiedad
+	// mapa_vende: el precio de venta mÃ¡s bajo de una propiedad
 	$result = mysql_query("SELECT pols FROM ".SQL."mapa WHERE estado = 'v' ORDER BY pols ASC LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) { $st['mapa_vende'] = $r['pols']; }
 } else { $st['empresas'] = 0; $st['mapa'] = 0; $st['mapa_vende'] = 0; }
@@ -495,7 +495,7 @@ mysql_query("INSERT INTO stats
 VALUES ('".PAIS."', '".date('Y-m-d 20:00:00')."', '".$st['ciudadanos']."', '".$st['nuevos']."', '".$st['pols']."', '".$st['pols_cuentas']."', '".$st['transacciones']."', '".$st['hilos_msg']."', '".$st['pols_gobierno']."', '".$st['partidos']."', '".$pujas_total."', '".$st['empresas']."', '".$st['eliminados']."', '".$st['mapa']."', '".$st['mapa_vende']."', '".$st['24h']."', '".$st['confianza']."', '".$st['autentificados']."')", $link);
 
 
-// ¿ELECCIONES?
+// Â¿ELECCIONES?
 include($root_dir.'source/cron/cron-elecciones.php');
 
 // Unifica y comprime archivos CSS y JS

@@ -37,13 +37,13 @@ while($r = mysql_fetch_array($result)) {
 
 $txt_mapa .= '
 <style type="text/css">
-#polm table {
+#polmap table {
 table-layout: fixed;
 width:' . $mapa_width . 'px;
 height:' . $mapa_height . 'px;
 }
 
-#polm td {
+#polmap td {
 background: #FFF;
 height:' . $cuadrado_size . 'px;
 padding:0;
@@ -95,7 +95,7 @@ function colorear(modo) {
 $(document).ready(function(){
 	$("#msg").css("display","none");
 	colorear("normal");
-	$("#polm td").mouseover(function(){
+	$("#polmap td").mouseover(function(){
 		var ID = $(this).attr("id");
 		var amsg = prop[ID];
 		if (amsg) {
@@ -138,7 +138,7 @@ $(document).mousemove(function(e){
 unset($prop);
 $txt_mapa .= '
 
-<div id="polm">
+<div id="polmap">
 <table border="0" cellpadding="0" cellspacing="0" height="' . $mapa_height . '" width="' . $mapa_width . '">';
 for ($y=1;$y<=$filas;$y++) {
 	$txt_mapa .= '<tr>';

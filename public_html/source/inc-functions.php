@@ -115,6 +115,12 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 	}
 }
 
+function escape($a) {
+	$a = str_replace('\'', '&#39;', $a);
+	$a = str_replace('"', '&quot;', $a);
+	return mysql_real_escape_string($a);
+}
+
 function pass_key($t, $type='sha') {
 	switch ($type) {
 		case 'md5': return hash('md5', $t); break;

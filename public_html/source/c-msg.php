@@ -9,9 +9,7 @@ if ($_GET['a'] == 'mensajes-enviados') {
 	$txt_nav = array('/msg'=>'Mensajes Privados', 'Enviados');
 	$txt_tab = array('/msg'=>'Recibidos', '/msg/mensajes-enviados'=>'Enviados');
 
-	$txt .= '<h1 class="quitar"><img src="'.IMG.'varios/email.gif" alt="Msg" /> <a href="/msg/">Mensajes privados</a>: Mensajes enviados</h1>';
-	
-	$txt .= '<p>'.boton('Enviar mensaje', '/msg/enviar/').' &nbsp; <span class="gris">Mensajes enviados por ti.</span></p>';
+	$txt .= '<p>'.boton('Enviar mensaje', '/msg/enviar').' &nbsp; <span class="gris">Mensajes enviados por ti.</span></p>';
 
 	$txt .= '<table border="0" cellspacing="0" cellpadding="0" width="100%" class="pol_table" id="msg_table">
 <tr>
@@ -32,7 +30,7 @@ LIMIT 50", $link);
 	while($r = mysql_fetch_array($result)){
 
 
-		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>' . crear_link($r['nick_envia']) . '</b><br /><b>' . str_replace(' ', '&nbsp;', $r['cargo']) . '</b><acronym title="' . $r['time'] . '" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top" class="rich">' . $r['text'] . '<hr class="quitar" /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($r['nick_envia']) . '/') . '</td><td valign="top"></td></tr>' . "\n";
+		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>' . crear_link($r['nick_envia']) . '</b><br /><b>' . str_replace(' ', '&nbsp;', $r['cargo']) . '</b><acronym title="' . $r['time'] . '" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top" class="rich">' . $r['text'] . '<hr class="quitar" /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($r['nick_envia'])) . '</td><td valign="top"></td></tr>' . "\n";
 	}
 
 	$txt .= '</table><p><b>(*)</b> <em>Esta p&aacute;gina est&aacute; en versi&oacute;n ALPHA, el motivo es que cabe la "extra&ntilde;a" posibilidad de que falten algunos mensajes. Esto suceder&aacute; cuando el RECEPTOR elimine tu mensaje enviado (ya que el mensaje se borra de la base de datos). Puede resultar incoherente la ausencia de algun mensaje enviado.</em></p>';
@@ -42,7 +40,7 @@ LIMIT 50", $link);
 	$txt_nav = array('/msg'=>'Mensajes Privados', 'Recibidos');
 	$txt_tab = array('/msg'=>'Recibidos', '/msg/mensajes-enviados'=>'Enviados');
 
-	$txt .= '<h1 class="quitar"><img src="'.IMG.'varios/email.gif" alt="Msg" /> Mensajes privados: <a href="/msg/mensajes-enviados/">Mensajes enviados</a></h1>
+	$txt .= '
 
 <br />
 
@@ -161,7 +159,7 @@ function click_form(tipo) {
 
 <input type="hidden" name="calidad" value="0" />
 
-<p><input type="submit" value="Enviar" style="font-size:24px;" class="large" /> &nbsp; <input type="checkbox" name="urgente" value="1" id="urgente" /> Env&iacute;o urgente. (el receptor recibir&aacute; un email)'.(ECONOMIA?' '.pols($pol['config']['pols_mensajeurgente']) . ' '.MONEDA:'').'</form></p>
+<p>'.boton('Enviar', 'submit', false, 'large blue').' &nbsp; <input type="checkbox" name="urgente" value="1" id="urgente" /> Env&iacute;o urgente. (el receptor recibir&aacute; un email)'.(ECONOMIA?' '.pols($pol['config']['pols_mensajeurgente']) . ' '.MONEDA:'').'</form></p>
 <hr />
 <br /><br />
 </div>
@@ -213,8 +211,7 @@ LIMIT 100", $link);
 }
 
 } else if ($pol['user_ID']) {
-	header('Location: http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.($_GET['a']?$_GET['a'].'/':''));
-	exit;
+	redirect('http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.($_GET['a']?$_GET['a']:''));
 }
 
 //THEME

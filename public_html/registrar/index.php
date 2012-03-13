@@ -1,5 +1,8 @@
 <?php
 include('../inc-login.php');
+include('../source/inc-functions-accion.php');
+
+
 
 function comprobar_email($email){
     $mail_correcto = false;
@@ -249,8 +252,6 @@ case 'verificar': //URL EMAIL
 			mysql_query("UPDATE users SET estado = 'turista' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 			redirect(REGISTRAR."login.php?a=login&user=".$r['nick']."&pass_md5=".$r['pass']."&url_http=".REGISTRAR);
 		} else {
-			include('../source/inc-functions-accion.php');
-
 			mysql_query("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
 			
@@ -286,8 +287,6 @@ case 'solicitar-ciudadania':
 	if (($pol['user_ID']) AND ($tiene_kick != true) AND ($user_pais == 'ninguno') AND ($pol['estado'] == 'turista') AND (!in_array($_POST['pais'], $vp['paises_congelados']))) {
 		mysql_query("UPDATE users SET estado = 'ciudadano', pais = '" . $_POST['pais'] . "' WHERE estado = 'turista' AND pais = 'ninguno' AND ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	
-		include('../source/inc-functions-accion.php');
-
 		if (($pol['pols'] > 0) AND ($_POST['pais'] != '15M') AND ($_POST['pais'] != '15MBCN')) {
 			$trae = ', trayendo consigo: '.pols($pol['pols']).' '.MONEDA;
 		} else { $trae = ''; }

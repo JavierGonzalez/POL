@@ -100,8 +100,9 @@ p_scroll = true;
 				<ul>
 					<li><a href="http://www.virtualpol.com/video" target="_blank">Vídeo de bienvenida</a></li>
 					<li><a href="http://www.virtualpol.com/manual" target="_blank">Documentación</a></li>
-					<li><a href="http://www.virtualpol.com/desarrollo" target="_blank">Desarrollo</a></li>
 					<li><a href="http://www.virtualpol.com/TOS" target="_blank">Condiciones de Uso</a></li>
+					<li><a href="http://www.virtualpol.com/desarrollo" target="_blank">Desarrollo</a></li>
+					<li><a href="https://virtualpol.com/donaciones" target="_blank">Donaciones</a></li>
 				</ul>
 			</li>
 		</ul>
@@ -218,35 +219,46 @@ if (isset($pol['user_ID'])) {
 			<a target="_blank" href="http://www.virtualpol.com/TOS">Condiciones de Uso</a> | <a target="_blank" href="http://www.virtualpol.com/desarrollo">Desarrollo / Código fuente</a><br />
 <?php
 unset($txt);
+if (!isset($pol['user_ID'])) { echo '<a target="_blank" href="http://gonzo.teoriza.com" title="GONZO">Javier González</a> (<a target="_blank" href="http://www.teoriza.com" title="Blogs">Teoriza</a>, <a target="_blank" href="http://www.eventuis.com" title="Eventos">eventuis</a>, <a target="_blank" href="http://www.perfectcine.com" title="Cine">PerfectCine</a>)<br />'; }
 if ($pol['user_ID'] == 1) { echo num((microtime(true)-TIME_START)*1000).'ms '.num(memory_get_usage()/1000).'kb | '; }
-echo '<span title="Época antigua en IRC" style="color:#BBB;">2004-</span>2008-2012';
-if (!isset($pol['user_ID'])) { echo '<br /><a target="_blank" href="http://gonzo.teoriza.com" title="GONZO">Javier González</a> (<a target="_blank" href="http://www.teoriza.com" title="Blogs">Teoriza</a>, <a target="_blank" href="http://www.eventuis.com" title="Eventos">eventuis</a>, <a target="_blank" href="http://www.perfectcine.com" title="Cine">PerfectCine</a>)'; }
 ?>
+				<span title="Época antigua en IRC" style="color:#BBB;">2004-</span>2008-2012
 			</p>
 		</div>
 		
 		<div id="footer-left">
 <?php
-echo '<p><b>'.PAIS.', '.$pol['config']['pais_des'].'</b> &nbsp; ';
+echo '<table border="0"><tr><td height="30"><b>'.PAIS.', '.$pol['config']['pais_des'].'</b></td>';
 
 if (ASAMBLEA) {
-	echo '<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://15m.virtualpol.com/" data-text="Participa en Asamblea Virtual 15M! http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="AsambleaVirtual">Twittear</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script> 
-<a href="https://www.facebook.com/AsambleaVirtual"><img src="'.IMG.'ico/2_32.png" alt="Facebook" width="32" height="32" style="margin-bottom:-4px;" /></a>';
+	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.$_SERVER['HTTP_HOST'].'" data-text="Participa en Asamblea Virtual 15M! http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="AsambleaVirtual">Twittear</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>
+
+<td><div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, \'script\', \'facebook-jssdk\'));</script>
+<div class="fb-like" data-href="http://'.$_SERVER['HTTP_HOST'].'" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div></td>
+';
+
 } else {
-	echo '<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.virtualpol.com/" data-text="VirtualPol, la primera red democrática virtual http://www.virtualpol.com/video" data-lang="es" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">Twittear</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>';
+	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.$_SERVER['HTTP_HOST'].'" data-text="VirtualPol, la primera red democrática virtual http://www.virtualpol.com/video" data-lang="es" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">Twittear</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>';
 }
 
-echo '</p>';
+echo '</tr></table>';
 
 
 if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != ':') AND ($pol['config']['palabra_gob'] != '')) {
-	echo '<div class="azul"><b><a href="http://'.explodear(':', $pol['config']['palabra_gob'], 1).'">'.explodear(':', $pol['config']['palabra_gob'], 0).'</a></b></div>';
+	echo '<div class="azul"><b><a href="http://'.explodear(':', $pol['config']['palabra_gob'], 1).'">'.explodear(':', $pol['config']['palabra_gob'], 0).'</a></b></div><br />';
 }
 
 if (!ASAMBLEA) {
-	echo '<br /><div class="amarillo"><b>'.$pol['config']['pols_frase'].'</b></div>';
+	echo '<div class="amarillo"><b>'.$pol['config']['pols_frase'].'</b></div>';
 	if ($pol['config']['pols_fraseedit'] == $pol['user_ID']) { echo ' <a href="/subasta/editar" class="gris">#</a>'; }
 }
 ?>	

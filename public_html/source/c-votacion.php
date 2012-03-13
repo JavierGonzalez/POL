@@ -477,7 +477,7 @@ $txt .= '</ul>
 			// Muestra información de votación (a la derecha)
 			$txt .= '<span style="float:right;text-align:right;">
 Creador ' . crear_link($r['nick']) . '. Duración <b>'.$duracion.'</b>.<br />
-Acceso de voto: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</acronym>.<br /> 
+Acceso de voto: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</acronym>'.($r['acceso_ver']!='anonimos'?' (privada)':'').'.<br /> 
 Inicio: <em>' . $r['time'] . '</em><br /> 
 Fin: <em>' . $r['time_expire'] . '</em><br />
 '.($r['votos_expire']!=0?'Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.<br />':'').'
@@ -775,8 +775,14 @@ ORDER BY siglas ASC", $link);
 <span style="float:right;text-align:right;">
 <b title="Promedio global de las ultimas 2 horas">'.$votos_por_hora.'</b> votos/hora</span>
 
-<span style="color:#888;"><br /><b>En curso</b>:</span><hr />
-<table border="0" cellpadding="1" cellspacing="0" class="pol_table">';
+<span style="color:#888;"><br /><b>Votaciones en curso</b>:</span>
+<table border="0" cellpadding="1" cellspacing="0">
+<tr>
+<th></th>
+<th>Votos</th>
+<th></th>
+<th>Finaliza en...</th>
+</tr>';
 	$mostrar_separacion = true;
 	
 	$result = mysql_query("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
@@ -789,24 +795,23 @@ LIMIT 500", $link);
 		$time_expire = strtotime($r['time_expire']);
 
 		if ((!isset($pol['user_ID'])) OR ((!$r['ha_votado']) AND ($r['estado'] == 'ok') AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])))) { 
-			$votar = boton('Votar', '/votacion/'.$r['ID'], false, 'small').' ';
+			$votar = boton('Votar', '/votacion/'.$r['ID'], false, 'small blue').' ';
 		} else { $votar = ''; }
 
 		$boton = '';
 		if ($r['user_ID'] == $pol['user_ID']) {
 			if ($r['estado'] == 'ok') {
-				if ($r['tipo'] != 'cargo') { $boton .= boton('Finalizar', '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '¿Seguro que quieres FINALIZAR esta votacion?'); }
-				$boton .= boton('X', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Seguro que quieres ELIMINAR esta votacion?');
+				if ($r['tipo'] != 'cargo') { $boton .= boton('Finalizar', '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '¿Seguro que quieres FINALIZAR esta votacion?', 'small orange'); }
+				$boton .= boton('X', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Seguro que quieres ELIMINAR esta votacion?', 'small red');
 			}
 		}
-
 		
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 			$txt .= '<tr>
 <td width="100"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
 <td>'.$votar.'<a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
-<td nowrap="nowrap"><span style="color:blue;" title="Tiempo que falta para el resultado">Faltan <b><span class="timer" value="'.$time_expire.'"></span></b></span></td>
+<td nowrap="nowrap" class="gris" align="right">'.timer($time_expire, true).'</td>
 <td nowrap="nowrap">'.$boton.'</td>
 <td></td>
 </tr>';
@@ -857,7 +862,7 @@ LIMIT 500", $link);
 <td width="100"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
 <td><a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
-<td nowrap="nowrap"><span style="color:grey;">Hace <span class="timer" value="'.$time_expire.'"></span></span></td>
+<td nowrap="nowrap" align="right" class="gris">'.timer($time_expire, true).'</td>
 <td></td>
 </tr>';
 		}

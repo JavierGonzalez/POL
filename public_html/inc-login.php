@@ -1,9 +1,6 @@
 <?php
 
 // ARREGLAR: este login es una copia redundante y simplificada del login principal (source/inc-login.php). Centralizar pronto.
-
-
-
 include('config.php'); // config raiz
 include('source/inc-functions.php'); // libreria de funciones basicas
 
@@ -13,16 +10,23 @@ $tiempoinicial = $mtime[1] + $mtime[0];
 
 $date = date('Y-m-d H:i:s'); // fija fecha actual $date en formato entendible por MySQL
 
-
 $IP = direccion_IP('longip'); // obtiene la IP en formato numérico (longip)
 $link = conectar(); // conecta MySQL
+
+
+// Prevención de inyecciones varias
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val); }
+foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape($val); }
+foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
+foreach ($_COOKIE AS $nom => $val) { $_COOKIE[$nom] = escape($val); }
+
 
 if (!isset($_SESSION)) { session_start(); } // inicia sesion PHP
 
 
 // nucleo del sistema de usuarios, comienza la verificación
 if (isset($_COOKIE['teorizauser'])) {
-	$result = mysql_query("SELECT ID, pass, nick, estado, pols, pais, email, fecha_registro, rechazo_last, cargo, nivel, dnie FROM users WHERE nick = '".trim($_COOKIE['teorizauser'])."' LIMIT 1", $link);
+	$result = mysql_query("SELECT ID, pass, nick, estado, pols, pais, email, fecha_registro, rechazo_last, cargo, nivel, dnie FROM users WHERE nick = '".$_COOKIE['teorizauser']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
 		if (md5(CLAVE.$r['pass']) == $_COOKIE['teorizapass']) { // cookie pass OK
 			$session_new = true;

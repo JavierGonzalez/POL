@@ -9,11 +9,6 @@ while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor
 // load user cargos
 $pol['cargos'] = cargos();
 
-// prevent XSS
-if ($_GET['ID']) { $_GET['ID'] = mysql_real_escape_string($_GET['ID']); }
-foreach ($_POST AS $nom => $val) { $_POST[$nom] = str_replace("'", "&#39;", $val); }
-foreach ($_GET AS $nom => $val) { $_GET[$nom] = str_replace("'", "&#39;", $val); }
-
 
 if (
 (nucleo_acceso('ciudadanos'))
@@ -1945,10 +1940,10 @@ case 'editar-documento':
 			$text = str_replace("<script", "nojs", $text);
 			$text = str_replace("&lt;script", "nojs", $text);
 
-			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
+			if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 
 				// Impide fijar acceso que no tienes.
-				if (nucleo_acceso($_POST['acceso_escribir'], $_POST['acceso_cfg_escribir']) == false) { 
+				if ((!nucleo_acceso($_POST['acceso_escribir'], $_POST['acceso_cfg_escribir'])) AND (!nucleo_acceso($vp['acceso']['control_gobierno']))) { 
 					$_POST['acceso_escribir'] = $r['acceso_escribir']; 
 					$_POST['acceso_cfg_escribir'] = $r['acceso_cfg_escribir']; 
 				}

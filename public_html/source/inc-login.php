@@ -11,13 +11,18 @@ $date = date('Y-m-d H:i:s');
 $IP = direccion_IP('longip');
 $link = conectar();
 
+// Prevención de inyecciones varias
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val); }
+foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape($val); }
+foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
+foreach ($_COOKIE AS $nom => $val) { $_COOKIE[$nom] = escape($val); }
 
 // LOGIN
 if (isset($_COOKIE['teorizauser'])) { 
 	session_start();
 	
 	if (!isset($_SESSION['pol'])) { //NO existe sesion
-		$result = mysql_query("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado, dnie, voto_confianza FROM users WHERE nick = '" .mysql_real_escape_string($_COOKIE['teorizauser'])."' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado, dnie, voto_confianza FROM users WHERE nick = '" .$_COOKIE['teorizauser']."' LIMIT 1", $link);
 		while ($r = mysql_fetch_array($result)) {
 			if (md5(CLAVE.$r['pass']) == $_COOKIE['teorizapass']) {
 				$session_new = true;
@@ -47,8 +52,7 @@ while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor
 if (isset($pol['user_ID'])) {
 
 	// LOAD: $pol
-	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, fecha_legal, dnie, SC, IP, grupos,
-(SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE recibe_ID = users.ID AND leido = '0') AS msg
+	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, fecha_legal, dnie, SC, IP, grupos
 FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
 		$pol['pols'] = $r['pols'];
@@ -58,7 +62,7 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 		$pol['bando'] = $r['bando'];
 		$pol['fecha_registro'] = $r['fecha_registro'];
 		$pol['nivel'] = $r['nivel'];
-		$pol['msg'] = $r['msg'];
+		//$pol['msg'] = $r['msg'];
 		$pol['online'] = $r['online'];
 		$pol['cargo'] = $r['cargo'];
 		$pol['IP'] = $r['IP'];

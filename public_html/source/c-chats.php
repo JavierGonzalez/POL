@@ -9,14 +9,12 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 	$txt_nav = array('/chats'=>'Chats', 'Solicitar chat');
 	$txt_tab = array('/chats/solicitar-chat'=>'Solicitar chat');
 
-	if (($pol['pais']) AND ($pol['pais'] != PAIS)) { header('Location: http://'.strtolower($pol['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'); exit; }
+	if (($pol['pais']) AND ($pol['pais'] != PAIS)) { redirect('http://'.strtolower($pol['pais']).'.'.DOMAIN.'/chats/'.$_GET['a']); }
 
 	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
 	while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
 
-	$txt .= '<h1 class="quitar"><a href="/chats/">Chats</a>: Solicitar chat</h1>
-
-<form action="/accion.php?a=chat&b=solicitar" method="post">
+	$txt .= '<form action="/accion.php?a=chat&b=solicitar" method="post">
 
 <ol>
 <li><b>Nombre del chat:</b><br />
@@ -37,8 +35,6 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 		$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo'], 'Log');
 		$txt_tab = array('/chats/'.$r['url']=>'Chat', '/chats/'.$r['url'].'/log'=>'Log', '/chats/'.$r['url'].'/opciones'=>'Opciones');
 		
-		$txt .= '<h1 class="quitar"><a href="/chats/">Chats</a>: <a href="/chats/'.$r['url'].'">'.$r['titulo'].'</a> | log</h1>';
-
 		if ((nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) AND (isset($pol['user_ID']))) {
 			$txt .= '<p>Log de las ultimas 24 horas:</p><p class="rich" style="background:#FFFFFF;padding:15px;font-size:14px;text-align:left;">VirtualPol: Plataforma '.PAIS.'. Sala: '.$r['titulo'].'. A fecha de '.date('Y-m-d').'.<br />...<br />';
 			$result2 = mysql_query("SELECT * FROM chats_msg WHERE chat_ID = '".$r['chat_ID']."' AND tipo != 'p' ORDER BY msg_ID ASC", $link);
@@ -71,7 +67,7 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 			$txt_li['escribir_ex'] .= '<input type="radio" name="acceso_escribir_ex" value="'.$at.'"'.($at==$r['acceso_escribir_ex']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_escribir_ex_var\').val(\''.$at_var.'\');"'.($at=='anonimos'?' disabled="disabled"':'').' /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
 		}
 
-		$txt .= '<h1 class="quitar"><a href="/chats/">Chats</a>: <a href="/chats/'.$r['url'].'/">'.$r['titulo'].'</a> | Opciones</h1>
+		$txt .= '<h1 class="quitar"><a href="/chats">Chats</a>: <a href="/chats/'.$r['url'].'">'.$r['titulo'].'</a> | Opciones</h1>
 
 <form action="/accion.php?a=chat&b=editar" method="post">
 <input type="hidden" name="chat_ID" value="'.$r['chat_ID'].'" />
@@ -113,7 +109,7 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 } else { // Listado de chats
 	$txt_title = 'Chats';
 	$txt_nav = array('/chats'=>'Chats');
-	$txt_tab = array('/chats/solicitar-chat/'=>'Solicitar chat');
+	$txt_tab = array('/chats/solicitar-chat'=>'Solicitar chat');
 
 	$result = mysql_query("SELECT COUNT(*) AS num FROM chats_msg WHERE time > '".date('Y-m-d H:i:s', time() - 600)."'", $link);
 	while ($r = mysql_fetch_array($result)) { 
@@ -124,7 +120,7 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 	
 	$txt .= '<span style="float:right;color:#888;font-size:18px;"><b>'.round(($msgnum_10min / 10), 1).'</b> msg/min</span>
 	
-<h1 class="quitar"><a href="/chats/">Chats</a>:</h1>
+<h1 class="quitar"><a href="/chats">Chats</a>:</h1>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="4">
 <tr>
@@ -153,7 +149,7 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 		$txt .= '<tr>
 <td valign="top" align="right">'.($r['estado']=='activo'?'':'<b style="color:#888;">#</b>').'</td>
 <td valign="top" align="right"><b>'.$r['online'].'</b></td>
-<td valign="top" nowrap="nowrap" style="background:'.$vp['bg'][$r['pais']].';" title="'.$r['pais'].'">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'/"><b>'.$r['titulo'].'</b></a>':'<b>'.$r['titulo'].'</b>').'</td>
+<td valign="top" nowrap="nowrap" style="background:'.$vp['bg'][$r['pais']].';" title="'.$r['pais'].'">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'"><b>'.$r['titulo'].'</b></a>':'<b>'.$r['titulo'].'</b>').'</td>
 
 <td valign="top" style="background:#5CB3FF;">'.($r['acceso_cfg_leer']?'<acronym title="['.$r['acceso_cfg_leer'].']">':'').ucfirst($r['acceso_leer']).($r['acceso_cfg_leer']?'</acronym>':'').'</td>
 
@@ -170,13 +166,8 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 		$txt .= ((($r['estado'] != 'activo') AND ($pol['pais'] == $r['pais']) AND ($pol['nivel'] >= 95))?boton('Activar', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=activar&chat_ID='.$r['chat_ID']):'').
 ((($r['estado'] == 'bloqueado') AND ($pol['user_ID'] == $r['user_ID']))?boton('Borrar', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=eliminar&chat_ID='.$r['chat_ID']):'').'</td>
 </tr>';
-}
-
-// '.($pol['estado'] == 'ciudadano'?'<p style="float:right;"><a href="/chats/turistas/"><b>Turistas</b></a></p>':'').'
-	$txt .= '</table>
-<p class="quitar">'.boton('Solicitar chat', '/chats/solicitar-chat/').' <span style="font-size:12px;"></span></p>';
-
-
+	}
+	$txt .= '</table>';
 }
 
 // Limpiar logs de 24h

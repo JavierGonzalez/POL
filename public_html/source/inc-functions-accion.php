@@ -185,13 +185,13 @@ LIMIT 1", $link);
 
 
 function enviar_email($user_ID, $asunto, $mensaje, $email='') {
-        $cabeceras = "From: VirtualPol <".CONTACTO_EMAIL.">;\n MIME-Version: 1.0;\nContent-type: text/html; charset=UTF-8\n";
-        if (($user_ID) AND ($email == '')) {
-                global $link;
-                $result = mysql_query("SELECT email FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
-                while($r = mysql_fetch_array($result)){ $email = $r['email']; }
-        }
-        mail($email, $asunto, $mensaje, $cabeceras);
+	$cabeceras = "From: VirtualPol <".CONTACTO_EMAIL.">;\nReturn-Path: VirtualPol <".CONTACTO_EMAIL.">;\nX-Sender: VirtualPol <".CONTACTO_EMAIL.">;\n MIME-Version: 1.0;\nContent-type: text/html; charset=UTF-8\n";
+	if (($user_ID) AND ($email == '')) {
+		global $link;
+		$result = mysql_query("SELECT email FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)){ $email = $r['email']; }
+	}
+	mail($email, $asunto, $mensaje, $cabeceras);
 }
 
 function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais='') {
@@ -202,7 +202,7 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais='') {
         $return = false;
         $pols = strval($pols);
         if (($pols != 0) AND ($concepto)) {
-                $concepto = ucfirst(mysql_real_escape_string($concepto));
+                $concepto = ucfirst($concepto);
 
                 //quitar
                 if ($emisor_ID > 0) {
@@ -298,8 +298,8 @@ function gen_title($title) {
 function gen_url($url) {
 	if (mb_detect_encoding($url) != 'UTF-8') { $url = utf8_decode($url); }
 	$url = trim($url);
-	$url = strtr(utf8_decode($url), utf8_decode(' àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'),
-utf8_decode('-aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
+	$url = strtr(utf8_decode($url), utf8_decode(' àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'), utf8_decode('-aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
+	$url = str_replace(array('&quot;', '&#39;'), '', $url);
 	$url = ereg_replace("[^A-Za-z0-9-]", "", $url);
 	$url = substr($url, 0, 90);
 	$url = strip_tags($url);
@@ -351,6 +351,8 @@ function imageCompression($imgfile='',$thumbsize=0,$savePath=NULL,$format) {
 }
 
 function filtro_sql($a) {
+	$a = str_replace('\'', '&#39;', $a);
+	$a = str_replace('"', '&quot;', $a);
 	return mysql_real_escape_string($a);
 }
 

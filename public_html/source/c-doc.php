@@ -8,7 +8,7 @@ if ($_GET['a']) {
 
 		include('inc-functions-accion.php');
 
-		if (($_GET['b'] == 'editar') AND (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']))) { 
+		if (($_GET['b'] == 'editar') AND ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_gobierno'])))) { 
 			// EDITAR!
 
 			foreach (nucleo_acceso('print') AS $at => $at_var) { 
@@ -69,7 +69,7 @@ if ($_GET['a']) {
 </form>
 
 '.pad('print', $r['ID']);
-			$txt_nav = array('/doc'=>'Documentos', $r['title'], 'Editar');
+			$txt_nav = array('/doc'=>'Documentos', '/doc/'.$r['url']=>$r['title'], 'Editar');
 			$txt_tab['/doc/'.$r['url']] = 'Ver documento';
 			$txt_tab['/doc/'.$r['url'].'/editar'] = 'Editar';
 
@@ -80,7 +80,12 @@ if ($_GET['a']) {
 			} else { $txt .= '<b style="color:red;">No tienes acceso de lectura.</b>'; }
 
 		} else { //doc/documento-de-test
-			$boton_editar = boton('Editar', (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?'/doc/'.$r['url'].'/editar/':null));
+			if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) || (nucleo_acceso($vp['acceso']['control_gobierno']))) {
+				$boton_editar = boton('Editar', '/doc/'.$r['url'].'/editar');
+				$txt_tab['/doc/'.$r['url'].'/editar'] = 'Editar';
+			} else {
+				$boton_editar = boton('Editar', null);
+			}
 
 			if ($_GET['b'] == 'backup') { $r['text'] = $r['text_backup']; }
 
@@ -93,7 +98,7 @@ if ($_GET['a']) {
 <h1 style="color:#444;text-align:center;font-size:28px;">'.$r['title'].' </h1>
 
 <div id="doc_pad">
-'.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])?$r['text']:'<b style="color:red;">No tienes acceso de lectura.</b>').'
+'.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])||nucleo_acceso($vp['acceso']['control_gobierno'])?$r['text']:'<b style="color:red;">No tienes acceso de lectura.</b>').'
 </div>
 
 </div>
@@ -106,25 +111,20 @@ Pueden ver: '.verbalizar_acceso($r['acceso_leer'], $r['acceso_cfg_leer']).'.<br 
 Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']).'.
 </div>';
 			$txt_nav = array('/doc'=>'Documentos', $r['title']);
-			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) { $txt_tab['/doc/'.$r['url'].'/editar'] = 'Editar'; }
+			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])||nucleo_acceso($vp['acceso']['control_gobierno'])) { $txt_tab['/doc/'.$r['url'].'/editar'] = 'Editar'; }
 		}
-
 		$txt_title = $r['title'];
 	}
 
 
-} else { //docs/
 
+} else { //docs
 
 	$txt_title = 'Documentos';
 	$txt_nav = array('/doc'=>'Documentos');
 	$txt_tab = array('/form/crear-documento'=>'Crear documento');
 
-	$txt .= '<h1 class="quitar"><img src="'.IMG.'documentos/doc.gif" alt="Documento" width="20" height="22" /> Documentos: &nbsp; '.boton('Crear Documento', '/form/crear-documento/').'</h1>
-
-<div id="docs">';
-
-
+	$txt .= '<div id="docs">';
 
 	$result = mysql_query("SELECT ID, nombre, tipo FROM ".SQL."cat WHERE tipo = 'docs' ORDER BY orden ASC", $link);
 	while($r = mysql_fetch_array($result)){
@@ -148,7 +148,7 @@ ORDER BY title ASC", $link);
 
 			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {
 				$txt .= '<tr>
-<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])?' '.boton('Editar', '/doc/'.$r2['url'].'/editar', false, 'small').' ':'').'<a href="/doc/'.$r2['url'].'">'.$r2['title'].'</a></td>
+<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])||nucleo_acceso($vp['acceso']['control_gobierno'])?' '.boton('Editar', '/doc/'.$r2['url'].'/editar', false, 'small').' ':'').'<a href="/doc/'.$r2['url'].'">'.$r2['title'].'</a></td>
 
 <td width="90" valign="top" style="background:#5CB3FF;">'.($r2['acceso_cfg_leer']?'<acronym title="['.$r2['acceso_cfg_leer'].']">':'').ucfirst($r2['acceso_leer']).($r2['acceso_cfg_leer']?'</acronym>':'').'</td>
 
@@ -159,16 +159,10 @@ ORDER BY title ASC", $link);
 			}
 
 		}
-		$txt .= '</table><br />';
+		$txt .= '</table>';
 	}
-
-
-	$txt .= '</div>
-
-<p class="quitar">'.boton('Crear Documento', '/form/crear-documento/').'</p>';
-
+	$txt .= '</div>';
 }
-
 
 
 //THEME

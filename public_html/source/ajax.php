@@ -54,6 +54,13 @@ function nucleo_acceso($tipo, $valor='') {
 }
 
 
+
+function filtro_sql($a) {
+	$a = str_replace('\'', '&#39;', $a);
+	$a = str_replace('"', '&quot;', $a);
+	return mysql_real_escape_string($a);
+}
+
 function acceso_check($chat_ID, $ac=null) {
 	global $link;
 	if (isset($ac)) { $check = array($ac); } else { $check = array('leer','escribir','escribir_ex'); }
@@ -84,6 +91,9 @@ ORDER BY msg_ID DESC LIMIT 50", $link);
 }
 
 
+// Prevención de inyección SQL y JS
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = filtro_sql($val); }
+foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = filtro_sql($val); }
 
 
 if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
@@ -132,7 +142,7 @@ LIMIT 1", $link);
 		$msg = $_REQUEST['msg'];
 		if (isset($borrar_msg)) { $msg = ''; }
 
-		$msg = str_replace("ส็็็็็็็็", "", str_replace("ส็็็็็็็็็็็็็็็็็็็็็็็็็", "", str_replace("'", "''", str_replace("\r", "", str_replace("\n", "", htmlentities(trim($msg), null, 'UTF-8'))))));
+		$msg = str_replace("ส็็็็็็็็", "", str_replace("ส็็็็็็็็็็็็็็็็็็็็็็็็็", "", str_replace("'", "''", str_replace("\r", "", str_replace("\n", "", trim($msg))))));
 		
 		$target_ID = 0;
 		$tipo = 'c';
@@ -276,7 +286,7 @@ UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMI
 (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS partido,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
-FROM users WHERE nick = '".mysql_real_escape_string($_REQUEST['nick'])."' LIMIT 1", $link);
+FROM users WHERE nick = '".$_REQUEST['nick']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($res)) { 
 		include('inc-functions.php');
 		if ($r['avatar'] == 'true') { $r['avatar'] = 1; } else { $r['avatar'] = 0; }

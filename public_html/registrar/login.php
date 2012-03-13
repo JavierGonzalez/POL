@@ -1,5 +1,7 @@
 <?php
 include('../inc-login.php');
+include('../source/inc-functions-accion.php');
+
 
 function ischecked($num, $user_info) {
 	$canales = explode("|", $user_info);
@@ -258,7 +260,6 @@ case 'changenick':
 				// EJECUTAR CAMBIO DE NICK
 				mysql_query("UPDATE users SET nick = '".$nick_new."', nickchange_last = now() WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 				
-				include('../source/inc-functions-accion.php');
 				evento_chat('<b>[#] El ciudadano '.$pol['nick'].'</b> se ha cambiado de nombre a <b>'.crear_link($nick_new).'</b>.', 0, 0, true, 'e', $pol['pais']);
 				
 				

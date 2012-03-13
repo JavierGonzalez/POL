@@ -100,7 +100,7 @@ ORDER BY nivel DESC", $link);
 <input name="title" size="60" maxlength="80" type="text" value="'.str_replace('"', '&#34;', $edit_title).'" /></p>
 
 <p'.($edit&&$edit_user_ID!=$pol['user_ID']?' style="display:none;"':'').'>Mensaje:<br />
-<textarea name="text" style="color:#999;font-weight:bold;width:600px;height:260px;">' . $edit_text . '</textarea><br />
+<textarea name="text" style="width:600px;height:260px;">' . $edit_text . '</textarea><br />
 <span style="color:grey;font-size:12px;">Etiquetas: [b]...[/b] [em]...[/em] [quote]...[/quote] [img]url[/img] [youtube]url-youtube[/youtube], auto-enlaces.</span></p>
 
 <p>'.boton('Enviar', 'submit', false, 'large blue').' En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '
@@ -121,7 +121,7 @@ ORDER BY nivel DESC", $link);
 <hr />
 
 <p>Mensaje en hilo:<br />
-<textarea name="text" style="color:#999;font-weight:bold;width:570px;height:250px;">' . $edit_text . '</textarea><br />
+<textarea name="text" style="width:570px;height:250px;">' . $edit_text . '</textarea><br />
 <span style="color:grey;font-size:12px;">Etiquetas: [b]...[/b] [em]...[/em] [quote]...[/quote] [img]url[/img] [youtube]url-youtube[/youtube], auto-enlaces.</span></p>
 
 <p>'.boton('Enviar', 'submit', false, 'blue').' En calidad de: <select name="encalidad" style="color:green;font-weight:bold;font-size:17px;">' . $select_cargos . '

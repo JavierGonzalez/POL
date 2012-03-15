@@ -5,18 +5,20 @@ if ($pol['user_ID'] != 1) { exit; }
 $txt .= '<h1>TEST DE DESARROLLO</h1><hr />';
 
 
-// Prevención de inyecciones varias
-function escape_sql($a) {
-	//$a = str_replace('\'', '&#39;', $a);
-	//$a = str_replace('"', '&quot;', $a);
-	return mysql_real_escape_string($a);
-}
-foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape_sql($val); }
-foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape_sql($val); }
-foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape_sql($val); }
-foreach ($_COOKIE AS $nom => $val) { $_COOKIE[$nom] = escape_sql($val); }
 
+$txt .= mysql_real_escape_string(nl2br("Empieza.
 
+Termina.")).'<hr />';
+
+$_POST['test'] = "Mensaje. Test. 
+
+Ñé \"ok\" 'vale'. Fin.";
+
+$_POST['test'] = nl2br($_POST['test']);
+
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val); }
+
+$txt .= 'PRINT = '.$_POST['test'];
 
 
 

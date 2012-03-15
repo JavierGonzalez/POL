@@ -161,7 +161,7 @@ case 'reset-pass':
 
 case 'reset-pass-change':	
 	if ($_POST['pass_new'] === $_POST['pass_new2']) {
-		mysql_query("UPDATE users SET pass = '".md5($_POST['pass_new'])."', api_pass = '".rand(1000000,9999999)."', reset_last = '".$date."' WHERE ID = '".$_POST['user_ID']."' AND api_pass = '".$_POST['check']."' AND reset_last >= '".$date."' LIMIT 1", $link);
+		mysql_query("UPDATE users SET pass = '".pass_key($_POST['pass_new'], 'md5')."', pass2 = '".pass_key($_POST['pass_new'])."', api_pass = '".rand(1000000,9999999)."', reset_last = '".$date."' WHERE ID = '".$_POST['user_ID']."' AND api_pass = '".$_POST['check']."' AND reset_last >= '".$date."' LIMIT 1", $link);
 	}
 	redirect('http://www.'.DOMAIN.'/');
 	break;
@@ -200,8 +200,6 @@ VirtualPol</p>";
 		} else {
 			redirect(REGISTRAR.'login.php?a=recuperar-pass&b=no-existe');
 		}
-
-
 	} else {
 		redirect('http://www.'.DOMAIN.'/');
 	}
@@ -221,8 +219,8 @@ case 'changepass':
 		$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND pass = '".$oldpass."' LIMIT 1", $link);
 		while ($r = mysql_fetch_array($result)) { $userID = $r['ID']; }
 		if (($pol['user_ID'] == $userID) AND ($newpass === $newpass2)) {
-			if (strlen($newpass) != 32) { $newpass = md5($newpass); }
-			mysql_query("UPDATE users SET pass = '" . $newpass . "' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+			if (strlen($newpass) != 32) { $newpass = pass_key($newpass, 'md5'); }
+			mysql_query("UPDATE users SET pass = '".$newpass."', pass2 = '".pass_key($_POST['pass1'])."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		}
 	}
 

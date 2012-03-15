@@ -89,7 +89,7 @@ Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_e
 <table border="0" width="100%">
 <tr>
 
-<td width="100%" border="0">'.(isset($pol['user_ID'])?'<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="width:98%;" autofocus="autofocus" />':boton('Para participar debes crear un ciudadano', REGISTRAR.'?p='.PAIS, false, 'blue')).'</td>
+<td width="100%" border="0">'.(isset($pol['user_ID'])?'<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="width:98%;" autofocus="autofocus" />':boton('¡Crea tu ciudadano para participar!', REGISTRAR.'?p='.PAIS, false, 'large blue')).'</td>
 
 <td nowrap="nowrap" title="Marcar para ocultar eventos del chat">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">Ocultar eventos</label></td>
 

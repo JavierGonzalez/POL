@@ -239,12 +239,10 @@ case 'pass':
 			$new_pass = rand(1000000,9999999);
 			mysql_query("UPDATE users SET pass = '".pass_key($new_pass, 'md5')."', pass2 = '".pass_key($new_pass)."', reset_last = fecha_registro WHERE ID = '".$user_ID."' LIMIT 1", $link);
 
-			$asunto = 'Nueva contraseña para el usuario: '.$nick;
-			$mensaje = "Hola Ciudadano,\n\nSe ha procedido a resetear tu contraseña por razones de seguridad. Por lo tanto tu contraseña ha cambiado.\n\n\nUsuario: ".$nick."\nNueva contraseña: ".$new_pass."\n\nPara entrar: ".REGISTRAR."login.php\n\nEs recomendado que cambies tu contraseña. También puedes iniciar un proceso de recuperación con tu email.\n\nGracias, nos vemos en VirtualPol ;)\n\n\nVirtualPol\nhttp://www.".DOMAIN;
-			mail($email, $asunto, $mensaje, "FROM: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: VirtualPol <".CONTACTO_EMAIL."> \nX-Sender: VirtualPol <".CONTACTO_EMAIL."> \nMIME-Version: 1.0\n"); 
+			$mensaje = "<p>Ciudadano ".$nick.".</p><p>Se ha procedido a resetear tu contraseña por razones de seguridad. Por lo tanto tu contraseña ha cambiado.</p><p>Usuario: ".$nick."<br />Nueva contraseña: ".$new_pass."</p><p>Para entrar: ".REGISTRAR."login.php</p><p>Es recomendado que cambies tu contraseña. También puedes iniciar un proceso de recuperación con tu email.</p><p>Gracias, nos vemos en VirtualPol ;)</p><p>VirtualPol<br />http://www.".DOMAIN."</p>";
+			enviar_email($user_ID, 'Nueva contraseña para el usuario: '.$nick, $mensaje);
 			
 			unset($new_pass);
-
 			echo 'OK: '.$_GET['nick'];
 		} else { echo 'Error.'; }
 		exit;

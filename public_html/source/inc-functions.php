@@ -37,11 +37,11 @@ function verbalizar_acceso($tipo, $valor='') {
 		case 'ciudadanos': $t = ($valor==''?'todos los ciudadanos de esta plataforma':'todos los ciudadanos de esta plataforma y '.$valor); break;
 		case 'excluir': $t = 'todos los ciudadanos excepto: '.$valor; break;
 		case 'privado': $t = 'los ciudadanos: '.$valor; break;
-		case 'afiliado': $t = 'ciudadanos afiliados al <span title="ID: '.$valor.'">partido</span> (<a href="/partidos/">Ver partidos</a>)'; break;
-		case 'confianza': $t = 'ciudadanos con confianza mayor o igual a '.confianza($valor).' (<a href="/censo/confianza/">Ver confianza</a>)'; break;
-		case 'nivel': $t = 'ciudadanos con nivel mayor o igual a '.$valor.' (<a href="/cargos/">Ver cargos</a>)'; break;
-		case 'cargo': $t = 'ciudadanos con cargo: '.$valor.' (<a href="/cargos/">Ver cargos</a>)'; break;
-		case 'grupos': $t = 'ciudadanos afiliados al grupo: '.$valor.' (<a href="/grupos/">Ver grupos</a>)'; break;
+		case 'afiliado': $t = 'ciudadanos afiliados al <span title="ID: '.$valor.'">partido</span> (<a href="/partidos">Ver partidos</a>)'; break;
+		case 'confianza': $t = 'ciudadanos con confianza mayor o igual a '.confianza($valor).' (<a href="/censo/confianza">Ver confianza</a>)'; break;
+		case 'nivel': $t = 'ciudadanos con nivel mayor o igual a '.$valor.' (<a href="/cargos">Ver cargos</a>)'; break;
+		case 'cargo': $t = 'ciudadanos con cargo: '.$valor.' (<a href="/cargos">Ver cargos</a>)'; break;
+		case 'grupos': $t = 'ciudadanos afiliados al grupo: '.$valor.' (<a href="/grupos">Ver grupos</a>)'; break;
 		case 'monedas': $t = 'ciudadanos con al menos '.$valor.' monedas'; break;
 		case 'autentificados': $t = 'ciudadanos autentificados'; break;
 		case 'supervisores_censo': $t = 'Supervisores del Censo'; break;
@@ -115,10 +115,12 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 	}
 }
 
-function escape($a) {
+function escape($a, $escape=true) {
+	$a = nl2br($a);
 	$a = str_replace('\'', '&#39;', $a);
 	$a = str_replace('"', '&quot;', $a);
-	return mysql_real_escape_string($a);
+	if ($escape == true) { $a = mysql_real_escape_string($a); }
+	return $a;
 }
 
 function pass_key($t, $type='sha') {
@@ -170,7 +172,7 @@ function get_supervisores_del_censo() {
 function duracion($t) {
 	if ($t > 5356800) { $d = round($t / 2626560) . ' meses'; }
 	elseif ($t > 129600) { $d = round($t / 86400) . ' días'; }
-	elseif ($t > 86400) { $d = '1 d&iacute;a'; }
+	elseif ($t > 86400) { $d = '1 día'; }
 	elseif ($t > 7200) { $d = round($t / 3600) . ' horas'; }
 	elseif ($t > 3600) { $d = '1 hora'; }
 	elseif ($t > 60) { $d = round($t / 60) . ' min'; }

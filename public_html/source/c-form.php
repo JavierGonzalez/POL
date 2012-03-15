@@ -109,7 +109,7 @@ case 'crear-documento':
 
 	$pol_form = array(
 	array('type'=>'select_cat'),
-	array('type'=>'hidden', 'name'=>'acceso_leer', 'value'=>'anonimos'),
+	array('type'=>'hidden', 'name'=>'acceso_leer', 'value'=>'ciudadanos'),
 	array('type'=>'hidden', 'name'=>'acceso_escribir', 'value'=>'privado'),
 	array('type'=>'hidden', 'name'=>'acceso_cfg_leer', 'value'=>''),
 	array('type'=>'hidden', 'name'=>'acceso_cfg_escribir', 'value'=>strtolower($pol['nick'])),

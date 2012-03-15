@@ -207,7 +207,7 @@ LIMIT 1", $link);
 
 				case 'trabaja': 
 					if (PAIS != '15M') {
-						$elmsg = 'la econom&iacute;a te necesita! <button style="font-weight:bold;margin:0;">Trabaja</button> :troll:'; 
+						$elmsg = 'la econom&iacute;a te necesita! <button class="small pill">Trabaja</button> :troll:'; 
 						$tipo = 'm';
 					}
 					break;

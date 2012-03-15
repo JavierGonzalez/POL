@@ -311,7 +311,9 @@ function gen_text($text, $type='') {
 	$text = preg_replace('#(<[^>]+[\s\r\n\"\'])(on|xmlns)[^>]*>#iU', "$1>", $text); //prevent XSS
 	if ($type == 'plain') {
 		$text = strip_tags($text);
-		$text = nl2br($text);
+		//$text = nl2br($text);
+		$text = str_replace("\n\n", "<br /><br />\n\n", $text); //LINUX
+		$text = str_replace("\r\n\r\n", "<br /><br />\r\n\r\n", $text); //WINDOWS
 	} else {
 		$text = strip_tags($text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>,<span>,<font>,<strong>,<p>,<b>,<em>,<ul>,<ol>,<li>,<blockquote>,<a>,<h2>,<h3>,<h4>,<br>,<hr>,<table>,<tr>,<td>,<th>");
 		$text = str_replace("\n\n", "<br /><br />\n\n", $text); //LINUX
@@ -348,12 +350,6 @@ function imageCompression($imgfile='',$thumbsize=0,$savePath=NULL,$format) {
 	} else {
 		imagejpeg($thumb,$savePath,80);
 	}
-}
-
-function filtro_sql($a) {
-	$a = str_replace('\'', '&#39;', $a);
-	$a = str_replace('"', '&quot;', $a);
-	return mysql_real_escape_string($a);
 }
 
 ?>

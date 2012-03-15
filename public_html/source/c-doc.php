@@ -95,7 +95,7 @@ if ($_GET['a']) {
 
 
 <div style="color:#555;">
-<h1 style="color:#444;text-align:center;font-size:28px;">'.$r['title'].' </h1>
+<h1 style="color:#444;font-size:28px;">'.$r['title'].' </h1>
 
 <div id="doc_pad">
 '.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])||nucleo_acceso($vp['acceso']['control_gobierno'])?$r['text']:'<b style="color:red;">No tienes acceso de lectura.</b>').'

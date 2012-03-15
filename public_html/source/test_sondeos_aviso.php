@@ -4,47 +4,54 @@ include('inc-functions-accion.php');
 
 // ENVIO DE EMAILS DE AVISO
 
-$votaciones = array(1856, 1829, 1832, 1824, 1855);
-
 if (false) {
 
 	evento_chat('<b>[#] Comienzo de envio de emails</b> de aviso de votaciones <span style="color:grey;">('.count($votaciones).' votaciones)</span>.');
-
-	$result = mysql_query("SELECT ID AS user_ID, nick, email FROM users WHERE estado = 'ciudadano' AND email != '' ORDER BY fecha_registro ASC LIMIT 100000", $link);
+	
+	$emails_enviados = 0;
+	$result = mysql_query("SELECT ID, nick, email FROM users WHERE estado = 'ciudadano' AND email != '' ORDER BY fecha_registro ASC LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
 
-		$ha_votado_en = array();
-		$falta_votar_en = array();
-		$result2 = mysql_query("SELECT ref_ID FROM votacion_votos WHERE user_ID = '".$r['user_ID']."' AND ref_ID IN (".implode(',', $votaciones).")", $link);
-		while($r2 = mysql_fetch_array($result2)) { $ha_votado_en[] = $r2['ref_ID']; }
-
-
-		$falta_votar_en = array_diff($votaciones, $ha_votado_en);
-		
-		if (count($falta_votar_en) > 0) {
-
-			// print
-			$txt .= count($falta_votar_en).' '.$r['nick'].' ('.implode(', ', $falta_votar_en).')<br />';
-			$contador++;
-
-			$votaciones_li = '';
-			$numm = 1;
-			foreach ($falta_votar_en AS $id => $dato) {
-				$votaciones_li .= "     ".$numm++.". http://15m.".DOMAIN."/votacion/".$dato."/\n";
-			}
-
-			$texto_email = "Hola ".$r['nick']."!\n\nAún no has votado en los siguientes sondeos de Asamblea Virtual 15M:\n\n".$votaciones_li."\nCuantos más votos más legitimidad. Tu opinión cuenta. Puedes votar \"En Blanco\" si no lo tienes claro y así participar. Recuerda que puedes modificar mientras la votación está activa.\n\n¿Como participar? http://15m.virtualpol.com/hacer/\n\nVer resultados: http://15m.virtualpol.com/votacion/\n\n\nDifundimos entre todos! Una asamblea para todos\n\n_________\nAsamblea Virtual 15M\nhttp://15m.virtualpol.com/";
-			
-			echo $r['nick'].'<br />';
-
-			// \n\nSigue los sondeos desde redes sociales:\nhttps://www.facebook.com/pages/Asamblea-Virtual/216054178475524\nhttps://twitter.com/#!/AsambleaVirtuaI
-
-			if (true) {
-				mail($r['email'], (count($falta_votar_en)>1?"[15M] Hay ".count($falta_votar_en)." votaciones en las que aún no has votado!":"[15M] Hay una votación en la que aún no has votado!"), $texto_email, "FROM: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: VirtualPol <".CONTACTO_EMAIL."> \nX-Sender: VirtualPol <".CONTACTO_EMAIL."> \nMIME-Version: 1.0\n"); 
+		$txt_votaciones = '';
+		$votar_num = 0;
+		$result2 = mysql_query("SELECT ID, pais, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
+(SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$r['ID']."' LIMIT 1) AS ha_votado
+FROM votacion
+WHERE estado = 'ok' AND pais = '15M' AND acceso_votar = 'ciudadanos_global'
+ORDER BY num DESC", $link);
+		while($r2 = mysql_fetch_array($result2)) {
+			if (!$r2['ha_votado']) {
+				$votar_num++;
+				$txt_votaciones .= '<li><a href="http://'.strtolower($r2['pais']).'.'.DOMAIN.'/votacion/'.$r2['ID'].'"><b>'.$r2['pregunta'].'</b></a> ('.ucfirst($r2['tipo']).')</li>';
 			}
 		}
+
+		if ($votar_num > 0) {
+
+			$txt_email = '<p>Hola '.$r['nick'].'!</p>
+		
+<p>Aún no has votado en las siguientes votaciones:</p>
+
+<ol>
+'.$txt_votaciones.'
+</ol>
+
+<p>Tu voto cuenta. Puedes participar en <a href="http://15m.virtualpol.com">nuestra sala de chat</a>.</p>
+
+<p>¡Unidos somos fuertes!</p>
+
+<p>_____<br />
+<a href="http://15m.virtualpol.com">Asamblea Virtual 15M</a><br />
+</p>';
+			$txt_titulo = $r['nick'].', '.($votar_num>1?'¡Tienes '.$votar_num.' votaciones pendientes!':'¡Tienes una votación pendiente!');
+
+			enviar_email($r['ID'], $txt_titulo, $txt_email); 
+			$emails_enviados++;
+
+			$txt .= $votar_num.' '.$r['nick'].'<br />';
+		}
 	}
-	evento_chat('<b>[#] Terminado el envio de emails</b> de aviso de votaciones <span style="color:grey;">('.num($contador).' emails enviados, '.round(microtime(true)-TIME_START).' seg de proceso)</span>.');
+	evento_chat('<b>[#] Terminado el envio de emails</b> de aviso <span style="color:grey;">('.num($emails_enviados).' emails enviados, '.round(microtime(true)-TIME_START).' seg de proceso)</span>.');
 }
 
 $txt .= '<hr />'.$contador;

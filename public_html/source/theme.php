@@ -148,7 +148,7 @@ p_scroll = true;
 <?php
 foreach(explode(';', $pol['config']['palabras']) as $t) {
 	$t = explode(':', $t);
-	echo ($t[1]!=''?'<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>':$t[2]).($pol['user_ID']==$t[0]?' <a href="/subasta/editar" class="gris">#</a>':'')."<br />\n";
+	echo ($t[1]!=''?'<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>':$t[2]).($pol['user_ID']==$t[0]||nucleo_acceso($vp['acceso']['control_gobierno'])?' <a href="/subasta/editar" style="float:right;color:#CCC;">#</a>':'').'<br />';
 }
 
 echo '</p>';
@@ -228,7 +228,7 @@ if ($pol['user_ID'] == 1) { echo num((microtime(true)-TIME_START)*1000).'ms '.nu
 		
 		<div id="footer-left">
 <?php
-echo '<table border="0"><tr><td height="30"><b>'.PAIS.', '.$pol['config']['pais_des'].'</b></td>';
+echo '<table border="0"><tr><td height="30" nowrap="nowrap"><b>'.PAIS.', '.$pol['config']['pais_des'].'</b></td>';
 
 if (ASAMBLEA) {
 	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.$_SERVER['HTTP_HOST'].'" data-text="Participa en Asamblea Virtual 15M! http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="AsambleaVirtual">Twittear</a>

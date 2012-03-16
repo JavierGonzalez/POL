@@ -12,8 +12,6 @@ pol_pujas		(ID, mercado_ID, user_ID, pols, time)
 
  if ($_GET['a'] == 'editar') {
 
-	$txt .= '<h1><a href="/subasta/">Subastas</a>: Editar</h1><br />';
-
 	if ($pol['user_ID'] == $pol['config']['pols_fraseedit']) {
 
 		$url = str_replace("http://", "", explodear("\"", $pol['config']['pols_frase'], 1));
@@ -24,12 +22,13 @@ pol_pujas		(ID, mercado_ID, user_ID, pols, time)
 <table border="0"><tr>
 <td align="right">Texto: <input value="' . $frase . '" type="text" name="frase" size="50" maxlength="70" /><br />
 http://<input type="text" name="url" size="50" maxlength="150" value="' . $url . '" /></td><td>
-<input type="submit" value="Editar" style="height:40px;" /></form></b></td></tr>
+'.boton('Editar', 'submit', false, 'blue').'
+</form></b></td></tr>
 <tr><td align="right">
 <form action="/accion.php?a=mercado&b=cederfrase" method="post">
 Ceder al Ciudadano: <input type="text" name="nick" size="14" maxlength="20" value="" />
 </td><td>
-<input type="submit" value="Ceder" style="height:30px;" />
+'.boton('Ceder', 'submit', false, 'small pill').'
 </form>
 
 </td></tr></table>
@@ -40,20 +39,21 @@ Ceder al Ciudadano: <input type="text" name="nick" size="14" maxlength="20" valu
 	// ;ID:URL:TEXT;
 	foreach(explode(";", $pol['config']['palabras']) as $num => $t) {
 		$t = explode(":", $t);
-		if ($t[0] == $pol['user_ID']) {
+		if (($t[0] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 			$txt .= '<div class="azul"><h2>"Palabra '.($num + 1).'"</h2>
 <form action="/accion.php?a=mercado&b=editarpalabra&ID=' . $num . '" method="post">
 
 <table border="0"><tr>
-<td>Texto: <input value="' . $t[2] . '" type="text" name="text" size="12" maxlength="10" /><br />
+<td>Texto: <input value="'.$t[2].'" type="text" name="text" size="20" maxlength="20" /><br />
 http://<input type="text" name="url" size="50" maxlength="150" value="' . $t[1] . '" /></td><td>
-<input type="submit" value="Editar" style="height:40px;" /></form></b></td></tr>
+'.boton('Editar', 'submit', false, 'blue').'
+</form></b></td></tr>
 
 <tr><td align="right">
 <form action="/accion.php?a=mercado&b=cederpalabra&ID='.$num.'" method="post">
 Ceder al Ciudadano: <input type="text" name="nick" size="14" maxlength="20" value="" />
 </td><td>
-<input type="submit" value="Ceder" style="height:30px;" />
+'.boton('Ceder', 'submit', false, 'small pill').'
 </form></td>
 
 </tr></table>

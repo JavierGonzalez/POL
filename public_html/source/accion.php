@@ -989,7 +989,7 @@ ORDER BY pols DESC LIMIT 1", $link);
 
 		$refer_url = 'subasta';
 	
-	} elseif (($_GET['b'] == 'editarfrase') AND ($pol['config']['pols_fraseedit'] == $pol['user_ID'])) {
+	} elseif (($_GET['b'] == 'editarfrase') AND (($pol['config']['pols_fraseedit'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['control_gobierno'])))) {
 
 		$_POST['url'] = str_replace("http://", "", $_POST['url']);
 		$url = '<a href="http://'.strip_tags($_POST['url']).'">'.ucfirst(strip_tags($_POST['frase'])).'</a>';
@@ -1008,7 +1008,7 @@ ORDER BY pols DESC LIMIT 1", $link);
 		
 		$refer_url = 'subasta/editar';
 
-	} elseif (($_GET['b'] == 'editarpalabra') AND ($_GET['ID'] != null) AND (strlen($_POST['text']) <= 10)) {
+	} elseif (($_GET['b'] == 'editarpalabra') AND (is_numeric($_GET['ID'])) AND (strlen($_POST['text']) <= 20)) {
 		
 		$_POST['text'] = ereg_replace("[^ A-Za-z0-9-]", "", $_POST['text']);
 		$_POST['text'] = str_replace(";", "", $_POST['text']);
@@ -1023,8 +1023,8 @@ ORDER BY pols DESC LIMIT 1", $link);
 			
 			if ($dato) { $dato .= ';'; }
 
-			if (($t[0] == $pol['user_ID']) AND ($_GET['ID'] == $num)) {
-				$dato .= $pol['user_ID'].':'.$_POST['url'].':'.$_POST['text'];
+			if ((($t[0] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) AND ($_GET['ID'] == $num)) {
+				$dato .= $t[0].':'.$_POST['url'].':'.$_POST['text'];
 			} else {
 				$dato .= $t[0].':'.$t[1].':'.$t[2];
 			}

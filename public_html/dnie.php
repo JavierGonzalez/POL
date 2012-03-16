@@ -4,13 +4,13 @@ include('inc-login.php');
 
 if (!$_SERVER['HTTPS']) { redirect(SSL_URL.'dnie.php'); } // Fuerza el uso de una conexion segura entre navegador y servidor. (https SSL)
 
-// Comprueba si el usuario est&aacute; autentificado o no.
+// Comprueba si el usuario está autentificado o no.
 $dnie_autentificado = false;
 $result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND dnie = 'true'", $link);
 while ($r = mysql_fetch_array($result)) { $dnie_autentificado = true; }
 
 if ((isset($pol['user_ID'])) AND ($dnie_autentificado == false)) {
-	// Es un usuario y no est&aacute; autentificado con DNIe 
+	// Es un usuario y no está autentificado con DNIe 
 	
 	// Plugin de Tractis para PHP. Software Libre. Fuente: https://github.com/tractis/tractis_identity_verifications_for_php
 	require('img/lib/tractis_identity/tractis_identity.php');
@@ -35,7 +35,7 @@ Este resultado final no supone ninguna información en claro.
 */
 		$dnie_check = hash('sha256', '.VirtualPol.'.CLAVE_DNIE.'.'.strtoupper($data['tractis:attribute:dni']).'.'.str_replace('+', ' ', strtoupper($data['tractis:attribute:name'])).'.'); // Generacion del hash anteriormente explicado.
 		
-		// Elimina todos los datos obtenidos del DNIe y desaparecen definitivamente a partir de aqu&iacute;.
+		// Elimina todos los datos obtenidos del DNIe y desaparecen definitivamente a partir de aquí.
 		unset($data);
 
 		// Busca checks coincidentes (para garantizar que cada DNIe se inscribe una vez).
@@ -46,6 +46,8 @@ Este resultado final no supone ninguna información en claro.
 		if ($dnie_clon == true) { 
 			// Persona ya identificada con otro usuario. No realiza la autentificacion. 
 			$txt .= 'Ya estas autentificado con otro usuario. Envia un email a '.CONTACTO_EMAIL.' explicando la situacion. Gracias.';
+			
+			unset($dnie_check); // Elimina el hash.
 
 		} else {
 			// Autentificacion correcta. El DNIe es inedito. Procede a guardar el hash en la base de datos.
@@ -53,44 +55,44 @@ Este resultado final no supone ninguna información en claro.
 
 			unset($dnie_check); // Elimina el hash.
 
-			// Carga funciones extra para ejecutar evento_chat() que envia un mensaje en el chat principal (por incentivacion).
+			// Carga funciones extra para ejecutar evento_chat() que envia un mensaje en el chat.
 			include('source/inc-functions-accion.php');
-			evento_chat('<b>[#] '.crear_link($pol['nick']).' se ha <a href="'.SSL_URL.'dnie.php">autentificado</a> correctamente.</b>');
+			evento_chat('<b>[#] '.crear_link($pol['nick']).' se ha <a href="'.SSL_URL.'dnie.php">autentificado</a> con exito.</b>', '0', '', false, 'e', $pol['pais']);
 
 			// Cierra y redirige a esta misma pagina.
 			redirect(SSL_URL.'dnie.php');
 		}
 
 	} else { 
-		// Autentificar.
-		$txt .= 'Usuario sin autentificar.<br />'.$tractis_identity->show_form(); // Muestra el boton de autentificaci&oacute;n de Tractis.
+		// Muestra controles para autentificar.
+		$txt .= 'Usuario sin autentificar.<br />'.$tractis_identity->show_form(); // Muestra el boton de autentificación de Tractis.
 	}
 } elseif (isset($pol['user_ID'])) {
-	$txt .= 'Est&aacute;s autentificado correctamente.';
+	$txt .= 'Estás autentificado correctamente.';
 } else {
-	$txt .= 'No est&aacute;s registrado, debes crear un usuario.';
+	$txt .= 'No estás registrado, debes crear un usuario.';
 }
 
 
-// Presentacion, dise&ntilde;o y poco m&aacute;s. No relevante.
-$txt_title = 'Autentificaci&oacute;n DNIe'; // Define el titulo de la pagina finalmente formada.
+// Presentacion, diseño y poco más. No relevante.
+$txt_title = 'Autentificación DNIe'; // Define el titulo de la pagina finalmente formada.
 $txt = '
 <style type="text/css">.content { text-align:center; width:500px; margin: 0 auto; padding: 2px 12px 30px 12px; }</style>
 
-<h1>Autentificaci&oacute;n DNIe</h1>
+<h1>Autentificación DNIe</h1>
 
-<p>La autentificaci&oacute;n mediante DNIe (y otros certificados) es el futuro, pues permite identificar a una persona fisica con seguridad.</p>
+<p>La autentificación mediante DNIe (y otros certificados) es el futuro, pues permite identificar a una persona fisica con seguridad.</p>
 
 <p>Estado: <b>'.$txt.'</b></p>
 
 <p>&nbsp;</p>
 
-<p><em>Seguridad:</em> no se almacenar&aacute; ning&uacute;n dato proporcionado por el DNIe u otro certificado en ninguna parte del sistema. Tan s&oacute;lo se almacena una miniaturizaci&oacute;n irreversible de esta informaci&oacute;n. De esta forma incluso ante el peor ataque posible (acceso a contrase&ntilde;as, claves y base de datos) no se podr&iacute;a obtener informaci&oacute;n alguna. La pasarela de autentificaci&oacute;n se conf&iacute;a totalmente a una empresa importante del sector llamada <a href="http://www.tractis.com/">Tractis</a>.</p>
+<p><em>Seguridad:</em> no se almacenará ningún dato proporcionado por el DNIe u otro certificado en ninguna parte del sistema. Tan sólo se almacena una miniaturización irreversible de esta información. De esta forma incluso ante el peor ataque posible (acceso a contraseñas, claves y base de datos) no se podría obtener información alguna. La pasarela de autentificación se confía totalmente a una empresa importante del sector llamada <a href="http://www.tractis.com/">Tractis</a>.</p>
 
-<p><a href="/documentacion">M&aacute;s informaci&oacute;n aqu&iacute;.</a></p>
+<p><a href="/documentacion">Más información aquí.</a></p>
 
-<p>Puedes ver el c&oacute;digo fuente de <a href="/desarrollo">esta aplicaci&oacute;n</a>.</p>';
+<p>Puedes ver el código fuente de <a href="/desarrollo">esta aplicación</a>.</p>';
 
-// Carga el dise&ntilde;o completo de VirtualPol. Mucho HTML, CSS y poco m&aacute;s.
+// Carga el diseño completo de VirtualPol. Mucho HTML, CSS y poco más.
 include('theme.php');
 ?>

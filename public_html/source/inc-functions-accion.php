@@ -352,4 +352,49 @@ function imageCompression($imgfile='',$thumbsize=0,$savePath=NULL,$format) {
 	}
 }
 
+
+function barajar_votos($votacion_ID) {
+	global $link;
+
+	// El objetivo de esta funcion es barajar los votos de forma que quede rota la relación Usuario-Voto.
+
+	// Comprueba que la votacion está terminada y los votos no son publicos (para evitar corrupciones)
+	$result = mysql_query("SELECT privacidad FROM votacion WHERE ID = '".$votacion_ID."' AND estado = 'end' AND privacidad = 'true' LIMIT 1", $link);
+	while($r = mysql_fetch_array($result)){ $ok = $r['privacidad']; }
+	if ($ok != 'true') { return false; }
+
+	$votos = array();
+	
+	// Extrae los IDs de votos y los guarda en array.
+	$n = 0;
+	$result = mysql_query("SELECT * FROM votacion_votos WHERE ref_ID = '".$votacion_ID."'", $link);
+	while($r = mysql_fetch_array($result)){ 
+		$n++;
+		$votos[$n]['ID'] = $r['ID'];
+	}
+
+	// Extrae los datos a barajar de la tabla de votos, ya ordenados aleatoriamente.
+	$n = 0;
+	$result = mysql_query("SELECT * FROM votacion_votos WHERE ref_ID = '".$votacion_ID."' ORDER BY RAND()", $link);
+	while($r = mysql_fetch_array($result)){ 
+		$n++;
+		$votos[$n]['voto'] = $r['voto'];
+		$votos[$n]['validez'] = $r['validez'];
+		$votos[$n]['autentificado'] = $r['autentificado'];
+		$votos[$n]['mensaje'] = $r['mensaje'];
+		$votos[$n]['comprobante'] = $r['comprobante'];
+	}
+
+	// Recorre el array para volver a guardar los mismos datos, pero barajados.
+	foreach ($votos AS $null => $voto) {
+		$sql_set = array();
+		foreach ($voto AS $dato => $valor) {
+			if ($dato == 'ID') { $voto_ID = $valor; } 
+			else { $sql_set[] = "".$dato." = '".str_replace("'", "", $valor)."'"; }
+		}
+		mysql_query("UPDATE votacion_votos SET ".implode(', ', $sql_set)." WHERE ID = '".$voto_ID."' LIMIT 1", $link);
+	}
+	return true;
+}
+
 ?>

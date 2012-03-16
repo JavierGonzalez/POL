@@ -6,20 +6,11 @@ $txt .= '<h1>TEST DE DESARROLLO</h1><hr />';
 
 
 
-$txt .= mysql_real_escape_string(nl2br("Empieza.
-
-Termina.")).'<hr />';
-
-$_POST['test'] = "Mensaje. Test. 
-
-Ñé \"ok\" 'vale'. Fin.";
-
-$_POST['test'] = nl2br($_POST['test']);
-
-foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val); }
-
-$txt .= 'PRINT = '.$_POST['test'];
-
+$result = mysql_query("SELECT ID FROM votacion WHERE estado = 'end' AND privacidad = 'true'", $link);
+while($r = mysql_fetch_array($result)){ 
+	$txt .= '|';
+	//barajar_votos($r['ID']);
+}
 
 
 $txt_title = 'Test';

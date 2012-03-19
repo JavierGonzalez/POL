@@ -330,12 +330,16 @@ case 'expulsar':
 
 			mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$r['ID']."'", $link);
 
-			// Cambiado a "En Blanco" los votos
-			$result2 = mysql_query("SELECT ID, tipo_voto FROM votacion WHERE estado = 'ok'", $link);
+			// Cambia a "En Blanco" los votos. Es equivalente a anular el voto.
+			$result2 = mysql_query("SELECT ID, tipo_voto, respuestas FROM votacion WHERE estado = 'ok'", $link);
 			while ($r2 = mysql_fetch_array($result2)) { 
-				if ($r2['tipo_voto'] == '3puntos') { $voto_en_blanco = '0 0 0'; }
-				elseif ($r2['tipo_voto'] == '5puntos') { $voto_en_blanco = '0 0 0 0 0'; }
-				elseif ($r2['tipo_voto'] == '8puntos') { $voto_en_blanco = '0 0 0 0 0 0 0 0'; }
+				if ($r2['tipo_voto'] == 'multiple') { 
+					foreach (implode('|', $r2['respuestas']) AS $id => $pregunta) { if ($pregunta != '') { $voto_en_blanco .= '0 '; } }
+					$voto_en_blanco = trim($voto_en_blanco);
+				}
+				else if ($r2['tipo_voto'] == '3puntos') { $voto_en_blanco = '0 0 0'; }
+				else if ($r2['tipo_voto'] == '5puntos') { $voto_en_blanco = '0 0 0 0 0'; }
+				else if ($r2['tipo_voto'] == '8puntos') { $voto_en_blanco = '0 0 0 0 0 0 0 0'; }
 				else { $voto_en_blanco = '0'; }
 				mysql_query("UPDATE votacion_votos SET voto = '".$voto_en_blanco."', validez = 'true' WHERE ref_ID = ".$r2['ID']." AND user_ID = ".$r['ID']." LIMIT 1", $link);
 			}

@@ -6,11 +6,30 @@ $txt .= '<h1>TEST DE DESARROLLO</h1><hr />';
 
 
 
-$result = mysql_query("SELECT ID FROM votacion WHERE estado = 'end' AND privacidad = 'true'", $link);
-while($r = mysql_fetch_array($result)){ 
-	$txt .= '|';
-	//barajar_votos($r['ID']);
+
+function escape2($a, $escape=true) {
+
+
+	// Previene inyección SQL
+	$a = nl2br($a);
+	$a = str_replace('\'', '&#39;', $a);
+	$a = str_replace('"', '&quot;', $a);
+	if ($escape == true) { $a = mysql_real_escape_string($a); }
+
+	// Previene XSS (inyección js)
+	
+
+	return $a;
 }
+
+
+$txt .= escape2("Linea uno.
+
+Linea dos.");
+
+
+$txt .= 'Inyección: '.$_GET['inyeccion'];
+
 
 
 $txt_title = 'Test';

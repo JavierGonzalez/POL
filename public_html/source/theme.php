@@ -16,8 +16,8 @@ if ($pol['config']['elecciones_estado'] == 'normal') {
 } elseif ($pol['config']['elecciones_estado'] == 'elecciones') {  
 	$elec_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']);
 	switch ($pol['config']['elecciones']) {
-		case 'pres1': $txt_elec_time = timer(($elec_quedan - 86400), true); $txt_elec = ' <a href="/elecciones" style="color:red;font-weight:normal;">1&ordf; Vuelta en curso, queda <b>'.$txt_elec_time.'</b></a> |';  break;
-		case 'pres2': $txt_elec_time = timer($elec_quedan, true); $txt_elec = ' <a href="/elecciones" style="color:red;font-weight:normal;">2&ordf; Vuelta en curso, queda <b>'.$txt_elec_time.'</b></a> |'; break;
+		case 'pres1': $txt_elec_time = timer(($elec_quedan - 86400), true); $txt_elec = ' <a href="/elecciones" style="color:red;font-weight:normal;">1&ordf; Vuelta, queda <b>'.$txt_elec_time.'</b></a> |';  break;
+		case 'pres2': $txt_elec_time = timer($elec_quedan, true); $txt_elec = ' <a href="/elecciones" style="color:red;font-weight:normal;">2&ordf; Vuelta, queda <b>'.$txt_elec_time.'</b></a> |'; break;
 		case 'parl': $txt_elec_time = timer($elec_quedan, true); $txt_elec = ' <a href="/elecciones" style="font-weight:normal;">Elecciones'.(ASAMBLEA?' a Coordinador':'').', queda <b>'.$txt_elec_time.'</b></a> |';  break;
 	}
 }
@@ -180,7 +180,7 @@ if (ECONOMIA) {
 <?php
 unset($txt_header);
 if (isset($pol['user_ID'])) {
-	echo '<span class="htxt"><b><a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(ECONOMIA?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' |'.$txt_elec.' <a href="/accion.php?a=logout">Salir</a></b></span>';
+	echo '<span class="htxt"><b><a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(ECONOMIA&&$pol['estado']=='ciudadano'?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' |'.$txt_elec.' <a href="/accion.php?a=logout">Salir</a></b></span>';
 } else {
 	echo boton('Crear ciudadano', REGISTRAR.'?p='.PAIS, false, 'large blue').' &nbsp; '.boton('Entrar', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
 }
@@ -216,7 +216,7 @@ if (isset($pol['user_ID'])) {
 			<p>VirtualPol, la primera <b>Red Social Democrática</b> <?=boton('Donar', 'https://virtualpol.com/donaciones', false, 'small pill orange')?></p>
 			<p>
 			<a target="_blank" href="http://www.virtualpol.com/video">Vídeo</a> | <a target="_blank" href="http://www.virtualpol.com/documentacion">Documentación / Ayuda</a><br />
-			<a target="_blank" href="http://www.virtualpol.com/TOS">Condiciones de Uso</a> | <a target="_blank" href="http://www.virtualpol.com/desarrollo">Desarrollo / Código fuente</a><br />
+			<a target="_blank" href="http://www.virtualpol.com/TOS" title="Condiciones de Uso">TOS</a> | <a target="_blank" href="http://www.virtualpol.com/desarrollo">Desarrollo / Código fuente</a><br />
 <?php
 unset($txt);
 if (!isset($pol['user_ID'])) { echo '<a target="_blank" href="http://gonzo.teoriza.com" title="GONZO">Javier González</a> (<a target="_blank" href="http://www.teoriza.com" title="Blogs">Teoriza</a>, <a target="_blank" href="http://www.eventuis.com" title="Eventos">eventuis</a>, <a target="_blank" href="http://www.perfectcine.com" title="Cine">PerfectCine</a>)<br />'; }
@@ -231,7 +231,7 @@ if ($pol['user_ID'] == 1) { echo num((microtime(true)-TIME_START)*1000).'ms '.nu
 echo '<table border="0"><tr><td height="30" nowrap="nowrap"><b>'.PAIS.', '.$pol['config']['pais_des'].'</b></td>';
 
 if (ASAMBLEA) {
-	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.$_SERVER['HTTP_HOST'].'" data-text="Participa en Asamblea Virtual 15M! http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="AsambleaVirtual">Twittear</a>
+	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.$_SERVER['HTTP_HOST'].'" data-text="Participa en Asamblea Virtual 15M! http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="15M">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>
 
 <td><div id="fb-root"></div>

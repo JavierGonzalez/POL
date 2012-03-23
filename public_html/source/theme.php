@@ -248,7 +248,7 @@ if (ASAMBLEA) {
 ';
 
 } else {
-	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.$_SERVER['HTTP_HOST'].'" data-text="VirtualPol, la primera red democrática virtual http://www.virtualpol.com/video" data-lang="es" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">Twittear</a>
+	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.$_SERVER['HTTP_HOST'].'" data-text="VirtualPol, la primera red democrática virtual http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>
 
 <td><g:plusone annotation="none" href="http://'.HOST.'"></g:plusone></td>

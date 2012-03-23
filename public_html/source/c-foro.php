@@ -60,13 +60,13 @@ function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 
 		if ($pol['nivel'] > 1) {
 			$result = mysql_query("SELECT cargo_ID, 
-(SELECT nombre FROM cargos WHERE cargos.cargo_ID = cargo_ID LIMIT 1) AS nombre,
-(SELECT nivel FROM cargos WHERE cargos.cargo_ID = cargo_ID LIMIT 1) AS nivel
-FROM cargos_users  WHERE cargo = 'true' AND user_ID = '" . $pol['user_ID'] . "'
+(SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargos_users.cargo_ID = cargo_ID LIMIT 1) AS nombre,
+(SELECT nivel FROM cargos WHERE pais = '".PAIS."' AND cargos_users.cargo_ID = cargo_ID LIMIT 1) AS nivel
+FROM cargos_users  
+WHERE cargo = 'true' AND pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."'
 ORDER BY nivel DESC", $link);
 			while($r = mysql_fetch_array($result)){
-				if ($edit_cargo == $r['cargo_ID']) { $selected = ' selected="selected"'; } else { $selected = ''; }
-				$select_cargos .= '<option value="' . $r['cargo_ID'] . '"' . $selected . '>' . $r['nombre'] . '</option>' . "\n";
+				$select_cargos .= '<option value="'.$r['cargo_ID'].'"'.($edit_cargo==$r['cargo_ID']?' selected="selected"':'').'>'.$r['nombre'].'</option>'."\n";
 			}
 		}
 		if ($pol['estado'] == 'extranjero') { $select_cargos = '<option value="99">Extranjero</option>'; } else { $select_cargos = '<option value="0">Ciudadano</option>' . $select_cargos; }

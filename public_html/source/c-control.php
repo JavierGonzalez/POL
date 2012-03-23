@@ -923,6 +923,7 @@ $sel[$pol['config']['frontera']] = ' selected="selected"';
 
 	$result = mysql_query("SELECT nombre, cargo_ID, salario
 FROM cargos
+WHERE pais = '".PAIS."'
 ORDER BY salario DESC", $link);
 	while($r = mysql_fetch_array($result)){
 		$txt .= '<tr><td align="right">' . $r['nombre'] . ':</td><td><input style="text-align:right;" type="text" name="salario_' . $r['cargo_ID'] . '" size="3" maxlength="6" class="pols" value="' . $r['salario'] . '"'.$dis.' /> '.MONEDA.'</td></tr>';

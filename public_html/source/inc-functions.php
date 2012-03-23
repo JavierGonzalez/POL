@@ -86,7 +86,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 				}
 
 				// NOTIFICACIONES
-				$result = mysql_query("SELECT noti_ID, visto, texto, url, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 6", $link);
+				$result = mysql_query("SELECT noti_ID, visto, texto, url, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 7", $link);
 				while($r = mysql_fetch_array($result)) {
 					$total_num += $r['num'];
 					if ($r['visto'] == 'false') { $nuevos_num += $r['num']; }
@@ -212,11 +212,11 @@ function explodear($pat, $str, $num) { $exp = explode($pat, $str); return $exp[$
 function implodear($pat, $str, $num) { $exp = implode($pat, $str); return $exp[$num]; }
 
 function boton($texto, $url=false, $confirm=false, $size=false, $pols='') {
-	if ($pols=='') {
+	if (($pols=='') OR (ECONOMIA == false)) {
 		return '<button'.($url==false?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').($url!='submit'?'window.location.href=\''.$url.'\';return false;':'').'"').($size!=false?' class="'.$size.'"':'').'>'.$texto.'</button>';
 	} else {
 		global $pol;
-		return '<span class="amarillo"><input type="submit" value="'.$texto.'"'.($pol['pols']<$pols?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').'window.location.href=\''.$url.'\';"').' class="blue large" />'.(ECONOMIA?' &nbsp; '.pols($pols).' '.MONEDA.'':'').'</span>';
+		return '<span class="amarillo"><input type="submit" value="'.$texto.'"'.($pol['pols']<$pols?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').'window.location.href=\''.$url.'\';"').' class="large blue" />'.(ECONOMIA?' &nbsp; '.pols($pols).' '.MONEDA.'':'').'</span>';
 	}
 }
 

@@ -515,7 +515,7 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 				}
 				if ($nota['nota'] >= $nota_aprobado) { $estado = ", aprobado = 'ok'"; } else { $estado = ", aprobado = 'no'"; }
 
-				$evento_examen = '<b>[EXAMEN]</b> &nbsp; <b style="color:grey;">' . $nota['nota'] . '</b> ' . crear_link($pol['nick']) . ' en el examen <a href="/examenes/' . $examen_ID . '/">' . $examen_titulo . '</a>';
+				$evento_examen = '<b>[CARGO]</b> '.crear_link($pol['nick']).' se postula como candidato a <a href="/cargos">'.$examen_titulo.'</a> <span class="gris">('.$nota['nota'].')</span>';
 
 				if ($nota['nota'] >= $nota_aprobado) { evento_chat($evento_examen); }
 				//evento_chat($evento_examen, 0, 6);
@@ -828,12 +828,12 @@ $dato_array = array(
 
 
 		// Salarios
-		$result = mysql_query("SELECT cargo_ID, salario, nombre FROM cargos", $link);
+		$result = mysql_query("SELECT cargo_ID, salario, nombre FROM cargos WHERE pais = '".PAIS."'", $link);
 		while($r = mysql_fetch_array($result)){
 			$salario = $_POST['salario_'.$r['cargo_ID']];
 			if (($salario >= 0) AND ($salario <= 1000)) {
 				if ($salario != $r['salario']) { evento_chat('<b>[GOBIERNO]</b> El salario de <img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" /><b>'.$r['nombre'].'</b> se ha cambiado de '.pols($r['salario']).' '.MONEDA.' a '.pols($salario).' '.MONEDA.' ('.crear_link($pol['nick']).', <a href="/control/gobierno/">Gobierno</a>)');  }
-				mysql_query("UPDATE cargos SET salario = '".$salario."' WHERE cargo_ID = '".$r['cargo_ID']."' LIMIT 1", $link);
+				mysql_query("UPDATE cargos SET salario = '".$salario."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1", $link);
 			}
 		}
 

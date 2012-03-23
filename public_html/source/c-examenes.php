@@ -68,28 +68,27 @@ WHERE ID = '" . $_GET['b'] . "'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 		
-		$txt_title = 'Editar exámen';
-		$txt_nav = array('/examenes'=>'Exámenes', 'Editar exámen');
+		$txt_title = 'Editar examen';
+		$txt_nav = array('/examenes'=>'Exámenes', 'Editar examen:'.$r['titulo']);
+		$txt_tab = array('/cargos'=>'Cargos');
 
-		$txt .= '<h1>Editar examen: ' . $r['titulo'] . ' (<a href="/examenes/">Ver examenes</a>)</h1>
-
-
-<hr />
-<h2>A&ntilde;adir pregunta: (mejor pocas y bien hechas, gracias!)</h2>
+		$txt .= '
+<h2>Añadir pregunta:</h2>
 <div id="edit">
-<form action="/accion.php?a=examenes&b=nueva-pregunta&ID=' . $_GET['b'] . '" method="post">
+<form action="/accion.php?a=examenes&b=nueva-pregunta&ID='.$_GET['b'].'" method="post">
 <ol>
-<li><b>Pregunta:</b> (max 200 caracteres)<b><br />&iquest;<input type="text" name="pregunta" autocomplete="off" size="50" maxlength="200" />?</b></li>
+<li><b>Pregunta:</b> (máximo 200 caracteres)<b><br />
+&iquest;<input type="text" name="pregunta" autocomplete="off" size="50" maxlength="200" />?</b></li>
 
-<li><b>Respuestas:</b> (entre 2 y 4, max 100 caracteres)<br />
-<input type="text" name="respuesta0" size="25" maxlength="100" autocomplete="off" style="border:2px solid grey;" /> <b>(Correcta)</b><br />
-<input type="text" name="respuesta1" size="25" maxlength="100" autocomplete="off" /><br />
-<input type="text" name="respuesta2" size="25" maxlength="100" autocomplete="off" /><br />
-<input type="text" name="respuesta3" size="25" maxlength="100" autocomplete="off" /></li>
+<li><b>Respuestas:</b> (entre 2 y 4 respuestas, máximo 100 caracteres)<br />
+<input type="text" name="respuesta0" size="35" maxlength="100" autocomplete="off" style="border:2px solid grey;" /> <b>(Correcta)</b><br />
+<input type="text" name="respuesta1" size="35" maxlength="100" autocomplete="off" /><br />
+<input type="text" name="respuesta2" size="35" maxlength="100" autocomplete="off" /><br />
+<input type="text" name="respuesta3" size="35" maxlength="100" autocomplete="off" /></li>
 
-<li><b>Tiempo preciso para responder:</b> <input type="text" name="tiempo" value="6" size="1" maxlength="3" style="text-align:right;" /> segundos</li>
+<li><b>Tiempo preciso para responder:</b> <input type="text" name="tiempo" value="10" size="1" maxlength="3" style="text-align:right;" /> segundos</li>
 
-<li>' . boton_cargo('Añadir pregunta', false, 34) . '</li>
+<li>'.boton_cargo('Añadir pregunta', false, 34).'</li>
 </ol>
 </form>
 
@@ -111,9 +110,9 @@ ORDER BY time DESC", $link);
 			}
 
 
-			if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR ((nucleo_acceso($vp['acceso']['examenes_profesor'])) AND ($r2['user_ID'] == $pol['user_ID']))) { $boton = boton('x', '/accion.php?a=examenes&b=eliminar-pregunta&ID=' . $r2['ID'] . '&re_ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta pregunta y sus respuestas?'); } else { $boton = ''; }
+			if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR ((nucleo_acceso($vp['acceso']['examenes_profesor'])) AND ($r2['user_ID'] == $pol['user_ID']))) { $boton = boton('x', '/accion.php?a=examenes&b=eliminar-pregunta&ID=' . $r2['ID'] . '&re_ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta pregunta y sus respuestas?', 'small red'); } else { $boton = ''; }
 
-			$txt .= '<li>' . crear_link($r2['nick']) . ': <b>&iquest;' . $r2['pregunta'] . '?</b> &nbsp; (' . $r2['tiempo'] . ' seg) &nbsp; <select name="p"><option value=""></option>' . $respuestas . '</select> ' . $boton . '</li>';
+			$txt .= '<li>¿' . $r2['pregunta'] . '? &nbsp; (' . $r2['tiempo'] . ' seg)<br /><select name="p" style="width:60px;"><option value=""></option>' . $respuestas . '</select> ' . $boton . ' ' . crear_link($r2['nick']) . '</li>';
 		}
 	
 	
@@ -171,8 +170,9 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
 
 	$txt_title = 'Mis exámenes';
 	$txt_nav = array('/examenes'=>'Exámenes', 'Mis exámenes');
+	$txt_tab = array('/cargos'=>'Cargos');
 
-	$txt .= '<h1 class="quitar"><a href="/examenes/">Examenes</a>: Mis examenes</h1>
+	$txt .= '<h1 class="quitar"><a href="/examenes">Exámenes</a>: Mis exámenes</h1>
 
 <br />
 
@@ -245,8 +245,8 @@ LIMIT 1", $link);
 			} else {
 				//insert
 				mysql_query("INSERT INTO cargos_users 
-(cargo_ID, user_ID, time, aprobado, nota) 
-VALUES ('" . $r['cargo_ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', 'no', '0.0')", $link);
+(cargo_ID, pais, user_ID, time, aprobado, nota) 
+VALUES ('" . $r['cargo_ID'] . "', '".PAIS."', '" . $pol['user_ID'] . "', '" . $date . "', 'no', '0.0')", $link);
 			}	
 
 			// Cobrar examen
@@ -258,8 +258,9 @@ VALUES ('" . $r['cargo_ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', 'n
 
 			// EMPIEZA EXAMEN
 
-			$txt_title = 'Exámen';
+			$txt_title = 'Examen';
 			$txt_nav = array('/examenes'=>'Exámenes', $r['titulo']);
+			$txt_tab = array('/cargos'=>'Cargos');
 
 			$txt .= '<h1 class="quitar">Examen: '.$r['titulo'].'</h1>
 
@@ -275,7 +276,7 @@ VALUES ('" . $r['cargo_ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', 'n
 
 
 <div id="examen">
-<form action="/accion.php?a=examenes&b=examinar&ID=' . $_GET['b'] . '" method="post" id="elexamen">
+<form action="/accion.php?a=examenes&b=examinar&ID='.$_GET['b'].'" method="post" id="elexamen">
 <ol>';
 
 
@@ -330,7 +331,7 @@ ORDER BY examen_ID DESC, RAND() LIMIT " . $r['num_preguntas'], $link);
 </tr>
 </table>
 
-<p><input type="submit" value="Terminar examen" style="height:35px;" /> &nbsp; Tienes <b><span class="seg"></span></b> segundos.</p>
+<p>'.boton('Terminar examen', 'submit', false, 'large blue').' &nbsp; Tienes <b><span class="seg"></span></b> segundos.</p>
 </form>
 ';
 
@@ -361,7 +362,7 @@ window.onload = function(){
 }
 </script>';
 
-		} else { header('Location: http://'.HOST.'/examenes/' . $r['ID'] . '/'); exit; }
+		} else { redirect('/examenes/'.$r['ID']); }
 	}
 
 
@@ -380,6 +381,7 @@ LIMIT 1", $link);
 
 		$txt_title = 'Examen de ' . $r['titulo'];
 		$txt_nav = array('/examenes'=>'Exámenes', $r['titulo']);
+		$txt_tab = array('/cargos'=>'Cargos');
 
 		$txt .= '<h1 class="quitar">' . $r['titulo'] . ' (<a href="/examenes/">Ver examenes</a>)</h1>
 <table border="0" width="100%"><tr><td valign="top" width="60%">
@@ -400,26 +402,12 @@ LIMIT 1", $link);
 
 		$margen_ultimoexamen = strtotime($r['fecha_ultimoexamen']) + $pol['config']['examen_repe'];
 		if ((!$r['fecha_ultimoexamen']) OR ($margen_ultimoexamen < time())) {
-			$txt .= '<p>' . boton('HACER EXAMEN', '/examenes/examen/' . $r['ID'] . '/', '&iquest;Est&aacute;s preparado para EXAMINARTE?\n\nSolo podr&aacute;s intentarlo UNA VEZ cada ' . duracion($pol['config']['examen_repe']) . '.\n\nSi ejerces el cargo y suspendes lo perder&aacute;s!', false, $pol['config']['pols_examen']) . '</p>';
+			$txt .= '<p>' . boton('HACER EXAMEN', '/examenes/examen/'.$r['ID'], '¿Estás preparado para EXAMINARTE?\n\nSolo podrás intentarlo UNA VEZ cada ' . duracion($pol['config']['examen_repe']) . '.\n\nSi ejerces el cargo y suspendes lo perder&aacute;s!', 'large blue', $pol['config']['pols_examen']) . '</p>';
 		} else {
 			$txt .= '<p><b class="amarillo">No puedes repetir el examen hasta dentro de ' . duracion($margen_ultimoexamen - time()) . '</b></p>';
 		}
 
-		$txt .= '</td><td valign="top" width="40%"><ol>';
-
-		$result2 = mysql_query("SELECT nota, user_ID, cargo, aprobado,
-(SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick,
-(SELECT fecha_registro FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_registro
-FROM cargos_users WHERE cargo_ID = '" . $r['cargo_ID'] . "' AND nota != '' ORDER BY nota DESC, cargo DESC, fecha_registro ASC LIMIT 100", $link);
-		while($r2 = mysql_fetch_array($result2)){ 
-			if ($r2['nick'] != '') {
-				if ($r2['cargo'] == 'true') { $cargo = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" />'; } else { $cargo = ''; }
-				if ($r2['aprobado'] == 'ok') { $sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = '<span style="margin-left:21px;"></span>'; }
-				$txt .= '<li><b class="gris">' . $sello . ' ' . $r2['nota'] . ' ' . $cargo . crear_link($r2['nick']) . '</b></li>';
-			}
-		}
-
-		$txt .= '</ol></td></tr></table>';
+		$txt .= '</td><td valign="top" width="40%"></td></tr></table>';
 
 	}
 
@@ -429,6 +417,7 @@ FROM cargos_users WHERE cargo_ID = '" . $r['cargo_ID'] . "' AND nota != '' ORDER
 
 	$txt_title = 'Exámenes';
 	$txt_nav = array('/examenes'=>'Exámenes');
+	$txt_tab = array('/cargos'=>'Cargos');
 
 	$txt .= '<h1 class="quitar">Examenes: <a href="/examenes/mis-examenes/">Mis examenes</a></h1>';
 
@@ -505,7 +494,7 @@ ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 }
 
 //THEME
-if (!$txt_title) { $txt_title = 'Examenes'; }
+if (!$txt_title) { $txt_title = 'Exámenes'; }
 $txt_menu = 'demo';
 include('theme.php');
 ?>

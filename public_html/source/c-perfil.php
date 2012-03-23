@@ -72,9 +72,6 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 		while($r2 = mysql_fetch_array($result2)) {
 			if ($r2['cargo'] == 'true') { 
 				$dimitir = ' <span class="gris"> (Cargo Ejercido)</span>';
-				if ($r['ID'] == $pol['user_ID']) {
-					$dimitir .= '</td><td><form action="/accion.php?a=cargo&b=dimitir&ID='.$r2['cargo_ID'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="Dimitir"  onclick="if (!confirm(\'&iquest;Seguro que quieres DIMITIR del cargo de ' . $r2['nombre'] . '?\')) { return false; }" /></form>';
-				}
 			}
 			$los_cargos_num++;
 			if ($r2['aprobado'] == 'ok') { 

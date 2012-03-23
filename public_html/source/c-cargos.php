@@ -35,14 +35,14 @@ ORDER BY voto_confianza DESC, nota DESC", $link);
 <input type="hidden" name="user_ID" value="'.$r2['user_ID'].'"  />'.boton('X', 'submit', '¿Seguro que quieres QUITAR el cargo a '.strtoupper($r2['nick']).'?', 'small red').'</form>':'').'</td>
 <td align="right">'.++$activos_num.'.</td>
 <td><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" style="margin-bottom:-3px;" /> <b>'.crear_link($r2['nick']).'</b></td>
-<td align="right">'.timer($r2['fecha_last']).'</td>
+<td align="right" class="gris">'.timer($r2['fecha_last']).'</td>
 </tr>';
 				} else {
 					$candidatos[] = '<tr>
-<td>'.($asignador?'<form action="/accion.php?a=cargo&b=add&ID='.$r['ID'].'" method="POST">
+<td>'.($asignador?'<form action="/accion.php?a=cargo&b=add&ID='.$r['cargo_ID'].'" method="POST">
 <input type="hidden" name="user_ID" value="'.$r2['user_ID'].'"  />'.boton('Asignar', 'submit', false, 'small blue').'</form>':'').'</td>
 <td><b>'.crear_link($r2['nick']).'</b></td>
-<td align="right">'.timer($r2['fecha_last']).'</td>
+<td align="right" class="gris">'.timer($r2['fecha_last']).'</td>
 <td align="right">'.confianza($r2['voto_confianza']).'</td>
 <td align="right"><b>'.num($r2['nota'],1).'</b></td>
 </tr>';
@@ -62,7 +62,7 @@ ORDER BY voto_confianza DESC, nota DESC", $link);
 </table>
 
 
-	</td><td>&nbsp; &nbsp;</td><td valign="top">
+	</td><td>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td valign="top">
 
 
 <table border="0">
@@ -84,18 +84,22 @@ ORDER BY voto_confianza DESC, nota DESC", $link);
 
 } else { // VER CARGOS
 	$txt_nav = array('Cargos');
-	$txt_tab = array('/cargos'=>'Examenes');
+	$txt_tab = array('/examenes'=>'Examenes');
 
 
-
+	if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) { 
+		$editar_examen = true;
+	} else {
+		$editar_examen = false;
+	}
 
 	$result = mysql_query("SELECT *, 
 (SELECT cargo FROM cargos_users WHERE user_ID = '".$pol['user_ID']."' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS cargo,
 (SELECT aprobado FROM cargos_users WHERE user_ID = '".$pol['user_ID']."' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS aprobado,
 (SELECT nota FROM cargos_users WHERE user_ID = '".$pol['user_ID']."' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS nota,
 (SELECT ID FROM ".SQL."examenes WHERE cargo_ID = cargos.cargo_ID LIMIT 1) AS examen_ID,
-(SELECT COUNT(ID) FROM cargos_users WHERE cargo_ID = cargos.cargo_ID AND pais = '".PAIS."' AND cargo = 'true') AS cargo_num,
-(SELECT COUNT(ID) FROM cargos_users WHERE cargo_ID = cargos.cargo_ID AND pais = '".PAIS."' AND cargo = 'false' AND aprobado = 'ok') AS candidatos_num
+(SELECT COUNT(ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = cargos.cargo_ID AND cargo = 'true') AS cargo_num,
+(SELECT COUNT(ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = cargos.cargo_ID AND aprobado = 'ok') AS candidatos_num
 FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 	while($r = mysql_fetch_array($result)){
 
@@ -112,8 +116,10 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 		if ($pol['pais'] == PAIS) {
 			if ($r['cargo'] == 'true') {
 				$txt_el_td .= boton('Dimitir', '/accion.php?a=cargo&b=dimitir&ID='.$r['cargo_ID'], '¿Estás seguro de querer DIMITIR?\n\n¡NUNCA LO HAGAS EN CALIENTE!', 'red');
-			} else if (($r['aprobado'] == 'ok') OR ($r['aprobado'] == 'no')) {
+			} else if ($r['aprobado'] == 'ok') {
 				$txt_el_td .= boton('Repetir examen ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue').' '.boton('Retirar candidatura', '/accion.php?a=examenes&b=retirar_examen&ID='.$r['cargo_ID'], false, 'red');
+			} else if ($r['aprobado'] == 'no') {
+				$txt_el_td .= boton('Ser candidato (examen, '.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue');
 			} else {
 				$txt_el_td .= boton('Ser candidato (examen)', '/examenes/'.$r['examen_ID'], false, 'blue');
 			}
@@ -124,6 +130,7 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 <td nowrap="nowrap">'.$asigna.'</td>
 <td align="right">'.$r['nivel'].'</td>
 '.(ECONOMIA?'<td align="right">'.pols($r['salario']).'</td>':'').'
+<td>'.($editar_examen?boton('Editar examen', '/examenes/editar/'.$r['examen_ID']):'').'</td>
 <td align="right" style="color:grey;">'.$r['cargo_ID'].'</td>
 ';
 		
@@ -139,12 +146,13 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 		$txt .= '
 <table border="0" cellspacing="3" cellpadding="0">
 <tr>
-<th>Cargos</th>
+<th></th>
 <th></th>
 <th>Con cargo</th>
 <th title="¿Quien asigna?">Asignación</th>
 <th>Nivel</th>
 '.(ECONOMIA?'<th title="Salario por dia trabajado">Salario</th>':'').'
+<th></th>
 <th>ID</th>
 </tr>';
 

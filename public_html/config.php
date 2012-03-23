@@ -41,7 +41,7 @@ switch ($host[0]) {
 'control_sancion'=>		array('cargo', ''),
 'control_grupos'=>		array('cargo', '6'),
 'examenes_decano'=>		array('cargo', '6'),
-'examenes_profesor'=>	array('cargo', ''),
+'examenes_profesor'=>	array('privado', ''),
 'crear_partido'=>		array('cargo', '6'),
 );
 		break;
@@ -63,7 +63,7 @@ switch ($host[0]) {
 'foro_borrar'=>			array('cargo', '12 13'),
 'control_gobierno'=>	array('cargo', '7 19'),
 'control_sancion'=>		array('cargo', '9'),
-'control_grupos'=>		array('nivel', '90'),
+'control_grupos'=>		array('cargo', '7 19'),
 'examenes_decano'=>		array('cargo', '35 60'),
 'examenes_profesor'=>	array('cargo', '34'),
 'crear_partido'=>		array('antiguedad','0'),

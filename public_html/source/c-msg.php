@@ -62,7 +62,7 @@ LIMIT 50", $link);
 	}
 
 	$result = mysql_query("SELECT cargo_ID, nombre,
-(SELECT COUNT(cargo_ID) FROM cargos_users WHERE cargo = 'true' AND cargo_ID = cargos.ID LIMIT 1) AS cargos_num
+(SELECT COUNT(cargo_ID) FROM cargos_users WHERE cargo = 'true' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS cargos_num
 FROM cargos
 WHERE asigna != '-1' AND pais = '".PAIS."'
 ORDER BY nivel DESC", $link);

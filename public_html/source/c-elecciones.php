@@ -360,7 +360,7 @@ ORDER BY time DESC LIMIT 1", $link);
 				// boton votar
 				$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $havotado = $r['ID']; }
-				if ((!$havotado) AND ($pol['user_ID'])) { $boton = '<br />' . boton('VOTAR', '/elecciones/votar/'); }
+				if ((!$havotado) AND ($pol['user_ID'])) { $boton = '<br />' . boton('VOTAR', '/elecciones/votar', false, 'large blue'); }
 				
 				$tabla = '<tr><td colspan="4" style="color:grey;" align="center">Elecciones en curso...' . $boton . '</td></tr>' . $tabla;
 			}
@@ -455,7 +455,7 @@ ORDER BY time DESC LIMIT 1", $link);
 				$havotado = $r['ID'];
 			}
 			if ((!$havotado) AND ($pol['user_ID'])) {
-				 $boton = '<br />' . boton('VOTAR', '/elecciones/votar/');
+				 $boton = '<br />' . boton('VOTAR', '/elecciones/votar', false, 'large blue');
 			}
 			$tabla = '<tr><td colspan="4" style="color:grey;" align="center">Elecciones en curso...' . $boton . '</td></tr>';
 

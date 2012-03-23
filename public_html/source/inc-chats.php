@@ -30,10 +30,10 @@ while ($r = mysql_fetch_array($result)) {
 }
 
 // genera array js, nombres cargos
-$result = mysql_query("SELECT ID, nombre FROM ".SQL."estudios WHERE asigna != '-1' ORDER BY nivel DESC", $link);
+$result = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND asigna != '-1' ORDER BY nivel DESC", $link);
 while ($r = mysql_fetch_array($result)) {
 	if ($array_cargos) { $array_cargos .= ', '; } 
-	$array_cargos .= $r['ID'].':"'.$r['nombre'].'"';
+	$array_cargos .= $r['cargo_ID'].':"'.$r['nombre'].'"';
 }
 
 // Muestra control de kicks.

@@ -136,16 +136,16 @@ function evento_log($accion, $dato='', $user_ID2='', $user_ID='') {
 
 function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 	global $link, $pol, $date; 
-	$result = mysql_query("SELECT nombre, nivel FROM ".SQL."estudios WHERE ID = '" . $cargo_ID . "' LIMIT 1", $link);
+	$result = mysql_query("SELECT nombre, nivel FROM cargos WHERE cargo_ID = '".$cargo_ID."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 			
-			$result2 = mysql_query("SELECT ID FROM ".SQL."estudios_users WHERE ID_estudio = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' LIMIT 1", $link);
+			$result2 = mysql_query("SELECT cargo_ID FROM cargos_users WHERE cargo_ID = '".$cargo_ID."' AND user_ID = '".$user_ID."' LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)){ $tiene_examen = true; }
 
 			if ($tiene_examen) {
-					mysql_query("UPDATE ".SQL."estudios_users SET cargo = '1', estado = 'ok' WHERE ID_estudio = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' AND estado = 'ok' LIMIT 1", $link);
+					mysql_query("UPDATE cargos_users SET cargo = 'true', aprobado = 'ok' WHERE cargo_ID = '".$cargo_ID."' AND user_ID = '".$user_ID."' AND aprobado = 'ok' LIMIT 1", $link);
 			} else {
-					mysql_query("INSERT INTO ".SQL."estudios_users (ID_estudio, user_ID, time, estado, cargo, nota) VALUES ('" . $cargo_ID . "', '".$user_ID."', '" . $date . "', 'ok', '1', '0.0')", $link);
+					mysql_query("INSERT INTO cargos_users (cargo_ID, user_ID, time, aprobado, cargo, nota) VALUES ('" . $cargo_ID . "', '".$user_ID."', '" . $date . "', 'ok', 'true', '0.0')", $link);
 			}
 
 			mysql_query("UPDATE users SET nivel = '" . $r['nivel'] . "', cargo = '" . $cargo_ID . "' WHERE ID = '".$user_ID."' AND nivel < '" . $r['nivel'] . "' LIMIT 1", $link);
@@ -161,17 +161,17 @@ function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 
 function cargo_del($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
         global $link, $pol; 
-        $result = mysql_query("SELECT nombre, nivel FROM ".SQL."estudios WHERE ID = '" . $cargo_ID . "' LIMIT 1", $link);
+        $result = mysql_query("SELECT nombre, nivel FROM cargos WHERE cargo_ID = '".$cargo_ID."' LIMIT 1", $link);
         while($r = mysql_fetch_array($result)){
-                mysql_query("UPDATE ".SQL."estudios_users SET cargo = '0' WHERE ID_estudio = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' LIMIT 1", $link);
+                mysql_query("UPDATE cargos_users SET cargo = 'false' WHERE cargo_ID = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' LIMIT 1", $link);
                 evento_log(12, $cargo_ID, $user_ID);
-                $result = mysql_query("SELECT ID_estudio, 
-(SELECT nivel FROM ".SQL."estudios WHERE ID = ".SQL."estudios_users.ID_estudio LIMIT 1) AS nivel
-FROM ".SQL."estudios_users 
-WHERE user_ID = '".$user_ID."' AND cargo = '1' 
+                $result = mysql_query("SELECT cargo_ID, 
+(SELECT nivel FROM cargos WHERE cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nivel
+FROM cargos_users 
+WHERE user_ID = '".$user_ID."' AND cargo = 'true' 
 ORDER BY nivel DESC
 LIMIT 1", $link);
-                while($r = mysql_fetch_array($result)){ $user_nivel_max = $r['nivel']; $user_nivel_sql = ", cargo = '" . $r['ID_estudio'] . "'"; }
+                while($r = mysql_fetch_array($result)){ $user_nivel_max = $r['nivel']; $user_nivel_sql = ", cargo = '" . $r['cargo_ID'] . "'"; }
                 if (!$user_nivel_max) { $user_nivel_max = 1; $user_nivel_sql = ", cargo = ''"; }
                 mysql_query("UPDATE users SET nivel = '" . $user_nivel_max . "'" . $user_nivel_sql . " WHERE ID = '".$user_ID."' LIMIT 1", $link);
 
@@ -254,7 +254,7 @@ function eliminar_ciudadano($ID) {
 			mysql_query("DELETE FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
 			mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."partidos WHERE ID_presidente = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM ".SQL."estudios_users WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."ban WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM chats WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM votos WHERE emisor_ID = '".$user_ID."' OR (tipo = 'confianza' AND item_ID = '".$user_ID."')", $link);

@@ -59,14 +59,14 @@ function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 		}
 
 		if ($pol['nivel'] > 1) {
-			$result = mysql_query("SELECT ID_estudio, 
-(SELECT nombre FROM ".SQL."estudios WHERE ".SQL."estudios.ID = ID_estudio LIMIT 1) AS nombre,
-(SELECT nivel FROM ".SQL."estudios WHERE ".SQL."estudios.ID = ID_estudio LIMIT 1) AS nivel
-FROM ".SQL."estudios_users  WHERE cargo = '1' AND user_ID = '" . $pol['user_ID'] . "'
+			$result = mysql_query("SELECT cargo_ID, 
+(SELECT nombre FROM cargos WHERE cargos.cargo_ID = cargo_ID LIMIT 1) AS nombre,
+(SELECT nivel FROM cargos WHERE cargos.cargo_ID = cargo_ID LIMIT 1) AS nivel
+FROM cargos_users  WHERE cargo = 'true' AND user_ID = '" . $pol['user_ID'] . "'
 ORDER BY nivel DESC", $link);
 			while($r = mysql_fetch_array($result)){
-				if ($edit_cargo == $r['ID_estudio']) { $selected = ' selected="selected"'; } else { $selected = ''; }
-				$select_cargos .= '<option value="' . $r['ID_estudio'] . '"' . $selected . '>' . $r['nombre'] . '</option>' . "\n";
+				if ($edit_cargo == $r['cargo_ID']) { $selected = ' selected="selected"'; } else { $selected = ''; }
+				$select_cargos .= '<option value="' . $r['cargo_ID'] . '"' . $selected . '>' . $r['nombre'] . '</option>' . "\n";
 			}
 		}
 		if ($pol['estado'] == 'extranjero') { $select_cargos = '<option value="99">Extranjero</option>'; } else { $select_cargos = '<option value="0">Ciudadano</option>' . $select_cargos; }
@@ -224,7 +224,7 @@ LIMIT 10", $link);
 
 	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo, votos,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
-(SELECT nombre FROM ".SQL."estudios WHERE ID = ".SQL."foros_msg.cargo LIMIT 1) AS encalidad,
+(SELECT nombre FROM cargos WHERE cargo_ID = ".SQL."foros_msg.cargo LIMIT 1) AS encalidad,
 (SELECT url FROM ".SQL."foros_hilos WHERE ID = ".SQL."foros_msg.hilo_ID LIMIT 1) AS hilo_url,
 (SELECT title FROM ".SQL."foros_hilos WHERE ID = ".SQL."foros_msg.hilo_ID LIMIT 1) AS hilo_titulo,
 (SELECT sub_ID FROM ".SQL."foros_hilos WHERE ID = ".SQL."foros_msg.hilo_ID LIMIT 1) AS sub_ID
@@ -268,7 +268,7 @@ LIMIT 50", $link);
 
 	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo, votos,
 (SELECT nick FROM users WHERE ID = m.user_ID LIMIT 1) AS nick,
-(SELECT nombre FROM ".SQL."estudios WHERE ID = m.cargo LIMIT 1) AS encalidad,
+(SELECT nombre FROM cargos WHERE cargo_ID = m.cargo LIMIT 1) AS encalidad,
 (SELECT url FROM ".SQL."foros_hilos WHERE ID = m.hilo_ID LIMIT 1) AS hilo_url,
 (SELECT title FROM ".SQL."foros_hilos WHERE ID = m.hilo_ID LIMIT 1) AS hilo_titulo,
 (SELECT sub_ID FROM ".SQL."foros_hilos WHERE ID = m.hilo_ID LIMIT 1) AS sub_ID,
@@ -417,7 +417,7 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysql
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
 (SELECT avatar FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS avatar,
 (SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) FROM users WHERE ID = ".SQL."foros_hilos.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
-(SELECT nombre FROM ".SQL."estudios WHERE ID = ".SQL."foros_hilos.cargo LIMIT 1) AS encalidad
+(SELECT nombre FROM cargos WHERE cargo_ID = ".SQL."foros_hilos.cargo LIMIT 1) AS encalidad
 FROM ".SQL."foros_hilos
 WHERE estado = 'borrado'
 ORDER BY time_last DESC", $link);
@@ -435,7 +435,7 @@ $txt .= '<tr><td><br /></td></tr><tr class="azul"><td colspan="4"><h2 style="col
 (SELECT nick FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
 (SELECT avatar FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS avatar,
 (SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) FROM users WHERE ID = ".SQL."foros_msg.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
-(SELECT nombre FROM ".SQL."estudios WHERE ID = ".SQL."foros_msg.cargo LIMIT 1) AS encalidad
+(SELECT nombre FROM cargos WHERE cargo_ID = ".SQL."foros_msg.cargo LIMIT 1) AS encalidad
 FROM ".SQL."foros_msg
 WHERE estado = 'borrado'
 ORDER BY time2 DESC", $link);

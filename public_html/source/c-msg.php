@@ -22,7 +22,7 @@ if ($_GET['a'] == 'mensajes-enviados') {
 	$result = mysql_query("SELECT 
 ID, envia_ID, recibe_ID, time, text,
 (SELECT nick FROM users WHERE users.ID = recibe_ID LIMIT 1) AS nick_envia,
-(SELECT nombre FROM ".SQL."estudios WHERE ".SQL."estudios.ID = cargo LIMIT 1) AS cargo
+(SELECT nombre FROM cargos WHERE cargos.cargo_ID = cargo LIMIT 1) AS cargo
 FROM ".SQL_MENSAJES."
 WHERE envia_ID = '" . $pol['user_ID'] . "'
 ORDER BY time DESC
@@ -61,27 +61,27 @@ LIMIT 50", $link);
 		}
 	}
 
-	$result = mysql_query("SELECT ID, nombre,
-(SELECT COUNT(ID) FROM ".SQL."estudios_users WHERE cargo = '1' AND ID_estudio = ".SQL."estudios.ID LIMIT 1) AS cargos_num
-FROM ".SQL."estudios
-WHERE asigna != '-1'
+	$result = mysql_query("SELECT cargo_ID, nombre,
+(SELECT COUNT(cargo_ID) FROM cargos_users WHERE cargo = 'true' AND cargo_ID = cargos.ID LIMIT 1) AS cargos_num
+FROM cargos
+WHERE asigna != '-1' AND pais = '".PAIS."'
 ORDER BY nivel DESC", $link);
 	while($r = mysql_fetch_array($result)){
 		if ($r['cargos_num'] > 0) {
-			$select_todoscargos .= '<option value="' . $r['ID'] . '"'.($pre_cargo==$r['ID']?' selected="selected"':'').'>' . $r['cargos_num'] . ' &nbsp; ' . $r['nombre'] . '</option>';
+			$select_todoscargos .= '<option value="' . $r['cargo_ID'] . '"'.($pre_cargo==$r['cargo_ID']?' selected="selected"':'').'>' . $r['cargos_num'] . ' &nbsp; ' . $r['nombre'] . '</option>';
 		}
 	}
 	$select_todoscargos .= '<option value="SC"'.($pre_cargo=='SC'?' selected="selected"':'').'>&nbsp; &nbsp; Supervisores del Censo</option>';
 
 	//tus cargos
-	$result = mysql_query("SELECT ID_estudio, 
-(SELECT nombre FROM ".SQL."estudios WHERE ".SQL."estudios.ID = ID_estudio LIMIT 1) AS nombre
-FROM ".SQL."estudios_users 
-WHERE cargo = '1'
+	$result = mysql_query("SELECT cargo_ID, 
+(SELECT nombre FROM cargos WHERE cargos.ID = cargo_ID LIMIT 1) AS nombre
+FROM cargos_users 
+WHERE cargo = 'true'
 AND user_ID = '" . $pol['user_ID'] . "'
 ORDER BY nombre ASC", $link);
 	while($r = mysql_fetch_array($result)){
-		$select_cargos .= '<option value="' . $r['ID_estudio'] . '">' . $r['nombre'] . '</option>';
+		$select_cargos .= '<option value="' . $r['cargo_ID'] . '">' . $r['nombre'] . '</option>';
 	}
 
 	$result = mysql_query("SELECT * FROM grupos WHERE pais = '".PAIS."' ORDER BY num DESC", $link);
@@ -177,7 +177,7 @@ function click_form(tipo) {
 	$result = mysql_query("SELECT 
 ID, envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo,
 (SELECT nick FROM users WHERE users.ID = envia_ID LIMIT 1) AS nick_envia,
-(SELECT nombre FROM ".SQL."estudios WHERE ".SQL."estudios.ID = cargo LIMIT 1) AS cargo_nom
+(SELECT nombre FROM cargos WHERE cargos.cargo_ID = cargo LIMIT 1) AS cargo_nom
 FROM ".SQL_MENSAJES."
 WHERE recibe_ID = '" . $pol['user_ID'] . "'
 ORDER BY leido ASC, time DESC

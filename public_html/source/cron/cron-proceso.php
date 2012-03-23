@@ -47,13 +47,13 @@ while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor
 
 // EXPIRACION DE EXAMENES
 $examenes_exp_num = 0;
-$result = mysql_query("SELECT ID, time, cargo 
-FROM ".SQL."estudios_users 
-WHERE cargo = '0' AND time < '".date('Y-m-d 20:00:00', time() - $pol['config']['examenes_exp'])."'
+$result = mysql_query("SELECT cargo_ID, time, cargo 
+FROM cargos_users 
+WHERE pais = '".PAIS."' AND cargo = 'false' AND time < '".date('Y-m-d 20:00:00', time() - $pol['config']['examenes_exp'])."'
 ORDER BY time DESC", $link);
 while($r = mysql_fetch_array($result)){
 	$examenes_exp_num++;
-	mysql_query("DELETE FROM ".SQL."estudios_users WHERE ID = '".$r['ID']."'", $link);
+	mysql_query("DELETE FROM cargos_users WHERE cargo_ID = '".$r['cargo_ID']."'", $link);
 }
 //evento_chat('<b>[PROCESO]</b> Expirados <b>'.$examenes_exp_num.'</b> examenes.');
 
@@ -82,9 +82,9 @@ mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE time < '".$margen_30dias."'",
 
 // SALARIOS
 $result = mysql_query("SELECT user_ID,
-(SELECT salario FROM ".SQL."estudios WHERE  ID = ".SQL."estudios_users.ID_estudio AND asigna != '-1' LIMIT 1) AS salario
-FROM ".SQL."estudios_users
-WHERE cargo = '1'
+(SELECT salario FROM cargos WHERE cargo_ID = cargos_users.cargo_ID AND asigna != '-1' LIMIT 1) AS salario
+FROM cargos_users
+WHERE cargo = 'true'
 ORDER BY user_ID ASC", $link);
 while($r = mysql_fetch_array($result)){ if ($salarios[$r['user_ID']] < $r['salario']) { $salarios[$r['user_ID']] = $r['salario']; } }
 $result = mysql_query("SELECT pols FROM ".SQL."cuentas WHERE ID = 1 LIMIT 1", $link);
@@ -315,7 +315,7 @@ if ($pol['config']['impuestos_empresa'] > 0) {
 
 
 // NOTAS MEDIA
-$result = mysql_query("SELECT user_ID, AVG(nota) AS media FROM ".SQL."estudios_users GROUP BY user_ID", $link);
+$result = mysql_query("SELECT user_ID, AVG(nota) AS media FROM cargos_users GROUP BY user_ID", $link);
 while($r = mysql_fetch_array($result)){ 
 	if ($r['media']) { mysql_query("UPDATE users SET nota = '".$r['media']."' WHERE ID = '".round($r['user_ID'], 1)."' LIMIT 1", $link); }
 }
@@ -346,7 +346,7 @@ mysql_query("DELETE FROM ".SQL."foros_hilos WHERE estado = 'borrado' AND time_la
 mysql_query("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '".$margen_10dias."'", $link);
 
 // ELIMINAR examenes antiguos
-//mysql_query("DELETE FROM ".SQL."estudios_users WHERE cargo = '0' AND time < '".$margen_60dias."'", $link);
+//mysql_query("DELETE FROM cargos_users WHERE cargo = 'false' AND time < '".$margen_60dias."'", $link);
 
 
 

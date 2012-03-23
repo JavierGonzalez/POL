@@ -6,7 +6,7 @@ function dato_nombre($dato, $tipo) {
 	switch ($tipo) {
 		case 'documento': $table = 'docs'; $result = 'url'; break;
 		case 'partido': $table = SQL.'partidos'; $result = 'siglas'; break;
-		case 'cargo': $table = SQL.'estudios'; $result = 'nombre'; break;
+		case 'cargo': $table = 'cargos'; $result = 'nombre'; break;
 		case 'kick': $table = SQL.'ban'; $result = 'expire'; break;
 		case 'empresa': $table = SQL.'empresas'; $result = 'nombre'; break;
 	}

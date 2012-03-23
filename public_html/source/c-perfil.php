@@ -63,26 +63,26 @@ Votos emitidos: <b'.($num_votos <= VOTO_CONFIANZA_MAX?'':' style="color:red;"').
 		$txt .= '</td></tr>'.$extras.'</table><div id="info">';
 
 		$cargos_num = 0;
-		$estudios_num = 0;
-		$result2 = mysql_query("SELECT ID_estudio, cargo, nota, estado, time,
-(SELECT titulo FROM ".SQL."examenes WHERE cargo_ID = ".SQL."estudios_users.ID_estudio LIMIT 1) AS nombre
-FROM ".SQL."estudios_users
+		$los_cargos_num = 0;
+		$result2 = mysql_query("SELECT cargo_ID, cargo, nota, aprobado, time,
+(SELECT titulo FROM ".SQL."examenes WHERE cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre
+FROM cargos_users
 WHERE user_ID = '" . $user_ID . "'
-ORDER BY cargo DESC, estado ASC, nota DESC", $link);
+ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 		while($r2 = mysql_fetch_array($result2)) {
-			if ($r2['cargo'] == 1) { 
+			if ($r2['cargo'] == 'true') { 
 				$dimitir = ' <span class="gris"> (Cargo Ejercido)</span>';
 				if ($r['ID'] == $pol['user_ID']) {
-					$dimitir .= '</td><td><form action="/accion.php?a=cargo&b=dimitir&ID='.$r2['ID_estudio'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="Dimitir"  onclick="if (!confirm(\'&iquest;Seguro que quieres DIMITIR del cargo de ' . $r2['nombre'] . '?\')) { return false; }" /></form>';
+					$dimitir .= '</td><td><form action="/accion.php?a=cargo&b=dimitir&ID='.$r2['cargo_ID'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="Dimitir"  onclick="if (!confirm(\'&iquest;Seguro que quieres DIMITIR del cargo de ' . $r2['nombre'] . '?\')) { return false; }" /></form>';
 				}
 			}
-			$estudios_num++;
-			if ($r2['estado'] == 'ok') { 
+			$los_cargos_num++;
+			if ($r2['aprobado'] == 'ok') { 
 				$sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" /> '; 
 			} else { $sello = ''; }
 
-			if ($r2['ID_estudio'] > 0) { $cargo_img = '<img src="'.IMG.'cargos/' . $r2['ID_estudio'] . '.gif" border="0" />'; } else { $cargo_img = ''; }
-			$estudios .= '<tr>
+			if ($r2['cargo_ID'] > 0) { $cargo_img = '<img src="'.IMG.'cargos/' . $r2['cargo_ID'] . '.gif" border="0" />'; } else { $cargo_img = ''; }
+			$los_cargos .= '<tr>
 <td>' . $sello . '</td>
 <td align="right" class="gris">' . $r2['nota'] . '</td>
 <td>' . $cargo_img . '</td>
@@ -94,7 +94,7 @@ ORDER BY cargo DESC, estado ASC, nota DESC", $link);
 			$dimitir = '';
 		}
 
-		$estudios = '<table border="0" cellpadding="0" cellspacing="4">' . $estudios . '</table>';
+		$los_cargos = '<table border="0" cellpadding="0" cellspacing="4">' . $los_cargos . '</table>';
 
 		if ($user_ID == $pol['user_ID']) { //es USER
 
@@ -341,8 +341,8 @@ while($r2 = mysql_fetch_array($result2)){
 }
 $txt .= '</table>
 
-<p style="margin-bottom:0px;">Cargos y Examenes: <b>' . $estudios_num . '</b> (<a href="/examenes/">Ver examenes</a>)</p>
-'.$estudios.'<br />';
+<p style="margin-bottom:0px;">Cargos y Examenes: <b>' . $los_cargos_num . '</b> (<a href="/examenes/">Ver examenes</a>)</p>
+'.$los_cargos.'<br />';
 
 if ($r['grupos'] != '') {
 	$txt .= '<b>Grupos</b>:<ul>';

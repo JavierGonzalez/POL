@@ -10,7 +10,7 @@ Header unset Last-Modified
 redirect 301 /codigo https://github.com/JavierGonzalez/VirtualPol/
 redirect 301 /license http://www.gnu.org/licenses/gpl.html
 redirect 301 /contenido http://creativecommons.org/licenses/by-sa/3.0/deed.es_ES
-redirect 301 /video http://www.youtube.com/watch?v=WZhkO5E2nL0
+redirect 301 /video http://www.youtube.com/watch?v=fbSZf5hToQc
 
 RewriteEngine on 
 RewriteRule ^(TOS|legal|manual|documentacion|donaciones|donar|desarrollo|presentacion)$ /pages.php?a=$1 [L]

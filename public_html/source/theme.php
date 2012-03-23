@@ -50,7 +50,7 @@ if (isset($_GET['bg'])) {
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '<?=IMG?>';
-p_scroll = true;
+p_scroll = false;
 </script>
 
 <?=$txt_header?>
@@ -72,7 +72,7 @@ p_scroll = true;
 					<?=(isset($pol['user_ID'])?'<li><a href="/foro/mis-respuestas">Tu actividad</a></li>':'')?>
 				</ul>
 			</li>
-			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0">Voz</a><ul><li><a href="/info/voz">Configurar <em>Mumble</em></a></li></ul></li>':'')?>
+			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/15M/Virtualpol/?version=1.2.0">Voz</a><ul><li><a href="/info/voz">Configurar <em>Mumble</em></a></li></ul></li>':'')?>
 			<li><a href="/msg">Mensajes Privados</a></li>
 			<li><a href="#" style="cursor:default;">Redes sociales</a>
 				<ul>
@@ -121,8 +121,8 @@ p_scroll = true;
 				</ul>
 			</li>
 			<?=(ASAMBLEA?'':'<li><a href="/partidos">Partidos <span class="md">'.$pol['config']['info_partidos'].'</span></a></li>')?>
-			<li><a href="/grupos">Grupos</a></li>
 			<li><a href="/cargos">Cargos</a></li>
+			<li><a href="/grupos">Grupos</a></li>
 		</ul>
 	</li>
 
@@ -234,6 +234,8 @@ if (ASAMBLEA) {
 	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.$_SERVER['HTTP_HOST'].'" data-text="Participa en Asamblea Virtual 15M! http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="15M">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>
 
+<td><g:plusone annotation="none" href="http://'.HOST.'"></g:plusone></td>
+
 <td><div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -247,7 +249,10 @@ if (ASAMBLEA) {
 
 } else {
 	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.$_SERVER['HTTP_HOST'].'" data-text="VirtualPol, la primera red democrática virtual http://www.virtualpol.com/video" data-lang="es" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">Twittear</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>';
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>
+
+<td><g:plusone annotation="none" href="http://'.HOST.'"></g:plusone></td>
+';
 }
 
 echo '</tr></table>';
@@ -267,6 +272,12 @@ if (!ASAMBLEA) {
 <div>
 
 <div id="pnick" class="azul" style="display:none;"></div>
+
+
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+/* GA */
+{lang: 'es'}
+</script>
 
 <script type="text/javascript">
 /* GA */

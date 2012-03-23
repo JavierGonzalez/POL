@@ -424,14 +424,14 @@ ORDER BY time DESC LIMIT 1", $link);
 					// ejerce diputado?
 					$cargo = '';
 					$nestado = '';
-					$result = mysql_query("SELECT ID, estado, (SELECT cargo FROM ".SQL."estudios_users WHERE user_ID = users.ID AND ID_estudio = '6' LIMIT 1) AS cargo FROM users WHERE nick = '" . $t[2] . "' AND pais = '".PAIS."' LIMIT 1", $link);
+					$result = mysql_query("SELECT ID, estado, (SELECT cargo FROM cargos_users WHERE user_ID = users.ID AND cargo_ID = '6' LIMIT 1) AS cargo FROM users WHERE nick = '" . $t[2] . "' AND pais = '".PAIS."' LIMIT 1", $link);
 					while($r = mysql_fetch_array($result)){ 
 						if ($r['estado'] == 'ciudadano') { $cargo = $r['cargo']; } 
 						$nestado = $r['estado']; 
 					}
 
 					if ($t[1]) {
-						if ($cargo == '1') {
+						if ($cargo == 'true') {
 							$tabla .= '<tr><td align="right">'.(ASAMBLEA?'':crear_link($t[1], 'partido')).'</td><td><img src="'.IMG.'cargos/6.gif" alt="Diputado" title="Diputado" border="0" width="16" height="16" /> <b>' . crear_link($t[2], 'nick', $nestado) . '</b></td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';
 						} else {
 							$tabla .= '<tr><td align="right">'.(ASAMBLEA?'':crear_link($t[1], 'partido')).'</td><td><img src="'.IMG.'cargos/0.gif" border="0" width="16" height="16" /> ' . crear_link($t[2], 'nick', $nestado) . '</td><td align="right"><b>' . $t[0] . '</b></td><td align="right"></td></tr>';

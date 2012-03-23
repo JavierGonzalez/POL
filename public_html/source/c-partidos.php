@@ -35,7 +35,7 @@ ORDER BY ID ASC", $link);
 			$ciudadanos_num = 0;
 			$result2 = mysql_query("SELECT ID, nick, fecha_last, voto_confianza,
 (SELECT user_ID FROM ".SQL."partidos_listas WHERE ID_partido = '" . $r['ID'] . "' AND user_ID = users.ID LIMIT 1) AS en_lista, 
-(SELECT user_ID FROM ".SQL."estudios_users WHERE ID_estudio = '6' AND user_ID = users.ID AND estado = 'ok' LIMIT 1) AS es_diputado
+(SELECT user_ID FROM cargos_users WHERE cargo_ID = '6' AND user_ID = users.ID AND aprobado = 'ok' LIMIT 1) AS es_diputado
 FROM users 
 WHERE estado != 'validar' AND estado != 'desarrollador' AND partido_afiliado = '" . $r['ID'] . "' AND pais = '".PAIS."'
 ORDER BY nick DESC", $link);

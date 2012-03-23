@@ -5,7 +5,7 @@
 pnick = '';
 whois_cache = new Array();
 chat_msg_ID = new Array();
-
+p_st = '';
 
 // ON LOAD
 $(document).ready(function(){
@@ -29,7 +29,6 @@ $(document).ready(function(){
 
 	// Efecto scroll horizontal de Notificaciones.
 	if (p_scroll == true) { 
-		p_st = '';
 		p_r = false;
 		pl = 0;
 		if (Math.floor(Math.random()*2) == 1) { p_r = true; } // Deslizado izquierda/derecha aleatorio.
@@ -140,7 +139,7 @@ function hace(cuando, ts, num, pre) {
 		if ((nm < num) && ((tiempo_cont >= (sec*2)) || (n == 4))) {
 			period = Math.floor(tiempo_cont / sec);
 			if (n == 4) { 
-				duracion += "pocos segundos";
+				duracion += "Pocos segundos";
 			} else {
 				duracion += period + " " + periods_txt[n];
 			}

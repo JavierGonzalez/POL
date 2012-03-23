@@ -188,13 +188,13 @@ ORDER BY ID ASC LIMIT 1", $link);
 		$elec_next = '_parl';
 
 		// quita cargos de todo el Poder Ejecutivo
-		$result2 = mysql_query("SELECT ID_estudio, user_ID FROM ".SQL."estudios_users WHERE cargo = '1' AND (ID_estudio = '7' OR ID_estudio = '16' OR ID_estudio = '19' OR ID_estudio = '23' OR ID_estudio = '27' OR ID_estudio = '26')", $link);
+		$result2 = mysql_query("SELECT cargo_ID, user_ID FROM cargos_users WHERE cargo = 'true' AND (cargo_ID IN (7, 16, 19, 23, 27, 26)", $link);
 		while($row2 = mysql_fetch_array($result2)){
-			cargo_del($row2['ID_estudio'], $row2['user_ID'], true, true);
+			cargo_del($row2['cargo_ID'], $row2['user_ID'], true, true);
 		}
 
 		// añade NUEVO presidente
-		mysql_query("INSERT INTO ".SQL."estudios_users (ID_estudio, user_ID, time, estado, cargo, nota) VALUES ('7', '" . $presidente_electo_ID . "', '" . date('Y-m-d 20:00:00') . "', 'ok', '1', '')", $link);
+		mysql_query("INSERT INTO cargos_users (cargo_ID, user_ID, time, aprobado, cargo, nota) VALUES ('7', '" . $presidente_electo_ID . "', '" . date('Y-m-d 20:00:00') . "', 'ok', 'true', '')", $link);
 		cargo_add(7, $presidente_electo_ID, true, true);
 
 		evento_chat('<b>[ELECCIONES]</b> <a href="/elecciones/"><b>Elecciones Presidenciales FINALIZADAS</b> VIVA EL PRESIDENTE <b>' . crear_link($presidente_electo) . '</b>!!</a>');
@@ -207,7 +207,7 @@ ORDER BY ID ASC LIMIT 1", $link);
 
 
 		// QUITA DIPUTADOS
-		$r2 = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE ID_estudio = '6' AND cargo = '1'", $link);
+		$r2 = mysql_query("SELECT user_ID FROM cargos_users WHERE cargo_ID = '6' AND cargo = 'true'", $link);
 		while($row2 = mysql_fetch_array($r2)){
 			cargo_del(6, $row2['user_ID'], true, true);
 		}

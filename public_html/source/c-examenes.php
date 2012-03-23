@@ -1,20 +1,11 @@
 <?php
 include('inc-login.php');
 /*
-pol_examenes 		(ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas)
-pol_examenes_preg 	(ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo)
-pol_estudios_users 	(ID, ID_estudio, user_ID, time, estado, cargo, nota)
-
 /examenes/editar/ID/		- Config, Ver, editar, borrar y añadir preguntas
 /examenes/crear/			- Crear nuevo
 /examenes/examen/ID/		- Hacer Examen
 /examenes/ID/				- Ver Examen
 /examenes/					- Lista
-
-34 Profesor - Añadir editar borrar preguntas
-35 Profesor Decano - Añadir examenes, editar info examenes
-
-$pol['config']['examen_repe']
 */
 
 
@@ -108,7 +99,7 @@ LIMIT 1", $link);
 <ol id="lista">';
 		// ".SQL."examenes_preg 	(ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo)
 		$result2 = mysql_query("SELECT ID, examen_ID, user_ID, pregunta, respuestas, tiempo,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."examenes_preg.user_ID LIMIT 1) AS nick
+(SELECT nick FROM users WHERE ID = ".SQL."examenes_preg.user_ID LIMIT 1) AS nick
 FROM ".SQL."examenes_preg
 WHERE examen_ID = '" . $_GET['b'] . "'
 ORDER BY time DESC", $link);
@@ -196,22 +187,22 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
 // ".SQL."examenes 		(ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas)
 // ".SQL."examenes_preg 	(ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo) 
 
-	$result = mysql_query("SELECT ID, ID_estudio, user_ID, time, estado, cargo, nota, 
-(SELECT titulo FROM ".SQL."examenes WHERE cargo_ID = ".SQL."estudios_users.ID_estudio LIMIT 1) AS nombre_examen,
-(SELECT ID FROM ".SQL."examenes WHERE cargo_ID = ".SQL."estudios_users.ID_estudio LIMIT 1) AS examen_ID
-FROM ".SQL."estudios_users
+	$result = mysql_query("SELECT cargo_ID, user_ID, time, aprobado, cargo, nota, 
+(SELECT titulo FROM ".SQL."examenes WHERE cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre_examen,
+(SELECT ID FROM ".SQL."examenes WHERE cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_ID
+FROM cargos_users
 WHERE user_ID = '" . $pol['user_ID'] . "'
-ORDER BY estado ASC, nota DESC", $link);
+ORDER BY aprobado ASC, nota DESC", $link);
 	while($r = mysql_fetch_array($result)){
-		if ($r['estado'] == 'ok') { $sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = ''; }
-		if ($r['cargo'] == 1) { $cargo = '(Cargo ejercido)'; } else { $cargo = ''; }
-		if (($r['ID_estudio'] <= 0) AND (time()-strtotime($r['time']) > $pol['config']['examen_repe']*6)) {
-			$caducar_examen = ' <form action="/accion.php?a=examenes&b=caducar_examen&ID='.$r['ID'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="X"  onclick="if (!confirm(\'&iquest;Seguro que quieres que CADUQUE el examen de ' . $r['nombre_examen'] . '?\')) { return false; }"/></form>';
+		if ($r['aprobado'] == 'ok') { $sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = ''; }
+		if ($r['cargo'] == 'true') { $cargo = '(Cargo ejercido)'; } else { $cargo = ''; }
+		if (($r['cargo_ID'] <= 0) AND (time()-strtotime($r['time']) > $pol['config']['examen_repe']*6)) {
+			$caducar_examen = ' <form action="/accion.php?a=examenes&b=caducar_examen&ID='.$r['cargo_ID'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="X"  onclick="if (!confirm(\'&iquest;Seguro que quieres que CADUQUE el examen de ' . $r['nombre_examen'] . '?\')) { return false; }"/></form>';
 		}
 		else {
 			$caducar_examen = '';
 		}
-		$txt .= '<tr><td>' . $sello . '</td><td align="right"><b style="color:grey;">' . $r['nota'] . '</b></td><td><a href="/examenes/' . $r['examen_ID'] . '/"><b>' . $r['nombre_examen'] . '</b></a></td><td>' . $cargo . '</td><td align="right"><acronym title="' . $r['time'] . '">' . duracion(time() - strtotime($r['time'])) .  '</acronym></td><td><b>'. $caducar_examen .'</b></td></tr>';
+		$txt .= '<tr><td>' . $sello . '</td><td align="right"><b style="color:grey;">' . $r['nota'] . '</b></td><td><a href="/examenes/' . $r['examen_ID'] . '"><b>' . $r['nombre_examen'] . '</b></a></td><td>' . $cargo . '</td><td align="right"><acronym title="' . $r['time'] . '">' . duracion(time() - strtotime($r['time'])) .  '</acronym></td><td><b>'. $caducar_examen .'</b></td></tr>';
 	}
 
 	$txt .= '</table><p style="color:red;">Tiempo de expiraci&oacute;n: <b>'.duracion($pol['config']['examenes_exp']).'</b></p>';
@@ -235,7 +226,7 @@ ORDER BY estado ASC, nota DESC", $link);
 														// HACER EXAMEN
 
 	$result = mysql_query("SELECT ID, titulo, user_ID, time, cargo_ID, nota, num_preguntas,
-(SELECT time FROM ".SQL."estudios_users WHERE ID_estudio = ".SQL."examenes.cargo_ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS fecha_ultimoexamen,
+(SELECT time FROM cargos_users WHERE cargo_ID = ".SQL."examenes.cargo_ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS fecha_ultimoexamen,
 (SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_preguntas_especificas,
 (SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = 0 LIMIT 1) AS num_preguntas_generales
 FROM ".SQL."examenes
@@ -250,12 +241,12 @@ LIMIT 1", $link);
 			// marca examen como hecho	
 			if ($r['fecha_ultimoexamen']) {
 				//update 
-				mysql_query("UPDATE ".SQL."estudios_users SET time = '" . $date . "', nota = 0.0, estado = 'examen' WHERE ID_estudio = '" . $r['cargo_ID'] . "' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+				mysql_query("UPDATE cargos_users SET time = '" . $date . "', nota = 0.0, aprobado = 'no' WHERE cargo_ID = '" . $r['cargo_ID'] . "' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 			} else {
 				//insert
-				mysql_query("INSERT INTO ".SQL."estudios_users 
-(ID_estudio, user_ID, time, estado, nota) 
-VALUES ('" . $r['cargo_ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', 'examen', '0.0')", $link);
+				mysql_query("INSERT INTO cargos_users 
+(cargo_ID, user_ID, time, aprobado, nota) 
+VALUES ('" . $r['cargo_ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', 'no', '0.0')", $link);
 			}	
 
 			// Cobrar examen
@@ -381,7 +372,7 @@ window.onload = function(){
 
 	$result = mysql_query("SELECT ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas,
 (SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_preguntas_especificas,
-(SELECT time FROM ".SQL."estudios_users WHERE ID_estudio = ".SQL."examenes.cargo_ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS fecha_ultimoexamen
+(SELECT time FROM cargos_users WHERE cargo_ID = ".SQL."examenes.cargo_ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS fecha_ultimoexamen
 FROM ".SQL."examenes
 WHERE ID = '" . $_GET['a'] . "'
 LIMIT 1", $link);
@@ -402,7 +393,7 @@ LIMIT 1", $link);
 		if ($r['cargo_ID'] == 0) {
 			$txt .= '<p>Examen sin vinculaci&oacute;n con cargo.</p>';
 		} else {
-			$result2 = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '" . $r['cargo_ID'] . "' LIMIT 1", $link);
+			$result2 = mysql_query("SELECT nombre FROM cargos WHERE cargo_ID = '" . $r['cargo_ID'] . "' LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)){ $txt .= '<p>Examen vinculado al cargo: <a href="/cargos/">' . $r2['nombre'] . '</a>.</p>'; }
 			
 		}
@@ -416,14 +407,14 @@ LIMIT 1", $link);
 
 		$txt .= '</td><td valign="top" width="40%"><ol>';
 
-		$result2 = mysql_query("SELECT nota, user_ID, cargo, estado,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick,
-(SELECT fecha_registro FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS fecha_registro
-FROM ".SQL."estudios_users WHERE ID_estudio = '" . $r['cargo_ID'] . "' AND nota != '' ORDER BY nota DESC, cargo DESC, fecha_registro ASC LIMIT 100", $link);
+		$result2 = mysql_query("SELECT nota, user_ID, cargo, aprobado,
+(SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick,
+(SELECT fecha_registro FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_registro
+FROM cargos_users WHERE cargo_ID = '" . $r['cargo_ID'] . "' AND nota != '' ORDER BY nota DESC, cargo DESC, fecha_registro ASC LIMIT 100", $link);
 		while($r2 = mysql_fetch_array($result2)){ 
 			if ($r2['nick'] != '') {
-				if ($r2['cargo'] == 1) { $cargo = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" />'; } else { $cargo = ''; }
-				if ($r2['estado'] == 'ok') { $sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = '<span style="margin-left:21px;"></span>'; }
+				if ($r2['cargo'] == 'true') { $cargo = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" />'; } else { $cargo = ''; }
+				if ($r2['aprobado'] == 'ok') { $sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = '<span style="margin-left:21px;"></span>'; }
 				$txt .= '<li><b class="gris">' . $sello . ' ' . $r2['nota'] . ' ' . $cargo . crear_link($r2['nick']) . '</b></li>';
 			}
 		}
@@ -466,15 +457,15 @@ FROM ".SQL."estudios_users WHERE ID_estudio = '" . $r['cargo_ID'] . "' AND nota 
 
 	$result = mysql_query("SELECT ID, titulo, user_ID, time, cargo_ID, nota, num_preguntas,
 (SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_preguntas_especificas,
-(SELECT COUNT(*) FROM ".SQL."estudios_users WHERE ID_estudio = ".SQL."examenes.cargo_ID AND nota != '') AS examinados,
-(SELECT COUNT(*) FROM ".SQL."estudios_users WHERE ID_estudio = ".SQL."examenes.cargo_ID AND nota != '' AND estado = 'ok') AS aprobados
+(SELECT COUNT(*) FROM cargos_users WHERE cargo_ID = ".SQL."examenes.cargo_ID AND nota != '') AS examinados,
+(SELECT COUNT(*) FROM cargos_users WHERE cargo_ID = ".SQL."examenes.cargo_ID AND nota != '' AND aprobado = 'ok') AS aprobados
 FROM ".SQL."examenes
 WHERE ID != 0
 ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 	while($r = mysql_fetch_array($result)){
 
 		if (substr($r['cargo_ID'], 0, 1) != '-') {
-			$result2 = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '" . $r['cargo_ID'] . "' LIMIT 1", $link);
+			$result2 = mysql_query("SELECT nombre FROM cargos WHERE cargo_ID = '" . $r['cargo_ID'] . "' LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)){ $cargo = '<img src="'.IMG.'cargos/' . $r['cargo_ID'] . '.gif" title="' . $r2['nombre'] . '" />'; }
 		} else { $cargo = ''; }
 

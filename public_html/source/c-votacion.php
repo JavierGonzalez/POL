@@ -129,8 +129,8 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 <select name="cargo">';
 
 	$sel['cargo'][explodear('|', $edit['ejecutar'], 0)] = ' selected="selected"';
-	$result = mysql_query("SELECT ID, nombre FROM ".SQL."estudios ORDER BY nivel DESC", $link);
-	while($r = mysql_fetch_array($result)) { $txt .= '<option value="'.$r['ID'].'"'.$sel['cargo'][$r['ID']].'>'.$r['nombre'].'</option>'; }
+	$result = mysql_query("SELECT cargo_ID, nombre FROM cargos ORDER BY nivel DESC", $link);
+	while($r = mysql_fetch_array($result)) { $txt .= '<option value="'.$r['cargo_ID'].'"'.$sel['cargo'][$r['cargo_ID']].'>'.$r['nombre'].'</option>'; }
 
 	$txt .= '
 </select><br />
@@ -313,7 +313,7 @@ WHERE ID = '".$_GET['a']."' AND pais = '".PAIS."'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
 
-		if (!nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver'])) { 
+		if ((!nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver'])) AND ($r['estado'] != 'borrador')) { 
 			$txt .= '<p style="color:red;">Esta votación es privada. No tienes acceso para ver su contenido o resultado.</p>'; 
 			break; 
 		}
@@ -481,10 +481,12 @@ LIMIT 1", $link);
 <td nowrap="nowrap"><b style="font-size:20px;color:#777;">¡Difúnde esta votación!</b> &nbsp;</td>
 
 <td width="140" height="35">
-<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion/'.$r['ID'].'" data-text="'.($r['estado']=='ok'?'VOTACIÓN':'RESULTADO').': '.substr($r['pregunta'], 0, 83).'" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="15M">Twittear</a>
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.HOST.'/votacion/'.$r['ID'].'" data-text="'.($r['estado']=='ok'?'VOTACIÓN':'RESULTADO').': '.substr($r['pregunta'], 0, 83).'" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="15M">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </td>
 
+
+<td width="50"><g:plusone annotation="none" href="http://'.HOST.'/votacion/'.$r['ID'].'"></g:plusone></td>
 
 <td>'.boton('Donar', 'https://virtualpol.com/donaciones', false, 'pill orange').'</td>
 
@@ -496,7 +498,7 @@ LIMIT 1", $link);
   js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, \'script\', \'facebook-jssdk\'));</script>
-<div style="display:inline;" class="fb-like" data-href="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion/'.$r['ID'].'" data-send="true" data-layout="button_count" data-width="300" data-show-faces="false" data-action="recommend" data-font="verdana"></div></td>
+<div style="display:inline;" class="fb-like" data-href=http://'.HOST.'/votacion/'.$r['ID'].'" data-send="true" data-layout="button_count" data-width="300" data-show-faces="false" data-action="recommend" data-font="verdana"></div></td>
 </tr></table>':'').'
 ';
 
@@ -769,12 +771,12 @@ Validez de esta votación: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&n
 			if ($r['tipo'] == 'parlamento') {
 				$txt .= '<table border="0" cellpadding="0" cellspacing="3" class="pol_table"><tr><th>Diputado</th><th></th><th colspan="2">Voto</th><th>Mensaje</th></tr>';
 				$result2 = mysql_query("SELECT user_ID,
-(SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick,
-(SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS siglas,
-(SELECT voto FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = ".SQL."estudios_users.user_ID LIMIT 1) AS ha_votado,
-(SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = ".SQL."estudios_users.user_ID LIMIT 1) AS ha_mensaje
-FROM ".SQL."estudios_users
-WHERE cargo = '1' AND ID_estudio = '6'
+(SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick,
+(SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS siglas,
+(SELECT voto FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = cargos_users.user_ID LIMIT 1) AS ha_votado,
+(SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = cargos_users.user_ID LIMIT 1) AS ha_mensaje
+FROM cargos_users
+WHERE cargo = 'true' AND cargo_ID = '6'
 ORDER BY siglas ASC", $link);
 				while($r2 = mysql_fetch_array($result2)) {
 					if ($r2['ha_votado'] != null) { $ha_votado = ' style="background:blue;"';

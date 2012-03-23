@@ -401,7 +401,7 @@ $result = mysql_query("SELECT SUM(pols + IFNULL((SELECT SUM(pols) FROM ".strtolo
 (SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'impuestos' LIMIT 1) AS impuestos,
 (SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'impuestos_minimo' LIMIT 1) AS impuestos_minimo,
 (SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'pols_inem' LIMIT 1) AS inem,
-(SELECT AVG(salario) FROM ".strtolower($pais)."_estudios) AS salario_medio
+(SELECT AVG(salario) FROM cargos WHERE pais = '".$pais."') AS salario_medio
 FROM users
 WHERE pais = '".$pais."'");
 	while($r = mysql_fetch_array($result)) {

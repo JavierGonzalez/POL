@@ -600,12 +600,12 @@ case 'gobierno':
 
 	if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $dis = null; } else { $dis = ' disabled="disabled"'; }
 
-	$result = mysql_query("SELECT (SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS elnick
-	 FROM ".SQL."estudios_users WHERE ID_estudio = '7' AND cargo = '1' LIMIT 1", $link);
+	$result = mysql_query("SELECT (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS elnick
+	 FROM cargos_users WHERE cargo_ID = '7' AND cargo = 'true' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) { $presidente = $r['elnick']; }
 
-	$result = mysql_query("SELECT (SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS elnick
-	 FROM ".SQL."estudios_users WHERE ID_estudio = '19' AND cargo = '1' LIMIT 1", $link);
+	$result = mysql_query("SELECT (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS elnick
+	 FROM cargos_users WHERE cargo_ID = '19' AND cargo = 'true' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) { $vicepresidente = $r['elnick']; }
 
 	$defcon_bg = array('1' => 'white','2' => 'red','3' => 'yellow','4' => 'green','5' => 'blue');
@@ -921,11 +921,11 @@ $sel[$pol['config']['frontera']] = ' selected="selected"';
 <tr><td colspan="2" class="amarillo"><b class="big">Salarios</b></td></tr>';
 
 
-	$result = mysql_query("SELECT nombre, ID, salario
-FROM ".SQL."estudios
+	$result = mysql_query("SELECT nombre, cargo_ID, salario
+FROM cargos
 ORDER BY salario DESC", $link);
 	while($r = mysql_fetch_array($result)){
-		$txt .= '<tr><td align="right">' . $r['nombre'] . ':</td><td><input style="text-align:right;" type="text" name="salario_' . $r['ID'] . '" size="3" maxlength="6" class="pols" value="' . $r['salario'] . '"'.$dis.' /> '.MONEDA.'</td></tr>';
+		$txt .= '<tr><td align="right">' . $r['nombre'] . ':</td><td><input style="text-align:right;" type="text" name="salario_' . $r['cargo_ID'] . '" size="3" maxlength="6" class="pols" value="' . $r['salario'] . '"'.$dis.' /> '.MONEDA.'</td></tr>';
 	}
 
 

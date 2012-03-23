@@ -95,7 +95,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 
 			} else { $t = '<li><a href="'.REGISTRAR.'?p='.PAIS.'" class="noti-nuevo">Primer paso: Crea tu ciudadano</a></li>'; $total_num = 1; $nuevos_num = 1; }
 			global $txt_elec_time;
-			return '<li id="menu-noti"'.($nuevos_num!=0?' class="menu-sel"':'').'><a href="/hacer">Notificaciones<span class="md">'.$nuevos_num.'</span></a><ul><li style="border-bottom:1px dotted #DDD;"><a href="/elecciones">Elecciones en <b>'.$txt_elec_time.'</b>, proceso '.(time()>strtotime(date('Y-m-d 20:00:00'))?'hace':'en').' <b>'.timer(date('Y-m-d 20:00:00')).'.</b></a></li>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'<li style="text-align:right;"><a href="/hacer"><b>¿Qué hacer?</b></a></li></ul></li>';
+			return '<li id="menu-noti"'.($nuevos_num!=0?' class="menu-sel"':'').'><a href="/hacer">Notificaciones<span class="md">'.$nuevos_num.'</span></a><ul><li style="border-bottom:1px dotted #DDD;"><a href="/elecciones">Elecciones en <b>'.$txt_elec_time.'</b>, proceso '.(time()>strtotime(date('Y-m-d 20:00:00'))?'hace':'en').' <b>'.timer(date('Y-m-d 20:00:00')).'</b></a></li>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'<li style="text-align:right;"><a href="/hacer"><b>¿Qué hacer?</b></a></li></ul></li>'.($nuevos!=0?'':'<script type="text/javascript">p_scroll = true;</script>');
 			break;
 
 
@@ -216,7 +216,7 @@ function boton($texto, $url=false, $confirm=false, $size=false, $pols='') {
 		return '<button'.($url==false?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').($url!='submit'?'window.location.href=\''.$url.'\';return false;':'').'"').($size!=false?' class="'.$size.'"':'').'>'.$texto.'</button>';
 	} else {
 		global $pol;
-		return '<span class="amarillo"><input type="submit" value="'.$texto.'"'.($pol['pols']<$pols?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').'window.location.href=\''.$url.'\';"').' /> &nbsp; '.pols($pols).' '.MONEDA.'</span>';
+		return '<span class="amarillo"><input type="submit" value="'.$texto.'"'.($pol['pols']<$pols?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').'window.location.href=\''.$url.'\';"').' class="blue large" />'.(ECONOMIA?' &nbsp; '.pols($pols).' '.MONEDA.'':'').'</span>';
 	}
 }
 
@@ -227,8 +227,8 @@ function form_select_nivel($nivel_select='') {
 	if ($pol['nivel'] > 1) {
 		$result = mysql_query("
 SELECT nombre, nivel 
-FROM ".SQL."estudios 
-WHERE asigna != '-1' AND nivel <= '" . $pol['nivel'] . "' 
+FROM cargos 
+WHERE pais = '".PAIS."' AND asigna != '-1' AND nivel <= '" . $pol['nivel'] . "' 
 ORDER BY nivel ASC", $link);
 		while($row = mysql_fetch_array($result)){
 			if ($nivel_select == $row['nivel']) { $selected = ' selected="selected"'; } else { $selected = ''; }
@@ -265,8 +265,8 @@ ORDER BY orden ASC", $link);
 
 function cargos() {
 	global $pol, $link; 
-	$result = mysql_query("SELECT ID_estudio FROM ".SQL."estudios_users WHERE cargo = '1' AND user_ID = '" . $pol['user_ID'] . "'", $link);
-	while($row = mysql_fetch_array($result)) { $cargos[$row['ID_estudio']] = true; }
+	$result = mysql_query("SELECT cargo_ID FROM cargos_users WHERE cargo = 'true' AND user_ID = '" . $pol['user_ID'] . "'", $link);
+	while($row = mysql_fetch_array($result)) { $cargos[$row['cargo_ID']] = true; }
 	return $cargos;
 }
 

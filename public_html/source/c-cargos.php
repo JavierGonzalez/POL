@@ -5,120 +5,163 @@ include('inc-login.php');
 $pol['cargos'] = cargos();
 
 
-if ($_GET['a']) { // EDITAR CARGOS
+if (is_numeric($_GET['a'])) { // CARGOS
 
-	$result = mysql_query("SELECT ID, nombre, tiempo, nivel, num_cargo, salario
-FROM ".SQL."estudios
-WHERE ID = '" . $_GET['a'] . "'
-LIMIT 1", $link);
+	$result = mysql_query("SELECT * FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['a']."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
-		$txt .= '<h1><img src="'.IMG.'doc-edit.gif" alt="Editar" /> <a href="/cargos/">Cargo</a>: ' . $r['nombre'] . '</h1><ul>';
+		$txt_nav = array('/cargos'=>'Cargos', '/cargos/'.$r['cargo_ID']=>$r['nombre']);
 
-		$result2 = mysql_query("SELECT user_ID, nota,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick,
-(SELECT cargo FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick_cargo,
-(SELECT estado FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick_estado
-FROM ".SQL."estudios_users 
-WHERE estado = 'ok' 
-AND ID_estudio = '" . $r['ID'] . "'
-AND cargo = '0'
-AND user_ID != '" . $pol['user_ID'] . "'
-ORDER BY nick ASC", $link);
+		$a = 0;
+		$activos = array();
+		$candidatos = array();
+		$result2 = mysql_query("SELECT *, 
+(SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick,
+(SELECT estado FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick_estado,
+(SELECT fecha_last FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_last,
+(SELECT voto_confianza FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS voto_confianza
+FROM cargos_users
+WHERE pais = '".PAIS."' 
+AND cargo_ID = '".$r['cargo_ID']."'
+AND aprobado = 'ok'
+ORDER BY voto_confianza DESC, nota DESC", $link);
 		while($r2 = mysql_fetch_array($result2)){
-			if (($r2['nick_estado'] == 'ciudadano')) { // ($r2['nick_cargo'] == '0') AND 
-				$ciudadanos .= '<option value="' . $r2['user_ID'] . '">' . $r2['nota'] . ' ' . $r2['nick'] . '</option>';
+
+			if ($r['asigna'] > 0) { $asignador = nucleo_acceso('cargo', $r['asigna']); } else { $asignador = false; }
+
+			if ($r2['nick_estado'] == 'ciudadano') {
+				if ($r2['cargo'] == 'true') {
+					$activos[] = '<tr>
+<td>'.($asignador?'<form action="/accion.php?a=cargo&b=del&ID='.$r['cargo_ID'].'" method="post">
+<input type="hidden" name="user_ID" value="'.$r2['user_ID'].'"  />'.boton('X', 'submit', '¿Seguro que quieres QUITAR el cargo a '.strtoupper($r2['nick']).'?', 'small red').'</form>':'').'</td>
+<td align="right">'.++$activos_num.'.</td>
+<td><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" style="margin-bottom:-3px;" /> <b>'.crear_link($r2['nick']).'</b></td>
+<td align="right">'.timer($r2['fecha_last']).'</td>
+</tr>';
+				} else {
+					$candidatos[] = '<tr>
+<td>'.($asignador?'<form action="/accion.php?a=cargo&b=add&ID='.$r['ID'].'" method="POST">
+<input type="hidden" name="user_ID" value="'.$r2['user_ID'].'"  />'.boton('Asignar', 'submit', false, 'small blue').'</form>':'').'</td>
+<td><b>'.crear_link($r2['nick']).'</b></td>
+<td align="right">'.timer($r2['fecha_last']).'</td>
+<td align="right">'.confianza($r2['voto_confianza']).'</td>
+<td align="right"><b>'.num($r2['nota'],1).'</b></td>
+</tr>';
+				}
 			}
 		}
 
-		$txt .= '<li><form action="/accion.php?a=cargo&b=add&ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos . '</select> <input type="submit" value="Asignar" /></form><br /></li></ul>';
+		$txt .= '<table border="0"><tr><td valign="top">
+
+<table border="0">
+<tr>
+<th></th>
+<th colspan="2" align="left">'.$r['nombre'].' <span style="font-weight:normal;">('.count($activos).')</span></th>
+<th style="font-weight:normal;">Último acceso</th>
+</tr>
+'.implode('', $activos).'
+</table>
 
 
-		$a = 0;
-		$result2 = mysql_query("SELECT user_ID, 
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick
-FROM ".SQL."estudios_users 
-WHERE ID_estudio = '" . $r['ID'] . "'
-AND cargo = '1'
-ORDER BY nick ASC", $link);
-		while($r2 = mysql_fetch_array($result2)){
-			$a++;
-			$activos .= '<li><form action="/accion.php?a=cargo&b=del&ID=' . $r['ID'] . '" method="post"><input type="hidden" name="user_ID" value="' . $r2['user_ID'] . '"  /><input style="height:26px;" type="submit" value="X" /> <b>' . crear_link($r2['nick']) . '</b></form></li>';
-		}
+	</td><td>&nbsp; &nbsp;</td><td valign="top">
 
-		$txt .= '<div class="azul"><p><b style="color:green;">' . $r['nombre'] . ': ' . $a . '</b></p><ol>' . $activos . '</ol></div>';
+
+<table border="0">
+<tr>
+<th></th>
+<th>Candidatos <span style="font-weight:normal;">('.count($candidatos).')</span></th>
+<th style="font-weight:normal;">Último acceso</th>
+<th style="font-weight:normal;">Confianza</th>
+<th style="font-weight:normal;">Nota</th>
+</tr>
+'.implode('', $candidatos).'
+</table>
+
+
+
+</td></tr></table>';
+
 	}
 
 } else { // VER CARGOS
 	$txt_nav = array('Cargos');
-	$txt_tab = array('/examenes/'=>'Examenes');
+	$txt_tab = array('/cargos'=>'Examenes');
 
-	$txt .= '<h1 class="quitar">Cargos</h1><br />
 
-<table border="0" cellspacing="3" cellpadding="0" class="pol_table">
-<tr>
-<th>Nivel&nbsp;</th>
-<th>Cargo</th>
-'.(ECONOMIA?'<th><acronym title="Salario por dia trabajado">Salario</acronym></th>':'').'
-<th></th>
-<th>Cargos</th>
-<th colspan="2">Asigna</th>
-<th>ID</th>
-</tr>';
 
-	$cargos = cargos();
 
-	$result = mysql_query("SELECT 
-ID, nombre, nivel, num_cargo, asigna, salario, ico
-FROM ".SQL."estudios 
-WHERE asigna != '-1'
-ORDER BY nivel DESC", $link);
+	$result = mysql_query("SELECT *, 
+(SELECT cargo FROM cargos_users WHERE user_ID = '".$pol['user_ID']."' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS cargo,
+(SELECT aprobado FROM cargos_users WHERE user_ID = '".$pol['user_ID']."' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS aprobado,
+(SELECT nota FROM cargos_users WHERE user_ID = '".$pol['user_ID']."' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS nota,
+(SELECT ID FROM ".SQL."examenes WHERE cargo_ID = cargos.cargo_ID LIMIT 1) AS examen_ID,
+(SELECT COUNT(ID) FROM cargos_users WHERE cargo_ID = cargos.cargo_ID AND pais = '".PAIS."' AND cargo = 'true') AS cargo_num,
+(SELECT COUNT(ID) FROM cargos_users WHERE cargo_ID = cargos.cargo_ID AND pais = '".PAIS."' AND cargo = 'false' AND aprobado = 'ok') AS candidatos_num
+FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 	while($r = mysql_fetch_array($result)){
 
-
-		$p_edit = '';
-		if (($pol['nivel'] == 120) OR ($pol['cargos'][$r['asigna']]) OR (($r['ID'] != 19) AND ($r['asigna'] == 7) AND ($pol['cargos'][19]))) { 
-			$p_edit = '<form><input style="margin-bottom:-16px;" type="button" value="Editar" onClick="window.location.href=\'/cargos/' . $r['ID'] . '/\';"></form>';
+		switch ($r['asigna']) {
+			case -2: $asigna = '<b title="Votacion Ejecutiva">Votacion Ejecutiva</b>'; break;
+			case 0:  $asigna = '<b title="Elecciones Generales">Elecciones</b>'; break;
+			default: $asigna = ''; break;
 		}
+		
+		$txt_el_td = '
+<a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" /> <b style="font-size:20px;">'.$r['nombre'].'</b></a></td>
+<td>';
 
-		$c_nicks = '';
-		$num = 0;
-		$result2 = mysql_query("SELECT user_ID,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick
-FROM ".SQL."estudios_users 
-WHERE cargo = '1'
-AND ID_estudio = '".$r['ID']."'
-ORDER BY nick ASC", $link);
-		while($r2 = mysql_fetch_array($result2)){
-			if ($r2['nick']) {
-				$num++;
-				if ($c_nicks) { $c_nicks .= ', '; } 
-				$c_nicks .= crear_link($r2['nick']);
+		if ($pol['pais'] == PAIS) {
+			if ($r['cargo'] == 'true') {
+				$txt_el_td .= boton('Dimitir', '/accion.php?a=cargo&b=dimitir&ID='.$r['cargo_ID'], '¿Estás seguro de querer DIMITIR?\n\n¡NUNCA LO HAGAS EN CALIENTE!', 'red');
+			} else if (($r['aprobado'] == 'ok') OR ($r['aprobado'] == 'no')) {
+				$txt_el_td .= boton('Repetir examen ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue').' '.boton('Retirar candidatura', '/accion.php?a=examenes&b=retirar_examen&ID='.$r['cargo_ID'], false, 'red');
+			} else {
+				$txt_el_td .= boton('Ser candidato (examen)', '/examenes/'.$r['examen_ID'], false, 'blue');
 			}
 		}
 
+		$txt_el_td .= '</td>
+<td align="right"><b style="font-size:16px;">'.$r['cargo_num'].'</b> de '.$r['candidatos_num'].'</td>
+<td nowrap="nowrap">'.$asigna.'</td>
+<td align="right">'.$r['nivel'].'</td>
+'.(ECONOMIA?'<td align="right">'.pols($r['salario']).'</td>':'').'
+<td align="right" style="color:grey;">'.$r['cargo_ID'].'</td>
+';
+		
+		$txt_td2[$r['cargo_ID']] = array();
+		if ($r['asigna']>0) { // Asignado...
+			$txt_td2[$r['asigna']][$r['cargo_ID']] = $txt_el_td;
+		} else { // Elecciones...
+			$txt_td1[$r['cargo_ID']] = $txt_el_td;
+		}
+	}
 
-		switch ($r['asigna']) {
-			case -2: $asignado_por = '<acronym title="Votacion Ejecutiva"><b>V</b></acronym>'; break;
-			case 0: $asignado_por = '<acronym title="Elecciones Generales"><b>E</b></acronym>'; break;
-			default: $asignado_por = '<img src="'.IMG.'cargos/'.$r['asigna'].'.gif" title="" />'; break;
+
+		$txt .= '
+<table border="0" cellspacing="3" cellpadding="0">
+<tr>
+<th>Cargos</th>
+<th></th>
+<th>Con cargo</th>
+<th title="¿Quien asigna?">Asignación</th>
+<th>Nivel</th>
+'.(ECONOMIA?'<th title="Salario por dia trabajado">Salario</th>':'').'
+<th>ID</th>
+</tr>';
+
+		foreach ($txt_td1 AS $cargo_ID => $d1) {
+			$txt .= '<tr><td nowrap="nowrap">'.$d1.'</tr>';
+			foreach ($txt_td2[$cargo_ID] AS $cargo_ID2 => $d2) { 
+				$txt .= '<tr><td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp; '.$d2.'</tr>'; 
+				foreach ($txt_td2[$cargo_ID2] AS $cargo_ID3 => $d3) { 
+					$txt .= '<tr><td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; '.$d3.'</tr>';
+					foreach ($txt_td2[$cargo_ID3] AS $cargo_ID4 => $d4) { 
+						$txt .= '<tr><td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; '.$d4.'</tr>'; 
+					}
+				}
+			}
 		}
 
-
-		if ($r['ico'] == true) { $ico = '<img src="'.IMG.'cargos/'.$r['ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" /> '; } else { $ico = ''; }
-
-		$txt .= '<tr>
-<td align="right" valign="top">'.$r['nivel'].'</td>
-<td valign="top" nowrap="nowrap">'.$ico.'<b style="font-size:20px;">'.$r['nombre'].'</b></td>
-'.(ECONOMIA?'<td align="right" valign="top">'.pols($r['salario']).'</td>':'').'
-<td valign="top" align="right">'.$num.'</td>
-<td>'.$c_nicks.'</td><td valign="top" nowrap="nowrap">' . $asignado_por . '</td>
-<td valign="top">'.$p_edit.'</td>
-<td valign="top" align="right" style="color:grey;">'.$r['ID'].'</td></tr>';
-	}
-	$txt .= '</table>
-	
-<p class="quitar"><a href="/examenes/">Ver <b>Examenes</b></a></p>';
-
+	$txt .= '</table>';
 }
 
 

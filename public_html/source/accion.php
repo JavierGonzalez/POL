@@ -286,12 +286,12 @@ LIMIT 1", $link);
 		if (ECONOMIA) {
 			pols_transferir($pols_arancel, $user_ID, '-1', 'Arancel de salida (rechazo de ciudadania) '.$pol['config']['arancel_salida'].'%');
 			mysql_query("DELETE FROM ".SQL."empresas WHERE user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM ".SQL."estudios_users WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."mercado WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."pujas WHERE user_ID = '".$user_ID."'", $link);
 		}
+		mysql_query("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'", $link);
 		mysql_query("UPDATE users SET estado = 'turista', pais = 'ninguno', nivel = '1', cargo = '0', nota = '0.0', pols = '".$pols."', rechazo_last = '".$date."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		
 		if ($pol['config']['elecciones_estado'] == 'elecciones') { 
@@ -481,6 +481,7 @@ case 'examenes':
 		$_POST['descripcion'] = gen_text($_POST['descripcion'], 'plain');
 		mysql_query("UPDATE ".SQL."examenes SET titulo = '".$_POST['titulo']."', descripcion = '".$_POST['descripcion'] . "', nota = '".$_POST['nota']."', num_preguntas = '".$_POST['num_preguntas']."' WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 		$refer_url = 'examenes/editar/' . $_GET['ID'];
+	
 	} elseif (($_GET['b'] == 'examinar') AND ($_GET['ID'] != null) AND ($_POST['pregs']) AND (($_POST['tlgs'] + 10) > time())) {
 
 		$result = mysql_query("SELECT cargo_ID, titulo, ID, nota, num_preguntas,
@@ -512,16 +513,16 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 				} else {
 					$nota['nota'] = 0;
 				}
-				if ($nota['nota'] >= $nota_aprobado) { $estado = ", estado = 'ok'"; } else { $estado = ", estado = 'examen'"; }
+				if ($nota['nota'] >= $nota_aprobado) { $estado = ", aprobado = 'ok'"; } else { $estado = ", aprobado = 'no'"; }
 
 				$evento_examen = '<b>[EXAMEN]</b> &nbsp; <b style="color:grey;">' . $nota['nota'] . '</b> ' . crear_link($pol['nick']) . ' en el examen <a href="/examenes/' . $examen_ID . '/">' . $examen_titulo . '</a>';
 
 				if ($nota['nota'] >= $nota_aprobado) { evento_chat($evento_examen); }
 				//evento_chat($evento_examen, 0, 6);
 
-				mysql_query("UPDATE ".SQL."estudios_users SET time = '" . $date . "', nota = '" . $nota['nota'] . "'" . $estado . " WHERE user_ID = '" . $pol['user_ID'] . "' AND ID_estudio = '" . $cargo_ID . "' LIMIT 1", $link);
+				mysql_query("UPDATE cargos_users SET time = '".$date."', nota = '".$nota['nota']."'".$estado." WHERE user_ID = '".$pol['user_ID']."' AND cargo_ID = '".$cargo_ID."' LIMIT 1", $link);
 
-				$refer_url = 'examenes/mis-examenes';
+				$refer_url = 'cargos';
 			}
 			unset($_SESSION['examen']);
 		}
@@ -532,16 +533,19 @@ FROM ".SQL."examenes WHERE ID = '" . $_POST['ID'] . "' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 			if (($r['cargo_ID'] < 0) AND ($r['num_depreguntas'] == 0)) {
 				mysql_query("DELETE FROM ".SQL."examenes WHERE ID = '".$_POST['ID']."'", $link);
-				mysql_query("DELETE FROM ".SQL."estudios_users WHERE ID_estudio = '".$r['cargo_ID']."'", $link);
-				$refer_url = 'examenes';
+				mysql_query("DELETE FROM cargos_users WHERE cargo_ID = '".$r['cargo_ID']."'", $link);
+				$refer_url = 'cargos';
 			}
 		}
 	} elseif (($_GET['b'] == 'caducar_examen') AND ($_GET['ID'] != null)) {
 	
 		if ($_POST['pais'] == PAIS) {
-			mysql_query("DELETE FROM ".SQL."estudios_users WHERE ID = '".$_GET['ID']."' AND user_ID = '". $pol['user_ID']."' AND time < '".date('Y-m-d 20:00:00', time() - $pol['config']['examen_repe']*6)."' AND ID_estudio <= 0", $link);
-			$refer_url = 'examenes/mis-examenes';
+			mysql_query("DELETE FROM cargos_users WHERE cargo_ID = '".$_GET['ID']."' AND user_ID = '". $pol['user_ID']."' AND time < '".date('Y-m-d 20:00:00', time() - $pol['config']['examen_repe']*6)."' AND cargo_ID <= 0", $link);
+			$refer_url = 'cargos';
 		}
+	} elseif (($_GET['b'] == 'retirar_examen') AND (is_numeric($_GET['ID']))) {
+		mysql_query("DELETE FROM cargos_users WHERE cargo_ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		$refer_url = 'cargos';
 	}
 
 	break;
@@ -824,12 +828,12 @@ $dato_array = array(
 
 
 		// Salarios
-		$result = mysql_query("SELECT ID, salario, nombre FROM ".SQL."estudios", $link);
+		$result = mysql_query("SELECT cargo_ID, salario, nombre FROM cargos", $link);
 		while($r = mysql_fetch_array($result)){
-			$salario = $_POST['salario_'.$r['ID']];
+			$salario = $_POST['salario_'.$r['cargo_ID']];
 			if (($salario >= 0) AND ($salario <= 1000)) {
-				if ($salario != $r['salario']) { evento_chat('<b>[GOBIERNO]</b> El salario de <img src="'.IMG.'cargos/'.$r['ID'].'.gif" /><b>'.$r['nombre'].'</b> se ha cambiado de '.pols($r['salario']).' '.MONEDA.' a '.pols($salario).' '.MONEDA.' ('.crear_link($pol['nick']).', <a href="/control/gobierno/">Gobierno</a>)');  }
-				mysql_query("UPDATE ".SQL."estudios SET salario = '".$salario."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+				if ($salario != $r['salario']) { evento_chat('<b>[GOBIERNO]</b> El salario de <img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" /><b>'.$r['nombre'].'</b> se ha cambiado de '.pols($r['salario']).' '.MONEDA.' a '.pols($salario).' '.MONEDA.' ('.crear_link($pol['nick']).', <a href="/control/gobierno/">Gobierno</a>)');  }
+				mysql_query("UPDATE cargos SET salario = '".$salario."' WHERE cargo_ID = '".$r['cargo_ID']."' LIMIT 1", $link);
 			}
 		}
 
@@ -1223,7 +1227,7 @@ case 'votacion':
 				break;
 
 			case 'cargo':
-				$result = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '".$_POST['cargo']."' LIMIT 1", $link);
+				$result = mysql_query("SELECT nombre FROM cargos WHERE cargo_ID = '".$_POST['cargo']."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $cargo_nombre = $r['nombre']; }
 
 				$result = mysql_query("SELECT ID, nick FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' LIMIT 1", $link);
@@ -1649,13 +1653,13 @@ case 'enviar-mensaje':
 			}
 		} elseif (($_POST['para'] == 'cargo') AND ($_POST['cargo_ID'])) {
 
-			$result = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '".$_POST['cargo_ID']."' LIMIT 1", $link);
+			$result = mysql_query("SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_POST['cargo_ID']."' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $cargo_nombre = $r['nombre']; }
 
 			if ($_POST['cargo_ID'] == '55') {
-				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1' AND estado = 'ok' AND ID_estudio IN (55, 56, 57) LIMIT 1000", $link);
+				$result = mysql_query("SELECT user_ID FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'true' AND aprobado = 'ok' AND cargo_ID IN (55, 56, 57) LIMIT 1000", $link);
 			} else {
-				$result = mysql_query("SELECT user_ID FROM ".SQL."estudios_users WHERE cargo = '1' AND estado = 'ok' AND ID_estudio = '".$_POST['cargo_ID']."' LIMIT 1000", $link);
+				$result = mysql_query("SELECT user_ID FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'true' AND aprobado = 'ok' AND cargo_ID = '".$_POST['cargo_ID']."' LIMIT 1000", $link);
 			}
 			while($r = mysql_fetch_array($result)){ 
 				if (($r['user_ID'] != $pol['user_ID']) AND ($r['user_ID'] != 0)) {
@@ -1816,13 +1820,13 @@ case 'cargo':
 
 		cargo_del($_GET['ID'], $pol['user_ID'], false);
 
-		$result = mysql_query("SELECT nombre FROM ".SQL."estudios WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+		$result = mysql_query("SELECT nombre FROM cargos WHERE cargo_ID = '".$_GET['ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ $cargo_nom = $r['nombre']; }
 		
 		evento_chat('<b>[CARGO] '.crear_link($pol['nick']).' dimite</b> del cargo <img src="'.IMG.'cargos/'.$_GET['ID'].'.gif" />'.$cargo_nom);
 
 		// Elimina examen
-		mysql_query("DELETE FROM ".SQL."estudios_users WHERE ID_estudio = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("DELETE FROM cargos_users WHERE cargo_ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 
 		// Si es cargo_ID 6 (Diputado o Coordinador), ceder al siguiente en la sucesión
 		if ($_GET['ID'] == 6) {
@@ -1832,7 +1836,7 @@ case 'cargo':
 			foreach(explode('|', $escrutinio) AS $data) {
 				$data = explode(':', $data);
 				$cargo_estado = null;
-				$result = mysql_query("SELECT ID, (SELECT cargo FROM ".SQL."estudios_users WHERE ID_estudio = 6 AND estado = 'ok' AND user_ID = u.ID LIMIT 1) AS cargo_estado FROM users `u` WHERE nick = '".$data[2]."' LIMIT 1", $link);
+				$result = mysql_query("SELECT ID, (SELECT cargo FROM cargos_users WHERE cargo_ID = 6 AND aprobado = 'ok' AND user_ID = u.ID LIMIT 1) AS cargo_estado FROM users `u` WHERE nick = '".$data[2]."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $el_user_ID = $r['ID']; $cargo_estado = $r['cargo_estado']; }
 
 				if ($cargo_estado == '0') {
@@ -1842,13 +1846,13 @@ case 'cargo':
 			}
 		}
 
-		$refer_url = 'perfil/'.$pol['nick'].'/';
+		$refer_url = 'cargos';
 
 	} elseif (($b) AND ($cargo_ID)) {
-		$result = mysql_query("SELECT ID, asigna, nombre FROM ".SQL."estudios WHERE ID = '".$cargo_ID."' LIMIT 1", $link);
+		$result = mysql_query("SELECT cargo_ID, asigna, nombre FROM cargos WHERE cargo_ID = '".$cargo_ID."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){
 
-			if ((($pol['cargos'][$r['asigna']]) AND ($r['ID'] != 7)) OR (($r['ID'] != 19) AND ($r['asigna'] == 7) AND ($pol['cargos'][19]) AND ($r['ID'] != 7))) { 
+			if ((($pol['cargos'][$r['asigna']]) AND ($r['cargo_ID'] != 7)) OR (($r['cargo_ID'] != 19) AND ($r['asigna'] == 7) AND ($pol['cargos'][19]) AND ($r['cargo_ID'] != 7))) { 
 
 
 				$result2 = mysql_query("SELECT nick, online, fecha_registro FROM users WHERE ID = '".$_POST['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
@@ -1864,7 +1868,7 @@ case 'cargo':
 						cargo_del($cargo_ID, $_POST['user_ID']); 
 					}
 				}
-				$refer_url = 'cargos/'.$cargo_ID.'/';
+				$refer_url = 'cargos/'.$cargo_ID;
 			}
 		}
 	}

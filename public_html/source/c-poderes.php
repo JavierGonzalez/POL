@@ -13,8 +13,8 @@ function get_cargo($cargo_ID, $salto=', ', $reicon=false) {
 	$limit = '';
 	if ($num != false) { $limit = ' LIMIT ' . $num; }
 	$result = mysql_query("SELECT 
-(SELECT nick FROM users WHERE ID = ".SQL."estudios_users.user_ID LIMIT 1) AS nick
-FROM ".SQL."estudios_users WHERE ID_estudio = '" . $cargo_ID . "' AND cargo = '1'" . $limit);
+(SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick
+FROM cargos_users WHERE cargo_ID = '" . $cargo_ID . "' AND cargo = 'true'" . $limit);
 	while ($row = mysql_fetch_array($result)) {
 		if ($html) { $html .= $salto; if ($reicon) { $html .= '<img src="'.IMG.'cargos/' . $cargo_ID . '.gif" /> '; } }
 		$html .= crear_link($row['nick']); 

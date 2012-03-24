@@ -25,18 +25,16 @@ $(document).ready(function(){
 	});
 
 	search_timers();
-	setInterval("search_timers()", 60000); // Actualiza temporizadores ".timer" cada minuto.
+	setInterval("search_timers()", 60000); // Actualiza temporizadores, cada 1 minuto.
 
 	// Efecto scroll horizontal de Notificaciones.
 	if (p_scroll == true) { 
 		p_r = false;
 		pl = 0;
 		if (Math.floor(Math.random()*2) == 1) { p_r = true; } // Deslizado izquierda/derecha aleatorio.
-		var p_st = setInterval("pscr()", 95); // Inicia deslizado cada 95ms.
+		var p_st = setInterval("pscr()", 95); // Inicia deslizado cada 95ms (10 veces por segundo)
 		var p_st_close = setTimeout("pscr_close()", 180000); // Detiene deslizado tras 3 min.
 	}
-
-	//$("#pnick").css("display","none").css("position","absolute");
 
 	// Popup de info de ciudadanos.
 	$(".nick").mouseover(function(){
@@ -55,14 +53,16 @@ $(document).ready(function(){
 		function () { $(".ayudap").remove(); }
 	);
 
+	setInterval("actualizar_noti()", 180000); // Actualiza notificaciones cada 3 min.
 });
 
 
 
-// FUNCIONES
+/*** FUNCIONES ***/
 
-/* Esta funcion es critica, debe optimizarse al máximo. Se ejecuta 10 veces por segundo. */
+
 function pscr() {
+	// Esta funcion es critica, debe optimizarse al máximo. Se ejecuta 10 veces por segundo.
 	if (p_scroll == true) {
 		if (p_r == true) { pl++; } else { pl--; }
 		document.getElementById('menu-noti').style.backgroundPosition = pl + 'px 0';
@@ -70,8 +70,11 @@ function pscr() {
 }
 function pscr_close() { p_scroll = false; }
 
-
-
+function actualizar_noti() { 
+	$('#notif').load('/ajax.php?a=noti');
+	if (p_scroll == false) { clearInterval(p_st); }
+	search_timers();
+}
 
 function votar(voto, tipo, item_ID) {
 	var radio_ID = tipo + item_ID;

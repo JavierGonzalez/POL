@@ -178,7 +178,7 @@ if ($externo) {
 	echo '
 <html>
 <body>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="'.IMG.'scripts.js"></script>
 <script type="text/javascript">IMG = "'.IMG.'";</script>
 '.$txt_header.$txt.'

@@ -45,8 +45,8 @@ if (isset($_GET['bg'])) {
 </style>
 
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script type="text/javascript" src="<?=IMG?>scripts_all.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="<?=IMG?>scripts_all.js?v=10"></script>
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '<?=IMG?>';
@@ -137,10 +137,9 @@ p_scroll = false;
 			<li><a href="/info/economia">Economía Global</a></li>
 		</ul>
 	</li>
-<?php } echo notificacion('print'); ?>
+<?php } echo '<div id="notif">'.notificacion('print').'</div>'; ?>
 
 	</ul>
-
 
 	<div id="menu-next">
 

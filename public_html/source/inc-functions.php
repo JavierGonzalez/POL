@@ -95,7 +95,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 
 			} else { $t = '<li><a href="'.REGISTRAR.'?p='.PAIS.'" class="noti-nuevo">Primer paso: Crea tu ciudadano</a></li>'; $total_num = 1; $nuevos_num = 1; }
 			global $txt_elec_time;
-			return '<li id="menu-noti"'.($nuevos_num!=0?' class="menu-sel"':'').'><a href="/hacer">Notificaciones<span class="md">'.$nuevos_num.'</span></a><ul><li style="border-bottom:1px dotted #DDD;"><a href="/elecciones">Elecciones en <b>'.$txt_elec_time.'</b>, proceso '.(time()>strtotime(date('Y-m-d 20:00:00'))?'hace':'en').' <b>'.timer(date('Y-m-d 20:00:00')).'</b></a></li>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'<li style="text-align:right;"><a href="/hacer"><b>¿Qué hacer?</b></a></li></ul></li>'.($nuevos!=0?'':'<script type="text/javascript">p_scroll = true;</script>');
+			return '<li id="menu-noti"'.($nuevos_num!=0?' class="menu-sel"':'').'><a href="/hacer">Notificaciones<span class="md">'.$nuevos_num.'</span></a><ul><li style="border-bottom:1px dotted #DDD;"><a href="/elecciones">'.(isset($txt_elec_time)?'Elecciones en <b>'.$txt_elec_time.'</b>, ':'').'proceso '.(time()>strtotime(date('Y-m-d 20:00:00'))?'hace':'en').' <b>'.timer(date('Y-m-d 20:00:00')).'</b></a></li>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'<li style="text-align:right;"><a href="/hacer"><b>¿Qué hacer?</b></a></li></ul></li>'.($nuevos!=0?'':'<script type="text/javascript">p_scroll = true;</script>');
 			break;
 
 

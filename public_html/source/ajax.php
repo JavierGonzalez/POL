@@ -1,9 +1,12 @@
 <?php
 session_start(); 
-if ((!isset($_SESSION['pol']['user_ID'])) AND (isset($_COOKIE['teorizauser']))) { include('inc-login.php'); // Si no hay login, hace login basico
-} else { include('../config-pwd.php'); $link = @conectar(); } // Conecta MySQL solo
 header('connection: close');
 header('Content-Type: text/plain');
+
+// Inicialización.
+if ((!isset($_SESSION['pol']['user_ID'])) AND (isset($_COOKIE['teorizauser']))) { include('inc-login.php'); // Si no hay login, hace login basico
+} else { include('../config-pwd.php'); $link = @conectar(); } // Conecta MySQL solo
+include('inc-functions.php');
 
 // ARREGLAR: reemplazar esta zona por un include a un config.php ligero
 $host = explode('.', $_SERVER['HTTP_HOST']);
@@ -12,54 +15,6 @@ define('PAIS', $host[0]);
 define('SQL', strtolower($host[0]).'_');
 define('DOMAIN', 'virtualpol.com');
 
-/*
-ID CARGO 00:00 NICK MSG
-m0 - m normal
-p - m privado
-e - evento
-c - print comando
-*/
-
-
-if ($_REQUEST['a'] != 'whois') {
-// ### IMPORTANTE: MANTENER FUNCION IGUAL QUE SU COPIA IDENTICA EN inc-functions.php (duplicación por optimizacion (para evitar cargar archivo de funciones))
-// ### NUCLEO ACCESO 3.0
-function nucleo_acceso($tipo, $valor='') {
-	global $_SESSION;
-	$rt = false;
-	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
-	switch ($tipo) {
-		case 'internet': case 'anonimos': if ($_SESSION['pol']['estado'] != 'expulsado') { $rt = true; } break;
-		case 'ciudadanos_global': if ((isset($_SESSION['pol']['user_ID'])) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $rt = true; } break;
-		case 'ciudadanos': if (($_SESSION['pol']['estado'] == 'ciudadano') && (($_SESSION['pol']['pais'] == PAIS) || (in_array(strtolower($_SESSION['pol']['pais']), explode(' ', strtolower($valor)))))) { $rt = true; } break;
-		case 'excluir': if ((isset($_SESSION['pol']['nick'])) AND (!in_array(strtolower($_SESSION['pol']['nick']), explode(' ', strtolower($valor))))) { $rt = true; } break;
-		case 'privado': if ((isset($_SESSION['pol']['nick'])) AND (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', strtolower($valor))))) { $rt = true; } break;
-		case 'afiliado': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['partido_afiliado'] == $valor)) { $rt = true; } break;
-		case 'confianza': if ($_SESSION['pol']['confianza'] >= $valor) { $rt = true; } break;
-		case 'nivel': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['nivel'] >= $valor)) { $rt = true; } break;
-		case 'cargo': if (($_SESSION['pol']['pais'] == PAIS) AND (in_array($_SESSION['pol']['cargo'], explode(' ', $valor)))) { $rt = true; } break;
-		case 'grupos': if (($_SESSION['pol']['pais'] == PAIS) AND (count(array_intersect(explode(' ', $_SESSION['pol']['grupos']), explode(' ', $valor))) > 0)) { $rt = true; } break;
-		case 'monedas': if ($_SESSION['pol']['pols'] >= $valor) { $rt = true; } break;
-		case 'autentificados': if ($_SESSION['pol']['dnie'] == 'true') { $rt = true; } break;
-		case 'supervisores_censo': if ($_SESSION['pol']['SC'] == 'true') { $rt = true; } break;
-		case 'antiguedad': if (($_SESSION['pol']['fecha_registro']) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($valor*86400)))) { $rt = true; } break;
-		case 'print': 
-			if (ASAMBLEA) {	return array('privado'=>'Nick ...', 'excluir'=>'Nick ...', 'afiliado'=>'partido_ID', 'confianza'=>'0', 'cargo'=>'cargo_ID ...', 'grupos'=>'grupo_ID ...', 'nivel'=>'1', 'antiguedad'=>'365', 'autentificados'=>'', 'supervisores_censo'=>'', 'ciudadanos'=>'', 'ciudadanos_global'=>'', 'anonimos'=>''); } 
-			else { return array('privado'=>'Nick ...', 'excluir'=>'Nick ...', 'afiliado'=>'partido_ID', 'confianza'=>'0', 'cargo'=>'cargo_ID ...', 'grupos'=>'grupo_ID ...', 'nivel'=>'1', 'antiguedad'=>'365', 'monedas'=>'0', 'autentificados'=>'', 'supervisores_censo'=>'', 'ciudadanos'=>'', 'ciudadanos_global'=>'', 'anonimos'=>''); }
-		exit;
-	}
-	return $rt;
-}
-// ###
-}
-
-
-
-function filtro_sql($a) {
-	$a = str_replace('\'', '&#39;', $a);
-	$a = str_replace('"', '&quot;', $a);
-	return mysql_real_escape_string($a);
-}
 
 function acceso_check($chat_ID, $ac=null) {
 	global $link;
@@ -71,7 +26,12 @@ function acceso_check($chat_ID, $ac=null) {
 	if (isset($ac)) { return $acceso[$ac]; } else { return $acceso; }
 }
 
-
+/* ID CARGO 00:00 NICK MSG
+m0 - m normal
+p - m privado
+e - evento
+c - print comando
+*/
 function chat_refresh($chat_ID, $msg_ID=0) {
 	global $link, $_SESSION;
 	$t = '';
@@ -92,8 +52,8 @@ ORDER BY msg_ID DESC LIMIT 50", $link);
 
 
 // Prevención de inyección SQL y JS
-foreach ($_POST AS $nom => $val) { $_POST[$nom] = filtro_sql($val); }
-foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = filtro_sql($val); }
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val); }
+foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
 
 
 if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
@@ -279,8 +239,27 @@ UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMI
 
 	} else { echo 'n 0 &nbsp; &nbsp; <b style="color:#FF0000;">No tienes permiso de escritura.</b>'."\n"; }
 
+} else if ($_REQUEST['a'] == 'noti') {
+	
+	define('REGISTRAR', 'https://virtualpol.com/registrar/');
+	include_once('inc-login.php');
+?>
+<script type="text/javascript">
+$('ul.menu').each(function(){
+	$(this).find('li').has('ul').addClass('has-menu').append('<span class="arrow">&nbsp;</span>');
+});
+$('ul.menu li').hover(function(){
+	$(this).find('ul:first').stop(true, true).show();
+	$(this).addClass('hover');
+}, function(){
+	$(this).find('ul').stop(true, true).hide();
+	$(this).removeClass('hover');
+});
+</script>
+<?php
+	echo notificacion('print');
 
-} elseif (($_REQUEST['a'] == 'whois') AND (isset($_REQUEST['nick']))) {
+} else if (($_REQUEST['a'] == 'whois') AND (isset($_REQUEST['nick']))) {
 
 	$res = mysql_query("SELECT ID, fecha_registro, partido_afiliado, fecha_last, nivel, online, nota, avatar, voto_confianza, estado, pais, cargo,
 (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS partido,

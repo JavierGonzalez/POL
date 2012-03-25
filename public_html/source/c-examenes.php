@@ -437,7 +437,8 @@ LIMIT 1", $link);
 <th>Nota</th>
 <th colspan="2">Aprobados</th>
 <th></th>
-<th>Exámen</th>
+<th>Examen</th>
+<th class="gris">ID</th>
 <th></th>
 </tr>';
 // ".SQL."examenes 		(ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas)
@@ -481,6 +482,7 @@ ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 <td valign="top" align="right">' . $r['aprobados'] . '</td>
 <td valign="top">' . $cargo . '</td>
 <td valign="top">' . $url . '</td>
+<td valign="top" align="right"class="gris">'.$r['ID'].'</td>
 <td valign="top">' . $boton . '</td>
 </tr>';
 	}

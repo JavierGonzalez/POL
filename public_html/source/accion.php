@@ -45,7 +45,7 @@ case 'grupos';
 		}
 		mysql_query("UPDATE users SET grupos = '".implode(' ', $grupos_array)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	}
-	$refer_url = 'grupos/';
+	$refer_url = 'grupos';
 	break;
 
 
@@ -55,7 +55,7 @@ case 'perfil':
 			$datos_array[] = $_POST[$dato];
 		}
 		mysql_query("UPDATE users SET datos = '".implode('][', $datos_array)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		$refer_url = 'perfil/'.strtolower($pol['nick']).'/';
+		$refer_url = 'perfil/'.strtolower($pol['nick']);
 	}
 	break;
 
@@ -73,7 +73,7 @@ case 'SC':
 	$sc = get_supervisores_del_censo();
 	if (($_GET['b'] == 'nota') AND (isset($sc[$pol['user_ID']])) AND ($_GET['ID'])) {
 		mysql_query("UPDATE users SET nota_SC = '".strip_tags($_POST['nota_SC'])."' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
-		$refer_url = 'control/supervisor-censo/';
+		$refer_url = 'control/supervisor-censo';
 	}
 	break;
 
@@ -89,7 +89,7 @@ case 'exencion_impuestos':
 				mysql_query("UPDATE ".SQL."cuentas SET exenta_impuestos = 0 where ID = '".$r['ID']."'", $link);
 			}
 		}
-		$refer_url = 'pols/cuentas/';
+		$refer_url = 'pols/cuentas';
 	} 
 	break;
 
@@ -107,7 +107,7 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 				pols_transferir($pol['config']['pols_crearchat'], $pol['user_ID'], '-1', 'Solicitud chat: '.$nombre);
 			}
 		}
-		$refer_url = 'chats/';
+		$refer_url = 'chats';
 	} elseif (($_GET['b'] == 'cambiarfundador') AND ($_POST['admin']) AND ($_POST['chat_ID'])) {
 
 		$result = mysql_query("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1", $link);
@@ -115,7 +115,7 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 			if ((nucleo_acceso('privado', $r['admin'])) OR ($r['user_ID'] == $pol['user_ID'])) {
 				mysql_query("UPDATE chats SET admin = '".strtolower(strip_tags($_POST['admin']))."' WHERE chat_ID = '".$_POST['chat_ID']."' LIMIT 1", $link);
 			}
-			$refer_url = 'chats/'.$r['url'].'/opciones/';
+			$refer_url = 'chats/'.$r['url'].'/opciones';
 		} 
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {
 
@@ -143,18 +143,18 @@ acceso_cfg_escribir_ex = '".$_POST['acceso_cfg_escribir_ex']."'
 WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' LIMIT 1", $link);
 			}
 		}
-		$refer_url = 'chats/'.$_POST['chat_nom'].'/opciones/';
+		$refer_url = 'chats/'.$_POST['chat_nom'].'/opciones';
 
 
 	} elseif (($_GET['b'] == 'activar') AND ($_GET['chat_ID']) AND (nucleo_acceso('nivel', 98))) {
 		mysql_query("UPDATE chats SET estado = 'activo' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado != 'activo' AND pais = '".PAIS."' LIMIT 1", $link);
-		$refer_url = 'chats/';
+		$refer_url = 'chats';
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['chat_ID'])) {
 		mysql_query("DELETE FROM chats WHERE chat_ID = '".$_GET['chat_ID']."' AND estado = 'bloqueado' AND pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		$refer_url = 'chats/';
+		$refer_url = 'chats';
 	} elseif (($_GET['b'] == 'bloquear') AND ($_GET['chat_ID'])) {
 		mysql_query("UPDATE chats SET estado = 'bloqueado' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR ((acceso_escribir = 'anonimos') AND ('".$pol['nivel']."' >= 95))) LIMIT 1", $link);
-		$refer_url = 'chats/';
+		$refer_url = 'chats';
 	}
 	break;
 
@@ -169,11 +169,11 @@ case 'vaciar_listas':
 		$elecciones_frecuencia_dias = ceil($pol['config']['elecciones_frecuencia'] / 86400);
 		if (($elecciones_dias_quedan > 5) AND ($elecciones_dias_quedan < $elecciones_frecuencia_dias)) {
 			mysql_query("DELETE FROM ".SQL."partidos_listas", $link);
-			evento_chat('<b>[GOBIERNO]</b> Se han vaciado las listas electorales ('.crear_link($pol['nick']).', <a href="/control/gobierno/">Gobierno</a>)');
+			evento_chat('<b>[GOBIERNO]</b> Se han vaciado las listas electorales ('.crear_link($pol['nick']).', <a href="/control/gobierno">Gobierno</a>)');
 		}
 	}
 
-	$refer_url = 'partidos/';
+	$refer_url = 'partidos';
 
 	break;
 
@@ -188,7 +188,7 @@ case 'historia':
 	}
 
 
-	$refer_url = 'historia/';
+	$refer_url = 'historia';
 
 	break;
 
@@ -198,7 +198,7 @@ case 'geolocalizacion':
 	if (($_GET['b'] == 'add') AND ($_POST['x']) AND ($_POST['y'])) {
 		mysql_query("UPDATE users SET geo = '".$_POST['x'].":".$_POST['y']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	}
-	$refer_url = 'geolocalizacion/';
+	$refer_url = 'geolocalizacion';
 
 	break;
 
@@ -216,11 +216,11 @@ LIMIT 1", $link);
 		
 			pols_transferir($_POST['pols'], $r['ID'], '-1', '<b>SANCION ('.$pol['nick'].')&rsaquo;</b> '.strip_tags($_POST['concepto']));
 
-			evento_chat('<b>[SANCION] '.crear_link($r['nick']).'</b> ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial/">Ver sanciones</a>)');
+			evento_chat('<b>[SANCION] '.crear_link($r['nick']).'</b> ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial">Ver sanciones</a>)');
 		}
 
 	}
-	$refer_url = 'control/judicial/';
+	$refer_url = 'control/judicial';
 
 	break;
 
@@ -276,7 +276,8 @@ LIMIT 1", $link);
 		} else { $pols_arancel = 0; }
 		$pols = $pols - $pols_arancel;
 
-		evento_log(13); // rechazo de ciudadania
+		evento_log_OLD(13); // rechazo de ciudadania
+		evento_log('Rechazar ciudadanía');
 		if (($pol['pols'] > 0) AND (PAIS == 'VP')) {
 			$consigo = ' (llevandose consigo: '.pols($pols).' '.MONEDA.')';
 		}
@@ -349,7 +350,7 @@ case 'expulsar':
 			//evento_chat('<span class="expulsado"><img src="'.IMG.'varios/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['nick'].'</b> ha sido expulsado de VirtualPol. Razon: <b>'.$_POST['razon'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
 		}
 	}
-	$refer_url = 'control/expulsiones/';
+	$refer_url = 'control/expulsiones';
 	break;
 
 
@@ -517,10 +518,14 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 
 				$evento_examen = '<b>[CARGO]</b> '.crear_link($pol['nick']).' se postula como candidato a <a href="/cargos">'.$examen_titulo.'</a> <span class="gris">('.$nota['nota'].')</span>';
 
-				if ($nota['nota'] >= $nota_aprobado) { evento_chat($evento_examen); }
-				//evento_chat($evento_examen, 0, 6);
-
 				mysql_query("UPDATE cargos_users SET time = '".$date."', nota = '".$nota['nota']."'".$estado." WHERE user_ID = '".$pol['user_ID']."' AND cargo_ID = '".$cargo_ID."' LIMIT 1", $link);
+
+
+				if ($nota['nota'] >= $nota_aprobado) { // APROBADO
+					evento_chat($evento_examen); 
+					actualizar('examenes');
+				}
+				//evento_chat($evento_examen, 0, 6);
 
 				$refer_url = 'cargos';
 			}
@@ -541,10 +546,12 @@ FROM ".SQL."examenes WHERE ID = '" . $_POST['ID'] . "' LIMIT 1", $link);
 	
 		if ($_POST['pais'] == PAIS) {
 			mysql_query("DELETE FROM cargos_users WHERE cargo_ID = '".$_GET['ID']."' AND user_ID = '". $pol['user_ID']."' AND time < '".date('Y-m-d 20:00:00', time() - $pol['config']['examen_repe']*6)."' AND cargo_ID <= 0", $link);
+			actualizar('examenes');
 			$refer_url = 'cargos';
 		}
 	} elseif (($_GET['b'] == 'retirar_examen') AND (is_numeric($_GET['ID']))) {
 		mysql_query("DELETE FROM cargos_users WHERE cargo_ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		actualizar('examenes');
 		$refer_url = 'cargos';
 	}
 
@@ -596,7 +603,8 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = '
 		while($r = mysql_fetch_array($result)){ 
 			if ($r['ceder_user_ID']) {
 				mysql_query("UPDATE ".SQL."mapa SET user_ID = '".$r['ceder_user_ID']."', nick = '".$_POST['nick']."',  time = '".$date."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
-				evento_log(16, $r['ID'], $r['ceder_user_ID']); // Ceder propiedad
+				evento_log_OLD(16, $r['ID'], $r['ceder_user_ID']); // Ceder propiedad
+				evento_log('Cesión propiedad #'.$_GET['ID']);
 			}
 		}
 
@@ -958,7 +966,8 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link
 		while($r = mysql_fetch_array($result)){ 
 			if ($r['ceder_user_ID']) {
 				mysql_query("UPDATE ".SQL."empresas SET user_ID = '".$r['ceder_user_ID']."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
-				evento_log(15, $r['ID'], $r['ceder_user_ID']); // Ceder empresa
+				evento_log_OLD(15, $r['ID'], $r['ceder_user_ID']); // Ceder empresa
+				evento_log('Cesión empresa #'.$r['ID']);
 			}
 		}
 		$refer_url = 'empresas';
@@ -1454,7 +1463,8 @@ case 'foro':
 			mysql_query("UPDATE ".SQL."foros_msg SET estado = 'borrado', time2 = '".$date."' WHERE ID = '".$_GET['ID']."' AND estado = 'ok' LIMIT 1", $link);
 		}
 
-		evento_log(17, $_GET['ID'], $el_user_ID);
+		evento_log_OLD(17, $_GET['ID'], $el_user_ID);
+		evento_log('Foro '.ucfirst($_GET['c']).' #'.$_GET['ID'].' enviado a la papelera');
 
 		$refer_url = 'foro/papelera';
 
@@ -1529,7 +1539,7 @@ case 'kick':
 			if (mysql_affected_rows()==1) {
 				$result = mysql_query("SELECT nick FROM users WHERE ID = '".$kickeado_id."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $kickeado_nick = $r['nick'];}
-				evento_log(14, $kick_id, $kickeado_id); // Kick cancelado
+				evento_log_OLD(14, $kick_id, $kickeado_id); // Kick cancelado
 				evento_chat('<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[KICK]</b> El kick a <b>'.$kickeado_nick.'</b> ha sido cancelado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>.</span>');
 			}
 		}
@@ -1657,9 +1667,9 @@ case 'enviar-mensaje':
 			while($r = mysql_fetch_array($result)){ $cargo_nombre = $r['nombre']; }
 
 			if ($_POST['cargo_ID'] == '55') {
-				$result = mysql_query("SELECT user_ID FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'true' AND aprobado = 'ok' AND cargo_ID IN (55, 56, 57) LIMIT 1000", $link);
+				$result = mysql_query("SELECT user_ID FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'true' AND cargo_ID IN (55, 56, 57) LIMIT 1000", $link);
 			} else {
-				$result = mysql_query("SELECT user_ID FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'true' AND aprobado = 'ok' AND cargo_ID = '".$_POST['cargo_ID']."' LIMIT 1000", $link);
+				$result = mysql_query("SELECT user_ID FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'true' AND cargo_ID = '".$_POST['cargo_ID']."' LIMIT 1000", $link);
 			}
 			while($r = mysql_fetch_array($result)){ 
 				if (($r['user_ID'] != $pol['user_ID']) AND ($r['user_ID'] != 0)) {
@@ -1820,7 +1830,7 @@ case 'cargo':
 
 		cargo_del($_GET['ID'], $pol['user_ID'], false);
 
-		$result = mysql_query("SELECT nombre FROM cargos WHERE cargo_ID = '".$_GET['ID']."' LIMIT 1", $link);
+		$result = mysql_query("SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ $cargo_nom = $r['nombre']; }
 		
 		evento_chat('<b>[CARGO] '.crear_link($pol['nick']).' dimite</b> del cargo <img src="'.IMG.'cargos/'.$_GET['ID'].'.gif" />'.$cargo_nom);
@@ -1884,7 +1894,7 @@ case 'eliminar-partido':
 		while($r = mysql_fetch_array($result)){
 			mysql_query("DELETE FROM ".SQL."partidos WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 			mysql_query("DELETE FROM ".SQL."partidos_listas WHERE ID_partido = '".$r['ID']."' LIMIT 1", $link);
-			evento_log(5, $r['ID']);
+			evento_log_OLD(5, $r['ID']);
 		}
 	}
 
@@ -1918,7 +1928,7 @@ case 'eliminar-documento':
 	while($r = mysql_fetch_array($result)){ 
 		if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
 			mysql_query("UPDATE docs SET estado = 'del' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
-			evento_log(8, $r['ID']);
+			evento_log_OLD(8, $r['ID']);
 			pad('delete', $r['ID']);
 			
 		}
@@ -1975,7 +1985,7 @@ case 'crear-documento':
 		mysql_query("INSERT INTO docs 
 (pais, url, title, text, time, time_last, estado, cat_ID, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir) 
 VALUES ('".PAIS."', '".$url."', '".$_POST['title']."', '', '".$date."', '".$date."', 'ok', '".$_POST['cat']."', '".$_POST['acceso_leer']."', '".$_POST['acceso_escribir']."', '".$_POST['acceso__cfg_leer']."', '".$_POST['acceso_cfg_escribir']."')", $link);
-		evento_log(6, $url);
+		evento_log_OLD(6, $url);
 
 		// actualizacion de info en theme
 		$result = mysql_query("SELECT COUNT(ID) AS num FROM docs WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
@@ -1992,7 +2002,7 @@ case 'afiliarse':
 	if (($pol['config']['elecciones_estado'] != 'elecciones')) {
 		mysql_query("UPDATE users SET partido_afiliado = '".$_POST['partido']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '".$pol['user_ID']."'", $link);
-		evento_log(9, $_POST['partido']);
+		evento_log_OLD(9, $_POST['partido']);
 	}
 	$refer_url = 'perfil/'.$pol['nick'].'/';
 	break;
@@ -2015,7 +2025,7 @@ VALUES ('".$pol['user_ID']."', '".$date."', '".strtoupper($_POST['siglas'])."', 
 
 		$result = mysql_query("SELECT ID FROM ".SQL."partidos WHERE siglas = '".$_POST['siglas']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ $partido_ID = $r['ID']; }
-		evento_log(3, $partido_ID);
+		evento_log_OLD(3, $partido_ID);
 	}
 
 	// actualizar info en theme

@@ -15,8 +15,9 @@ function nucleo_acceso($tipo, $valor='') {
 		case 'afiliado': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['partido_afiliado'] == $valor)) { $rt = true; } break;
 		case 'confianza': if ($_SESSION['pol']['confianza'] >= $valor) { $rt = true; } break;
 		case 'nivel': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['nivel'] >= $valor)) { $rt = true; } break;
-		case 'cargo': if (($_SESSION['pol']['pais'] == PAIS) AND (in_array($_SESSION['pol']['cargo'], explode(' ', $valor)))) { $rt = true; } break;
+		case 'cargo': if (($_SESSION['pol']['pais'] == PAIS) AND (count(array_intersect(explode(' ', $_SESSION['pol']['cargos']), explode(' ', $valor))) > 0)) { $rt = true; } break;
 		case 'grupos': if (($_SESSION['pol']['pais'] == PAIS) AND (count(array_intersect(explode(' ', $_SESSION['pol']['grupos']), explode(' ', $valor))) > 0)) { $rt = true; } break;
+		case 'examenes': if (($_SESSION['pol']['pais'] == PAIS) AND (count(array_intersect(explode(' ', $_SESSION['pol']['examenes']), explode(' ', $valor))) > 0)) { $rt = true; } break;
 		case 'monedas': if ($_SESSION['pol']['pols'] >= $valor) { $rt = true; } break;
 		case 'autentificados': if ($_SESSION['pol']['dnie'] == 'true') { $rt = true; } break;
 		case 'supervisores_censo': if ($_SESSION['pol']['SC'] == 'true') { $rt = true; } break;
@@ -42,6 +43,7 @@ function verbalizar_acceso($tipo, $valor='') {
 		case 'nivel': $t = 'ciudadanos con nivel mayor o igual a '.$valor.' (<a href="/cargos">Ver cargos</a>)'; break;
 		case 'cargo': $t = 'ciudadanos con cargo: '.$valor.' (<a href="/cargos">Ver cargos</a>)'; break;
 		case 'grupos': $t = 'ciudadanos afiliados al grupo: '.$valor.' (<a href="/grupos">Ver grupos</a>)'; break;
+		case 'examenes': $t = 'ciudadanos con los siguientes exámenes aprobados: '.$valor.' (<a href="/examenes">Ver exámenes</a>)'; break;
 		case 'monedas': $t = 'ciudadanos con al menos '.$valor.' monedas'; break;
 		case 'autentificados': $t = 'ciudadanos autentificados'; break;
 		case 'supervisores_censo': $t = 'Supervisores del Censo'; break;
@@ -211,12 +213,12 @@ function num($num, $dec=0) { return number_format(round($num, $dec), $dec, ',', 
 function explodear($pat, $str, $num) { $exp = explode($pat, $str); return $exp[$num]; }
 function implodear($pat, $str, $num) { $exp = implode($pat, $str); return $exp[$num]; }
 
-function boton($texto, $url=false, $confirm=false, $size=false, $pols='') {
+function boton($texto, $url=false, $confirm=false, $size=false, $pols='', $html_extra=false) {
 	if (($pols=='') OR (ECONOMIA == false)) {
-		return '<button'.($url==false?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').($url!='submit'?'window.location.href=\''.$url.'\';return false;':'').'"').($size!=false?' class="'.$size.'"':'').'>'.$texto.'</button>';
+		return '<button'.($url==false?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').($url!='submit'?'window.location.href=\''.$url.'\';return false;':'').'"').($size!=false?' class="'.$size.'"':'').($html_extra!=false?$html_extra:'').'>'.$texto.'</button>';
 	} else {
 		global $pol;
-		return '<span class="amarillo"><input type="submit" value="'.$texto.'"'.($pol['pols']<$pols?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').'window.location.href=\''.$url.'\';"').' class="large blue" />'.(ECONOMIA?' &nbsp; '.pols($pols).' '.MONEDA.'':'').'</span>';
+		return '<span class="amarillo"><input type="submit" value="'.$texto.'"'.($pol['pols']<$pols?' disabled="disabled"':' onClick="'.($confirm!=false?'if(!confirm(\''.$confirm.'\')){return false;}':'').'window.location.href=\''.$url.'\';"').' class="large blue" />'.(ECONOMIA?' &nbsp; '.pols($pols).' '.MONEDA.'':'').($html_extra!=false?$html_extra:'').'</span>';
 	}
 }
 
@@ -270,6 +272,7 @@ function cargos() {
 	return $cargos;
 }
 
+// FUNCION MALA. REEMPLAZAR URGENTE.
 function paginacion($type, $url, $ID, $num_ahora=null, $num_total=null, $num='10') {
 	global $link, $p_limit, $p_paginas, $p_init;
 	if (!$num_total) {

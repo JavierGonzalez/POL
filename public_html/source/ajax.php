@@ -217,12 +217,7 @@ LIMIT 1", $link);
 			if ($_SESSION['pol']['estado'] == 'anonimo') { $sql_ip = 'inet_aton("'.$_SERVER['REMOTE_ADDR'].'")'; } else { $sql_ip = 'NULL'; }
 
 			$elcargo = $_SESSION['pol']['cargo'];
-			if (($_SESSION['pol']['pais'] != PAIS) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { 
-				if ($_SESSION['pol']['cargo'] != 42) { $elcargo = 99; }
-			} elseif (substr($elnick, 0, 1) == '-') {
-				$elcargo = 98;
-				$elnick = substr($elnick, 1);
-			}
+			if (($_SESSION['pol']['pais'] != PAIS) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $elcargo = 99; } // Extrangero
 
 			mysql_query("INSERT DELAYED INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.")", $link);
 

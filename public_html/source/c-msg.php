@@ -44,7 +44,7 @@ LIMIT 50", $link);
 
 <br />
 
-<div><button onclick="$(\'#box_msg\').toggle(\'slow\');">Escribir mensaje</button> &nbsp; <span class="gris">Tienes <b>'.$pol['msg'].'</b> mensajes sin leer</span> '.boton('Marcar todo como leído', '/accion.php?a=mensaje-leido&ID=all', false, 'small').'</div>';
+<div><button onclick="$(\'#box_msg\').toggle(\'slow\');">Escribir mensaje</button> &nbsp; <span class="gris">Tienes <b>'.$pol['msg'].'</b> mensajes sin leer</span> '.boton('Marcar todo como leído', '/accion.php?a=mensaje-leido&ID=all', false, 'small pill').'</div>';
 
 
 
@@ -62,13 +62,13 @@ LIMIT 50", $link);
 	}
 
 	$result = mysql_query("SELECT cargo_ID, nombre,
-(SELECT COUNT(cargo_ID) FROM cargos_users WHERE cargo = 'true' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS cargos_num
+(SELECT COUNT(cargo_ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'true' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS cargos_num
 FROM cargos
 WHERE asigna != '-1' AND pais = '".PAIS."'
 ORDER BY nivel DESC", $link);
 	while($r = mysql_fetch_array($result)){
 		if ($r['cargos_num'] > 0) {
-			$select_todoscargos .= '<option value="' . $r['cargo_ID'] . '"'.($pre_cargo==$r['cargo_ID']?' selected="selected"':'').'>' . $r['cargos_num'] . ' &nbsp; ' . $r['nombre'] . '</option>';
+			$select_todoscargos .= '<option value="' . $r['cargo_ID'] . '"'.($pre_cargo==$r['cargo_ID']?' selected="selected"':'').'>'.$r['nombre'].' ('.$r['cargos_num'].')</option>';
 		}
 	}
 	$select_todoscargos .= '<option value="SC"'.($pre_cargo=='SC'?' selected="selected"':'').'>&nbsp; &nbsp; Supervisores del Censo</option>';
@@ -199,8 +199,8 @@ LIMIT 100", $link);
 <td valign="top">'.$boton.'</td>
 <td valign="top" align="right" nowrap="nowrap"><b>'.crear_link($r['nick_envia']).'</b>'.$cargo.'<br /><acronym title="'.$r['time'].'" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td>
 <td valign="top" class="rich">'.$r['text'].'<hr class="quitar" /></td>
-<td valign="top"><button onclick="$(\'#ciudadano\').val(\''.$r['nick_envia'].'\');$(\'#box_msg\').toggle(\'slow\');">Responder</button></td>
-<td valign="top">'.boton('X', '/accion.php?a=borrar-mensaje&ID='.$r['ID'], false, 'small').'</td>
+<td valign="top"><button onclick="$(\'#ciudadano\').val(\''.$r['nick_envia'].'\');$(\'#box_msg\').toggle(\'slow\');" class="blue">Responder</button></td>
+<td valign="top">'.boton('X', '/accion.php?a=borrar-mensaje&ID='.$r['ID'], false, 'small red').'</td>
 </tr>'."\n";
 	}
 

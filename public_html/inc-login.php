@@ -26,7 +26,7 @@ if (!isset($_SESSION)) { session_start(); } // inicia sesion PHP
 
 // nucleo del sistema de usuarios, comienza la verificación
 if (isset($_COOKIE['teorizauser'])) {
-	$result = mysql_query("SELECT ID, pass, nick, estado, pols, pais, email, fecha_registro, rechazo_last, cargo, nivel, dnie FROM users WHERE nick = '".$_COOKIE['teorizauser']."' LIMIT 1", $link);
+	$result = mysql_query("SELECT ID, pass, nick, estado, pols, pais, email, fecha_registro, rechazo_last, cargo, cargos, examenes, nivel, dnie FROM users WHERE nick = '".$_COOKIE['teorizauser']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
 		if (md5(CLAVE.$r['pass']) == $_COOKIE['teorizapass']) { // cookie pass OK
 			$session_new = true;
@@ -43,6 +43,8 @@ if (isset($_COOKIE['teorizauser'])) {
 			$_SESSION['pol']['nick'] = $r['nick'];
 			$_SESSION['pol']['user_ID'] = $r['ID'];
 			$_SESSION['pol']['cargo'] = $r['cargo'];
+			$_SESSION['pol']['cargos'] = $r['cargos'];
+			$_SESSION['pol']['examenes'] = $r['examenes'];
 			$_SESSION['pol']['nivel'] = $r['nivel'];
 			$_SESSION['pol']['fecha_registro'] = $r['fecha_registro'];
 			$_SESSION['pol']['pais'] = $r['pais'];

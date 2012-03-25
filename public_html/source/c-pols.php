@@ -9,13 +9,11 @@ if (($_GET['a'] == 'cuentas') AND ($_GET['b'] == 'crear')) {
 	$txt_title = 'Crear nueva cuenta bancaria';
 	$txt_nav = array('/pols'=>'Economía', 'Crear cuenta bancaria');
 
-	$txt .= '<h1>Crear nueva Cuenta Bancaria</h1>
-
-<form action="/accion.php?a=pols&b=crear-cuenta" method="post">
+	$txt .= '<form action="/accion.php?a=pols&b=crear-cuenta" method="post">
 
 <p>Nombre: <input type="text" name="nombre" size="20" maxlength="20" /> ' . boton('Crear Cuenta', false, false, false, $pol['config']['pols_cuentas']) . '</p>
 
-<p><a href="/pols/cuentas/"><b>Ver Cuentas Bancarias</b></a> &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>
+<p><a href="/pols/cuentas"><b>Ver Cuentas Bancarias</b></a> &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>
 
 </form>
 ';
@@ -23,7 +21,7 @@ if (($_GET['a'] == 'cuentas') AND ($_GET['b'] == 'crear')) {
 } elseif (($_GET['a'] == 'cuentas') AND ($_GET['b'])) {
 
 	$result = mysql_query("SELECT ID, nombre, user_ID, pols, nivel, time,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."cuentas.user_ID LIMIT 1) AS nick
+(SELECT nick FROM users WHERE ID = ".SQL."cuentas.user_ID LIMIT 1) AS nick
 FROM ".SQL."cuentas
 WHERE ID = '" . $_GET['b'] . "'
 LIMIT 1", $link);
@@ -60,12 +58,12 @@ LIMIT 1", $link);
 
 // concepto != 'CP' AND concepto != 'INEMPOL' AND concepto != 'Salario' AND 
 	$result = mysql_query("SELECT ID, pols, concepto, time, receptor_ID, emisor_ID,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."transacciones.emisor_ID LIMIT 1) AS nick_emisor,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."transacciones.receptor_ID LIMIT 1) AS nick_receptor
+(SELECT nick FROM users WHERE ID = ".SQL."transacciones.emisor_ID LIMIT 1) AS nick_emisor,
+(SELECT nick FROM users WHERE ID = ".SQL."transacciones.receptor_ID LIMIT 1) AS nick_receptor
 FROM ".SQL."transacciones
 WHERE (emisor_ID = '-" . $ID . "' OR receptor_ID = '-" . $ID . "')
 ORDER BY time DESC
-LIMIT " . $p_limit, $link);
+LIMIT ".mysql_real_escape_string($p_limit), $link);
 	while($row = mysql_fetch_array($result)) {
 
 		if ($row['emisor_ID'] == '-' . $ID) { //doy
@@ -131,7 +129,7 @@ LIMIT " . $p_limit, $link);
 </tr>';
 
 	$result = mysql_query("SELECT ID, nombre, user_ID, pols, nivel, time, exenta_impuestos,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."cuentas.user_ID LIMIT 1) AS nick
+(SELECT nick FROM users WHERE ID = ".SQL."cuentas.user_ID LIMIT 1) AS nick
 FROM ".SQL."cuentas
 ORDER BY nivel DESC, pols DESC", $link);
 	while($row = mysql_fetch_array($result)) {
@@ -287,12 +285,12 @@ function click_ciudadano() {
 	paginacion('censo', '/pols/', null, $ahora, $total, 15);
 
 	$result = mysql_query("SELECT ID, pols, concepto, time, receptor_ID, emisor_ID,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."transacciones.emisor_ID LIMIT 1) AS nick_emisor,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."transacciones.receptor_ID LIMIT 1) AS nick_receptor
+(SELECT nick FROM users WHERE ID = ".SQL."transacciones.emisor_ID LIMIT 1) AS nick_emisor,
+(SELECT nick FROM users WHERE ID = ".SQL."transacciones.receptor_ID LIMIT 1) AS nick_receptor
 FROM ".SQL."transacciones
 WHERE emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "'
 ORDER BY time DESC
-LIMIT " . $p_limit, $link);
+LIMIT " . mysql_real_escape_string($p_limit), $link);
 	while($row = mysql_fetch_array($result)) {
 
 		if ($row['nick_emisor'] == $pol['nick']) { //doy

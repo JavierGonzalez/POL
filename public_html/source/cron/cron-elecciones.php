@@ -48,6 +48,7 @@ $elecciones_inicio_t = strtotime($pol['config']['elecciones_inicio']);
 $elecciones_fin = $elecciones_inicio_t + $pol['config']['elecciones_duracion'];
 
 
+
 // INICIA 2º VUELTA (mejorar)
 if ($pol['config']['elecciones'] == 'pres1') {
 	// cambia estado NEW
@@ -105,7 +106,7 @@ ORDER BY ID ASC LIMIT 1", $link);
 
 
 
-if (($pol['config']['elecciones_estado'] == 'normal') AND (time() >= ($elecciones_inicio_t - 1000))) { 
+if (($pol['config']['elecciones_estado'] == 'normal') AND (time() >= ($elecciones_inicio_t - 4000))) { 
 	// INICIO ELECCIONES
 
 

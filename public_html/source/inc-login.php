@@ -52,7 +52,7 @@ while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor
 if (isset($pol['user_ID'])) {
 
 	// LOAD: $pol
-	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, fecha_legal, dnie, SC, IP, grupos
+	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, cargos, examenes, fecha_legal, dnie, SC, IP, grupos
 FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
 		$pol['pols'] = $r['pols'];
@@ -72,6 +72,8 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 		
 
 		$_SESSION['pol']['cargo'] = $r['cargo'];
+		$_SESSION['pol']['cargos'] = $r['cargos'];
+		$_SESSION['pol']['examenes'] = $r['examenes'];
 		$_SESSION['pol']['nivel'] = $r['nivel'];
 		$_SESSION['pol']['pais'] = $r['pais'];
 		$_SESSION['pol']['estado'] = $r['estado'];

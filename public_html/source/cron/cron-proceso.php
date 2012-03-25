@@ -348,6 +348,8 @@ mysql_query("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '
 // ELIMINAR examenes antiguos
 //mysql_query("DELETE FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'false' AND time < '".$margen_60dias."'", $link);
 
+// ELIMINAR notificaciones
+mysql_query("DELETE FROM notificaciones WHERE time < '".$margen_10dias."'", $link);
 
 
 /* Tramos de expiración:

@@ -105,7 +105,7 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 
 		switch ($r['asigna']) {
 			case -2: $asigna = '<b title="Votacion Ejecutiva">Votacion Ejecutiva</b>'; break;
-			case 0:  $asigna = '<b title="Elecciones Generales">Elecciones</b>'; break;
+			case 0:  $asigna = '<a href="/elecciones"><b>Elecciones</b></a>'; break;
 			default: $asigna = ''; break;
 		}
 		

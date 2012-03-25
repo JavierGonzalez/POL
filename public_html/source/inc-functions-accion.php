@@ -1,6 +1,42 @@
 <?php
 
 
+function actualizar($accion, $user_ID=false) {
+	global $pol, $link;
+	if ($user_ID == false) { $user_ID = $pol['user_ID']; }
+	switch ($accion) {
+
+		case 'examenes':
+			$data_array = array();
+			$result = mysql_query("SELECT cargo_ID, (SELECT ID FROM ".SQL."examenes WHERE cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_ID FROM cargos_users WHERE user_ID = '".$user_ID."' AND aprobado = 'ok'", $link);
+			while($r = mysql_fetch_array($result)){ $data_array[] = $r['examen_ID']; }
+			mysql_query("UPDATE users SET examenes = '".implode(' ', $data_array)."' WHERE ID = '".$user_ID."' LIMIT 1", $link);
+			break;
+
+		case 'cargos':
+			$data_array = array();
+			$result = mysql_query("SELECT cargo_ID FROM cargos_users WHERE user_ID = '".$user_ID."' AND cargo = 'true'", $link);
+			while($r = mysql_fetch_array($result)){ $data_array[] = $r['cargo_ID']; }
+			mysql_query("UPDATE users SET cargos = '".implode(' ', $data_array)."' WHERE ID = '".$user_ID."' LIMIT 1", $link);
+			break;
+	}
+}
+
+
+function evento_log($accion, $es_sistema=false) {
+	global $pol, $link;
+	if (!isset($pol['user_ID'])) { $es_sistema = true; }
+	mysql_query("INSERT INTO log (pais, user_ID, nick, time, accion) VALUES ('".PAIS."', '".($es_sistema==false?$pol['user_ID']:0)."', '".($es_sistema==false?$pol['nick']:'Sistema')."', '".date('Y-m-d H:i:s')."', '".$accion."')", $link);
+}
+
+// FUNCION OBSOLETA.
+function evento_log_OLD($accion, $dato='', $user_ID2='', $user_ID='') {
+	global $pol, $link; 
+	$user_ID = $pol['user_ID'];
+	mysql_query("INSERT INTO ".SQL."log (time, user_ID, user_ID2, accion, dato) VALUES ('" . date('Y-m-d H:i:s') . "', '".$user_ID."', '" . $user_ID2 . "', '" . $accion . "', '" . $dato . "')", $link);
+}
+
+
 function presentacion($titulo, $html, $url='http://www.virtualpol.com') {
 	global $link;
 	echo '
@@ -128,12 +164,6 @@ function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', 
 	mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('".$chat_ID."', '".$nick."', '".$msg."', '0', '".$user_ID."', '".$tipo."')", $link);
 }
 
-function evento_log($accion, $dato='', $user_ID2='', $user_ID='') {
-	global $pol, $link; 
-	$user_ID = $pol['user_ID'];
-	mysql_query("INSERT INTO ".SQL."log (time, user_ID, user_ID2, accion, dato) VALUES ('" . date('Y-m-d H:i:s') . "', '".$user_ID."', '" . $user_ID2 . "', '" . $accion . "', '" . $dato . "')", $link);
-}
-
 
 function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 	global $link, $pol, $date; 
@@ -150,7 +180,8 @@ function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 		}
 
 		mysql_query("UPDATE users SET nivel = '" . $r['nivel'] . "', cargo = '" . $cargo_ID . "' WHERE ID = '".$user_ID."' AND nivel < '" . $r['nivel'] . "' LIMIT 1", $link);
-		evento_log(11, $cargo_ID, $user_ID);
+		actualizar('cargos', $user_ID);
+		evento_log_OLD(11, $cargo_ID, $user_ID);
 
 		if ($evento_chat) { 
 			$result2 = mysql_query("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
@@ -166,7 +197,7 @@ function cargo_del($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 	$result = mysql_query("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 		mysql_query("UPDATE cargos_users SET cargo = 'false' WHERE pais = '".PAIS."' AND cargo_ID = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' LIMIT 1", $link);
-		evento_log(12, $cargo_ID, $user_ID);
+		evento_log_OLD(12, $cargo_ID, $user_ID);
 		$result = mysql_query("SELECT cargo_ID, 
 (SELECT nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nivel
 FROM cargos_users 
@@ -176,6 +207,7 @@ LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ $user_nivel_max = $r['nivel']; $user_nivel_sql = ", cargo = '" . $r['cargo_ID'] . "'"; }
 		if (!$user_nivel_max) { $user_nivel_max = 1; $user_nivel_sql = ", cargo = ''"; }
 		mysql_query("UPDATE users SET nivel = '" . $user_nivel_max . "'" . $user_nivel_sql . " WHERE ID = '".$user_ID."' LIMIT 1", $link);
+		actualizar('cargos', $user_ID);
 
 		if ($evento_chat) { 
 			$result2 = mysql_query("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);

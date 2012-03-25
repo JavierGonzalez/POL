@@ -73,7 +73,7 @@ switch ($host[0]) {
 	case 'rssv': 
 		define('PAIS', 'RSSV'); 
 		define('ASAMBLEA', false);
-		define('ECONOMIA', true); 
+		define('ECONOMIA', false); 
 		define('NOM_PARTIDOS','Partidos');
 		$columnas = 14; $filas = 14;
 		$vp['acceso'] = array(

@@ -7,12 +7,9 @@ $txt_description = 'Red social democrática. Simulador Politico y social Espa&nt
 
 
 
-// '.(isset($pol['user_ID'])?'':'<span style="float:right;margin-left:10px;"><iframe src="http://docs.google.com/present/embed?id=ddfcnxdb_15fqwwcpct&interval=30" frameborder="0" width="410" height="342"></iframe></span>').'
-
 
 
 // Datos estadisticos
-
 /*
 Se contabilizan los siguientes datos antiguos conservadas en tablas antiguas.
 Plataforma votaciones votos
@@ -22,7 +19,6 @@ Hispania 1079 15546
 Vulcan 161 954
 VP 369 11341
 */
-
 $result = mysql_query("SELECT COUNT(*) AS num FROM votacion", $link);
 while($r = mysql_fetch_array($result)) { $num_votaciones = $r['num']+2784; }
 
@@ -42,7 +38,7 @@ $txt .= '<h1>Bienvenido a VirtualPol</h1>
 
 <ul><em>VirtualPol ofrece:</em>
 
-<li><b>Herramientas democr&aacute;ticas</b>: elecciones, votaciones avanzadas, sistema de cargos, <abbr title="El voto de confianza es un voto +1 -1 secreto, que cada usuario otorga a otros usuarios">voto de confianza</abbr>, grupos/partidos, control de <abbr title="Los kicks sirven para moderar, son bloqueos temporales de usuarios">kicks</abbr>, <abbr title="Ex&aacute;menes tipo test automaticos">ex&aacute;menes</abbr>...</li>
+<li><b>Herramientas democráticas</b>: elecciones, votaciones avanzadas, sistema de cargos, <abbr title="El voto de confianza es un voto +1 -1 secreto, que cada usuario otorga a otros usuarios">voto de confianza</abbr>, grupos/partidos, control de <abbr title="Los kicks sirven para moderar, son bloqueos temporales de usuarios">kicks</abbr>, <abbr title="Exámenes tipo test automaticos">exámenes</abbr>...</li>
 
 <li><b>Herramientas de comunicaci&oacute;n</b>: salas de chat, foros, voz (mumble), mensajes privados, notas...</li>
 
@@ -61,8 +57,8 @@ $txt .= '<center>
 <table border="0" cellpadding="5" cellspacing="0" width="60%">
 <tr style="color:grey;">
 <th colspan="2" align="left">Plataformas</th>
-<th>Poblaci&oacute;n</th>
-<th>Antig&uuml;edad</th>
+<th>Población</th>
+<th>Antigüedad</th>
 <th></th>
 <th></th>
 </tr>';
@@ -85,11 +81,11 @@ foreach ($vp['paises'] AS $pais) {
 	// Presidente
 	$pais_presidente = '';
 	$result = mysql_query("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '7'", $link);
-	while($r = mysql_fetch_array($result)) { $pais_presidente = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'/" class="nick"><b style="font-size:18px;">' . $r['nick'] . '</b></a>'; }
+	while($r = mysql_fetch_array($result)) { $pais_presidente = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'" class="nick"><b style="font-size:18px;">' . $r['nick'] . '</b></a>'; }
 
 	$pais_vice = '';
 	$result = mysql_query("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '19'", $link);
-	while($r = mysql_fetch_array($result)) { $pais_vice = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'/" class="nick" style="font-size:18px;">' . $r['nick'] . '</a>'; }
+	while($r = mysql_fetch_array($result)) { $pais_vice = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'" class="nick" style="font-size:18px;">' . $r['nick'] . '</a>'; }
 
 	// DEFCON
 	$result = mysql_query("SELECT valor, dato FROM ".$pais_low."_config WHERE dato = 'pais_des'", $link);
@@ -112,17 +108,17 @@ foreach ($vp['paises'] AS $pais) {
 
 
 	$txt .= '<tr style="background:'.$vp['bg'][$pais].';">
-<td><a href="http://'.$pais_low.'.'.DOMAIN.'/"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.'" width="60" height="40" /></a></td>
+<td><a href="http://'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.'" width="60" height="40" /></a></td>
 
-<td nowrap="nowrap"><a href="http://'.$pais_low.'.'.DOMAIN.'/"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
+<td nowrap="nowrap"><a href="http://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
 
 <td align="right"><b style="font-size:22px;">'.num($pais_pob).'</b></td>
-<td nowrap="nowrap" align="right"><b>'.num($pais_dias).'</b> d&iacute;as</td>
+<td nowrap="nowrap" align="right"><b>'.num($pais_dias).'</b> días</td>
 
 <td style="font-size:13px;">
-<a href="http://'.$pais_low.'.'.DOMAIN.'/elecciones/">Elecciones</a><br />
-<a href="http://'.$pais_low.'.'.DOMAIN.'/votacion/">Votaciones</a><br />
-<a href="http://'.$pais_low.'.'.DOMAIN.'/chats/">Chats</a> <a href="http://'.$pais_low.'.'.DOMAIN.'/foro/">Foro</a>
+<a href="http://'.$pais_low.'.'.DOMAIN.'/elecciones">Elecciones</a><br />
+<a href="http://'.$pais_low.'.'.DOMAIN.'/votacion">Votaciones</a><br />
+<a href="http://'.$pais_low.'.'.DOMAIN.'/chats">Chats</a> <a href="http://'.$pais_low.'.'.DOMAIN.'/foro">Foro</a>
 </td>
 
 <td nowrap="nowrap">'.($pais!='VP'?'':'<img src="'.IMG.'cargos/7.gif" alt="Presidente de '.$pais.'" title="Presidente de '.$pais.'" width="16" height="16" /> '.$pais_presidente.'<br /><img src="'.IMG.'cargos/19.gif" alt="Vicepresidente de '.$pais.'" title="Vicepresidente de '.$pais.'" width="16" height="16" /> '.$pais_vice.'').'</td>
@@ -146,7 +142,7 @@ while($r = mysql_fetch_array($result)){
 $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="10"></td></tr>
 
 <tr>
-<td colspan="2" rowspan="2" align="right"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=225x110&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto de la poblaci&oacute;n entre plataformas." width="225" height="110" /></td>
+<td colspan="2" rowspan="2" align="right"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=240x150&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto de la poblaci&oacute;n entre plataformas." width="240" height="150" /></td>
 <td align="right" valign="top"><b style="font-size:22px;">'.num($poblacion_num).'</b></td>
 <td colspan="2" valign="top"><b style="font-size:20px;">Ciudadanos</b></td>
 <td colspan="3" align="right"></td>
@@ -180,7 +176,7 @@ while($r = mysql_fetch_array($result)){
 
 	$pais_url = strtolower($r['pais']);
 	if ($pais_url == 'ninguno') { $pais_url = 'vp'; }
-	$li_online .= ' <a href="http://'.$pais_url.'.'.DOMAIN.'/perfil/'.$r['nick'].'/" class="nick redondeado '.$r['estado'].'" style="padding:2px;line-height:25px;background:' . $vp['bg'][$r['pais']] . ';">'.$r['nick'].'</a>'; 
+	$li_online .= ' <a href="http://'.$pais_url.'.'.DOMAIN.'/perfil/'.$r['nick'].'" class="nick redondeado '.$r['estado'].'" style="padding:2px;line-height:25px;background:'.$vp['bg'][$r['pais']].';">'.$r['nick'].'</a>'; 
 }
 
 $txt .= '<br />
@@ -188,7 +184,7 @@ $txt .= '<br />
 <div class="amarillo" style="width:90%;margin:0 auto;">
 <table border="0">
 <tr>
-<td><b style="font-size:34px;">'.num($li_online_num).'</b></td>
+<td valign="top"><b style="font-size:34px;">'.num($li_online_num).'</b></td>
 <td>Ciudadanos online: '.$li_online.'</td>
 </tr>
 </table></div>'; 

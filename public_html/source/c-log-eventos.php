@@ -24,7 +24,7 @@ if ($_GET['b']) {
 
 
 
-	paginacion('eventos', '/log-eventos/', null, $_GET['a'], null, '250');
+	paginacion('eventos', '/log-eventos', null, $_GET['a'], null, '250');
 
 	$txt .= '<h1 class="quitar">Log de Eventos:</h1>
 
@@ -43,7 +43,7 @@ time, accion, user_ID, user_ID2, dato,
 (SELECT nick FROM users WHERE ".SQL."log.user_ID2 != '0' AND ID = ".SQL."log.user_ID2 LIMIT 1) AS nick2
 FROM ".SQL."log " . $filtro_ID . "
 ORDER BY time DESC
-LIMIT " . $p_limit, $link);
+LIMIT ".mysql_real_escape_string($p_limit), $link);
 	while($r = mysql_fetch_array($result)){
 		$fecha = explodear(' ', $r['time'], 1);
 		$fecha = explodear(':', $fecha, 0) . ':' . explodear(':', $fecha, 1);

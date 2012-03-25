@@ -161,6 +161,13 @@ function hace(cuando, ts, num, pre) {
 
 // FUNCIONES CHAT START
 
+function actualizar_ahora() {
+	chat_delay = 4000;
+	refresh = setTimeout(chat_query_ajax, chat_delay);
+	delays();
+	chat_query_ajax();
+}
+
 function scroll_abajo() {
 	if (chat_scroll <= document.getElementById("vpc").scrollTop) {
 		document.getElementById("vpc").scrollTop = 90000000;
@@ -251,11 +258,13 @@ function chat_query_ajax() {
 	if (ajax_refresh) {
 		ajax_refresh = false;
 		clearTimeout(refresh);
+		$("#vpc_actividad").attr("src", IMG + "ico/punto_azul.png").attr("title", "Actualizar chat (" + (chat_delay/1000) + " segundos)");
 		$.post("/ajax.php", { chat_ID: chat_ID, n: msg_ID },
 			function(data){
 				ajax_refresh = true;
 				if (data) { print_msg(data); }
 				refresh = setTimeout(chat_query_ajax, chat_delay);
+				$("#vpc_actividad").attr("src", IMG + "ico/punto_gris.png");
 			}
 		);
 		if (ajax_refresh == true) { merge_list(); }
@@ -396,6 +405,7 @@ function print_delay() {
 function enviarmsg() {
  	var elmsg = $("#vpc_msg").attr("value");
 	var boton_envia_estado = $("#botonenviar").attr("disabled");
+	$("#vpc_actividad").attr("src", IMG + "ico/punto_rojo.png");
 	if ((elmsg) && (boton_envia_estado != "disabled")) {
 		ajax_refresh = false;
 		clearTimeout(refresh);
@@ -409,6 +419,7 @@ function enviarmsg() {
 			chat_delay = 4000;
 			refresh = setTimeout(chat_query_ajax, chat_delay);
 			delays();
+			$("#vpc_actividad").attr("src", IMG + "ico/punto_gris.png");
 		} );
 	}
 	return false;

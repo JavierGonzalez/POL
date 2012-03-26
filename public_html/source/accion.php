@@ -1813,7 +1813,7 @@ case 'partido-lista':
 				mysql_query("UPDATE users SET partido_afiliado = '0' WHERE partido_afiliado = '".$ID_partido."' AND ID = '".$_POST['user_ID']."' LIMIT 1", $link);
 			}
 
-			$refer_url = 'partidos/'.strtolower($siglas).'/editar/';
+			$refer_url = 'partidos/'.strtolower($siglas).'/editar';
 		}
 	}
 	break;
@@ -1857,6 +1857,41 @@ case 'cargo':
 		}
 
 		$refer_url = 'cargos';
+
+		
+	} elseif (($_GET['b'] == 'editar') AND (nucleo_acceso($vp['acceso']['control_cargos']))) {
+		$result = mysql_query("SELECT * FROM cargos WHERE pais = '".PAIS."' AND asigna > 0", $link);
+		while($r = mysql_fetch_array($result)){
+			$_POST['nombre_'.$r['cargo_ID']] = strip_tags(trim(substr($_POST['nombre_'.$r['cargo_ID']], 0, 30)));
+			if ((strlen($_POST['nombre_'.$r['cargo_ID']]) >= 3) AND (is_numeric($_POST['asigna_'.$r['cargo_ID']])) AND (is_numeric($_POST['nivel_'.$r['cargo_ID']])) AND ($_POST['nivel_'.$r['cargo_ID']] <= 99)) {
+				mysql_query("UPDATE cargos SET nombre = '".$_POST['nombre_'.$r['cargo_ID']]."', asigna = '".$_POST['asigna_'.$r['cargo_ID']]."', nivel = '".$_POST['nivel_'.$r['cargo_ID']]."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND asigna > 0 LIMIT 1", $link);
+			}
+		}
+		$refer_url = 'cargos/editar';
+
+
+	} elseif (($_GET['b'] == 'eliminar') AND (nucleo_acceso($vp['acceso']['control_cargos'])) AND (is_numeric($_GET['cargo_ID']))) {
+		
+		$result = mysql_query("SELECT *,
+(SELECT COUNT(ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = cargos.cargo_ID AND cargo = 'true') AS cargo_num
+FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' AND asigna > 0 LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)){
+			if ($r['cargo_num'] == 0) {
+				mysql_query("DELETE FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' LIMIT 1", $link);
+				mysql_query("DELETE FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."'", $link);
+				mysql_query("DELETE FROM ".SQL."examenes WHERE cargo_ID = '".$_GET['cargo_ID']."' LIMIT 1", $link);
+			}
+		}
+		$refer_url = 'cargos/editar';
+
+
+	} elseif (($_GET['b'] == 'crear') AND (nucleo_acceso($vp['acceso']['control_cargos'])) AND (strlen($_POST['nombre']) >= 3) AND (strlen($_POST['nombre']) <= 30) AND (is_numeric($_POST['nivel'])) AND (is_numeric($_POST['cargo_ID']))) {
+		
+		$_POST['nombre'] = strip_tags(trim(substr($_POST['nombre'], 0, 30)));
+		mysql_query("INSERT INTO cargos (cargo_ID, asigna, nombre, pais, nivel) VALUES ('".$_POST['cargo_ID']."', '".$_POST['asigna']."', '".$_POST['nombre']."', '".PAIS."', '".$_POST['nivel']."')", $link);
+		mysql_query("INSERT INTO ".SQL."examenes (titulo, time, cargo_ID, nota) VALUES ('".$_POST['nombre']."', '".$date."', '".$_POST['cargo_ID']."', '0')", $link);
+		$refer_url = 'cargos/editar';
+
 
 	} elseif (($b) AND ($cargo_ID)) {
 		$result = mysql_query("SELECT cargo_ID, asigna, nombre FROM cargos WHERE cargo_ID = '".$cargo_ID."' LIMIT 1", $link);

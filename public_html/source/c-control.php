@@ -37,7 +37,7 @@ if (isset($sc[$pol['user_ID']])) {
 
 	function print_nota_SC($nota_SC, $user_ID) {
 		global $pol;
-		return ($nota_SC!=''?'<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=SC&b=nota&ID='.$user_ID.'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$nota_SC.'" /><input type="submit" value="OK" /></form>':'');
+		return ($nota_SC!=''?'<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=SC&b=nota&ID='.$user_ID.'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$nota_SC.'" /> '.boton('OK', 'submit', false, 'small pill').'</form>':'');
 	}
 
 	// nomenclatura
@@ -1038,7 +1038,7 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 <br /><br /></li>
 
 
-<li><input type="submit" value="Ejecutar EXPULSION" onclick="if (!confirm(\'&iquest;Seguro que quieres EXPULSAR a este usuario?\')) { return false; }"'.$disabled.' /></li></ol></form>	
+<li>'.boton('EXPULSAR', ($disabled?'submit':false), '¿Seguro que debes EXPULSAR a este usuario?', 'large red').'</li></ol></form>	
 ';
 
 

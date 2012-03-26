@@ -11,11 +11,11 @@ $host[0] = str_replace('-dev', '', $host[0]); // convierte subdominios "pais-dev
 include(RAIZ.'config-pwd.php');
 
 // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
-$vp['paises'] = array('15M', 'Hispania', 'RSSV'); // 
+$vp['paises'] = array('15M', 'Hispania', 'RSSV');
 
 // CONFIG PLATAFORMAS
 $vp['paises_congelados'] = array('POL', 'VULCAN', 'Atlantis', 'VP'); // INACTIVOS
-$vp['paises_economia'] = array('VP', 'Hispania', 'RSSV'); // Plataformas con economia
+$vp['paises_economia'] = array('Hispania'); // Plataformas con economia
 $vp['paises_chat'] = array(''=>4, 'VP'=>4, '15M'=>5, 'Hispania'=>6, 'RSSV'=>7);
 $vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'RSSV'=>'#FFD7D7', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'www'=>'#eeeeee');
 $vp['bg2'] = array('POL'=>'#BFD9FF', 'Hispania'=>'#D9D900', 'RSSV'=>'#999999', 'Atlantis'=>'#999999', 'VP'=>'#71D8FF', '15M' => '#FFFF64', 'www'=>'grey');
@@ -40,6 +40,7 @@ switch ($host[0]) {
 'control_gobierno'=>	array('cargo', '6'),
 'control_sancion'=>		array('cargo', ''),
 'control_grupos'=>		array('cargo', '6'),
+'control_cargos'=>		array('cargo', '6'),
 'examenes_decano'=>		array('cargo', '6'),
 'examenes_profesor'=>	array('privado', ''),
 'crear_partido'=>		array('cargo', '6'),
@@ -64,6 +65,7 @@ switch ($host[0]) {
 'control_gobierno'=>	array('cargo', '7 19'),
 'control_sancion'=>		array('cargo', '9'),
 'control_grupos'=>		array('cargo', '7 19'),
+'control_cargos'=>		array('cargo', '7 19'),
 'examenes_decano'=>		array('cargo', '35 60'),
 'examenes_profesor'=>	array('cargo', '34'),
 'crear_partido'=>		array('antiguedad','0'),
@@ -72,25 +74,25 @@ switch ($host[0]) {
 
 	case 'rssv': 
 		define('PAIS', 'RSSV'); 
-		define('ASAMBLEA', false);
+		define('ASAMBLEA', true);
 		define('ECONOMIA', false); 
-		define('NOM_PARTIDOS','Partidos');
-		$columnas = 14; $filas = 14;
+		define('NOM_PARTIDOS','Grupos');
 		$vp['acceso'] = array(
-'votacion_borrador'=>	array('ciudadanos_global', ''),
-'sondeo'=>				array('cargo', '41 6 16 22 19 7'),
-'referendum'=>			array('nivel', '95'),
-'parlamento'=>			array('cargo', '6 22'),
-'cargo'=>				array('nivel', '85'),
-'kick'=>				array('cargo', '12 13 22 9'),
-'kick_quitar'=>			array('cargo', '13 9 8'),
-'foro_borrar'=>			array('cargo', '12 13'),
-'control_gobierno'=>	array('cargo', '7 19'),
-'control_sancion'=>		array('cargo', '9'),
-'control_grupos'=>		array('nivel', '90'),
-'examenes_decano'=>		array('cargo', '35 60'),
-'examenes_profesor'=>	array('cargo', '34'),
-'crear_partido'=>		array('cargo','7 19'),
+'votacion_borrador'=>	array('ciudadanos', ''),
+'sondeo'=>				array('cargo', '6'),
+'referendum'=>			array('cargo', '6'),
+'parlamento'=>			array('cargo', '6'),
+'cargo'=>				array('cargo', '6'),
+'kick'=>				array('cargo', '13'),
+'kick_quitar'=>			array('cargo', '6 13'),
+'foro_borrar'=>			array('cargo', '6 13'),
+'control_gobierno'=>	array('cargo', '6'),
+'control_sancion'=>		array('cargo', ''),
+'control_grupos'=>		array('cargo', '6'),
+'control_cargos'=>		array('cargo', '6'),
+'examenes_decano'=>		array('cargo', '6'),
+'examenes_profesor'=>	array('privado', ''),
+'crear_partido'=>		array('cargo', '6'),
 );
 		break;
 

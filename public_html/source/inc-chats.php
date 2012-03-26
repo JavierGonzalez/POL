@@ -89,13 +89,13 @@ Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_e
 <table border="0" width="100%">
 <tr>
 
-<td>'.(isset($pol['user_ID'])?'<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="width:98%;" autofocus="autofocus" />':boton('¡Crea tu ciudadano para participar!', REGISTRAR.'?p='.PAIS, false, 'large blue')).'</td>
+<td width="46" align="right" valign="middle"><img id="vpc_actividad" onclick="actualizar_ahora();" src="'.IMG.'ico/punto_gris.png" width="16" height="16" title="Actualizar chat" style="margin-top:4px;" /></td>
 
-<td nowrap="nowrap" title="Marcar para ocultar eventos del chat">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">Ocultar eventos</label></td>
+<td valign="middle">'.(isset($pol['user_ID'])?'<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%;" autofocus="autofocus" />':boton('¡Crea tu ciudadano para participar!', REGISTRAR.'?p='.PAIS, false, 'large blue')).'</td>
 
-<td width="16"><img id="vpc_actividad" onclick="actualizar_ahora();" src="'.IMG.'ico/punto_gris.png" width="16" height="16" title="Actualizar chat" /></td>
+<td nowrap="nowrap" valign="middle" title="Marcar para ocultar eventos del chat">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">Ocultar eventos</label></td>
 
-<td>'.boton('Enviar', 'submit', false, '', '', ' id="botonenviar"').'</td>
+<td align="right">'.boton('Enviar', 'submit', false, '', '', ' id="botonenviar"').'</td>
 
 </tr>
 </table>

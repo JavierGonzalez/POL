@@ -258,13 +258,15 @@ function chat_query_ajax() {
 	if (ajax_refresh) {
 		ajax_refresh = false;
 		clearTimeout(refresh);
-		$("#vpc_actividad").attr("src", IMG + "ico/punto_azul.png").attr("title", "Actualizar chat (" + (chat_delay/1000) + " segundos)");
+		var start = new Date().getTime();
+		$("#vpc_actividad").attr("src", IMG + "ico/punto_azul.png");
 		$.post("/ajax.php", { chat_ID: chat_ID, n: msg_ID },
 			function(data){
 				ajax_refresh = true;
 				if (data) { print_msg(data); }
 				refresh = setTimeout(chat_query_ajax, chat_delay);
-				$("#vpc_actividad").attr("src", IMG + "ico/punto_gris.png");
+				var elapsed = new Date().getTime() - start;
+				$("#vpc_actividad").attr("src", IMG + "ico/punto_gris.png").attr("title", "Chat actualizado (" + (chat_delay/1000) + " segundos, " + elapsed + "ms)");
 			}
 		);
 		if (ajax_refresh == true) { merge_list(); }
@@ -460,18 +462,18 @@ function enriquecer(m, bbcode) {
 	
 
 	// Emoticonos
-	m = m.replace(/(\s|^):\)/gi, " <img src=\""+IMG+"smiley/sonrie.gif\" border=\"0\" alt=\":)\" title=\":)\" width=\"15\" height=\"15\" />");
-	m = m.replace(/(\s|^):\(/gi, " <img src=\""+IMG+"smiley/disgustado.gif\" border=\"0\" alt=\":(\" title=\":(\" width=\"15\" height=\"15\" />");
-	m = m.replace(/(\s|^):\|/gi, " <img src=\""+IMG+"smiley/desconcertado.gif\" border=\"0\" alt=\":|\" title=\":|\" width=\"15\" height=\"15\" />");
-	m = m.replace(/(\s|^):D/gi, " <img src=\""+IMG+"smiley/xd.gif\" alt=\":D\" border=\"0\" title=\":D\" width=\"15\" height=\"15\" />");
-	m = m.replace(/(\s|^):\*/gi, " <img src=\""+IMG+"smiley/muacks.gif\" alt=\":*\" border=\"0\" title=\":*\" width=\"15\" height=\"15\" />");
-	m = m.replace(/(\s|^);\)/gi, " <img src=\""+IMG+"smiley/guino.gif\" alt=\";)\" border=\"0\" title=\";)\" width=\"15\" height=\"15\" />");
-	m = m.replace(/(\s|^):O/gi, " <img src=\""+IMG+"smiley/bocaabierta.gif\" alt=\":O\" border=\"0\" title=\":O\" width=\"15\" height=\"15\" />");
-	m = m.replace(/:tarta:/gi, " <img src=\""+IMG+"smiley/tarta.gif\" alt=\":tarta:\" border=\"0\" title=\":tarta:\" width=\"16\" height=\"16\" />");
-	m = m.replace(/:roto2:/gi, " <img src=\""+IMG+"smiley/roto2.gif\" alt=\":roto2:\" border=\"0\" title=\":roto2:\" width=\"16\" height=\"16\" />");
-	m = m.replace(/:(palm|facepalm):/gi, " <img src=\""+IMG+"smiley/palm.gif\" alt=\":palm:\" border=\"0\" title=\":palm:\" width=\"15\" height=\"15\" />");
-	m = m.replace(/:moneda:/gi, " <img src=\""+IMG+"varios/m.gif\" alt=\":moneda:\" border=\"0\" title=\":moneda:\" width=\"16\" height=\"16\" />");
-	m = m.replace(/:troll:/gi, " <img src=\""+IMG+"smiley/troll.gif\" alt=\":troll:\" border=\"0\" title=\":troll:\" width=\"15\" height=\"15\" />");
+	m = m.replace(/(\s|^):\)/gi,			' <img src="'+IMG+'smiley/sonrie.gif" border="0" alt=":)" title=":)" width="15" height="15" />');
+	m = m.replace(/(\s|^):\(/gi,			' <img src="'+IMG+'smiley/disgustado.gif" border="0" alt=":(" title=":(" width="15" height="15" />');
+	m = m.replace(/(\s|^):\|/gi,			' <img src="'+IMG+'smiley/desconcertado.gif" border="0" alt=":|" title=":|" width="15" height="15" />');
+	m = m.replace(/(\s|^):D/gi,				' <img src="'+IMG+'smiley/xd.gif" alt=":D" border="0" title=":D" width="15" height="15" />');
+	m = m.replace(/(\s|^):\*/gi,			' <img src="'+IMG+'smiley/muacks.gif" alt=":*" border="0" title=":*" width="15" height="15" />');
+	m = m.replace(/(\s|^);\)/gi,			' <img src="'+IMG+'smiley/guino.gif" alt=";)" border="0" title=";)" width="15" height="15" />');
+	m = m.replace(/(\s|^):O/gi,				' <img src="'+IMG+'smiley/bocaabierta.gif" alt=":O" border="0" title=":O" width="15" height="15" />');
+	m = m.replace(/:tarta:/gi,				' <img src="'+IMG+'smiley/tarta.gif" alt=":tarta:" border="0" title=":tarta:" width="16" height="16" />');
+	m = m.replace(/:roto2:/gi,				' <img src="'+IMG+'smiley/roto2.gif" alt=":roto2:" border="0" title=":roto2:" width="16" height="16" />');
+	m = m.replace(/:(palm|facepalm):/gi,	' <img src="'+IMG+'smiley/palm.gif" alt=":palm:" border="0" title=":palm:" width="15" height="15" />');
+	m = m.replace(/:moneda:/gi,				' <img src="'+IMG+'varios/m.gif" alt=":moneda:" border="0" title=":moneda:" width="16" height="16" />');
+	m = m.replace(/:troll:/gi,				' <img src="'+IMG+'smiley/troll.gif" alt=":troll:" border="0" title=":troll:" width="15" height="15" />');
 
 	// Botones Instant
 	if (bbcode) { var boton_width = 50; } else { var boton_width = 16; }

@@ -199,7 +199,7 @@ LIMIT 100", $link);
 <td valign="top">'.$boton.'</td>
 <td valign="top" align="right" nowrap="nowrap"><b>'.crear_link($r['nick_envia']).'</b>'.$cargo.'<br /><acronym title="'.$r['time'].'" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td>
 <td valign="top" class="rich">'.$r['text'].'<hr class="quitar" /></td>
-<td valign="top"><button onclick="$(\'#ciudadano\').val(\''.$r['nick_envia'].'\');$(\'#box_msg\').toggle(\'slow\');" class="blue">Responder</button></td>
+<td valign="top"><button onclick="$(\'#ciudadano\').val(\''.$r['nick_envia'].'\');$(\'#box_msg\').toggle(\'slow\');">Responder</button></td>
 <td valign="top">'.boton('X', '/accion.php?a=borrar-mensaje&ID='.$r['ID'], false, 'small red').'</td>
 </tr>'."\n";
 	}

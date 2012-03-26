@@ -112,6 +112,7 @@ p_scroll = false;
 		<ul>
 			<li><a href="/elecciones">Elecciones<span class="md"><?=$txt_elec_time?></span></a></li>
 			<li><a href="/votacion"><b>Votaciones</b><span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
+			<li><a href="/cargos">Cargos</a></li>
 			<li><a href="/control">Gestión</a>
 				<ul>
 					<li><a href="/control/gobierno">Gobierno</a></li>
@@ -121,7 +122,6 @@ p_scroll = false;
 				</ul>
 			</li>
 			<?=(ASAMBLEA?'':'<li><a href="/partidos">Partidos <span class="md">'.$pol['config']['info_partidos'].'</span></a></li>')?>
-			<li><a href="/cargos">Cargos</a></li>
 			<li><a href="/grupos">Grupos</a></li>
 		</ul>
 	</li>

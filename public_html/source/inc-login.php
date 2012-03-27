@@ -45,7 +45,7 @@ if (isset($_COOKIE['teorizauser'])) {
 
 
 // LOAD CONFIG
-$result = mysql_unbuffered_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'si'", $link);
+$result = mysql_unbuffered_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'si'", $link);
 while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 // USER OK

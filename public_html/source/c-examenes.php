@@ -52,7 +52,7 @@ function shuffle_assoc_OLD(&$array) {
 } 
 
 // carga config
-$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
+$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
 while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 $pol['cargos'] = cargos();
@@ -165,7 +165,7 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
 } elseif (($_GET['a'] == 'mis-examenes') AND ($pol['estado'] == 'ciudadano')) { 	// MIS EXAMENES
 
 	// load config full
-	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
+	$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
 	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 	$txt_title = 'Mis exámenes';

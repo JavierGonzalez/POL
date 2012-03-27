@@ -114,7 +114,7 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 
 		switch ($r['asigna']) {
 			case -2: $asigna = '<b title="Votacion Ejecutiva">Votacion Ejecutiva</b>'; break;
-			case 0:  $asigna = '<a href="/elecciones"><b>Elecciones</b></a>'; break;
+			case 0:  $asigna = '<a href="/elecciones"><b>Elecciones en '.timer(strtotime($pol['config']['elecciones_inicio']), true).'</b></a>'; break;
 			default: $asigna = ''; break;
 		}
 		
@@ -147,7 +147,7 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 		}
 
 		$txt_el_td .= '
-<td align="right"><b style="font-size:16px;">'.$r['cargo_num'].'</b> / '.$r['candidatos_num'].'</td>
+<td align="right" title="Ejerciendo / Candidatos"><b style="font-size:16px;">'.$r['cargo_num'].'</b> / '.$r['candidatos_num'].'</td>
 <td nowrap="nowrap">'.$asigna.'</td>
 <td align="right">'.($cargo_editar?'<input type="text" name="nivel_'.$r['cargo_ID'].'" value="'.$r['nivel'].'" size="3" style="text-align:right;" />':$r['nivel']).'</td>
 '.(ECONOMIA?'<td align="right">'.pols($r['salario']).'</td>':'').'
@@ -187,6 +187,9 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 						$txt .= '<tr><td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; '.$d4.'</tr>'; 
 						foreach ($txt_td2[$cargo_ID4] AS $cargo_ID5 => $d5) { 
 							$txt .= '<tr><td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; '.$d5.'</tr>'; 
+							foreach ($txt_td2[$cargo_ID5] AS $cargo_ID6 => $d6) { 
+								$txt .= '<tr><td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; '.$d6.'</tr>'; 
+							}
 						}
 					}
 				}

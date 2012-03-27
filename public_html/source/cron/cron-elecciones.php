@@ -29,7 +29,7 @@ if (!$pol['config']['elecciones']) {
 	$margen_90dias	= date('Y-m-d 20:00:00', time() - 7776000); // 90 dias
 
 	// LOAD CONFIG $pol['config'][]
-	$result = mysql_query("SELECT valor, dato FROM ".SQL."config", $link);
+	$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."'", $link);
 	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 }
 
@@ -52,7 +52,7 @@ $elecciones_fin = $elecciones_inicio_t + $pol['config']['elecciones_duracion'];
 // INICIA 2º VUELTA (mejorar)
 if ($pol['config']['elecciones'] == 'pres1') {
 	// cambia estado NEW
-	mysql_query("UPDATE ".SQL."config SET valor = 'pres2' WHERE dato = 'elecciones' LIMIT 1", $link);
+	mysql_query("UPDATE config SET valor = 'pres2' WHERE pais = '".PAIS."' AND dato = 'elecciones' LIMIT 1", $link);
 	// genera escrutinio primera vuelta
 	$escrutinio = false;
 	$nulo = false;
@@ -124,7 +124,7 @@ if (($pol['config']['elecciones_estado'] == 'normal') AND (time() >= ($eleccione
 	mysql_query("DELETE FROM ".SQL."elecciones", $link);
 
 	// cambia estado OLD
-	mysql_query("UPDATE ".SQL."config SET valor = 'elecciones' WHERE dato = 'elecciones_estado' LIMIT 1", $link);
+	mysql_query("UPDATE config SET valor = 'elecciones' WHERE pais = '".PAIS."' AND dato = 'elecciones_estado' LIMIT 1", $link);
 	evento_chat('<b>[PROCESO]</b> <a href="/elecciones/"><b>Comienzan las ' . $empiezan_elecciones . '</b></a>');
 
 	// calcula votantes
@@ -134,7 +134,7 @@ if (($pol['config']['elecciones_estado'] == 'normal') AND (time() >= ($eleccione
 
 	// cambia estado NEW
 	if ($elec_now == 'pres') { $elecciones_new = 'pres1'; } else { $elecciones_new = $elec_now; }
-	mysql_query("UPDATE ".SQL."config SET valor = '" . $elecciones_new . "' WHERE dato = 'elecciones' LIMIT 1", $link);
+	mysql_query("UPDATE config SET valor = '" . $elecciones_new . "' WHERE pais = '".PAIS."' AND dato = 'elecciones' LIMIT 1", $link);
 
 	// crea inicio de elecciones
 	mysql_query("INSERT INTO ".SQL."elec (time, tipo, num_votantes, escrutinio, num_votos, pols_init) VALUES ('" . date('Y-m-d 20:00:00') . "', '" . $elec_now . "', '" . $num_votantes . "', '', '0', '" . $st['pol_gobierno'] . "')", $link);
@@ -262,10 +262,10 @@ ORDER BY ID ASC LIMIT 1", $link);
 
 	// tiempo next elecciones
 	$elecciones_next = date('Y-m-d 20:00:00', time() + $pol['config']['elecciones_frecuencia']);
-	mysql_query("UPDATE ".SQL."config SET valor = '" . $elecciones_next . "' WHERE dato = 'elecciones_inicio' LIMIT 1", $link);
+	mysql_query("UPDATE config SET valor = '" . $elecciones_next . "' WHERE pais = '".PAIS."' AND dato = 'elecciones_inicio' LIMIT 1", $link);
 
 	// FIN ELEC
-	mysql_query("UPDATE ".SQL."config SET valor = 'normal' WHERE dato = 'elecciones_estado' LIMIT 1", $link);
-	mysql_query("UPDATE ".SQL."config SET valor = '" . $elec_next . "' WHERE dato = 'elecciones' LIMIT 1", $link);
+	mysql_query("UPDATE config SET valor = 'normal' WHERE pais = '".PAIS."' AND dato = 'elecciones_estado' LIMIT 1", $link);
+	mysql_query("UPDATE config SET valor = '" . $elec_next . "' WHERE pais = '".PAIS."' AND dato = 'elecciones' LIMIT 1", $link);
 }
 ?>

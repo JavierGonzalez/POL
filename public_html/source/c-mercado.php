@@ -24,8 +24,8 @@ http://<input type="text" name="url" size="63" maxlength="80" value="' . $url . 
 	if (substr($queda, 0, 1) == '-') { $queda = '1 dia'; }
 
 	$result = mysql_query("SELECT valor,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."config.valor LIMIT 1) AS nick
-FROM ".SQL."config WHERE dato = 'pols_fraseedit' LIMIT 1", $link);
+(SELECT nick FROM users WHERE ID = config.valor LIMIT 1) AS nick
+FROM config WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1", $link);
 	while($row = mysql_fetch_array($result)){ $nick = $row['nick']; }
 
 	$txt .= '<h1>Subasta ' . $_GET['a'] . '</h1>

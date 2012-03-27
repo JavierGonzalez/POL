@@ -228,7 +228,7 @@ function click_ciudadano() {
 </script>';
 
 	// load config full
-	$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE dato = 'arancel_salida'", $link);
+	$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'arancel_salida'", $link);
 	while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
 
 	if ($pol['pols'] < 1) { $extra_personal = ' disabled="disabled"'; } else { $extra_personal = ''; }

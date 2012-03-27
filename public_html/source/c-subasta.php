@@ -2,7 +2,7 @@
 include('inc-login.php');
 
 // carga config
-$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
+$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
 while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
 
 /*
@@ -88,8 +88,8 @@ ORDER BY time ASC LIMIT 500", $link);
 	if (substr($queda, 0, 1) == '-') { $queda = '1 dia'; }
 
 	$result = mysql_query("SELECT valor,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."config.valor LIMIT 1) AS nick
-FROM ".SQL."config WHERE dato = 'pols_fraseedit' LIMIT 1", $link);
+(SELECT nick FROM users WHERE ID = config.valor LIMIT 1) AS nick
+FROM config WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1", $link);
 	while($row = mysql_fetch_array($result)){ $nick = $row['nick']; }
 
 

@@ -41,7 +41,7 @@ $margen_180dias	= date('Y-m-d 20:00:00', time() - (86400*180)); // 180 dias
 
 
 // LOAD CONFIG $pol['config'][]
-$result = mysql_query("SELECT valor, dato FROM ".SQL."config", $link);
+$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."'", $link);
 while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
@@ -157,8 +157,8 @@ while($r = mysql_fetch_array($result)){
 	evento_chat('<b>[PROCESO]</b> Subasta: <b>La frase</b>, de <em>'.crear_link($r['nick']).'</em> por '.pols($r['pols']).' '.MONEDA.'');
 	$pujas_total = $r['pols'];
 	pols_transferir($r['pols'], $r['user_ID'], '-1', 'Subasta: <em>La frase</em>');
-	mysql_query("UPDATE ".SQL."config SET valor = '".$r['user_ID']."' WHERE dato = 'pols_fraseedit' LIMIT 1", $link);
-	mysql_query("UPDATE ".SQL."config SET valor = '".$r['nick']."' WHERE dato = 'pols_frase' LIMIT 1", $link);
+	mysql_query("UPDATE config SET valor = '".$r['user_ID']."' WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1", $link);
+	mysql_query("UPDATE config SET valor = '".$r['nick']."' WHERE pais = '".PAIS."' AND dato = 'pols_frase' LIMIT 1", $link);
 }
 
 
@@ -184,7 +184,7 @@ while($r = mysql_fetch_array($result)) {
 	}
 }
 mysql_query("DELETE FROM ".SQL."pujas WHERE mercado_ID = '2'", $link); //resetea pujas
-mysql_query("UPDATE ".SQL."config SET valor = '".$las_palabras."' WHERE dato = 'palabras' LIMIT 1", $link);
+mysql_query("UPDATE config SET valor = '".$las_palabras."' WHERE pais = '".PAIS."' AND dato = 'palabras' LIMIT 1", $link);
 
 
 // COSTE PROPIEDADES

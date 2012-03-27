@@ -88,14 +88,9 @@ p_scroll = false;
 		<ul>
 			<li><a href="/info/censo">Censo<span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
 			<li><a href="/doc"><b>Documentos</b><span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
-			<li><a href="#" style="cursor:default;">Estadísticas</a>
-				<ul>
-					<li><a href="/estadisticas">Estadísticas</a></li>
-					<!--<li><a href="http://chartbeat.com/dashboard2/?url=virtualpol.com&k=ecc15496e00f415838f6912422024d06" target="_blank" title="Estadísticas de ChartBeat">Estadísticas web</a></li>-->
-					<li><a href="/log">Log de acciones</a></li>
-				</ul>
-			</li>
 			<li><a href="/buscar">Buscar</a></li>
+			<li><a href="/estadisticas">Estadísticas</a></li>
+			<li><a href="/log">Log de acciones</a></li>
 			<li><a href="#" style="cursor:default;">Sobre VirtualPol...</a>
 				<ul>
 					<li><a href="http://www.virtualpol.com/video" target="_blank">Vídeo de bienvenida</a></li>

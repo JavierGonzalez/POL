@@ -47,7 +47,7 @@ while($r = mysql_fetch_array($result)){
 	// Actualiza contador de votaciones activas
 	$result2 = mysql_query("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_ver = 'anonimos'", $link);
 	while($r2 = mysql_fetch_array($result2)) {
-		mysql_query("UPDATE ".SQL."config SET valor = '".$r2['num']."' WHERE dato = 'info_consultas' LIMIT 1", $link);
+		mysql_query("UPDATE config SET valor = '".$r2['num']."' WHERE pais = '".PAIS."' AND dato = 'info_consultas' LIMIT 1", $link);
 	}
 
 	if ($r['acceso_ver'] == 'anonimos') {
@@ -288,7 +288,7 @@ LIMIT 500", $link);
 		}
 		
 		$txt .= '<tr>
-<td valign="top" align="right" nowrap="nowrap"><b>'.ucfirst($r['tipo']).'</b><br />'.$boton_borrar.$boton_iniciar.'<br />'.boton('Previsualizar', '/votacion/'.$r['ID'], false, 'small').'</td>
+<td valign="top" align="right" nowrap="nowrap"><b>'.ucfirst($r['tipo']).'</b><br />'.$boton_borrar.' '.$boton_iniciar.'<br />'.boton('Previsualizar', '/votacion/'.$r['ID'], false, 'small').'</td>
 <td><a href="/votacion/crear/'.$r['ID'].'"><b style="font-size:18px;">'.$r['pregunta'].'</b></a><br />
 Creado hace <b><span class="timer" value="'.strtotime($r['time']).'"></span></b> por '.crear_link($r['nick']).', editado hace <span class="timer" value="'.strtotime($r['time_expire']).'"></span>
 <br />

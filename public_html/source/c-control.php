@@ -3,7 +3,7 @@ include('inc-login.php');
 
 
 // load config full
-$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
+$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
 while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 // load user cargos
@@ -48,16 +48,14 @@ if (isset($sc[$pol['user_ID']])) {
 	$result = mysql_query("SELECT ID, siglas FROM ".SQL."partidos", $link);
 	while($r = mysql_fetch_array($result)) { $siglas[$r['ID']] = $r['siglas']; }
 
-	$txt_tab = array('/control/supervisor-censo/'=>'Principal', '/control/supervisor-censo/factores-secundarios/'=>'Extra', '/control/supervisor-censo/nuevos-ciudadanos/'=>'Nuevos ciudadanos', '/control/expulsiones/'=>'Expulsiones');
+	$txt_tab = array('/control/supervisor-censo'=>'Principal', '/control/supervisor-censo/factores-secundarios'=>'Extra', '/control/supervisor-censo/nuevos-ciudadanos'=>'Nuevos ciudadanos', '/control/expulsiones'=>'Expulsiones');
 
 	if ($_GET['b'] == 'nuevos-ciudadanos') {
 
 			$txt_title = 'Control: SC | Nuevos ciudadanos';
 			$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC', 'Nuevos ciudadanos');
 
-			$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisión del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | Nuevos ciudadanos | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
-
-<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+			$txt .= '<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
 			$txt .= '<h1>1. Actividad de nuevos Ciudadanos (ultimos 60)</h1><hr />
 <table border="0" cellspacing="0" cellpadding="2">
@@ -144,9 +142,7 @@ LIMIT 60", $link);
 	$txt_title = 'Control: SC | Confianza mutua';
 	$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC', 'Confianza mutua');
 
-	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisión del Censo</a> | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | Confianza | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
-
-<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+	$txt .= '<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
 
 $data_amigos = array();
@@ -232,14 +228,10 @@ $txt .= '<h1>Grafico confianza</h1>
 
 } else if ($_GET['b'] == 'factores-secundarios') {
 
-
-
 	$txt_title = 'Control: SC | Extras';
 	$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC', 'Extras');
 
-	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/supervisor-censo/">Supervisión del Censo</a> | Extras | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
-
-<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
+	$txt .= '<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
 
 	$txt .= '<br /><h1>5. Referencias</h1><hr /><table border="0" cellspacing="4">';
@@ -406,9 +398,7 @@ ORDER BY factor DESC LIMIT 30", $link);
 	$txt_title = 'Control: SC';
 	$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC');
 
-	$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: Supervisión del Censo | <a href="/control/supervisor-censo/factores-secundarios/">Extras</a> | <a href="/control/supervisor-censo/nuevos-ciudadanos/">Nuevos ciudadanos</a> | <a href="/control/supervisor-censo/confianza-mutua/">Confianza</a> | <a href="/control/expulsiones/">Expulsiones</a> | <a href="/control/expulsiones/expulsar">Expulsar</a></h1>
-
-<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>'.$supervisores.'</b></p>'.$nomenclatura;
+	$txt .= '<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>'.$supervisores.'</b></p>'.$nomenclatura;
 
 
 	$txt .= '<h1>1. Coincidencias de IP<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
@@ -574,21 +564,10 @@ ORDER BY fecha_registro DESC", $link);
 	}
 	$txt .= '</table><span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span>';
 
-
-
-
-
-
-
-
-
 	}
-
 
 	} else { $txt .= '<p class="amarillo" style="color:red;"><b>Acceso restringido a los Supervisores del Censo.</b></p>'; }
 	break;
-
-
 
 
 
@@ -1038,7 +1017,7 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 <br /><br /></li>
 
 
-<li>'.boton('EXPULSAR', ($disabled?'submit':false), '¿Seguro que debes EXPULSAR a este usuario?', 'large red').'</li></ol></form>	
+<li>'.boton('EXPULSAR', ($disabled?false:'submit'), '¿Seguro que debes EXPULSAR a este usuario?', 'large red').'</li></ol></form>	
 ';
 
 

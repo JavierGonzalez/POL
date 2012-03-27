@@ -3,7 +3,7 @@ include('inc-login.php');
 include('inc-functions-accion.php');
 
 // load config full
-$result = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE autoload = 'no'", $link);
+$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
 while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 // load user cargos
@@ -810,17 +810,17 @@ $dato_array = array(
 
 				if ($dato == 'online_ref') {
 					$valor = round($_POST['online_ref']*60);
-					mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
+					mysql_query("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1", $link);
 				} elseif ($dato == 'palabra_gob0') {
 					$dato = 'palabra_gob';
 					$valor = strip_tags($_POST['palabra_gob0']).":".strip_tags($_POST['palabra_gob1']);
-					mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
+					mysql_query("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1", $link);
 				} elseif ($dato == 'num_escanos') {
 					if ($pol['config']['elecciones_estado'] != 'elecciones') {
-						mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
+						mysql_query("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1", $link);
 					}
 				} else {
-					mysql_query("UPDATE ".SQL."config SET valor = '".strip_tags($valor)."' WHERE dato = '".$dato."' LIMIT 1", $link);
+					mysql_query("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1", $link);
 				}
 
 				if ($pol['config'][$dato] != $valor) { 
@@ -988,14 +988,14 @@ ORDER BY pols DESC LIMIT 1", $link);
 	} elseif (($_GET['b'] == 'editarfrase') AND (($pol['config']['pols_fraseedit'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['control_gobierno'])))) {
 		$_POST['url'] = str_replace("http://", "", $_POST['url']);
 		$url = '<a href="http://'.strip_tags($_POST['url']).'">'.ucfirst(strip_tags($_POST['frase'])).'</a>';
-		mysql_query("UPDATE ".SQL."config SET valor = '".$url."' WHERE dato = 'pols_frase' LIMIT 1", $link);
+		mysql_query("UPDATE config SET valor = '".$url."' WHERE pais = '".PAIS."' AND dato = 'pols_frase' LIMIT 1", $link);
 		evento_log('Frase editada');
 		$refer_url = 'subasta/editar';
 
 	} elseif (($_GET['b'] == 'cederfrase') AND ($pol['config']['pols_fraseedit'] == $pol['user_ID']) AND ($pol['nick'] != $_POST['nick'])) {
 		$result = mysql_query("SELECT ID, nick, pais FROM users WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
-			mysql_query("UPDATE ".SQL."config SET valor = '".$r['ID']."' WHERE dato = 'pols_fraseedit' LIMIT 1", $link);	
+			mysql_query("UPDATE config SET valor = '".$r['ID']."' WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1", $link);	
 			evento_chat('<b>[#] '.crear_link($pol['nick']).' cede</b> "la frase" a <b>'.crear_link($r['nick']).'</b>'); 
 		}
 		$refer_url = 'subasta/editar';
@@ -1018,7 +1018,7 @@ ORDER BY pols DESC LIMIT 1", $link);
 				$dato .= $t[0].':'.$t[1].':'.$t[2];
 			}
 		}
-		mysql_query("UPDATE ".SQL."config SET valor = '".$dato."' WHERE dato = 'palabras' LIMIT 1", $link);
+		mysql_query("UPDATE config SET valor = '".$dato."' WHERE pais = '".PAIS."' AND dato = 'palabras' LIMIT 1", $link);
 		evento_log('Palabra editada #'.$_GET['ID']);
 		$refer_url = 'subasta/editar';
 
@@ -1033,7 +1033,7 @@ ORDER BY pols DESC LIMIT 1", $link);
 					$dato .= $r['ID'].'::'.$r['nick'];
 				} else { $dato .= $t[0].':'.$t[1].':'.$t[2]; }
 			}
-			mysql_query("UPDATE ".SQL."config SET valor = '".$dato."' WHERE dato = 'palabras' LIMIT 1", $link);
+			mysql_query("UPDATE config SET valor = '".$dato."' WHERE pais = '".PAIS."' AND dato = 'palabras' LIMIT 1", $link);
 			evento_chat('<b>[#] '.crear_link($pol['nick']).' cede</b> la "palabra '.($_GET['ID'] + 1).'" a <b>'.crear_link($r['nick']).'</b>');
 			evento_log('Palabra #'.($_GET['ID'] + 1).' cedida a '.$r['nick']);
 		}
@@ -1345,7 +1345,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 	// actualizar info en theme
 	$result = mysql_query("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_ver = 'anonimos'", $link);
 	while($r = mysql_fetch_array($result)) {
-		mysql_query("UPDATE ".SQL."config SET valor = '".$r['num']."' WHERE dato = 'info_consultas' LIMIT 1", $link);
+		mysql_query("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_consultas' LIMIT 1", $link);
 	}
 
 	$refer_url = 'votacion';
@@ -1440,9 +1440,9 @@ case 'foro':
 		if ($es_ok) {
 			mysql_query("DELETE FROM ".SQL."foros_msg WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 			mysql_query("UPDATE ".SQL."foros_hilos SET num = num-1 WHERE ID = '".$_GET['hilo_ID']."' LIMIT 1", $link);
+			evento_log('Foro mensaje eliminado #'.$_GET['ID']);
 		}
 		if ($_GET['hilo_ID'] == '-1') { $refer_url = 'notas'; } else { $refer_url = 'foro'; }
-		evento_log('Foro mensaje eliminado #'.$_GET['ID']);
 
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['text']) AND ($_POST['subforo'])) {
 		$text = gen_text($_POST['text'], 'plain');
@@ -1838,8 +1838,8 @@ FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' AND a
 		$refer_url = 'cargos/editar';
 
 
-	} elseif (($b) AND ($cargo_ID)) {
-		$result = mysql_query("SELECT cargo_ID, asigna, nombre FROM cargos WHERE cargo_ID = '".$cargo_ID."' LIMIT 1", $link);
+	} elseif (($b) AND (is_numeric($cargo_ID))) {
+		$result = mysql_query("SELECT cargo_ID, asigna, nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){
 
 			if ((($pol['cargos'][$r['asigna']]) AND ($r['cargo_ID'] != 7)) OR (($r['cargo_ID'] != 19) AND ($r['asigna'] == 7) AND ($pol['cargos'][19]) AND ($r['cargo_ID'] != 7))) { 
@@ -1853,8 +1853,7 @@ FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' AND a
 						if (($cargo_ID != 21) OR (($cargo_ID == 21) AND (strtotime($asignado['fecha_registro']) <= (time()-8640000)) AND ($asignado['online'] >= 864000))) {
 							cargo_add($cargo_ID, $_POST['user_ID']);
 						}
-					}
-					elseif ($b == 'del') { 
+					} elseif ($b == 'del') { 
 						cargo_del($cargo_ID, $_POST['user_ID']); 
 					}
 				}
@@ -1882,7 +1881,7 @@ case 'eliminar-partido':
 	// actualizar info en theme
 	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."partidos WHERE estado = 'ok'", $link);
 	while($r = mysql_fetch_array($result)) {
-		mysql_query("UPDATE ".SQL."config SET valor = '".$r['num']."' WHERE dato = 'info_partidos' LIMIT 1", $link);
+		mysql_query("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_partidos' LIMIT 1", $link);
 	}
 
 	$refer_url = 'partidos';
@@ -1920,7 +1919,7 @@ case 'eliminar-documento':
 	// actualiza info en theme
 	$result = mysql_query("SELECT COUNT(ID) AS num FROM docs WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
 	while($r = mysql_fetch_array($result)) {
-		mysql_query("UPDATE ".SQL."config SET valor = '".$r['num']."' WHERE dato = 'info_documentos' LIMIT 1", $link);
+		mysql_query("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_documentos' LIMIT 1", $link);
 	}
 	break;
 
@@ -1973,7 +1972,7 @@ VALUES ('".PAIS."', '".$url."', '".$_POST['title']."', '', '".$date."', '".$date
 		// actualizacion de info en theme
 		$result = mysql_query("SELECT COUNT(ID) AS num FROM docs WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
 		while($r = mysql_fetch_array($result)) {
-			mysql_query("UPDATE ".SQL."config SET valor = '".$r['num']."' WHERE dato = 'info_documentos' LIMIT 1", $link);
+			mysql_query("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_documentos' LIMIT 1", $link);
 		}
 	}
 	$refer_url = 'doc/'.$url.'/editar';
@@ -2016,7 +2015,7 @@ VALUES ('".$pol['user_ID']."', '".$date."', '".$_POST['siglas']."', '".$_POST['n
 	// actualizar info en theme
 	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."partidos WHERE estado = 'ok'", $link);
 	while($r = mysql_fetch_array($result)) {
-		mysql_query("UPDATE ".SQL."config SET valor = '".$r['num']."' WHERE dato = 'info_partidos' LIMIT 1", $link);
+		mysql_query("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_partidos' LIMIT 1", $link);
 	}
 
 	$refer_url = 'partidos/';

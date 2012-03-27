@@ -95,7 +95,7 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 
 		if ($user_ID == $pol['user_ID']) { //es USER
 
-			$result2 = mysql_query("SELECT valor FROM ".SQL."config WHERE dato = 'pols_afiliacion' LIMIT 1", $link);
+			$result2 = mysql_query("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'pols_afiliacion' LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)){ if ($r2['pols'] >= $pols) { $pols_afiliacion = $r2['valor']; } }
 
 			$text_limit = 1600 - strlen(strip_tags($r['text']));
@@ -110,7 +110,7 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 
 if (ECONOMIA) {
 			
-$result2 = mysql_query("SELECT valor, dato FROM ".SQL."config WHERE dato = 'impuestos' OR dato = 'impuestos_minimo'", $link);
+$result2 = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'impuestos' OR dato = 'impuestos_minimo'", $link);
 while($r2 = mysql_fetch_array($result2)){ $pol['config'][$r2['dato']] = $r2['valor']; }
 
 $patrimonio = $r['pols'];

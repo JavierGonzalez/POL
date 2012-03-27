@@ -282,7 +282,7 @@ function paginacion($type, $url, $ID, $num_ahora=null, $num_total=null, $num='10
 				$num_total = $result[0];
 				break;
 			case 'eventos': 
-				$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM ".SQL."log", $link));
+				$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM log WHERE pais = '".PAIS."'", $link));
 				$num_total = $result[0];
 				break;
 		}

@@ -92,7 +92,7 @@ p_scroll = false;
 				<ul>
 					<li><a href="/estadisticas">Estadísticas</a></li>
 					<!--<li><a href="http://chartbeat.com/dashboard2/?url=virtualpol.com&k=ecc15496e00f415838f6912422024d06" target="_blank" title="Estadísticas de ChartBeat">Estadísticas web</a></li>-->
-					<li><a href="/log-eventos">Log de acciones</a></li>
+					<li><a href="/log">Log de acciones</a></li>
 				</ul>
 			</li>
 			<li><a href="/buscar">Buscar</a></li>

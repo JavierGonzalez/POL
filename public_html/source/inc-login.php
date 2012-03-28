@@ -108,10 +108,10 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 
 
 	// EXPULSADO?
-	$result = mysql_query("SELECT expire FROM ".SQL."ban WHERE estado = 'activo' AND (user_ID = '".$pol['user_ID']."' OR (IP != '0' AND IP = '" . $IP . "')) LIMIT 1", $link);
+	$result = mysql_query("SELECT expire FROM kicks WHERE pais = '".PAIS."' AND estado = 'activo' AND (user_ID = '".$pol['user_ID']."' OR (IP != '0' AND IP = '" . $IP . "')) LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){ 
 		if ($r['expire'] < $date) { // DESBANEAR!
-			mysql_query("UPDATE LOW_PRIORITY ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '".$date."'", $link); 
+			mysql_query("UPDATE LOW_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'", $link); 
 		} else { // BANEADO 
 			$pol['estado'] = 'kickeado';
 		}

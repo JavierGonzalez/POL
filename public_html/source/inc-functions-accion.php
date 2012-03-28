@@ -290,7 +290,7 @@ function eliminar_ciudadano($ID) {
 			mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."partidos WHERE ID_presidente = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM ".SQL."ban WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM kicks WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM chats WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM votos WHERE emisor_ID = '".$user_ID."' OR (tipo = 'confianza' AND item_ID = '".$user_ID."')", $link);
 			mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."' AND hilo_ID = '-1'", $link);

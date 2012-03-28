@@ -88,7 +88,7 @@ foreach ($vp['paises'] AS $pais) {
 	while($r = mysql_fetch_array($result)) { $pais_vice = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'" class="nick" style="font-size:18px;">' . $r['nick'] . '</a>'; }
 
 	// DEFCON
-	$result = mysql_query("SELECT valor, dato FROM ".$pais_low."_config WHERE dato = 'pais_des'", $link);
+	$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".$pais_low."' AND dato = 'pais_des'", $link);
 	while($r = mysql_fetch_array($result)) { $pais_config[$r['dato']] = $r['valor']; }
 
 

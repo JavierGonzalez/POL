@@ -126,7 +126,7 @@ Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribi
 
 	$txt .= '<div id="docs">';
 
-	$result = mysql_query("SELECT ID, nombre, tipo FROM ".SQL."cat WHERE tipo = 'docs' ORDER BY orden ASC", $link);
+	$result = mysql_query("SELECT ID, nombre, tipo FROM cat WHERE pais = '".PAIS."' AND tipo = 'docs' ORDER BY orden ASC", $link);
 	while($r = mysql_fetch_array($result)){
 
 		// CAT

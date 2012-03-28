@@ -1102,11 +1102,11 @@ case 'kick':
 	if (($_GET['b'] == 'info') AND ($_GET['c'])) {
 
 		$result = mysql_query("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
-(SELECT nick FROM users WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado,
-(SELECT estado FROM users WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado_estado,
-(SELECT nick FROM users WHERE ID = ".SQL."ban.autor LIMIT 1) AS nick_autor
-FROM ".SQL."ban
-WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
+(SELECT nick FROM users WHERE ID = kicks.user_ID LIMIT 1) AS expulsado,
+(SELECT estado FROM users WHERE ID = kicks.user_ID LIMIT 1) AS expulsado_estado,
+(SELECT nick FROM users WHERE ID = kicks.autor LIMIT 1) AS nick_autor
+FROM kicks
+WHERE pais = '".PAIS."' AND ID = '".$_GET['c']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){
 			$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/kick/">Kicks</a> | info '.$_GET['c'].'</h1>
 <p>Motivo: <b>'.$r['razon'].'</b></p>
@@ -1174,14 +1174,14 @@ WHERE ID = '" . $_GET['c'] . "' LIMIT 1", $link);
 <th></th>
 </tr>';
 
-	mysql_query("UPDATE ".SQL."ban SET estado = 'inactivo' WHERE estado = 'activo' AND expire < '" . $date . "'", $link); 
+	mysql_query("UPDATE kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '" . $date . "'", $link); 
 	$margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); //30dias
 	$result = mysql_query("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo, user_ID,
-(SELECT nick FROM users WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado,
-(SELECT estado FROM users WHERE ID = ".SQL."ban.user_ID LIMIT 1) AS expulsado_estado,
-(SELECT nick FROM users WHERE ID = ".SQL."ban.autor LIMIT 1) AS nick_autor
-FROM ".SQL."ban
-WHERE expire > '" . $margen_30dias . "' AND estado != 'expulsado'
+(SELECT nick FROM users WHERE ID = kicks.user_ID LIMIT 1) AS expulsado,
+(SELECT estado FROM users WHERE ID = kicks.user_ID LIMIT 1) AS expulsado_estado,
+(SELECT nick FROM users WHERE ID = kicks.autor LIMIT 1) AS nick_autor
+FROM kicks
+WHERE pais = '".PAIS."' AND expire > '" . $margen_30dias . "' AND estado != 'expulsado'
 ORDER BY expire DESC", $link);
 	while($r = mysql_fetch_array($result)){
 		if ((($r['autor'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['kick_quitar']))) AND ($r['estado'] == 'activo')) { $expulsar = boton('X', '/accion.php?a=kick&b=quitar&ID=' . $r['ID'], '&iquest;Seguro que quieres hacer INACTIVO este kick?'); } else { $expulsar = ''; }

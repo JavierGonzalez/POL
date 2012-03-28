@@ -132,14 +132,14 @@ function click_form(tipo) {
 </tr>
 <tr onclick="click_form(\'cargos\');">
 <td nowrap="nowrap"><input id="radio_cargos" type="radio" name="para" value="cargo"'.($pre_cargo?' checked="checked"':'').' />Cargos:</td>
-<td nowrap="nowrap"><select name="cargo_ID" style="color:green;font-weight:bold;font-size:17px;"><option name="" value=""></option>'.$select_todoscargos.'</select> (envío múltiple)</td>
+<td nowrap="nowrap"><select name="cargo_ID" style="font-weight:bold;font-size:16px;"><option name="" value=""></option>'.$select_todoscargos.'</select> (envío múltiple)</td>
 </tr>
 
 '.(isset($select_grupos)?'
 
 <tr onclick="click_form(\'grupos\');">
 <td><input id="radio_grupos" type="radio" name="para" value="grupos"'.($pre_grupos?' checked="checked"':'').' />Grupos:</td>
-<td><select name="grupo_ID" style="color:green;font-weight:bold;font-size:17px;">
+<td><select name="grupo_ID" style="font-weight:bold;font-size:16px;">
 <option name="" value=""></option>
 '.$select_grupos.'
 </select> (env&iacute;o m&uacute;ltiple)</td>
@@ -155,7 +155,7 @@ function click_form(tipo) {
 </p>
 
 <p><b>Mensaje:</b><br />
-<textarea tabindex="2" name="text" style="color:green;font-weight:bold;width:550px;height:200px;"></textarea></p>
+<textarea tabindex="2" name="text" style="font-weight:bold;width:550px;height:200px;"></textarea></p>
 
 <input type="hidden" name="calidad" value="0" />
 

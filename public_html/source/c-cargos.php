@@ -90,10 +90,9 @@ ORDER BY voto_confianza DESC, nota DESC", $link);
 		$txt_tab['/cargos/editar'] = 'Editar';
 	}
 
-
-	if (($_GET['a'] == 'editar') AND (nucleo_acceso($vp['acceso']['control_cargos']))) { 
+	if ($_GET['a'] == 'editar') { 
 		$editar = true; 
-		$txt_nav[] = 'Editar cargos';
+		if (nucleo_acceso($vp['acceso']['control_cargos'])) { $txt_nav[] = 'Editar cargos'; }
 		$txt .= '<form action="/accion.php?a=cargo&b=editar" method="POST">';
 	} else { $editar = false; }
 
@@ -197,7 +196,7 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 		}
 
 	if ($editar) {
-		$txt .= '<tr><td colspan="6" align="center">'.boton('Editar cargos', 'submit', '¿Estás seguro que quieres EDITAR toda la configuracion de cargos?\n\nCUIDADO ESTA ACCION PUEDE TENER CONSECUENCIAS IMPORTANTES.', 'large red').'</form></td></tr>';
+		$txt .= '<tr><td colspan="6" align="center">'.boton('Editar cargos', 'submit', '¿Estás seguro que quieres EDITAR toda la configuracion de cargos?\n\nCUIDADO ESTA ACCION PUEDE TENER CONSECUENCIAS IMPORTANTES.', 'large orange').'</form></td></tr>';
 	}
 	$txt .= '</table>';
 
@@ -206,18 +205,18 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 
 <p>Nombre: <input type="text" name="nombre" value="" /></p>
 
-<p>Icono (único): ';
+<p><table><tr><td valign="top">Icono (único):</td>';
 		$directorio = opendir(RAIZ.'/img/cargos/');
 		while ($archivo = readdir($directorio)) {
 			$img_cargo_ID = explodear('.', $archivo, 0);
 			if ((is_numeric($img_cargo_ID)) AND (!in_array($img_cargo_ID, array(0,98,99,7,6))) AND (!in_array($img_cargo_ID, $cargo_ID_array))) {
-				$txt .= '<input type="radio" name="cargo_ID" value="'.$img_cargo_ID.'"'.(!$txt_cargo_elegido?' checked="checked"':'').' /><img src="'.IMG.'cargos/'.$archivo.'" width="16" height="16" title="cargo_ID: '.$img_cargo_ID.'" /> &nbsp; &nbsp; ';
+				$txt .= '<td align="center"><img src="'.IMG.'cargos/'.$archivo.'" width="16" height="16" title="cargo_ID: '.$img_cargo_ID.'" /><br /><input type="radio" name="cargo_ID" value="'.$img_cargo_ID.'"'.(!$txt_cargo_elegido?' checked="checked"':'').' /></td>';
 				$txt_cargo_elegido = true;
 			}
 		}
 		closedir($directorio); 
 
-		$txt .= '</p><p>Cargo supeditado a: <select name="asigna">';
+		$txt .= '</tr></table></p><p>Cargo supeditado a: <select name="asigna">';
 		
 		$result2 = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 		while($r2 = mysql_fetch_array($result2)){

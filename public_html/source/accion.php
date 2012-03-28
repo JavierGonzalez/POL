@@ -901,7 +901,7 @@ case 'empresa':
 	if (($_GET['b'] == 'crear') AND ($pol['pols'] >= $pol['config']['pols_empresa']) AND (ctype_digit($_POST['cat'])) AND ($_POST['nombre'])) {
 		$nombre = $_POST['nombre'];
 		$url = gen_url($nombre);
-		$result = mysql_query("SELECT ID, url FROM ".SQL."cat WHERE ID = '".$_POST['cat']."' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, url FROM cat WHERE pais = '".PAIS."' AND ID = '".$_POST['cat']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ $cat_url = $r['url']; $cat_ID = $r['ID']; }
 
 		mysql_query("INSERT INTO ".SQL."empresas (url, nombre, user_ID, descripcion, web, cat_ID, time) VALUES ('".$url."', '".$nombre."', '".$pol['user_ID']."', 'Editar...', '', '".$cat_ID."', '".$date."')", $link);
@@ -912,7 +912,7 @@ case 'empresa':
 		$acciones=mysql_query("INSERT INTO ".SQL."acciones (nick, nombre_empresa, acciones, pais, ID_empresa) 
 		VALUES ('".$nick."', '".$nombre."', '".$acciones."', '".$PAIS."')", $link);
 
-		mysql_query("UPDATE ".SQL."cat SET num = num + 1 WHERE ID = '".$cat_ID."' LIMIT 1", $link);
+		mysql_query("UPDATE cat SET num = num + 1 WHERE pais = '".PAIS."' AND ID = '".$cat_ID."' LIMIT 1", $link);
 
 		pols_transferir($pol['config']['pols_empresa'], $pol['user_ID'], '-1', 'Creacion nueva empresa: '.$nombre);
 		evento_log('Empresa creada ('.$nombre.')');
@@ -1466,7 +1466,7 @@ case 'kick':
 	if (($_GET['b'] == 'quitar') AND ($_GET['ID'])) {
 
 		$es_policiaexpulsador = false;
-		$result = mysql_unbuffered_query("SELECT ID, user_ID, autor FROM ".SQL."ban WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+		$result = mysql_unbuffered_query("SELECT ID, user_ID, autor FROM kicks WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 			if ($pol['user_ID'] == $r['autor']) {
 				$es_policiaexpulsador = true;
@@ -1476,7 +1476,7 @@ case 'kick':
 		}
 	
 		if (($es_policiaexpulsador) OR (nucleo_acceso($vp['acceso']['kick_quitar']))) {
-			mysql_query("UPDATE ".SQL."ban SET estado = 'cancelado' WHERE estado = 'activo' AND ID = '".$_GET['ID']."' LIMIT 1", $link); 
+			mysql_query("UPDATE kicks SET estado = 'cancelado' WHERE pais = '".PAIS."' AND estado = 'activo' AND ID = '".$_GET['ID']."' LIMIT 1", $link); 
 			if (mysql_affected_rows()==1) {
 				$result = mysql_query("SELECT nick FROM users WHERE ID = '".$kickeado_id."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $kickeado_nick = $r['nick'];}
@@ -1499,13 +1499,13 @@ case 'kick':
 			while($r = mysql_fetch_array($result)){ $kick_nick = $r['nick']; }
 			$_POST['razon'] = '['.$kick_nick.'] '.$_POST['razon'];
 			$kick_pais = PAIS;
-			$result = mysql_query("SELECT ID FROM ".SQL."ban WHERE IP = ".$kick_IP." AND estado = 'activo' LIMIT 1", $link);
+			$result = mysql_query("SELECT ID FROM kicks WHERE pais = '".PAIS."' AND IP = ".$kick_IP." AND estado = 'activo' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $user_kicked = true; }
 			$el_userid = -1;
 		} else {
 			$result = mysql_query("SELECT ID, nick, IP, cargo, pais FROM users WHERE nick = '".$_POST['nick']."' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $kick_cargo = $r['cargo']; $kick_user_ID = $r['ID']; $kick_nick = $r['nick']; $kick_IP = '\''.$r['IP'].'\''; $kick_pais = $r['pais']; }
-			$result = mysql_query("SELECT ID FROM ".SQL."ban WHERE user_ID = '".$kick_user_ID."' AND estado = 'activo' LIMIT 1", $link);
+			$result = mysql_query("SELECT ID FROM kicks WHERE pais = '".PAIS."' AND user_ID = '".$kick_user_ID."' AND estado = 'activo' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $user_kicked = true; }
 			$el_userid = $kick_user_ID;
 		}
@@ -1524,7 +1524,7 @@ case 'kick':
 ) {
 			$_POST['razon'] = ucfirst(strip_tags($_POST['razon']));
 			$expire = date('Y-m-d H:i:s', time() + $_POST['expire']);
-			mysql_query("INSERT INTO ".SQL."ban (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$el_userid."', ".$pol['user_ID'].", '".$expire."', '".$_POST['razon']."', 'activo', '".$_POST['expire']."', ".$kick_IP.", '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
+			mysql_query("INSERT INTO kicks (pais, user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".PAIS."', '".$el_userid."', ".$pol['user_ID'].", '".$expire."', '".$_POST['razon']."', 'activo', '".$_POST['expire']."', ".$kick_IP.", '".$pol['cargo']."', '".$_POST['motivo']."')", $link);
 
 			evento_chat('<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>');
 			evento_log('Kick a '.$kick_nick.', tiempo('.$_POST['expire'].'), razon: '.$_POST['razon']);
@@ -1830,32 +1830,23 @@ FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' AND a
 		$refer_url = 'cargos/editar';
 
 
-	} elseif (($_GET['b'] == 'crear') AND (nucleo_acceso($vp['acceso']['control_cargos'])) AND (strlen($_POST['nombre']) >= 3) AND (strlen($_POST['nombre']) <= 30) AND (is_numeric($_POST['nivel'])) AND (is_numeric($_POST['cargo_ID']))) {
-		
+	} elseif (($_GET['b'] == 'crear') AND (nucleo_acceso($vp['acceso']['control_cargos'])) AND (strlen($_POST['nombre']) >= 3) AND (strlen($_POST['nombre']) <= 30) AND (entre($_POST['nivel'], 1, 98)) AND (is_numeric($_POST['cargo_ID']))) {
 		$_POST['nombre'] = strip_tags(trim(substr($_POST['nombre'], 0, 30)));
 		mysql_query("INSERT INTO cargos (cargo_ID, asigna, nombre, pais, nivel) VALUES ('".$_POST['cargo_ID']."', '".$_POST['asigna']."', '".$_POST['nombre']."', '".PAIS."', '".$_POST['nivel']."')", $link);
 		mysql_query("INSERT INTO ".SQL."examenes (titulo, time, cargo_ID, nota) VALUES ('".$_POST['nombre']."', '".$date."', '".$_POST['cargo_ID']."', '0')", $link);
 		$refer_url = 'cargos/editar';
 
 
-	} elseif (($b) AND (is_numeric($cargo_ID))) {
+	} elseif ((in_array($b, array('add', 'del'))) AND (is_numeric($cargo_ID))) {
 		$result = mysql_query("SELECT cargo_ID, asigna, nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){
-
-			if ((($pol['cargos'][$r['asigna']]) AND ($r['cargo_ID'] != 7)) OR (($r['cargo_ID'] != 19) AND ($r['asigna'] == 7) AND ($pol['cargos'][19]) AND ($r['cargo_ID'] != 7))) { 
-
-
+			if (nucleo_acceso('cargo', $r['asigna'])) { 
 				$result2 = mysql_query("SELECT nick, online, fecha_registro FROM users WHERE ID = '".$_POST['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
 				while($r2 = mysql_fetch_array($result2)){ $nick_asignado = $r2['nick']; $asignado['fecha_registro'] = $r2['fecha_registro']; $asignado['online'] = $r2['online']; }
 
 				if ($nick_asignado) {
-					if ($b == 'add') {
-						if (($cargo_ID != 21) OR (($cargo_ID == 21) AND (strtotime($asignado['fecha_registro']) <= (time()-8640000)) AND ($asignado['online'] >= 864000))) {
-							cargo_add($cargo_ID, $_POST['user_ID']);
-						}
-					} elseif ($b == 'del') { 
-						cargo_del($cargo_ID, $_POST['user_ID']); 
-					}
+					if ($b == 'add') { cargo_add($cargo_ID, $_POST['user_ID']); } 
+					elseif ($b == 'del') { cargo_del($cargo_ID, $_POST['user_ID']); }
 				}
 				$refer_url = 'cargos/'.$cargo_ID;
 			}

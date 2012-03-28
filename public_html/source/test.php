@@ -11,9 +11,9 @@ $txt .= '<h1>TEST DE DESARROLLO</h1><hr />';
 
 foreach ($vp['paises'] AS $pais) {
 	$txt .= $pais.'<br />';
-	$result = mysql_query("SELECT * FROM ".strtolower($pais)."_config", $link);
+	$result = mysql_query("SELECT * FROM ".strtolower($pais)."_cat", $link);
 	while($r = mysql_fetch_array($result)){
-		//mysql_query("INSERT INTO config (pais, dato, valor, autoload) VALUES ('".$pais."', '".$r['dato']."', '".$r['valor']."', '".$r['autoload']."')", $link);
+		//mysql_query("INSERT INTO cat (pais, url, nombre, num, nivel, tipo, orden) VALUES ('".$pais."', '".$r['url']."', '".$r['nombre']."', '".$r['num']."', '".$r['nivel']."', '".$r['tipo']."', '".$r['orden']."')", $link);
 	}
 }
 

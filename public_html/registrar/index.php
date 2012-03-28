@@ -120,7 +120,7 @@ function onlynumbers($string) {
 foreach ($vp['paises'] AS $pais) {
 	$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$pais."'", $link);
 	while($r = mysql_fetch_array($result)) {
-		mysql_query("UPDATE ".strtolower($pais)."_config SET valor = '" . $r['num'] . "' WHERE dato = 'info_censo' LIMIT 1", $link);
+		mysql_query("UPDATE config SET valor = '" . $r['num'] . "' WHERE pais = '".strtolower($pais)."' AND dato = 'info_censo' LIMIT 1", $link);
 	}
 }
 
@@ -323,7 +323,7 @@ if ($pol['estado'] == 'ciudadano') {
 
 
 	// load config full
-	$result = mysql_query("SELECT valor, dato FROM ".strtolower($pol['pais'])."_config WHERE autoload = 'no'", $link);
+	$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".strtolower($pol['pais'])."' AND autoload = 'no'", $link);
 	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
@@ -388,7 +388,7 @@ $txt .= '</blockquote></div>';
 		while($r = mysql_fetch_array($result)) { $ciudadanos_num = $r['num']; }
 
 		// pais_des
-		$result = mysql_query("SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'pais_des' LIMIT 1", $link);
+		$result = mysql_query("SELECT valor FROM config WHERE pais = '".strtolower($pais)."' AND dato = 'pais_des' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) { $pais_des = $r['valor']; }
 
 		$txt .= ($pais=='VP'?'<tr><td>&nbsp;</td></tr>':'').'

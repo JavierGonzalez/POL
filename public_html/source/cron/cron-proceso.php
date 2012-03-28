@@ -337,7 +337,7 @@ mysql_query("DELETE FROM ".SQL."transacciones WHERE time < '".$margen_60dias."'"
 mysql_query("DELETE FROM ".SQL."log WHERE time < '".$margen_90dias."'", $link);
 
 // ELIMINAR bans antiguos
-mysql_query("DELETE FROM ".SQL."ban WHERE (estado = 'inactivo' OR estado = 'cancelado') AND expire < '".$margen_60dias."'", $link);
+mysql_query("DELETE FROM kicks WHERE pais = '".PAIS."' AND (estado = 'inactivo' OR estado = 'cancelado') AND expire < '".$margen_60dias."'", $link);
 
 // ELIMINAR hilos BASURA
 mysql_query("DELETE FROM ".SQL."foros_hilos WHERE estado = 'borrado' AND time_last < '".$margen_10dias."'", $link);
@@ -405,7 +405,7 @@ if (date('N') == 7) { // SOLO DOMINGO
 	$SC_num = 8; // 8 SC + Custodiador = 9 SC
 	$margen_365d = date('Y-m-d 20:00:00', time() - 86400*365); // Antiguedad minima: 365 dias.
 	mysql_query("UPDATE users SET SC = 'false' WHERE ID != 1", $link);
-	$result = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".$margen_365d."' AND ser_SC = 'true' AND ID != 1 ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT ".$SC_num, $link);
+	$result = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".$margen_365d."' AND ser_SC = 'true' AND ID != 1 ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT ".mysql_real_escape_string($SC_num), $link);
 	while($r = mysql_fetch_array($result)){ 
 		mysql_query("UPDATE users SET SC = 'true' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 	}

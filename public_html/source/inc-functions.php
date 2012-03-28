@@ -203,8 +203,8 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 				return '<span title="Usuario expirado">&dagger;</span>'; 
 			} 
 			break;
-		case 'partido': if ($a) { return '<a href="/partidos/' . strtolower($a) . '">' . $a . '</a>'; } else { return 'Ninguno'; } break;
-		case 'documento': return '<a href="/doc/' . $a . '">/doc/' . $a . '</a>'; break;
+		case 'partido': if ($a) { return '<a href="/partidos/'.strtolower($a).'">'.$a.'</a>'; } else { return 'Ninguno'; } break;
+		case 'documento': return '<a href="/doc/'.$a.'">/doc/'.$a.'</a>'; break;
 	}
 }
 
@@ -212,6 +212,7 @@ function num($num, $dec=0) { return number_format(round($num, $dec), $dec, ',', 
 
 function explodear($pat, $str, $num) { $exp = explode($pat, $str); return $exp[$num]; }
 function implodear($pat, $str, $num) { $exp = implode($pat, $str); return $exp[$num]; }
+function entre($num, $min, $max) { if ((is_numeric($num)) AND ($num >= $min) AND ($num <= $max)) { return true; } else { return false; } }
 
 function boton($texto, $url=false, $confirm=false, $size=false, $pols='', $html_extra=false) {
 	if (($pols=='') OR (ECONOMIA == false)) {
@@ -246,8 +247,8 @@ function form_select_cat($tipo='docs', $cat_now='') {
 	$f .= '<select name="cat">';
 	$result = mysql_query("
 SELECT ID, nombre, nivel
-FROM ".SQL."cat
-WHERE tipo = '" . $tipo . "'
+FROM cat
+WHERE pais = '".PAIS."' AND tipo = '" . $tipo . "'
 ORDER BY orden ASC", $link);
 	while($row = mysql_fetch_array($result)){
 		if ($cat_now == $row['ID']) { 

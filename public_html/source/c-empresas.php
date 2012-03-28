@@ -7,9 +7,9 @@ pol_empresas	(ID, url, nombre, user_ID, descripcion, web, cat_ID, time)
 if (($_GET['a'] == 'editar') AND ($_GET['b'])) { //EDITAR EMPRESA
 
 	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time,
-(SELECT nombre FROM ".SQL."cat WHERE ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_nom,
-(SELECT url FROM ".SQL."cat WHERE ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_url,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
+(SELECT nombre FROM cat WHERE pais = '".PAIS."' AND ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_nom,
+(SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_url,
+(SELECT nick FROM users WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
 FROM ".SQL."empresas
 WHERE ID = '" . $_GET['b'] . "' 
 AND user_ID = '" . $pol['user_ID'] . "'
@@ -38,8 +38,8 @@ LIMIT 1", $link);
 } elseif ($_GET['a'] == 'crear-empresa') { //CREAR EMPRESA
 
 	$result = mysql_query("SELECT ID, url, nombre, num
-FROM ".SQL."cat
-WHERE tipo = 'empresas'
+FROM cat
+WHERE pais = '".PAIS."' AND tipo = 'empresas'
 ORDER BY num DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$txt_li .= '<option value="' . $r['ID'] . '">' . $r['nombre'] . '</option>';
@@ -62,8 +62,8 @@ ORDER BY num DESC", $link);
 } elseif (($_GET['a']) AND (!$_GET['b'])) { //VER SECTOR
 
 	$result = mysql_query("SELECT ID, url, nombre, num
-FROM ".SQL."cat
-WHERE tipo = 'empresas'
+FROM cat
+WHERE pais = '".PAIS."' AND tipo = 'empresas'
 AND url = '" . $_GET['a'] . "'
 ORDER BY num DESC", $link);
 	while($r = mysql_fetch_array($result)) {
@@ -82,7 +82,7 @@ ORDER BY num DESC", $link);
 
 
 	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
+(SELECT nick FROM users WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
 FROM ".SQL."empresas
 WHERE cat_ID = '" . $cat_ID . "'
 ORDER BY time ASC", $link);
@@ -94,13 +94,13 @@ ORDER BY time ASC", $link);
 
 } elseif ($_GET['a']) { //VER EMPRESA
 
-	$result = mysql_query("SELECT ID FROM ".SQL."cat WHERE tipo = 'empresas' AND url = '".$_GET['a']."' LIMIT 1", $link);
+	$result = mysql_query("SELECT ID FROM cat WHERE pais = '".PAIS."' AND tipo = 'empresas' AND url = '".$_GET['a']."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) { $cat_ID = $r['ID']; }
 
 	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
-(SELECT nombre FROM ".SQL."cat WHERE ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_nom,
-(SELECT url FROM ".SQL."cat WHERE ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_url,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
+(SELECT nombre FROM cat WHERE pais = '".PAIS."' AND ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_nom,
+(SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_url,
+(SELECT nick FROM users WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
 FROM ".SQL."empresas
 WHERE url = '" . $_GET['b'] . "' AND cat_ID = '".$cat_ID."'
 LIMIT 1", $link);
@@ -143,8 +143,8 @@ Cantidad de acciones: <input type="text" name="cantidad" size="8" maxlength="3" 
 <table border="0" cellspacing="0" cellpadding="2" class="pol_table">';
 
 	$result = mysql_query("SELECT ID, url, nombre, num
-FROM ".SQL."cat
-WHERE tipo = 'empresas'
+FROM cat
+WHERE pais = '".PAIS."' AND tipo = 'empresas'
 ORDER BY orden ASC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$pv_num = 0;

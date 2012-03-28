@@ -435,21 +435,24 @@ LIMIT 1", $link);
 #tabla_comprobantes .tcb { color:blue; }
 #tabla_comprobantes .tcr { color:red; }
 </style>
+
 <table border="0" style="font-family:\'Courier New\',Courier,monospace;" id="tabla_comprobantes">
 <tr>
-'.($r['tipo_voto']=='estandar'?'<th title="Conteo de los diferentes sentidos de votos">Contador</th>':'').'
+<th title="Conteo de los diferentes sentidos de votos">Contador</th>
 <th title="Sentido del voto emitido">Sentido de voto</th>
 <th title="Voto de validez/nulidad, es una votación binaria paralela a la votación para determinar la validez de la misma.">Validez</th>
 <th title="Código aleatorio relacionado a cada voto">Comprobante</th>
 <th title="Comentario emitido junto al voto, anónimo y opcional">Comentario</th>
 </tr>';
-			if (($r['estado'] == 'end') AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
+			if ((!nucleo_acceso('ciudadanos')) AND ($r['estado'] == 'end')) {
+				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>Tienes que ser ciudadano para ver la tabla de comprobantes.</b></td></tr>';
+			} else if (($r['estado'] == 'end') AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 				$contador_votos = 0;
 				$result2 = mysql_query("SELECT voto, validez, comprobante, mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".($r['tipo_voto']=='estandar'?" ORDER BY voto ASC":""), $link);
 				while($r2 = mysql_fetch_array($result2)) { 
 					$contador_votos++; 
 					$txt .= '<tr id="'.$r2['comprobante'].'">
-'.($r['tipo_voto']=='estandar'?'<td align="right">'.++$contador[$r2['voto']].'.</td>':'').'
+<td align="right">'.($r['tipo_voto']=='estandar'?++$contador[$r2['voto']]:++$contador).'.</td>
 <td nowrap>'.($r['tipo_voto']=='estandar'?'<b>'.$respuestas[$r2['voto']].'</b>':$r2['voto']).'</td>
 <td'.($r2['validez']=='true'?' class="tcb">Válida':' class="tcr">Nula').'</td>
 <td nowrap>'.$r['ID'].'-'.$r2['comprobante'].'</td>

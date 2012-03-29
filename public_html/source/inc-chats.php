@@ -1,4 +1,11 @@
 <?php
+
+// Prevención de inyección
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val); }
+foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape($val); }
+foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
+
+
 if (!isset($_COOKIE['teorizauser'])) { session_start(); }
 
 if ($_GET['b'] == 'e') { $externo = true; } else { $externo = false; }

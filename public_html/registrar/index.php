@@ -318,7 +318,6 @@ VALUES ('".date('Y-m-d H:i:s')."', '".$pol['user_ID']."', '".$pol['user_ID']."',
 
 
 
-
 if ($pol['estado'] == 'ciudadano') {
 
 
@@ -328,15 +327,14 @@ if ($pol['estado'] == 'ciudadano') {
 
 
 	$txt_title = 'Registrar: PASO 3 (Ya eres Ciudadano!)';
-	$txt .= '<h1><span class="gris">1. Crear usuario | 2. Solicitar Ciudadan&iacute;a</span> | 3. Ser Ciudadano</h1><hr />
-<p><b>Eres ciudadano de ' . $pol['pais'] . '</b>.</p>
+	$txt_nav = array('Ciudadanía');
 
-<p>Puedes entrar en la <a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/"><b>plataforma '.$pol['pais'].'</b></a> y saluda a tus compa&ntilde;eros ciudadanos!</p>
+	$txt .= '<p><b>Eres ciudadano de ' . $pol['pais'] . '</b>.</p>
 
-<br /><br /><hr />
+<p>Puedes entrar en la <a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'"><b>plataforma '.$pol['pais'].'</b></a> y saluda a tus compa&ntilde;eros ciudadanos!</p>
 
-<div class="azul">
-<p style="color:red;"><b>Rechazar ciudadania de ' . $pol['pais'] . '</b>:</p>
+<blockquote>
+<p style="color:red;"><b>Rechazar ciudadania de '.$pol['pais'].'</b>:</p>
 
 <ul>
 <li>Esta acci&oacute;n es irreversible.</li>
@@ -344,28 +342,28 @@ if ($pol['estado'] == 'ciudadano') {
 <li>Siempre podr&aacute;s solicitar ciudadan&iacute;a de cualquier plataforma.</li>
 <li style="color:red;"><b>PERDERAS:</b> tus cuentas bancarias (pero tus monedas), <b>cargos</b>, examenes, <b>votos</b> en elecciones activas en este momento, tus empresas, tu partido, subastas de hoy y todos los derechos de ciudadano.</li>
 <li>CONSERVARAS: tus monedas (restando un arancel del <b style="color:red;">'.$pol['config']['arancel_salida'].'%</b>), tu antiguedad, online, mensajes privados, confianza, mensajes en foro... y todo lo dem&aacute;s.</li>
-</ul>
-<blockquote>';
+</ul>';
 
 
 if (strtotime($pol['rechazo_last']) < (time() - 21600)) { // 6 horas
 	$txt .= '
 <form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=rechazar-ciudadania" method="POST">
 <input type="hidden" name="pais" value="'.$pol['pais'].'" />
-<p><b style="color:red;">[<input type="submit" value="Rechazar ciudadania de la plataforma '.$pol['pais'].'" />]</b></p>
+<p>'.boton('Rechazar ciudadania de la plataforma '.$pol['pais'], 'submit', '¿Estás seguro de querer RECHAZAR ciudadanía?', 'pill red').'</p>
 </form>';
 
 } else { $txt .= '<p style="color:red;"><b>Solo puedes rechazar tu ciudadan&iacute;a una vez cada 6 horas...</b></p>'; }
 
-$txt .= '</blockquote></div>';
-
+$txt .= '</blockquote>';
 
 } elseif (($pol['estado'] == 'turista') AND ($pol['pais'] != 'ninguno')) {
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';
+	$txt_nav = array('Crear ciudadano');
 	$txt .= '<h1><span class="gris">1. Crear usuario |</span> 2. Solicitar Ciudadan&iacute;a <span class="gris">| 3. Ser Ciudadano</span></h1><hr /><p>Tu solicitud de ciudadan&iacute;a en ' . $pol['pais'] . ' est&aacute; en proceso.</p>';
 
 } elseif (($pol['estado'] == 'turista') AND ($pol['pais'] == 'ninguno')) {
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';
+	$txt_nav = array('Crear ciudadano');
 	$atrack = '"/atrack/registro/solicitar.html"'; 
 
 	if (!$_GET['pais']) { $_GET['pais'] = $vp['paises'][0]; }
@@ -408,6 +406,7 @@ $txt .= '</blockquote></div>';
 
 } elseif ($registro_txt) {
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';
+	$txt_nav = array('Crear ciudadano');
 	$txt .= '<h1>1. Crear usuario <span class="gris">| 2. Solicitar Ciudadan&iacute;a | 3. Ser Ciudadano</span></h1><hr />' . $registro_txt;
 } else {
 
@@ -426,7 +425,9 @@ $(document).ready(function() {
 
 	$atrack = '"/atrack/registro/formulario.html"';
 	$txt_title = 'Registrar: PASO 1 (Crear ciudadano)';
-	$txt .= '<h1>Crear tu ciudadano</h1><hr />
+	$txt_nav = array('Crear ciudadano');
+
+	$txt .= '
 
 <form action="?a=registrar'.($_GET['p']?'&p='.$_GET['p']:'').($_GET['r']?'&r='.$_GET['r']:'').'" method="POST" id="form_crear_ciudadano">
 <input type="hidden" name="repid" value="' . $rn . '" />
@@ -474,7 +475,7 @@ En caso afirmativo indica el nick: <input type="text" name="nick_clon" value="" 
 
 <li><input name="condiciones" value="ok" type="checkbox" /> <b>Aceptas las <a href="http://www'.'.'.DOMAIN.'/TOS" target="_blank">Condiciones de Uso de VirtualPol</a>.</b><br /><br /></li>
 
-<li><input type="submit" value="Crear ciudadano" style="height:40px;font-size:22px;" /></li>
+<li>'.boton('Crear ciudadano', 'submit', false, 'large blue').'</li>
 </form>
 </ol>
 <script type="text/javascript" src="'.IMG.'lib/md5.js"></script>

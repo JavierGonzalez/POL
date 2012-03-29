@@ -1,4 +1,11 @@
 <?php
+
+// Prevención de inyección
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val); }
+foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape($val); }
+foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
+
+
 $mapa_width = $cuadrado_size * $columnas;
 $mapa_height = $cuadrado_size * $filas;
 $superficie_total = $columnas * $filas;

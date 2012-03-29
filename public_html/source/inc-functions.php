@@ -117,13 +117,22 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 	}
 }
 
-function escape($a, $escape=true) {
+function escape($a, $escape=true, $html=true) {
+	// INYECCION SQL
 	$a = nl2br($a);
 	$a = str_replace('\'', '&#39;', $a);
 	$a = str_replace('"', '&quot;', $a);
 	if ($escape == true) { $a = mysql_real_escape_string($a); }
+	
+	// XSS
+	if ($html == false) { $a = strip_tags($a); }
+	$js_filter = 'javascript vbscript expression applet meta xml blink link style script embed object iframe frame frameset ilayer layer bgsound title base onabort onactivate onafterprint onafterupdate onbeforeactivate onbeforecopy onbeforecut onbeforedeactivate onbeforeeditfocus onbeforepaste onbeforeprint onbeforeunload onbeforeupdate onblur onbounce oncellchange onchange onclick oncontextmenu oncontrolselect oncopy oncut ondataavailable ondatasetchanged ondatasetcomplete ondblclick ondeactivate ondrag ondragend ondragenter ondragleave ondragover ondragstart ondrop onerror onerrorupdate onfilterchange onfinish onfocus onfocusin onfocusout onhelp onkeydown onkeypress onkeyup onlayoutcomplete onload onlosecapture onmousedown onmouseenter onmouseleave onmousemove onmouseout onmouseover onmouseup onmousewheel onmove onmoveend onmovestart onpaste onpropertychange onreadystatechange onreset onresize onresizeend onresizestart onrowenter onrowexit onrowsdelete onrowsinserted onscroll onselect onselectionchange onselectstart onstart onstop onsubmit onunload';
+	$a = str_replace(explode(' ', $js_filter), 'nojs', $a);
+
 	return $a;
 }
+
+
 
 function pass_key($t, $type='sha') {
 	switch ($type) {

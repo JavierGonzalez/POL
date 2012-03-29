@@ -6,9 +6,6 @@ include('inc-functions-accion.php');
 $result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
 while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
-// load user cargos
-$pol['cargos'] = cargos();
-
 
 if (
 (nucleo_acceso('ciudadanos'))
@@ -561,6 +558,9 @@ FROM ".SQL."examenes WHERE ID = '".$_POST['ID']."' LIMIT 1", $link);
 
 case 'mapa':
 	//pol_mapa (ID, pos_x, pos_y, size_x, size_y, user_ID, link, text, time, pols, color, estado)
+
+	// load user cargos
+	$pol['cargos'] = cargos();
 
 	// pasa a ESTADO
 	if ($pol['cargos'][40]) { mysql_query("UPDATE ".SQL."mapa SET estado = 'e', user_ID = '' WHERE link = 'ESTADO'", $link); }

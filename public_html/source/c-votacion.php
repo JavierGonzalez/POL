@@ -12,6 +12,10 @@ while($r = mysql_fetch_array($result)){
 	// Finaliza la votación
 	mysql_query("UPDATE votacion SET estado = 'end', time_expire = '".$date."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
+	if ($r['acceso_ver'] == 'anonimos') {
+		evento_chat('<b>['.strtoupper($r['tipo']).']</b> Finalizado, resultados: <a href="/votacion/'.$r['ID'].'"><b>'.$r['pregunta'].'</b></a> <span style="color:grey;">(votos: <b>'.$r['num'].'</b>)</span>');
+	}
+
 	include_once('inc-functions-accion.php');
 
 	if ($r['ejecutar'] != '') { 
@@ -48,10 +52,6 @@ while($r = mysql_fetch_array($result)){
 	$result2 = mysql_query("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_ver = 'anonimos'", $link);
 	while($r2 = mysql_fetch_array($result2)) {
 		mysql_query("UPDATE config SET valor = '".$r2['num']."' WHERE pais = '".PAIS."' AND dato = 'info_consultas' LIMIT 1", $link);
-	}
-
-	if ($r['acceso_ver'] == 'anonimos') {
-		evento_chat('<b>['.strtoupper($r['tipo']).']</b> Finalizado, resultados: <a href="/votacion/'.$r['ID'].'"><b>'.$r['pregunta'].'</b></a> <span style="color:grey;">(votos: <b>'.$r['num'].'</b>)</span>');
 	}
 }
 // FIN DE FINALIZAR VOTACIONES
@@ -448,22 +448,26 @@ LIMIT 1", $link);
 				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>Tienes que ser ciudadano para ver la tabla de comprobantes.</b></td></tr>';
 			} else if (($r['estado'] == 'end') AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 				$contador_votos = 0;
-				$result2 = mysql_query("SELECT voto, validez, comprobante, mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".($r['tipo_voto']=='estandar'?" ORDER BY voto ASC":""), $link);
+				$result2 = mysql_query("SELECT user_ID, voto, validez, comprobante, mensaje,
+(SELECT nick FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS nick
+FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".($r['tipo_voto']=='estandar'?" ORDER BY voto ASC":""), $link);
 				while($r2 = mysql_fetch_array($result2)) { 
 					$contador_votos++; 
+					if ($r2['user_ID'] != 0) { $txt_votantes[] = $r2['nick']; }
 					$txt .= '<tr id="'.$r2['comprobante'].'">
 <td align="right">'.($r['tipo_voto']=='estandar'?++$contador[$r2['voto']]:++$contador).'.</td>
 <td nowrap>'.($r['tipo_voto']=='estandar'?'<b>'.$respuestas[$r2['voto']].'</b>':$r2['voto']).'</td>
 <td'.($r2['validez']=='true'?' class="tcb">Válida':' class="tcr">Nula').'</td>
 <td nowrap>'.$r['ID'].'-'.$r2['comprobante'].'</td>
 '.($r2['mensaje']?'<td title="'.$r2['mensaje'].'">Comentario</td>':'').'
-</tr>'."\n"; }
+</tr>'."\n"; 
+				}
 				if ($contador_votos == 0) { $txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>Esta votación es anterior al sistema de comprobantes, por lo tanto esta comprobación no es posible.</b></td></tr>'; }
 			} else {
 				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>Esta votación aún no ha finalizado. Cuando finalice se mostrará aquí la tabla de votos-comprobantes.</b></td></tr>';
 			}
 
-			$txt .= '</table>';
+			$txt .= '</table><p><b>Votantes:</b><br />'.implode(', ', $txt_votantes).'</p>';
 
 		} else {
 

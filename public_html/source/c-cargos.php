@@ -205,11 +205,12 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 
 <p>Nombre: <input type="text" name="nombre" value="" /></p>
 
-<p><table><tr><td valign="top">Icono (único):</td>';
+<p><table><tr><td valign="top">Icono:</td>';
 		$directorio = opendir(RAIZ.'/img/cargos/');
 		while ($archivo = readdir($directorio)) {
 			$img_cargo_ID = explodear('.', $archivo, 0);
 			if ((is_numeric($img_cargo_ID)) AND (!in_array($img_cargo_ID, array(0,98,99,7,6))) AND (!in_array($img_cargo_ID, $cargo_ID_array))) {
+				if ($num >= 27) { $txt .= '</tr><tr><td></td>'; $num = 0; } $num++;
 				$txt .= '<td align="center"><img src="'.IMG.'cargos/'.$archivo.'" width="16" height="16" title="cargo_ID: '.$img_cargo_ID.'" /><br /><input type="radio" name="cargo_ID" value="'.$img_cargo_ID.'"'.(!$txt_cargo_elegido?' checked="checked"':'').' /></td>';
 				$txt_cargo_elegido = true;
 			}

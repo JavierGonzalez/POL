@@ -5,13 +5,11 @@ include('../config.php');
 include(RAIZ.'source/inc-functions.php');
 
 //INIT
-$mtime = explode(' ', microtime()); 
-$tiempoinicial = $mtime[1] + $mtime[0]; 
 $date = date('Y-m-d H:i:s');
 $IP = direccion_IP('longip');
 $link = conectar();
 
-// Prevención de inyecciones varias
+// Prevención de inyección
 foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val, false); }
 foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape($val); }
 foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }

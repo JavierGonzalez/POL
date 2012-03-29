@@ -294,7 +294,7 @@ LIMIT 50", $link);
 
 
 
-} elseif ($_GET['b']) {			//foro/subforo/hilo-prueba/
+} elseif ($_GET['b']) {			//foro/subforo/hilo-prueba
 
 
 	$result = mysql_query("SELECT h.ID, sub_ID, user_ID, h.url, h.title, h.time, time_last, h.text, h.cargo, num, u.nick, u.estado, u.avatar, acceso_leer, acceso_escribir, acceso_escribir_msg, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_msg, votos, v.voto, f.title AS foro_title, f.url AS foro_url, f.descripcion
@@ -340,7 +340,7 @@ LIMIT 1", $link);
 				// es tu post
 				$editar = '<span style="float:right;">'.boton('Editar', '/foro/editar/'.$r['ID'], false, 'small').'</span>'; 
 			} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
-				$editar = '<span style="float:right;">'.boton('Mover', '/foro/editar/'.$r['ID'], false, 'small').' '.boton('Papelera', '/accion.php?a=foro&b=borrar&c=hilo&ID='.$r['ID'], '¿Quieres enviar a la PAPELERA este HILO y sus MENSAJES?', 'small').'</span>'; 
+				$editar = '<span style="float:right;">'.boton('Mover', '/foro/editar/'.$r['ID'], false, 'small').' '.boton('Papelera', '/accion.php?a=foro&b=borrar&c=hilo&ID='.$r['ID'], '¿Quieres enviar a la PAPELERA este HILO y TODOS sus MENSAJES?', 'small red').'</span>'; 
 			} else { $editar = ''; }
 
 			$txt .= '<tr>
@@ -366,12 +366,13 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysql
 			while($r2 = mysql_fetch_array($result2)) {
 
 				if (($pol['user_ID'] == $r2['user_ID']) AND ($subforo != 'notaria') AND (strtotime($r2['time']) > (time() - 3600))) { 
-					$editar = boton('Editar', '/foro/editar/'.$r2['hilo_ID'].'/'.$r2['ID'], false, 'small') . boton('X', '/accion.php?a=foro&b=eliminarreply&ID='.$r2['ID'].'&hilo_ID='.$r2['hilo_ID'], '¿Estás seguro de querer ELIMINAR tu MENSAJE?', 'small') . ' '; 
+					$editar = boton('Editar', '/foro/editar/'.$r2['hilo_ID'].'/'.$r2['ID'], false, 'small').boton('X', '/accion.php?a=foro&b=eliminarreply&ID='.$r2['ID'].'&hilo_ID='.$r2['hilo_ID'], '¿Estás seguro de querer ELIMINAR tu MENSAJE?', 'small red').' '; 
 				} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
 					// policia borra
 					$editar = boton('Papelera', '/accion.php?a=foro&b=borrar&c=mensaje&ID=' . $r2['ID'] . '/', '¿Quieres enviar a la PAPELERA este MENSAJE?', 'small') . ' '; 
 				} else { $editar = ''; }
-				if ($citar) {
+
+				if (($citar) AND ($pol['user_ID'] != $r2['user_ID'])) {
 					 $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/'.$r2['ID'].'#enviar', false, 'small pill').'</div>'; 
 				}
 

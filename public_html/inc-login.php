@@ -1,15 +1,11 @@
 <?php
+define('TIME_START', microtime(true));
 
-// ARREGLAR: este login es una copia redundante y simplificada del login principal (source/inc-login.php). Centralizar pronto.
 include('config.php'); // config raiz
 include('source/inc-functions.php'); // libreria de funciones basicas
 
-// inicia el cronometro para medir el tiempo de carga
-$mtime = explode(' ', microtime()); 
-$tiempoinicial = $mtime[1] + $mtime[0]; 
 
 $date = date('Y-m-d H:i:s'); // fija fecha actual $date en formato entendible por MySQL
-
 $IP = direccion_IP('longip'); // obtiene la IP en formato numérico (longip)
 $link = conectar(); // conecta MySQL
 

@@ -51,19 +51,18 @@ ORDER BY msg_ID DESC LIMIT 50", $link);
 }
 
 
-// Prevención de inyección SQL y JS
-foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val); }
-foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
+// Prevención de inyección
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val, true, false); }
 
 
-if ((!isset($_REQUEST['a'])) AND (is_numeric($_REQUEST['chat_ID']))) {
+if ((!isset($_POST['a'])) AND (is_numeric($_POST['chat_ID']))) {
 
-	echo chat_refresh($_REQUEST['chat_ID'], $_REQUEST['n']);
+	echo chat_refresh($_POST['chat_ID'], $_POST['n']);
 
-} elseif (($_REQUEST['a'] == 'enviar') AND (is_numeric($_REQUEST['chat_ID']))) {
+} elseif (($_POST['a'] == 'enviar') AND (is_numeric($_POST['chat_ID']))) {
 
 	$date = date('Y-m-d H:i:s');
-	$chat_ID = $_REQUEST['chat_ID'];
+	$chat_ID = $_POST['chat_ID'];
 
 	// EXPULSADO?
 	$result = mysql_unbuffered_query("SELECT HIGH_PRIORITY ID FROM expulsiones WHERE estado = 'expulsado' AND user_ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1", $link);
@@ -83,7 +82,7 @@ LIMIT 1", $link);
 	}
 
 	// CHECK MSG
-	$msg_len = strlen($_REQUEST['msg']);
+	$msg_len = strlen($_POST['msg']);
 	if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_check($chat_ID, 'escribir')) OR (($_SESSION['pol']['pais'] != PAIS) AND (acceso_check($chat_ID, 'escribir_ex'))))) {
 		
 		if ((!isset($_SESSION['pol']['nick'])) AND (substr($_POST['anonimo'], 0, 1) == '-') AND (strlen($_POST['anonimo']) >= 3) AND (strlen($_POST['anonimo']) <= 15) AND (!stristr($_POST['anonimo'], '__'))) { 
@@ -99,7 +98,7 @@ LIMIT 1", $link);
 		}
 
 		// limpia MSG
-		$msg = $_REQUEST['msg'];
+		$msg = $_POST['msg'];
 		if (isset($borrar_msg)) { $msg = ''; }
 
 		$msg = str_replace("ส็็็็็็็็", "", str_replace("ส็็็็็็็็็็็็็็็็็็็็็็็็็", "", str_replace("'", "''", str_replace("\r", "", str_replace("\n", "", trim($msg))))));
@@ -230,11 +229,11 @@ UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMI
 
 
 		// print refresh
-		if (isset($_REQUEST['n'])) { echo chat_refresh($chat_ID, $_REQUEST['n']); }
+		if (isset($_POST['n'])) { echo chat_refresh($chat_ID, $_POST['n']); }
 
 	} else { echo 'n 0 &nbsp; &nbsp; <b style="color:#FF0000;">No tienes permiso de escritura.</b>'."\n"; }
 
-} else if ($_REQUEST['a'] == 'noti') {
+} else if ($_POST['a'] == 'noti') {
 	
 	define('REGISTRAR', 'https://virtualpol.com/registrar/');
 	include_once('inc-login.php');
@@ -254,13 +253,13 @@ $('ul.menu li').hover(function(){
 <?php
 	echo notificacion('print');
 
-} else if (($_REQUEST['a'] == 'whois') AND (isset($_REQUEST['nick']))) {
+} else if (($_POST['a'] == 'whois') AND (isset($_POST['nick']))) {
 
 	$res = mysql_query("SELECT ID, fecha_registro, partido_afiliado, fecha_last, nivel, online, nota, avatar, voto_confianza, estado, pais, cargo,
 (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS partido,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
-FROM users WHERE nick = '".$_REQUEST['nick']."' LIMIT 1", $link);
+FROM users WHERE nick = '".$_POST['nick']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($res)) { 
 		include('inc-functions.php');
 		if ($r['avatar'] == 'true') { $r['avatar'] = 1; } else { $r['avatar'] = 0; }

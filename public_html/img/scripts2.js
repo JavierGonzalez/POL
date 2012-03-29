@@ -487,7 +487,8 @@ function enriquecer(m, bbcode) {
 	m = m.replace(/:aleluya:/gi, html_instant('aleluya', boton_width));
 
 	// URL
-	m = m.replace(/(\s|^)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, " <a href=\"$2\" target=\"_blank\">$2</a>");
+	m = m.replace(/(\s|^)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, ' <a href="$2" target="_blank">$2</a>');
+
 
 	// BBCODE
 	if (bbcode) {

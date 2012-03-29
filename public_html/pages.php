@@ -4,9 +4,16 @@ include('inc-login.php');
 
 switch ($_GET['a']) {
 
+case 'video':
+	$txt_title = 'Vídeo';
+	$txt_nav = array('Vídeo');
+	$txt .= '<br /><iframe width="640" height="360" src="http://www.youtube-nocookie.com/embed/fbSZf5hToQc" frameborder="0" allowfullscreen></iframe>';
+	break;
+
+
 case 'donaciones':
 	$txt_title = 'Donaciones a VirtualPol'; 
-	$txt_header = '<style type="text/css">.content { width:800px; margin: 0 auto; }</style>';
+	$txt_nav = array('Donaciones');
 
 	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 752 LIMIT 1", $link); // doc_ID 752 = Donaciones
 	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
@@ -59,7 +66,7 @@ case 'presentacion':
 
 case 'desarrollo':
 	$txt_title = 'Desarrollo de VirtualPol | Codigo fuente, Software libre, descargar'; 
-	$txt_header = '<style type="text/css">.content { width:860px; margin: 0 auto; }</style>';
+	$txt_nav = array('Desarrollo');
 
 	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 10 LIMIT 1", $link); // doc_ID 10 = Desarrollo
 	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
@@ -79,7 +86,7 @@ case 'desarrollo':
 case 'manual': redirect('http://www.virtualpol.com/documentacion'); break;
 case 'documentacion':
 	$txt_title = 'Documentación de VirtualPol | Manual, ayuda'; 
-	$txt_header = '<style type="text/css">.content { width:860px; margin: 0 auto; }</style>';
+	$txt_nav = array('Documentación');
 
 	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 2 LIMIT 1", $link); // doc_ID 2 = Documentacion
 	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
@@ -99,6 +106,7 @@ case 'documentacion':
 
 case 'legal': redirect('http://www.virtualpol.com/TOS'); break;
 case 'TOS':
+	$txt_nav = array('TOS');
 	if (isset($pol['user_ID'])) {
 		$result = mysql_query("SELECT fecha_legal FROM users WHERE ID = '".$pol['user_ID']."' AND fecha_legal != '0000-00-00 00:00:00'", $link);
 		while($r = mysql_fetch_array($result)) { $fecha_legal = $r['fecha_legal']; }
@@ -120,11 +128,7 @@ case 'TOS':
 	$txt_title = 'CONDICIONES DE USO DE VIRTUALPOL | Informacion legal, contacto';
 	$txt_description = 'Condiciones de Uso de VirtualPol. Texto legal, contacto.'; 
 
-	$txt_header .= '
-<meta name="robots" content="noindex,nofollow" />
-<style type="text/css">
-.content { width:800px; margin: 0 auto; }
-</style>';
+	$txt_header .= '<meta name="robots" content="noindex,nofollow" />';
 
 	$txt .= '<em>'.$txt_legal.'</em>
 

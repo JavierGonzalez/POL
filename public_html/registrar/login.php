@@ -89,6 +89,7 @@ case 'panel':
 
 
 	$txt_title = 'Panel de Usuarios';
+	$txt_nav = array('Panel de usuario');
 	include('../theme.php');
 	break;
 
@@ -122,6 +123,7 @@ case 'recuperar-pass':
 <p>Si esto no te ayuda a recuperar tu usuario, en ultima instancia, puedes escribirnos un email a <em>'.CONTACTO_EMAIL.'</em></p>
 ';
 	$txt_title = 'Recuperar contrase&ntilde;a';
+	$txt_nav = array('Recuperar contraseña');
 	include('../theme.php');
 	break;
 
@@ -151,6 +153,7 @@ case 'reset-pass':
 	if ($check != true) { $txt .= 'Error.'; }
 
 	$txt_title = 'Recuperar contrase&ntilde;a';
+	$txt_nav = array('Recuperar contraseña');
 	include('../theme.php');
 	break;
 
@@ -411,7 +414,7 @@ default:
 	$txt_header .= '<style type="text/css">.content { width:400px; margin: 0 auto; padding: 2px 12px 0 12px; }</style>';
 
 
-	$txt .= '<center><h1>Entrar con ciudadano:</h1></center>';
+	$txt .= '<center><h1>Entrar con tu ciudadano</h1></center>';
 
 	if (isset($pol['user_ID'])) {
 		$txt .= '<p>Ya est&aacute;s logueado correctamente como <b>'.$pol['nick'].'</b>.</p>';
@@ -441,7 +444,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <tr>
 <td colspan="2" align="center">
 '.($_GET['error']?'<em style="color:red;">'.base64_decode($_GET['error']).'.</em><br /><br />':'').'
-<input type="submit" value="Entrar" onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" style="font-size:25px;color:#777;" /><br /><br />
+<button onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" class="large blue">Entrar</button><br /><br />
 <a href="'.REGISTRAR.'login.php?a=recuperar-pass">&iquest;Has olvidado tu contrase&ntilde;a?</a><br /><br />
 <a href="'.REGISTRAR.'">&iquest;A&uacute;n no tienes usuario registrado?</a><br /><br /><br />
 <span style="color:#888;">Contacto: '.CONTACTO_EMAIL.'</span>
@@ -453,7 +456,8 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 </form>';
 	}
 
-	$txt_title = 'Login';
+	$txt_title = 'Entrar';
+	$txt_nav = array('Entrar');
 	include('../theme.php');
 	break;
 

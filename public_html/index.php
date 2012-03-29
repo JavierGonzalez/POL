@@ -28,9 +28,9 @@ while($r = mysql_fetch_array($result)) { $num_votaciones_votos = $r['num']+46133
 $result = mysql_query("SELECT COUNT(*) AS num FROM votos", $link);
 while($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
 
-$txt .= '<h1>Bienvenido a VirtualPol</h1>
+$txt_nav = array('Bienvenido a VirtualPol');
 
-<p>VirtualPol es la primera <b>red social democrática</b>.</p>
+$txt .= '<p>VirtualPol es la primera <b>red social democrática</b>.</p>
 
 <p><b>En VirtualPol no hay administrador.</b> Se ha automatizado la democracia. Todo se decide con pilares democr&aacute;ticos (1 ciudadano 1 voto). En VirtualPol hay diferentes plataformas independientes entre s&iacute; que comparten este sistema como base.</p>
 
@@ -142,7 +142,7 @@ while($r = mysql_fetch_array($result)){
 $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="10"></td></tr>
 
 <tr>
-<td colspan="2" rowspan="2" align="right"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=240x150&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB" alt="Reparto del censo - Simulador Politico" title="Reparto de la poblaci&oacute;n entre plataformas." width="240" height="150" /></td>
+<td colspan="2" rowspan="2" align="right"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=250x100&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB&chf=bg,s,ffffff01|c,s,ffffff01&chco=FF9900|FFBE5E|FFD08A|FFDBA6" alt="Reparto del censo - Simulador Politico" title="Reparto de la poblaci&oacute;n entre plataformas." width="250" height="100" /></td>
 <td align="right" valign="top"><b style="font-size:22px;">'.num($poblacion_num).'</b></td>
 <td colspan="2" valign="top"><b style="font-size:20px;">Ciudadanos</b></td>
 <td colspan="3" align="right"></td>

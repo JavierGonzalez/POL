@@ -12,7 +12,7 @@ while($r = mysql_fetch_array($result)){
 
 	$user_ID = $r['ID'];
 	if ((PAIS != $r['pais']) AND ($r['estado'] == 'ciudadano') AND ($r['pais'] != 'ninguno')) {
-		header('HTTP/1.1 301 Moved Permanently'); header('Location: http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'/'); exit;
+		header('HTTP/1.1 301 Moved Permanently'); header('Location: http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick']); exit;
 	} elseif ($user_ID) { //nick existe
 
 		$nick = $r['nick'];

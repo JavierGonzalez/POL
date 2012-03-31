@@ -3,7 +3,7 @@ include('inc-login.php');
 
 function reemplazos($t) { return '<span class="rich">'.strip_tags($t, '<br>').'</span>'; }
 
-function print_lateral($nick, $cargo_ID=false, $time, $siglas='', $user_ID='', $avatar='', $votos=0, $voto=false, $tipo='msg', $item_ID=0) {
+function print_lateral($nick, $cargo_ID=false, $time, $siglas='', $user_ID='', $avatar='', $votos=0, $votos_num=false, $voto=false, $tipo='msg', $item_ID=0) {
 	global $pol;
 	if ($cargo_ID == 99) { $cargo = 'Extranjero'; }
 	return '<table border="0" width="100%"><tr>
@@ -11,7 +11,7 @@ function print_lateral($nick, $cargo_ID=false, $time, $siglas='', $user_ID='', $
 <td align="right" valign="top" nowrap="nowrap">
 <b>'.($cargo_ID?'<img src="'.IMG.'cargos/'.$cargo_ID.'.gif" /> ':'').crear_link($nick).'</b><br />
 <span class="min">'.timer($time).' '.$siglas.'</span> 
-<span id="'.$tipo.$item_ID.'">'.confianza($votos).'</span>'.($pol['pais']==PAIS&&$item_ID!=0&&$user_ID!=$pol['user_ID']?'<br />
+<span id="'.$tipo.$item_ID.'">'.confianza($votos, $votos_num).'</span>'.($pol['pais']==PAIS&&$item_ID!=0&&$user_ID!=$pol['user_ID']?'<br />
 <span id="data_'.$tipo.$item_ID.'" class="votar" type="'.$tipo.'" name="'.$item_ID.'" value="'.$voto.'"></span>':'').'
 </td></tr></table>';
 }
@@ -195,14 +195,14 @@ $txt .= mysql_error($link);
 
 
 
-	$result = mysql_query("SELECT h.ID, h.cargo, h.time, h.votos, h.num, h.sub_ID, h.url, h.title, h.text, u.nick
+	$result = mysql_query("SELECT h.ID, h.cargo, h.time, h.votos, h.votos_num, h.num, h.sub_ID, h.url, h.title, h.text, u.nick
 FROM ".SQL."foros_hilos `h`
 LEFT JOIN users `u` ON (u.ID = h.user_ID)
 WHERE user_ID = '".$el_user_ID."'
 ORDER BY h.time DESC
 LIMIT 10", $link);
 	while($r = mysql_fetch_array($result)) {
-		$txt .= '<tr><td align="right" valign="top" colspan="2">' . print_lateral($r['nick'], $r['cargo'], $r['time'], '', $pol['user_ID'], '', $r['votos'], false, 'hilos', $r['ID']) . '</td><td align="right" valign="top"><b style="font-size:20px;">'.$r['num'].'</b></td><td valign="top" colspan="2" nowrap="nowrap" style="color:grey;"><a href="/foro/' . $sub[$r['sub_ID']] . '/' . $r['url'] . '/"><b>' . $r['title'] . '</b></a><br />' . substr(strip_tags($r['text']), 0, 90) . '..</td></tr>';
+		$txt .= '<tr><td align="right" valign="top" colspan="2">' . print_lateral($r['nick'], $r['cargo'], $r['time'], '', $pol['user_ID'], '', $r['votos'], $r['votos_num'], false, 'hilos', $r['ID']) . '</td><td align="right" valign="top"><b style="font-size:20px;">'.$r['num'].'</b></td><td valign="top" colspan="2" nowrap="nowrap" style="color:grey;"><a href="/foro/' . $sub[$r['sub_ID']] . '/' . $r['url'] . '/"><b>' . $r['title'] . '</b></a><br />' . substr(strip_tags($r['text']), 0, 90) . '..</td></tr>';
 	}
 
 
@@ -217,7 +217,7 @@ LIMIT 10", $link);
 	$result = mysql_query("SELECT ID, url FROM ".SQL."foros", $link);
 	while($r = mysql_fetch_array($result)) { $sub[$r['ID']] = $r['url']; }
 
-	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo, votos,
+	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo, votos, votos_num,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
 (SELECT nombre FROM cargos WHERE cargo_ID = ".SQL."foros_msg.cargo LIMIT 1) AS encalidad,
 (SELECT url FROM ".SQL."foros_hilos WHERE ID = ".SQL."foros_msg.hilo_ID LIMIT 1) AS hilo_url,
@@ -237,7 +237,7 @@ LIMIT 50", $link);
 		if (!$repes[$r['hilo_ID']]) {
 			$repes[$r['hilo_ID']] = true;
 
-			$txt .= '<tr><td align="right" valign="top" colspan="2">' . print_lateral($r['nick'], $r['cargo'], $r['time'], '', $pol['user_ID'], '', $r['votos'], false, 'msg', $r['ID']) . '</td><td align="right" valign="top"><acronym title="Nuevos mensajes"><b style="font-size:20px;">'.$resp_num.'</b></acronym></td><td valign="top" colspan="2" nowrap="nowrap" style="color:grey;"><a href="/foro/'.$sub[$r['sub_ID']].'/'.$r['hilo_url'].'"><b>'.$r['hilo_titulo'].'</b></a><br /><span title="Mensajes después del tuyo">(<b style="font-size:18px;">'.$resp_num.'</b> nuevos)</span> '.substr(strip_tags($r['text']), 0, 90).'..</td></tr>';
+			$txt .= '<tr><td align="right" valign="top" colspan="2">' . print_lateral($r['nick'], $r['cargo'], $r['time'], '', $pol['user_ID'], '', $r['votos'], $r['votos_num'], false, 'msg', $r['ID']) . '</td><td align="right" valign="top"><acronym title="Nuevos mensajes"><b style="font-size:20px;">'.$resp_num.'</b></acronym></td><td valign="top" colspan="2" nowrap="nowrap" style="color:grey;"><a href="/foro/'.$sub[$r['sub_ID']].'/'.$r['hilo_url'].'"><b>'.$r['hilo_titulo'].'</b></a><br /><span title="Mensajes después del tuyo">(<b style="font-size:18px;">'.$resp_num.'</b> nuevos)</span> '.substr(strip_tags($r['text']), 0, 90).'..</td></tr>';
 		}
 	}
 
@@ -260,7 +260,7 @@ LIMIT 50", $link);
 	$result = mysql_query("SELECT ID, url FROM ".SQL."foros", $link);
 	while($r = mysql_fetch_array($result)) { $sub[$r['ID']] = $r['url']; }
 
-	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo, votos,
+	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo, votos, votos_num,
 (SELECT nick FROM users WHERE ID = m.user_ID LIMIT 1) AS nick,
 (SELECT nombre FROM cargos WHERE cargo_ID = m.cargo LIMIT 1) AS encalidad,
 (SELECT url FROM ".SQL."foros_hilos WHERE ID = m.hilo_ID LIMIT 1) AS hilo_url,
@@ -277,7 +277,7 @@ LIMIT 50", $link);
 		while($r2 = mysql_fetch_array($result2)) {
 			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {
 				$txt .= '<tr>
-<td align="right" valign="top" colspan="2" nowrap="nowrap">'.print_lateral($r['nick'], $r['cargo'], $r['time'], '', $r['user_ID'], '', $r['votos'], $r['voto'], 'msg', $r['ID']).'</td>
+<td align="right" valign="top" colspan="2" nowrap="nowrap">'.print_lateral($r['nick'], $r['cargo'], $r['time'], '', $r['user_ID'], '', $r['votos'], $r['votos_num'], $r['voto'], 'msg', $r['ID']).'</td>
 <td valign="top" colspan="2">
 <span style="font-size:17px;"><a href="/foro/'.$sub[$r['sub_ID']].'/'.$r['hilo_url'].'"><b>'.$r['hilo_titulo'].'</b></a></span><br />
 
@@ -297,7 +297,7 @@ LIMIT 50", $link);
 } elseif ($_GET['b']) {			//foro/subforo/hilo-prueba
 
 
-	$result = mysql_query("SELECT h.ID, sub_ID, user_ID, h.url, h.title, h.time, time_last, h.text, h.cargo, num, u.nick, u.estado, u.avatar, acceso_leer, acceso_escribir, acceso_escribir_msg, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_msg, votos, v.voto, f.title AS foro_title, f.url AS foro_url, f.descripcion
+	$result = mysql_query("SELECT h.ID, sub_ID, user_ID, h.url, h.title, h.time, time_last, h.text, h.cargo, num, u.nick, u.estado, u.avatar, acceso_leer, acceso_escribir, acceso_escribir_msg, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_msg, votos, votos_num, v.voto, f.title AS foro_title, f.url AS foro_url, f.descripcion
 FROM ".SQL."foros_hilos `h`
 LEFT JOIN ".SQL."foros `f` ON (f.ID = sub_ID)
 LEFT JOIN users `u` ON (u.ID = user_ID)
@@ -344,7 +344,7 @@ LIMIT 1", $link);
 			} else { $editar = ''; }
 
 			$txt .= '<tr>
-<td align="right" valign="top" style="border-bottom:none;">'.print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['voto'], 'hilos', $r['ID']).'</td>
+<td align="right" valign="top" style="border-bottom:none;">'.print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['votos_num'], $r['voto'], 'hilos', $r['ID']).'</td>
 <td class="amarillo redondeado" valign="top" width="80%"><p style="text-align:justify;">'.$citar.$editar.'<h1 style="margin:-6px 0 10px 0;"><a href="/'.$return_url.'" class="rich" style="font-size:20px;">'.$r['title'].'</a></h1>'.reemplazos($r['text']).'</p></td>
 </tr>
 
@@ -357,7 +357,7 @@ LIMIT 1", $link);
 </td>
 </td>';
 
-			$result2 = mysql_query("SELECT m.ID, hilo_ID, user_ID, m.time, m.text, m.cargo, nick, m.estado AS nick_estado, avatar, votos, v.voto
+			$result2 = mysql_query("SELECT m.ID, hilo_ID, user_ID, m.time, m.text, m.cargo, nick, m.estado AS nick_estado, avatar, votos, votos_num, v.voto
 FROM ".SQL."foros_msg `m`
 LEFT JOIN users `u` on (u.ID = user_ID)
 LEFT JOIN votos `v` ON (tipo = 'msg' AND v.pais = '".PAIS."' AND item_ID = m.ID AND emisor_ID = '".$pol['user_ID']."')
@@ -376,7 +376,7 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysql
 					 $citar = '<div class="citar">'.boton('Citar', '/'.$return_url.'1/'.$r2['ID'].'#enviar', false, 'small pill').'</div>'; 
 				}
 
-				$txt .= '<tr id="m-' . $r2['ID'] . '"><td align="right" valign="top">' . print_lateral($r2['nick'], $r2['cargo'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['votos'], $r2['voto'], 'msg', $r2['ID']) . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $r2['ID'] . '">#</a></span>'.($r2['nick_estado']=='expulsado'?'<span style="color:red;">Expulsado.</span>':$citar.reemplazos($r2['text'])).'</p></td></tr>';
+				$txt .= '<tr id="m-' . $r2['ID'] . '"><td align="right" valign="top">' . print_lateral($r2['nick'], $r2['cargo'], $r2['time'], $r2['siglas'], $r2['user_ID'], $r2['avatar'], $r2['votos'], $r2['votos_num'], $r2['voto'], 'msg', $r2['ID']) . '</td><td valign="top"><p class="pforo"><span style="float:right;">' . $editar . '<a href="#m-' . $r2['ID'] . '">#</a></span>'.($r2['nick_estado']=='expulsado'?'<span style="color:red;">Expulsado.</span>':$citar.reemplazos($r2['text'])).'</p></td></tr>';
 			}
 			$txt .= '</table> <p>' . $p_paginas . '</p>';
 
@@ -406,7 +406,7 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysql
 
 
 
-	$result = mysql_query("SELECT ID, sub_ID, user_ID, url, title, time, time_last, text, cargo, num, votos,
+	$result = mysql_query("SELECT ID, sub_ID, user_ID, url, title, time, time_last, text, cargo, num, votos, votos_num
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
 (SELECT avatar FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS avatar,
 (SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) FROM users WHERE ID = ".SQL."foros_hilos.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
@@ -417,14 +417,14 @@ ORDER BY time_last DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		if (nucleo_acceso($vp['acceso']['foro_borrar'])) { $boton = boton('Restaurar', '/accion.php?a=foro&b=restaurar&c=hilo&ID=' . $r['ID'], '¿Quieres RESTAURAR este HILO y sus MENSAJES?'); } else { $boton = boton('Restaurar'); }
 
-		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], false, 'hilos') . '</td><td valign="top"><p class="pforo"><b style="color:blue;">' . $r['title'] . '</b><br />' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time_last'] . '"><span class="timer" value="'.strtotime($r['time_last']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
+		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['votos_num'], false, 'hilos') . '</td><td valign="top"><p class="pforo"><b style="color:blue;">' . $r['title'] . '</b><br />' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time_last'] . '"><span class="timer" value="'.strtotime($r['time_last']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
 	}
 
 $txt .= '<tr><td><br /></td></tr><tr class="azul"><td colspan="4"><h2 style="color:red;font-size:22px;padding:8px;">Mensajes</h2></tr>';
 
 
 
-	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, time2, text, cargo, votos,
+	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, time2, text, cargo, votos, votos_num,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
 (SELECT avatar FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS avatar,
 (SELECT (SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) FROM users WHERE ID = ".SQL."foros_msg.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
@@ -435,7 +435,7 @@ ORDER BY time2 DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		if (nucleo_acceso($vp['acceso']['foro_borrar'])) { $boton = boton('Restaurar', '/accion.php?a=foro&b=restaurar&c=mensaje&ID=' . $r['ID'], '¿Quieres RESTAURAR este MENSAJE?'); } else { $boton = boton('Restaurar'); }
 
-		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], false) . '</td><td valign="top"><p class="pforo">' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time2'] . '"><span class="timer" value="'.strtotime($r['time2']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
+		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['votos_num'], false) . '</td><td valign="top"><p class="pforo">' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time2'] . '"><span class="timer" value="'.strtotime($r['time2']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
 	}
 
 
@@ -470,7 +470,7 @@ ORDER BY time2 DESC", $link);
 <th>Creado</th>
 <th></th>
 </tr>';
-			$result2 = mysql_query("SELECT ID, url, user_ID, title, time, time_last, cargo, num, sub_ID, votos,
+			$result2 = mysql_query("SELECT ID, url, user_ID, title, time, time_last, cargo, num, sub_ID, votos, votos_num,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
 (SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS estado
 FROM ".SQL."foros_hilos
@@ -494,7 +494,7 @@ LIMIT 200", $link);
 					$txt .= '<tr>
 <td align="right">'.crear_link($r2['nick']).'</td>
 <td align="right"><b>'.$r2['num'].'</b></td>
-<td align="right" style="padding-right:4px;">'.confianza($r2['votos']).'</td>
+<td align="right" style="padding-right:4px;">'.confianza($r2['votos'], $r2['votos_num']).'</td>
 <td>'.$titulo.'</td>
 <td align="right"><span class="timer" value="'.strtotime($r2['time']).'"></span></td>
 <td>'.$editar.'</td>
@@ -524,7 +524,7 @@ ORDER BY time ASC", $link);
 <td align="right" width="10%">'.boton('Crear Hilo', (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?'/foro/'.$r['url'].'#enviar':false), false, 'large').'</td>
 </tr>';
 
-			$result2 = mysql_query("SELECT ID, url, user_ID, title, time, time_last, cargo, num, votos,
+			$result2 = mysql_query("SELECT ID, url, user_ID, title, time, time_last, cargo, num, votos, votos_num,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
 (SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS user_estado
 FROM ".SQL."foros_hilos
@@ -537,7 +537,7 @@ LIMIT ".mysql_real_escape_string($r['limite']), $link);
 					$txt_table .= '<tr>
 	<td align="right" style="padding-right:4px;">'.crear_link($r2['nick']).'</td>
 	<td align="right"><b>'.$r2['num'].'</b></td>
-	<td align="right" style="padding-right:4px;">'.confianza($r2['votos']).'</td>
+	<td align="right" style="padding-right:4px;">'.confianza($r2['votos'], $r2['votos_num']).'</td>
 	
 	<td><a'.($time_hilo>(time()-432000)?' style="font-weight:bold;"':'').' href="/foro/'.$r['url'].'/'.$r2['url'].'" class="rich">'.$r2['title'].'</a>'.($time_hilo>(time()-86400)?' <sup style="font-size:9px;color:red;">Nuevo!</sup>':'').'</td>
 	

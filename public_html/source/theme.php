@@ -46,7 +46,7 @@ if (isset($_GET['bg'])) {
 
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="<?=IMG?>scripts_all.js?v=10"></script>
+<script type="text/javascript" src="<?=IMG?>scripts_all.js?v=12"></script>
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '<?=IMG?>';
@@ -88,9 +88,14 @@ p_scroll = false;
 		<ul>
 			<li><a href="/info/censo">Censo<span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
 			<li><a href="/doc"><b>Documentos</b><span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
+			<li><a href="#" style="cursor:default;">Más</a>
+				<ul>
+					<li><a href="/geolocalizacion">Mapa de ciudadanos</a></li>
+					<li><a href="/estadisticas">Estadísticas</a></li>
+					<li><a href="/log">Log de acciones</a></li>
+				</ul>
+			</li>
 			<li><a href="/buscar">Buscar</a></li>
-			<li><a href="/estadisticas">Estadísticas</a></li>
-			<li><a href="/log">Log de acciones</a></li>
 			<li><a href="#" style="cursor:default;">Sobre VirtualPol...</a>
 				<ul>
 					<li><a href="http://www.virtualpol.com/video" target="_blank">Vídeo de bienvenida</a></li>
@@ -124,9 +129,9 @@ p_scroll = false;
 <?php if (ECONOMIA) { ?>
 	<li id="menu-econ"<?=($txt_menu=='econ'?' class="menu-sel"':'')?>><a href="/pols">Economía</a>
 		<ul>
-			<?=($pol['pais']==PAIS?'<li><a href="/pols"><b>Tus monedas</b></a></li>':'')?>
 			<li><a href="/pols/cuentas">Cuentas</a></li>
 			<li><a href="/empresas"><b>Empresas</b></a></li>
+			<?=($pol['pais']==PAIS?'<li><a href="/pols">Tus monedas</a></li>':'')?>
 			<li><a href="/subasta">Subastas</a></li>
 			<li><a href="/mapa">Mapa</a></li>
 			<li><a href="/info/economia">Economía Global</a></li>
@@ -142,7 +147,7 @@ p_scroll = false;
 <?php
 foreach(explode(';', $pol['config']['palabras']) as $t) {
 	$t = explode(':', $t);
-	echo ($t[1]!=''?'<a href="http://'.$t[1].'"><b>'.$t[2].'</b></a>':$t[2]).($pol['user_ID']==$t[0]||nucleo_acceso($vp['acceso']['control_gobierno'])?' <a href="/subasta/editar" style="float:right;color:#CCC;">#</a>':'').'<br />';
+	echo ($t[1]!=''?'<a href="http://'.$t[1].'">'.$t[2].'</a>':$t[2]).($pol['user_ID']==$t[0]||nucleo_acceso($vp['acceso']['control_gobierno'])?' <a href="/subasta/editar" style="float:right;color:#CCC;">#</a>':'').'<br />';
 }
 
 echo '</p>';

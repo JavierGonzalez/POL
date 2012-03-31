@@ -191,9 +191,8 @@ case 'historia':
 
 
 case 'geolocalizacion':
-
 	if (($_GET['b'] == 'add') AND ($_POST['x']) AND ($_POST['y'])) {
-		mysql_query("UPDATE users SET geo = '".$_POST['x'].":".$_POST['y']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("UPDATE users SET geo = '".round($_POST['x'],2).":".round($_POST['y'],2)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	}
 	$refer_url = 'geolocalizacion';
 
@@ -403,10 +402,10 @@ case 'voto':
 
 			// Contadores
 			if (($tipo == 'hilos') OR ($tipo == 'msg')) {
-				$result = mysql_query("SELECT SUM(voto) AS num FROM votos WHERE tipo = '".$tipo."' AND pais = '".$pais."' AND item_ID = '".$item_ID."'", $link);
+				$result = mysql_query("SELECT SUM(voto) AS num, COUNT(*) AS votos_num FROM votos WHERE tipo = '".$tipo."' AND pais = '".$pais."' AND item_ID = '".$item_ID."'", $link);
 				while ($r = mysql_fetch_array($result)) { 
 					$voto_result = $r['num'];
-					mysql_query("UPDATE ".SQL."foros_".$tipo." SET votos = '".$r['num']."' WHERE ID = '".$item_ID."' LIMIT 1", $link);
+					mysql_query("UPDATE ".SQL."foros_".$tipo." SET votos = '".$r['num']."', votos_num = '".$r['votos_num']."' WHERE ID = '".$item_ID."' LIMIT 1", $link);
 				}
 			}
 		}
@@ -514,14 +513,21 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 				}
 				if ($nota['nota'] >= $nota_aprobado) { $estado = ", aprobado = 'ok'"; } else { $estado = ", aprobado = 'no'"; }
 
-				$evento_examen = '<b>[CARGO]</b> '.crear_link($pol['nick']).' se postula como candidato a <a href="/cargos">'.$examen_titulo.'</a> <span class="gris">('.$nota['nota'].')</span>';
-
 				mysql_query("UPDATE cargos_users SET time = '".$date."', nota = '".$nota['nota']."'".$estado." WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' AND cargo_ID = '".$cargo_ID."' LIMIT 1", $link);
 
-
 				if ($nota['nota'] >= $nota_aprobado) { // APROBADO
-					evento_chat($evento_examen); 
-					actualizar('examenes');
+					
+					$result2 = mysql_query("SELECT cargo_ID FROM ".SQL."examenes WHERE ID = '".$_GET['ID']."' AND cargo_ID > 0 LIMIT 1", $link);
+					while($r2 = mysql_fetch_array($result2)){
+						$result3 = mysql_query("SELECT cargo_ID FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$r2['cargo_ID']."' AND autocargo = 'true' LIMIT 1", $link);
+						while($r3 = mysql_fetch_array($result3)){ $auto_cargo = $r3['cargo_ID']; }	
+					}
+					if ($auto_cargo > 0) {
+						cargo_add($auto_cargo, $pol['user_ID'], true, true);
+					} else {
+						evento_chat('<b>[CARGO]</b> '.crear_link($pol['nick']).' se postula como candidato a <a href="/cargos">'.$examen_titulo.'</a> <span class="gris">('.$nota['nota'].')</span>'); 
+						actualizar('examenes');
+					}
 				}
 
 				$refer_url = 'cargos';
@@ -1170,7 +1176,7 @@ case 'pols':
 
 
 case 'votacion':
-	$votaciones_tipo = array('referendum', 'parlamento', 'sondeo', 'cargo');
+	$votaciones_tipo = array('referendum', 'parlamento', 'sondeo', 'cargo', 'elecciones');
 	if (($_GET['b'] == 'crear') AND (in_array($_POST['tipo'], $votaciones_tipo)) AND (nucleo_acceso($vp['acceso']['votacion_borrador']))) {
 		
 		if ($_POST['votos_expire'] > 0) { } else { $_POST['votos_expire'] = 0; }
@@ -1213,7 +1219,7 @@ case 'votacion':
 						$_POST['acceso_votar'] = 'ciudadanos'; $_POST['acceso_cfg_votar'] = '';
 						$_POST['acceso_ver'] = 'anonimos'; $_POST['acceso_cfg_ver'] = '';
 					}
-					$ejecutar = $_POST['cargo'].'|'.$cargo_user_ID;
+					$ejecutar = 'cargo|'.$_POST['cargo'].'|'.$cargo_user_ID;
 					$_POST['pregunta'] = '&iquest;Apruebas que el ciudadano '.$_POST['nick'].' ostente el cargo '.$cargo_nombre.'?';
 					$_POST['descripcion'] .= '<hr />&iquest;Estas a favor que <b>'.crear_link($_POST['nick']).'</b> tenga el cargo <b>'.$cargo_nombre.'</b>?<br /><br />Al finalizar esta votaci&oacute;n, si el resultado por mayor&iacute;a es a favor, se otorgar&aacute; el cargo autom&aacute;ticamente, si por el contrario el resultado es en contra se le destituir&aacute; del cargo.';
 					$respuestas = 'En Blanco|SI|NO|';
@@ -1809,7 +1815,7 @@ case 'cargo':
 		while($r = mysql_fetch_array($result)){
 			$_POST['nombre_'.$r['cargo_ID']] = strip_tags(trim(substr($_POST['nombre_'.$r['cargo_ID']], 0, 30)));
 			if ((strlen($_POST['nombre_'.$r['cargo_ID']]) >= 3) AND (is_numeric($_POST['asigna_'.$r['cargo_ID']])) AND (is_numeric($_POST['nivel_'.$r['cargo_ID']])) AND ($_POST['nivel_'.$r['cargo_ID']] <= 99)) {
-				mysql_query("UPDATE cargos SET nombre = '".$_POST['nombre_'.$r['cargo_ID']]."', asigna = '".$_POST['asigna_'.$r['cargo_ID']]."', nivel = '".$_POST['nivel_'.$r['cargo_ID']]."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND asigna > 0 LIMIT 1", $link);
+				mysql_query("UPDATE cargos SET nombre = '".$_POST['nombre_'.$r['cargo_ID']]."', nombre_extra = '".strip_tags($_POST['nombre_extra_'.$r['cargo_ID']])."', asigna = '".$_POST['asigna_'.$r['cargo_ID']]."', nivel = '".$_POST['nivel_'.$r['cargo_ID']]."', autocargo = '".$_POST['autocargo_'.$r['cargo_ID']]."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND asigna > 0 LIMIT 1", $link);
 			}
 		}
 		$refer_url = 'cargos/editar';

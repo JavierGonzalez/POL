@@ -24,7 +24,7 @@ if (isset($_GET['bg'])) {
 <title><?=$txt_title?></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="language" content="es_ES" />
-<meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS.' | VirtualPol')?>" />
+<meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS)?> | La primera Red social democratica | VirtualPol" />
 <link rel="shortcut icon" href="/favicon.ico" />
 
 <link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css" media="all" />
@@ -58,6 +58,22 @@ p_scroll = false;
 
 	<div id="menu-next">
 		<p style="text-align:center;"><?=boton('Donaciones', 'http://www.virtualpol.com/donaciones', false, 'small pill orange')?></p>
+
+
+<?php
+$result = mysql_query("SELECT nick, pais, estado
+FROM users 
+WHERE fecha_last > '".date('Y-m-d H:i:00', time() - 3600)."' AND estado != 'expulsado'
+ORDER BY fecha_last DESC", $link);
+while($r = mysql_fetch_array($result)){ 
+	$li_online_num++; 
+	$li_online .= '<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'" style="color:#AAA;">'.$r['nick'].'</a> '; 
+}
+
+echo '<p><b>'.num($li_online_num).' ciudadanos</b> online:<br />
+'.$li_online.'</td>'; 
+?>
+
 	</div>
 </div>
 

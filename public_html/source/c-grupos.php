@@ -48,8 +48,8 @@ default:
 	$result = mysql_query("SELECT * FROM grupos WHERE pais = '".PAIS."' ORDER BY num DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$txt .= '<tr>
-<td align="right"><input type="checkbox" name="grupo_'.$r['grupo_ID'].'" value="true"'.(nucleo_acceso('grupos', $r['grupo_ID'])?' checked="checked"':'').' /></td>
-<td><b>'.$r['nombre'].'</b></td>
+<td align="right"><input type="checkbox" name="grupo_'.$r['grupo_ID'].'" id="grupo_'.$r['grupo_ID'].'" value="true"'.(nucleo_acceso('grupos', $r['grupo_ID'])?' checked="checked"':'').' /></td>
+<td><b><label for="grupo_'.$r['grupo_ID'].'" class="inline">'.$r['nombre'].'</label></b></td>
 <td align="right" style="font-size:18px;color:#777;" title="AFILIADOS: '.(is_array($users_array[$r['grupo_ID']])?implode(' ', $users_array[$r['grupo_ID']]):'').'"><b>'.$r['num'].'</b> (<span class="punteado">Ver</span>)</td>
 <td>'.(is_array($foros_array[$r['grupo_ID']])?implode(' ', $foros_array[$r['grupo_ID']]):'').'</td>
 <td width="100" align="right" style="color:#888;">'.$r['grupo_ID'].'</td>
@@ -59,7 +59,7 @@ default:
 
 	$txt .= '</table>
 
-<p>'.boton('Guardar afiliación', 'submit', false, 'large blue').'</p>
+<p>'.boton('Guardar afiliación', 'submit', false, 'blue').'</p>
 	
 </form>';
 }

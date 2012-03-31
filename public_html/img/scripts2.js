@@ -166,6 +166,8 @@ function actualizar_ahora() {
 	refresh = setTimeout(chat_query_ajax, chat_delay);
 	delays();
 	chat_query_ajax();
+	scroll_abajo();
+	$("#vpc_msg").focus();
 }
 
 function scroll_abajo() {
@@ -487,6 +489,7 @@ function enriquecer(m, bbcode) {
 	m = m.replace(/:aleluya:/gi, html_instant('aleluya', boton_width));
 
 	// URL
+	m = m.replace(/(\s|^)(\/[-A-Z0-9\/_]{3,})/ig, ' <a href="$2" target="_blank">$2</a>');
 	m = m.replace(/(\s|^)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, ' <a href="$2" target="_blank">$2</a>');
 
 

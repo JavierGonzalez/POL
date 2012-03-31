@@ -24,9 +24,9 @@ function actualizar($accion, $user_ID=false) {
 
 
 function evento_log($accion, $es_sistema=false) {
-	global $pol, $link;
+	global $pol, $link, $_REQUEST;
 	if (!isset($pol['user_ID'])) { $es_sistema = true; }
-	mysql_query("INSERT INTO log (pais, user_ID, nick, time, accion) VALUES ('".PAIS."', '".($es_sistema==false?$pol['user_ID']:0)."', '".($es_sistema==false?$pol['nick']:'Sistema')."', '".date('Y-m-d H:i:s')."', '".$accion."')", $link);
+	mysql_query("INSERT INTO log (pais, user_ID, nick, time, accion, accion_a) VALUES ('".PAIS."', '".($es_sistema==false?$pol['user_ID']:0)."', '".($es_sistema==false?$pol['nick']:'Sistema')."', '".date('Y-m-d H:i:s')."', '".$accion."', '".$_REQUEST['a']."')", $link);
 }
 
 // FUNCION OBSOLETA.

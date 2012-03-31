@@ -126,7 +126,7 @@ function escape($a, $escape=true, $html=true) {
 	
 	// XSS
 	if ($html == false) { $a = strip_tags($a); }
-	$js_filter = 'javascript vbscript expression applet meta xml blink link style script embed object iframe frame frameset ilayer layer bgsound title base onabort onactivate onafterprint onafterupdate onbeforeactivate onbeforecopy onbeforecut onbeforedeactivate onbeforeeditfocus onbeforepaste onbeforeprint onbeforeunload onbeforeupdate onblur onbounce oncellchange onchange onclick oncontextmenu oncontrolselect oncopy oncut ondataavailable ondatasetchanged ondatasetcomplete ondblclick ondeactivate ondrag ondragend ondragenter ondragleave ondragover ondragstart ondrop onerror onerrorupdate onfilterchange onfinish onfocus onfocusin onfocusout onhelp onkeydown onkeypress onkeyup onlayoutcomplete onload onlosecapture onmousedown onmouseenter onmouseleave onmousemove onmouseout onmouseover onmouseup onmousewheel onmove onmoveend onmovestart onpaste onpropertychange onreadystatechange onreset onresize onresizeend onresizestart onrowenter onrowexit onrowsdelete onrowsinserted onscroll onselect onselectionchange onselectstart onstart onstop onsubmit onunload';
+	$js_filter = 'javascript vbscript expression applet xml blink style script embed object iframe frame frameset ilayer bgsound onabort onactivate onafterprint onafterupdate onbeforeactivate onbeforecopy onbeforecut onbeforedeactivate onbeforeeditfocus onbeforepaste onbeforeprint onbeforeunload onbeforeupdate onblur onbounce oncellchange onchange onclick oncontextmenu oncontrolselect oncopy oncut ondataavailable ondatasetchanged ondatasetcomplete ondblclick ondeactivate ondrag ondragend ondragenter ondragleave ondragover ondragstart ondrop onerror onerrorupdate onfilterchange onfinish onfocus onfocusin onfocusout onhelp onkeydown onkeypress onkeyup onlayoutcomplete onload onlosecapture onmousedown onmouseenter onmouseleave onmousemove onmouseout onmouseover onmouseup onmousewheel onmove onmoveend onmovestart onpaste onpropertychange onreadystatechange onreset onresize onresizeend onresizestart onrowenter onrowexit onrowsdelete onrowsinserted onscroll onselect onselectionchange onselectstart onstart onstop onsubmit onunload';
 	$a = str_replace(explode(' ', $js_filter), 'nojs', $a);
 
 	return $a;
@@ -356,12 +356,11 @@ function pols($pols) {
 	else { return '<span class="pp">' . $pols . '</span>'; }
 }
 
-function confianza($num, $size=false) {
-	if ($size != false) { $s = ' style="font-size:'.$size.'px;"'; } else { $s = ''; }
-	if ($num >= 10) { return '<span class="vcc"'.$s.'>+'.$num.'</span>'; }
-	elseif ($num >= 0) { return '<span class="vc"'.$s.'>+'.$num.'</span>'; } 
-	elseif ($num > -10) { return '<span class="vcn"'.$s.'>'.$num.'</span>'; }
-	else { return '<span class="vcnn"'.$s.'>'.$num.'</span>'; }
+function confianza($num, $votos_num=false) {
+	if ($num >= 10) { return '<span title="'.$votos_num.' votos" class="vcc">+'.$num.'</span>'; }
+	elseif ($num >= 0) { return '<span title="'.$votos_num.' votos" class="vc">+'.$num.'</span>'; } 
+	elseif ($num > -10) { return '<span title="'.$votos_num.' votos" class="vcn">'.$num.'</span>'; }
+	else { return '<span title="'.$votos_num.' votos" class="vcnn">'.$num.'</span>'; }
 }
 
 function direccion_IP($tipo='') {

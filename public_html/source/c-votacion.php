@@ -1,42 +1,77 @@
 <?php 
 include('inc-login.php');
 
-$votaciones_tipo = array('sondeo', 'referendum', 'parlamento', 'cargo');
+$votaciones_tipo = array('sondeo', 'referendum', 'parlamento', 'cargo', 'elecciones');
 
 
 // FINALIZAR VOTACIONES
-$result = mysql_query("SELECT ID, tipo, num, pregunta, ejecutar, privacidad, acceso_ver FROM votacion 
+$result = mysql_query("SELECT ID, tipo, tipo_voto, num, pregunta, respuestas, ejecutar, privacidad, acceso_ver FROM votacion 
 WHERE estado = 'ok' AND pais = '".PAIS."' AND (time_expire <= '".$date."' OR ((votos_expire != 0) AND (num >= votos_expire)))", $link);
 while($r = mysql_fetch_array($result)){
 	
 	// Finaliza la votación
 	mysql_query("UPDATE votacion SET estado = 'end', time_expire = '".$date."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
+	include_once('inc-functions-accion.php');
+
 	if ($r['acceso_ver'] == 'anonimos') {
 		evento_chat('<b>['.strtoupper($r['tipo']).']</b> Finalizado, resultados: <a href="/votacion/'.$r['ID'].'"><b>'.$r['pregunta'].'</b></a> <span style="color:grey;">(votos: <b>'.$r['num'].'</b>)</span>');
 	}
 
-	include_once('inc-functions-accion.php');
+	if ($r['ejecutar'] != '') { // EJECUTAR ACCIONES
 
-	if ($r['ejecutar'] != '') { 
-		// EJECUTAR ACCIONES
-
-		$validez_voto['true'] = 0; $validez_voto['false'] = 0; $voto[0] = 0; $voto[1] = 0; $voto[2] = 0;
+		$validez_voto['true'] = 0; $validez_voto['false'] = 0; $voto[0] = 0; $voto[1] = 0; $voto[2] = 0; $voto_preferencial = array();
 		$result2 = mysql_query("SELECT validez, voto FROM votacion_votos WHERE ref_ID = ".$r['ID']."", $link);
 		while($r2 = mysql_fetch_array($result2)) {
 			$validez_voto[$r2['validez']]++;
-			$voto[$r2['voto']]++;
+			if ($r['tipo_voto'] == 'estandar') {
+				$voto[$r2['voto']]++;
+			} elseif (substr($r['tipo_voto'], 1, 6) == 'puntos') {
+				$voto_valor = 0;
+				foreach (explode(' ', $r2['voto']) AS $opcion_ID) {
+					$voto_valor++;
+					$voto_preferencial[$opcion_ID] += $voto_valor;
+				}
+			}
 		}
 
-		// Determinar validez: mayoria simple = votacion nula
+		// Determina validez: mayoria simple <= votacion nula
 		if ($validez_voto['false'] < $validez_voto['true']) { 
-			// OK: es válida
-			if ($r['tipo'] == 'cargo') {
-				if ($voto[1] > $voto[2]) {
-					cargo_add(explodear('|', $r['ejecutar'], 0), explodear('|', $r['ejecutar'], 1), true, true);
-				} else {
-					cargo_del(explodear('|', $r['ejecutar'], 0), explodear('|', $r['ejecutar'], 1), true, true);
-				}
+			// OK: votación válida
+			$cargo_ID = explodear('|', $r['ejecutar'], 1);
+			
+			switch (explodear('|', $r['ejecutar'], 0)) {
+
+				case 'cargo': // $r['ejecutar'] = cargo|$cargo_ID|$user_ID
+					if ($voto[1] > $voto[2]) {
+						cargo_add($cargo_ID, explodear('|', $r['ejecutar'], 2), true, true);
+					} else {
+						cargo_del($cargo_ID, explodear('|', $r['ejecutar'], 2), true, true);
+					}
+					break;
+
+				case 'elecciones': // $r['ejecutar'] = elecciones|$cargo_ID|$numero_a_asignar
+					
+					// Quita todos los cargos de las elecciones (reset)
+					$result2 = mysql_query("SELECT user_ID FROM cargos_users WHERE cargo_ID = '".$cargo_ID."' AND pais = '".PAIS."' AND cargo = 'true'", $link);
+					while($r2 = mysql_fetch_array($result2)) { cargo_del($cargo_ID, $r2['user_ID'], true, true); }
+
+					// Reset campo temporal (más simple que crear tablas temporales)
+					mysql_query("UPDATE users SET temp = NULL", $link);
+					
+					// Añade los resultados de puntos en el campo temporal
+					$respuestas = explode('|', $r['respuestas']);
+					foreach ($voto_preferencial AS $opcion_ID => $puntos) {
+						if ($opcion_ID != 0) { // Ignora "En blanco" por ser no computable
+							mysql_query("UPDATE users SET temp = '".$puntos."' WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND nick = '".$respuestas[$opcion_ID]."' LIMIT 1", $link);
+						}
+					}
+
+					// Asigna ordenando con mysql teniendo en cuenta la antiguedad para desempatar
+					$result2 = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND temp IS NOT NULL ORDER BY temp DESC, fecha_registro ASC LIMIT ".explodear('|', $r['ejecutar'], 2), $link);
+					while($r2 = mysql_fetch_array($result2)) { cargo_add($cargo_ID, $r2['ID'], true, true); }
+					
+					break;
 			}
 		}
 	}
@@ -520,7 +555,7 @@ Inicio: <em>' . $r['time'] . '</em><br />
 Fin: <em>' . $r['time_expire'] . '</em><br />
 '.($r['votos_expire']!=0?'Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.<br />':'').'
 '.($r['tipo_voto']!='estandar'?($r['tipo_voto']=='multiple'?'<b>Votación múltiple</b>':'<b>Votación preferencial</b> ('.$r['tipo_voto'].').').'<br />':'').'
-<a href="/votacion/'.$r['ID'].'/info/#ver_info">Más información</a>.
+<a href="/votacion/'.$r['ID'].'/info#ver_info">Más información</a>.
 </span>';
 
 

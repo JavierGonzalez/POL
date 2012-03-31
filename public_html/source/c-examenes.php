@@ -390,15 +390,16 @@ LIMIT 1", $link);
 
 <p>Nota minima para aprobar: <b class="gris">' . $r['nota'] . '</b>. Examen tipo test, tiempo limitado, <b>' . $r['num_preguntas'] . '</b> preguntas de entre <b>' . $r['num_preguntas_especificas'] . '</b> en total.</p>
 
-<p>No podr&aacute;s repetir este examen hasta <b>' . duracion($pol['config']['examen_repe']) . '</b> despu&eacute;s.</p>';
+<p>No podr&aacute;s repetir este examen hasta <b>' . duracion($pol['config']['examen_repe']) . '</b> despu&eacute;s. ';
 
 		if ($r['cargo_ID'] == 0) {
-			$txt .= '<p>Examen sin vinculaci&oacute;n con cargo.</p>';
+			$txt .= 'Examen sin vinculaci&oacute;n con cargo.';
 		} else {
 			$result2 = mysql_query("SELECT nombre FROM cargos WHERE cargo_ID = '" . $r['cargo_ID'] . "' LIMIT 1", $link);
-			while($r2 = mysql_fetch_array($result2)){ $txt .= '<p>Examen vinculado al cargo: <a href="/cargos/">' . $r2['nombre'] . '</a>.</p>'; }
-			
+			while($r2 = mysql_fetch_array($result2)){ $txt .= 'Examen vinculado al cargo: <a href="/cargos/">' . $r2['nombre'] . '</a>.'; }	
 		}
+
+		$txt .= '</p>';
 
 		$margen_ultimoexamen = strtotime($r['fecha_ultimoexamen']) + $pol['config']['examen_repe'];
 		if ((!$r['fecha_ultimoexamen']) OR ($margen_ultimoexamen < time())) {

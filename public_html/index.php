@@ -165,31 +165,6 @@ if (!$pol['nick']) {
 }
 
 
-$time_pre = date('Y-m-d H:i:00', time() - 3600); // 1 hora
-$result = mysql_query("SELECT nick, pais, estado
-FROM users 
-WHERE fecha_last > '" . $time_pre . "' AND estado != 'expulsado'
-ORDER BY fecha_last DESC", $link);
-while($r = mysql_fetch_array($result)){ 
-	$li_online_num++; 
-	$gf['censo_online'][$r['pais']]++;
-
-	$pais_url = strtolower($r['pais']);
-	if ($pais_url == 'ninguno') { $pais_url = 'vp'; }
-	$li_online .= ' <a href="http://'.$pais_url.'.'.DOMAIN.'/perfil/'.$r['nick'].'" class="nick redondeado '.$r['estado'].'" style="padding:2px;line-height:25px;background:'.$vp['bg'][$r['pais']].';">'.$r['nick'].'</a>'; 
-}
-
-$txt .= '<br />
-
-<div class="amarillo" style="width:90%;margin:0 auto;">
-<table border="0">
-<tr>
-<td valign="top"><b style="font-size:34px;">'.num($li_online_num).'</b></td>
-<td>Ciudadanos online: '.$li_online.'</td>
-</tr>
-</table></div>'; 
-
-
 $txt_header .= '<style type="text/css">td b { font-size:15px; }</style>';
 
 include('theme.php');

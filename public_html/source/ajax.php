@@ -191,7 +191,7 @@ LIMIT 1", $link);
 					break;
 
 				case 'moderador': 
-				case 'policia': if (nucleo_acceso('cargo', '13 12 6'))  { $elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>'; $tipo = 'm'; } break;
+				case 'policia': if (nucleo_acceso('cargo', '13 12'))  { $elmsg = '<span style="color:blue;">' . $msg_rest . ' <b>(Aviso Oficial)</b></span>'; $tipo = 'm'; } break;
 
 				case 'msg':
 					if (isset($_SESSION['pol']['user_ID'])) {
@@ -233,7 +233,7 @@ UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMI
 
 	} else { echo 'n 0 &nbsp; &nbsp; <b style="color:#FF0000;">No tienes permiso de escritura.</b>'."\n"; }
 
-} else if ($_POST['a'] == 'noti') {
+} else if ($_GET['a'] == 'noti') {
 	
 	define('REGISTRAR', 'https://virtualpol.com/registrar/');
 	include_once('inc-login.php');

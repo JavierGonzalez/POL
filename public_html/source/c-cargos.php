@@ -2,10 +2,30 @@
 include('inc-login.php');
 
 
-$pol['cargos'] = cargos();
+if ($_GET['a'] == 'organigrama') {
+	
+	$txt_title = 'Organigrama';
+	$txt_nav = array('/cargos'=>'Cargos', 'Organigrama');
+
+	function cargo_bien($c){
+		return str_replace(' ', '_', $c);
+	}
 
 
-if (is_numeric($_GET['a'])) { // CARGOS
+	$result = mysql_query("SELECT nombre, asigna,
+(SELECT nombre FROM cargos WHERE cargo_ID = c.asigna AND pais = '".PAIS."' LIMIT 1) AS asigna_nombre
+FROM cargos `c`
+WHERE pais = '".PAIS."'", $link);
+	while($r = mysql_fetch_array($result)) {
+		if ($r['asigna'] <= 0) { $r['asigna_nombre'] = 'CIUDADANOS'; }
+		$data_cargos[] = cargo_bien($r['asigna_nombre']).'->'.cargo_bien($r['nombre']);
+	}
+
+
+	$txt .= '<img src="http://chart.googleapis.com/chart?cht=gv&chs=1000x300&chl=digraph{'.implode(';', $data_cargos).'}" alt="grafico confianza" />';
+
+
+} elseif (is_numeric($_GET['a'])) { // CARGOS
 
 	$result = mysql_query("SELECT * FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['a']."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
@@ -108,6 +128,7 @@ ORDER BY voto_confianza DESC, nota DESC", $link);
 (SELECT COUNT(ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = cargos.cargo_ID AND cargo = 'false' AND aprobado = 'ok') AS candidatos_num
 FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 	while($r = mysql_fetch_array($result)){
+
 		$cargo_ID_array[] = $r['cargo_ID'];
 		if (($editar) AND ($r['asigna'] > 0)) { $cargo_editar = true; } else { $cargo_editar = false; }
 
@@ -116,9 +137,9 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 			case 0:  $asigna = '<a href="/elecciones"><b>Elecciones en '.timer(strtotime($pol['config']['elecciones_inicio']), true).'</b></a>'; break;
 			default: $asigna = ''; break;
 		}
-		
+
 		$txt_el_td = '
-<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" /> '.($cargo_editar?'<input type="text" name="nombre_'.$r['cargo_ID'].'" value="'.$r['nombre'].'" />':'<a href="/cargos/'.$r['cargo_ID'].'"><b style="font-size:20px;">'.$r['nombre'].'</b></a>').'</td>';
+<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" /> '.($cargo_editar?'<input type="text" name="nombre_'.$r['cargo_ID'].'" value="'.$r['nombre'].'" size="14" style="font-weight:bold;" />':'<a href="/cargos/'.$r['cargo_ID'].'" title="'.$r['nombre_extra'].'"><b style="font-size:20px;">'.$r['nombre'].'</b></a>').'</td><td>'.($cargo_editar?'<input type="text" name="nombre_extra_'.$r['cargo_ID'].'" value="'.$r['nombre_extra'].'" size="20" maxlength="160"  />':'').'</td>';
 
 		if ($cargo_editar) {
 			$txt_el_td .= '<td align="right">'.($r['asigna']>0&&$r['cargo_num']==0?boton('X', '/accion.php?a=cargo&b=eliminar&cargo_ID='.$r['cargo_ID'], '¿Estás seguro de querer ELIMINAR este cargo?', 'small red').' ':'').'<select name="asigna_'.$r['cargo_ID'].'">';
@@ -147,14 +168,14 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 
 		$txt_el_td .= '
 <td align="right" title="Ejerciendo / Candidatos"><b style="font-size:16px;">'.$r['cargo_num'].'</b> / '.$r['candidatos_num'].'</td>
-<td nowrap="nowrap">'.$asigna.'</td>
-<td align="right">'.($cargo_editar?'<input type="text" name="nivel_'.$r['cargo_ID'].'" value="'.$r['nivel'].'" size="3" style="text-align:right;" />':$r['nivel']).'</td>
+<td nowrap="nowrap">'.($r['asigna']>0&&$cargo_editar?'<input type="checkbox" name="autocargo_'.$r['cargo_ID'].'" value="true" id="autocargo_'.$r['cargo_ID'].'"'.($r['autocargo']=='true'?' checked="checked"':'').' /> <label for="autocargo_'.$r['cargo_ID'].'" class="inline" title="Asignación de cargo automático al aprobar examen">Automática</label>':'').(!$editar&&$r['autocargo']=='true'?'Asignación automática.':'').$asigna.'</td>
+<td align="right">'.($cargo_editar?'<input type="text" name="nivel_'.$r['cargo_ID'].'" value="'.$r['nivel'].'" size="3" maxlength="2" style="text-align:right;" />':$r['nivel']).'</td>
 '.(ECONOMIA?'<td align="right">'.pols($r['salario']).'</td>':'').'
 <td>'.($editar_examen?boton('Editar examen', '/examenes/editar/'.$r['examen_ID']):'').'</td>
 <td align="right" style="color:grey;">'.$r['cargo_ID'].'</td>
 ';
 		
-		$txt_td2[$r['cargo_ID']] = array();
+		//$txt_td2[$r['cargo_ID']] = array();
 		if ($r['asigna']>0) { // Asignado...
 			$txt_td2[$r['asigna']][$r['cargo_ID']] = $txt_el_td;
 		} else { // Asignado por elecciones...
@@ -163,37 +184,39 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 	}
 
 
+
 		$txt .= '
 <table border="0" cellspacing="3" cellpadding="0">
 <tr>
 <th></th>
-<th>'.($editar?'Supeditado a':'').'</th>
+<th>'.($editar?'Descripción':'').'</th>
+<th title="De quien depende el cargo">'.($editar?'Supeditado a':'').'</th>
 <th title="Con cargo / Candidatos">Con cargo</th>
-<th title="¿Quien asigna?">Asignación</th>
+<th title="Cómo/quien asigna el cargo">Asignación</th>
 <th>Nivel</th>
 '.(ECONOMIA?'<th title="Salario por dia trabajado">Salario</th>':'').'
 <th></th>
 <th>ID</th>
 </tr>';
 
-		foreach ($txt_td1 AS $cargo_ID => $d1) {
+		if ($txt_td1) { foreach ($txt_td1 AS $cargo_ID => $d1) {
 			$txt .= '<tr><td nowrap="nowrap">'.$d1.'</tr>';
-			foreach ($txt_td2[$cargo_ID] AS $cargo_ID2 => $d2) { 
+			if ($txt_td2[$cargo_ID]) { foreach ($txt_td2[$cargo_ID] AS $cargo_ID2 => $d2) { 
 				$txt .= '<tr><td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp; '.$d2.'</tr>'; 
-				foreach ($txt_td2[$cargo_ID2] AS $cargo_ID3 => $d3) { 
+				if ($txt_td2[$cargo_ID2]) { foreach ($txt_td2[$cargo_ID2] AS $cargo_ID3 => $d3) { 
 					$txt .= '<tr><td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; '.$d3.'</tr>';
-					foreach ($txt_td2[$cargo_ID3] AS $cargo_ID4 => $d4) { 
+					if ($txt_td2[$cargo_ID3]) { foreach ($txt_td2[$cargo_ID3] AS $cargo_ID4 => $d4) { 
 						$txt .= '<tr><td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; '.$d4.'</tr>'; 
-						foreach ($txt_td2[$cargo_ID4] AS $cargo_ID5 => $d5) { 
+						if ($txt_td2[$cargo_ID4]) { foreach ($txt_td2[$cargo_ID4] AS $cargo_ID5 => $d5) { 
 							$txt .= '<tr><td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; '.$d5.'</tr>'; 
-							foreach ($txt_td2[$cargo_ID5] AS $cargo_ID6 => $d6) { 
+							if ($txt_td2[$cargo_ID5]) { foreach ($txt_td2[$cargo_ID5] AS $cargo_ID6 => $d6) { 
 								$txt .= '<tr><td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; '.$d6.'</tr>'; 
-							}
-						}
-					}
-				}
-			}
-		}
+							} }
+						} }
+					} }
+				} }
+			} }
+		} }
 
 	if ($editar) {
 		$txt .= '<tr><td colspan="6" align="center">'.boton('Editar cargos', 'submit', '¿Estás seguro que quieres EDITAR toda la configuracion de cargos?\n\nCUIDADO ESTA ACCION PUEDE TENER CONSECUENCIAS IMPORTANTES.', 'large orange').'</form></td></tr>';

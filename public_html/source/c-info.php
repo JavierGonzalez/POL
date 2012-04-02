@@ -165,11 +165,11 @@ case 'voz':
 
 <li>Conecta unos <b>auriculares con micr&oacute;fono</b> (es lo m&aacute;s comodo, para que no se acople el sonido).<br /><br /></li>
 
-<li><b>¡<a href="mumble://'.$pol['nick'].'@mumble.democraciarealya.es/Virtualpol/'.PAIS.'/?version=1.2.0">Entra aqu&iacute;</a>!</b> (o desde el men&uacute; "Voz") (<a href="mumble://'.$pol['nick'].'@democraciarealya.es/Virtualpol/?version=1.2.0">servidor alternativo</a>)</li>
+<li><b>¡<a href="mumble://'.$pol['nick'].'@cryptious.net/Other/?version=1.2.0">Entra aqu&iacute;</a>!</b> (o desde el men&uacute; "Voz") (<a href="mumble://'.$pol['nick'].'@cryptious.net/Other/?version=1.2.0">servidor alternativo</a>)</li>
 
 </ol>
 
-<p><br />El servidor de Mumble es "mumble.democraciarealya.es". De uso compartido con otras plataformas.</p>';
+<p><br />El servidor de Mumble es "cryptious.net". De uso compartido con otras plataformas.</p>';
 
 
 	$txt_title = 'Chat de Voz';

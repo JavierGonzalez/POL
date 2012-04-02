@@ -10,8 +10,12 @@ if(  $db->consulta("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND a
 	}
 
 }else{
-	//some error, config not loaded
-}
+	// some error, config not loaded
+	// You can obtain info about error using:
+	// echo $db->getLastError(); // show you raw mysql error
+	// echo $db->getErrno(); // show you mysql error number
+	// echo $db->getQuery(); //show you the SQL Query executed
+}	
 
 
 

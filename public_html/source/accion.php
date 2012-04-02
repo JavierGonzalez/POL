@@ -3,8 +3,16 @@ include('inc-login.php');
 include('inc-functions-accion.php');
 
 // load config full
-$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
-while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
+if(  $db->consulta("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'")  ){
+
+	while($r = $db->cursor()){
+		$pol['config'][$r['dato']] = $r['valor'];
+	}
+
+}else{
+	//some error, config not loaded
+}
+
 
 
 if (

@@ -89,7 +89,7 @@ Longitud: <input name="x" size="3" type="text" id="geo_x" value="'.$center['x'].
 </td>
 
 <td>Marca tu lugar haciendo clic. La información será pública.<br />
-Por privacidad la precisión guardada es de solo 560 metros.</td>
+Por privacidad la precisión guardada es de solo 1.112 metros a la redonda.</td>
 
 </tr>
 </table>

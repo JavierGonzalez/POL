@@ -29,11 +29,10 @@ switch ($host[0]) {
 		define('ECONOMIA', false);
 		define('NOM_PARTIDOS','Grupos');
 		$vp['acceso'] = array(
-'votacion_borrador'=>	array('ciudadanos', ''),
+'votacion_borrador'=>	array('cargo', '6 25 67'),
 'sondeo'=>				array('cargo', '6'),
 'referendum'=>			array('cargo', '6'),
 'parlamento'=>			array('cargo', '6'),
-'cargo'=>				array('cargo', '6'),
 'kick'=>				array('cargo', '13'),
 'kick_quitar'=>			array('cargo', '6 13'),
 'foro_borrar'=>			array('cargo', '6 13'),
@@ -58,7 +57,6 @@ switch ($host[0]) {
 'sondeo'=>				array('cargo', '41 6 16 22 19 7'),
 'referendum'=>			array('nivel', '95'),
 'parlamento'=>			array('cargo', '6 22'),
-'cargo'=>				array('nivel', '85'),
 'kick'=>				array('cargo', '12 13 22 9'),
 'kick_quitar'=>			array('cargo', '13 9 8'),
 'foro_borrar'=>			array('cargo', '12 13'),
@@ -82,7 +80,6 @@ switch ($host[0]) {
 'sondeo'=>				array('cargo', '6'),
 'referendum'=>			array('cargo', '6'),
 'parlamento'=>			array('cargo', '6'),
-'cargo'=>				array('cargo', '6'),
 'kick'=>				array('cargo', '13'),
 'kick_quitar'=>			array('cargo', '6 13'),
 'foro_borrar'=>			array('cargo', '6 13'),

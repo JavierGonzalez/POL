@@ -193,9 +193,9 @@ case 'historia':
 case 'geolocalizacion':
 	if (($_GET['b'] == 'add') AND (is_numeric($_POST['x'])) AND (is_numeric($_POST['y']))) {
 
-		// Por privacidad solo guarda 3 digitos de latitud y longitud, además suma aleatoriamente entre -0.002 y 0.002 grados aleatoriamente. Eso es una precisión aproximada de 560 metros a la redonda.
-		$_POST['x'] = (round($_POST['x'],3)+(mt_rand(-2,2)/1000));
-		$_POST['y'] = (round($_POST['y'],3)+(mt_rand(-2,2)/1000));
+		// Por privacidad solo se guardan 2 digitos reales de latitud y longitud (esto supone una precisión de 1.112km a la redonda a nivel del mar). Se añade un digito más aleatorio para evitar efecto cuadrícula en el mapa.
+		$_POST['x'] = round($_POST['x'],2).mt_rand(0,9);
+		$_POST['y'] = round($_POST['y'],2).mt_rand(0,9);
 
 		$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NULL LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) {
@@ -1820,11 +1820,21 @@ case 'cargo':
 		$result = mysql_query("SELECT * FROM cargos WHERE pais = '".PAIS."' AND asigna > 0", $link);
 		while($r = mysql_fetch_array($result)){
 			$_POST['nombre_'.$r['cargo_ID']] = strip_tags(trim(substr($_POST['nombre_'.$r['cargo_ID']], 0, 30)));
-			if ((strlen($_POST['nombre_'.$r['cargo_ID']]) >= 3) AND (is_numeric($_POST['asigna_'.$r['cargo_ID']])) AND (is_numeric($_POST['nivel_'.$r['cargo_ID']])) AND ($_POST['nivel_'.$r['cargo_ID']] <= 99)) {
-				mysql_query("UPDATE cargos SET nombre = '".$_POST['nombre_'.$r['cargo_ID']]."', nombre_extra = '".strip_tags($_POST['nombre_extra_'.$r['cargo_ID']])."', asigna = '".$_POST['asigna_'.$r['cargo_ID']]."', nivel = '".$_POST['nivel_'.$r['cargo_ID']]."', autocargo = '".$_POST['autocargo_'.$r['cargo_ID']]."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND asigna > 0 LIMIT 1", $link);
+			
+			if ((strlen($_POST['nombre_'.$r['cargo_ID']]) >= 3) AND (is_numeric($_POST['asigna_'.$r['cargo_ID']])) AND (is_numeric($_POST['nivel_'.$r['cargo_ID']])) AND (entre($_POST['nivel_'.$r['cargo_ID']], 1, 99))) {
+				
+				if ($_POST['editar_elecciones'] == 'true') {
+					if (($_POST['autocargo_'.$r['cargo_ID']] != 'true') AND (isset($_POST['elecciones_'.$r['cargo_ID']])) AND ($_POST['elecciones_'.$r['cargo_ID']] != '') AND (entre($_POST['elecciones_cada_'.$r['cargo_ID']], 7, 90)) AND (entre($_POST['elecciones_durante_'.$r['cargo_ID']],1,30)) AND (entre($_POST['elecciones_electos_'.$r['cargo_ID']],1,100))) {
+						$sql_set = ", elecciones = '".$_POST['elecciones_'.$r['cargo_ID']]."', elecciones_electos = '".$_POST['elecciones_electos_'.$r['cargo_ID']]."', elecciones_cada = '".$_POST['elecciones_cada_'.$r['cargo_ID']]."', elecciones_durante = '".$_POST['elecciones_durante_'.$r['cargo_ID']]."', elecciones_votan = '".$_POST['elecciones_votan_'.$r['cargo_ID']]."'";
+					} else { 
+						$sql_set = ", elecciones = NULL, elecciones_electos = NULL, elecciones_cada = NULL, elecciones_durante = NULL, elecciones_votan = NULL";
+					}
+				}
+				
+				mysql_query("UPDATE cargos SET nombre = '".$_POST['nombre_'.$r['cargo_ID']]."', nombre_extra = '".strip_tags($_POST['nombre_extra_'.$r['cargo_ID']])."', asigna = '".$_POST['asigna_'.$r['cargo_ID']]."', nivel = '".$_POST['nivel_'.$r['cargo_ID']]."', autocargo = '".($_POST['autocargo_'.$r['cargo_ID']]?'true':'false')."'".$sql_set." WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1", $link);
 			}
 		}
-		$refer_url = 'cargos/editar';
+		if ($_POST['editar_elecciones'] == 'true') { $refer_url = 'cargos/editar/elecciones'; } else { $refer_url = 'cargos/editar'; }
 
 
 	} elseif (($_GET['b'] == 'eliminar') AND (nucleo_acceso($vp['acceso']['control_cargos'])) AND (is_numeric($_GET['cargo_ID']))) {

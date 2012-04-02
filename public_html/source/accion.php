@@ -98,29 +98,21 @@ case 'chat':
 		mysql_query("INSERT INTO chats (pais, url, titulo, user_ID, admin, fecha_creacion, fecha_last, dias_expira) 
 VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '".$pol['nick']."', '".$date."', '".$date."', '".$pol['config']['chat_diasexpira']."')", $link);
 		if (ECONOMIA) {
-			if(  $db->consulta("SELECT chat_ID FROM chats WHERE url = '".$url."' AND user_ID = '".$pol['user_ID']."' AND pais = '".$_POST['pais']."' LIMIT 1") > 0){
-				//$r=$db->cursor(); //no data is obtained from DB, its not needed
+			if(  $r = $db->sql("SELECT chat_ID FROM chats WHERE url = '".$url."' AND user_ID = '".$pol['user_ID']."' AND pais = '".$_POST['pais']."' LIMIT 1") ){
 				pols_transferir($pol['config']['pols_crearchat'], $pol['user_ID'], '-1', 'Solicitud chat: '.$nombre);
-			}else{
-				//some error in sql query
 			}
 		}
 		$refer_url = 'chats';
 	} elseif (($_GET['b'] == 'cambiarfundador') AND ($_POST['admin']) AND ($_POST['chat_ID'])) {
-		if( $db->consulta("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1") > 0 ){
-			$r=$db->cursor();
+		if( $r = $db->sql("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1")  ){
 			$refer_url = 'chats/'.$r['url'].'/opciones';
 			if ((nucleo_acceso('privado', $r['admin'])) OR ($r['user_ID'] == $pol['user_ID'])) {
-				if( $db->consulta("UPDATE chats SET admin = '".strtolower(strip_tags($_POST['admin']))."' WHERE chat_ID = '".$_POST['chat_ID']."' LIMIT 1") > 0 ){
-					//query has changed a data in db
-				}else{
-					//without changes in db
-				}
+				$db->sql("UPDATE chats SET admin = '".strtolower(strip_tags($_POST['admin']))."' WHERE chat_ID = '".$_POST['chat_ID']."' LIMIT 1") > 0 );
 			}
 		}
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {
 
-		if( $db->consulta("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1") > 0){
+		if( $r = $db->sql("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1") ){
 			$r=$db->cursor();
 			if ((nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))) {
 				if ($_POST['acceso_cfg_leer']) { 
@@ -133,7 +125,7 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 				if ($_POST['acceso_cfg_escribir_ex']) { 
 					$_POST['acceso_cfg_escribir_ex'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir_ex'])));
 				}
-				$db->consulta("UPDATE chats 
+				$db->sql("UPDATE chats 
 SET acceso_leer = '".$_POST['acceso_leer']."', 
 acceso_escribir = '".$_POST['acceso_escribir']."', 
 acceso_escribir_ex = '".$_POST['acceso_escribir_ex']."', 

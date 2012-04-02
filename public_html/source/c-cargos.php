@@ -6,23 +6,24 @@ if ($_GET['a'] == 'organigrama') {
 	
 	$txt_title = 'Organigrama';
 	$txt_nav = array('/cargos'=>'Cargos', 'Organigrama');
+	$txt_tab = array('/cargos/organigrama'=>'Organigrama', '/examenes'=>'Exámenes');
 
 	function cargo_bien($c){
 		return str_replace(' ', '_', $c);
 	}
 
-
 	$result = mysql_query("SELECT nombre, asigna,
-(SELECT nombre FROM cargos WHERE cargo_ID = c.asigna AND pais = '".PAIS."' LIMIT 1) AS asigna_nombre
+(SELECT COUNT(ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = c.cargo_ID AND cargo = 'true') AS cargo_num,
+(SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = c.asigna LIMIT 1) AS asigna_nombre,
+(SELECT COUNT(ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = c.asigna AND cargo = 'true') AS asigna_num
 FROM cargos `c`
 WHERE pais = '".PAIS."'", $link);
 	while($r = mysql_fetch_array($result)) {
-		if ($r['asigna'] <= 0) { $r['asigna_nombre'] = 'CIUDADANOS'; }
-		$data_cargos[] = cargo_bien($r['asigna_nombre']).'->'.cargo_bien($r['nombre']);
+		if ($r['asigna'] <= 0) { $r['asigna_nombre'] = 'CIUDADANOS'; $r['asigna_num'] = $pol['config']['info_censo']; }
+		$data_cargos[] = cargo_bien($r['asigna_nombre'].' '.$r['asigna_num'].'').'->'.cargo_bien($r['nombre'].' '.$r['cargo_num'].'');
 	}
 
-
-	$txt .= '<img src="http://chart.googleapis.com/chart?cht=gv&chs=1000x300&chl=digraph{'.implode(';', $data_cargos).'}" alt="grafico confianza" />';
+	$txt .= '<a href="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" target="_blank"><img style="max-width:1800px;margin-left:-20px;" src="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" alt="grafico confianza" /></a><p>Organigrama de la jerarquía de cargos. Grafico experimental, alpha.</p>';
 
 
 } elseif (is_numeric($_GET['a'])) { // CARGOS
@@ -104,7 +105,7 @@ ORDER BY voto_confianza DESC, nota DESC", $link);
 
 } else { // VER CARGOS
 	$txt_nav = array('/cargos'=>'Cargos');
-	$txt_tab = array('/examenes'=>'Exámenes');
+	$txt_tab = array('/cargos/organigrama'=>'Organigrama', '/examenes'=>'Exámenes');
 	if (nucleo_acceso($vp['acceso']['control_cargos'])) {
 		$txt_tab['/cargos'] = 'Ver cargos';
 		$txt_tab['/cargos/editar'] = 'Editar';

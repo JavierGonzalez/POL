@@ -253,6 +253,16 @@ $('ul.menu li').hover(function(){
 <?php
 	echo notificacion('print');
 
+
+} else if (($_GET['a'] == 'geo') AND (nucleo_acceso('ciudadanos_global'))) {
+	header('Content-Type: application/javascript');
+	echo 'var eventos = [';
+	$result = mysql_query("SELECT pais, nick, x, y FROM users WHERE estado = 'ciudadano' AND x IS NOT NULL LIMIT 5000", $link); 
+	// .($_GET['b']?" AND pais = '".$_GET['b']."'":"")
+	while ($r = mysql_fetch_array($result)) { echo '{"q":"'.$r['nick'].'","x":'.$r['y'].',"y":'.$r['x'].'},'; }
+	echo '];';
+
+
 } else if (($_POST['a'] == 'whois') AND (isset($_POST['nick']))) {
 
 	$res = mysql_query("SELECT ID, fecha_registro, partido_afiliado, fecha_last, nivel, online, nota, avatar, voto_confianza, estado, pais, cargo,

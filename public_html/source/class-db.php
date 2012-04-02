@@ -7,6 +7,9 @@ class db {
   var $cursor;
   var $resultado;
   var $conexion;
+  private $lastRes = NULL;
+  private $lastError = NULL;
+  private $Errno = NULL;
   private $query;
 
 	function __construct($link=NULL) {
@@ -14,7 +17,7 @@ class db {
 			$link=conectar();
 		}
 		if (!$link){
-			$this->debug("class db, db(): Error al conectar con la DB ".mysql_error());
+			$this->debug("class db, db(): Error al conectar con la DB ".mysql_error(),1);
 		}else{
 			$this->conexion=$link;
 			$this->debug("class db, db(): Conexión a DB establecida");
@@ -37,7 +40,7 @@ class db {
 		$this->resultado = mysql_query ($consulta, $this->conexion);
 		if ($this->resultado == false) {
 			$this->debug("class db, consulta(): Error en la consulta (".$this->query.") ".mysql_errno($this->conexion)." : ".mysql_error($this->conexion),1);
-			$res=-1;
+			$res = false;
 		}else{
 			if (strtolower (substr (ltrim ($consulta), 0, 6)) == 'select') {
 				$res=mysql_num_rows ($this->resultado);
@@ -45,6 +48,7 @@ class db {
 				$res=@mysql_affected_rows ($this->resultado);
 			}
 		}
+		$this->lastRes=$res;
 		return $res;
 	}
 
@@ -73,11 +77,19 @@ class db {
 	}
 
 
-	private function debug($debugtext){
+	private function debug($debugtext, $type=0){
 		if(DBDEBUG == 1){
+			if($type==1){
+				$this->lastError=mysql_error();
+				$this->Errno=mysql_errno($this->conexion);
+			}
 			echo "<!-- $debugtext -->\n";
 		}
 	}
+	
+	public function getLastError(){ return $this->lastError; }
+	public function getLastRes(){ return $this->lastRes; }
+	public function getErrno(){ return $this->Errno; }
 
 	function desconectar() {
 		@mysql_close($this->conexion);

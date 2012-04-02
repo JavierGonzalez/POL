@@ -3,7 +3,7 @@ include('inc-login.php');
 include('inc-functions-accion.php');
 
 // load config full
-if(  $db->consulta("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'")  ){
+if(  $db->consulta("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'")  >  0  ){
 
 	while($r = $db->cursor()){
 		$pol['config'][$r['dato']] = $r['valor'];

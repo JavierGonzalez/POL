@@ -4,7 +4,7 @@ define("DBDEBUG", 0);
 
 class db {
 
-  var $cursor;
+  private $cursor = NULL;
   var $resultado;
   var $conexion;
   private $lastRes = NULL;
@@ -34,6 +34,23 @@ class db {
 	public function consult($consulta){
 		return $this->consulta($consulta);
 	}
+
+
+	public function sql($consulta){
+		if($this->cursor == NULL){
+			$this->debug("class db, sql(): Primera llamada");
+			if($this->consulta($consulta) > 0){
+				return $this->cursor();
+			}else{
+				return false;
+			}
+		}else{
+			$this->debug("class db, sql(): Siguientes llamadas");
+			if($this->cursor() == FALSE ){ $this->libera(); }
+			return $this->cursor();
+		}
+	}
+
 
 	function consulta($consulta){
 		$this->query=$consulta;
@@ -65,7 +82,8 @@ class db {
 
 	public function libera () {
 		@mysql_free_result($this->resultado);
-		@reset ($this->cursor);
+		//@reset ($this->cursor);
+		$this->cursor = NULL;
 	}
 
 	function cursor() {

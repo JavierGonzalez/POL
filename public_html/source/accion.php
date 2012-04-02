@@ -3,22 +3,9 @@ include('inc-login.php');
 include('inc-functions-accion.php');
 
 // load config full
-if(  $db->consulta("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'")  >  0  ){
-
-	while($r = $db->cursor()){
+	while(   $r = $db->sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'")   ){
 		$pol['config'][$r['dato']] = $r['valor'];
 	}
-
-}else{
-	// some error, config not loaded
-	// You can obtain info about error using:
-	// echo $db->getLastError(); // show you raw mysql error
-	// echo $db->getErrno(); // show you mysql error number
-	// echo $db->getQuery(); //show you the SQL Query executed
-}	
-
-
-
 if (
 (nucleo_acceso('ciudadanos'))
 OR (($pol['estado'] == 'kickeado') AND (in_array($_GET['a'], array('rechazar-ciudadania', 'elecciones-generales', 'votacion'))))

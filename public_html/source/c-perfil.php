@@ -313,6 +313,14 @@ $txt .= 'Expira '.($r['dnie']=='true'?'<b>Nunca</b> (Autentificado)':'<b>tras '.
 
 </p></td><td valign="top">
 
+
+
+'.(nucleo_acceso('ciudadanos_global')&&is_numeric($r['x'])?'<a href="/geolocalizacion"><img width="300" height="160" class="static_map" style="border:1px solid #AAA;" src="http://maps.google.com/maps/api/staticmap?
+center='.$r['y'].','.$r['x'].'&amp;zoom=13&amp;size=300x160&amp;maptype=roadmap&amp;sensor=false&amp;markers=icon:'.IMG.'ico/marker.png|'.$r['y'].','.$r['x'].'" alt="Geoposición" /></a>':'').'
+
+
+
+
 <p>';
 $datos = explode('][', $r['datos']);
 foreach ($datos_perfil AS $id => $dato) {
@@ -320,7 +328,9 @@ foreach ($datos_perfil AS $id => $dato) {
 		$txt .= '<a href="'.$datos[$id].'" target="_blank"><img src="'.IMG.'ico/'.$id.'_32.png" width="32" width="32" alt="'.$datos.'" /></a>';
 	}
 }
-$txt .= ' (<a href="/info/seguir/">Seguir desde redes sociales</a>)</p>
+$txt .= '
+
+(<a href="/info/seguir/">Seguir desde redes sociales</a>)</p>
 
 
 <b>&Uacute;ltimas 5 notas:</b>

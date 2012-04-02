@@ -341,7 +341,7 @@ FROM users ".$order_by." LIMIT ".mysql_real_escape_string($p_limit), $link);
 	
 	$txt_title = 'Censo de Ciudadanos';
 	$txt_nav = array('/info/censo'=>'Censo');
-	$txt_tab = array('/info/censo/SC/'=>'Censo VirtualPol');
+	$txt_tab = array('/geolocalizacion'=>'Mapa de ciudadanos', '/info/censo/SC/'=>'Censo VirtualPol');
 	break;
 
 

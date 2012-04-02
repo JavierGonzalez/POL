@@ -88,9 +88,9 @@ p_scroll = false;
 		<ul>
 			<li><a href="/info/censo">Censo<span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
 			<li><a href="/doc"><b>Documentos</b><span class="md"><?=$pol['config']['info_documentos']?></span></a></li>
-			<li><a href="#" style="cursor:default;">Más</a>
+			<li><a href="/geolocalizacion">Mapa de ciudadanos</a></li>
+			<li><a href="#" style="cursor:default;">Estadísticas</a>
 				<ul>
-					<li><a href="/geolocalizacion">Mapa de ciudadanos</a></li>
 					<li><a href="/estadisticas">Estadísticas</a></li>
 					<li><a href="/log">Log de acciones</a></li>
 				</ul>
@@ -112,7 +112,11 @@ p_scroll = false;
 		<ul>
 			<li><a href="/elecciones">Elecciones<span class="md"><?=$txt_elec_time?></span></a></li>
 			<li><a href="/votacion"><b>Votaciones</b><span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
-			<li><a href="/cargos">Cargos</a></li>
+			<li><a href="/cargos">Cargos</a>
+				<ul>
+					<li><a href="/grupos">Grupos</a></li>
+				</ul>
+			</li>
 			<li><a href="/control">Gestión</a>
 				<ul>
 					<li><a href="/control/gobierno">Gobierno</a></li>
@@ -122,7 +126,6 @@ p_scroll = false;
 				</ul>
 			</li>
 			<?=(ASAMBLEA?'':'<li><a href="/partidos">Partidos <span class="md">'.$pol['config']['info_partidos'].'</span></a></li>')?>
-			<li><a href="/grupos">Grupos</a></li>
 		</ul>
 	</li>
 
@@ -143,8 +146,12 @@ p_scroll = false;
 
 	<div id="menu-next">
 
-		<p id="palabras">
-<?php
+<?php 
+echo '<p style="color:#999;"><b>'.timer('2012-04-18 00:00:00').'</b> para lograr el objetivo de <a href="http://www.goteo.org/project/expansion-de-virtualpol/supporters" target="_blank" title="Campaña de crowdfunding en Goteo.org para poder desarrollar la Expansión Internacional"><b>crowdfunding</b></a>.</p>';
+if (PAIS == '15M') { echo '<p style="color:#999;"><b>'.timer('2012-05-12 00:00:00').'</b> para el <a href="/foro/debates-15m/preparativos-para-el-12m" title="12 de Mayo: Movilización Global"><b>12M</b></a>.</p>'; } 
+
+echo '<p id="palabras">';
+
 foreach(explode(';', $pol['config']['palabras']) as $t) {
 	$t = explode(':', $t);
 	echo ($t[1]!=''?'<a href="http://'.$t[1].'">'.$t[2].'</a>':$t[2]).($pol['user_ID']==$t[0]||nucleo_acceso($vp['acceso']['control_gobierno'])?' <a href="/subasta/editar" style="float:right;color:#CCC;">#</a>':'').'<br />';

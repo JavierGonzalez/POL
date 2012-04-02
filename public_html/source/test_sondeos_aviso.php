@@ -36,7 +36,9 @@ ORDER BY num DESC", $link);
 '.$txt_votaciones.'
 </ol>
 
-<p>Tu voto cuenta. Participamos en nuestra <a href="http://15m.virtualpol.com">sala de chat</a>.</p>
+<p>Tu voto cuenta. También participamos en nuestra <a href="http://15m.virtualpol.com">sala de chat</a>.</p>
+
+<p>Síguenos y difunde también en <a href="https://www.facebook.com/AsambleaVirtual">nuestro Facebook</a></p>
 
 <p>¡Unidos somos fuertes!</p>
 

@@ -357,10 +357,11 @@ function pols($pols) {
 }
 
 function confianza($num, $votos_num=false) {
-	if ($num >= 10) { return '<span title="'.$votos_num.' votos" class="vcc">+'.$num.'</span>'; }
-	elseif ($num >= 0) { return '<span title="'.$votos_num.' votos" class="vc">+'.$num.'</span>'; } 
-	elseif ($num > -10) { return '<span title="'.$votos_num.' votos" class="vcn">'.$num.'</span>'; }
-	else { return '<span title="'.$votos_num.' votos" class="vcnn">'.$num.'</span>'; }
+	if ($num >= 10) { $t = 'vcc">+'; }
+	elseif ($num >= 0) { $t = 'vc">+'; } 
+	elseif ($num > -10) { $t = 'vcn">'; }
+	else { return $t = 'vcnn">'; }
+	return '<span'.($votos_num!=false?' title="+'.(($votos_num+$num)/2).' -'.($votos_num-(($votos_num+$num)/2)).' ('.$votos_num.' votos)"':'').' class="'.$t.$num.'</span>';
 }
 
 function direccion_IP($tipo='') {

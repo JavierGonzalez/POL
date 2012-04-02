@@ -207,23 +207,29 @@ case 'historia':
 
 
 case 'geolocalizacion':
-	if (($_GET['b'] == 'add') AND ($_POST['x']) AND ($_POST['y'])) {
-		mysql_query("UPDATE users SET geo = '".round($_POST['x'],2).":".round($_POST['y'],2)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+	if (($_GET['b'] == 'add') AND (is_numeric($_POST['x'])) AND (is_numeric($_POST['y']))) {
+
+		// Por privacidad solo guarda 3 digitos de latitud y longitud, además suma aleatoriamente entre -0.002 y 0.002 grados aleatoriamente. Eso es una precisión aproximada de 560 metros a la redonda.
+		$_POST['x'] = (round($_POST['x'],3)+(mt_rand(-2,2)/1000));
+		$_POST['y'] = (round($_POST['y'],3)+(mt_rand(-2,2)/1000));
+
+		$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NULL LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) {
+			evento_chat('<b>[#]</b> '.crear_link($pol['nick']).' se ha geolocalizado en el <a href="/geolocalizacion"><b>mapa</b> de ciudadanos</a>');
+		}
+
+		mysql_query("UPDATE users SET x = '".$_POST['x']."', y = '".$_POST['y']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		
 	}
 	$refer_url = 'geolocalizacion';
-
 	break;
 
 
 
-
 case 'sancion':
-
 	if ((nucleo_acceso($vp['acceso']['control_sancion'])) AND ($_POST['pols'] <= 5000) AND ($_POST['pols'] > 0)) {
-
 		$result = mysql_query("SELECT ID, nick FROM users 
-WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' AND pais = '".PAIS."'
-LIMIT 1", $link);
+WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' AND pais = '".PAIS."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) {
 		
 			pols_transferir($_POST['pols'], $r['ID'], '-1', '<b>SANCION ('.$pol['nick'].')&rsaquo;</b> '.strip_tags($_POST['concepto']));
@@ -418,7 +424,7 @@ case 'voto':
 
 			// Contadores
 			if (($tipo == 'hilos') OR ($tipo == 'msg')) {
-				$result = mysql_query("SELECT SUM(voto) AS num, COUNT(*) AS votos_num FROM votos WHERE tipo = '".$tipo."' AND pais = '".$pais."' AND item_ID = '".$item_ID."'", $link);
+				$result = mysql_query("SELECT SUM(voto) AS num, COUNT(*) AS votos_num FROM votos WHERE tipo = '".$tipo."' AND pais = '".$pais."' AND item_ID = '".$item_ID."' AND (voto = 1 OR voto = -1)", $link);
 				while ($r = mysql_fetch_array($result)) { 
 					$voto_result = $r['num'];
 					mysql_query("UPDATE ".SQL."foros_".$tipo." SET votos = '".$r['num']."', votos_num = '".$r['votos_num']."' WHERE ID = '".$item_ID."' LIMIT 1", $link);

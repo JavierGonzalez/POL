@@ -13,7 +13,7 @@ if ($_GET['b'] == 'e') { $externo = true; } else { $externo = false; }
 if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['pol']['nick']; }
 
 
-if(  $db->consulta("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1")  ){
+if(  $db->consulta("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1")  >  0  ){
 	$r=$db->cursor();
 	
 	$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo']);

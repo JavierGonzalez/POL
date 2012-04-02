@@ -34,7 +34,10 @@ class db {
 	public function consult($consulta){
 		return $this->consulta($consulta);
 	}
-
+	
+	public function sql_num($consulta){
+		return $this->consulta($consulta);
+	}
 
 	public function sql($consulta){
 		if($this->cursor == NULL){
@@ -46,7 +49,6 @@ class db {
 			}
 		}else{
 			$this->debug("class db, sql(): Siguientes llamadas");
-			if($this->cursor() == FALSE ){ $this->libera(); }
 			return $this->cursor();
 		}
 	}
@@ -65,6 +67,7 @@ class db {
 				$res=mysql_num_rows ($this->resultado);
 			}else{
 				$res=@mysql_affected_rows ($this->resultado);
+				$this->libera();
 			}
 		}
 		$this->lastRes=$res;
@@ -83,12 +86,21 @@ class db {
 	public function libera () {
 		@mysql_free_result($this->resultado);
 		//@reset ($this->cursor);
+		$this->freeCursor();
+	}
+
+	private function freeCursor(){
 		$this->cursor = NULL;
 	}
 
 	function cursor() {
 		$this->cursor=mysql_fetch_array ($this->resultado, MYSQL_ASSOC);
-		return $this->cursor;
+		if($this->cursor == false){
+			$this->libera();
+			return false;
+		}else{
+			return $this->cursor;
+		}
 	}
 
 	function cursorn() {

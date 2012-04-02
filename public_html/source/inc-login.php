@@ -3,11 +3,14 @@ define('TIME_START', microtime(true));
 
 include('../config.php');
 include(RAIZ.'source/inc-functions.php');
+include(RAIZ.'source/class-db.php');
+
 
 //INIT
 $date = date('Y-m-d H:i:s');
 $IP = direccion_IP('longip');
-$link = conectar();
+$link = conectar(); // Old db way
+$db = new db($link); // New db way. We pass $link to class to maintain compatibility. It is not really necesary.
 
 // Prevención de inyección
 foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val, false); }

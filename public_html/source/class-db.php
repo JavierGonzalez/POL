@@ -28,6 +28,8 @@ class db {
 	public function print_query(){
 		echo $this->query;
 	}
+	
+	public function getQuery(){ return $this->query; }
 
 	public function consult($consulta){
 		return $this->consulta($consulta);

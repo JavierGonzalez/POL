@@ -3,9 +3,11 @@ include('inc-login.php');
 include('inc-functions-accion.php');
 
 // load config full
-	while(   $r = $db->sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'")   ){
-		$pol['config'][$r['dato']] = $r['valor'];
-	}
+while($r=$db->sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'")){
+	$pol['config'][$r['dato']] = $r['valor'];
+}
+
+
 if (
 (nucleo_acceso('ciudadanos'))
 OR (($pol['estado'] == 'kickeado') AND (in_array($_GET['a'], array('rechazar-ciudadania', 'elecciones-generales', 'votacion'))))
@@ -107,7 +109,7 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 		if( $r = $db->sql("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1")  ){
 			$refer_url = 'chats/'.$r['url'].'/opciones';
 			if ((nucleo_acceso('privado', $r['admin'])) OR ($r['user_ID'] == $pol['user_ID'])) {
-				$db->sql("UPDATE chats SET admin = '".strtolower(strip_tags($_POST['admin']))."' WHERE chat_ID = '".$_POST['chat_ID']."' LIMIT 1") > 0 );
+				$db->sql("UPDATE chats SET admin = '".strtolower(strip_tags($_POST['admin']))."' WHERE chat_ID = '".$_POST['chat_ID']."' LIMIT 1");
 			}
 		}
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {

@@ -194,7 +194,7 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 
 		$txt_el_td .= '
 <td align="right" title="Con cargo / Candidatos"><b style="font-size:16px;">'.$r['cargo_num'].'</b> / '.$r['candidatos_num'].'</td>
-<td nowrap="nowrap" class="gris" align="center">'.($r['asigna']>0&&$cargo_editar?'<input type="checkbox" name="autocargo_'.$r['cargo_ID'].'" value="true" id="autocargo_'.$r['cargo_ID'].'"'.($r['autocargo']=='true'?' checked="checked"':'').' /> <label for="autocargo_'.$r['cargo_ID'].'" class="inline" title="Asignación de cargo automático al aprobar examen">Cargo automático</label>':'').(!$editar&&$r['autocargo']=='true'?'Cargo automático.':'').($r['elecciones']!=''?'<a href="/elecciones"><b>Elecciones en '.timer($r['elecciones']).'</b></a>':'').'</td>
+<td nowrap="nowrap" class="gris" align="center">'.($r['asigna']>0&&$cargo_editar?'<input type="checkbox" name="autocargo_'.$r['cargo_ID'].'" value="true" id="autocargo_'.$r['cargo_ID'].'"'.($r['autocargo']=='true'?' checked="checked"':'').' /> <label for="autocargo_'.$r['cargo_ID'].'" class="inline" title="Asignación de cargo automático al aprobar examen">Cargo automático</label>':'').(!$editar&&$r['autocargo']=='true'?'Cargo automático.':'').($r['elecciones']!=''?' <a href="/elecciones"><b>Elecciones en '.timer($r['elecciones']).'</b></a>':'').'</td>
 <td align="right">'.($cargo_editar?'<input type="text" name="nivel_'.$r['cargo_ID'].'" value="'.$r['nivel'].'" size="3" maxlength="2" style="text-align:right;" />':$r['nivel']).'</td>
 '.(ECONOMIA?'<td align="right">'.pols($r['salario']).'</td>':'').'
 <td>'.($editar_examen?boton('Editar examen', '/examenes/editar/'.$r['examen_ID']):'').'</td>

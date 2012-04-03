@@ -112,7 +112,7 @@ case 'TOS':
 		while($r = mysql_fetch_array($result)) { $fecha_legal = $r['fecha_legal']; }
 
 		if ($fecha_legal) {
-			$txt_legal = 'Como usuario de VirtualPol aceptaste las siguientes condiciones. ('.$fecha_legal.')<br /><br />';
+			$txt_legal = '<p style="text-align:right;">Como usuario de VirtualPol aceptaste las siguientes condiciones en la fecha: '.$fecha_legal.'.</p>';
 			$txt_legal_botones = '';
 		} else {
 			$txt_legal = 'Como usuario de VirtualPol debes aceptar las siguientes condiciones.<br /><br />';

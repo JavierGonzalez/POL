@@ -62,10 +62,9 @@ LIMIT 50", $link);
 	}
 
 	$result = mysql_query("SELECT cargo_ID, nombre,
-(SELECT COUNT(cargo_ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'true' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS cargos_num
+(SELECT COUNT(*) FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'true' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS cargos_num
 FROM cargos
-WHERE asigna != '-1' AND pais = '".PAIS."'
-ORDER BY nivel DESC", $link);
+WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 	while($r = mysql_fetch_array($result)){
 		if ($r['cargos_num'] > 0) {
 			$select_todoscargos .= '<option value="' . $r['cargo_ID'] . '"'.($pre_cargo==$r['cargo_ID']?' selected="selected"':'').'>'.$r['nombre'].' ('.$r['cargos_num'].')</option>';

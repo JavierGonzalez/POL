@@ -6,9 +6,6 @@ $txt .= '<h1>TEST DE DESARROLLO</h1><hr />';
 
 
 
-$txt .= (0+(rand(-2,2)/1000));
-
-
 
 $txt_title = 'Test';
 $txt_nav = array('Test');

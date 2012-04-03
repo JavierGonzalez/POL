@@ -549,7 +549,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 			// Muestra información de votación (a la derecha)
 			$txt .= '<span style="float:right;text-align:right;">
-Creador ' . crear_link($r['nick']) . '. Duración <b>'.$duracion.'</b>.<br />
+'.(isset($r['nick'])?'Creador '.crear_link($r['nick']).'. ':'').'Duración <b>'.$duracion.'</b>.<br />
 Acceso de voto: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</acronym>'.($r['acceso_ver']!='anonimos'?' (privada)':'').'.<br /> 
 Inicio: <em>' . $r['time'] . '</em><br /> 
 Fin: <em>' . $r['time_expire'] . '</em><br />
@@ -744,7 +744,7 @@ Validez de esta votación: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&n
 <td valign="top"><input type="radio" name="voto_7" value="'.$i.'"'.($ha_votado_array[6]==$i?' checked="checked"':'').' /></td>
 <td valign="top"><input type="radio" name="voto_8" value="'.$i.'"'.($ha_votado_array[7]==$i?' checked="checked"':'').' /></td>
 ':'').'
-<td nowrap="nowrap"'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'" class="punteado"':'').'>'.($respuestas[$i]==='En Blanco'?'<em title="Equivale a No sabe/No contesta. No computable.">En Blanco</em>':$respuestas[$i]).'</td>
+<td nowrap="nowrap"'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'" class="punteado"':'').'>'.($respuestas[$i]==='En Blanco'?'<em title="Equivale a No sabe/No contesta. No computable.">En Blanco</em>':($r['tipo']=='elecciones'?'<b>'.crear_link($respuestas[$i]).'</b>':$respuestas[$i])).'</td>
 </tr>';
 					} }
 					if ($r['aleatorio'] == 'true') { shuffle($votos_array); }

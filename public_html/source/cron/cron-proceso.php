@@ -53,7 +53,8 @@ WHERE pais = '".PAIS."' AND cargo = 'false' AND time < '".date('Y-m-d 20:00:00',
 ORDER BY time DESC", $link);
 while($r = mysql_fetch_array($result)){
 	$examenes_exp_num++;
-	mysql_query("DELETE FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."'", $link);
+	// QUITADO PROVISIONALMENTE. HAY POSIBILIDAD DE QUE ESTO CAUSE PROBLEMAS (BUG GRAVE).
+	//mysql_query("DELETE FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."'", $link);
 }
 //evento_chat('<b>[PROCESO]</b> Expirados <b>'.$examenes_exp_num.'</b> examenes.');
 

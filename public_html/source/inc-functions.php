@@ -1,5 +1,6 @@
 <?php
 
+//function sql_test($query) { global $link; return mysql_fetch_array(mysql_query($query, $link)); }
 
 // ### NUCLEO ACCESO 3.0
 function nucleo_acceso($tipo, $valor='') {

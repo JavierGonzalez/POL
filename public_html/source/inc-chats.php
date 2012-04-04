@@ -38,7 +38,7 @@ if(  $db->consulta("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_G
 }
 
 // genera array js, nombres cargos
-$result = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND asigna != '-1' ORDER BY nivel DESC", $link);
+$result = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 while ($r = mysql_fetch_array($result)) {
 	if ($array_cargos) { $array_cargos .= ', '; } 
 	$array_cargos .= $r['cargo_ID'].':"'.$r['nombre'].'"';
@@ -58,12 +58,12 @@ $txt .= '
 
 if ($externo) {
 	if ($_SESSION['pol']['user_ID']) {
-		$txt .= '<span style="float:right;"><a href="http://www.'.DOMAIN.'/">Volver a VirtualPOL</a></span>'.$titulo;
+		$txt .= '<span style="float:right;"><a href="http://www.'.DOMAIN.'">Volver a VirtualPOL</a></span>'.$titulo;
 	} else {
-		$txt .= '<span style="float:right;"><a href="http://www.'.DOMAIN.'/registrar/">Crear ciudadano</a></span>'.$titulo;
+		$txt .= '<span style="float:right;"><a href="'.REGISTRAR.'">Crear ciudadano</a></span>'.$titulo;
 	}
 } else {
-	$txt .= '<span class="quitar"><span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones/">Opciones</a>] [<a href="/chats/'.$_GET['a'].'/log/">Log</a>]</span><a href="/chats/">Chat</a>: '.$titulo.'</span>';
+	$txt .= '<span class="quitar"><span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones">Opciones</a>] [<a href="/chats/'.$_GET['a'].'/log">Log</a>]</span><a href="/chats/">Chat</a>: '.$titulo.'</span>';
 }
 
 
@@ -175,8 +175,6 @@ window.onload = function(){
 
 
 </script>';
-
-
 
 
 

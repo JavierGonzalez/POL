@@ -214,7 +214,7 @@ case 'changepass':
 	$oldpass = md5(trim($_POST['oldpass']));
 	$newpass = md5(trim($_POST['pass1']));
 	$newpass2 = md5(trim($_POST['pass2']));
-	if (substr($_POST['url'], 0, 4) == 'http') { $url = $_POST['url']; } else { $url = base64_decode($_POST['url']); }
+	if (substr($_POST['url'], 0, 4) == 'http') { $url = $_POST['url']; } else { $url = escape(base64_decode($_POST['url'])); }
 
 	$pre_login = true;
 	
@@ -235,7 +235,7 @@ case 'changenick':
 		if (substr($_POST['url'], 0, 4) == 'http') {
 			$url = $_POST['url'];
 		} else { 
-			$url = base64_decode($_POST['url']);
+			$url = escape(base64_decode($_POST['url']));
 		}
 	
 		$pre_login = true;
@@ -278,7 +278,7 @@ case 'changenick':
 	
 case 'changemail':
 	$email = trim($_POST['email']);
-	$url = base64_decode($_POST['url']);
+	$url = escape(base64_decode($_POST['url']));
 
 	$pre_login = true;
 	
@@ -329,7 +329,7 @@ case 'login':
 	if ($_REQUEST['url_http']) { 
 		$url = $_REQUEST['url_http'];
 	} elseif ($_REQUEST['url']) { 
-		$url = base64_decode($_REQUEST['url']); 
+		$url = escape(base64_decode($_REQUEST['url'])); 
 	} else {
 		$url = 'http://vp.'.DOMAIN.'/'; 
 	}
@@ -443,7 +443,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 <tr>
 <td colspan="2" align="center">
-'.($_GET['error']?'<em style="color:red;">'.base64_decode($_GET['error']).'.</em><br /><br />':'').'
+'.($_GET['error']?'<em style="color:red;">'.escape(base64_decode($_GET['error'])).'.</em><br /><br />':'').'
 <button onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" class="large blue">Entrar</button><br /><br />
 <a href="'.REGISTRAR.'login.php?a=recuperar-pass">&iquest;Has olvidado tu contrase&ntilde;a?</a><br /><br />
 <a href="'.REGISTRAR.'">&iquest;A&uacute;n no tienes usuario registrado?</a><br /><br /><br />

@@ -36,7 +36,12 @@ WHERE pais = '".PAIS."'", $link);
 		$data_cargos[] = cargo_bien($r['asigna_nombre'].' '.$r['asigna_num'].'').'->'.cargo_bien($r['nombre'].' '.$r['cargo_num'].'');
 	}
 
-	$txt .= '<a href="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" target="_blank"><img style="max-width:1800px;margin-left:-20px;" src="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" alt="grafico confianza" /></a><p>Organigrama de la jerarquía de cargos. Grafico experimental, alpha.</p>';
+	$txt .= '<a href="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" target="_blank"><img style="max-width:1800px;margin-left:-20px;" src="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" alt="grafico confianza" /></a><p>Organigrama de la jerarquía de cargos. Grafico experimental, alpha.</p>
+
+<style>
+#header { z-index:1010; }
+</style>
+';
 
 } elseif (is_numeric($_GET['a'])) { // VER CARGO
 

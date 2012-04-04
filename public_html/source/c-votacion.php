@@ -818,7 +818,7 @@ Validez de esta votación: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&n
 (SELECT voto FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = cargos_users.user_ID LIMIT 1) AS ha_votado,
 (SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = cargos_users.user_ID LIMIT 1) AS ha_mensaje
 FROM cargos_users
-WHERE cargo = 'true' AND cargo_ID = '6'
+WHERE pais = '".PAIS."' AND cargo = 'true' AND cargo_ID = '6'
 ORDER BY siglas ASC", $link);
 				while($r2 = mysql_fetch_array($result2)) {
 					if ($r2['ha_votado'] != null) { $ha_votado = ' style="background:blue;"';

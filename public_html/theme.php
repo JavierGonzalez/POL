@@ -64,7 +64,7 @@ p_scroll = false;
 $result = mysql_query("SELECT nick, pais, estado
 FROM users 
 WHERE fecha_last > '".date('Y-m-d H:i:00', time() - 3600)."' AND estado != 'expulsado'
-ORDER BY fecha_last DESC", $link);
+ORDER BY fecha_last DESC LIMIT 50", $link);
 while($r = mysql_fetch_array($result)){ 
 	$li_online_num++; 
 	$li_online .= '<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'" style="color:#AAA;">'.$r['nick'].'</a> '; 

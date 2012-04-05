@@ -18,5 +18,14 @@ define('CLAVE_DNIE', '...');
 define('CLAVE_API_TRACTIS', '...'); 
 define('CLAVE_API_ETHERPAD', '...'); 
 
+
+$twitter_key = array(
+'consumer_key'    => '...',
+'consumer_secret' => '...',
+'user_token'      => '...',
+'user_secret'     => '...',
+);
+
+
 define('DEV', '');
 ?>

@@ -10,7 +10,6 @@ include('inc-login.php');
 
 
 function boton_cargo($value, $url, $cargo) {
-	//boton_cargo('Crear examen', '/examenes/crear/', '7', $pol['cargos'])
 	$text = '';
 	if ($url) { $val = ' type="button" onclick="window.location.href=\'' . $url . '\';"'; } 
 	else { $val = ' type="submit"'; }
@@ -54,8 +53,6 @@ function shuffle_assoc_OLD(&$array) {
 // carga config
 $result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
 while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
-
-$pol['cargos'] = cargos();
 
 // INIT
 if (($_GET['a'] == 'editar') AND (((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) AND ($pol['estado'] == 'ciudadano'))) { 		// EDITAR

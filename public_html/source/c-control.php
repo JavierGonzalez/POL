@@ -6,9 +6,6 @@ include('inc-login.php');
 $result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
 while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
-// load user cargos
-$pol['cargos'] = cargos();
-
 $sc = get_supervisores_del_censo();
 
 switch ($_GET['a']) {

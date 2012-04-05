@@ -60,18 +60,6 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 		case 'print':
 			if (isset($pol['user_ID'])) {
 				$t = ''; $total_num = 0;
-				
-				// NOTIFICACION ELECCIONES
-				if (($pol['config']['elecciones_estado'] == 'elecciones') AND ($pol['estado'] == 'ciudadano')) {
-					$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-					while($r = mysql_fetch_array($result)){ $havotado = $r['ID']; }
-					if (!isset($havotado)) { $nuevos_num++; }
-					$total_num++;
-					$elecciones_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']);
-					if (!isset($havotado)) {
-						$t .= '<li><a href="/elecciones/votar" class="noti-nuevo">&iexcl;Elecciones en curso!<span class="md">Quedan '.timer($elecciones_quedan, true).'</span></a></li>';
-					}
-				}
 
 				// NOTIFICACION VOTACIONES
 				$pol['config']['info_consultas'] = 0;
@@ -97,8 +85,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 				}
 
 			} else { $t = '<li><a href="'.REGISTRAR.'?p='.PAIS.'" class="noti-nuevo">Primer paso: Crea tu ciudadano</a></li>'; $total_num = 1; $nuevos_num = 1; }
-			global $txt_elec_time;
-			return '<li id="menu-noti"'.($nuevos_num!=0?' class="menu-sel"':'').'><a href="/hacer">Notificaciones<span class="md">'.$nuevos_num.'</span></a><ul><li style="border-bottom:1px dotted #DDD;"><a href="/elecciones">'.(isset($txt_elec_time)?'Elecciones en <b>'.$txt_elec_time.'</b>, ':'').'proceso '.(time()>strtotime(date('Y-m-d 20:00:00'))?'hace':'en').' <b>'.timer(date('Y-m-d 20:00:00')).'</b></a></li>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'<li style="text-align:right;"><a href="/hacer"><b>¿Qué hacer?</b></a></li></ul></li>'.($nuevos!=0?'':'<script type="text/javascript">p_scroll = true;</script>');
+			return '<li id="menu-noti"'.($nuevos_num!=0?' class="menu-sel"':'').'><a href="/hacer">Notificaciones<span class="md">'.$nuevos_num.'</span></a><ul><li style="border-bottom:1px dotted #DDD;"><a href="/elecciones">Proceso diario '.(time()>strtotime(date('Y-m-d 20:00:00'))?'hace':'en').' <b>'.timer(date('Y-m-d 20:00:00')).'</b></a></li>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'<li style="text-align:right;"><a href="/hacer"><b>¿Qué hacer?</b></a></li></ul></li>'.($nuevos!=0?'':'<script type="text/javascript">p_scroll = true;</script>');
 			break;
 
 
@@ -219,7 +206,6 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 }
 
 function num($num, $dec=0) { return number_format(round($num, $dec), $dec, ',', '.'); }
-
 function explodear($pat, $str, $num) { $exp = explode($pat, $str); return $exp[$num]; }
 function implodear($pat, $str, $num) { $exp = implode($pat, $str); return $exp[$num]; }
 function entre($num, $min, $max) { if ((is_numeric($num)) AND ($num >= $min) AND ($num <= $max)) { return true; } else { return false; } }
@@ -273,14 +259,6 @@ ORDER BY orden ASC", $link);
 	}
 	$f .= '</select>';
 	return $f;
-
-}
-
-function cargos() {
-	global $pol, $link; 
-	$result = mysql_query("SELECT cargo_ID FROM cargos_users WHERE cargo = 'true' AND user_ID = '" . $pol['user_ID'] . "'", $link);
-	while($row = mysql_fetch_array($result)) { $cargos[$row['cargo_ID']] = true; }
-	return $cargos;
 }
 
 // FUNCION MALA. REEMPLAZAR URGENTE.

@@ -107,7 +107,7 @@ function pad($control, $ID=false, $txt='') {
 
 		case 'get':
 			try {
-				return escape($e->getHTML($ID)->html, false);
+				return $e->getHTML($ID)->html;
 			} catch (Exception $error) { return false; }
 			break;
 

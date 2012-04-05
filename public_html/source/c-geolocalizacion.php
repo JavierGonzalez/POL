@@ -26,7 +26,7 @@ if (!isset($pol['user_ID'])) {
 	
 	
 	$txt .= '<table border="0">';
-	$result = mysql_query("SELECT ID, nick, pais, avatar, x, y, POW(x-".$user_x.",2)+POW(y-".$user_y.",2) AS dist FROM users WHERE estado = 'ciudadano' AND ID != '".$pol['user_ID']."' AND x IS NOT NULL ORDER BY dist ASC LIMIT 25", $link);
+	$result = mysql_query("SELECT ID, nick, pais, avatar, x, y, POW(x-".$user_x.",2)+POW(y-".$user_y.",2) AS dist FROM users WHERE estado = 'ciudadano' AND ID != '".$pol['user_ID']."' AND x IS NOT NULL ORDER BY dist ASC LIMIT 50", $link);
 	while ($r = mysql_fetch_array($result)) { 
 		$txt .= '<tr><td height="40">'.($r['avatar']=='true'?avatar($r['ID'], 40):'').'</td><td><b style="font-size:16px;">'.crear_link($r['nick']).'</b></td><td align="right">'.distancia($user_x, $user_y, $r['x'], $r['y'], 0).' km</td><td>'.boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$r['nick']).'</td></tr>';
 	}

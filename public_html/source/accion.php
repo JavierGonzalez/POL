@@ -10,7 +10,7 @@ while($r=$db->sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND au
 
 if (
 (nucleo_acceso('ciudadanos'))
-OR (($pol['estado'] == 'kickeado') AND (in_array($_GET['a'], array('rechazar-ciudadania', 'elecciones-generales', 'votacion'))))
+OR (($pol['estado'] == 'kickeado') AND (in_array($_GET['a'], array('rechazar-ciudadania', 'votacion'))))
 OR (($pol['estado'] == 'extranjero') AND (in_array($_GET['a'], array('voto', 'mercado', 'foro', 'votacion'))))
 ) {
 
@@ -154,23 +154,6 @@ WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS
 
 
 
-
-
-case 'vaciar_listas':
-
-	if (nucleo_acceso($vp['acceso']['control_gobierno'])) {
-		$elecciones_dias_quedan = ceil((strtotime($pol['config']['elecciones_inicio']) - time()) / 86400);
-		$elecciones_frecuencia_dias = ceil($pol['config']['elecciones_frecuencia'] / 86400);
-		if (($elecciones_dias_quedan > 5) AND ($elecciones_dias_quedan < $elecciones_frecuencia_dias)) {
-			mysql_query("DELETE FROM ".SQL."partidos_listas", $link);
-			evento_chat('<b>[GOBIERNO]</b> Se han vaciado las listas electorales ('.crear_link($pol['nick']).', <a href="/control/gobierno">Gobierno</a>)');
-		}
-	}
-
-	$refer_url = 'partidos';
-
-	break;
-
 case 'historia':
 	$sc = get_supervisores_del_censo();
 
@@ -282,10 +265,6 @@ LIMIT 1", $link);
 			mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."pujas WHERE user_ID = '".$user_ID."'", $link);
-		}
-
-		if ($pol['config']['elecciones_estado'] == 'elecciones') { 
-			mysql_query("UPDATE ".SQL."elecciones SET ID_partido = '-1' WHERE user_ID = '".$user_ID."' LIMIT 1", $link);
 		}
 
 		mysql_query("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'", $link);
@@ -566,13 +545,9 @@ FROM ".SQL."examenes WHERE ID = '".$_POST['ID']."' LIMIT 1", $link);
 
 
 case 'mapa':
-	//pol_mapa (ID, pos_x, pos_y, size_x, size_y, user_ID, link, text, time, pols, color, estado)
-
-	// load user cargos
-	$pol['cargos'] = cargos();
 
 	// pasa a ESTADO
-	if ($pol['cargos'][40]) { mysql_query("UPDATE ".SQL."mapa SET estado = 'e', user_ID = '' WHERE link = 'ESTADO'", $link); }
+	if (nucleo_acceso('cargo', 40)) { mysql_query("UPDATE ".SQL."mapa SET estado = 'e', user_ID = '' WHERE link = 'ESTADO'", $link); }
 
 	if (($_GET['b'] == 'compraventa') AND ($_GET['ID'])) {
 
@@ -599,7 +574,7 @@ case 'mapa':
 
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['ID'])) {
 
-		mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargos'][40]."')) LIMIT 1", $link);
+		mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) LIMIT 1", $link);
 		$refer_url = 'mapa/propiedades';
 
 
@@ -652,7 +627,7 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = '
 
 		$result = mysql_query("SELECT *
 FROM ".SQL."mapa 
-WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargos'][40]."')) AND (ID = '".$ID[0]."' OR ID = '".$ID[1]."') LIMIT 2", $link);
+WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) AND (ID = '".$ID[0]."' OR ID = '".$ID[1]."') LIMIT 2", $link);
 		while($r = mysql_fetch_array($result)){ 
 			$prop[$r['ID']]['size_x'] = $r['size_x'];
 			$prop[$r['ID']]['size_y'] = $r['size_y'];
@@ -712,7 +687,7 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargo
 		$_POST['link'] = str_replace("\"", "", $_POST['link']);
 		$_POST['link'] = str_replace(HOST, "", $_POST['link']);
 		if (strlen($_POST['color']) == 3) {
-			mysql_query("UPDATE ".SQL."mapa SET color = '".$_POST['color']."', text = '".$_POST['text']."', link = '".$_POST['link']."' WHERE ID = '" .	$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".$pol['cargos'][40]."')) LIMIT 1", $link);
+			mysql_query("UPDATE ".SQL."mapa SET color = '".$_POST['color']."', text = '".$_POST['text']."', link = '".$_POST['link']."' WHERE ID = '" .	$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) LIMIT 1", $link);
 			$refer_url = 'mapa/propiedades';
 		}
 
@@ -824,10 +799,6 @@ $dato_array = array(
 					$dato = 'palabra_gob';
 					$valor = strip_tags($_POST['palabra_gob0']).":".strip_tags($_POST['palabra_gob1']);
 					mysql_query("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1", $link);
-				} elseif ($dato == 'num_escanos') {
-					if ($pol['config']['elecciones_estado'] != 'elecciones') {
-						mysql_query("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1", $link);
-					}
 				} else {
 					mysql_query("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1", $link);
 				}
@@ -1280,8 +1251,8 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 	} elseif (($_GET['b'] == 'votar') AND (is_numeric($_POST['ref_ID']))) { 
 
 			// Extrae configuracion de la votación
-			$result = mysql_query("SELECT pais, tipo, pregunta, estado, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, num, votos_expire, tipo_voto FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
-			while($r = mysql_fetch_array($result)){ $tipo = $r['tipo']; $pregunta = $r['pregunta']; $estado = $r['estado']; $pais = $r['pais']; $acceso_votar = $r['acceso_votar']; $acceso_cfg_votar = $r['acceso_cfg_votar']; $acceso_ver = $r['acceso_ver']; $acceso_cfg_ver = $r['acceso_cfg_ver']; $num = $r['num']; $votos_expire = $r['votos_expire']; $tipo_voto = $r['tipo_voto']; $num++; }
+			$result = mysql_query("SELECT * FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)){ $tipo = $r['tipo']; $pregunta = $r['pregunta']; $estado = $r['estado']; $pais = $r['pais']; $acceso_votar = $r['acceso_votar']; $acceso_cfg_votar = $r['acceso_cfg_votar']; $acceso_ver = $r['acceso_ver']; $acceso_cfg_ver = $r['acceso_cfg_ver']; $num = $r['num']; $votos_expire = $r['votos_expire']; $tipo_voto = $r['tipo_voto']; $num_censo = $r['num_censo']; $num++; }
 
 			// Verifica acceso y estado de votacion
 			if (($estado == 'ok') AND (in_array($tipo, $votaciones_tipo)) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar)) AND (nucleo_acceso($acceso_ver, $acceso_cfg_ver))) {
@@ -1315,14 +1286,15 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 					mysql_query("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".$_POST['validez']."', mensaje = '".$_POST['mensaje']."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 				
 				} else {			// INSERTAR VOTO
+					
+					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
+
 					$comprobante = sha1(DOMAIN.'-'.$_POST['ref_ID'].'-'.time().'-'.microtime().'-'.$_POST['voto'].'-'.mt_rand(1000,99999999999999999999));
 					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje, comprobante) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".$_POST['validez']."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."', '".$comprobante."')", $link);
 					unset($comprobante);
 					
-					mysql_query("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1", $link);
-					
 					if ($acceso_ver == 'anonimos') {
-						evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
+						evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').','.(is_numeric($num_censo)?', '.num(($num*100)/$num_censo, 2).'%':'').' '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
 					}
 				}
 				unset($_POST['voto'], $_POST['mensaje'], $_POST['validez']);
@@ -1647,7 +1619,6 @@ case 'enviar-mensaje':
 					evento_chat('<b>Nuevo mensaje privado</b> (<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/msg"><b>Leer!</b></a>)', $r['user_ID'], -1, false, 'p');
 					
 					notificacion($r['user_ID'], 'Mensaje privado del grupo '.$grupo_nombre, '/msg');
-					
 				}
 			}
 			$refer_url = 'msg/';
@@ -1665,86 +1636,6 @@ case 'enviar-mensaje':
 	}
 	break;
 
-
-case 'elecciones-generales':
-
-	$ID_partido = $_POST['ID_partido'];
-	if ((!$_GET['b']) AND ($pol['config']['elecciones_estado'] == 'elecciones') AND ($pol['estado'] == 'ciudadano')) {
-
-		$fecha_24_antes = date('Y-m-d H:i:00', strtotime($pol['config']['elecciones_inicio']) - $pol['config']['elecciones_antiguedad']);
-
-		//fecha registro?
-		$result = mysql_query("SELECT fecha_registro FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)){ $fecha_registro = $r['fecha_registro']; }
-
-		//ha votado?
-		$result = mysql_query("SELECT ID FROM ".SQL."elecciones WHERE user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)){ $ha_votado = $r['ID']; }
-		
-		if ((!$ha_votado) AND ($fecha_registro < $fecha_24_antes)) {
-
-			$nav = $_SERVER['HTTP_USER_AGENT'];
-			$IP = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-			$time = $date;
-
-
-			if ($pol['config']['elecciones'] == 'parl') {
-				$diputados = '';
-				$votos_count = 0;
-				foreach ($_POST as $diputado_ID => $valor) {
-					if (($valor == '1') AND ($votos_count <= $pol['config']['num_escanos'])) {
-						// existe diputado
-						$result = mysql_query("SELECT user_ID FROM ".SQL."partidos_listas WHERE user_ID = '".$diputado_ID."' LIMIT 1", $link);
-						while($r = mysql_fetch_array($result)){ 
-							if ($diputados) { $diputados .= '.'; }
-							$diputados .= $diputado_ID;
-							$votos_count++;
-						}
-					}
-				} 
-
-				mysql_query("INSERT INTO ".SQL."elecciones (ID_partido, user_ID, nav, IP, time) VALUES ('".$diputados."', '".$pol['user_ID']."', '".$nav."', '".$IP."', '".$time."')", $link);
-				mysql_query("UPDATE users SET num_elec = num_elec + 1 WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-				mysql_query("UPDATE ".SQL."elec SET num_votos = num_votos + 1 ORDER BY time DESC LIMIT 1", $link);
-
-
-			} else {
-				// PRES
-				if ($ID_partido == '0') { //BLANCO
-					mysql_query("INSERT INTO ".SQL."elecciones (ID_partido, user_ID, nav, IP, time) VALUES ('0', '".$pol['user_ID']."', '".$nav."', '".$IP."', '".$time."')", $link);
-					mysql_query("UPDATE users SET num_elec = num_elec + 1 WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-					mysql_query("UPDATE ".SQL."elec SET num_votos = num_votos + 1 ORDER BY time DESC LIMIT 1", $link);
-					
-				} else {
-					$result = mysql_query("SELECT ID, 
-(SELECT COUNT(ID) FROM ".SQL."partidos_listas WHERE ID_partido = ".SQL."partidos.ID LIMIT 1) AS num_lista
-FROM ".SQL."partidos 
-WHERE estado = 'ok' 
-AND ID = '".$ID_partido."'
-AND fecha_creacion < '".$fecha_24_antes."'
-LIMIT 1", $link);
-					while($r = mysql_fetch_array($result)){
-						mysql_query("INSERT INTO ".SQL."elecciones (ID_partido, user_ID, nav, IP, time) VALUES ('".$ID_partido."', '".$pol['user_ID']."', '".$nav."', '".$IP."', '".$time."')", $link);
-						mysql_query("UPDATE users SET num_elec = num_elec + 1 WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-						mysql_query("UPDATE ".SQL."elec SET num_votos = num_votos + 1 ORDER BY time DESC LIMIT 1", $link);
-					}
-				}
-			}
-
-			$result = mysql_query("SELECT num_votantes FROM ".SQL."elec ORDER BY time DESC LIMIT 1", $link);
-			while($r = mysql_fetch_array($result)) { $num_votantes = $r['num_votantes']; }
-
-			$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."elecciones", $link);
-			while($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
-
-			evento_chat('<b>[ELECCIONES]</b> <a href="/elecciones/">Nuevo voto</a> <span style="color:grey;">(<b>'.num($num_votos).'</b> votos, '.num(($num_votos*100)/$num_votantes, 2).'%, '.$pol['nick'].')</span>', '0', '0', true); 
-
-		}
-
-	}
-	$refer_url = '';
-	
-	break;
 
 case 'partido-lista':
 	$b = $_GET['b'];

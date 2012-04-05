@@ -12,8 +12,6 @@ $result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AN
 while($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
-// load user cargos
-$pol['cargos'] = cargos(); // 40 arquitecto
 
 /* estado
 P - propiedad	LIBRE			(propiedad, no venta)						link|nick|color
@@ -92,7 +90,7 @@ Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * 
 
 	$result = mysql_query("SELECT *
 FROM ".SQL."mapa
-WHERE ID = '" . $_GET['b'] . "' AND (user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND '1' = '" . $pol['cargos'][40] . "'))
+WHERE ID = '" . $_GET['b'] . "' AND (user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."'))
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
@@ -159,7 +157,7 @@ Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * 
 	
 	$result = mysql_query("SELECT *
 FROM ".SQL."mapa
-WHERE user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND '1' = '" . $pol['cargos'][40] . "')
+WHERE user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')
 ORDER BY estado ASC, time ASC", $link);
 	while($r = mysql_fetch_array($result)){
 

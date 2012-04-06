@@ -276,6 +276,19 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 .expulsado { color:#FF8A8A; }
 .extrangero { color:#CCC; }
 
+.gbarra {
+	position: relative; /* IE is dumb */
+	width: 120px;
+	border: 1px solid #999;
+	padding: 0px;
+}
+.gbarra .barra {
+	display: block;
+	position: relative;
+	background: #CCC;
+	text-align: center;
+}
+.gbarra .barra span { position: absolute; left: 1em; }
 
 
 /*** CONTENIDO CHAT ***/

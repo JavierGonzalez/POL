@@ -1151,7 +1151,7 @@ case 'pols':
 
 case 'votacion':
 	$votaciones_tipo = array('referendum', 'parlamento', 'sondeo', 'cargo', 'elecciones');
-	if (($_GET['b'] == 'crear') AND (in_array($_POST['tipo'], $votaciones_tipo)) AND (nucleo_acceso($vp['acceso']['votacion_borrador']))) {
+	if (($_GET['b'] == 'crear') AND ($_POST['tipo'] != 'elecciones') AND (in_array($_POST['tipo'], $votaciones_tipo)) AND (nucleo_acceso($vp['acceso']['votacion_borrador']))) {
 		
 		if ($_POST['votos_expire'] > 0) { } else { $_POST['votos_expire'] = 0; }
 		if ($_POST['tipo_voto'] == 'multiple') { unset($_POST['respuesta0']); }
@@ -1242,7 +1242,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 				$r['time_expire'] = date('Y-m-d H:i:s', time() + $r['duracion']); 
 				mysql_query("UPDATE votacion SET estado = 'ok', user_ID = '".$pol['user_ID']."', time = '".$date."', time_expire = '".$r['time_expire']."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 				if ($r['acceso_ver'] == 'anonimos') {
-					evento_chat('<b>['.strtoupper($r['tipo']).'] <a href="/votacion/'.$r['ID'].'">'.$r['pregunta'].'</a></b> <span style="color:grey;">('.duracion($r['time_expire']).')</span>');
+					evento_chat('<b>[VOTACIÓN] <a href="/votacion/'.$r['ID'].'">'.$r['pregunta'].'</a></b> <span style="color:grey;">('.duracion($r['time_expire']).')</span>');
 				}
 			}
 		}
@@ -1293,8 +1293,8 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 					mysql_query("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje, comprobante) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".$_POST['validez']."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."', '".$comprobante."')", $link);
 					unset($comprobante);
 					
-					if ($acceso_ver == 'anonimos') {
-						evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'/">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').','.(is_numeric($num_censo)?', '.num(($num*100)/$num_censo, 2).'%':'').' '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
+					if (in_array($acceso_ver, array('anonimos', 'ciudadanos_global', 'ciudadanos'))) {
+						evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').(is_numeric($num_censo)?' '.num(($num*100)/$num_censo, 2).'%':'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
 					}
 				}
 				unset($_POST['voto'], $_POST['mensaje'], $_POST['validez']);
@@ -1684,6 +1684,7 @@ case 'cargo':
 		mysql_query("DELETE FROM cargos_users WHERE cargo_ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 
 		// Si es cargo_ID 6 (Diputado o Coordinador), ceder al siguiente en la sucesión
+		/*
 		if ($_GET['ID'] == 6) {
 			$result = mysql_query("SELECT escrutinio FROM ".SQL."elec WHERE tipo = 'parl' ORDER BY time DESC LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $escrutinio = $r['escrutinio']; }
@@ -1700,6 +1701,7 @@ case 'cargo':
 				}
 			}
 		}
+		*/
 
 		$refer_url = 'cargos';
 

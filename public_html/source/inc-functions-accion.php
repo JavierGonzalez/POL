@@ -310,11 +310,6 @@ function eliminar_ciudadano($ID) {
 					@unlink($img_root . '_40.jpg');
 			}
 
-			// anula el posible voto en elecciones
-			if ($pol['config']['elecciones_estado'] == 'elecciones') {
-					mysql_query("UPDATE ".SQL."elecciones SET ID_partido = '-1' WHERE user_ID = '".$user_ID."' LIMIT 1", $link);
-			}
-
 			// eliminar
 			/* PENDIENTE DE ARREGLAR. CODIGO CORRECTO, EXCEPTO QUE NO DEBE BORRAR MENSAJES DE EXPULSADOS POR PETICION PROPIA.
 			if ($estado == 'expulsado') { 

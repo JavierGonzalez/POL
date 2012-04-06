@@ -30,8 +30,6 @@ ORDER BY fecha_creacion ASC", $link);
 		$fecha_24_antes = date('Y-m-d H:i:00', strtotime($pol['config']['elecciones_inicio']) - $pol['config']['elecciones_antiguedad']);
 		$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL_USERS." WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_registro < '" . $fecha_24_antes . "'", $link);
 		while($row = mysql_fetch_array($result)) { $num_votantes = $row['num']; }
-		$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."elecciones", $link);
-		while($row = mysql_fetch_array($result)) { $num_votos = $row['num']; }
 
 		$elecciones_quedan = duracion((strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']) - time());
 		$li_elecciones_num = 'En curso';

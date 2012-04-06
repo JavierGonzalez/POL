@@ -24,12 +24,12 @@ while($r = mysql_fetch_array($result)) {
 
 	// Crear votacion, ya activada
 	mysql_query("INSERT INTO votacion 
-(pais, pregunta, descripcion, respuestas, respuestas_desc, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, ejecutar, votos_expire, tipo_voto, privacidad, debate_url, aleatorio, duracion, num_censo) 
+(pais, pregunta, descripcion, respuestas, respuestas_desc, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, ejecutar, votos_expire, tipo_voto, privacidad, debate_url, aleatorio, duracion, num_censo, cargo_ID) 
 VALUES (
 '".PAIS."', 
-'".$elecciones_num."ª Elecciones a ".$r['nombre']."', 
+'".$elecciones_num."&ordf; Elecciones a ".$r['nombre']."', 
 'Elecciones periódicas y automáticas para el cargo <b>".$r['nombre']."</b>.<br /><br />
-Elecciones cada <b>".$r['elecciones_cada']." días</b>, durante <b>".$r['elecciones_durante']." días</b>. ".($r['elecciones_electos']==1?"Será electo el candidato más votado":"Serán electos los <b>".$r['elecciones_electos']." candidatos más votados</b>").", de entre <b>".count($candidatos_nick)." candidatos</b>.', 
+Realizadas cada <b>".$r['elecciones_cada']." días</b>, durante <b>".$r['elecciones_durante']." días</b>. ".($r['elecciones_electos']==1?"Será electo el candidato más votado":"Serán electos los <b>".$r['elecciones_electos']." candidatos más votados</b>").", de entre <b>".count($candidatos_nick)." candidatos</b>.', 
 'En Blanco|".implode('|',$candidatos_nick)."|', 
 '',
 '".$date."', 
@@ -48,7 +48,8 @@ Elecciones cada <b>".$r['elecciones_cada']." días</b>, durante <b>".$r['eleccio
 '', 
 'true', 
 '".($r['elecciones_durante']*24*60*60)."',
-".(is_numeric($votos_num)?$votos_num:'NULL').")", $link);
+".(is_numeric($votos_num)?$votos_num:'NULL').",
+".$r['cargo_ID'].")", $link);
 
 	// Imprime evento en el chat
 	$result2 = mysql_query("SELECT ID FROM votacion WHERE pais = '".PAIS."' AND estado = 'ok' ORDER BY ID DESC LIMIT 1", $link);

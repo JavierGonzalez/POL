@@ -40,11 +40,7 @@ while($r = mysql_fetch_array($result)){ $fecha_registro = $r['fecha_registro']; 
 
 
 
-$has_votado_elecciones = false;
-if ($pol['config']['elecciones_estado'] == 'elecciones') {
-	$result = mysql_query("SELECT user_ID FROM ".SQL."elecciones WHERE user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) { $has_votado_elecciones = true; }
-}
+$has_votado_elecciones = true;
 
 $txt .= '<li>'.($pol['config']['elecciones_estado']=='normal'?'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Quedan <span class="timer" value="'.strtotime($pol['config']['elecciones_inicio']).'"></span> para las pr&oacute;ximas Elecciones.</b>':($has_votado_elecciones==true?'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Has votado correctamente en las elecciones.</b>':($fecha_registro>=$fecha_24_antes?'<img src="'.IMG.'ico/ok.png" width="32" height="32" /> <b style="color:blue;">Podr&aacute;s votar en las pr&oacute;ximas elecciones.</b>':'<img src="'.IMG.'ico/no.png" width="32" height="32" /> <b style="color:red;">No has votado en las elecciones Elecciones.</b>'))).' <a href="/elecciones/" target="_blank" style="font-size:19px;">Ver Elecciones</a>.<br />
 Las Elecciones son un proceso democr&aacute;tico, peri&oacute;dico y autom&aacute;tico. De su resultado dependen los cargos principales de moderaci&oacute;n y gesti&oacute;n. Todos los participantes pueden votar y cualquiera puede postularse como candidato.<br /><br /></li>';

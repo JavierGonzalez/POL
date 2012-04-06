@@ -1,7 +1,5 @@
 <?php
 
-//function sql_test($query) { global $link; return mysql_fetch_array(mysql_query($query, $link)); }
-
 // ### NUCLEO ACCESO 3.0
 function nucleo_acceso($tipo, $valor='') {
 	global $_SESSION;
@@ -121,6 +119,9 @@ function escape($a, $escape=true, $html=true) {
 }
 
 
+function gbarra($porcentaje, $size=false) {
+	return '<div class="gbarra"'.($size!=false?' style="width:'.$size.'px;"':'').'><strong class="barra" style="width:'.round($porcentaje).'%;">'.round($porcentaje).'%</strong></div>';
+}
 
 function pass_key($t, $type='sha') {
 	switch ($type) {

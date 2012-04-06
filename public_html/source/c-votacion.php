@@ -64,12 +64,19 @@ while($r = mysql_fetch_array($result)){
 					foreach ($voto_preferencial AS $opcion_ID => $puntos) {
 						if ($opcion_ID != 0) { // Ignora "En blanco" por ser no computable
 							mysql_query("UPDATE users SET temp = '".$puntos."' WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND nick = '".$respuestas[$opcion_ID]."' LIMIT 1", $link);
+							$votacion_preferencial_nick[$respuestas[$opcion_ID]] = $puntos;
 						}
 					}
 
 					// Asigna ordenando con mysql teniendo en cuenta la antiguedad para desempatar
-					$result2 = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND temp IS NOT NULL ORDER BY temp DESC, fecha_registro ASC LIMIT ".explodear('|', $r['ejecutar'], 2), $link);
-					while($r2 = mysql_fetch_array($result2)) { cargo_add($cargo_ID, $r2['ID'], true, true); }
+					$result2 = mysql_query("SELECT ID, nick FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND temp IS NOT NULL ORDER BY temp DESC, fecha_registro ASC LIMIT ".explodear('|', $r['ejecutar'], 2), $link);
+					while($r2 = mysql_fetch_array($result2)) { 
+						cargo_add($cargo_ID, $r2['ID'], true, true); 
+						$guardar[] = $r2['nick'].'.'.$votacion_preferencial_nick[$r2['nick']];
+					}
+					
+					// Guarda escrutinio
+					mysql_query("UPDATE votacion SET ejecutar = '".$r['ejecutar']."|".implode(':', $guardar)."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 					
 					break;
 			}
@@ -103,6 +110,9 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 	redirect('/votacion/'.$ref_ID.'/verificacion#'.$comprobante);
 
 } elseif ($_GET['a'] == 'crear') {
+
+	unset($votaciones_tipo[4]); 
+
 	$txt_title = 'Borrador de votación';
 	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores', 'Crear borrador');
 	$txt_tab = array('/votacion/borradores'=>'Ver borradores', '/votacion/'.$_GET['b']=>'Previsualizar', '/votacion/crear/'.$_GET['b']=>'Editar borrador');
@@ -516,7 +526,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 </div>
 </div>
 
-'.($r['acceso_ver']=='anonimos'&&((!isset($pol['user_ID'])) || ($r['ha_votado']) || ($r['estado']=='end'))?'<table border="0" style="margin:5px 0 15px 0;">
+'.($r['acceso_ver']=='anonimos'&&((!isset($pol['user_ID'])) || ($r['ha_votado']) || ($r['estado']=='end'))?'<center><table border="0" style="margin:5px 0 15px 0;">
 <tr>
 '.(!isset($pol['user_ID'])?'<td>'.boton('¡Crea tu ciudadano para votar!', REGISTRAR.'?p='.PAIS, false, 'large blue').'</td>':'').'
 <td width="20"></td>
@@ -541,7 +551,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
   fjs.parentNode.insertBefore(js, fjs);
 }(document, \'script\', \'facebook-jssdk\'));</script>
 <div style="display:inline;" class="fb-like" data-href=http://'.HOST.'/votacion/'.$r['ID'].'" data-send="true" data-layout="button_count" data-width="300" data-show-faces="false" data-action="recommend" data-font="verdana"></div></td>
-</tr></table>':'').'
+</tr></table></center>':'').'
 ';
 
 
@@ -725,7 +735,7 @@ Validez de esta votación: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&n
 <th align="center">3</th>
 '.($r['tipo_voto']=='5puntos'?'<th align="center">4</th><th align="center">5</th>':'').'
 '.($r['tipo_voto']=='8puntos'?'<th align="center">4</th><th align="center">5</th><th align="center">6</th><th align="center">7</th><th align="center">8</th>':'').'
-<th>Opciones</th>
+<th>Opciones'.($r['tipo']=='elecciones'?' / Candidatos':'').'</th>
 </tr>';				if ($r['ha_votado']) { $ha_votado_array = explode(' ', $r['que_ha_votado']); }
 					else { $ha_votado_array = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); }
 					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
@@ -866,6 +876,7 @@ ORDER BY time_expire DESC
 LIMIT 500", $link);
 	while($r = mysql_fetch_array($result)) {
 		$time_expire = strtotime($r['time_expire']);
+		$time = strtotime($r['time']);
 
 		if ((!isset($pol['user_ID'])) OR ((!$r['ha_votado']) AND ($r['estado'] == 'ok') AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])))) { 
 			$votar = boton('Votar', (isset($pol['user_ID'])?'/votacion/'.$r['ID']:REGISTRAR.'?p='.PAIS), false, 'small blue').' ';
@@ -881,12 +892,12 @@ LIMIT 500", $link);
 		
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 			$txt .= '<tr>
-<td width="100"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
+<td width="100"'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
-<td>'.$votar.'<a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
+<td>'.$votar.'<a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap" class="gris" align="right">'.timer($time_expire, true).'</td>
 <td nowrap="nowrap">'.$boton.'</td>
-<td></td>
+<td>'.gbarra(((time()-$time)*100)/($time_expire-$time)).'</td>
 </tr>';
 		}
 	}
@@ -932,9 +943,9 @@ LIMIT 500", $link);
 		
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 			$txt .= '<tr class="v_'.$r['tipo'].($r['acceso_ver']!='anonimos'?' v_privadas':'').'"'.(in_array($r['tipo'], array('referendum', 'parlamento', 'sondeo'))&&$r['acceso_ver']=='anonimos'?'':' style="display:none;"').'>
-<td width="100"'.($r['tipo']=='referendum'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
+<td width="100"'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
-<td><a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
+<td><a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap" align="right" class="gris">'.timer($time_expire, true).'</td>
 <td></td>
 </tr>';

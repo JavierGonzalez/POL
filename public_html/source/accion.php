@@ -434,9 +434,9 @@ case 'avatar':
 case 'examenes':
 	if (($_GET['b'] == 'crear') AND ($_POST['titulo']) AND (nucleo_acceso($vp['acceso']['examenes_decano']))) {
 		$_POST['titulo'] = gen_title($_POST['titulo']);
-		mysql_query("INSERT INTO ".SQL."examenes (titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas) VALUES ('" . $_POST['titulo'] . "', 'Editar...', '" . $pol['user_ID'] . "', '" . $date . "', '" . $_POST['cargo_ID'] . "', '5.0', 10)", $link);
+		mysql_query("INSERT INTO examenes (pais, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas) VALUES ('".PAIS."', '" . $_POST['titulo'] . "', 'Editar...', '" . $pol['user_ID'] . "', '" . $date . "', '" . $_POST['cargo_ID'] . "', '5.0', 10)", $link);
 		$new_ID = mysql_insert_id($link);
-		mysql_query("UPDATE ".SQL."examenes SET cargo_ID = '-" . $new_ID . "' WHERE ID = '" . $new_ID . "' LIMIT 1", $link);
+		mysql_query("UPDATE examenes SET cargo_ID = '-" . $new_ID . "' WHERE pais = '".PAIS."' AND ID = '" . $new_ID . "' LIMIT 1", $link);
 		evento_log('Examen nuevo '.$_POST['titulo']);
 		$refer_url = 'examenes';
 
@@ -449,24 +449,24 @@ case 'examenes':
 			} 
 		}
 		$pregunta = ucfirst($_POST['pregunta']);
-		mysql_query("INSERT INTO ".SQL."examenes_preg (examen_ID, user_ID, time, pregunta, respuestas, tiempo) VALUES ('" . $_GET['ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', '" . $pregunta . "', '" . $respuestas . "', " . $_POST['tiempo'] . ")", $link);
+		mysql_query("INSERT INTO examenes_preg (pais, examen_ID, user_ID, time, pregunta, respuestas, tiempo) VALUES ('".PAIS."', '" . $_GET['ID'] . "', '" . $pol['user_ID'] . "', '" . $date . "', '" . $pregunta . "', '" . $respuestas . "', " . $_POST['tiempo'] . ")", $link);
 		$refer_url = 'examenes/editar/' . $_GET['ID'];
 
 	} elseif (($_GET['b'] == 'eliminar-pregunta') AND ($_GET['ID'] != null) AND ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor'])))) {
-		mysql_query("DELETE FROM ".SQL."examenes_preg WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
+		mysql_query("DELETE FROM examenes_preg WHERE pais = '".PAIS."' AND ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 		$refer_url = 'examenes/editar/' . $_GET['re_ID'];
 
 	} elseif (($_GET['b'] == 'editar-examen') AND ($_GET['ID'] != null) AND (nucleo_acceso($vp['acceso']['examenes_decano'])) AND ($_POST['titulo']) AND ($_POST['descripcion']) AND ($_POST['nota'] >= 0) AND ($_POST['num_preguntas'] >= 0)) {
 		$_POST['descripcion'] = gen_text($_POST['descripcion'], 'plain');
-		mysql_query("UPDATE ".SQL."examenes SET titulo = '".$_POST['titulo']."', descripcion = '".$_POST['descripcion'] . "', nota = '".$_POST['nota']."', num_preguntas = '".$_POST['num_preguntas']."' WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
+		mysql_query("UPDATE examenes SET titulo = '".$_POST['titulo']."', descripcion = '".$_POST['descripcion'] . "', nota = '".$_POST['nota']."', num_preguntas = '".$_POST['num_preguntas']."' WHERE pais = '".PAIS."' AND ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 		evento_log('Examen editado #'.$_GET['ID']);
 		$refer_url = 'examenes/editar/'.$_GET['ID'];
 		
 	} elseif (($_GET['b'] == 'examinar') AND ($_GET['ID'] != null) AND ($_POST['pregs']) AND (($_POST['tlgs'] + 10) > time())) {
 
 		$result = mysql_query("SELECT cargo_ID, titulo, ID, nota, num_preguntas,
-(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas
-FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
+(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas
+FROM examenes WHERE pais = '".PAIS."' AND ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 			$cargo_ID = $r['cargo_ID'];
 			$nota_aprobado = $r['nota'];
@@ -499,7 +499,7 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 
 				if ($nota['nota'] >= $nota_aprobado) { // APROBADO
 					
-					$result2 = mysql_query("SELECT cargo_ID FROM ".SQL."examenes WHERE ID = '".$_GET['ID']."' AND cargo_ID > 0 LIMIT 1", $link);
+					$result2 = mysql_query("SELECT cargo_ID FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND cargo_ID > 0 LIMIT 1", $link);
 					while($r2 = mysql_fetch_array($result2)){
 						$result3 = mysql_query("SELECT cargo_ID FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$r2['cargo_ID']."' AND autocargo = 'true' LIMIT 1", $link);
 						while($r3 = mysql_fetch_array($result3)){ $auto_cargo = $r3['cargo_ID']; }	
@@ -518,11 +518,11 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['ID'] . "' LIMIT 1", $link);
 		}
 	} elseif (($_GET['b'] == 'eliminar-examen') AND ($_POST['ID'] != null) AND (nucleo_acceso($vp['acceso']['examenes_decano']))) { 
 		$result = mysql_query("SELECT cargo_ID,
-(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas
-FROM ".SQL."examenes WHERE ID = '".$_POST['ID']."' LIMIT 1", $link);
+(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas
+FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_POST['ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 			if (($r['cargo_ID'] < 0) AND ($r['num_depreguntas'] == 0)) {
-				mysql_query("DELETE FROM ".SQL."examenes WHERE ID = '".$_POST['ID']."'", $link);
+				mysql_query("DELETE FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_POST['ID']."'", $link);
 				evento_log('Examen eliminado #'.$_POST['ID']);
 				$refer_url = 'cargos';
 			}
@@ -1736,7 +1736,7 @@ FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' AND a
 			if ($r['cargo_num'] == 0) {
 				mysql_query("DELETE FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' LIMIT 1", $link);
 				mysql_query("DELETE FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."'", $link);
-				mysql_query("DELETE FROM ".SQL."examenes WHERE cargo_ID = '".$_GET['cargo_ID']."' LIMIT 1", $link);
+				mysql_query("DELETE FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' LIMIT 1", $link);
 			}
 		}
 		$refer_url = 'cargos/editar';
@@ -1745,7 +1745,7 @@ FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' AND a
 	} elseif (($_GET['b'] == 'crear') AND (nucleo_acceso($vp['acceso']['control_cargos'])) AND (strlen($_POST['nombre']) >= 3) AND (strlen($_POST['nombre']) <= 30) AND (entre($_POST['nivel'], 1, 98)) AND (is_numeric($_POST['cargo_ID']))) {
 		$_POST['nombre'] = strip_tags(trim(substr($_POST['nombre'], 0, 30)));
 		mysql_query("INSERT INTO cargos (cargo_ID, asigna, nombre, pais, nivel) VALUES ('".$_POST['cargo_ID']."', '".$_POST['asigna']."', '".$_POST['nombre']."', '".PAIS."', '".$_POST['nivel']."')", $link);
-		mysql_query("INSERT INTO ".SQL."examenes (titulo, time, cargo_ID, nota) VALUES ('".$_POST['nombre']."', '".$date."', '".$_POST['cargo_ID']."', '0')", $link);
+		mysql_query("INSERT INTO examenes (pais, titulo, time, cargo_ID, nota) VALUES ('".PAIS."', '".$_POST['nombre']."', '".$date."', '".$_POST['cargo_ID']."', '0')", $link);
 		$refer_url = 'cargos/editar';
 
 

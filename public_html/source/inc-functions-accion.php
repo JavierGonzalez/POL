@@ -8,7 +8,7 @@ function actualizar($accion, $user_ID=false) {
 
 		case 'examenes':
 			$data_array = array();
-			$result = mysql_query("SELECT cargo_ID, (SELECT ID FROM ".SQL."examenes WHERE cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_ID FROM cargos_users WHERE user_ID = '".$user_ID."' AND aprobado = 'ok'", $link);
+			$result = mysql_query("SELECT cargo_ID, (SELECT ID FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_ID FROM cargos_users WHERE user_ID = '".$user_ID."' AND aprobado = 'ok'", $link);
 			while($r = mysql_fetch_array($result)){ $data_array[] = $r['examen_ID']; }
 			mysql_query("UPDATE users SET examenes = '".implode(' ', $data_array)."' WHERE ID = '".$user_ID."' LIMIT 1", $link);
 			break;

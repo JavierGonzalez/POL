@@ -65,7 +65,7 @@ Votos emitidos: <b'.($num_votos <= VOTO_CONFIANZA_MAX?'':' style="color:red;"').
 		$cargos_num = 0;
 		$los_cargos_num = 0;
 		$result2 = mysql_query("SELECT cargo_ID, cargo, nota, aprobado, time,
-(SELECT titulo FROM ".SQL."examenes WHERE cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre
+(SELECT titulo FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre
 FROM cargos_users
 WHERE user_ID = '" . $user_ID . "'
 ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);

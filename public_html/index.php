@@ -30,7 +30,15 @@ while($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
 
 $txt_nav = array('Bienvenido a VirtualPol');
 
-$txt .= '<p>VirtualPol es la primera <b>red social democrática</b>.</p>
+$txt .= '
+
+
+<table>
+
+<tr><td valign="top">
+
+
+<p>VirtualPol es la primera <b>red social democrática</b>.</p>
 
 <p><b>En VirtualPol no hay administrador.</b> Se ha automatizado la democracia. Todo se decide con pilares democr&aacute;ticos (1 ciudadano 1 voto). En VirtualPol hay diferentes plataformas independientes entre s&iacute; que comparten este sistema como base.</p>
 
@@ -50,17 +58,17 @@ $txt .= '<p>VirtualPol es la primera <b>red social democrática</b>.</p>
 </ul>
 
 
-<p>VirtualPol es la primera comunidad de Internet sin administrador. Un paso firme hacia la Democracia Directa.</p>';
+<p>VirtualPol es la primera comunidad de Internet sin administrador. Un paso firme hacia la Democracia Directa.</p>
 
 
-$txt .= '<center>
-<table border="0" cellpadding="5" cellspacing="0" width="60%">
-<tr style="color:grey;">
+</td><td valign="top">
+
+<br />
+
+<table border="0" cellpadding="2" cellspacing="0">
+<tr>
 <th colspan="2" align="left">Plataformas</th>
-<th>Población</th>
-<th>Antigüedad</th>
-<th></th>
-<th></th>
+<th colspan="2" align="left">Población</th>
 </tr>';
 
 $result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE dnie = 'true'", $link);
@@ -115,13 +123,6 @@ foreach ($vp['paises'] AS $pais) {
 <td align="right"><b style="font-size:22px;">'.num($pais_pob).'</b></td>
 <td nowrap="nowrap" align="right"><b>'.num($pais_dias).'</b> días</td>
 
-<td style="font-size:13px;">
-<a href="http://'.$pais_low.'.'.DOMAIN.'/elecciones">Elecciones</a><br />
-<a href="http://'.$pais_low.'.'.DOMAIN.'/votacion">Votaciones</a><br />
-<a href="http://'.$pais_low.'.'.DOMAIN.'/chats">Chats</a> <a href="http://'.$pais_low.'.'.DOMAIN.'/foro">Foro</a>
-</td>
-
-<td nowrap="nowrap">'.($pais!='VP'?'':'<img src="'.IMG.'cargos/7.gif" alt="Presidente de '.$pais.'" title="Presidente de '.$pais.'" width="16" height="16" /> '.$pais_presidente.'<br /><img src="'.IMG.'cargos/19.gif" alt="Vicepresidente de '.$pais.'" title="Vicepresidente de '.$pais.'" width="16" height="16" /> '.$pais_vice.'').'</td>
 </tr>';
 
 }
@@ -139,23 +140,22 @@ while($r = mysql_fetch_array($result)){
 }
 
 
-$txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="10"></td></tr>
+$txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="4"></td></tr>
 
 <tr>
-<td colspan="2" rowspan="2" align="right"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=250x100&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB&chf=bg,s,ffffff01|c,s,ffffff01&chco=FF9900|FFBE5E|FFD08A|FFDBA6" alt="Reparto del censo - Simulador Politico" title="Reparto de la poblaci&oacute;n entre plataformas." width="250" height="100" /></td>
-<td align="right" valign="top"><b style="font-size:22px;">'.num($poblacion_num).'</b></td>
-<td colspan="2" valign="top"><b style="font-size:20px;">Ciudadanos</b></td>
-<td colspan="3" align="right"></td>
+<td colspan="2" rowspan="2" align="center" valign="top"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=190x90&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB&chf=bg,s,ffffff01|c,s,ffffff01&chco=FF9900|FFBE5E|FFD08A|FFDBA6" alt="Reparto del censo - Simulador Politico" title="Reparto de la poblaci&oacute;n entre plataformas." width="190" height="90" /></td>
+<td align="right" valign="top"><b style="font-size:20px;">'.num($poblacion_num).'</b></td>
+<td colspan="2" valign="middle"><b>Ciudadanos</b></td>
 </tr>
 
 <tr>
-<td align="right" valign="top"><b style="font-size:18px;">'.num($autentificados).'</b></td>
-<td colspan="2" valign="top">Autentificados</td>
-<td colspan="3" align="right"></td>
+<td align="right" valign="top" colspan="2"><b>'.num($autentificados).'</b> Autentificados</td>
 </tr>
 
 </table>
-</center>';
+
+
+</td></tr></table>';
 
 
 if (!$pol['nick']) {

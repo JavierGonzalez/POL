@@ -60,8 +60,8 @@ if (($_GET['a'] == 'editar') AND (((nucleo_acceso($vp['acceso']['examenes_decano
 	if (!$_GET['b']) { $_GET['b'] = 0; }
 
 	$result = mysql_query("SELECT ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas
-FROM ".SQL."examenes
-WHERE ID = '" . $_GET['b'] . "'
+FROM examenes
+WHERE pais = '".PAIS."' AND ID = '" . $_GET['b'] . "'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 		
@@ -93,11 +93,11 @@ LIMIT 1", $link);
 
 <h2>Preguntas:</h2>
 <ol id="lista">';
-		// ".SQL."examenes_preg 	(ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo)
+
 		$result2 = mysql_query("SELECT ID, examen_ID, user_ID, pregunta, respuestas, tiempo,
-(SELECT nick FROM users WHERE ID = ".SQL."examenes_preg.user_ID LIMIT 1) AS nick
-FROM ".SQL."examenes_preg
-WHERE examen_ID = '" . $_GET['b'] . "'
+(SELECT nick FROM users WHERE ID = examenes_preg.user_ID LIMIT 1) AS nick
+FROM examenes_preg
+WHERE pais = '".PAIS."' AND examen_ID = '" . $_GET['b'] . "'
 ORDER BY time DESC", $link);
 		while($r2 = mysql_fetch_array($result2)){
 			$respuestas = '';
@@ -136,8 +136,8 @@ ORDER BY time DESC", $link);
 </ol>
 </form>';
 			if ((nucleo_acceso($vp['acceso']['examenes_decano'])) AND ($r['cargo_ID'] < 0))  {
-				$result3 = mysql_query("SELECT (SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_depreguntas
-FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
+				$result3 = mysql_query("SELECT (SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas
+FROM examenes WHERE pais = '".PAIS."' AND ID = '" . $_GET['b'] . "' LIMIT 1", $link);
 				while($r3 = mysql_fetch_array($result3)){ 
 					if ($r3['num_depreguntas'] == 0) {
 						$txt .='<hr />
@@ -181,12 +181,10 @@ FROM ".SQL."examenes WHERE ID = '" . $_GET['b'] . "' LIMIT 1", $link);
 <th></th>
 <th>Hace</th>
 </tr>';
-// ".SQL."examenes 		(ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas)
-// ".SQL."examenes_preg 	(ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo) 
 
 	$result = mysql_query("SELECT cargo_ID, user_ID, time, aprobado, cargo, nota, 
-(SELECT titulo FROM ".SQL."examenes WHERE cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre_examen,
-(SELECT ID FROM ".SQL."examenes WHERE cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_ID
+(SELECT titulo FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre_examen,
+(SELECT ID FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_ID
 FROM cargos_users
 WHERE user_ID = '" . $pol['user_ID'] . "'
 ORDER BY aprobado ASC, nota DESC", $link);
@@ -223,11 +221,11 @@ ORDER BY aprobado ASC, nota DESC", $link);
 														// HACER EXAMEN
 
 	$result = mysql_query("SELECT ID, titulo, user_ID, time, cargo_ID, nota, num_preguntas,
-(SELECT time FROM cargos_users WHERE cargo_ID = ".SQL."examenes.cargo_ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS fecha_ultimoexamen,
-(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_preguntas_especificas,
-(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = 0 LIMIT 1) AS num_preguntas_generales
-FROM ".SQL."examenes
-WHERE ID = '" . $_GET['b'] . "'
+(SELECT time FROM cargos_users WHERE cargo_ID = examenes.cargo_ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS fecha_ultimoexamen,
+(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_preguntas_especificas,
+(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = 0 LIMIT 1) AS num_preguntas_generales
+FROM examenes
+WHERE pais = '".PAIS."' AND ID = '" . $_GET['b'] . "'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
@@ -277,12 +275,11 @@ VALUES ('" . $r['cargo_ID'] . "', '".PAIS."', '" . $pol['user_ID'] . "', '" . $d
 <ol>';
 
 
-			// ".SQL."examenes_preg 	(ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo)
 			$examen_tiempo = 0;
 			$respuestas_correctas = array();
 			$result2 = mysql_query("SELECT ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo
-FROM ".SQL."examenes_preg
-WHERE examen_ID = '" . $_GET['b'] . "' OR examen_ID = 0
+FROM examenes_preg
+WHERE pais = '".PAIS."' AND examen_ID = '" . $_GET['b'] . "' OR examen_ID = 0
 ORDER BY examen_ID DESC, RAND() LIMIT " . $r['num_preguntas'], $link);
 			echo mysql_error($link);
 			while($r2 = mysql_fetch_array($result2)){
@@ -369,10 +366,10 @@ window.onload = function(){
 } elseif (($_GET['a']) AND ($_GET['a'] != 0)) {				// VER EXAMEN
 
 	$result = mysql_query("SELECT ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas,
-(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_preguntas_especificas,
-(SELECT time FROM cargos_users WHERE cargo_ID = ".SQL."examenes.cargo_ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS fecha_ultimoexamen
-FROM ".SQL."examenes
-WHERE ID = '" . $_GET['a'] . "'
+(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_preguntas_especificas,
+(SELECT time FROM cargos_users WHERE cargo_ID = examenes.cargo_ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS fecha_ultimoexamen
+FROM examenes
+WHERE pais = '".PAIS."' AND ID = '" . $_GET['a'] . "'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
@@ -417,10 +414,10 @@ LIMIT 1", $link);
 	$txt_nav = array('/examenes'=>'Exámenes');
 	$txt_tab = array('/cargos'=>'Cargos');
 
-	$txt .= '<h1 class="quitar">Examenes: <a href="/examenes/mis-examenes/">Mis examenes</a></h1>';
+	$txt .= '<h1 class="quitar">Examenes: <a href="/examenes/mis-examenes">Mis examenes</a></h1>';
 
 
-	$result = mysql_query("SELECT examen_ID FROM ".SQL."examenes_preg", $link);
+	$result = mysql_query("SELECT examen_ID FROM examenes_preg WHERE pais = '".PAIS."'", $link);
 	while($r = mysql_fetch_array($result)){ 
 		 if ($r['examen_ID'] == 0) { $num_generales++; } else { $num_especificas++; }
 	}
@@ -439,16 +436,14 @@ LIMIT 1", $link);
 <th class="gris">ID</th>
 <th></th>
 </tr>';
-// ".SQL."examenes 		(ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas)
-// ".SQL."examenes_preg 	(ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo) 
 
 
 	$result = mysql_query("SELECT ID, titulo, user_ID, time, cargo_ID, nota, num_preguntas,
-(SELECT COUNT(*) FROM ".SQL."examenes_preg WHERE examen_ID = ".SQL."examenes.ID LIMIT 1) AS num_preguntas_especificas,
-(SELECT COUNT(*) FROM cargos_users WHERE cargo_ID = ".SQL."examenes.cargo_ID AND nota != '') AS examinados,
-(SELECT COUNT(*) FROM cargos_users WHERE cargo_ID = ".SQL."examenes.cargo_ID AND nota != '' AND aprobado = 'ok') AS aprobados
-FROM ".SQL."examenes
-WHERE ID != 0
+(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_preguntas_especificas,
+(SELECT COUNT(*) FROM cargos_users WHERE cargo_ID = examenes.cargo_ID AND nota != '') AS examinados,
+(SELECT COUNT(*) FROM cargos_users WHERE cargo_ID = examenes.cargo_ID AND nota != '' AND aprobado = 'ok') AS aprobados
+FROM examenes
+WHERE pais = '".PAIS."' AND ID != 0
 ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 	while($r = mysql_fetch_array($result)){
 

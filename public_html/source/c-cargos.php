@@ -30,7 +30,7 @@ if ($_GET['a'] == 'organigrama') { // ORGANIGRAMA
 (SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = c.asigna LIMIT 1) AS asigna_nombre,
 (SELECT COUNT(ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = c.asigna AND cargo = 'true') AS asigna_num
 FROM cargos `c`
-WHERE pais = '".PAIS."'", $link);
+WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		if ($r['asigna'] <= 0) { $r['asigna_nombre'] = 'CIUDADANOS'; $r['asigna_num'] = $pol['config']['info_censo']; }
 		$data_cargos[] = cargo_bien($r['asigna_nombre'].' '.$r['asigna_num'].'').'->'.cargo_bien($r['nombre'].' '.$r['cargo_num'].'');

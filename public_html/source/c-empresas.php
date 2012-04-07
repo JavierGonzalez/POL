@@ -148,7 +148,7 @@ WHERE pais = '".PAIS."' AND tipo = 'empresas'
 ORDER BY orden ASC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$pv_num = 0;
-		$result2 = mysql_query("SELECT pv FROM ".SQL."empresas WHERE cat_ID = '" . $r['ID'] . "'", $link);
+		$result2 = mysql_query("SELECT pv FROM ".SQL."empresas WHERE pais = '".PAIS."' AND cat_ID = '" . $r['ID'] . "'", $link);
 		while($r2 = mysql_fetch_array($result2)) { $pv_num += $r2['pv']; }
 
 		$txt .= '<tr class="amarillo"><td><a href="/empresas/' . $r['url'] . '/" style="font-size:19px;"><b>' . $r['nombre'] . '</b></a></td><td align="right"><b>'.$r['num'].'</b> empresas</td><td align="right"><b>'.$pv_num.'</b> visitas</td></tr>';

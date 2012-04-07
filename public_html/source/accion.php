@@ -268,7 +268,7 @@ LIMIT 1", $link);
 		}
 
 		mysql_query("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'", $link);
-		mysql_query("UPDATE users SET estado = 'turista', pais = 'ninguno', nivel = '1', cargo = '0', nota = '0.0', pols = '".$pols."', rechazo_last = '".$date."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("UPDATE users SET estado = 'turista', pais = 'ninguno', nivel = '1', cargo = '0', cargos = '', examenes = '', nota = '0.0', pols = '".$pols."', rechazo_last = '".$date."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '".$user_ID."'", $link);
 		mysql_query("DELETE FROM ".SQL."partidos WHERE ID_presidente = '".$user_ID."'", $link);
 

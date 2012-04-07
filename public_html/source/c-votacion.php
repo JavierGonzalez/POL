@@ -227,7 +227,8 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 	}
 
 	$txt .= '</select><br />
-<input type="text" name="acceso_cfg_votar" size="18" maxlength="500" id="acceso_cfg_votar_var" value="'.$edit['acceso_cfg_votar'].'" /></p>
+<input type="text" name="acceso_cfg_votar" size="18" maxlength="500" id="acceso_cfg_votar_var" value="'.$edit['acceso_cfg_votar'].'" /><br />
+'.ucfirst(verbalizar_acceso($edit['acceso_votar'], $edit['acceso_cfg_votar'])).'</p>
 		
 <p id="acceso_ver" class="azul"><b>Acceso ver votación:</b><br />
 <select name="acceso_ver">';
@@ -239,7 +240,9 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 	}
 
 	$txt .= '</select><br />
-<input type="text" name="acceso_cfg_ver" size="18" maxlength="500" id="acceso_cfg_ver_var" value="'.$edit['acceso_cfg_ver'].'" /></p>
+<input type="text" name="acceso_cfg_ver" size="18" maxlength="500" id="acceso_cfg_ver_var" value="'.$edit['acceso_cfg_ver'].'" /><br />
+'.ucfirst(verbalizar_acceso($edit['acceso_ver'], $edit['acceso_cfg_ver'])).'
+</p>
 
 </td></tr></table>
 
@@ -249,7 +252,7 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 </div>
 
 <p><b>Descripción</b>:<br />
-<textarea name="descripcion" style="color: green; font-weight: bold; width: 570px; height: 250px;">
+<textarea name="descripcion" style="width:600px;height:260px;">
 '.strip_tags($edit['descripcion']).'
 </textarea></p>
 
@@ -377,7 +380,7 @@ LIMIT 1", $link);
 
 		if ($r['estado'] == 'ok') { 
 			$txt_nav['/votacion/'.$r['ID']] = 'En curso: '.num($votos_total).' votos';
-			$txt_tab = array('/votacion'=>'Ver otros resultados');
+			$txt_tab = array('/votacion/'.$r['ID']=>'Votación', '/votacion/'.$r['ID'].'/info'=>'Más información');
 
 			$tiempo_queda =  '<span style="color:blue;">Quedan '.timer($time_expire, true).'.</span>'; 
 		} elseif ($r['estado'] == 'borrador') {
@@ -387,7 +390,7 @@ LIMIT 1", $link);
 			$tiempo_queda =  '<span style="color:red;">Borrador <span style="font-weight:normal;">(Previsualización de votación)</span></span> ';
 		} else { 
 			$txt_nav['/votacion/'.$r['ID']] = 'Finalizado: '.num($votos_total).' votos';
-			$txt_tab = array('/votacion/'.$r['ID']=>'Resultado', '/votacion/'.$r['ID'].'/info'=>'Más información');
+			$txt_tab = array('/votacion/'.$r['ID']=>'Votación', '/votacion/'.$r['ID'].'/info'=>'Más información');
 			if (isset($pol['user_ID'])) { $txt_tab['/votacion/'.$r['ID'].'/verificacion'] = 'Verificación'; }
 			$tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; 
 		}
@@ -395,61 +398,76 @@ LIMIT 1", $link);
 
 		if ($_GET['b'] == 'info') {
 			
-			$txt .= '<table border="0" width="100%"><tr><td valign="top">';
-			
-			
-			$result2 = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
-			while($r2 = mysql_fetch_array($result2)) { $comentarios_num = $r2['num']; }
+			$txt .= '<h2>Información sobre esta votación:</h2>
 
-			$txt .= '<h2 style="margin-top:18px;">Comentarios anónimos ('.($r['estado']=='end'?$comentarios_num.' comentarios, '.num(($comentarios_num*100)/$votos_total, 1).'%':'*').')</h2>';
-			if (nucleo_acceso('ciudadanos_global')) {
-				if ($r['estado'] == 'end') { 
-					$result2 = mysql_query("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
-					while($r2 = mysql_fetch_array($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
-				} else { $txt .= '<p>Los comentarios estarán visibles al finalizar la votación.</p>'; }
-			} else { $txt .= '<p>Para ver los comentarios debes ser ciudadano.</p>'; }
+<table border="0">
 
-
-			if ((($r['privacidad'] == 'false') AND ($r['estado'] == 'end')) OR ($r['estado'] != 'end')) {
-				$txt .= '<h2 style="margin-top:18px;">Registro de votos</h2>
-
-<table border="0" cellpadding="3">
 <tr>
-<th>Quien</th>
-<th>Voto</th>
-<th>Autentificado</th>
-</tr>';
-				$orden = 0;
-				$result2 = mysql_query("SELECT user_ID, voto, validez, autentificado, (SELECT nick FROM users WHERE ID = user_ID LIMIT 1) AS nick FROM votacion_votos WHERE ref_ID = '".$r['ID']."' ORDER BY RAND()", $link);
-				while($r2 = mysql_fetch_array($result2)) {
-					$orden++;
+<td align="right">Título/Pregunta:</td>
+<td><a href="/votacion/'.$r['ID'].'"><b>'.$r['pregunta'].'</b></a></td>
+</tr>
 
-					$txt .= '<tr>
-<td>'.($r2['user_ID']==0?'*':crear_link($r2['nick'])).'</td>
-<td nowrap="nowrap"><b>'.($r['privacidad']=='false'&&$r['estado']=='end'?($r['tipo_voto']=='estandar'?$respuestas[$r2['voto']]:$r2['voto']):'*').'</b></td>
-<td>'.($r2['autentificado']=='true'?'<span style="color:blue;"><b>SI</b></span>':'<span style="color:grey;">NO</span>').'</td>
-</tr>';
-				}
-				$txt .= '<tr><td colspan="4" nowrap="nowrap">Votos computados: <b>'.$orden.'</b> (Contador: '.$r['num'].')</td></tr></table>';
-			}
+<tr>
+<td align="right">Estado de la votación:</td>
+<td><b>'.($r['estado']=='ok'?'En curso... quedan '.timer($r['time_expire']):'Finalizada, hace'.timer($r['time_expire'])).'</b> ('.num($r['num']).' votos)</td>
+</tr>
 
-	
-			$txt .= '
-</td>
-<td valign="top" width="350">
 
-<h2>Propiedades de la votación:</h2>
+<tr>
+<td align="right">Creado o aprobado por:</td>
+<td>'.($r['user_ID']==0?'<b>Sistema VirtualPol</b> (automático, sin intervención humana)':'<b>'.crear_link($r['nick']).'</b>').'</td>
+</tr>
+
+<tr>
+<td align="right">Tipo de votación:</td>
+<td><b>'.ucfirst($r['tipo']).'</b> '.($r['tipo']=='sondeo'?'(No vinculante, informativo)':'(Vinculante)').'</td>
+</tr>
+
+<tr>
+<td align="right">Tipo de voto:</td>
+<td><b>'.ucfirst((substr($r['tipo_voto'], 1, 6)=='puntos'?'preferencial, repartir '.substr($r['tipo_voto'], 0, 1).' puntos':$r['tipo_voto'])).'</b> ('.($r['privacidad']=='true'?'voto secreto':'voto público, no secreto').($r['aleatorio']=='true'?', orden de opciones aleatorio':'').')</td>
+</tr>
+
+<tr>
+<td align="right">Pueden votar:</td>
+<td><b>'.ucfirst(verbalizar_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])).'</b></td>
+</tr>
+
+<tr>
+<td align="right">Pueden ver la votación:</td>
+<td><b>'.ucfirst(verbalizar_acceso($r['acceso_ver'], $r['acceso_cfg_ver'])).'</b></td>
+</tr>
+
+<tr>
+<td align="right">Fecha creación:</td>
+<td><b>'.$r['time'].'</b> ('.timer($r['time'], false, true).')</td>
+</tr>
+
+<tr>
+<td align="right">Fecha finalización:</td>
+<td><b>'.$r['time_expire'].'</b> ('.timer($r['time_expire'], false, true).')</td>
+</tr>
+
+<tr>
+<td align="right">Duración:</td>
+<td><b>'.round($r['duracion']/24/60/60).' días</b></td>
+</tr>
+
+</table>
+
+
+<br /><h3>Propiedades de la votación:</h3>
 <ul>';
 
 			if ($r['privacidad'] == 'true') { // Privacidad SI, voto secreto.
 				$txt .= '
 <li><b title="Accuracy: el computo de los votos es exacto.">Precisión:</b> Si, el computo de los votos es exacto.</b>
 
-<li><b title="Democracy: solo pueden votar personas autorizadas y una sola vez.">Democracia:</b> Autentificación solida mediante DNIe (y otros certificados) opcional y avanzado sistema de vigilancia del censo de eficacia elevada.</li>
+<li><b title="Democracy: solo pueden votar personas autorizadas y una sola vez.">Democracia:</b> Autentificación solida mediante DNIe (y otros certificados) opcional, avanzado sistema de vigilancia del censo de eficacia elevada, con supervisores del censo electos por democracia directa (voto de confianza) cada 7 días.</li>
 
 <li><b title="Privacy: el sentido del voto es secreto.">Privacidad:</b> Si, siempre que el servidor no se comprometa mientras la votación está activa.</li>
 
-<li><b title="Veriability: capacidad publica de comprobar el recuento de votos.">Verificación:</b> Muy alta. Se permite verificar el sentido del propio voto mientras la votación está activa, se hace publico CUANDO vota QUIEN y hay un sistema de comprobantes que permite verificar el sentido del voto.</li>
+<li><b title="Veriability: capacidad publica de comprobar el recuento de votos.">Verificación:</b> Muy alta. Se permite verificar el sentido del propio voto mientras la votación está activa, se hace publico CUANDO vota QUIEN y hay un sistema de comprobantes que permite verificar el sentido del voto en el escrutinio publico.</li>
 
 <li><b title="Posibilidad de modificar el sentido del voto propio en una votación activa.">Rectificación</b> Si.</li>';
 			} else { // Privacidad NO, voto publico, verificabilidad
@@ -465,7 +483,22 @@ LIMIT 1", $link);
 <li><b title="Posibilidad de modificar el sentido del voto propio en una votación activa.">Rectificación</b> Si.</li>';
 			}
 
-			$txt .= '</ul></td></tr></table>';
+
+
+			
+
+			$result2 = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
+			while($r2 = mysql_fetch_array($result2)) { $comentarios_num = $r2['num']; }
+
+			$txt .= '<br /><h3>Comentarios anónimos ('.($r['estado']=='end'?$comentarios_num.' comentarios, '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</h3>';
+			
+			if (nucleo_acceso('ciudadanos_global')) {
+				if ($r['estado'] == 'end') { 
+					$result2 = mysql_query("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
+					while($r2 = mysql_fetch_array($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
+				} else { $txt .= '<p>Los comentarios estarán visibles al finalizar la votación.</p>'; }
+			} else { $txt .= '<p>Para ver los comentarios debes ser ciudadano.</p>'; }
+	
 
 		} elseif ($_GET['b'] == 'verificacion') {
 
@@ -498,7 +531,7 @@ LIMIT 1", $link);
 FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".($r['tipo_voto']=='estandar'?" ORDER BY voto ASC":""), $link);
 				while($r2 = mysql_fetch_array($result2)) { 
 					$contador_votos++; 
-					if ($r2['user_ID'] != 0) { $txt_votantes[] = $r2['nick']; }
+					if ($r2['user_ID'] != 0) { $txt_votantes[] = ($r2['nick']?$r2['nick']:'&dagger;'); }
 					$txt .= '<tr id="'.$r2['comprobante'].'">
 <td align="right">'.($r['tipo_voto']=='estandar'?++$contador[$r2['voto']]:++$contador).'.</td>
 <td nowrap>'.($r['tipo_voto']=='estandar'?'<b>'.$respuestas[$r2['voto']].'</b>':$r2['voto']).'</td>
@@ -565,7 +598,6 @@ Inicio: <em>' . $r['time'] . '</em><br />
 Fin: <em>' . $r['time_expire'] . '</em><br />
 '.($r['votos_expire']!=0?'Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.<br />':'').'
 '.($r['tipo_voto']!='estandar'?($r['tipo_voto']=='multiple'?'<b>Votación múltiple</b>':'<b>Votación preferencial</b> ('.$r['tipo_voto'].').').'<br />':'').'
-<a href="/votacion/'.$r['ID'].'/info#ver_info">Más información</a>.
 </span>';
 
 
@@ -852,7 +884,7 @@ ORDER BY siglas ASC", $link);
 
 	$txt_title = 'Votaciones';
 	$txt_nav = array('/votacion'=>'Votaciones');
-	$txt_tab = array('/votacion/borradores'=>'Borradores ('.$borradores_num.')', '/votacion/crear'=>'Crear votación');
+	$txt_tab = array('/elecciones'=>'Elecciones', '/votacion/borradores'=>'Borradores ('.$borradores_num.')', '/votacion/crear'=>'Crear votación');
 	
 	$txt .= '
 <span style="float:right;text-align:right;">
@@ -864,7 +896,7 @@ ORDER BY siglas ASC", $link);
 <th></th>
 <th>Votos</th>
 <th></th>
-<th>Finaliza en...</th>
+<th colspan="3">Finaliza en...</th>
 </tr>';
 	$mostrar_separacion = true;
 	
@@ -872,7 +904,7 @@ ORDER BY siglas ASC", $link);
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS ha_votado
 FROM votacion
 WHERE estado = 'ok' AND pais = '".PAIS."'
-ORDER BY time_expire DESC
+ORDER BY time_expire ASC
 LIMIT 500", $link);
 	while($r = mysql_fetch_array($result)) {
 		$time_expire = strtotime($r['time_expire']);

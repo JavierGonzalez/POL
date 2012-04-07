@@ -74,7 +74,7 @@ LIMIT 1000", $link);
 <td colspan="7">';
 
 if ($r['estado'] == 'end') {
-	$txt .= '<table border="0"><tr><td valign="top"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.round(($r['num']*100)/$r['num_censo'], 2).','.round(100-(($r['num']*100)/$r['num_censo']), 2).'&chs=300x180&chds=a&chl=Participación|Abstención&chf=bg,s,ffffff01|c,s,ffffff01&chp=3.14" alt="Participación" /></td>';
+	$txt .= '<table border="0"><tr><td valign="top"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.round(($r['num']*100)/$r['num_censo'], 2).','.round(100-(($r['num']*100)/$r['num_censo']), 2).'&chs=300x160&chds=a&chl=Participación|Abstención&chf=bg,s,ffffff01|c,s,ffffff01&chp=3.14" alt="Participación" /></td>';
 	
 	$txt .= '<td valign="top"><table border="0"><tr><th></th><th>Candidato</th><th>Puntos</th></tr>';
 	$cnum = 0;
@@ -84,7 +84,7 @@ if ($r['estado'] == 'end') {
 		$d = explode('.', $d);
 		if ($d[2] != 'B') {
 			$cnum++;
-			$txt .= '<tr'.($cnum<=$elecciones_electos?' style="font-weight:bold;"':'').'><td>'.($d[2]&&$d[2]!='COORDINACION'?$d[2]:'').'</td><td>'.crear_link($d[0]).'</td><td align="right">'.$d[1].'</td></tr>';
+			$txt .= '<tr'.($cnum<=$elecciones_electos?' style="font-weight:bold;"':'').'><td align="right">'.($d[2]&&$d[2]!='COORDINACION'?$d[2]:'').'</td><td>'.crear_link($d[0]).'</td><td align="right">'.$d[1].'</td></tr>';
 			$escrutinio_d[] = $d[1];
 		}
 	}

@@ -32,21 +32,21 @@ function nucleo_acceso($tipo, $valor='') {
 function verbalizar_acceso($tipo, $valor='') {
 	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
 	switch ($tipo) { // ¿Quien tiene acceso?
-		case 'internet': case 'anonimos': $t = 'todo el mundo'; break;
+		case 'internet': case 'anonimos': $t = 'todo el mundo (Internet)'; break;
 		case 'ciudadanos_global': $t = 'todos los ciudadanos de VirtualPol'; break;
-		case 'ciudadanos': $t = ($valor==''?'todos los ciudadanos de esta plataforma':'todos los ciudadanos de esta plataforma y '.$valor); break;
+		case 'ciudadanos': $t = 'todos los ciudadanos de '.($valor==''?'la plataforma '.PAIS:' las plataformas: '.$valor); break;
 		case 'excluir': $t = 'todos los ciudadanos excepto: '.$valor; break;
 		case 'privado': $t = 'los ciudadanos: '.$valor; break;
-		case 'afiliado': $t = 'ciudadanos afiliados al <span title="ID: '.$valor.'">partido</span> (<a href="/partidos">Ver partidos</a>)'; break;
+		case 'afiliado': $t = 'ciudadanos de '.PAIS.' afiliados al partido: #'.$valor.' (<a href="/partidos">Ver partidos</a>)'; break;
 		case 'confianza': $t = 'ciudadanos con confianza mayor o igual a '.confianza($valor).' (<a href="/censo/confianza">Ver confianza</a>)'; break;
-		case 'nivel': $t = 'ciudadanos con nivel mayor o igual a '.$valor.' (<a href="/cargos">Ver cargos</a>)'; break;
-		case 'cargo': $t = 'ciudadanos con cargo: '.$valor.' (<a href="/cargos">Ver cargos</a>)'; break;
-		case 'grupos': $t = 'ciudadanos afiliados al grupo: '.$valor.' (<a href="/grupos">Ver grupos</a>)'; break;
-		case 'examenes': $t = 'ciudadanos con los siguientes exámenes aprobados: '.$valor.' (<a href="/examenes">Ver exámenes</a>)'; break;
-		case 'monedas': $t = 'ciudadanos con al menos '.$valor.' monedas'; break;
+		case 'nivel': $t = 'ciudadanos de '.PAIS.' con nivel '.$valor.' o mayor (<a href="/cargos">Ver cargos</a>)'; break;
+		case 'cargo': $t = 'ciudadanos de '.PAIS.' con cargo: '.$valor.' (<a href="/cargos">Ver cargos</a>)'; break;
+		case 'grupos': $t = 'ciudadanos de '.PAIS.' afiliados al grupo: '.$valor.' (<a href="/grupos">Ver grupos</a>)'; break;
+		case 'examenes': $t = 'ciudadanos de '.PAIS.' con los exámenes aprobados: '.$valor.' (<a href="/examenes">Ver exámenes</a>)'; break;
+		case 'monedas': $t = 'ciudadanos de '.PAIS.' con al menos '.$valor.' monedas'; break;
 		case 'autentificados': $t = 'ciudadanos autentificados'; break;
 		case 'supervisores_censo': $t = 'Supervisores del Censo'; break;
-		case 'antiguedad': $t = 'ciudadanos con al menos '.$valor.' dias de antig&uuml;edad';  break;
+		case 'antiguedad': $t = 'ciudadanos con al menos '.$valor.' dias de antigüedad';  break;
 	}
 	return $t;
 }
@@ -130,9 +130,9 @@ function pass_key($t, $type='sha') {
 	}
 }
 
-function timer($t, $es_time=false) {
-	if ($es_time == true) { return '<span class="timer" value="'.$t.'"></span>'; } 
-	else { return '<span class="timer" value="'.strtotime($t).'" title="'.$t.'"></span>'; } 
+function timer($t, $es_timestamp=false, $pre=null) {
+	if ($pre == true) { if (time() > strtotime($t)) { $pre = 'Hace '; } else { $pre = 'En '; } }
+	return $pre.'<span class="timer" value="'.($es_timestamp==true?$t:strtotime($t)).'" title="'.$t.'"></span>'; 
 }
 
 function ocultar_IP($IP, $tipo='IP') { 

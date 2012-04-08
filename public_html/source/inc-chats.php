@@ -12,9 +12,8 @@ if ($_GET['b'] == 'e') { $externo = true; } else { $externo = false; }
 
 if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['pol']['nick']; }
 
-
-if(  $db->consulta("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1")  >  0  ){
-	$r=$db->cursor();
+$result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
+while ($r = mysql_fetch_array($result)) { 
 	
 	$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo']);
 	$txt_tab = array('/chats/'.$r['url'].'/log'=>'Log', '/chats/'.$r['url'].'/opciones'=>'Opciones');

@@ -3,9 +3,8 @@ include('inc-login.php');
 include('inc-functions-accion.php');
 
 // load config full
-while($r=$db->sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'")){
-	$pol['config'][$r['dato']] = $r['valor'];
-}
+$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
+while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 if (
@@ -100,22 +99,26 @@ case 'chat':
 		mysql_query("INSERT INTO chats (pais, url, titulo, user_ID, admin, fecha_creacion, fecha_last, dias_expira) 
 VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '".$pol['nick']."', '".$date."', '".$date."', '".$pol['config']['chat_diasexpira']."')", $link);
 		if (ECONOMIA) {
-			if(  $r = $db->sql("SELECT chat_ID FROM chats WHERE url = '".$url."' AND user_ID = '".$pol['user_ID']."' AND pais = '".$_POST['pais']."' LIMIT 1") ){
+			$result = mysql_query("SELECT chat_ID FROM chats WHERE url = '".$url."' AND user_ID = '".$pol['user_ID']."' AND pais = '".$_POST['pais']."' LIMIT 1", $link);
+			while($r = mysql_fetch_array($result)) {
 				pols_transferir($pol['config']['pols_crearchat'], $pol['user_ID'], '-1', 'Solicitud chat: '.$nombre);
 			}
 		}
 		$refer_url = 'chats';
 	} elseif (($_GET['b'] == 'cambiarfundador') AND ($_POST['admin']) AND ($_POST['chat_ID'])) {
-		if( $r = $db->sql("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1")  ){
-			$refer_url = 'chats/'.$r['url'].'/opciones';
+		
+		$result = mysql_query("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) {
 			if ((nucleo_acceso('privado', $r['admin'])) OR ($r['user_ID'] == $pol['user_ID'])) {
-				$db->sql("UPDATE chats SET admin = '".strtolower(strip_tags($_POST['admin']))."' WHERE chat_ID = '".$_POST['chat_ID']."' LIMIT 1");
+				mysql_query("UPDATE chats SET admin = '".strtolower(strip_tags($_POST['admin']))."' WHERE chat_ID = '".$_POST['chat_ID']."' LIMIT 1", $link);
 			}
+			$refer_url = 'chats/'.$r['url'].'/opciones';
 		}
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {
 
 		$result = mysql_query("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) {
+			
 			if ((nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))) {
 				if ($_POST['acceso_cfg_leer']) { 
 					$_POST['acceso_cfg_leer'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_leer']))); 
@@ -127,14 +130,14 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 				if ($_POST['acceso_cfg_escribir_ex']) { 
 					$_POST['acceso_cfg_escribir_ex'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir_ex'])));
 				}
-				$db->sql("UPDATE chats 
+				mysql_query("UPDATE chats 
 SET acceso_leer = '".$_POST['acceso_leer']."', 
 acceso_escribir = '".$_POST['acceso_escribir']."', 
 acceso_escribir_ex = '".$_POST['acceso_escribir_ex']."', 
 acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', 
 acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."',
 acceso_cfg_escribir_ex = '".$_POST['acceso_cfg_escribir_ex']."'
-WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' LIMIT 1");
+WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' LIMIT 1", $link);
 			}
 		}
 		$refer_url = 'chats/'.$_POST['chat_nom'].'/opciones';

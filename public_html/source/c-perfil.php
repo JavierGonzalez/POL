@@ -315,7 +315,7 @@ $txt .= 'Expira '.($r['dnie']=='true'?'<b>Nunca</b> (Autentificado)':'<b>tras '.
 
 
 
-'.(nucleo_acceso('ciudadanos_global')&&is_numeric($r['x'])?'<a href="/geolocalizacion"><img width="300" height="160" class="static_map" style="border:1px solid #AAA;" src="http://maps.google.com/maps/api/staticmap?
+'.(nucleo_acceso('ciudadanos_global')&&is_numeric($r['x'])?'<a href="http://maps.google.es/maps?q='.round($r['y'],2).','.round($r['x'],2).'&hl=es&t=m" target="_blank"><img width="300" height="160" class="static_map" style="border:1px solid #AAA;" src="http://maps.google.com/maps/api/staticmap?
 center='.$r['y'].','.$r['x'].'&amp;zoom=13&amp;size=300x160&amp;maptype=roadmap&amp;sensor=false&amp;markers=icon:'.IMG.'ico/marker.png|'.$r['y'].','.$r['x'].'" alt="Geoposición" /></a>':'').'
 
 

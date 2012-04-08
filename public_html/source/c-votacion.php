@@ -397,7 +397,8 @@ LIMIT 1", $link);
 
 
 		if ($_GET['b'] == 'info') {
-			
+			$time_expire = strtotime($r['time_expire']);
+			$time = strtotime($r['time']);
 			$txt .= '<h2>Información sobre esta votación:</h2>
 
 <table border="0">
@@ -450,38 +451,38 @@ LIMIT 1", $link);
 
 <tr>
 <td align="right">Duración:</td>
-<td><b>'.round($r['duracion']/24/60/60).' días</b></td>
+<td><b>'.round($r['duracion']/24/60/60).' días</b>'.($r['estado']=='ok'?gbarra(((time()-$time)*100)/($time_expire-$time)):'').'</td>
 </tr>
 
 </table>
 
 
 <br /><h3>Propiedades de la votación:</h3>
-<ul>';
+<ul>
 
-			if ($r['privacidad'] == 'true') { // Privacidad SI, voto secreto.
-				$txt .= '
-<li><b title="Accuracy: el computo de los votos es exacto.">Precisión:</b> Si, el computo de los votos es exacto.</b>
+<li><b title="Accuracy: el computo de los votos es exacto.">Precisión:</b> Si, el computo de los votos es exacto.</b></li>
 
-<li><b title="Democracy: solo pueden votar personas autorizadas y una sola vez.">Democracia:</b> Autentificación solida mediante DNIe (y otros certificados) opcional, avanzado sistema de vigilancia del censo de eficacia elevada, con supervisores del censo electos por democracia directa (voto de confianza) cada 7 días.</li>
+<li><b title="Consistency: los resultados son coherentes y estables en el tiempo.">Consistencia:</b> Si, el resultado es coherente y estable en el tiempo. Una vez finalizadas no se puede eliminar o modificar las votaciones.</b></li>
 
-<li><b title="Privacy: el sentido del voto es secreto.">Privacidad:</b> Si, siempre que el servidor no se comprometa mientras la votación está activa.</li>
+<li><b title="Democracy: solo pueden votar personas autorizadas y una sola vez.">Democracia:</b> Autentificación solida mediante DNIe (y otros certificados) opcional, avanzado sistema de vigilancia del censo de eficacia elevada, con supervisores del censo electos por democracia directa (voto de confianza, cada 7 días).</li>
 
-<li><b title="Veriability: capacidad publica de comprobar el recuento de votos.">Verificación:</b> Muy alta. Se permite verificar el sentido del propio voto mientras la votación está activa, se hace publico CUANDO vota QUIEN y hay un sistema de comprobantes que permite verificar el sentido del voto en el escrutinio publico.</li>
+'.($r['privacidad']=='true'?'
 
-<li><b title="Posibilidad de modificar el sentido del voto propio en una votación activa.">Rectificación</b> Si.</li>';
-			} else { // Privacidad NO, voto publico, verificabilidad
-				$txt .= '
-<li><b title="Accuracy: el computo de los votos es exacto.">Precisión:</b> Si, el computo de los votos es exacto.</b>
+<li><b title="Privacy: el sentido del voto es secreto.">Privacidad:</b> Si, siempre que el servidor no se comprometa mientras la votación está activa. Al finalizar la votación se rompe la relación Usuario-Voto de forma definitiva e irreversible.</li>
 
-<li><b title="Democracy: solo pueden votar personas autorizadas y una sola vez.">Democracia:</b> Autentificación solida mediante DNIe (y otros certificados) opcional y avanzado sistema de vigilancia del censo de eficacia elevada.</li>
+<li><b title="Veriability: capacidad publica de comprobar el recuento de votos.">Verificación:</b> Muy alta, con diferentes medidas de transparencia. 1. Se permite verificar el sentido del propio voto mientras la votación está activa. 2. Se hace publico CUANDO vota QUIEN. 3. Sistema de comprobantes que permite verificar -más allá de toda duda- el sentido del voto en el escrutinio público y completo.</li>
 
-<li><b title="Privacy: el sentido del voto es secreto.">Privacidad:</b> No, el voto es público.</li>
+':'
 
-<li><b title="Veriability: capacidad publica de comprobar el recuento de votos.">Verificación:</b> Si, verificabilidad universal.</li>
+<li><b title="Privacy: el sentido del voto es secreto.">Privacidad:</b> NO, el voto es público. Cualquiera puede ver QUÉ vota QUIEN.</li>
 
-<li><b title="Posibilidad de modificar el sentido del voto propio en una votación activa.">Rectificación</b> Si.</li>';
-			}
+<li><b title="Veriability: capacidad pública de comprobar el recuento de votos.">Verificación:</b> Si. Esta votación tiene verificabilidad universal ya que el voto no es secreto.</li>
+
+').'
+
+<li><b title="Posibilidad de modificar el sentido del voto propio en una votación activa.">Rectificación</b> Si.</li>
+
+</ul>';
 
 
 
@@ -506,8 +507,17 @@ LIMIT 1", $link);
 
 <p>La información presentada a continuación es la tabla de comprobantes que muestra el escrutinio completo y la relación Voto-Comprobante de esta votación. Esto permite a cualquier votante comprobar el sentido de su voto ejercido más allá de toda duda. Todo ello sin romper el secreto de voto.</p>
 
-'.($r['tipo_voto']!='estandar'?'<p><em>* El tipo de voto de esta votación es múltiple o preferencial. Por razones tecnicas -provisionalmente- se muestra el campo "voto" en bruto.'.($r['tipo_voto']=='multiple'?' 0=En Blanco, 1=SI y 2=NO.':'').'</em></p>':'').'
+'.($r['tipo_voto']!='estandar'?'<p><em>* El tipo de voto de esta votación es múltiple o preferencial. Por razones tecnicas -provisionalmente- se muestra el campo "voto" en bruto.'.($r['tipo_voto']=='multiple'?' 0=En Blanco, 1=SI y 2=NO.':'').'</em></p>':'');
 
+if (substr($r['tipo_voto'], 1, 6) == 'puntos') {
+	$txt .= '<p>Opciones de voto: ';
+	foreach ($respuestas AS $ID => $opcion) {
+		if ($opcion) { $txt .= $ID.'='.$opcion.', '; }
+	}
+	$txt .= '</p>';
+}
+
+$txt .= '
 <style>
 #tabla_comprobantes td { padding:0 4px; }
 #tabla_comprobantes .tcb { color:blue; }
@@ -591,7 +601,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 
 			// Muestra información de votación (a la derecha)
-			$txt .= '<span style="float:right;text-align:right;">
+/*			$txt .= '<span style="float:right;text-align:right;">
 '.(isset($r['nick'])?'Creador '.crear_link($r['nick']).'. ':'').'Duración <b>'.$duracion.'</b>.<br />
 Acceso de voto: <acronym title="'.$r['acceso_cfg_votar'].'">'.ucfirst(str_replace('_', ' ', $r['acceso_votar'])).'</acronym>'.($r['acceso_ver']!='anonimos'?' (privada)':'').'.<br /> 
 Inicio: <em>' . $r['time'] . '</em><br /> 
@@ -599,6 +609,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 '.($r['votos_expire']!=0?'Finaliza tras  <b>'.$r['votos_expire'].'</b> votos.<br />':'').'
 '.($r['tipo_voto']!='estandar'?($r['tipo_voto']=='multiple'?'<b>Votación múltiple</b>':'<b>Votación preferencial</b> ('.$r['tipo_voto'].').').'<br />':'').'
 </span>';
+*/
 
 
 
@@ -974,7 +985,7 @@ LIMIT 500", $link);
 		$time_expire = strtotime($r['time_expire']);
 		
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
-			$txt .= '<tr class="v_'.$r['tipo'].($r['acceso_ver']!='anonimos'?' v_privadas':'').'"'.(in_array($r['tipo'], array('referendum', 'parlamento', 'sondeo'))&&$r['acceso_ver']=='anonimos'?'':' style="display:none;"').'>
+			$txt .= '<tr class="v_'.$r['tipo'].($r['acceso_ver']!='anonimos'?' v_privadas':'').'"'.(in_array($r['tipo'], array('referendum', 'parlamento', 'sondeo', 'elecciones'))&&$r['acceso_ver']=='anonimos'?'':' style="display:none;"').'>
 <td width="100"'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
 <td><a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').($r['acceso_ver']!='anonimos'?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>

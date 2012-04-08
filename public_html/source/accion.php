@@ -114,8 +114,8 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 		}
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['chat_ID'])) {
 
-		if( $r = $db->sql("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1") ){
-			$r=$db->cursor();
+		$result = mysql_query("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)) {
 			if ((nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))) {
 				if ($_POST['acceso_cfg_leer']) { 
 					$_POST['acceso_cfg_leer'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_leer']))); 

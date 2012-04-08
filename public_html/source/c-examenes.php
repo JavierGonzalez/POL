@@ -38,18 +38,6 @@ function shuffle_assoc($input_array){
 	return $return_array;
 }
 
-function shuffle_assoc_OLD(&$array) {
-	if (count($array)>1) {
-		$keys = array_rand($array, count($array));
-
-		foreach($keys as $key)
-		$new[$key] = $array[$key];
-
-		$array = $new;
-	}
-	return true;
-} 
-
 // carga config
 $result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
 while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
@@ -279,7 +267,7 @@ VALUES ('" . $r['cargo_ID'] . "', '".PAIS."', '" . $pol['user_ID'] . "', '" . $d
 			$respuestas_correctas = array();
 			$result2 = mysql_query("SELECT ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo
 FROM examenes_preg
-WHERE pais = '".PAIS."' AND examen_ID = '" . $_GET['b'] . "' OR examen_ID = 0
+WHERE pais = '".PAIS."' AND (examen_ID = '" . $_GET['b'] . "' OR examen_ID = 0)
 ORDER BY examen_ID DESC, RAND() LIMIT " . $r['num_preguntas'], $link);
 			echo mysql_error($link);
 			while($r2 = mysql_fetch_array($result2)){

@@ -354,7 +354,7 @@ mysql_query("DELETE FROM notificaciones WHERE time < '".$margen_10dias."'", $lin
 
 
 /* Tramos de expiración:
-0d	< 30d	- 15 dias
+0d	< 30d	- 15 dias (CANCELADO)
 30d < 90d	- 30 dias 
 90d >		- 60 dias
 Autentificados NO expiran.
@@ -364,7 +364,6 @@ $result = mysql_query("SELECT ID, estado FROM users
 WHERE dnie = 'false' AND 
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".$margen_90dias."' AND fecha_last <= '".$margen_60dias."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_90dias."' AND fecha_registro <= '".$margen_30dias."' AND fecha_last <= '".$margen_30dias."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_30dias."' AND fecha_last <= '".$margen_15dias."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".$margen_10dias."') OR
 (estado = 'validar' AND fecha_last <= '".$margen_5dias."')
 ", $link);
@@ -381,7 +380,6 @@ WHERE dnie = 'false' AND estado != 'expulsado' AND
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".retrasar_t($margen_90dias)."' AND fecha_last <= '".retrasar_t($margen_60dias)."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_90dias)."' AND fecha_registro <= '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_30dias)."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_15dias)."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".retrasar_t($margen_15dias)."') OR
 (estado = 'validar' AND fecha_last <= '".retrasar_t($margen_15dias)."')
 ", $link);
 while($r = mysql_fetch_array($result)) {

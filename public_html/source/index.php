@@ -12,8 +12,7 @@ WHERE estado = 'ciudadano' AND fecha_last > '" . $time_pre . "' AND pais = '".PA
 ORDER BY fecha_last DESC", $link);
 	while($row = mysql_fetch_array($result)){ $li_online_num++; if ($li_online) { $li_online .= ', '; } $li_online .= crear_link($row['nick']); }
 
-	$result = mysql_query("SELECT siglas FROM ".SQL."partidos 
-ORDER BY fecha_creacion ASC", $link);
+	$result = mysql_query("SELECT siglas FROM partidos WHERE pais = '".PAIS."' ORDER BY fecha_creacion ASC", $link);
 	while($row = mysql_fetch_array($result)){ 
 		$li_partidos_num++; 
 		if ($li_partidos_num <= 10) {

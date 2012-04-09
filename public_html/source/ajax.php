@@ -44,7 +44,7 @@ msg_ID > '".$msg_ID."' AND
 ORDER BY msg_ID DESC LIMIT 50", $link);
 		while ($r = @mysql_fetch_array($res)) { 
 			if ($r['tipo'] != 'm') { $r['cargo'] = $r['tipo']; }
-			$t = $r['msg_ID'].' '.$r['cargo'].' '.date('H:i', strtotime($r['time'])).' '.$r['nick'].' '.$r['msg']."\n".$t; 
+			$t = $r['msg_ID'].' '.$r['cargo'].' '.substr($r['time'], 11, 5).' '.$r['nick'].' '.$r['msg']."\n".$t; 
 		}
 		return $t;
 	}
@@ -266,7 +266,7 @@ $('ul.menu li').hover(function(){
 } else if (($_POST['a'] == 'whois') AND (isset($_POST['nick']))) {
 
 	$res = mysql_query("SELECT ID, fecha_registro, partido_afiliado, fecha_last, nivel, online, nota, avatar, voto_confianza, estado, pais, cargo,
-(SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS partido,
+(SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS partido,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
 FROM users WHERE nick = '".$_POST['nick']."' LIMIT 1", $link);

@@ -47,7 +47,7 @@ function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 				case 'select_partidos':
 					$f .= '<li><b>'.NOM_PARTIDOS.':</b><br /><select name="partido"><option value="0">Ninguno</option>';
 					
-					$result = mysql_query("SELECT siglas, ID FROM ".SQL."partidos WHERE estado = 'ok' ORDER BY siglas ASC", $link);
+					$result = mysql_query("SELECT siglas, ID FROM partidos WHERE pais = '".PAIS."' AND estado = 'ok' ORDER BY siglas ASC", $link);
 					while($row = mysql_fetch_array($result)){
 						if ($v['partido'] == strtolower($row['siglas'])) { $selected = ' selected="selected"'; } else { $selected = '';  }
 						$f .= '<option value="' . $row['ID'] . '"' . $selected . '>' . $row['siglas'] . '</option>';

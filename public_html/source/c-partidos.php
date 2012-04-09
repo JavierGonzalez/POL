@@ -6,9 +6,9 @@ if ($_GET['a']) {
 
 	$result = mysql_query("SELECT 
 ID, siglas, nombre, descripcion, fecha_creacion, ID_presidente, 
-(SELECT nick FROM users WHERE ID = ".SQL."partidos.ID_presidente LIMIT 1) AS nick_presidente
-FROM ".SQL."partidos 
-WHERE siglas = '" . trim($_GET['a']) . "'
+(SELECT nick FROM users WHERE ID = partidos.ID_presidente LIMIT 1) AS nick_presidente
+FROM partidos 
+WHERE pais = '".PAIS."' AND siglas = '" . trim($_GET['a']) . "'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
@@ -20,11 +20,11 @@ LIMIT 1", $link);
 			//print listas
 			$candidatos_num = 0;
 			$result2 = mysql_query("SELECT user_ID, orden, 
-(SELECT nick FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick,
-(SELECT cargo FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS cargo,
-(SELECT voto_confianza FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS confianza
-FROM ".SQL."partidos_listas
-WHERE ID_partido = '" . $r['ID'] . "'
+(SELECT nick FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS nick,
+(SELECT cargo FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS cargo,
+(SELECT voto_confianza FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS confianza
+FROM partidos_listas
+WHERE pais = '".PAIS."' AND ID_partido = '" . $r['ID'] . "'
 ORDER BY ID ASC", $link);
 			while($r2 = mysql_fetch_array($result2)){ 
 				if ((!$li_listas) AND (ECONOMIA)) {  $li_presi = ' &larr; Candidato a Presidente'; } else { $li_presi = ''; }
@@ -34,7 +34,7 @@ ORDER BY ID ASC", $link);
 
 			$ciudadanos_num = 0;
 			$result2 = mysql_query("SELECT ID, nick, fecha_last, voto_confianza,
-(SELECT user_ID FROM ".SQL."partidos_listas WHERE ID_partido = '" . $r['ID'] . "' AND user_ID = users.ID LIMIT 1) AS en_lista, 
+(SELECT user_ID FROM partidos_listas WHERE pais = '".PAIS."' AND ID_partido = '" . $r['ID'] . "' AND user_ID = users.ID LIMIT 1) AS en_lista, 
 (SELECT user_ID FROM cargos_users WHERE cargo_ID = '6' AND user_ID = users.ID AND aprobado = 'ok' LIMIT 1) AS es_diputado
 FROM users 
 WHERE estado != 'validar' AND estado != 'desarrollador' AND partido_afiliado = '" . $r['ID'] . "' AND pais = '".PAIS."'
@@ -83,11 +83,11 @@ ORDER BY nick DESC", $link);
 			//print listas
 			$num_listas = 0;
 			$result2 = mysql_query("SELECT user_ID,
-(SELECT nick FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick,
-(SELECT voto_confianza FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS confianza,
-(SELECT fecha_last FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS fecha_last
-FROM ".SQL."partidos_listas
-WHERE ID_partido = '" . $r['ID'] . "'
+(SELECT nick FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS nick,
+(SELECT voto_confianza FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS confianza,
+(SELECT fecha_last FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS fecha_last
+FROM partidos_listas
+WHERE pais = '".PAIS."' AND ID_partido = '" . $r['ID'] . "'
 ORDER BY ID ASC", $link);
 			while($r2 = mysql_fetch_array($result2)){ 
 				$li_presi = '';
@@ -153,12 +153,12 @@ ORDER BY fecha_registro ASC", $link);
 
 
 	$result = mysql_query("SELECT ID, siglas, nombre, fecha_creacion, ID_presidente,
-(SELECT nick FROM users WHERE ID = ".SQL."partidos.ID_presidente LIMIT 1) AS nick_presidente, 
-(SELECT (SELECT nick FROM users WHERE ID = ".SQL."partidos_listas.user_ID LIMIT 1) AS nick FROM ".SQL."partidos_listas WHERE ID_partido = ".SQL."partidos.ID ORDER BY ID ASC LIMIT 1) AS nick_candidato, 
-(SELECT COUNT(ID) FROM users WHERE partido_afiliado = ".SQL."partidos.ID AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS afiliados, 
-(SELECT COUNT(ID) FROM ".SQL."partidos_listas WHERE ID_partido = ".SQL."partidos.ID LIMIT 1) AS num_lista
-FROM ".SQL."partidos 
-WHERE estado = 'ok'
+(SELECT nick FROM users WHERE ID = partidos.ID_presidente LIMIT 1) AS nick_presidente, 
+(SELECT (SELECT nick FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS nick FROM partidos_listas WHERE pais = '".PAIS."' AND ID_partido = partidos.ID ORDER BY ID ASC LIMIT 1) AS nick_candidato, 
+(SELECT COUNT(ID) FROM users WHERE partido_afiliado = partidos.ID AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS afiliados, 
+(SELECT COUNT(ID) FROM partidos_listas WHERE pais = '".PAIS."' AND ID_partido = partidos.ID LIMIT 1) AS num_lista
+FROM partidos 
+WHERE pais = '".PAIS."' AND estado = 'ok'
 ORDER BY num_lista DESC, afiliados DESC, nombre DESC", $link);
 	while($r = mysql_fetch_array($result)){
 

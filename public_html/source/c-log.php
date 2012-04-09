@@ -7,7 +7,7 @@ $txt .= '<br />'.$p_paginas.'
 
 <table border="0" cellspacing="0" cellpadding="0" class="pol_table">
 <tr>
-<th>Fecha</th>
+<th colspan="2">Fecha</th>
 <th>Quien</th>
 <th>Acción</th>
 </tr>';
@@ -17,9 +17,7 @@ FROM log
 WHERE pais = '".PAIS."'
 ORDER BY time DESC LIMIT ".mysql_real_escape_string($p_limit), $link);
 while($r = mysql_fetch_array($result)){
-	$fecha = explodear(' ', $r['time'], 1);
-	$fecha = explodear(':', $fecha, 0).':'.explodear(':', $fecha, 1);
-	$txt .= '<tr><td title="'.$r['time'].'">'.$fecha.'</td><td>'.crear_link($r['nick']).'</td><td>'.$r['accion'].'.</td></tr>'."\n";
+	$txt .= '<tr><td>'.substr($r['time'], 11, 5).'</td><td align="right">'.timer($r['time']).'</td><td>'.crear_link($r['nick']).'</td><td>'.$r['accion'].'.</td></tr>'."\n";
 }
 $txt .= '</table>';
 

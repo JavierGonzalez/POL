@@ -453,7 +453,7 @@ if (ECONOMIA) {
 } else { $st['pols_gobierno'] = 0; }
 
 // partidos
-$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."partidos WHERE estado = 'ok'", $link);
+$result = mysql_query("SELECT COUNT(ID) AS num FROM partidos WHERE pais = '".PAIS."' AND estado = 'ok'", $link);
 while($r = mysql_fetch_array($result)) { $st['partidos'] = $r['num']; }
 
 // empresas

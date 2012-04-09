@@ -42,7 +42,7 @@ if (isset($sc[$pol['user_ID']])) {
 	$nomenclatura = '<span style="float:right;">Plataformas:'.$paises.' | Estados: <b class="ciudadano">Ciudadano</b> <b class="turista">Turista</b> <b class="validar">Validar</b> <b class="expulsado">Expulsado</b></span>';
 
 	// siglas partidos
-	$result = mysql_query("SELECT ID, siglas FROM ".SQL."partidos", $link);
+	$result = mysql_query("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."'", $link);
 	while($r = mysql_fetch_array($result)) { $siglas[$r['ID']] = $r['siglas']; }
 
 	$txt_tab = array('/control/supervisor-censo'=>'Principal', '/control/supervisor-censo/factores-secundarios'=>'Extra', '/control/supervisor-censo/nuevos-ciudadanos'=>'Nuevos ciudadanos', '/control/expulsiones'=>'Expulsiones');

@@ -300,7 +300,7 @@ $txt .= '
 	$sc = get_supervisores_del_censo();
 
 	$result = mysql_query("SELECT ID, ID AS user_ID, nick, estado, pais, nivel, online, ref, ref_num, num_elec, voto_confianza, fecha_registro, nota, fecha_last, cargo, avatar, datos,
-(SELECT siglas FROM ".SQL."partidos WHERE users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas".$sql_extra."
+(SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas".$sql_extra."
 FROM users ".$order_by." LIMIT ".mysql_real_escape_string($p_limit), $link);
 	while($r = mysql_fetch_array($result)){
 		if ($r['online'] != 0) { $online = duracion($r['online']); } else { $online = ''; }

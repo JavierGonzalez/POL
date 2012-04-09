@@ -4,31 +4,45 @@ include('inc-functions-accion.php');
 if ($pol['user_ID'] != 1) { exit; }
 $txt .= '<h1>TEST DE DESARROLLO</h1><hr />';
 
+exit;
 
+/*
+foreach ($vp['paises'] AS $pais) {
 
-function control_acceso($name, $name_cfg, $value, $value_cfg=null, $titulo=null) {
-
-	$html = '<fieldset><legend>'.$titulo.'</legend><select name="'.$name.'">';
-
-	$tipos_array = nucleo_acceso('print');
-	unset($tipos_array['anonimos']);
-
-	foreach ($tipos_array AS $at => $at_var) {
-		$html .= '<option value="'.$at.'"'.($value==$at?' selected="selected"':'').' />'.$at.'</option>';
+	$result = mysql_query("SELECT * FROM ".strtolower($pais)."_partidos", $link);
+	while($r = mysql_fetch_array($result)) {
+		mysql_query("INSERT INTO partidos (pais, ID_presidente, fecha_creacion, siglas, nombre, descripcion, estado, ID_old) 
+VALUES ('".$pais."', '".$r['ID_presidente']."', '".$r['fecha_creacion']."', '".$r['siglas']."', '".$r['nombre']."', '".$r['descripcion']."', '".$r['estado']."', '".$r['ID']."')", $link);
 	}
-
-	$html .= '</select><br />
-<input type="text" name="'.$name_cfg.'" size="18" maxlength="500" id="acceso_cfg_votar_var" value="'.$value_cfg.'" /><br />
-'.ucfirst(verbalizar_acceso($value, $value_cfg)).'</fieldset>';
-
-	return $html;
 }
 
-$txt .= control_acceso('acceso_votar', 'acceso_cfg_votar', 'cargo', '6', 'Acceso para votar').'<hr />';
 
-$txt .= control_acceso('acceso_votar', 'acceso_cfg_votar', 'anonimos').'<hr />';
+foreach ($vp['paises'] AS $pais) {
 
-$txt .= control_acceso('acceso_votar', 'acceso_cfg_votar', 'privado', 'GONZO ddo').'<hr />';
+	$result = mysql_query("SELECT *,
+(SELECT ID FROM partidos WHERE ID_old = ".strtolower($pais)."_partidos_listas.ID_partido LIMIT 1) AS nuevo_partido_ID
+FROM ".strtolower($pais)."_partidos_listas", $link);
+	while($r = mysql_fetch_array($result)) {
+		mysql_query("INSERT INTO partidos_listas (pais, ID_partido, user_ID, orden) 
+VALUES ('".$pais."', '".$r['nuevo_partido_ID']."', '".$r['user_ID']."', '".$r['orden']."')", $link);
+	}
+}
+*/
+
+
+$result = mysql_query("SELECT ID, partido_afiliado,
+(SELECT ID FROM partidos WHERE ID_old = users.partido_afiliado  LIMIT 1) AS nuevo_partido_ID
+FROM users
+WHERE estado = 'ciudadano' AND partido_afiliado > 0", $link);
+while($r = mysql_fetch_array($result)) {
+	mysql_query("UPDATE users SET partido_afiliado = '".$r['nuevo_partido_ID']."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+}
+
+
+
+
+
+
 
 
 

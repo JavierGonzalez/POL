@@ -29,14 +29,6 @@ function evento_log($accion, $es_sistema=false) {
 	mysql_query("INSERT INTO log (pais, user_ID, nick, time, accion, accion_a) VALUES ('".PAIS."', '".($es_sistema==false?$pol['user_ID']:0)."', '".($es_sistema==false?$pol['nick']:'Sistema')."', '".date('Y-m-d H:i:s')."', '".$accion."', '".$_REQUEST['a']."')", $link);
 }
 
-// FUNCION OBSOLETA.
-function evento_log_OLD($accion, $dato='', $user_ID2='', $user_ID='') {
-	global $pol, $link; 
-	$user_ID = $pol['user_ID'];
-	mysql_query("INSERT INTO ".SQL."log (time, user_ID, user_ID2, accion, dato) VALUES ('" . date('Y-m-d H:i:s') . "', '".$user_ID."', '" . $user_ID2 . "', '" . $accion . "', '" . $dato . "')", $link);
-}
-
-
 function presentacion($titulo, $html, $url='http://www.virtualpol.com') {
 	global $link;
 	echo '
@@ -176,19 +168,20 @@ function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 		if ($tiene_examen) {
 			mysql_query("UPDATE cargos_users SET cargo = 'true', aprobado = 'ok' WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' AND user_ID = '".$user_ID."' LIMIT 1", $link);
 		} else {
-			mysql_query("INSERT INTO cargos_users (cargo_ID, pais, user_ID, time, aprobado, cargo, nota) VALUES ('" . $cargo_ID . "', '".PAIS."', '".$user_ID."', '" . $date . "', 'ok', 'true', '0.0')", $link);
+			mysql_query("INSERT INTO cargos_users (cargo_ID, pais, user_ID, time, aprobado, cargo, nota) VALUES ('".$cargo_ID."', '".PAIS."', '".$user_ID."', '".$date."', 'ok', 'true', '0.0')", $link);
 		}
 
-		mysql_query("UPDATE users SET nivel = '" . $r['nivel'] . "', cargo = '" . $cargo_ID . "' WHERE ID = '".$user_ID."' AND nivel < '" . $r['nivel'] . "' LIMIT 1", $link);
+		mysql_query("UPDATE users SET nivel = '".$r['nivel']."', cargo = '".$cargo_ID."' WHERE ID = '".$user_ID."' AND nivel < '".$r['nivel']."' LIMIT 1", $link);
 		actualizar('cargos', $user_ID);
-		evento_log_OLD(11, $cargo_ID, $user_ID);
 
 		if ($evento_chat) { 
 			$result2 = mysql_query("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)){ $nick_asignado = $r2['nick']; }
-			evento_chat('<b>[CARGO]</b> El cargo de <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$r['nombre'].' ha sido asignado a '.crear_link($nick_asignado).' por '.crear_link(($sistema==true?'VirtualPol':$pol['nick'])));
+			evento_chat('<b>[CARGO]</b> El cargo de <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" /> '.$r['nombre'].' ha sido asignado a '.crear_link($nick_asignado).' por '.crear_link(($sistema==true?'VirtualPol':$pol['nick'])));
 			notificacion($user_ID, 'Te ha sido asignado el cargo '.$r['nombre'], '/cargos');
 		}
+
+		evento_log('Cargo '.$r['nombre'].' asignado a '.$nick_asignado.' por '.($sistema==true?'VirtualPol':$pol['nick']));
 	}
 }
 
@@ -197,7 +190,6 @@ function cargo_del($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 	$result = mysql_query("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 		mysql_query("UPDATE cargos_users SET cargo = 'false' WHERE pais = '".PAIS."' AND cargo_ID = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' LIMIT 1", $link);
-		evento_log_OLD(12, $cargo_ID, $user_ID);
 		$result = mysql_query("SELECT cargo_ID, 
 (SELECT nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nivel
 FROM cargos_users 
@@ -214,6 +206,8 @@ LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)){ $nick_asignado = $r2['nick']; }
 			evento_chat('<b>[CARGO] '.crear_link(($sistema==true?'VirtualPol':$pol['nick'])).' quita</b> el cargo <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$r['nombre'].' a '. crear_link($nick_asignado));
 		}
+
+		evento_log('Cargo '.$r['nombre'].' quitado a '.$nick_asignado.' por '.($sistema==true?'VirtualPol':$pol['nick']));
 	}
 }
 
@@ -287,8 +281,8 @@ function eliminar_ciudadano($ID) {
 					mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE IP = '" . $IP . "' OR user_ID = '" . $ref . "'", $link); 
 			}
 			mysql_query("DELETE FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
-			mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM ".SQL."partidos WHERE ID_presidente = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM kicks WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM chats WHERE user_ID = '".$user_ID."'", $link);

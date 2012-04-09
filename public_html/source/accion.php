@@ -267,7 +267,7 @@ LIMIT 1", $link);
 			mysql_query("DELETE FROM ".SQL."mercado WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM ".SQL."pujas WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM pujas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 		}
 
 		mysql_query("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'", $link);
@@ -953,13 +953,13 @@ case 'mercado':
 		$ID = $_GET['ID'];
 		$pols = $_POST['puja'];
 		$pols_max = true;
-		$result = mysql_query("SELECT pols FROM ".SQL."pujas 
-WHERE mercado_ID = '".$ID."' 
+		$result = mysql_query("SELECT pols FROM pujas 
+WHERE pais = '".PAIS."' AND mercado_ID = '".$ID."' 
 ORDER BY pols DESC LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ if ($r['pols'] >= $pols) { $pols_max = false; } }
 
 		if (($pols_max) AND ($pols <= $pol['pols'])) {
-			mysql_query("INSERT INTO ".SQL."pujas (mercado_ID, user_ID, pols, time) VALUES ('".$ID."', '".$pol['user_ID']."', '".$pols."', '".$date."')", $link);
+			mysql_query("INSERT INTO pujas (pais, mercado_ID, user_ID, pols, time) VALUES ('".PAIS."', '".$ID."', '".$pol['user_ID']."', '".$pols."', '".$date."')", $link);
 			evento_chat('<b>[#]</b> puja '.pols($pols).' '.MONEDA.' de <em>'.$pol['nick'].'</em> (<a href="/subasta/">Subasta</a>)'); 
 		}
 		evento_log('Puja ('.$pols.' monedas)');

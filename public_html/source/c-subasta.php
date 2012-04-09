@@ -74,7 +74,7 @@ window.onload = function(){
 	// datos graficos
 	$i = 0;
 	$result = mysql_query("SELECT mercado_ID, pols
-FROM ".SQL."pujas WHERE mercado_ID = '1' OR mercado_ID = '2' 
+FROM pujas WHERE pais = '".PAIS."' AND mercado_ID = '1' OR mercado_ID = '2' 
 ORDER BY time ASC LIMIT 500", $link);
 	while($row = mysql_fetch_array($result)){
 		$dgrafico[$row['mercado_ID']][] = $row['pols'];
@@ -115,9 +115,9 @@ FROM config WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1", $link)
 	$ganador = 'ok';
 	$init = false;
 	$result = mysql_query("SELECT user_ID, pols, time,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."pujas.user_ID LIMIT 1) AS nick
-FROM ".SQL."pujas
-WHERE mercado_ID = 1
+(SELECT nick FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick
+FROM pujas
+WHERE pais = '".PAIS."' AND mercado_ID = 1
 ORDER BY pols DESC
 LIMIT 10", $link);
 	while($row = mysql_fetch_array($result)) {
@@ -161,9 +161,9 @@ LIMIT 10", $link);
 	$ganador = '';
 	$init = false;
 	$result = mysql_query("SELECT user_ID, MAX(pols) AS los_pols, time,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."pujas.user_ID LIMIT 1) AS nick
-FROM ".SQL."pujas
-WHERE mercado_ID = 2
+(SELECT nick FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick
+FROM pujas
+WHERE pais = '".PAIS."' AND mercado_ID = 2
 GROUP BY user_ID
 ORDER BY los_pols DESC
 LIMIT 10", $link);

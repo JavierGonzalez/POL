@@ -52,7 +52,7 @@ case 'perfil':
 			$datos_array[] = $_POST[$dato];
 		}
 		mysql_query("UPDATE users SET datos = '".implode('][', $datos_array)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		$refer_url = 'perfil/'.strtolower($pol['nick']);
+		$refer_url = 'perfil/'.$pol['nick'];
 	}
 	break;
 
@@ -184,9 +184,10 @@ case 'geolocalizacion':
 		while($r = mysql_fetch_array($result)) {
 			evento_chat('<b>[#]</b> '.crear_link($pol['nick']).' se ha geolocalizado en el <a href="/geolocalizacion"><b>mapa</b> de ciudadanos</a>');
 		}
-
 		mysql_query("UPDATE users SET x = '".$_POST['x']."', y = '".$_POST['y']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		
+	} elseif ($_GET['b'] == 'del') {
+		mysql_query("UPDATE users SET x = NULL, y = NULL WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	}
 	$refer_url = 'geolocalizacion';
 	break;

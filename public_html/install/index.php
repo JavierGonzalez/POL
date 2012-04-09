@@ -26,6 +26,7 @@ switch($_GET['step']){
 			strlen($_SESSION['i_dbpass']) > 0 &&
 			strlen($_SESSION['i_dbhost']) > 0 )
 			{
+				
 				$link= @mysql_connect($_SESSION['i_dbhost'],
 					$_SESSION['i_dbuser'],
 					$_SESSION['i_dbpass']);	
@@ -33,39 +34,37 @@ switch($_GET['step']){
 				{ 
 					$theme->addvar("{ERROR}", mysql_error()); 
 				}
+				elseif(!mysql_select_db(
+				$_SESSION['i_dbname'], 
+				$link))
+				{
+					$theme->addvar("{ERROR}", mysql_error());
+				}
 				else
 				{
-					if(!mysql_select_db(
-					$_SESSION['i_dbname'], 
-					$link))
-					{
-						$theme->addvar("{ERROR}", mysql_error());
-					}
-					else
-					{
-						mysql_close($link);
-						$conf_pwd=file_get_contents("../config-pwd-sample.php");
-						$conf_pwd=str_replace(
-								array(
-									'$mysql_host = \'...\';',
-									'$mysql_db = \'...\';',
-									'$mysql_user = \'...\';',
-									'$mysql_pass = \'...\';'
-								),
-								array(
-									'$mysql_host = \''.$_SESSION["i_dbhost"].'\';',
-									'$mysql_db = \''.$_SESSION["i_dbname"].'\';',
-									'$mysql_user = \''.$_SESSION["i_dbuser"].'\';',
-									'$mysql_pass = \''.$_SESSION["i_dbpass"].'\';'
-								), 
-								$conf_pwd);
-						if(file_put_contents("../config-pwd.php",$conf_pwd) === FALSE){
-							$theme->addvar("{ERROR}", "No se pudo escribir en config-pwd.php, compruebe los permisos.");
-						}else{
-							header("Location: ?step=1");
-						}
+					mysql_close($link);
+					$conf_pwd=file_get_contents("../config-pwd-sample.php");
+					$conf_pwd=str_replace(
+							array(
+								'$mysql_host = \'...\';',
+								'$mysql_db = \'...\';',
+								'$mysql_user = \'...\';',
+								'$mysql_pass = \'...\';'
+							),
+							array(
+								'$mysql_host = \''.$_SESSION["i_dbhost"].'\';',
+								'$mysql_db = \''.$_SESSION["i_dbname"].'\';',
+								'$mysql_user = \''.$_SESSION["i_dbuser"].'\';',
+								'$mysql_pass = \''.$_SESSION["i_dbpass"].'\';'
+							), 
+							$conf_pwd);
+					if(file_put_contents("../config-pwd.php",$conf_pwd) === FALSE){
+						$theme->addvar("{ERROR}", "No se pudo escribir en config-pwd.php, compruebe los permisos.");
+					}else{
+						header("Location: ?step=1");
 					}
 				}
+				
 			}
 		}
 

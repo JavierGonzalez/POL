@@ -47,22 +47,23 @@ switch($_GET['step']){
 						$conf_pwd=file_get_contents("../config-pwd-sample.php");
 						$conf_pwd=str_replace(
 								array(
-									"$mysql_host = '...';",
-									"$mysql_db = '...';",
-									"$mysql_user = '...';",
-									"$mysql_pass = '...';"
+									'$mysql_host = \'...\';',
+									'$mysql_db = \'...\';',
+									'$mysql_user = \'...\';',
+									'$mysql_pass = \'...\';'
 								),
 								array(
-									"$mysql_host = '".$_SESSION['i_dbhost']."';",
-									"$mysql_db = '".$_SESSION['i_dbname']."';",
-									"$mysql_user = '".$_SESSION['i_dbuser']."';",
-									"$mysql_pass = '".$_SESSION['i_dbpass']."';"
+									'$mysql_host = \''.$_SESSION["i_dbhost"].'\';',
+									'$mysql_db = \''.$_SESSION["i_dbname"].'\';',
+									'$mysql_user = \''.$_SESSION["i_dbuser"].'\';',
+									'$mysql_pass = \''.$_SESSION["i_dbpass"].'\';'
 								), 
 								$conf_pwd);
-						file_put_contents("../config-pwd.php",$conf_pwd);
-
-						
-						header("Location: ?step=1");
+						if(file_put_contents("../config-pwd.php",$conf_pwd) === FALSE){
+							$theme->addvar("{ERROR}", "No se pudo escribir en config-pwd.php, compruebe los permisos.");
+						}else{
+							header("Location: ?step=1");
+						}
 					}
 				}
 			}

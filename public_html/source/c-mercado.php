@@ -48,9 +48,9 @@ FROM config WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1", $link)
 
 	$ganador = 'ok';
 	$result = mysql_query("SELECT user_ID, pols, time,
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."pujas.user_ID LIMIT 1) AS nick
-FROM ".SQL."pujas
-WHERE mercado_ID = 1
+(SELECT nick FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick
+FROM pujas
+WHERE pais = '".PAIS."' AND mercado_ID = 1
 ORDER BY pols DESC
 LIMIT 15", $link);
 	while($row = mysql_fetch_array($result)) {

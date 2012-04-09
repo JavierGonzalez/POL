@@ -148,13 +148,13 @@ if ($pols_gobierno - $gasto_total != $pols_gobierno2) {
 
 // SUBASTA: LA FRASE
 $result = mysql_query("SELECT pols, user_ID,
-(SELECT nick FROM users WHERE ID = ".SQL."pujas.user_ID LIMIT 1) AS nick,
-(SELECT pols FROM users WHERE ID = ".SQL."pujas.user_ID LIMIT 1) AS nick_pols
-FROM ".SQL."pujas 
-WHERE mercado_ID = '1'
+(SELECT nick FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick,
+(SELECT pols FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick_pols
+FROM pujas 
+WHERE pais = '".PAIS."' AND mercado_ID = '1'
 ORDER BY pols DESC LIMIT 1", $link);
 while($r = mysql_fetch_array($result)){
-	mysql_query("DELETE FROM ".SQL."pujas WHERE mercado_ID = '1'", $link); //resetea pujas
+	mysql_query("DELETE FROM pujas WHERE pais = '".PAIS."' AND mercado_ID = '1'", $link); //resetea pujas
 	evento_chat('<b>[PROCESO]</b> Subasta: <b>La frase</b>, de <em>'.crear_link($r['nick']).'</em> por '.pols($r['pols']).' '.MONEDA.'');
 	$pujas_total = $r['pols'];
 	pols_transferir($r['pols'], $r['user_ID'], '-1', 'Subasta: <em>La frase</em>');
@@ -168,10 +168,10 @@ $gan = $pol['config']['palabras_num'];
 $g = 1;
 $las_palabras = '';
 $result = mysql_query("SELECT user_ID, MAX(pols) AS los_pols,
-(SELECT nick FROM users WHERE ID = ".SQL."pujas.user_ID LIMIT 1) AS nick,
-(SELECT pols FROM users WHERE ID = ".SQL."pujas.user_ID LIMIT 1) AS nick_pols
-FROM ".SQL."pujas
-WHERE mercado_ID = 2
+(SELECT nick FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick,
+(SELECT pols FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick_pols
+FROM pujas
+WHERE pais = '".PAIS."' AND mercado_ID = 2
 GROUP BY user_ID
 ORDER BY los_pols DESC", $link);
 while($r = mysql_fetch_array($result)) {
@@ -184,7 +184,7 @@ while($r = mysql_fetch_array($result)) {
 		$g++;
 	}
 }
-mysql_query("DELETE FROM ".SQL."pujas WHERE mercado_ID = '2'", $link); //resetea pujas
+mysql_query("DELETE FROM pujas WHERE pais = '".PAIS."' AND mercado_ID = '2'", $link); //resetea pujas
 mysql_query("UPDATE config SET valor = '".$las_palabras."' WHERE pais = '".PAIS."' AND dato = 'palabras' LIMIT 1", $link);
 
 
@@ -453,7 +453,7 @@ if (ECONOMIA) {
 } else { $st['pols_gobierno'] = 0; }
 
 // partidos
-$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."partidos WHERE estado = 'ok'", $link);
+$result = mysql_query("SELECT COUNT(ID) AS num FROM partidos WHERE pais = '".PAIS."' AND estado = 'ok'", $link);
 while($r = mysql_fetch_array($result)) { $st['partidos'] = $r['num']; }
 
 // empresas

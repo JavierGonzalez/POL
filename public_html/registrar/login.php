@@ -279,19 +279,19 @@ case 'changenick':
 case 'changemail':
 	$email = trim($_POST['email']);
 	$url = escape(base64_decode($_POST['url']));
-
 	$pre_login = true;
-	
 	if ($pol['user_ID']) {
 		mysql_query("UPDATE users SET email = '".$email."' WHERE ID = '".$pol['user_ID']."' AND fecha_registro < '".date('Y-m-d 20:00:00', time() - 864000)."' LIMIT 1", $link);
 	}
-
 	redirect($url);
 	break;
 
 
 case 'borrar-usuario':
-	if ($_POST['nick'] == $pol['nick']) { mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link); }
+	if ($_POST['nick'] == $pol['nick']) { 
+		mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link); 
+		evento_log('Eliminación de usuario permanente y voluntaria.');
+	}
 	redirect('http://www.'.DOMAIN.'/');
 	break;
 

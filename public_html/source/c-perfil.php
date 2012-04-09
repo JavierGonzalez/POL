@@ -2,7 +2,7 @@
 include('inc-login.php');
 
 $result = mysql_query("SELECT *, 
-(SELECT siglas FROM ".SQL."partidos WHERE ID = users.partido_afiliado LIMIT 1) AS partido,
+(SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS partido,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
 FROM users 
@@ -180,7 +180,7 @@ $txt .= '<p>'.boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel').
 Afiliaci&oacute;n: <select name="partido"><option value="0">Ninguno</option>';
 
 
-$result2 = mysql_query("SELECT ID, siglas FROM ".SQL."partidos ORDER BY siglas ASC", $link);
+$result2 = mysql_query("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."' ORDER BY siglas ASC", $link);
 while($r2 = mysql_fetch_array($result2)){
 	$txt .= '<option value="'.$r2['ID'].'"'.($r2['ID']==$pol['partido']?' selected="selected"':'').'>' . $r2['siglas'] . '</option>';
 }
@@ -293,7 +293,7 @@ $txt .= 'Registrado hace: <b><acronym title="' . $r['fecha_registro'] . '">'.rou
 
 
 /* Tramos de expiraci?n
-	< 30d	- 15 dias
+	< 30d	- 15 dias CANCELADO
 30d < 90d	- 30 dias 
 90d >		- 60 dias
 */
@@ -303,10 +303,8 @@ $margen_90dias	= date('Y-m-d 20:00:00', time() - 7776000); // 90 dias
 $time_registro = $r['fecha_registro'];
 if ($time_registro <= $margen_90dias) {
 	$tiempo_inactividad = 5184000; // tras 60 dias
-} elseif (($time_registro > $margen_90dias) AND ($time_registro <= $margen_30dias)) {
+} else {
 	$tiempo_inactividad = 2592000; // tras 30 dias
-} else  {
-	$tiempo_inactividad = (86400*15); // tras 15 dias
 }
 $txt .= 'Expira '.($r['dnie']=='true'?'<b>Nunca</b> (Autentificado)':'<b>tras '.round($tiempo_inactividad / 60 / 60 / 24).' dias</b> inactivo').'
 

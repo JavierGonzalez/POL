@@ -267,15 +267,14 @@ LIMIT 1", $link);
 			mysql_query("DELETE FROM ".SQL."mercado WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM ".SQL."pujas WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM pujas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 		}
 
 		mysql_query("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'", $link);
 		mysql_query("UPDATE users SET estado = 'turista', pais = 'ninguno', nivel = '1', cargo = '0', cargos = '', examenes = '', nota = '0.0', pols = '".$pols."', rechazo_last = '".$date."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '".$user_ID."'", $link);
-		mysql_query("DELETE FROM ".SQL."partidos WHERE ID_presidente = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'", $link);
 
-		evento_log_OLD(13); // rechazo de ciudadania
 		evento_log('Rechaza ciudadanía');
 		evento_chat('<b>[#] '.crear_link($nick).' rechaza la Ciudadania</b> de '.PAIS);
 
@@ -591,7 +590,6 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = '
 		while($r = mysql_fetch_array($result)){ 
 			if ($r['ceder_user_ID']) {
 				mysql_query("UPDATE ".SQL."mapa SET user_ID = '".$r['ceder_user_ID']."', nick = '".$_POST['nick']."',  time = '".$date."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
-				evento_log_OLD(16, $r['ID'], $r['ceder_user_ID']); // Ceder propiedad
 				evento_log('Cede propiedad #'.$r['ID']);
 			}
 		}
@@ -857,14 +855,14 @@ $dato_array = array(
 			$result = mysql_query("SELECT ID FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."'", $link);
 			while($r = mysql_fetch_array($result)){
 				notificacion($r['ID'], $_POST['texto'], $_POST['url'], PAIS);
-				evento_log('Gobierno configuración: notificación nueva ('.$_POST['texto'].')');
 			}
+			evento_log('Gobierno configuración: notificación nueva ('.$_POST['texto'].')');
 		} elseif (($_GET['c'] == 'borrar') AND (is_numeric($_GET['noti_ID']))) {
 			$result = mysql_query("SELECT texto FROM notificaciones WHERE noti_ID = '".$_GET['noti_ID']."' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){
 				mysql_query("DELETE FROM notificaciones WHERE texto = '".$r['texto']."' AND emisor = '".PAIS."'", $link);
-				evento_log('Gobierno configuración: notificación eliminada #'.$_GET['noti_ID']);
 			}
+			evento_log('Gobierno configuración: notificación eliminada #'.$_GET['noti_ID']);
 		}
 		$refer_url = 'control/gobierno/notificaciones';
 	}
@@ -931,7 +929,6 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link
 		while($r = mysql_fetch_array($result)){ 
 			if ($r['ceder_user_ID']) {
 				mysql_query("UPDATE ".SQL."empresas SET user_ID = '".$r['ceder_user_ID']."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
-				evento_log_OLD(15, $r['ID'], $r['ceder_user_ID']); // Ceder empresa
 				evento_log('Cede empresa #'.$r['ID'].' a '.$_POST['nick']);
 			}
 		}
@@ -956,13 +953,13 @@ case 'mercado':
 		$ID = $_GET['ID'];
 		$pols = $_POST['puja'];
 		$pols_max = true;
-		$result = mysql_query("SELECT pols FROM ".SQL."pujas 
-WHERE mercado_ID = '".$ID."' 
+		$result = mysql_query("SELECT pols FROM pujas 
+WHERE pais = '".PAIS."' AND mercado_ID = '".$ID."' 
 ORDER BY pols DESC LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ if ($r['pols'] >= $pols) { $pols_max = false; } }
 
 		if (($pols_max) AND ($pols <= $pol['pols'])) {
-			mysql_query("INSERT INTO ".SQL."pujas (mercado_ID, user_ID, pols, time) VALUES ('".$ID."', '".$pol['user_ID']."', '".$pols."', '".$date."')", $link);
+			mysql_query("INSERT INTO pujas (pais, mercado_ID, user_ID, pols, time) VALUES ('".PAIS."', '".$ID."', '".$pol['user_ID']."', '".$pols."', '".$date."')", $link);
 			evento_chat('<b>[#]</b> puja '.pols($pols).' '.MONEDA.' de <em>'.$pol['nick'].'</em> (<a href="/subasta/">Subasta</a>)'); 
 		}
 		evento_log('Puja ('.$pols.' monedas)');
@@ -1002,7 +999,7 @@ ORDER BY pols DESC LIMIT 1", $link);
 			}
 		}
 		mysql_query("UPDATE config SET valor = '".$dato."' WHERE pais = '".PAIS."' AND dato = 'palabras' LIMIT 1", $link);
-		evento_log('Palabra editada #'.$_GET['ID']);
+		evento_log('Enlace editado #'.$_GET['ID']);
 		$refer_url = 'subasta/editar';
 
 	} elseif (($_GET['b'] == 'cederpalabra') AND ($_GET['ID'] >= 0) AND ($pol['nick'] != $_POST['nick'])) {
@@ -1395,8 +1392,7 @@ case 'foro':
 		} elseif ($_GET['c'] == 'mensaje') {
 			mysql_query("UPDATE ".SQL."foros_msg SET estado = 'borrado', time2 = '".$date."' WHERE ID = '".$_GET['ID']."' AND estado = 'ok' LIMIT 1", $link);
 		}
-		evento_log_OLD(17, $_GET['ID'], $el_user_ID);
-		evento_log('Foro '.strtolower($_GET['c']).' enviado a la papelera por moderación #'.$_GET['ID']);
+		evento_log('Foro <em>'.strtolower($_GET['c']).'</em> enviado a la papelera por moderación #'.$_GET['ID']);
 		$refer_url = 'foro/papelera';
 
 	} elseif (($_GET['b'] == 'restaurar') AND ($_GET['ID']) AND ($_GET['c']) AND (nucleo_acceso($vp['acceso']['foro_borrar']))) {
@@ -1465,7 +1461,6 @@ case 'kick':
 				$result = mysql_query("SELECT nick FROM users WHERE ID = '".$kickeado_id."' LIMIT 1", $link);
 				while($r = mysql_fetch_array($result)){ $kickeado_nick = $r['nick'];}
 				
-				evento_log_OLD(14, $kick_id, $kickeado_id); // Kick cancelado
 				evento_log('Kick a '.$kickeado_nick.' cancelado');
 				
 				evento_chat('<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[KICK]</b> El kick a <b>'.$kickeado_nick.'</b> ha sido cancelado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>.</span>');
@@ -1646,17 +1641,17 @@ case 'partido-lista':
 
 	if (($b) AND ($ID_partido) AND ($pol['config']['elecciones_estado'] != 'elecciones')) {
 
-		$result = mysql_query("SELECT ID_presidente, siglas FROM ".SQL."partidos WHERE ID = '".$ID_partido."' AND ID_presidente = '".$pol['user_ID']."' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID_presidente, siglas FROM partidos WHERE pais = '".PAIS."' AND ID = '".$ID_partido."' AND ID_presidente = '".$pol['user_ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){
 			$siglas = $r['siglas'];
 			if ($b == 'edit') {
-				mysql_query("UPDATE ".SQL."partidos SET descripcion = '".gen_text($_POST['text'])."' WHERE ID = '".$ID_partido."' LIMIT 1", $link);
+				mysql_query("UPDATE partidos SET descripcion = '".gen_text($_POST['text'])."' WHERE pais = '".PAIS."' AND ID = '".$ID_partido."' LIMIT 1", $link);
 			} elseif (($b == 'add') AND ($_POST['user_ID'])) {
-				mysql_query("INSERT INTO ".SQL."partidos_listas (ID_partido, user_ID) VALUES ('".$ID_partido."', '".$_POST['user_ID']."')", $link);
+				mysql_query("INSERT INTO partidos_listas (pais, ID_partido, user_ID) VALUES ('".PAIS."', '".$ID_partido."', '".$_POST['user_ID']."')", $link);
 			} elseif (($b == 'del') AND ($_POST['user_ID'])) {
-				mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '".$_POST['user_ID']."' AND ID_partido = '".$ID_partido."' LIMIT 1", $link);
+				mysql_query("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND user_ID = '".$_POST['user_ID']."' AND ID_partido = '".$ID_partido."' LIMIT 1", $link);
 			} elseif (($b == 'ceder-presidencia') AND ($_POST['user_ID'])) {
-				mysql_query("UPDATE ".SQL."partidos SET ID_presidente = '".$_POST['user_ID']."' WHERE ID = '".$ID_partido."' LIMIT 1", $link);
+				mysql_query("UPDATE partidos SET ID_presidente = '".$_POST['user_ID']."' WHERE pais = '".PAIS."' AND ID = '".$ID_partido."' LIMIT 1", $link);
 			} elseif (($b == 'del-afiliado') AND ($_POST['user_ID'])) {
 				mysql_query("UPDATE users SET partido_afiliado = '0' WHERE partido_afiliado = '".$ID_partido."' AND ID = '".$_POST['user_ID']."' LIMIT 1", $link);
 			}
@@ -1775,17 +1770,16 @@ FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' AND a
 
 case 'eliminar-partido':
 	if (($pol['config']['elecciones_estado'] != 'elecciones')) {
-		$result = mysql_query("SELECT ID, siglas FROM ".SQL."partidos WHERE ID_presidente = '".$pol['user_ID']."' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$pol['user_ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){
-			mysql_query("DELETE FROM ".SQL."partidos WHERE ID = '".$r['ID']."' LIMIT 1", $link);
-			mysql_query("DELETE FROM ".SQL."partidos_listas WHERE ID_partido = '".$r['ID']."' LIMIT 1", $link);
-			evento_log_OLD(5, $r['ID']);
+			mysql_query("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID = '".$r['ID']."' LIMIT 1", $link);
+			mysql_query("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND ID_partido = '".$r['ID']."' LIMIT 1", $link);
 			evento_log('Partido eliminado '.$r['siglas']);
 		}
 	}
 
 	// actualizar info en theme
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."partidos WHERE estado = 'ok'", $link);
+	$result = mysql_query("SELECT COUNT(ID) AS num FROM partidos WHERE pais = '".PAIS."' AND estado = 'ok'", $link);
 	while($r = mysql_fetch_array($result)) {
 		mysql_query("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_partidos' LIMIT 1", $link);
 	}
@@ -1814,7 +1808,6 @@ case 'eliminar-documento':
 	while($r = mysql_fetch_array($result)){ 
 		if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
 			mysql_query("UPDATE docs SET estado = 'del' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
-			evento_log_OLD(8, $r['ID']);
 			evento_log('Documento eliminado <a href="/doc/'.$r['url'].'">#'.$r['ID'].'</a>');
 			pad('delete', $r['ID']);
 			
@@ -1872,7 +1865,6 @@ case 'crear-documento':
 		mysql_query("INSERT INTO docs 
 (pais, url, title, text, time, time_last, estado, cat_ID, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir) 
 VALUES ('".PAIS."', '".$url."', '".$_POST['title']."', '', '".$date."', '".$date."', 'ok', '".$_POST['cat']."', '".$_POST['acceso_leer']."', '".$_POST['acceso_escribir']."', '".$_POST['acceso__cfg_leer']."', '".$_POST['acceso_cfg_escribir']."')", $link);
-		evento_log_OLD(6, $url);
 		evento_log('Documento creado <a href="/doc/'.$url.'">#</a>');
 
 		// actualizacion de info en theme
@@ -1889,8 +1881,7 @@ VALUES ('".PAIS."', '".$url."', '".$_POST['title']."', '', '".$date."', '".$date
 case 'afiliarse':
 	if (($pol['config']['elecciones_estado'] != 'elecciones')) {
 		mysql_query("UPDATE users SET partido_afiliado = '".$_POST['partido']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		mysql_query("DELETE FROM ".SQL."partidos_listas WHERE user_ID = '".$pol['user_ID']."'", $link);
-		evento_log_OLD(9, $_POST['partido']);
+		mysql_query("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."'", $link);
 		evento_log('Afiliado a #'.$_POST['partido']);
 	}
 	$refer_url = 'perfil/'.$pol['nick'];
@@ -1900,26 +1891,25 @@ case 'crear-partido':
 	$_POST['siglas'] = strtoupper(preg_replace("/[^[a-z-]/i", "", $_POST['siglas']));
 
 	$ya_es_presidente = false;
-	$result = mysql_query("SELECT ID FROM ".SQL."partidos WHERE ID_presidente = '".$pol['user_ID']."'", $link);
+	$result = mysql_query("SELECT ID FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$pol['user_ID']."'", $link);
 	while($r = mysql_fetch_array($result)){ $ya_es_presidente = true; }
 
 	if (($pol['config']['elecciones_estado'] != 'elecciones') AND (strlen($_POST['siglas']) <= 12) AND (strlen($_POST['siglas']) >= 2) AND (nucleo_acceso($vp['acceso']['crear_partido'])) AND ($_POST['nombre']) AND ($ya_es_presidente == false)) {
 
 		$_POST['descripcion'] = gen_text($_POST['descripcion']);
 
-		mysql_query("INSERT INTO ".SQL."partidos 
-(ID_presidente, fecha_creacion, siglas, nombre, descripcion, estado) 
-VALUES ('".$pol['user_ID']."', '".$date."', '".$_POST['siglas']."', '".$_POST['nombre']."', '".$_POST['descripcion']."', 'ok')
+		mysql_query("INSERT INTO partidos 
+(pais, ID_presidente, fecha_creacion, siglas, nombre, descripcion, estado) 
+VALUES ('".PAIS."', '".$pol['user_ID']."', '".$date."', '".$_POST['siglas']."', '".$_POST['nombre']."', '".$_POST['descripcion']."', 'ok')
 ", $link);
 
-		$result = mysql_query("SELECT ID FROM ".SQL."partidos WHERE siglas = '".$_POST['siglas']."' LIMIT 1", $link);
+		$result = mysql_query("SELECT ID FROM partidos WHERE pais = '".PAIS."' AND siglas = '".$_POST['siglas']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ $partido_ID = $r['ID']; }
-		evento_log_OLD(3, $partido_ID);
 		evento_log('Partido creado '.$_POST['siglas']);
 	}
 
 	// actualizar info en theme
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."partidos WHERE estado = 'ok'", $link);
+	$result = mysql_query("SELECT COUNT(ID) AS num FROM partidos WHERE pais = '".PAIS."' AND estado = 'ok'", $link);
 	while($r = mysql_fetch_array($result)) {
 		mysql_query("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_partidos' LIMIT 1", $link);
 	}

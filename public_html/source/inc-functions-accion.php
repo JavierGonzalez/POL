@@ -290,11 +290,11 @@ function eliminar_ciudadano($ID) {
 			mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."' AND hilo_ID = '-1'", $link);
 
 
+
 			if (ECONOMIA) {
 					mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE user_ID = '".$user_ID."'", $link);
-					mysql_query("DELETE FROM ".SQL."empresas WHERE user_ID = '".$user_ID."'", $link);
-					mysql_query("DELETE FROM ".SQL."mercado WHERE user_ID = '".$user_ID."'", $link);
-					mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '".$user_ID."'", $link);
+					mysql_query("DELETE FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
+					mysql_query("DELETE FROM mapa WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 					mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '".$user_ID."'", $link);
 			}
 

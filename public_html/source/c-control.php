@@ -1224,9 +1224,9 @@ case 'judicial':
 
 
 	$result = mysql_query("SELECT *,
-(SELECT nick FROM users WHERE ID = ".SQL."transacciones.emisor_ID LIMIT 1) AS nick
-FROM ".SQL."transacciones
-WHERE concepto LIKE '<b>SANCION %' AND receptor_ID = '-1'
+(SELECT nick FROM users WHERE ID = transacciones.emisor_ID LIMIT 1) AS nick
+FROM transacciones
+WHERE pais = '".PAIS."' AND concepto LIKE '<b>SANCION %' AND receptor_ID = '-1'
 ORDER BY time DESC", $link);
 	while($r = mysql_fetch_array($result)){
 		$txt .= '<tr><td>'.pols('-'.$r['pols']).' '.MONEDA.'</td><td><b>'.crear_link($r['nick']).'</b></td><td><acronym title="'.$r['time'].'">'.timer($r['time']).'</acronym></td><td>'.$r['concepto'].'</td></tr>' . "\n";

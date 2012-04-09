@@ -37,7 +37,7 @@ LIMIT 1", $link);
 		$txt_title = 'Cuenta bancaria: ' . $nombre;
 		$txt_nav = array('/pols'=>'Economía', '/pols/cuentas'=>'Cuenta bancaria', $nombre);
 
-		$result = mysql_unbuffered_query("SELECT COUNT(*) AS num FROM ".SQL."transacciones WHERE emisor_ID = '-" . $ID . "' OR receptor_ID = '-" . $ID . "'", $link);
+		$result = mysql_unbuffered_query("SELECT COUNT(*) AS num FROM transacciones WHERE pais = '".PAIS."' AND (emisor_ID = '-" . $ID . "' OR receptor_ID = '-" . $ID . "')", $link);
 		while($row = mysql_fetch_array($result)){ $total = $row['num']; }
 
 		if (is_numeric($_GET['c'])) { $ahora = $_GET['c']; } 
@@ -58,10 +58,10 @@ LIMIT 1", $link);
 
 // concepto != 'CP' AND concepto != 'INEMPOL' AND concepto != 'Salario' AND 
 	$result = mysql_query("SELECT ID, pols, concepto, time, receptor_ID, emisor_ID,
-(SELECT nick FROM users WHERE ID = ".SQL."transacciones.emisor_ID LIMIT 1) AS nick_emisor,
-(SELECT nick FROM users WHERE ID = ".SQL."transacciones.receptor_ID LIMIT 1) AS nick_receptor
-FROM ".SQL."transacciones
-WHERE (emisor_ID = '-" . $ID . "' OR receptor_ID = '-" . $ID . "')
+(SELECT nick FROM users WHERE ID = transacciones.emisor_ID LIMIT 1) AS nick_emisor,
+(SELECT nick FROM users WHERE ID = transacciones.receptor_ID LIMIT 1) AS nick_receptor
+FROM transacciones
+WHERE pais = '".PAIS."' AND (emisor_ID = '-" . $ID . "' OR receptor_ID = '-" . $ID . "')
 ORDER BY time DESC
 LIMIT ".mysql_real_escape_string($p_limit), $link);
 	while($row = mysql_fetch_array($result)) {
@@ -276,7 +276,7 @@ function click_ciudadano() {
 <th colspan="3">Concepto</th>
 </tr>';
 
-	$result = mysql_unbuffered_query("SELECT COUNT(*) AS num FROM ".SQL."transacciones WHERE emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "'", $link);
+	$result = mysql_unbuffered_query("SELECT COUNT(*) AS num FROM transacciones WHERE pais = '".PAIS."' AND (emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "')", $link);
 	while($row = mysql_fetch_array($result)){ $total = $row['num']; }
 
 	if (is_numeric($_GET['a'])) { $ahora = $_GET['a']; } 
@@ -285,10 +285,10 @@ function click_ciudadano() {
 	paginacion('censo', '/pols/', null, $ahora, $total, 15);
 
 	$result = mysql_query("SELECT ID, pols, concepto, time, receptor_ID, emisor_ID,
-(SELECT nick FROM users WHERE ID = ".SQL."transacciones.emisor_ID LIMIT 1) AS nick_emisor,
-(SELECT nick FROM users WHERE ID = ".SQL."transacciones.receptor_ID LIMIT 1) AS nick_receptor
-FROM ".SQL."transacciones
-WHERE emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "'
+(SELECT nick FROM users WHERE ID = transacciones.emisor_ID LIMIT 1) AS nick_emisor,
+(SELECT nick FROM users WHERE ID = transacciones.receptor_ID LIMIT 1) AS nick_receptor
+FROM transacciones
+WHERE pais = '".PAIS."' AND (emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "')
 ORDER BY time DESC
 LIMIT " . mysql_real_escape_string($p_limit), $link);
 	while($row = mysql_fetch_array($result)) {

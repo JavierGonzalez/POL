@@ -266,7 +266,7 @@ $txt .= '</div>
 		if (ECONOMIA) { 
 			// empresas y partidos
 			$empresas_num = 0;
-			$result = mysql_query("SELECT nombre, url, cat_ID, (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_url FROM ".SQL."empresas WHERE user_ID = '" . $r['ID'] . "' ORDER BY time DESC", $link);
+			$result = mysql_query("SELECT nombre, url, cat_ID, (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url FROM empresas WHERE pais = '".PAIS."' AND user_ID = '" . $r['ID'] . "' ORDER BY time DESC", $link);
 			while($r2 = mysql_fetch_array($result)) {
 				$empresas_num++;
 				$empresas .= '<a href="/empresas/'.$r2['cat_url'].'/'.$r2['url'].'/">' . $r2['nombre'] . '</a><br />' . "\n";

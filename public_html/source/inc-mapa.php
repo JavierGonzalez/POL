@@ -22,7 +22,8 @@ $count = 1;
 $prop = '';
 $m = null;
 $result = mysql_query("SELECT ID, pos_x, pos_y, size_x, size_y, link, pols, color, estado, superficie, nick
-FROM ".SQL."mapa
+FROM mapa
+WHERE pais = '".PAIS."' 
 ORDER BY pos_y ASC, pos_x ASC", $link);
 while($r = mysql_fetch_array($result)) {
 

@@ -133,10 +133,10 @@ $txt .= '</ol></td></tr></table>
 
 $first = '';
 $result = mysql_query("SELECT SUM(superficie) AS superficie,
-(SELECT nick FROM users WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS nick,
-(SELECT cargo FROM users WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS cargo
-FROM ".SQL."mapa
-WHERE estado != 'e'
+(SELECT nick FROM users WHERE ID = mapa.user_ID LIMIT 1) AS nick,
+(SELECT cargo FROM users WHERE ID = mapa.user_ID LIMIT 1) AS cargo
+FROM mapa
+WHERE pais = '".PAIS."' AND estado != 'e'
 GROUP BY user_ID
 ORDER BY superficie DESC
 LIMIT 15");

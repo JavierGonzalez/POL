@@ -43,7 +43,7 @@ CREATE TABLE `15m_foros_hilos` (
   KEY `sub_ID` (`sub_ID`),
   KEY `time_last` (`time_last`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM AUTO_INCREMENT=1174 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=1175 DEFAULT CHARSET=latin1;
 CREATE TABLE `15m_foros_msg` (
   `ID` int(10) unsigned NOT NULL auto_increment,
   `hilo_ID` mediumint(8) NOT NULL default '0',
@@ -59,7 +59,7 @@ CREATE TABLE `15m_foros_msg` (
   KEY `foro_ID` (`hilo_ID`),
   KEY `time` (`time`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM AUTO_INCREMENT=9452 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9473 DEFAULT CHARSET=latin1;
 CREATE TABLE `atlantis_cuentas` (
   `ID` mediumint(8) NOT NULL auto_increment,
   `nombre` varchar(25) NOT NULL,
@@ -73,20 +73,6 @@ CREATE TABLE `atlantis_cuentas` (
   KEY `user_ID` (`user_ID`),
   KEY `nivel` (`nivel`)
 ) ENGINE=MyISAM AUTO_INCREMENT=289 DEFAULT CHARSET=latin1;
-CREATE TABLE `atlantis_empresas` (
-  `ID` smallint(5) NOT NULL auto_increment,
-  `url` varchar(40) NOT NULL default '',
-  `nombre` varchar(40) NOT NULL default '',
-  `user_ID` mediumint(8) NOT NULL default '0',
-  `descripcion` text NOT NULL,
-  `web` varchar(200) NOT NULL default '',
-  `cat_ID` tinyint(3) NOT NULL default '0',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `pv` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`ID`),
-  UNIQUE KEY `url` (`url`,`cat_ID`),
-  KEY `cat_ID` (`cat_ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=1268 DEFAULT CHARSET=latin1;
 CREATE TABLE `atlantis_foros` (
   `ID` smallint(5) NOT NULL auto_increment,
   `url` varchar(50) NOT NULL default '',
@@ -138,39 +124,6 @@ CREATE TABLE `atlantis_foros_msg` (
   KEY `time` (`time`),
   KEY `estado` (`estado`)
 ) ENGINE=MyISAM AUTO_INCREMENT=8723 DEFAULT CHARSET=latin1;
-CREATE TABLE `atlantis_mapa` (
-  `ID` smallint(5) unsigned NOT NULL auto_increment,
-  `pos_x` tinyint(2) NOT NULL default '1',
-  `pos_y` tinyint(2) NOT NULL default '1',
-  `size_x` tinyint(2) NOT NULL default '1',
-  `size_y` tinyint(2) NOT NULL default '1',
-  `user_ID` mediumint(8) NOT NULL default '1',
-  `nick` varchar(255) default NULL,
-  `link` varchar(90) NOT NULL default '',
-  `text` varchar(90) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `pols` mediumint(8) NOT NULL default '0',
-  `color` char(3) NOT NULL default '',
-  `estado` enum('p','v','e') NOT NULL default 'p',
-  `superficie` smallint(4) NOT NULL default '0',
-  PRIMARY KEY  (`ID`),
-  KEY `pos_x` (`pos_x`),
-  KEY `pos_y` (`pos_y`),
-  KEY `estado` (`estado`),
-  KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-CREATE TABLE `atlantis_transacciones` (
-  `ID` int(12) unsigned NOT NULL auto_increment,
-  `pols` int(10) NOT NULL default '0',
-  `emisor_ID` mediumint(8) NOT NULL default '0',
-  `receptor_ID` mediumint(8) NOT NULL default '0',
-  `concepto` varchar(90) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`ID`),
-  KEY `emisor_ID` (`emisor_ID`),
-  KEY `receptor_ID` (`receptor_ID`),
-  KEY `time` (`time`)
-) ENGINE=MyISAM AUTO_INCREMENT=5862 DEFAULT CHARSET=latin1;
 CREATE TABLE `cargos` (
   `ID` smallint(6) NOT NULL auto_increment,
   `cargo_ID` smallint(6) unsigned NOT NULL default '0',
@@ -210,7 +163,7 @@ CREATE TABLE `cargos_users` (
   KEY `aprobado` (`aprobado`),
   KEY `pais` (`pais`),
   KEY `nota` (`nota`)
-) ENGINE=MyISAM AUTO_INCREMENT=8554 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=8567 DEFAULT CHARSET=utf8;
 CREATE TABLE `cat` (
   `ID` smallint(6) unsigned NOT NULL auto_increment,
   `pais` enum('15M','Hispania','RSSV') default NULL,
@@ -276,7 +229,7 @@ CREATE TABLE `chats_msg` (
   KEY `tipo` (`tipo`),
   KEY `msg` (`msg`(333)),
   KEY `IP` (`IP`)
-) ENGINE=MyISAM AUTO_INCREMENT=3075171 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3077703 DEFAULT CHARSET=latin1;
 CREATE TABLE `config` (
   `ID` smallint(5) unsigned NOT NULL auto_increment,
   `pais` enum('15M','Hispania','RSSV','VP') NOT NULL default '15M',
@@ -309,7 +262,7 @@ CREATE TABLE `docs` (
   KEY `estado` (`estado`),
   KEY `cat_ID` (`cat_ID`),
   KEY `url` (`url`)
-) ENGINE=MyISAM AUTO_INCREMENT=866 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=867 DEFAULT CHARSET=latin1;
 CREATE TABLE `empresa_acciones` (
   `id` int(11) NOT NULL auto_increment,
   `ID_empresa` mediumint(9) unsigned NOT NULL default '0',
@@ -318,6 +271,21 @@ CREATE TABLE `empresa_acciones` (
   `num_acciones` int(11) NOT NULL default '100',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+CREATE TABLE `empresas` (
+  `ID` smallint(5) NOT NULL auto_increment,
+  `pais` varchar(255) character set utf8 default 'Hispania',
+  `url` varchar(40) character set utf8 NOT NULL default '',
+  `nombre` varchar(40) character set utf8 NOT NULL default '',
+  `user_ID` mediumint(8) NOT NULL default '0',
+  `descripcion` text character set utf8 NOT NULL,
+  `web` varchar(200) character set utf8 NOT NULL default '',
+  `cat_ID` tinyint(3) NOT NULL default '0',
+  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `pv` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`ID`),
+  UNIQUE KEY `url` (`url`,`cat_ID`),
+  KEY `cat_ID` (`cat_ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=685 DEFAULT CHARSET=latin1;
 CREATE TABLE `examenes` (
   `ID` mediumint(9) unsigned NOT NULL auto_increment,
   `pais` varchar(255) default NULL,
@@ -396,21 +364,7 @@ CREATE TABLE `hispania_cuentas` (
   UNIQUE KEY `nombre` (`nombre`),
   KEY `user_ID` (`user_ID`),
   KEY `nivel` (`nivel`)
-) ENGINE=MyISAM AUTO_INCREMENT=506 DEFAULT CHARSET=latin1;
-CREATE TABLE `hispania_empresas` (
-  `ID` smallint(5) NOT NULL auto_increment,
-  `url` varchar(40) NOT NULL default '',
-  `nombre` varchar(40) NOT NULL default '',
-  `user_ID` mediumint(8) NOT NULL default '0',
-  `descripcion` text NOT NULL,
-  `web` varchar(200) NOT NULL default '',
-  `cat_ID` tinyint(3) NOT NULL default '0',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `pv` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`ID`),
-  UNIQUE KEY `url` (`url`,`cat_ID`),
-  KEY `cat_ID` (`cat_ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=684 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=507 DEFAULT CHARSET=latin1;
 CREATE TABLE `hispania_foros` (
   `ID` smallint(5) NOT NULL auto_increment,
   `subforo_ID` mediumint(9) unsigned default NULL,
@@ -451,7 +405,7 @@ CREATE TABLE `hispania_foros_hilos` (
   KEY `sub_ID` (`sub_ID`),
   KEY `time_last` (`time_last`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM AUTO_INCREMENT=4662 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4667 DEFAULT CHARSET=utf8;
 CREATE TABLE `hispania_foros_msg` (
   `ID` int(10) unsigned NOT NULL auto_increment,
   `hilo_ID` mediumint(8) NOT NULL default '0',
@@ -467,40 +421,7 @@ CREATE TABLE `hispania_foros_msg` (
   KEY `foro_ID` (`hilo_ID`),
   KEY `time` (`time`),
   KEY `estado` (`estado`)
-) ENGINE=MyISAM AUTO_INCREMENT=39872 DEFAULT CHARSET=utf8;
-CREATE TABLE `hispania_mapa` (
-  `ID` smallint(5) unsigned NOT NULL auto_increment,
-  `pos_x` tinyint(2) NOT NULL default '1',
-  `pos_y` tinyint(2) NOT NULL default '1',
-  `size_x` tinyint(2) NOT NULL default '1',
-  `size_y` tinyint(2) NOT NULL default '1',
-  `user_ID` mediumint(8) NOT NULL default '1',
-  `nick` varchar(255) default NULL,
-  `link` varchar(90) NOT NULL default '',
-  `text` varchar(90) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `pols` mediumint(8) NOT NULL default '0',
-  `color` char(3) NOT NULL default '',
-  `estado` enum('p','v','e') NOT NULL default 'p',
-  `superficie` smallint(4) NOT NULL default '0',
-  PRIMARY KEY  (`ID`),
-  KEY `pos_x` (`pos_x`),
-  KEY `pos_y` (`pos_y`),
-  KEY `estado` (`estado`),
-  KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=658 DEFAULT CHARSET=latin1;
-CREATE TABLE `hispania_transacciones` (
-  `ID` mediumint(8) NOT NULL auto_increment,
-  `pols` int(10) NOT NULL default '0',
-  `emisor_ID` mediumint(8) NOT NULL default '0',
-  `receptor_ID` mediumint(8) NOT NULL default '0',
-  `concepto` varchar(90) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`ID`),
-  KEY `emisor_ID` (`emisor_ID`),
-  KEY `receptor_ID` (`receptor_ID`),
-  KEY `time` (`time`)
-) ENGINE=MyISAM AUTO_INCREMENT=58531 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=39899 DEFAULT CHARSET=utf8;
 CREATE TABLE `kicks` (
   `ID` mediumint(9) unsigned NOT NULL auto_increment,
   `pais` enum('15M','Hispania','RSSV') default NULL,
@@ -515,7 +436,7 @@ CREATE TABLE `kicks` (
   `motivo` text NOT NULL,
   PRIMARY KEY  (`ID`),
   KEY `pais` (`pais`,`user_ID`,`estado`,`expire`)
-) ENGINE=MyISAM AUTO_INCREMENT=312 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=315 DEFAULT CHARSET=utf8;
 CREATE TABLE `log` (
   `ID` bigint(20) unsigned NOT NULL auto_increment,
   `user_ID` mediumint(8) unsigned NOT NULL default '0',
@@ -528,7 +449,25 @@ CREATE TABLE `log` (
   KEY `pais` (`pais`),
   KEY `user_ID` (`user_ID`),
   KEY `time` (`time`)
-) ENGINE=MyISAM AUTO_INCREMENT=6214 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6288 DEFAULT CHARSET=utf8;
+CREATE TABLE `mapa` (
+  `ID` smallint(5) unsigned NOT NULL auto_increment,
+  `pais` varchar(255) default 'Hispania',
+  `pos_x` tinyint(2) NOT NULL default '1',
+  `pos_y` tinyint(2) NOT NULL default '1',
+  `size_x` tinyint(2) NOT NULL default '1',
+  `size_y` tinyint(2) NOT NULL default '1',
+  `user_ID` mediumint(8) NOT NULL default '1',
+  `nick` varchar(255) default NULL,
+  `link` varchar(90) NOT NULL default '',
+  `text` varchar(90) NOT NULL default '',
+  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `pols` mediumint(8) NOT NULL default '0',
+  `color` char(3) NOT NULL default '',
+  `estado` enum('p','v','e') NOT NULL default 'p',
+  `superficie` smallint(4) NOT NULL default '0',
+  PRIMARY KEY  (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=771 DEFAULT CHARSET=latin1;
 CREATE TABLE `mensajes` (
   `ID` int(10) unsigned NOT NULL auto_increment,
   `envia_ID` mediumint(8) unsigned NOT NULL default '0',
@@ -543,7 +482,7 @@ CREATE TABLE `mensajes` (
   KEY `recibe_ID` (`recibe_ID`),
   KEY `leido` (`leido`),
   KEY `time` (`time`)
-) ENGINE=MyISAM AUTO_INCREMENT=183351 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=183383 DEFAULT CHARSET=utf8;
 CREATE TABLE `notificaciones` (
   `noti_ID` int(11) unsigned NOT NULL auto_increment,
   `time` timestamp NULL default CURRENT_TIMESTAMP,
@@ -558,7 +497,7 @@ CREATE TABLE `notificaciones` (
   KEY `user_ID` (`user_ID`),
   KEY `url` (`url`),
   KEY `texto` (`texto`)
-) ENGINE=MyISAM AUTO_INCREMENT=52706 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=52752 DEFAULT CHARSET=utf8;
 CREATE TABLE `partidos` (
   `ID` mediumint(8) unsigned NOT NULL auto_increment,
   `pais` varchar(40) default NULL,
@@ -599,20 +538,6 @@ CREATE TABLE `pol_cuentas` (
   KEY `user_ID` (`user_ID`),
   KEY `nivel` (`nivel`)
 ) ENGINE=MyISAM AUTO_INCREMENT=377 DEFAULT CHARSET=latin1;
-CREATE TABLE `pol_empresas` (
-  `ID` smallint(5) NOT NULL auto_increment,
-  `url` varchar(40) NOT NULL default '',
-  `nombre` varchar(40) NOT NULL default '',
-  `user_ID` mediumint(8) NOT NULL default '0',
-  `descripcion` text NOT NULL,
-  `web` varchar(200) NOT NULL default '',
-  `cat_ID` tinyint(3) NOT NULL default '0',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `pv` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`ID`),
-  UNIQUE KEY `url` (`url`,`cat_ID`),
-  KEY `cat_ID` (`cat_ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=459 DEFAULT CHARSET=latin1;
 CREATE TABLE `pol_foros` (
   `ID` smallint(5) NOT NULL auto_increment,
   `url` varchar(50) NOT NULL default '',
@@ -664,39 +589,6 @@ CREATE TABLE `pol_foros_msg` (
   KEY `time` (`time`),
   KEY `estado` (`estado`)
 ) ENGINE=MyISAM AUTO_INCREMENT=56233 DEFAULT CHARSET=latin1;
-CREATE TABLE `pol_mapa` (
-  `ID` smallint(5) unsigned NOT NULL auto_increment,
-  `pos_x` tinyint(2) NOT NULL default '1',
-  `pos_y` tinyint(2) NOT NULL default '1',
-  `size_x` tinyint(2) NOT NULL default '1',
-  `size_y` tinyint(2) NOT NULL default '1',
-  `user_ID` mediumint(8) NOT NULL default '1',
-  `nick` varchar(255) default '',
-  `link` varchar(90) NOT NULL default '',
-  `text` varchar(90) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `pols` mediumint(8) NOT NULL default '0',
-  `color` char(3) NOT NULL default '',
-  `estado` enum('p','v','e') NOT NULL default 'p',
-  `superficie` smallint(4) NOT NULL default '0',
-  PRIMARY KEY  (`ID`),
-  KEY `pos_x` (`pos_x`),
-  KEY `pos_y` (`pos_y`),
-  KEY `estado` (`estado`),
-  KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-CREATE TABLE `pol_transacciones` (
-  `ID` int(12) unsigned NOT NULL auto_increment,
-  `pols` int(10) NOT NULL default '0',
-  `emisor_ID` mediumint(8) NOT NULL default '0',
-  `receptor_ID` mediumint(8) NOT NULL default '0',
-  `concepto` varchar(90) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`ID`),
-  KEY `emisor_ID` (`emisor_ID`),
-  KEY `receptor_ID` (`receptor_ID`),
-  KEY `time` (`time`)
-) ENGINE=MyISAM AUTO_INCREMENT=318815 DEFAULT CHARSET=latin1;
 CREATE TABLE `pujas` (
   `ID` mediumint(9) unsigned NOT NULL auto_increment,
   `pais` varchar(255) NOT NULL default '',
@@ -709,7 +601,7 @@ CREATE TABLE `pujas` (
   KEY `mercado_ID` (`mercado_ID`),
   KEY `user_ID` (`user_ID`),
   KEY `time` (`time`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 CREATE TABLE `referencias` (
   `ID` mediumint(8) NOT NULL auto_increment,
   `user_ID` mediumint(8) NOT NULL default '0',
@@ -722,7 +614,7 @@ CREATE TABLE `referencias` (
   UNIQUE KEY `IP` (`IP`),
   KEY `user_ID` (`user_ID`),
   KEY `pagado` (`pagado`)
-) ENGINE=MyISAM AUTO_INCREMENT=9497 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9499 DEFAULT CHARSET=latin1;
 CREATE TABLE `rssv_foros` (
   `ID` smallint(5) NOT NULL auto_increment,
   `subforo_ID` smallint(5) unsigned default NULL,
@@ -784,7 +676,7 @@ CREATE TABLE `rssv_foros_msg` (
   KEY `time` (`time`),
   KEY `estado` (`estado`),
   KEY `hilo_ID` (`hilo_ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=1921 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=1924 DEFAULT CHARSET=latin1;
 CREATE TABLE `stats` (
   `stats_ID` smallint(5) unsigned NOT NULL auto_increment,
   `pais` enum('POL','15M','15MBCN','15MMAD','VULCAN','Hispania','Atlantis','VP','RSSV') character set utf8 NOT NULL default 'POL',
@@ -809,6 +701,19 @@ CREATE TABLE `stats` (
   KEY `time` (`time`),
   KEY `pais` (`pais`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2817 DEFAULT CHARSET=latin1;
+CREATE TABLE `transacciones` (
+  `ID` mediumint(8) NOT NULL auto_increment,
+  `pais` varchar(255) character set utf8 default 'Hispania',
+  `pols` int(10) NOT NULL default '0',
+  `emisor_ID` mediumint(8) NOT NULL default '0',
+  `receptor_ID` mediumint(8) NOT NULL default '0',
+  `concepto` varchar(90) character set utf8 NOT NULL default '',
+  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`ID`),
+  KEY `emisor_ID` (`emisor_ID`),
+  KEY `receptor_ID` (`receptor_ID`),
+  KEY `time` (`time`)
+) ENGINE=MyISAM AUTO_INCREMENT=58545 DEFAULT CHARSET=latin1;
 CREATE TABLE `users` (
   `ID` mediumint(8) unsigned NOT NULL auto_increment,
   `nick` varchar(18) NOT NULL default '',
@@ -875,7 +780,7 @@ CREATE TABLE `users` (
   KEY `examenes` (`examenes`(333)),
   KEY `x` (`x`),
   KEY `y` (`y`)
-) ENGINE=MyISAM AUTO_INCREMENT=212030 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=212033 DEFAULT CHARSET=utf8;
 CREATE TABLE `votacion` (
   `ID` smallint(5) NOT NULL auto_increment,
   `pais` enum('VP','15M','POL','Hispania','VULCAN','Atlantis','RSSV') NOT NULL default 'VP',
@@ -909,7 +814,7 @@ CREATE TABLE `votacion` (
   KEY `tipo` (`tipo`),
   KEY `num` (`num`),
   KEY `votos_expire` (`votos_expire`)
-) ENGINE=MyISAM AUTO_INCREMENT=2533 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2535 DEFAULT CHARSET=utf8;
 CREATE TABLE `votacion_votos` (
   `ID` int(11) unsigned NOT NULL auto_increment,
   `user_ID` mediumint(8) unsigned NOT NULL default '0',
@@ -926,7 +831,7 @@ CREATE TABLE `votacion_votos` (
   KEY `voto` (`voto`),
   KEY `validez` (`validez`),
   KEY `time` (`time`)
-) ENGINE=MyISAM AUTO_INCREMENT=91928 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=92195 DEFAULT CHARSET=latin1;
 CREATE TABLE `votos` (
   `voto_ID` int(11) unsigned NOT NULL auto_increment,
   `pais` enum('all','VP','15M','Hispania','RSSV') character set utf8 NOT NULL default 'all',
@@ -941,7 +846,7 @@ CREATE TABLE `votos` (
   KEY `item_ID` (`item_ID`),
   KEY `pais` (`pais`),
   KEY `voto` (`voto`)
-) ENGINE=MyISAM AUTO_INCREMENT=83953 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=84088 DEFAULT CHARSET=latin1;
 CREATE TABLE `vp_cuentas` (
   `ID` mediumint(8) NOT NULL auto_increment,
   `nombre` varchar(25) NOT NULL,
@@ -955,20 +860,6 @@ CREATE TABLE `vp_cuentas` (
   KEY `user_ID` (`user_ID`),
   KEY `nivel` (`nivel`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1002 DEFAULT CHARSET=latin1;
-CREATE TABLE `vp_empresas` (
-  `ID` smallint(5) NOT NULL auto_increment,
-  `url` varchar(40) NOT NULL default '',
-  `nombre` varchar(40) NOT NULL default '',
-  `user_ID` mediumint(8) NOT NULL default '0',
-  `descripcion` text NOT NULL,
-  `web` varchar(200) NOT NULL default '',
-  `cat_ID` tinyint(3) NOT NULL default '0',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `pv` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`ID`),
-  UNIQUE KEY `url` (`url`,`cat_ID`),
-  KEY `cat_ID` (`cat_ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=1665 DEFAULT CHARSET=latin1;
 CREATE TABLE `vp_foros` (
   `ID` smallint(5) NOT NULL auto_increment,
   `subforo_ID` smallint(5) unsigned default NULL,
@@ -1029,39 +920,6 @@ CREATE TABLE `vp_foros_msg` (
   KEY `estado` (`estado`),
   KEY `hilo_ID` (`hilo_ID`)
 ) ENGINE=MyISAM AUTO_INCREMENT=98144 DEFAULT CHARSET=latin1;
-CREATE TABLE `vp_mapa` (
-  `ID` smallint(5) unsigned NOT NULL auto_increment,
-  `pos_x` tinyint(2) NOT NULL default '1',
-  `pos_y` tinyint(2) NOT NULL default '1',
-  `size_x` tinyint(2) NOT NULL default '1',
-  `size_y` tinyint(2) NOT NULL default '1',
-  `user_ID` mediumint(8) NOT NULL default '1',
-  `nick` varchar(20) NOT NULL default '',
-  `link` varchar(90) NOT NULL default '',
-  `text` varchar(90) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `pols` mediumint(8) NOT NULL default '0',
-  `color` char(3) NOT NULL default '',
-  `estado` enum('p','v','e') NOT NULL default 'p',
-  `superficie` smallint(4) NOT NULL default '0',
-  PRIMARY KEY  (`ID`),
-  KEY `pos_x` (`pos_x`),
-  KEY `pos_y` (`pos_y`),
-  KEY `estado` (`estado`),
-  KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=1014 DEFAULT CHARSET=latin1;
-CREATE TABLE `vp_transacciones` (
-  `ID` int(12) unsigned NOT NULL auto_increment,
-  `pols` int(10) NOT NULL default '0',
-  `emisor_ID` mediumint(8) NOT NULL default '0',
-  `receptor_ID` mediumint(8) NOT NULL default '0',
-  `concepto` varchar(90) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`ID`),
-  KEY `emisor_ID` (`emisor_ID`),
-  KEY `receptor_ID` (`receptor_ID`),
-  KEY `time` (`time`)
-) ENGINE=MyISAM AUTO_INCREMENT=75605 DEFAULT CHARSET=latin1;
 CREATE TABLE `vulcan_cuentas` (
   `ID` mediumint(8) NOT NULL auto_increment,
   `nombre` varchar(25) NOT NULL,
@@ -1074,20 +932,6 @@ CREATE TABLE `vulcan_cuentas` (
   KEY `user_ID` (`user_ID`),
   KEY `nivel` (`nivel`)
 ) ENGINE=MyISAM AUTO_INCREMENT=77 DEFAULT CHARSET=latin1;
-CREATE TABLE `vulcan_empresas` (
-  `ID` smallint(5) NOT NULL auto_increment,
-  `url` varchar(40) NOT NULL default '',
-  `nombre` varchar(40) NOT NULL default '',
-  `user_ID` mediumint(8) NOT NULL default '0',
-  `descripcion` text NOT NULL,
-  `web` varchar(200) NOT NULL default '',
-  `cat_ID` tinyint(3) NOT NULL default '0',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `pv` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`ID`),
-  UNIQUE KEY `url` (`url`,`cat_ID`),
-  KEY `cat_ID` (`cat_ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=84 DEFAULT CHARSET=latin1;
 CREATE TABLE `vulcan_foros` (
   `ID` smallint(5) NOT NULL auto_increment,
   `url` varchar(50) NOT NULL default '',
@@ -1139,39 +983,6 @@ CREATE TABLE `vulcan_foros_msg` (
   KEY `time` (`time`),
   KEY `estado` (`estado`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4808 DEFAULT CHARSET=latin1;
-CREATE TABLE `vulcan_mapa` (
-  `ID` smallint(5) unsigned NOT NULL auto_increment,
-  `pos_x` tinyint(2) NOT NULL default '1',
-  `pos_y` tinyint(2) NOT NULL default '1',
-  `size_x` tinyint(2) NOT NULL default '1',
-  `size_y` tinyint(2) NOT NULL default '1',
-  `user_ID` mediumint(8) NOT NULL default '1',
-  `nick` varchar(255) default NULL,
-  `link` varchar(90) NOT NULL default '',
-  `text` varchar(90) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `pols` mediumint(8) NOT NULL default '0',
-  `color` char(3) NOT NULL default '',
-  `estado` enum('p','v','e') NOT NULL default 'p',
-  `superficie` smallint(4) NOT NULL default '0',
-  PRIMARY KEY  (`ID`),
-  KEY `pos_x` (`pos_x`),
-  KEY `pos_y` (`pos_y`),
-  KEY `estado` (`estado`),
-  KEY `user_ID` (`user_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-CREATE TABLE `vulcan_transacciones` (
-  `ID` mediumint(8) NOT NULL auto_increment,
-  `pols` int(10) NOT NULL default '0',
-  `emisor_ID` mediumint(8) NOT NULL default '0',
-  `receptor_ID` mediumint(8) NOT NULL default '0',
-  `concepto` varchar(90) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`ID`),
-  KEY `emisor_ID` (`emisor_ID`),
-  KEY `receptor_ID` (`receptor_ID`),
-  KEY `time` (`time`)
-) ENGINE=MyISAM AUTO_INCREMENT=12630 DEFAULT CHARSET=latin1;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

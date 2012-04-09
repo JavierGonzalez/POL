@@ -4,6 +4,7 @@ function conectar() {
 	$mysql_db = '...';
 	$mysql_user = '...';
 	$mysql_pass = '...';
+	$mysql_host = '...';
 
 	$error_msg = '<h1>MySQL Error</h1><p>Lo siento, la base de datos no funciona temporalmente.</p>';
 	if (!($l=@mysql_connect('localhost', $mysql_user, $mysql_pass))) { echo $error_msg; exit; }

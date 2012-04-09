@@ -8,28 +8,27 @@ switch($_GET['step']){
 	case 0:
 		if(isset($_POST['send']))
 		{
-			echo "Dentro";
-			$_SESSION['install-domain']=$_POST['domain'];
-			$_SESSION['install-dbname']=$_POST['dbname'];
-			$_SESSION['install-dbuser']=$_POST['dbuser'];
-			$_SESSION['install-dbhost']=$_POST['dbhost'];
+			$_SESSION['i_domain']=$_POST['domain'];
+			$_SESSION['i_dbname']=$_POST['dbname'];
+			$_SESSION['i_dbuser']=$_POST['dbuser'];
+			$_SESSION['i_dbhost']=$_POST['dbhost'];
 
-			if(!isset($_SESSION['install-dbpass']) 
-			|| ($_SESSION['install-dbpass'] != $_POST['dbpass'] 
+			if(!isset($_SESSION['i_dbpass']) 
+			|| ($_SESSION['i_dbpass'] != $_POST['dbpass'] 
 			&& strlen($_POST['dbpass']) > 0 ) )
 			{
-				$_SESSION['install-dbpass']=$_POST['dbpass'];
+				$_SESSION['i_dbpass']=$_POST['dbpass'];
 			}
 				
-			if( strlen($_SESSION['install-domain']) > 0 &&
-			strlen($_SESSION['install-dbname']) > 0 &&
-			strlen($_SESSION['install-dbuser']) > 0 &&
-			strlen($_SESSION['install-dbpass']) > 0 &&
-			strlen($_SESSION['install-dbhost']) > 0 )
+			if( strlen($_SESSION['i_domain']) > 0 &&
+			strlen($_SESSION['i_dbname']) > 0 &&
+			strlen($_SESSION['i_dbuser']) > 0 &&
+			strlen($_SESSION['i_dbpass']) > 0 &&
+			strlen($_SESSION['i_dbhost']) > 0 )
 			{
-				$link= @mysql_connect($_SESSION['install-dbhost'],
-					$_SESSION['install-dbuser'],
-					$_SESSION['install-dbpass']);	
+				$link= @mysql_connect($_SESSION['i_dbhost'],
+					$_SESSION['i_dbuser'],
+					$_SESSION['i_dbpass']);	
 				if( ! $link )
 				{ 
 					$theme->addvar("{ERROR}", mysql_error()); 
@@ -37,7 +36,7 @@ switch($_GET['step']){
 				else
 				{
 					if(!mysql_select_db(
-					$_SESSION['install-dbname'], 
+					$_SESSION['i_dbname'], 
 					$link))
 					{
 						$theme->addvar("{ERROR}", mysql_error());
@@ -45,6 +44,24 @@ switch($_GET['step']){
 					else
 					{
 						mysql_close($link);
+						$conf_pwd=file_get_contents("../config-pwd-sample.php");
+						$conf_pwd=str_replace(
+								array(
+									"$mysql_host = '...';",
+									"$mysql_db = '...';",
+									"$mysql_user = '...';",
+									"$mysql_pass = '...';"
+								),
+								array(
+									"$mysql_host = '".$_SESSION['i_dbhost']."';",
+									"$mysql_db = '".$_SESSION['i_dbname']."';",
+									"$mysql_user = '".$_SESSION['i_dbuser']."';",
+									"$mysql_pass = '".$_SESSION['i_dbpass']."';"
+								), 
+								$conf_pwd);
+						file_put_contents("../config-pwd.php",$conf_pwd);
+
+						
 						header("Location: ?step=1");
 					}
 				}
@@ -52,21 +69,21 @@ switch($_GET['step']){
 		}
 
 		$theme->addvar("{DOMINIO}",
-			(isset($_SESSION['install-domain'])) ? 
-			$_SESSION['install-domain'] : 
+			(isset($_SESSION['i_domain'])) ? 
+			$_SESSION['i_domain'] : 
 			$_SERVER['SERVER_NAME']);
 
 		$theme->addvar("{DBNAME}",
-			(isset($_SESSION['install-dbname'])) ? 
-			$_SESSION['install-dbname'] : "");
+			(isset($_SESSION['i_dbname'])) ? 
+			$_SESSION['i_dbname'] : "");
 
 		$theme->addvar("{DBUSER}",
-			(isset($_SESSION['install-dbuser'])) ? 
-			$_SESSION['install-dbuser'] : "");
+			(isset($_SESSION['i_dbuser'])) ? 
+			$_SESSION['i_dbuser'] : "");
 
 		$theme->addvar("{DBHOST}",
-			(isset($_SESSION['install-dbhost'])) ? 
-			$_SESSION['install-dbhost'] : "localhost");
+			(isset($_SESSION['i_dbhost'])) ? 
+			$_SESSION['i_dbhost'] : "localhost");
 
 		$theme->addvar("{DBPASS}","");
 

@@ -76,20 +76,22 @@ function initialize() {
 
 <div id="map" style="width:100%;height:400px"></div>
 
-<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=geolocalizacion&b=add" method="POST">
+<form action="/accion.php?a=geolocalizacion&b=add" method="POST">
 
-<table border="0">
+<table border="0" width="100%">
 <tr>
 
 <td>'.boton('Fijar mi localización', 'submit', false, 'blue').'</td>
 
 <td align="right" nowrap="nowrap">
-Latitud: <input name="y" size="3" type="text" id="geo_y" value="'.$center['y'].'" readonly="readonly" /><br />
-Longitud: <input name="x" size="3" type="text" id="geo_x" value="'.$center['x'].'" readonly="readonly" />
+Latitud: <input name="y" size="3" type="text" id="geo_y" value="'.$center['y'].'" style="text-align:right;" readonly="readonly" /><br />
+Longitud: <input name="x" size="3" type="text" id="geo_x" value="'.$center['x'].'" style="text-align:right;" readonly="readonly" />
 </td>
 
 <td>Marca tu lugar haciendo clic. La información será pública.<br />
 Por privacidad la precisión guardada es de solo 1.112 metros a la redonda.</td>
+
+<td align="right">'.boton('Eliminar tu geolocalización', '/accion.php?a=geolocalizacion&b=del', '¿Estás seguro de querer borrar tu geolocalización de forma permanente?\n\nDebes saber que -para proteger la privacidad- la precisión guardada es de 1112 metros a la redonda, aleatoriamente.', 'red small').'</td>
 
 </tr>
 </table>

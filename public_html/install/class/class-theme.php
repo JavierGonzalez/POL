@@ -5,7 +5,7 @@ class theme{
 	private $search = array();
 	private $replace = array();
 	
-	public function add($file){
+	public function putfile($file){
 		$this->html.=file_get_contents(THEME."/".$file.THEME_MIME);
 	}
 

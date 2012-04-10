@@ -88,7 +88,7 @@ FROM cargos_users
 WHERE pais = '".PAIS."' AND cargo = 'true'
 ORDER BY user_ID ASC", $link);
 while($r = mysql_fetch_array($result)){ if ($salarios[$r['user_ID']] < $r['salario']) { $salarios[$r['user_ID']] = $r['salario']; } }
-$result = mysql_query("SELECT pols FROM ".SQL."cuentas WHERE ID = 1 LIMIT 1", $link);
+$result = mysql_query("SELECT pols FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1", $link);
 while($r = mysql_fetch_array($result)) { $pols_gobierno = $r['pols']; }
 $gasto_total = 0;
 foreach($salarios as $user_ID => $salario) {
@@ -105,13 +105,13 @@ LIMIT 1", $link);
 }
 evento_chat('<b>[PROCESO] Sueldos efectuados.</b> Gasto: <em>'.pols($gasto_total).' '.MONEDA.'</em>');
 
-$result = mysql_query("SELECT pols FROM ".SQL."cuentas WHERE ID = '1' LIMIT 1", $link);
+$result = mysql_query("SELECT pols FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1", $link);
 while($r = mysql_fetch_array($result)) {
 	$pols_gobierno2 = $r['pols'];
 }
 
 if ($pols_gobierno - $gasto_total != $pols_gobierno2) {
-	mysql_query("UPDATE ".SQL."cuentas SET pols = pols - ".$gasto_total." WHERE ID = '1' LIMIT 1", $link);
+	mysql_query("UPDATE cuentas SET pols = pols - ".$gasto_total." WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1", $link);
 	$pols_gobierno -= $gasto_total;
 	evento_chat('<b>[PROCESO] Correcci&oacute;n efectuada.</b> Descontado el gasto en salarios. El error era de <em>'. pols($pols_gobierno2 - $pols_gobierno).' '.MONEDA.'</em>');
 }
@@ -134,13 +134,13 @@ if ($salario_inempol > 0) {
 }
 evento_chat('<b>[PROCESO] INEMPOL efectuado.</b> Gasto: <em>'.pols($gasto_total).' '.MONEDA.'</em>');
 
-$result = mysql_query("SELECT pols FROM ".SQL."cuentas WHERE ID = '1' LIMIT 1", $link);
+$result = mysql_query("SELECT pols FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1", $link);
 while($r = mysql_fetch_array($result)) {
 	$pols_gobierno2 = $r['pols'];
 }
 
 if ($pols_gobierno - $gasto_total != $pols_gobierno2) {
-	mysql_query("UPDATE ".SQL."cuentas SET pols = pols - ".$gasto_total." WHERE ID = '1' LIMIT 1", $link);
+	mysql_query("UPDATE cuentas SET pols = pols - ".$gasto_total." WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1", $link);
 	evento_chat('<b>[PROCESO] Correcci&oacute;n efectuada.</b> Descontado el gasto en INEMPOL. El error era de <em>'. pols($pols_gobierno2 - $pols_gobierno + $gasto_total).' '.MONEDA.'</em>');
 }
 
@@ -192,9 +192,9 @@ mysql_query("UPDATE config SET valor = '".$las_palabras."' WHERE pais = '".PAIS.
 $p['user_ID'] = 1;
 $recaudado_propiedades = 0;
 $result = mysql_query("SELECT ID, size_x, size_y, user_ID, estado, superficie,
-(SELECT pols FROM users WHERE ID = ".SQL."mapa.user_ID LIMIT 1) AS pols_total
-FROM ".SQL."mapa 
-WHERE user_ID != '0' AND estado != 'e'
+(SELECT pols FROM users WHERE ID = mapa.user_ID LIMIT 1) AS pols_total
+FROM mapa 
+WHERE pais = '".PAIS."' AND user_ID != '0' AND estado != 'e'
 ORDER BY user_ID ASC, size_x DESC, size_y DESC", $link);
 while($r = mysql_fetch_array($result)){ 
 	if ($p['user_ID'] != $r['user_ID']) { 
@@ -203,7 +203,7 @@ while($r = mysql_fetch_array($result)){
 			$recaudado_propiedades += $p['pols']; 
 		} else {
 			foreach($p['prop'] as $unID => $uncoste) {
-				mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '".$unID."' AND user_ID = '".$p['user_ID']."' LIMIT 1", $link);
+				mysql_query("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$unID."' AND user_ID = '".$p['user_ID']."' LIMIT 1", $link);
 			}
 		}
 		$p = '';
@@ -220,7 +220,7 @@ if ($p['pols_total'] >= $p['pols']) {
 	$recaudado_propiedades += $p['pols']; 
 } else {
 	foreach($p['prop'] as $unID => $uncoste) {
-		mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '".$unID."' AND user_ID = '".$p['user_ID']."' LIMIT 1", $link);
+		mysql_query("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$unID."' AND user_ID = '".$p['user_ID']."' LIMIT 1", $link);
 	}
 }
 evento_chat('<b>[PROCESO] Coste de propiedades efectuado,</b> recaudado: '.pols($recaudado_propiedades).' '.MONEDA);
@@ -237,7 +237,7 @@ if ($pol['config']['impuestos'] > 0) {
 	$porcentaje = $pol['config']['impuestos'];
 
 	$result = mysql_query("SELECT ID, nick, pols, estado,
-(SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = users.ID AND nivel = '0' AND exenta_impuestos = '0' GROUP BY user_ID) AS pols_cuentas
+(SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = users.ID AND nivel = '0' AND exenta_impuestos = '0' GROUP BY user_ID) AS pols_cuentas
 FROM users WHERE pais = '".PAIS."' AND fecha_registro < '".$margen_24h."'
 ORDER BY fecha_registro ASC", $link);
 	while($r = mysql_fetch_array($result)) { 
@@ -258,7 +258,7 @@ ORDER BY fecha_registro ASC", $link);
 				$pols_total = $r['pols_cuentas'];
 			}
 
-			$result2 = mysql_query("SELECT ID, pols FROM ".SQL."cuentas WHERE user_ID = '".$r['ID']."' AND nivel = '0' AND exenta_impuestos = '0'", $link);
+			$result2 = mysql_query("SELECT ID, pols FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' AND nivel = '0' AND exenta_impuestos = '0'", $link);
 			while($r2 = mysql_fetch_array($result2)) {
 				$impuesto_cuenta = ceil(($r2['pols']/$pols_total) * $impuesto);
 				pols_transferir($impuesto_cuenta, '-'.$r2['ID'], '-1', 'IMPUESTO '.date('Y-m-d').': '.$pol['config']['impuestos'].'%');
@@ -271,7 +271,7 @@ ORDER BY fecha_registro ASC", $link);
 			}
 
 			if ($resto_impuestos > 0) {
-				$result2 = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE user_ID = '".$r['ID']."' AND nivel = '0' AND exenta_impuestos = '0' ORDER BY pols DESC LIMIT 1", $link);
+				$result2 = mysql_query("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' AND nivel = '0' AND exenta_impuestos = '0' ORDER BY pols DESC LIMIT 1", $link);
 				while($r2 = mysql_fetch_array($result2)) { 
 					pols_transferir($resto_impuestos, '-'.$r2['ID'], '-1', 'IMPUESTO '.date('Y-m-d').': '.$pol['config']['impuestos'].'%. Ajuste por redondeos.');
 				}
@@ -284,7 +284,7 @@ ORDER BY fecha_registro ASC", $link);
 
 // IMPUESTO EMPRESA
 if ($pol['config']['impuestos_empresa'] > 0) {	
-	$result = mysql_query("SELECT COUNT(ID) AS num, user_ID FROM ".SQL."empresas GROUP BY user_ID ORDER BY num DESC", $link);
+	$result = mysql_query("SELECT COUNT(ID) AS num, user_ID FROM empresas WHERE pais = '".PAIS."' GROUP BY user_ID ORDER BY num DESC", $link);
 	while($r = mysql_fetch_array($result)) { 
 		// comprueba si existe el propietario de la empresa antes de ejecutar el impuesto
 		$result2 = mysql_query("SELECT ID, pols FROM users WHERE ID = '".$r['user_ID']."' AND pais = '".PAIS."' LIMIT 1", $link);
@@ -295,7 +295,7 @@ if ($pol['config']['impuestos_empresa'] > 0) {
 				pols_transferir($impuesto, $r['user_ID'], '-1', 'IMPUESTO EMPRESAS '.date('Y-m-d').': '.$r['num'].' empresas');	
 			} 
 			else {
-				$result3 = mysql_query("SELECT ID, pols FROM ".SQL."cuentas WHERE user_ID = '".$r['user_ID']."' AND nivel = '0' ORDER BY pols DESC LIMIT 1", $link);
+				$result3 = mysql_query("SELECT ID, pols FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['user_ID']."' AND nivel = '0' ORDER BY pols DESC LIMIT 1", $link);
 				while($r3 = mysql_fetch_array($result3)) {
 					 if ($r3['pols'] >= $impuesto) {
 						$recaudacion_empresas += $impuesto;
@@ -332,7 +332,7 @@ mysql_query("DELETE FROM chats WHERE pais = '".PAIS."' AND fecha_last < '".$marg
 mysql_query("DELETE FROM ".SQL_MENSAJES." WHERE time < '".$margen_15dias."'", $link);
 
 // ELIMINAR TRANSACCIONES ANTIGUAS
-mysql_query("DELETE FROM ".SQL."transacciones WHERE time < '".$margen_60dias."'", $link);
+mysql_query("DELETE FROM transacciones WHERE pais = '".PAIS."' AND time < '".$margen_60dias."'", $link);
 
 // ELIMINAR LOG EVENTOS
 mysql_query("DELETE FROM ".SQL."log WHERE time < '".$margen_90dias."'", $link);
@@ -431,12 +431,12 @@ while($r = mysql_fetch_array($result)) { $st['pols'] = $r['num']; }
 
 // pols_cuentas
 if (ECONOMIA) {
-	$result = mysql_query("SELECT SUM(pols) AS num FROM ".SQL."cuentas", $link);
+	$result = mysql_query("SELECT SUM(pols) AS num FROM cuentas WHERE pais = '".PAIS."'", $link);
 	while($r = mysql_fetch_array($result)) { $st['pols_cuentas'] = $r['num']; }
 
 	// transacciones
 
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."transacciones WHERE time > '".$margen_24h."'", $link);
+	$result = mysql_query("SELECT COUNT(ID) AS num FROM transacciones WHERE pais = '".PAIS."' AND time > '".$margen_24h."'", $link);
 	while($r = mysql_fetch_array($result)) { $st['transacciones'] = $r['num']; }
 } else { $st['transacciones'] = 0; $st['pols_cuentas'] = 0; }
 
@@ -448,7 +448,7 @@ while($r = mysql_fetch_array($result)) { $st['hilos_msg'] = $st['hilos_msg'] + $
 
 // pols_gobierno
 if (ECONOMIA) {
-	$result = mysql_query("SELECT SUM(pols) AS num FROM ".SQL."cuentas WHERE ID = '1' OR ID = '2'", $link);
+	$result = mysql_query("SELECT SUM(pols) AS num FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true'", $link);
 	while($r = mysql_fetch_array($result)) { $st['pols_gobierno'] = $r['num']; }
 } else { $st['pols_gobierno'] = 0; }
 
@@ -458,13 +458,13 @@ while($r = mysql_fetch_array($result)) { $st['partidos'] = $r['num']; }
 
 // empresas
 if (ECONOMIA) {
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."empresas", $link);
+	$result = mysql_query("SELECT COUNT(ID) AS num FROM empresas WHERE pais = '".PAIS."'", $link);
 	while($r = mysql_fetch_array($result)) { $st['empresas'] = $r['num']; }
 
 
 	// mapa (desde el 2011/04/07 guarda el porcentaje en venta.
 	$superficie_total = $columnas * $filas;
-	$result = mysql_query("SELECT superficie, estado FROM ".SQL."mapa", $link);
+	$result = mysql_query("SELECT superficie, estado FROM mapa WHERE pais = '".PAIS."'", $link);
 	while($r = mysql_fetch_array($result)) { 
 		$sup_total += $r['superficie']; 
 		if ($r['estado'] == 'v') { $sup_vende += $r['superficie']; }
@@ -472,7 +472,7 @@ if (ECONOMIA) {
 	$st['mapa'] = round(($sup_vende * 100) / $superficie_total);
 
 	// mapa_vende: el precio de venta más bajo de una propiedad
-	$result = mysql_query("SELECT pols FROM ".SQL."mapa WHERE estado = 'v' ORDER BY pols ASC LIMIT 1", $link);
+	$result = mysql_query("SELECT pols FROM mapa WHERE pais = '".PAIS."' AND estado = 'v' ORDER BY pols ASC LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) { $st['mapa_vende'] = $r['pols']; }
 } else { $st['empresas'] = 0; $st['mapa'] = 0; $st['mapa_vende'] = 0; }
 

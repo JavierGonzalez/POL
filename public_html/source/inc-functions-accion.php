@@ -260,10 +260,10 @@ function eliminar_ciudadano($ID) {
 	global $link, $pol;
 	$user_ID = false;
 	$result3 = mysql_query("SELECT IP, pols, nick, ID, ref, estado".(ECONOMIA?",
-	(SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = '" . $ID . "') AS pols_cuentas":"")." 
-	FROM users 
-	WHERE ID = '" . $ID . "' 
-	LIMIT 1", $link);
+(SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$ID."') AS pols_cuentas":"")." 
+FROM users 
+WHERE ID = '" . $ID . "' 
+LIMIT 1", $link);
 	while($r3 = mysql_fetch_array($result3)) {
 			$user_ID = $r3['ID']; 
 			$estado = $r3['estado']; 
@@ -290,18 +290,18 @@ function eliminar_ciudadano($ID) {
 			mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."' AND hilo_ID = '-1'", $link);
 
 
+
 			if (ECONOMIA) {
 					mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE user_ID = '".$user_ID."'", $link);
-					mysql_query("DELETE FROM ".SQL."empresas WHERE user_ID = '".$user_ID."'", $link);
-					mysql_query("DELETE FROM ".SQL."mercado WHERE user_ID = '".$user_ID."'", $link);
-					mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '".$user_ID."'", $link);
-					mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '".$user_ID."'", $link);
+					mysql_query("DELETE FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
+					mysql_query("DELETE FROM mapa WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
+					mysql_query("DELETE FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 			}
 
-			$img_root = RAIZ.'/img/a/' . $user_ID;
-			if (file_exists($img_root . '.jpg')) {
-					@unlink($img_root . '.jpg');
-					@unlink($img_root . '_40.jpg');
+			$img_root = RAIZ.'/img/a/'.$user_ID;
+			if (file_exists($img_root.'.jpg')) {
+					@unlink($img_root.'.jpg');
+					@unlink($img_root.'_40.jpg');
 			}
 
 			// eliminar

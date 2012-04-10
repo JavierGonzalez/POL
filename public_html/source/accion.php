@@ -52,7 +52,7 @@ case 'perfil':
 			$datos_array[] = $_POST[$dato];
 		}
 		mysql_query("UPDATE users SET datos = '".implode('][', $datos_array)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		$refer_url = 'perfil/'.strtolower($pol['nick']);
+		$refer_url = 'perfil/'.$pol['nick'];
 	}
 	break;
 
@@ -77,13 +77,13 @@ case 'SC':
 
 case 'exencion_impuestos':
 	if ($pol['nivel'] >= 98) {
-		$result = mysql_query("SELECT ID, exenta_impuestos FROM ".SQL."cuentas where nivel = '0'", $link);
+		$result = mysql_query("SELECT ID, exenta_impuestos FROM cuentas WHERE pais = '".PAIS."' AND nivel = '0'", $link);
 		while($r = mysql_fetch_array($result)) {
 			if (($_POST['exenta_impuestos'.$r['ID']] == '1') AND ($r['exenta_impuestos'] == '0')) {
-				mysql_query("UPDATE ".SQL."cuentas SET exenta_impuestos = 1 where ID = '".$r['ID']."'", $link);
+				mysql_query("UPDATE cuentas SET exenta_impuestos = 1 WHERE pais = '".PAIS."' AND ID = '".$r['ID']."'", $link);
 			}
 			elseif  (!isset($_POST['exenta_impuestos'.$r['ID']]) AND ($r['exenta_impuestos'] == '1')) {
-				mysql_query("UPDATE ".SQL."cuentas SET exenta_impuestos = 0 where ID = '".$r['ID']."'", $link);
+				mysql_query("UPDATE cuentas SET exenta_impuestos = 0 WHERE pais = '".PAIS."' AND ID = '".$r['ID']."'", $link);
 			}
 		}
 		$refer_url = 'pols/cuentas';
@@ -184,9 +184,10 @@ case 'geolocalizacion':
 		while($r = mysql_fetch_array($result)) {
 			evento_chat('<b>[#]</b> '.crear_link($pol['nick']).' se ha geolocalizado en el <a href="/geolocalizacion"><b>mapa</b> de ciudadanos</a>');
 		}
-
 		mysql_query("UPDATE users SET x = '".$_POST['x']."', y = '".$_POST['y']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		
+	} elseif ($_GET['b'] == 'del') {
+		mysql_query("UPDATE users SET x = NULL, y = NULL WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	}
 	$refer_url = 'geolocalizacion';
 	break;
@@ -241,7 +242,7 @@ case 'rechazar-ciudadania':
 	
 	$user_ID = false;
 	$result3 = mysql_query("SELECT IP, pols, nick, ID, ref, estado,
-".(ECONOMIA?"(SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = '".$pol['user_ID']."')":"estado")." AS pols_cuentas 
+".(ECONOMIA?"(SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."')":"estado")." AS pols_cuentas 
 FROM users 
 WHERE ID = '".$pol['user_ID']."' AND estado = 'ciudadano' AND pais = '".PAIS."'
 LIMIT 1", $link);
@@ -263,10 +264,10 @@ LIMIT 1", $link);
 
 		if (ECONOMIA) {
 			pols_transferir($pols_arancel, $user_ID, '-1', 'Arancel de salida (rechazo de ciudadania) '.$pol['config']['arancel_salida'].'%');
-			mysql_query("DELETE FROM ".SQL."empresas WHERE user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM ".SQL."mercado WHERE user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM ".SQL."mapa WHERE user_ID = '".$user_ID."'", $link);
+			
+			mysql_query("DELETE FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM mapa WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM pujas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 		}
 
@@ -549,34 +550,34 @@ FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_POST['ID']."' LIMIT 1", $lin
 case 'mapa':
 
 	// pasa a ESTADO
-	if (nucleo_acceso('cargo', 40)) { mysql_query("UPDATE ".SQL."mapa SET estado = 'e', user_ID = '' WHERE link = 'ESTADO'", $link); }
+	if (nucleo_acceso('cargo', 40)) { mysql_query("UPDATE mapa SET estado = 'e', user_ID = '' WHERE pais = '".PAIS."' AND link = 'ESTADO'", $link); }
 
 	if (($_GET['b'] == 'compraventa') AND ($_GET['ID'])) {
 
 
-		$result = mysql_query("SELECT ID, user_ID, pols FROM ".SQL."mapa WHERE ID = '".$_GET['ID']."' AND estado = 'v' AND '".$pol['pols']."' >= pols LIMIT 1", $link);
+		$result = mysql_query("SELECT ID, user_ID, pols FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND estado = 'v' AND '".$pol['pols']."' >= pols LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 			if ($pol['user_ID'] != $r['user_ID']) {
 				pols_transferir($r['pols'], $pol['user_ID'], $r['user_ID'], 'Compra-venta propiedad: '.$r['ID']);
-				mysql_query("UPDATE ".SQL."mapa SET estado = 'p', user_ID = '".$pol['user_ID']."', nick = '".$pol['nick']."' WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+				mysql_query("UPDATE mapa SET estado = 'p', user_ID = '".$pol['user_ID']."', nick = '".$pol['nick']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1", $link);
 			}
 		}
 		$refer_url = 'mapa/';
 
 	} elseif (($_GET['b'] == 'cancelar-venta') AND ($_GET['ID'])) {
 
-		mysql_query("UPDATE ".SQL."mapa SET estado = 'p' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("UPDATE mapa SET estado = 'p' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		$refer_url = 'mapa/propiedades';
 
 	} elseif (($_GET['b'] == 'vender') AND ($_GET['ID']) AND ($_POST['pols'] > 0)) {
 
-		mysql_query("UPDATE ".SQL."mapa SET pols = '".$_POST['pols']."', estado = 'v' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("UPDATE mapa SET pols = '".$_POST['pols']."', estado = 'v' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		$refer_url = 'mapa/propiedades';
 
 
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['ID'])) {
 
-		mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) LIMIT 1", $link);
+		mysql_query("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) LIMIT 1", $link);
 		$refer_url = 'mapa/propiedades';
 
 
@@ -585,11 +586,11 @@ case 'mapa':
 
 		$result = mysql_query("SELECT ID, user_ID, pols, 
 (SELECT ID FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS ceder_user_ID 
-FROM ".SQL."mapa 
-WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = 'p' OR estado = 'e') LIMIT 1", $link);
+FROM mapa 
+WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = 'p' OR estado = 'e') LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 			if ($r['ceder_user_ID']) {
-				mysql_query("UPDATE ".SQL."mapa SET user_ID = '".$r['ceder_user_ID']."', nick = '".$_POST['nick']."',  time = '".$date."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+				mysql_query("UPDATE mapa SET user_ID = '".$r['ceder_user_ID']."', nick = '".$_POST['nick']."',  time = '".$date."' WHERE pais = '".PAIS."' AND ID = '".$r['ID']."' LIMIT 1", $link);
 				evento_log('Cede propiedad #'.$r['ID']);
 			}
 		}
@@ -598,18 +599,18 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = '
 
 	} elseif (($_GET['b'] == 'separar') AND ($_GET['ID'])) {
 
-		$result = mysql_query("SELECT * FROM ".SQL."mapa WHERE ID = '".$_GET['ID']."' AND (estado = 'p' OR estado = 'e') AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		$result = mysql_query("SELECT * FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (estado = 'p' OR estado = 'e') AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 			
 			for ($y=1;$y<=$r['size_y'];$y++) {
 				for ($x=1;$x<=$r['size_x'];$x++) {
 					if (($x==1) AND ($y==1)) {
-						mysql_query("UPDATE ".SQL."mapa SET size_x = 1, size_y = 1, superficie = 1, time = '".$date."', estado = 'p' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+						mysql_query("UPDATE mapa SET size_x = 1, size_y = 1, superficie = 1, time = '".$date."', estado = 'p' WHERE pais = '".PAIS."' AND ID = '".$r['ID']."' LIMIT 1", $link);
 						$puntero_x = $r['pos_x'];
 						$puntero['pos_x'] = $r['pos_x'];
 						$puntero['pos_y'] = $r['pos_y'];
 					} else {
-						mysql_query("INSERT INTO ".SQL."mapa (pos_x, pos_y, size_x, size_y, user_ID, nick, link, text, time, pols, color, estado, superficie) VALUES ('".$puntero['pos_x']."', '".$puntero['pos_y']."', '1', '1', '".$pol['user_ID']."', '".$pol['nick']."', '".$r['link']."', '', '".$date."', '".$r['pols']."', '".$r['color']."', 'p', '1')", $link);
+						mysql_query("INSERT INTO mapa (pais, pos_x, pos_y, size_x, size_y, user_ID, nick, link, text, time, pols, color, estado, superficie) VALUES ('".PAIS."', '".$puntero['pos_x']."', '".$puntero['pos_y']."', '1', '1', '".$pol['user_ID']."', '".$pol['nick']."', '".$r['link']."', '', '".$date."', '".$r['pols']."', '".$r['color']."', 'p', '1')", $link);
 					}
 					$puntero['pos_x']++;
 				}
@@ -627,8 +628,8 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND (estado = '
 		$ID = explode("-", $_GET['ID']);
 
 		$result = mysql_query("SELECT *
-FROM ".SQL."mapa 
-WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) AND (ID = '".$ID[0]."' OR ID = '".$ID[1]."') LIMIT 2", $link);
+FROM mapa 
+WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) AND (ID = '".$ID[0]."' OR ID = '".$ID[1]."') LIMIT 2", $link);
 		while($r = mysql_fetch_array($result)){ 
 			$prop[$r['ID']]['size_x'] = $r['size_x'];
 			$prop[$r['ID']]['size_y'] = $r['size_y'];
@@ -641,18 +642,18 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_
 				//ampliar 0
 				$size_x = ($prop[$ID[0]]['size_x'] + $prop[$ID[1]]['size_x']);
 				$size_y = $prop[$ID[0]]['size_y'];
-				mysql_query("UPDATE ".SQL."mapa SET size_x = '".$size_x."', superficie = '".($size_x * $size_y)."' WHERE ID = '".$ID[0]."' LIMIT 1", $link);
+				mysql_query("UPDATE mapa SET size_x = '".$size_x."', superficie = '".($size_x * $size_y)."' WHERE pais = '".PAIS."' AND ID = '".$ID[0]."' LIMIT 1", $link);
 				//eliminar 1
-				mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '".$ID[1]."' LIMIT 1", $link);
+				mysql_query("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$ID[1]."' LIMIT 1", $link);
 
 			} elseif ($_GET['f'] == 'y') {
 
 				//ampliar 0
 				$size_x = $prop[$ID[0]]['size_x'];
 				$size_y = ($prop[$ID[0]]['size_y'] + $prop[$ID[1]]['size_y']);
-				mysql_query("UPDATE ".SQL."mapa SET size_y = '".$size_y."', superficie = '".($size_x * $size_y)."' WHERE ID = '".$ID[0]."' LIMIT 1", $link);
+				mysql_query("UPDATE mapa SET size_y = '".$size_y."', superficie = '".($size_x * $size_y)."' WHERE pais = '".PAIS."' AND ID = '".$ID[0]."' LIMIT 1", $link);
 				//eliminar 1
-				mysql_query("DELETE FROM ".SQL."mapa WHERE ID = '".$ID[1]."' LIMIT 1", $link);
+				mysql_query("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$ID[1]."' LIMIT 1", $link);
 
 			}
 		}
@@ -672,7 +673,7 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_
 		}
 		$_POST['color'] = ereg_replace("[^A-Fa-f0-9]", "", $_POST['color']);
 
-		$result = mysql_query("SELECT * FROM ".SQL."mapa WHERE ID = '".$_GET['ID']."' LIMIT 1", $link);
+		$result = mysql_query("SELECT * FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 			$superficie = $r['size_x'] * $r['size_y'];
 		}
@@ -688,7 +689,7 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_
 		$_POST['link'] = str_replace("\"", "", $_POST['link']);
 		$_POST['link'] = str_replace(HOST, "", $_POST['link']);
 		if (strlen($_POST['color']) == 3) {
-			mysql_query("UPDATE ".SQL."mapa SET color = '".$_POST['color']."', text = '".$_POST['text']."', link = '".$_POST['link']."' WHERE ID = '" .	$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) LIMIT 1", $link);
+			mysql_query("UPDATE mapa SET color = '".$_POST['color']."', text = '".$_POST['text']."', link = '".$_POST['link']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) LIMIT 1", $link);
 			$refer_url = 'mapa/propiedades';
 		}
 
@@ -708,7 +709,7 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_
 			
 			//verifica solar libre
 			$cc = false;
-			$result = mysql_query("SELECT pos_x, pos_y, size_x, size_y FROM ".SQL."mapa", $link);
+			$result = mysql_query("SELECT pos_x, pos_y, size_x, size_y FROM mapa WHERE pais = '".PAIS."'", $link);
 			while($r = mysql_fetch_array($result)){
 				for ($y=1;$y<=$r['size_y'];$y++) {
 					for ($x=1;$x<=$r['size_x'];$x++) {
@@ -721,7 +722,7 @@ WHERE (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_
 
 			if (($cc[$pos[0]][$pos[1]] != true) AND ($pol['pols'] >= $pol['config']['pols_solar'])) { // verifica solar libre
 
-				mysql_query("INSERT INTO ".SQL."mapa (pos_x, pos_y, size_x, size_y, user_ID, nick, link, text, time, pols, color, estado, superficie) VALUES ('".$pos[0]."', '".$pos[1]."', '1', '1', '".$pol['user_ID']."', '".$pol['nick']."', '".$_POST['link']."', '', '".$date."', '".$pol['config']['pols_solar']."', '".$_POST['color']."', 'p', '1')", $link);
+				mysql_query("INSERT INTO mapa (pais, pos_x, pos_y, size_x, size_y, user_ID, nick, link, text, time, pols, color, estado, superficie) VALUES ('".PAIS."', '".$pos[0]."', '".$pos[1]."', '1', '1', '".$pol['user_ID']."', '".$pol['nick']."', '".$_POST['link']."', '', '".$date."', '".$pol['config']['pols_solar']."', '".$_POST['color']."', 'p', '1')", $link);
 				pols_transferir($pol['config']['pols_solar'], $pol['user_ID'], '-1', 'Compra propiedad: '.$_GET['ID']);
 			}
 		}
@@ -885,7 +886,7 @@ case 'empresa':
 		$result = mysql_query("SELECT ID, url FROM cat WHERE pais = '".PAIS."' AND ID = '".$_POST['cat']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ $cat_url = $r['url']; $cat_ID = $r['ID']; }
 
-		mysql_query("INSERT INTO ".SQL."empresas (url, nombre, user_ID, descripcion, web, cat_ID, time) VALUES ('".$url."', '".$nombre."', '".$pol['user_ID']."', 'Editar...', '', '".$cat_ID."', '".$date."')", $link);
+		mysql_query("INSERT INTO empresas (pais, url, nombre, user_ID, descripcion, web, cat_ID, time) VALUES ('".PAIS."', '".$url."', '".$nombre."', '".$pol['user_ID']."', 'Editar...', '', '".$cat_ID."', '".$date."')", $link);
 
 		mysql_query("SELECT ID FROM ".SQL."vp_empresas WHERE nombre='$nombre'",$link);
 		$nick = $_SESSION['pol']['nick'];
@@ -924,11 +925,11 @@ case 'empresa':
 
 		$result = mysql_query("SELECT ID, user_ID, 
 (SELECT ID FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS ceder_user_ID 
-FROM ".SQL."empresas 
-WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+FROM empresas 
+WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)){ 
 			if ($r['ceder_user_ID']) {
-				mysql_query("UPDATE ".SQL."empresas SET user_ID = '".$r['ceder_user_ID']."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+				mysql_query("UPDATE empresas SET user_ID = '".$r['ceder_user_ID']."' WHERE pais = '".PAIS."' AND ID = '".$r['ID']."' LIMIT 1", $link);
 				evento_log('Cede empresa #'.$r['ID'].' a '.$_POST['nick']);
 			}
 		}
@@ -936,12 +937,12 @@ WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link
 
 	} elseif (($_GET['b'] == 'editar') AND ($_POST['txt'])) {
 		$txt = gen_text($_POST['txt']);
-		mysql_query("UPDATE ".SQL."empresas SET descripcion = '".$txt."' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("UPDATE empresas SET descripcion = '".$txt."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		$return =  $_POST['return'];
 		evento_log('Empresa editada #'.$_GET['ID']);
 		
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['ID'])) {
-		mysql_query("DELETE FROM ".SQL."empresas WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("DELETE FROM empresas WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		evento_log('Empresa eliminada #'.$_GET['ID']);
 	}
 	$refer_url = 'empresas/'.$return;
@@ -1053,7 +1054,7 @@ case 'pols':
 		} elseif (ctype_digit($_POST['origen'])) { 
 			//Cuenta
 
-			$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."')) LIMIT 1", $link);
+			$result = mysql_query("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."')) LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $origen = 'cuenta'; }
 
 		}
@@ -1070,7 +1071,7 @@ case 'pols':
 			//cuenta
 			
 			//cuenta existe
-			$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '".$_POST['cuenta']."' LIMIT 1", $link);
+			$result = mysql_query("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['cuenta']."' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $destino = 'cuenta'; $destino_cuenta_ID = $r['ID']; }
 		}
 
@@ -1101,7 +1102,7 @@ case 'pols':
 				$concepto = '<b>'.$pol['nick'].'&rsaquo;</b> '.$concepto;
 				if (!$pol['nick']) { $concepto = 'S&Upsilon;STEM'.$concepto; }
 				
-				mysql_query("UPDATE ".SQL."cuentas SET pols = pols - ".$pols." WHERE ID = '".$_POST['origen']."' LIMIT 1", $link);
+				mysql_query("UPDATE cuentas SET pols = pols - ".$pols." WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' LIMIT 1", $link);
 				$emisor_ID = '-'.$_POST['origen'];
 			}
 
@@ -1113,16 +1114,16 @@ case 'pols':
 				mysql_query("UPDATE users SET pols = pols + ".$pols." WHERE ID = '".$destino_user_ID."' LIMIT 1", $link);
 				$receptor_ID = $destino_user_ID;
 			} elseif ($destino == 'cuenta') {
-				mysql_query("UPDATE ".SQL."cuentas SET pols = pols + ".$pols." WHERE ID = '".$destino_cuenta_ID."' LIMIT 1", $link);
+				mysql_query("UPDATE cuentas SET pols = pols + ".$pols." WHERE pais = '".PAIS."' AND ID = '".$destino_cuenta_ID."' LIMIT 1", $link);
 				$receptor_ID = '-'.$destino_cuenta_ID;
 			}
 
 			// insert historial
 			if (($pols > 0) AND ($emisor_ID != $receptor_ID)) {
-				mysql_query("INSERT INTO ".SQL."transacciones (pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".$pols."', '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".$date."')", $link);
+				mysql_query("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".PAIS."', '".$pols."', '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".$date."')", $link);
 
 				if ($transf_int) {
-					mysql_query("INSERT INTO ".strtolower($pais_destino)."_transacciones (pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".$pols."', '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".$date."')", $link);
+					mysql_query("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".$pais_destino."', '".$pols."', '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".$date."')", $link);
 				}
 
 				$refer_url = 'pols#ok';
@@ -1137,12 +1138,12 @@ case 'pols':
 		$_POST['nombre'] = ucfirst(strip_tags($_POST['nombre']));
 
 		pols_transferir($pol['config']['pols_cuentas'], $pol['user_ID'], '-1', 'Creacion nueva cuenta bancaria: '.$_POST['nombre']);
-		mysql_query("INSERT INTO ".SQL."cuentas (nombre, user_ID, pols, nivel, time) VALUES ('".$_POST['nombre']."', '".$pol['user_ID']."', 0, 0, '".$date."')", $link);
+		mysql_query("INSERT INTO cuentas (pais, nombre, user_ID, pols, nivel, time) VALUES ('".PAIS."', '".$_POST['nombre']."', '".$pol['user_ID']."', 0, 0, '".$date."')", $link);
 
 		$refer_url = 'pols/cuentas';
 
 	} elseif (($_GET['b'] == 'eliminar-cuenta') AND ($_GET['ID'])) {
-		mysql_query("DELETE FROM ".SQL."cuentas WHERE ID = '".$_GET['ID']."' AND pols = '0' AND nivel = '0' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("DELETE FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND pols = '0' AND nivel = '0' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		$refer_url = 'pols/cuentas';
 	}
 

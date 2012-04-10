@@ -38,10 +38,10 @@ if (($_GET['a']) AND ($_GET['pass'])) {
 				$txt = '';
 				if (substr($_GET['cuenta'], 0, 1) == '-') {
 					$result2 = mysql_query("SELECT *,
-(SELECT nick FROM  ".SQL_USERS." WHERE ".SQL."transacciones.emisor_ID != '".$_GET['cuenta']."' AND ID = ".SQL."transacciones.emisor_ID LIMIT 1) AS emisor_nick,
-(SELECT nick FROM  ".SQL_USERS." WHERE ".SQL."transacciones.receptor_ID != '".$_GET['cuenta']."' AND ID = ".SQL."transacciones.receptor_ID LIMIT 1) AS receptor_nick
-FROM ".SQL."transacciones 
-WHERE emisor_ID = '".$_GET['cuenta']."' OR receptor_ID = '".$_GET['cuenta']."' 
+(SELECT nick FROM users WHERE transacciones.emisor_ID != '".$_GET['cuenta']."' AND ID = transacciones.emisor_ID LIMIT 1) AS emisor_nick,
+(SELECT nick FROM users WHERE transacciones.receptor_ID != '".$_GET['cuenta']."' AND ID = transacciones.receptor_ID LIMIT 1) AS receptor_nick
+FROM transacciones 
+WHERE pais = '".PAIS."' AND emisor_ID = '".$_GET['cuenta']."' OR receptor_ID = '".$_GET['cuenta']."' 
 ORDER BY time DESC
 LIMIT 500", $link);
 					while($r2 = mysql_fetch_array($result2)){ 
@@ -70,7 +70,7 @@ LIMIT 500", $link);
 					if ($_GET['origen']) {
 						// cuenta
 						$_GET['origen'] = str_replace('-', '', $_GET['origen']);
-						$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '".$_GET['origen']."' AND pols >= '".$_GET['pols']."' AND (user_ID = '".$r['ID']."' OR '".$r['nivel']."' >= nivel) LIMIT 1", $link);
+						$result = mysql_query("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_GET['origen']."' AND pols >= '".$_GET['pols']."' AND (user_ID = '".$r['ID']."' OR '".$r['nivel']."' >= nivel) LIMIT 1", $link);
 						while($row = mysql_fetch_array($result)){ $origen = '-'.$_GET['origen']; }
 					} else {
 						// personal
@@ -82,7 +82,7 @@ LIMIT 500", $link);
 					if (substr($_GET['destino'], 0, 1) == '-') {
 						// Cuenta
 						$_GET['destino'] = str_replace('-', '', $_GET['destino']);
-						$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '".$_GET['destino']."' LIMIT 1", $link);
+						$result = mysql_query("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_GET['destino']."' LIMIT 1", $link);
 						while($row = mysql_fetch_array($result)){ $destino = '-'.$row['ID']; }
 					} else {
 						// NICK

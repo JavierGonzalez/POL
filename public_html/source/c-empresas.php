@@ -7,11 +7,11 @@ pol_empresas	(ID, url, nombre, user_ID, descripcion, web, cat_ID, time)
 if (($_GET['a'] == 'editar') AND ($_GET['b'])) { //EDITAR EMPRESA
 
 	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time,
-(SELECT nombre FROM cat WHERE pais = '".PAIS."' AND ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_nom,
-(SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_url,
-(SELECT nick FROM users WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
-FROM ".SQL."empresas
-WHERE ID = '" . $_GET['b'] . "' 
+(SELECT nombre FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_nom,
+(SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url,
+(SELECT nick FROM users WHERE ID = empresas.user_ID LIMIT 1) AS nick
+FROM empresas
+WHERE pais = '".PAIS."' AND ID = '" . $_GET['b'] . "' 
 AND user_ID = '" . $pol['user_ID'] . "'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
@@ -82,9 +82,9 @@ ORDER BY num DESC", $link);
 
 
 	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
-(SELECT nick FROM users WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
-FROM ".SQL."empresas
-WHERE cat_ID = '" . $cat_ID . "'
+(SELECT nick FROM users WHERE ID = empresas.user_ID LIMIT 1) AS nick
+FROM empresas
+WHERE pais = '".PAIS."' AND cat_ID = '" . $cat_ID . "'
 ORDER BY time ASC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$txt .= '<tr><td align="right">' . crear_link($r['nick']) . '</td><td><a href="/empresas/' . $_GET['a'] . '/' . $r['url'] . '/"><b>' . $r['nombre'] . '</b></a></td><td align="right"><b>'.$r['pv'].'</b> visitas</td></tr>';
@@ -98,47 +98,44 @@ ORDER BY time ASC", $link);
 	while($r = mysql_fetch_array($result)) { $cat_ID = $r['ID']; }
 
 	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
-(SELECT nombre FROM cat WHERE pais = '".PAIS."' AND ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_nom,
-(SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_url,
-(SELECT nick FROM users WHERE ID = ".SQL."empresas.user_ID LIMIT 1) AS nick
-FROM ".SQL."empresas
-WHERE url = '" . $_GET['b'] . "' AND cat_ID = '".$cat_ID."'
+(SELECT nombre FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_nom,
+(SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url,
+(SELECT nick FROM users WHERE ID = empresas.user_ID LIMIT 1) AS nick
+FROM empresas
+WHERE pais = '".PAIS."' AND url = '" . $_GET['b'] . "' AND cat_ID = '".$cat_ID."'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
 
-		mysql_query("UPDATE ".SQL."empresas SET pv = pv+1 WHERE ID = '" . $r['ID'] . "'", $link);
+		mysql_query("UPDATE empresas SET pv = pv+1 WHERE pais = '".PAIS."' AND ID = '" . $r['ID'] . "'", $link);
 		$r['pv']++;
 
-		$txt_title = 'Empresa: ' . $r['nombre'] . ' - Sector: ' . $r['cat_nom'];
+		$txt_title = 'Empresa: '.$r['nombre'].' - Sector: '.$r['cat_nom'];
 		$txt_nav = array('/empresas'=>'Empresas', '/empresas/'.$_GET['a']=>$r['cat_nom'], $r['nombre']);
 
-		if ($pol['user_ID'] == $r['user_ID']) { $editar .= boton('Editar', '/empresas/editar/' . $r['ID'] . '/'); }
-		$txt .= '<h1 class="quitar"><a href="/empresas/">Empresas</a>: <a href="/empresas/' . $r['cat_url'] . '/">' . $r['cat_nom'] . '</a> | ' . $r['nombre'] . ' ' . $editar . '</h1>
-<br />
+		if ($pol['user_ID'] == $r['user_ID']) { $editar .= boton('Editar', '/empresas/editar/'.$r['ID']); }
+		
+		$txt .= '<br /><div class="amarillo">'.$r['descripcion'].'</div>
 
-<div class="amarillo">' . $r['descripcion'] . '</div>
+<p class="azul">Fundador: <b>'.crear_link($r['nick']).'</b> | creación: <em>'.explodear(" ", $r['time'], 0).'</em> | sector: <a href="/empresas/'.$r['cat_url'].'">'.$r['cat_nom'].'</a> | visitas: '.$r['pv'].'</p>
 
-<p class="azul">Fundador: <b>' . crear_link($r['nick']) . '</b> | creaci&oacute;n: <em>' . explodear(" ", $r['time'], 0) . '</em> | sector: <a href="/empresas/' . $r['cat_url'] . '/">' . $r['cat_nom'] . '</a> | visitas: ' . $r['pv'] . '</p>
-
-';
-if ($r['user_ID'] == $pol['user_ID']) {  $txt .= '<form action="/accion.php?a=empresa&b=acciones&ID='.$r['ID'].'" method="post">
+<table width="100%"><tr>';
+		if ($r['user_ID'] == $pol['user_ID']) {  
+			$txt .= '<td><form action="/accion.php?a=empresa&b=acciones&ID='.$r['ID'].'" method="post">
 Ceder acciones a: <input type="text" name="nick" size="8" maxlength="20" value="" /><br />
 Cantidad de acciones: <input type="text" name="cantidad" size="8" maxlength="3" value="" /><br />
-<input type="submit" value="Ceder" />
-</form>';
-                                                                                                         }
-		if ($r['user_ID'] == $pol['user_ID']) { $boton = '<form action="/accion.php?a=empresa&b=ceder&ID='.$r['ID'].'" method="post">
-<input type="submit" value="Ceder a:" /> <input type="text" name="nick" size="8" maxlength="20" value="" /></form> '.boton('X', '/accion.php?a=empresa&b=eliminar&ID=' . $r['ID'], '&iquest;Estas seguro de querer ELIMINAR definitivamente esta empresa?'); }
-		$txt .= '<span style="float:right;">' . $boton . $editar . '</span>';
+'.boton('Ceder', 'submit', false, 'small').' [En desarrollo]
+</form></td>';
+			$boton = '<form action="/accion.php?a=empresa&b=ceder&ID='.$r['ID'].'" method="post">
+'.boton('Ceder a:', 'submit', false, 'small').' <input type="text" name="nick" size="8" maxlength="20" value="" /></form> '.boton('X', '/accion.php?a=empresa&b=eliminar&ID='.$r['ID'], '¿Estas seguro de querer ELIMINAR definitivamente esta empresa?', 'red'); 
+		}
+		$txt .= '<td align="right">'.$boton.$editar.'</td></tr></table>';
 	}
 
 } else { // #EMPRESAS
 	
 	$txt_nav = array('/empresas'=>'Empresas');
 
-	$txt .= '<h1 class="quitar">Empresas:</h1>
-
-<p>' . boton('Crear Empresa', '/empresas/crear-empresa/', false, '', $pol['config']['pols_empresa']) . '</p>
+	$txt .= '<p>'.boton('Crear Empresa', '/empresas/crear-empresa/', false, '', $pol['config']['pols_empresa']).'</p>
 
 <table border="0" cellspacing="0" cellpadding="2" class="pol_table">';
 
@@ -148,15 +145,15 @@ WHERE pais = '".PAIS."' AND tipo = 'empresas'
 ORDER BY orden ASC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$pv_num = 0;
-		$result2 = mysql_query("SELECT pv FROM ".SQL."empresas WHERE pais = '".PAIS."' AND cat_ID = '" . $r['ID'] . "'", $link);
+		$result2 = mysql_query("SELECT pv FROM empresas WHERE pais = '".PAIS."' AND cat_ID = '" . $r['ID'] . "'", $link);
 		while($r2 = mysql_fetch_array($result2)) { $pv_num += $r2['pv']; }
 
-		$txt .= '<tr class="amarillo"><td><a href="/empresas/' . $r['url'] . '/" style="font-size:19px;"><b>' . $r['nombre'] . '</b></a></td><td align="right"><b>'.$r['num'].'</b> empresas</td><td align="right"><b>'.$pv_num.'</b> visitas</td></tr>';
+		$txt .= '<tr class="amarillo"><td><a href="/empresas/'.$r['url'].'" style="font-size:19px;"><b>'.$r['nombre'].'</b></a></td><td align="right"><b>'.$r['num'].'</b> empresas</td><td align="right"><b>'.$pv_num.'</b> visitas</td></tr>';
 
 		$txt .= '<tr><td colspan="3" height="6"></td></tr>';
 	}
 
-	$txt .= '</table><p>' . boton('Crear Empresa', '/empresas/crear-empresa/', false, '', $pol['config']['pols_empresa']) . '</p>';
+	$txt .= '</table><p>'.boton('Crear Empresa', '/empresas/crear-empresa', false, '', $pol['config']['pols_empresa']).'</p>';
 }
 
 

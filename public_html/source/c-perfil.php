@@ -125,7 +125,7 @@ $txt .= '<b>Tu Economia (<a href="/info/economia/">Economia Global</a>)</b>
 </tr>';
 
 
-$result2 = mysql_query("SELECT ID, pols, nombre, exenta_impuestos FROM ".SQL."cuentas WHERE user_ID = '".$r['ID']."'", $link);
+$result2 = mysql_query("SELECT ID, pols, nombre, exenta_impuestos FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."'", $link);
 while($r2 = mysql_fetch_array($result2)){
 	if ($r2['exenta_impuestos'] == 1) {
 		$patrimonio_libre_impuestos += $r2['pols'];
@@ -266,7 +266,7 @@ $txt .= '</div>
 		if (ECONOMIA) { 
 			// empresas y partidos
 			$empresas_num = 0;
-			$result = mysql_query("SELECT nombre, url, cat_ID, (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = ".SQL."empresas.cat_ID LIMIT 1) AS cat_url FROM ".SQL."empresas WHERE user_ID = '" . $r['ID'] . "' ORDER BY time DESC", $link);
+			$result = mysql_query("SELECT nombre, url, cat_ID, (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url FROM empresas WHERE pais = '".PAIS."' AND user_ID = '" . $r['ID'] . "' ORDER BY time DESC", $link);
 			while($r2 = mysql_fetch_array($result)) {
 				$empresas_num++;
 				$empresas .= '<a href="/empresas/'.$r2['cat_url'].'/'.$r2['url'].'/">' . $r2['nombre'] . '</a><br />' . "\n";

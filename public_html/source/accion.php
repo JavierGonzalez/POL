@@ -77,13 +77,13 @@ case 'SC':
 
 case 'exencion_impuestos':
 	if ($pol['nivel'] >= 98) {
-		$result = mysql_query("SELECT ID, exenta_impuestos FROM ".SQL."cuentas where nivel = '0'", $link);
+		$result = mysql_query("SELECT ID, exenta_impuestos FROM cuentas WHERE pais = '".PAIS."' AND nivel = '0'", $link);
 		while($r = mysql_fetch_array($result)) {
 			if (($_POST['exenta_impuestos'.$r['ID']] == '1') AND ($r['exenta_impuestos'] == '0')) {
-				mysql_query("UPDATE ".SQL."cuentas SET exenta_impuestos = 1 where ID = '".$r['ID']."'", $link);
+				mysql_query("UPDATE cuentas SET exenta_impuestos = 1 WHERE pais = '".PAIS."' AND ID = '".$r['ID']."'", $link);
 			}
 			elseif  (!isset($_POST['exenta_impuestos'.$r['ID']]) AND ($r['exenta_impuestos'] == '1')) {
-				mysql_query("UPDATE ".SQL."cuentas SET exenta_impuestos = 0 where ID = '".$r['ID']."'", $link);
+				mysql_query("UPDATE cuentas SET exenta_impuestos = 0 WHERE pais = '".PAIS."' AND ID = '".$r['ID']."'", $link);
 			}
 		}
 		$refer_url = 'pols/cuentas';
@@ -242,7 +242,7 @@ case 'rechazar-ciudadania':
 	
 	$user_ID = false;
 	$result3 = mysql_query("SELECT IP, pols, nick, ID, ref, estado,
-".(ECONOMIA?"(SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = '".$pol['user_ID']."')":"estado")." AS pols_cuentas 
+".(ECONOMIA?"(SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."')":"estado")." AS pols_cuentas 
 FROM users 
 WHERE ID = '".$pol['user_ID']."' AND estado = 'ciudadano' AND pais = '".PAIS."'
 LIMIT 1", $link);
@@ -266,7 +266,7 @@ LIMIT 1", $link);
 			pols_transferir($pols_arancel, $user_ID, '-1', 'Arancel de salida (rechazo de ciudadania) '.$pol['config']['arancel_salida'].'%');
 			
 			mysql_query("DELETE FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM ".SQL."cuentas WHERE user_ID = '".$user_ID."'", $link);
+			mysql_query("DELETE FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM mapa WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 			mysql_query("DELETE FROM pujas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 		}
@@ -1054,7 +1054,7 @@ case 'pols':
 		} elseif (ctype_digit($_POST['origen'])) { 
 			//Cuenta
 
-			$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."')) LIMIT 1", $link);
+			$result = mysql_query("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."')) LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $origen = 'cuenta'; }
 
 		}
@@ -1071,7 +1071,7 @@ case 'pols':
 			//cuenta
 			
 			//cuenta existe
-			$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '".$_POST['cuenta']."' LIMIT 1", $link);
+			$result = mysql_query("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['cuenta']."' LIMIT 1", $link);
 			while($r = mysql_fetch_array($result)){ $destino = 'cuenta'; $destino_cuenta_ID = $r['ID']; }
 		}
 
@@ -1102,7 +1102,7 @@ case 'pols':
 				$concepto = '<b>'.$pol['nick'].'&rsaquo;</b> '.$concepto;
 				if (!$pol['nick']) { $concepto = 'S&Upsilon;STEM'.$concepto; }
 				
-				mysql_query("UPDATE ".SQL."cuentas SET pols = pols - ".$pols." WHERE ID = '".$_POST['origen']."' LIMIT 1", $link);
+				mysql_query("UPDATE cuentas SET pols = pols - ".$pols." WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' LIMIT 1", $link);
 				$emisor_ID = '-'.$_POST['origen'];
 			}
 
@@ -1114,7 +1114,7 @@ case 'pols':
 				mysql_query("UPDATE users SET pols = pols + ".$pols." WHERE ID = '".$destino_user_ID."' LIMIT 1", $link);
 				$receptor_ID = $destino_user_ID;
 			} elseif ($destino == 'cuenta') {
-				mysql_query("UPDATE ".SQL."cuentas SET pols = pols + ".$pols." WHERE ID = '".$destino_cuenta_ID."' LIMIT 1", $link);
+				mysql_query("UPDATE cuentas SET pols = pols + ".$pols." WHERE pais = '".PAIS."' AND ID = '".$destino_cuenta_ID."' LIMIT 1", $link);
 				$receptor_ID = '-'.$destino_cuenta_ID;
 			}
 
@@ -1138,12 +1138,12 @@ case 'pols':
 		$_POST['nombre'] = ucfirst(strip_tags($_POST['nombre']));
 
 		pols_transferir($pol['config']['pols_cuentas'], $pol['user_ID'], '-1', 'Creacion nueva cuenta bancaria: '.$_POST['nombre']);
-		mysql_query("INSERT INTO ".SQL."cuentas (nombre, user_ID, pols, nivel, time) VALUES ('".$_POST['nombre']."', '".$pol['user_ID']."', 0, 0, '".$date."')", $link);
+		mysql_query("INSERT INTO cuentas (pais, nombre, user_ID, pols, nivel, time) VALUES ('".PAIS."', '".$_POST['nombre']."', '".$pol['user_ID']."', 0, 0, '".$date."')", $link);
 
 		$refer_url = 'pols/cuentas';
 
 	} elseif (($_GET['b'] == 'eliminar-cuenta') AND ($_GET['ID'])) {
-		mysql_query("DELETE FROM ".SQL."cuentas WHERE ID = '".$_GET['ID']."' AND pols = '0' AND nivel = '0' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query("DELETE FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND pols = '0' AND nivel = '0' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		$refer_url = 'pols/cuentas';
 	}
 

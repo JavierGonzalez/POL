@@ -70,7 +70,7 @@ LIMIT 500", $link);
 					if ($_GET['origen']) {
 						// cuenta
 						$_GET['origen'] = str_replace('-', '', $_GET['origen']);
-						$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '".$_GET['origen']."' AND pols >= '".$_GET['pols']."' AND (user_ID = '".$r['ID']."' OR '".$r['nivel']."' >= nivel) LIMIT 1", $link);
+						$result = mysql_query("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_GET['origen']."' AND pols >= '".$_GET['pols']."' AND (user_ID = '".$r['ID']."' OR '".$r['nivel']."' >= nivel) LIMIT 1", $link);
 						while($row = mysql_fetch_array($result)){ $origen = '-'.$_GET['origen']; }
 					} else {
 						// personal
@@ -82,7 +82,7 @@ LIMIT 500", $link);
 					if (substr($_GET['destino'], 0, 1) == '-') {
 						// Cuenta
 						$_GET['destino'] = str_replace('-', '', $_GET['destino']);
-						$result = mysql_query("SELECT ID FROM ".SQL."cuentas WHERE ID = '".$_GET['destino']."' LIMIT 1", $link);
+						$result = mysql_query("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_GET['destino']."' LIMIT 1", $link);
 						while($row = mysql_fetch_array($result)){ $destino = '-'.$row['ID']; }
 					} else {
 						// NICK

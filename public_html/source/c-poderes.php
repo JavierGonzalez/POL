@@ -94,7 +94,7 @@ $txt .= '
 <tr><td><ol>';
 
 $result = mysql_query("SELECT nick, cargo,
-(pols + IFNULL((SELECT SUM(pols) FROM ".SQL."cuentas WHERE user_ID = users.ID GROUP BY user_ID),0)) AS pols_total
+(pols + IFNULL((SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = users.ID GROUP BY user_ID),0)) AS pols_total
 FROM users
 WHERE pais = '".PAIS."'
 ORDER BY pols_total DESC 
@@ -114,7 +114,7 @@ $txt .= '</ol></td><td valign="top"><ol>';
 
 $first = '';
 $result = mysql_query("SELECT nombre, ID
-FROM ".SQL."cuentas WHERE ID != '1' AND ID != '2' AND ID != '154' AND ID != '182' ORDER BY pols DESC LIMIT 15");
+FROM cuentas WHERE pais = '".PAIS."' AND nivel <= 5 AND gobierno = 'false' ORDER BY pols DESC LIMIT 15");
 while ($row = mysql_fetch_array($result)) {
 	if (!$first) { 
 		$first = true;

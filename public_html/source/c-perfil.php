@@ -125,7 +125,7 @@ $txt .= '<b>Tu Economia (<a href="/info/economia/">Economia Global</a>)</b>
 </tr>';
 
 
-$result2 = mysql_query("SELECT ID, pols, nombre, exenta_impuestos FROM ".SQL."cuentas WHERE user_ID = '".$r['ID']."'", $link);
+$result2 = mysql_query("SELECT ID, pols, nombre, exenta_impuestos FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."'", $link);
 while($r2 = mysql_fetch_array($result2)){
 	if ($r2['exenta_impuestos'] == 1) {
 		$patrimonio_libre_impuestos += $r2['pols'];

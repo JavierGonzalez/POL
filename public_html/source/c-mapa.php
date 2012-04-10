@@ -369,12 +369,13 @@ ORDER BY estado ASC, time ASC", $link);
 
 } else {
 
-	$cuadrado_size = 22;
+	$cuadrado_size = 24;
 	$mapa_full = true;
 	include('inc-mapa.php');
 
-	$txt .= '<h1 style="margin: 6px 0 6px 0;">Mapa: &nbsp; <input type="button" value="Actualizar" onclick="window.location=\'/mapa/\';" style="margin:-8px 0 -6px 0;padding:0;" /> <input type="button" value="Modo" onclick="colorear(\'toggle\');" style="margin:-8px 0 -6px 0;padding:0;" /> &nbsp; (<a href="/doc/mapa-de-vp/">Ayuda</a>) &nbsp;</h1>
-<table><tr><td rowspan="2">
+	$txt .= '<p><button onclick="window.location=\'/mapa\';">Actualizar</button> <button onclick="colorear(\'toggle\');" class="orange">Modo</button> &nbsp; (<a href="/doc/mapa-de-vp/">Ayuda</a>)</p>
+
+<table><tr><td rowspan="2" valign="top">
 '.$txt_mapa.'
 </td><td valign="top" colspan="2">';
 

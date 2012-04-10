@@ -148,7 +148,7 @@ p_scroll = false;
 
 <?php 
 echo '<p style="color:#999;"><b>'.timer('2012-04-18 00:00:00').'</b> para poder <a href="http://www.goteo.org/project/expansion-de-virtualpol/supporters" target="_blank" title="Campaña de crowdfunding en Goteo.org para poder desarrollar la Expansión Internacional"><b>donar</b></a>.</p>';
-if (PAIS == '15M') { echo '<p style="color:#999;"><b>'.timer('2012-05-12 00:00:00').'</b> para el <a href="/foro/debates-15m/preparativos-para-el-12m" title="12 de Mayo: Movilización Global"><b>12M</b></a>.</p>'; } 
+if (PAIS == '15M') { echo '<p style="color:#999;"><b>'.timer('2012-05-12 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="12 de Mayo: Movilización Global"><b>12M</b></a>.</p>'; } 
 
 echo '<p id="palabras">';
 
@@ -241,10 +241,10 @@ if (!isset($pol['user_ID'])) {
 echo '<table border="0"><tr><td height="30" nowrap="nowrap"><b>'.PAIS.', '.$pol['config']['pais_des'].'</b></td>';
 
 if (ASAMBLEA) {
-	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.$_SERVER['HTTP_HOST'].'" data-text="Participa en Asamblea Virtual 15M! http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="15M">Twittear</a>
+	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-text="VirtualPol, la primera red social democrática" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="15M">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>
 
-<td><g:plusone annotation="none" href="http://'.HOST.'"></g:plusone></td>
+<td><g:plusone annotation="none"></g:plusone></td>
 
 <td><div id="fb-root"></div>
 <script>(function(d, s, id) {
@@ -258,7 +258,7 @@ if (ASAMBLEA) {
 ';
 
 } else {
-	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.$_SERVER['HTTP_HOST'].'" data-text="VirtualPol, la primera red democrática virtual http://www.virtualpol.com/video" data-lang="es" data-size="large" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">Twittear</a>
+	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-text="VirtualPol, la primera red social democrática" data-lang="es" data-size="large" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>
 
 <td><g:plusone annotation="none" href="http://'.HOST.'"></g:plusone></td>

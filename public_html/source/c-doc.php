@@ -91,11 +91,9 @@ if ($_GET['a']) {
 
 			if (strpos($r['text'], '&lt;/div&gt;')) { $r['text'] = '<p style="font-size:25px;"><a href="/doc/'.$r['url'].'/presentacion"><b>Ver presentación</b></a></p>'; }
 
-			$txt .= '<h1 class="quitar"><a href="/doc">Documento</a>: '.$boton_editar.'</h1>
-
-
-<div style="color:#555;">
-<h1 style="color:#444;font-size:28px;">'.$r['title'].' </h1>
+			$txt .= '
+<div>
+<h1 style="font-size:28px;">'.$r['title'].' </h1>
 
 <div id="doc_pad">
 '.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])||nucleo_acceso($vp['acceso']['control_gobierno'])?$r['text']:'<b style="color:red;">No tienes acceso de lectura.</b>').'
@@ -103,13 +101,12 @@ if ($_GET['a']) {
 
 </div>
 
-<hr />'; 
 
-			$txt .= '<div style="color:#777;">
-<span class="quitar">'.$boton_editar.' </span>Creado hace '.timer($r['time']).'. Última publicación hace '.timer($r['time_last']).', versión: '.$r['version'].'.<br />
+<fieldset><legend>Info</legend>
+Creado hace '.timer($r['time']).'. Última publicación hace '.timer($r['time_last']).', versión: '.$r['version'].'.<br />
 Pueden ver: '.verbalizar_acceso($r['acceso_leer'], $r['acceso_cfg_leer']).'.<br />
 Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']).'.
-</div>';
+</fieldset>';
 			$txt_nav = array('/doc'=>'Documentos', $r['title']);
 			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])||nucleo_acceso($vp['acceso']['control_gobierno'])) { $txt_tab['/doc/'.$r['url'].'/editar'] = 'Editar'; }
 		}
@@ -130,9 +127,9 @@ Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribi
 	while($r = mysql_fetch_array($result)){
 
 		// CAT
-		$txt .= '<div class="amarillo"><b style="font-size:20px;padding:15px;color:green;">'.$r['nombre'].'</b></div>';
-		
-		$txt .= '<table border="0" cellspacing="0" cellpadding="4" class="pol_table" width="100%">
+		$txt .= '<fieldset><legend>'.$r['nombre'].'</legend>
+
+<table border="0" cellspacing="0" cellpadding="4" class="pol_table" width="100%">
 <tr>
 <th></th>
 <th>Lectura</th>
@@ -159,9 +156,9 @@ ORDER BY title ASC", $link);
 			}
 
 		}
-		$txt .= '</table>';
+		$txt .= '</table></fieldset>';
 	}
-	$txt .= '</div>';
+	$txt .= '';
 }
 
 

@@ -23,7 +23,7 @@ if ($_GET['a'] == 'mensajes-enviados') {
 ID, envia_ID, recibe_ID, time, text,
 (SELECT nick FROM users WHERE users.ID = recibe_ID LIMIT 1) AS nick_envia,
 (SELECT nombre FROM cargos WHERE cargos.cargo_ID = cargo LIMIT 1) AS cargo
-FROM ".SQL_MENSAJES."
+FROM mensajes
 WHERE envia_ID = '" . $pol['user_ID'] . "'
 ORDER BY time DESC
 LIMIT 50", $link);
@@ -177,7 +177,7 @@ function click_form(tipo) {
 ID, envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo,
 (SELECT nick FROM users WHERE users.ID = envia_ID LIMIT 1) AS nick_envia,
 (SELECT nombre FROM cargos WHERE cargos.cargo_ID = cargo LIMIT 1) AS cargo_nom
-FROM ".SQL_MENSAJES."
+FROM mensajes
 WHERE recibe_ID = '" . $pol['user_ID'] . "'
 ORDER BY leido ASC, time DESC
 LIMIT 100", $link);

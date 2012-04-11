@@ -58,7 +58,7 @@ $txt .= '
 </ul>
 
 
-<p>VirtualPol es la primera comunidad de Internet sin administrador. Un paso firme hacia la Democracia Directa.</p>
+<p>VirtualPol es la primera comunidad de Internet sin administrador. Un paso firme hacia la Democracia Participativa.</p>
 
 
 </td><td valign="top">
@@ -155,14 +155,9 @@ $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="4"></td></tr>
 </table>
 
 
-</td></tr></table>';
+</td></tr></table>
 
-
-if (!$pol['nick']) {
-	$txt .= '<p style="text-align:center;"><span class="amarillo" style="padding:17px 9px 13px 9px;"><input value="REGISTRAR CIUDADANO" onclick="window.location.href=\''.REGISTRAR.'\';" type="button" style="font-size:18px;height:40px;" /></span></p>';
-} elseif ($pol['pais'] == 'ninguno'){ 
-	$txt .= '<p>'.boton('Solicitar ciudadania', REGISTRAR).'</p>';
-}
+<p style="text-align:center;">'.boton((isset($pol['nick'])?'Solicitar ciudadania':'crear ciuadano'), REGISTRAR, false, 'large blue').'</p>';
 
 
 $txt_header .= '<style type="text/css">td b { font-size:15px; }</style>';

@@ -262,7 +262,7 @@ function click_ciudadano() {
 
 <li><input value="' . $pre_pols . '" id="pols" type="text" tabindex="2" name="pols" size="3" maxlength="5" style="text-align:right;" class="pols" /> '.MONEDA.' <b>Concepto:</b> <input id="concepto" type="text" value="' . $pre_concepto . '" tabindex="3" name="concepto" size="30" maxlength="90"  /></li>
 
-<li><input type="submit" value="Transferir" onClick="if (!confirm(\'&iquest;Estas seguro de querer transferir '.MONEDA_NOMBRE.'?\')) { return false; }" /></li>
+<li><input type="submit" value="Transferir" onClick="if (!confirm(\'&iquest;Estas seguro de querer transferir monedas?\')) { return false; }" /></li>
 
 </ol>
 </form>

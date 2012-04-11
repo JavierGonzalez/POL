@@ -114,7 +114,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 	unset($votaciones_tipo[4]); 
 
 	$txt_title = 'Borrador de votación';
-	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores', 'Crear borrador');
+	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores', 'Crear votación');
 	$txt_tab = array('/votacion/borradores'=>'Ver borradores', '/votacion/'.$_GET['b']=>'Previsualizar', '/votacion/crear/'.$_GET['b']=>'Editar borrador');
 
 	// EDITAR
@@ -140,14 +140,17 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 '.(isset($edit['ID'])?'<input type="hidden" name="ref_ID" value="'.$_GET['b'].'" />':'').'
 
 <table border="0"><tr><td valign="top">
-<p class="azul" style="text-align:left;"><b>Tipo de votación</b>:<br />
+
+
+<fieldset><legend>Tipo de votación</legend>
+<p>
 <span id="tipo_select">';
 
 	$tipo_extra = array(
-'sondeo'=>'<span style="float:right;">(informativo, no vinculante)</span>', 
-'referendum'=>'<span style="float:right;">(vinculante)</span>',
-'parlamento'=>'<span style="float:right;">(vinculante)</span>',
-'cargo'=>'<span style="float:right;" title="Se ejecuta una acción automática tras su finalización.">(ejecutiva)</span>',
+'sondeo'=>'<span style="float:right;margin-left:6px;" class="gris">(informativo, no vinculante)</span>', 
+'referendum'=>'<span style="float:right;" class="gris">(vinculante)</span>',
+'parlamento'=>'<span style="float:right;" class="gris">(vinculante)</span>',
+'cargo'=>'<span style="float:right;" title="Se ejecuta una acción automática tras su finalización." class="gris">(ejecutiva)</span>',
 );
 
 	if (ASAMBLEA) { unset($votaciones_tipo[2]); } // Quitar tipo de votacion de parlamento.
@@ -156,7 +159,13 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 		$txt .= '<span style="font-size:18px;"><input type="radio" name="tipo" value="'.$tipo.'" onclick="cambiar_tipo_votacion(\''.$tipo.'\');"'.$sel['tipo'][$tipo].' />'.$tipo_extra[$tipo].ucfirst($tipo).'</span><br >';
 	}
 
-	$txt .= '</span><br />
+	$txt .= '</p>
+
+
+</fieldset>
+
+
+<fieldset><legend>Opciones de votación</legend>
 
 <span id="time_expire">
 <b>Duración</b>:
@@ -174,7 +183,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 <select name="cargo">';
 
 	$sel['cargo'][explodear('|', $edit['ejecutar'], 0)] = ' selected="selected"';
-	$result = mysql_query("SELECT cargo_ID, nombre FROM cargos ORDER BY nivel DESC", $link);
+	$result = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 	while($r = mysql_fetch_array($result)) { $txt .= '<option value="'.$r['cargo_ID'].'"'.$sel['cargo'][$r['cargo_ID']].'>'.$r['nombre'].'</option>'; }
 
 	$txt .= '
@@ -183,7 +192,12 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 
 
 <br /><span id="votos_expire">
-<b>Finalizar con</b>: <input type="text" name="votos_expire" value="'.($edit['votos_expire']?$edit['votos_expire']:'').'" size="1" maxlength="5" style="text-align:right;" /> votos</span><br />
+<b>Finalizar con</b>: <input type="text" name="votos_expire" value="'.($edit['votos_expire']?$edit['votos_expire']:'').'" size="1" maxlength="5" style="text-align:right;" /> votos</span>
+
+</fieldset>
+
+
+<fieldset><legend>Opciones de voto</legend>
 
 <span id="tipo_voto">
 <b>Tipo de voto</b>: 
@@ -196,9 +210,9 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 <option value="5puntos"'.$sel['tipo_voto']['5puntos'].'>5 votos (15 puntos)</option>
 <option value="8puntos"'.$sel['tipo_voto']['8puntos'].'>8 votos (36 puntos)</option>
 </optgroup>
-
-
 </select></span>
+
+
 <br />
 <span id="privacidad">
 <b>Voto</b>: 
@@ -211,12 +225,17 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 
 <b>Orden de opciones:</b> <input type="checkbox" name="aleatorio" value="true"'.($edit['aleatorio']=='true'?' checked="checked"':'').' /> Aleatorio.
 </span>
-</p>
+
+
+</fieldset>
 
 
 </td><td valign="top" align="right">
-		
-<p id="acceso_votar" class="azul"><b>Acceso para votar:</b><br />
+
+<fieldset><legend>Accesos</legend>
+
+<fieldset><legend>Para poder votar</legend>
+<p>
 <select name="acceso_votar">';
 
 
@@ -229,8 +248,12 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 	$txt .= '</select><br />
 <input type="text" name="acceso_cfg_votar" size="18" maxlength="500" id="acceso_cfg_votar_var" value="'.$edit['acceso_cfg_votar'].'" /><br />
 '.ucfirst(verbalizar_acceso($edit['acceso_votar'], $edit['acceso_cfg_votar'])).'</p>
-		
-<p id="acceso_ver" class="azul"><b>Acceso ver votación:</b><br />
+
+</fieldset>
+
+
+<fieldset><legend>Para ver votación</legend>
+<p>
 <select name="acceso_ver">';
 
 
@@ -243,8 +266,13 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 <input type="text" name="acceso_cfg_ver" size="18" maxlength="500" id="acceso_cfg_ver_var" value="'.$edit['acceso_cfg_ver'].'" /><br />
 '.ucfirst(verbalizar_acceso($edit['acceso_ver'], $edit['acceso_cfg_ver'])).'
 </p>
+</fieldset>
+
+</fieldset>
 
 </td></tr></table>
+
+<fieldset><legend>Redacción</legend>
 
 <div class="votar_form">
 <p><b>Pregunta</b>: 
@@ -259,8 +287,16 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 <p><b>URL de debate</b>: (opcional, debe empezar por http://...)<br />
 <input type="text" name="debate_url" size="57" maxlength="300" value="'.$edit['debate_url'].'" /></p>
 
+</fieldset>
+
+
+
+
 <div class="votar_form">
-<p><b>Opciones de voto</b>:
+
+
+<fieldset><legend>Opciones de voto</legend>
+<p>
 <ul style="margin-bottom:-16px;">
 <li><input type="text" name="respuesta0" size="22" value="En Blanco" readonly="readonly" style="color:grey;" /> &nbsp; <a href="#" id="a_opciones" onclick="opcion_nueva();return false;">Añadir opción</a></li>
 </ul>
@@ -286,6 +322,8 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 	$txt .= '
 </ol>
 </p>
+</fieldset>
+
 </div>
 <p><input type="submit" value="Guardar borrador"'.(nucleo_acceso($vp['acceso']['votacion_borrador'])?'':' disabled="disabled"').' style="font-size:18px;" /></p>';
 

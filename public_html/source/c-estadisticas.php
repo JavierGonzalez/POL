@@ -218,16 +218,16 @@ if (ECONOMIA) {
 $txt .= '
 <h2 style="margin-top:35px;">3. ECONOM&Iacute;A</h2>
 <p class="amarillo"><b id="3.1">3.1 '.MONEDA.' en total</b> </b><br />
-<img src="'.gen_grafico($d['pols_total'], '', true).'" alt="'.MONEDA_NOMBRE.' en total" border="0" />
+<img src="'.gen_grafico($d['pols_total'], '', true).'" alt="monedas en total" border="0" />
 
 <br /><b id="3.2">3.2 '.MONEDA.' de Ciudadanos</b> (<a href="/info/censo/riqueza/">Ver los m&aacute;s ricos</a>)<br />
-<img src="'.gen_grafico($d['pols'], '', true).'" alt="'.MONEDA_NOMBRE.' de ciudadanos" border="0" />
+<img src="'.gen_grafico($d['pols'], '', true).'" alt="monedas de ciudadanos" border="0" />
 
 <br /><b id="3.3">3.3 '.MONEDA.' en Cuentas personales</b> (<a href="/pols/cuentas/">Ver cuentas</a>)<br />
-<img src="'.gen_grafico($d['pols_cuentas'], '', true).'" alt="'.MONEDA_NOMBRE.' en cuentas" border="0" />
+<img src="'.gen_grafico($d['pols_cuentas'], '', true).'" alt="monedas en cuentas" border="0" />
 
 <br /><b id="3.4">3.4 '.MONEDA.' del Gobierno</b> (Ver cuenta del <a href="/pols/cuentas/1/">Gobierno</a>)<br />
-<img src="'.gen_grafico($d['pols_gobierno']).'" alt="'.MONEDA_NOMBRE.' Cuenta Gobierno" border="0" />
+<img src="'.gen_grafico($d['pols_gobierno']).'" alt="monedas Cuenta Gobierno" border="0" />
 
 <br /><b id="3.5">3.5 Subastas</b> (Referencia econ&oacute;mica)<br />
 <img src="'.gen_grafico($d['frase'], '', true).'" alt="Subasta: la frase" border="0" />
@@ -246,37 +246,35 @@ $txt .= '
 
 foreach ($vp['paises'] AS $PAIS) {
 	// GRAFICO AFILIADOS
-	if (!in_array($PAIS, $vp['paises_congelados'])) {
-		$n = 0;
-		$g_otros = 0;
-		$g_datos = array();
-		$g_siglas = array();
-		$result = mysql_query("SELECT COUNT(ID) AS num, partido_afiliado,
+	$n = 0;
+	$g_otros = 0;
+	$g_datos = array();
+	$g_siglas = array();
+	$result = mysql_query("SELECT COUNT(ID) AS num, partido_afiliado,
 (SELECT siglas FROM ".strtolower($PAIS)."_partidos WHERE ID = users.partido_afiliado) AS siglas
 FROM users 
 WHERE estado = 'ciudadano' AND pais = '".$PAIS."'
 GROUP BY partido_afiliado
 ORDER BY num DESC", $link);
-		while($r = mysql_fetch_array($result)){
-			$n++;
-			if ($n <= 10) {
-				if ($r['partido_afiliado'] == 0) { $r['siglas'] = 'Ninguno'; }
-				$g_datos[] = $r['num'];
-				$g_siglas[] = $r['siglas'];
-			} else {
-				$g_otros += $r['num'];
-			}
+	while($r = mysql_fetch_array($result)){
+		$n++;
+		if ($n <= 10) {
+			if ($r['partido_afiliado'] == 0) { $r['siglas'] = 'Ninguno'; }
+			$g_datos[] = $r['num'];
+			$g_siglas[] = $r['siglas'];
+		} else {
+			$g_otros += $r['num'];
 		}
+	}
 
-		$txt .= '
+	$txt .= '
 <td><b>'.$PAIS.'</b><br />
 <img src="http://chart.apis.google.com/chart?cht=p&chs=200x100&chds=a
 &chd=t:'.implode(',', $g_datos).','.$g_otros.'
 &chl='.implode('|', $g_siglas).'|Otros
 &chf=bg,s,ffffff01|c,s,ffffff01" alt="Afiliados por partido" title="Afiliados por partido" />
 </td>';
-		unset($g_siglas, $g_datos);
-	}
+	unset($g_siglas, $g_datos);
 }
 
 $txt .= '</tr></table>';

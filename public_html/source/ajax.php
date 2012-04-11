@@ -1,12 +1,14 @@
 <?php
-session_start(); 
 header('connection: close');
 header('Content-Type: text/plain');
+session_start(); 
 
 // Inicialización.
-if ((!isset($_SESSION['pol']['user_ID'])) AND (isset($_COOKIE['teorizauser']))) { include('inc-login.php'); // Si no hay login, hace login basico
-} else { include('../config-pwd.php'); $link = @conectar(); } // Conecta MySQL solo
-include('inc-functions.php');
+if ((!isset($_SESSION['pol']['user_ID'])) AND (isset($_COOKIE['teorizauser']))) { 
+	include('inc-login.php'); // Si no hay login, hace login basico
+} else { include('../config.php'); }
+
+
 
 // ARREGLAR: reemplazar esta zona por un include a un config.php ligero
 $host = explode('.', $_SERVER['HTTP_HOST']);

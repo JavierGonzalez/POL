@@ -7,7 +7,7 @@ if  (($pol['estado'] == 'turista'))  { // turista
 
 	$time_pre = date('Y-m-d H:i:00', time() - 3600); //15m 
 	$result = mysql_query("SELECT nick 
-FROM ".SQL_USERS." 
+FROM users 
 WHERE estado = 'ciudadano' AND fecha_last > '" . $time_pre . "' AND pais = '".PAIS."'
 ORDER BY fecha_last DESC", $link);
 	while($row = mysql_fetch_array($result)){ $li_online_num++; if ($li_online) { $li_online .= ', '; } $li_online .= crear_link($row['nick']); }
@@ -27,7 +27,7 @@ ORDER BY fecha_last DESC", $link);
 	} elseif ($pol['config']['elecciones_estado'] == 'elecciones') {  
 
 		$fecha_24_antes = date('Y-m-d H:i:00', strtotime($pol['config']['elecciones_inicio']) - $pol['config']['elecciones_antiguedad']);
-		$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL_USERS." WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_registro < '" . $fecha_24_antes . "'", $link);
+		$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_registro < '" . $fecha_24_antes . "'", $link);
 		while($row = mysql_fetch_array($result)) { $num_votantes = $row['num']; }
 
 		$elecciones_quedan = duracion((strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']) - time());

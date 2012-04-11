@@ -102,7 +102,6 @@ margin:10px 0 5px 0;
 -----------------------------------*/
 p{
 /*line-height:150%;*/
-color:#555;
 margin:10px 0;
 }
 
@@ -125,7 +124,7 @@ border-left:1px solid #ccc;
 	LISTS
 -----------------------------------*/
 ul, ol{
-padding:0;
+/*padding:0;*/
 margin:0 0 20px 25px;
 }
 
@@ -196,7 +195,7 @@ border:1px solid #ddd;
 -----------------------------------*/
 table{/*width:100%;*/margin:0 0 10px 0;/*text-align:left;*/border-collapse: collapse;}
 	thead, tbody{margin:0;padding:0;}
-	th, td{color:#555;padding:5px;/*font-size:14px;*/border-bottom:1px dotted #ddd;}
+	th, td{padding:5px;/*font-size:14px;*/border-bottom:1px dotted #ddd;}
 	thead th, th{color:#777;font-size:16px;padding:7px;border-bottom:1px solid #ddd;}
 	tbody tr.last th,
 	tbody tr.last td{border-bottom:0;}

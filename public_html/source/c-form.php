@@ -45,7 +45,7 @@ function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 					break;
 
 				case 'select_partidos':
-					$f .= '<li><b>'.NOM_PARTIDOS.':</b><br /><select name="partido"><option value="0">Ninguno</option>';
+					$f .= '<li><b>Partidos:</b><br /><select name="partido"><option value="0">Ninguno</option>';
 					
 					$result = mysql_query("SELECT siglas, ID FROM partidos WHERE pais = '".PAIS."' AND estado = 'ok' ORDER BY siglas ASC", $link);
 					while($row = mysql_fetch_array($result)){
@@ -128,7 +128,7 @@ case 'solicitar-ciudadania':
 
 case 'afiliarse':
 
-	$txt .= '<p>Afiliaci&oacute;n '.NOM_PARTIDOS.':</p>';
+	$txt .= '<p>Afiliaci&oacute;n partidos:</p>';
 
 	$pol_form = array(
 	array('type'=>'select_partidos', 'partido'=>$_GET['b']),
@@ -141,14 +141,14 @@ case 'afiliarse':
 
 case 'crear-partido':
 
-	$txt .= '<h2>Crear '.NOM_PARTIDOS.':</h2>';
+	$txt .= '<h2>Crear partido:</h2>';
 
 	$pol_form = array(
 	array('type'=>'text', 'name'=>'siglas', 'value'=>'', 'size'=>'6', 'maxlegth'=>'10', 'nombre'=>'Siglas', 'desc'=>'Escribe entre 2 y 10 letras may&uacute;sculas, guion permitido.'),
 	array('type'=>'text', 'name'=>'nombre', 'value'=>'', 'size'=>'', 'maxlegth'=>'40', 'nombre'=>'Nombre', 'desc'=>'Frase a modo de nombre que concuerda con las siglas anteriormente dadas.'),
 	array('type'=>'textrico', 'name'=>'descripcion', 'size'=>'10', 'nombre'=>'Introducci&oacute;n'),
 	);
-	$txt .= polform($_GET['a'], $pol_form, 'Crear '.NOM_PARTIDOS);
+	$txt .= polform($_GET['a'], $pol_form, 'Crear partido');
 
 
 	break;

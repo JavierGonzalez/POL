@@ -278,7 +278,7 @@ LIMIT 1", $link);
 
 			if ((ECONOMIA) AND ($ref != '0')) { 
 					mysql_query("UPDATE users SET ref_num = ref_num - 1 WHERE ID = '" . $ref . "' LIMIT 1", $link);
-					mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE IP = '" . $IP . "' OR user_ID = '" . $ref . "'", $link); 
+					mysql_query("DELETE FROM referencias WHERE IP = '" . $IP . "' OR user_ID = '" . $ref . "'", $link); 
 			}
 			mysql_query("DELETE FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
 			mysql_query("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
@@ -292,7 +292,7 @@ LIMIT 1", $link);
 
 
 			if (ECONOMIA) {
-					mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE user_ID = '".$user_ID."'", $link);
+					mysql_query("DELETE FROM referencias WHERE user_ID = '".$user_ID."'", $link);
 					mysql_query("DELETE FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 					mysql_query("DELETE FROM mapa WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
 					mysql_query("DELETE FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);

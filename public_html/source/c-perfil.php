@@ -104,9 +104,9 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 			
 			
 			
-			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="color:green;font-size:16px;font-weight:bold;">Editar perfil</button> '.boton('Opciones de usuario', REGISTRAR.'login.php?a=panel').'
+			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;">Editar perfil</button> '.boton('Opciones de usuario', REGISTRAR.'login.php?a=panel').'
 
-<div class="azul" id="editarperfil" style="display:none;">';
+<div id="editarperfil" style="display:none;">';
 
 if (ECONOMIA) {
 			
@@ -115,7 +115,11 @@ while($r2 = mysql_fetch_array($result2)){ $pol['config'][$r2['dato']] = $r2['val
 
 $patrimonio = $r['pols'];
 $patrimonio_libre_impuestos = 0;
-$txt .= '<b>Tu Economia (<a href="/info/economia/">Economia Global</a>)</b>
+$txt .= '
+
+
+<fieldset><legend>Tu economia</legend>
+
 <table border="0">
 
 <tr>
@@ -162,37 +166,55 @@ $txt .= '
 </tr>
 </table>
 
-<br />
+</fieldset>
 
-<p>Referencia: <input style="background:#FFFFDD;border: 1px solid grey;" type="text" size="35" value="http://'.HOST.'/r/' . strtolower($nick) . '/" readonly="readonly" /><br />
-(Ganar&aacute;s <b>' . pols($pols_afiliacion) . ' '.MONEDA.'</b> por cada nuevo Ciudadano autentico que se registre por este enlace y cumpla el minimo tiempo online en sus 30 primeros dias)</p>';
+<fieldset><legend>Referencia</legend>
+
+<p><input style="background:#FFFFDD;border: 1px solid grey;" type="text" size="35" value="http://'.HOST.'/r/' . strtolower($nick) . '/" readonly="readonly" /><br />
+(Ganar&aacute;s <b>' . pols($pols_afiliacion) . ' '.MONEDA.'</b> por cada nuevo Ciudadano autentico que se registre por este enlace y cumpla el minimo tiempo online en sus 30 primeros dias)</p>
+
+</fieldset>';
 
 } // fin ECONOMIA
 
 // <p>Clave API: <input class="api_box" type="text" size="12" value="' . $r['api_pass'] . '" readonly="readonly" /> ' . boton('Generar clave', '/accion.php?a=api&b=gen_pass', '&iquest;Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua no funcionar&aacute;.') . ' (Equivale a tu contrase&ntilde;a, mantenla en secreto. M&aacute;s info: <a href="'.SSL_URL.'api.php">API</a>)</p>
 
 
-$txt .= '<p>'.boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel').' '.boton('Autentificar con DNIe', SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton('Rechazar Ciudadania', REGISTRAR).' ':'').'</p>
+$txt .= '
 
-<p>
-<form action="/accion.php?a=afiliarse" method="post">
+<fieldset><legend>Opciones</legend>
 
-Afiliaci&oacute;n: <select name="partido"><option value="0">Ninguno</option>';
+<p>'.boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel').' '.boton('Autentificar con DNIe', SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton('Rechazar Ciudadania', REGISTRAR, false, 'red').' ':'').'</p>
+
+</fieldset>';
 
 
-$result2 = mysql_query("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."' ORDER BY siglas ASC", $link);
-while($r2 = mysql_fetch_array($result2)){
-	$txt .= '<option value="'.$r2['ID'].'"'.($r2['ID']==$pol['partido']?' selected="selected"':'').'>' . $r2['siglas'] . '</option>';
+if (!ASAMBLEA) {
+	$txt .= '<form action="/accion.php?a=afiliarse" method="post">
+
+<fieldset><legend>Afiliación</legend>
+
+<p><select name="partido"><option value="0">Ninguno</option>';
+
+
+	$result2 = mysql_query("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."' ORDER BY siglas ASC", $link);
+	while($r2 = mysql_fetch_array($result2)){
+		$txt .= '<option value="'.$r2['ID'].'"'.($r2['ID']==$pol['partido']?' selected="selected"':'').'>' . $r2['siglas'] . '</option>';
+	}
+
+	$txt .= '
+</select>
+
+<input value="Afiliarse" type="submit"'.($pol['config']['elecciones_estado']=='elecciones'?' disabled="disabled"':'').'>
+</form>
+</p></fieldset>';
+
 }
 
 $txt .= '
-</select>
-
-<input value="Afiliarse" type="submit"'.($pol['config']['elecciones_estado']=='elecciones'?' disabled="disabled"':'').'></form>
-</p>
-
-
 <form action="/accion.php?a=perfil&b=datos" method="POST">
+
+<fieldset><legend>Tus redes sociales</legend>
 <table border="0">
 <tr>
 <td colspan="2"><b>Perfiles</b></td>
@@ -212,18 +234,22 @@ foreach ($datos_perfil AS $id => $dato) {
 $txt .= '
 <tr><td colspan="2"></td><td><input type="submit" value="Guardar" /></td></tr>
 </table></form>
+</fieldset>
 
 
-<p><form action="/accion.php?a=avatar&b=desc" method="post">Espacio para lo que quieras: (<span id="desc_limit" style="color:blue;">'.$text_limit.'</span> caracteres)<br />
+<fieldset><legend>Tu biografía (escribe sobre ti)</legend>
+<form action="/accion.php?a=avatar&b=desc" method="post">
+<p>Espacio para lo que quieras: (<span id="desc_limit" style="color:blue;">'.$text_limit.'</span> caracteres)<br />
 <textarea name="desc" id="desc_area" style="background:#FFFFDD;border: 1px solid grey; padding:4px; color: green; font-weight: bold; width: 500px; height: 80px;">'.strip_tags($r['text'], '<b>').'</textarea> <input value="Guardar" type="submit" />
-</form></p>';
+</form></p>
+</fieldset>';
 
 
 // numero de votos emitidos
 $result2 = mysql_query("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
 while ($r2 = mysql_fetch_array($result2)) { $num_votos = $r2['num']; }
 
-$txt .= '<p><b>Votos de confianza emitidos:</b> (<span style="font-weight:bold;">'.$num_votos.'</span> de '.VOTO_CONFIANZA_MAX.')';
+$txt .= '<fieldset><legend>Votos de confianza emitidos ('.$num_votos.' de '.VOTO_CONFIANZA_MAX.')</legend><p>';
 
 $voto_anterior = '';
 $result2 = mysql_query("SELECT voto, time,
@@ -235,14 +261,16 @@ ORDER BY voto DESC, time ASC", $link);
 while($r2 = mysql_fetch_array($result2)) {
 	if ($voto_anterior != $r2['voto']) { $txt .= '<br /> ' . confianza($r2['voto']) . ' &middot; '; }
 	$voto_anterior = $r2['voto'];
-	$txt .= crear_link($r2['nick'], 'nick', null, $r2['pais']) . ', ';
+	$txt .= crear_link($r2['nick'], 'nick', null, $r2['pais']) . ' ';
 }
 
+$txt .= '</p></fieldset>
 
-$txt .= '</p>
-
-
-<p><form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">Avatar: <input name="avatar" type="file" /><input type="submit" value="Guardar Avatar" /> | ' . boton('Borrar Avatar', '/accion.php?a=avatar&b=borrar') . ' (jpg, max 1mb)</form></p>';
+<fieldset><legend>Avatar (tu imagen)</legend>
+<form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">
+<p>Avatar: <input name="avatar" type="file" /><input type="submit" value="Guardar Avatar" /> | ' . boton('Borrar Avatar', '/accion.php?a=avatar&b=borrar') . ' (jpg, max 1mb)</p>
+</form>
+</fieldset>';
 
 
 $txt .= '</div>
@@ -252,7 +280,7 @@ $txt .= '</div>
 
 		} 
 
-		if ($r['text']) { $txt .= '<div class="amarillo">' . $r['text'] . '</div>'; }
+		if ($r['text']) { $txt .= '<fieldset><legend>Biografia</legend><p>'.$r['text'].'</p></fieldset>'; }
 
 		if ($r['ref_num'] != 0) {
 			$result = mysql_query("SELECT IP, nick, pais, online FROM users WHERE ref = '" . $r['ID'] . "' ORDER BY fecha_last DESC", $link);

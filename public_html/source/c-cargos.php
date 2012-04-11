@@ -92,30 +92,33 @@ ORDER BY voto_confianza DESC, nota DESC", $link);
 
 		$txt .= '<table border="0"><tr><td valign="top">
 
+<fieldset><legend>'.$r['nombre'].' ('.count($activos).')</legend>
 <table border="0">
 <tr>
 <th></th>
-<th colspan="2" align="left">'.$r['nombre'].' <span style="font-weight:normal;">('.count($activos).')</span></th>
+<th colspan="2" align="left"></th>
 <th style="font-weight:normal;">Último acceso</th>
 </tr>
 '.implode('', $activos).'
 </table>
-
+</fieldset>
 
 	</td><td>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td valign="top">
 
 
+
+<fieldset><legend>Candidatos a '.strtolower($r['nombre']).' ('.count($candidatos).')</legend>
 <table border="0">
 <tr>
 <th></th>
-<th>Candidatos <span style="font-weight:normal;">('.count($candidatos).')</span></th>
+<th></th>
 <th style="font-weight:normal;">Último acceso</th>
 <th style="font-weight:normal;">Confianza</th>
 <th style="font-weight:normal;">Nota</th>
 </tr>
 '.implode('', $candidatos).'
 </table>
-
+</fieldset>
 
 
 </td></tr></table>';
@@ -267,6 +270,8 @@ días
 	if ($editar) {
 		$txt .= '<form action="/accion.php?a=cargo&b=crear" method="POST">
 
+<fieldset><legend>Crear cargo</legend>
+
 <p>Nombre: <input type="text" name="nombre" value="" /></p>
 
 <p><table><tr><td valign="top">Icono:</td>';
@@ -290,6 +295,8 @@ días
 		$txt .= '</select> Nivel: <input type="text" name="nivel" value="5" maxlength="2" size="2" style="text-align:right;" /></p>
 
 <p>'.boton('Crear cargo', 'submit', '¿Estás seguro de querer CREAR este nuevo cargo?', 'red').'</p>
+
+</fieldset>
 
 </form>';
 	}

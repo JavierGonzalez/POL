@@ -80,8 +80,8 @@ ORDER BY nivel DESC", $link);
 
 <hr />
 
-<h2>Nuevo hilo</h2>
 
+<fieldset><legend>Nuevo hilo</legend>
 
 <form action="/accion.php?a=foro&b=' . $get . '" method="post">
 <input type="hidden" name="subforo" value="' . $subforo . '"  />
@@ -107,6 +107,9 @@ ORDER BY nivel DESC", $link);
 </select></p>
 </form>
 
+</fieldset>
+
+
 '.($edit?'<hr /><p style="text-align:right;">'.boton('Eliminar hilo', '/accion.php?a=foro&b=eliminarhilo&ID='.$edit_ID, '¿Estás seguro de querer ELIMINAR este HILO DE FORMA IRREVOCABLE?').'</p>':'').'
 
 </div>';
@@ -120,12 +123,14 @@ ORDER BY nivel DESC", $link);
 
 <hr />
 
-<p>Mensaje en hilo:<br />
+<fieldset><legend>Mensaje en este hilo</legend>
+<p>
 <textarea name="text" style="width:570px;height:250px;">' . $edit_text . '</textarea><br />
 <span style="color:grey;font-size:12px;">Etiquetas: [b]...[/b] [em]...[/em] [quote]...[/quote] [img]url[/img] [youtube]url-youtube[/youtube], auto-enlaces.</span></p>
 
 <p>'.boton('Enviar', 'submit', false, 'blue large').' En calidad de: <select name="encalidad">' . $select_cargos . '
 </select></p>
+</fieldset>
 
 </form>
 </div>';

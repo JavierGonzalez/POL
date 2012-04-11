@@ -67,13 +67,13 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 			$txt_li['escribir_ex'] .= '<input type="radio" name="acceso_escribir_ex" value="'.$at.'"'.($at==$r['acceso_escribir_ex']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_escribir_ex_var\').val(\''.$at_var.'\');"'.($at=='anonimos'?' disabled="disabled"':'').' /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
 		}
 
-		$txt .= '<h1 class="quitar"><a href="/chats">Chats</a>: <a href="/chats/'.$r['url'].'">'.$r['titulo'].'</a> | Opciones</h1>
-
+		$txt .= '
 <form action="/accion.php?a=chat&b=editar" method="post">
 <input type="hidden" name="chat_ID" value="'.$r['chat_ID'].'" />
 <input type="hidden" name="chat_nom" value="'.$_GET['a'].'" />
 
-<br /><table border="0" cellpadding="9">
+<fieldset><legend>Opciones de acceso</legend>
+<table border="0" cellpadding="9">
 <tr>
 <td valign="top"><b>Acceso leer:</b><br />
 '.$txt_li['leer'].' <input type="text" name="acceso_cfg_leer" size="25" maxlength="900" autocomplete="off" id="acceso_cfg_leer_var" value="'.$r['acceso_cfg_leer'].'" /></td>
@@ -85,15 +85,24 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 '.$txt_li['escribir_ex'].' <input type="text" name="acceso_cfg_escribir_ex" size="25" maxlength="900" autocomplete="off" id="acceso_cfg_escribir_ex_var" value="'.$r['acceso_cfg_escribir_ex'].'" /></td>
 
 </tr>
-<tr><td colspan="2" align="center"><input type="submit" style="font-size:24px;width:150px;" value="Editar"'.((nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))?'':' disabled="disabled"').' /></td></tr>
+<tr><td colspan="2" align="center">
+
+'.boton('Guardar', ((nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))?'submit':''), false, 'large').'
+
+</td></tr>
 </table>
+</fieldset>
 
 </form>';
 
 		if ($r['user_ID'] != 0) {
 			$txt .= '<form action="/accion.php?a=chat&b=cambiarfundador" method="post">
 <input type="hidden" name="chat_ID" value="'.$r['chat_ID'].'" />
-<p>Administradores: <input type="text" name="admin" size="40" maxlength="900" value="'.$r['admin'].'" /> <input type="submit" value="Cambiar Administradores"'.(($r['user_ID'] == $pol['user_ID']) OR (nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND (nucleo_acceso('nivel', 98)))?'':' disabled="disabled"').' /></p></form>';
+
+<fieldset><legend>Administradores</legend>
+<p><input type="text" name="admin" size="40" maxlength="900" value="'.$r['admin'].'" /> <input type="submit" value="Cambiar Administradores"'.(($r['user_ID'] == $pol['user_ID']) OR (nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND (nucleo_acceso('nivel', 98)))?'':' disabled="disabled"').' /></p>
+</fieldset>
+</form>';
 		}
 
 		if (($r['estado'] == 'activo') AND ($r['user_ID'] != 0) AND (($r['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= 95) AND ($r['acceso_escribir'] == 'anonimos')))) { 

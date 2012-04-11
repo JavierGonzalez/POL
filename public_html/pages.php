@@ -43,8 +43,8 @@ case 'donaciones':
 
 
 	$txt .= '
-<div style="color:#555;">
-<h1 style="color:#444;text-align:center;font-size:28px;">'.$title.'</h1>
+<div>
+<h1 style="text-align:center;font-size:28px;">'.$title.'</h1>
 
 <div id="doc_pad">
 
@@ -72,8 +72,8 @@ case 'desarrollo':
 	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
 
 	$txt .= '
-<div style="color:#555;">
-<h1 style="color:#444;text-align:center;font-size:28px;">'.$title.'</h1>
+<div>
+<h1 style="text-align:center;font-size:28px;">'.$title.'</h1>
 
 <div id="doc_pad">
 '.$text.'
@@ -92,8 +92,8 @@ case 'documentacion':
 	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
 
 	$txt .= '
-<div style="color:#555;">
-<h1 style="color:#444;text-align:center;font-size:28px;">'.$title.'</h1>
+<div>
+<h1 style="text-align:center;font-size:28px;">'.$title.'</h1>
 
 <div id="doc_pad">
 '.$text.'
@@ -132,8 +132,8 @@ case 'TOS':
 
 	$txt .= '<em>'.$txt_legal.'</em>
 
-<div style="color:#555;">
-<h1 style="color:#444;text-align:center;font-size:28px;">'.$title.'</h1>
+<div>
+<h1 style="text-align:center;font-size:28px;">'.$title.'</h1>
 
 <div id="doc_pad">
 '.$text.'

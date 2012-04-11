@@ -2,12 +2,11 @@
 define('TIME_START', microtime(true));
 
 include('config.php'); // config raiz
-include('source/inc-functions.php'); // libreria de funciones basicas
 
 
 $date = date('Y-m-d H:i:s'); // fija fecha actual $date en formato entendible por MySQL
 $IP = direccion_IP('longip'); // obtiene la IP en formato numérico (longip)
-$link = conectar(); // conecta MySQL
+
 
 
 // Prevención de inyecciones varias

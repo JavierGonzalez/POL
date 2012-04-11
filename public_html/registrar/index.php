@@ -183,7 +183,7 @@ diputado
 								$result = mysql_query("SELECT ID FROM users WHERE nick = '".$nick."' LIMIT 1", $link);
 								while ($r = mysql_fetch_array($result)) { $nick_existe = $r['ID'];}
 
-								$result = mysql_query("SELECT tiempo FROM ".SQL_EXPULSIONES." WHERE tiempo = '".$nick."' AND estado = 'expulsado' LIMIT 1", $link);
+								$result = mysql_query("SELECT tiempo FROM expulsiones WHERE tiempo = '".$nick."' AND estado = 'expulsado' LIMIT 1", $link);
 								while ($r = mysql_fetch_array($result)) { $nick_expulsado_existe = $r['tiempo']; }
 
 								if ((!$nick_existe) AND (!$nick_expulsado_existe)) { //si el nick esta libre
@@ -193,8 +193,8 @@ diputado
 									//Si existe referencia IP
 									$afiliacion = 0;
 									$result = mysql_query("SELECT ID, user_ID,
-(SELECT nick FROM users WHERE ID = ".SQL_REFERENCIAS.".user_ID LIMIT 1) AS nick
-FROM ".SQL_REFERENCIAS." WHERE IP = '".$longip."' LIMIT 1", $link);
+(SELECT nick FROM users WHERE ID = referencias.user_ID LIMIT 1) AS nick
+FROM referencias WHERE IP = '".$longip."' LIMIT 1", $link);
 									while($r = mysql_fetch_array($result)){ 
 										$afiliacion = $r['user_ID'];
 										$ref = ' (ref: ' . crear_link($r['nick']) . ')';
@@ -217,7 +217,7 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . str
 										$result = mysql_query("SELECT ID FROM users WHERE nick = '" . $nick . "' LIMIT 1", $link);
 										while($r = mysql_fetch_array($result)){ $new_ID = $r['ID']; }
 										
-										mysql_query("UPDATE ".SQL_REFERENCIAS." SET new_user_ID = '" . $new_ID . "' WHERE IP = '" . $longip . "' LIMIT 1", $link);
+										mysql_query("UPDATE referencias SET new_user_ID = '" . $new_ID . "' WHERE IP = '" . $longip . "' LIMIT 1", $link);
 									}
 
 
@@ -284,15 +284,13 @@ case 'solicitar-ciudadania':
 	$result = mysql_query("SELECT pais FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { $user_pais = $r['pais']; }
 
-	if (($pol['user_ID']) AND ($tiene_kick != true) AND ($user_pais == 'ninguno') AND ($pol['estado'] == 'turista') AND (!in_array($_POST['pais'], $vp['paises_congelados']))) {
-		mysql_query("UPDATE users SET estado = 'ciudadano', pais = '" . $_POST['pais'] . "' WHERE estado = 'turista' AND pais = 'ninguno' AND ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+	$pais_existe = false;
+	$result = mysql_query("SELECT pais FROM config WHERE pais = '".$_POST['pais']."' AND dato = 'PAIS' LIMIT 1", $link);
+	while ($r = mysql_fetch_array($result)) { $pais_existe = $r['pais']; }
+
+	if (($pol['user_ID']) AND ($tiene_kick != true) AND ($user_pais == 'ninguno') AND ($pol['estado'] == 'turista') AND ($pais_existe != false)) {
+		mysql_query("UPDATE users SET estado = 'ciudadano', pais = '".$pais_existe."' WHERE estado = 'turista' AND pais = 'ninguno' AND ID = '".$pol['user_ID']."' LIMIT 1", $link);
 	
-		if (($pol['pols'] > 0) AND ($_POST['pais'] != '15M') AND ($_POST['pais'] != '15MBCN')) {
-			$trae = ', trayendo consigo: '.pols($pol['pols']).' '.MONEDA;
-		} else { $trae = ''; }
-
-
-
 		$result2 = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$_POST['pais']."'", $link);
 		while ($r2 = mysql_fetch_array($result2)) { $ciudadanos_num = $r2['num']; }
 
@@ -326,22 +324,22 @@ if ($pol['estado'] == 'ciudadano') {
 	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
-	$txt_title = 'Registrar: PASO 3 (Ya eres Ciudadano!)';
+	$txt_title = 'Rechazar ciudadania';
 	$txt_nav = array('Ciudadanía');
 
-	$txt .= '<p><b>Eres ciudadano de ' . $pol['pais'] . '</b>.</p>
-
-<p>Puedes entrar en la <a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'"><b>plataforma '.$pol['pais'].'</b></a> y saluda a tus compa&ntilde;eros ciudadanos!</p>
+	$txt .= '<p><b>Actualmente eres ciudadano en la plataforma '.$pol['pais'].'</b>.</p>
 
 <blockquote>
 <p style="color:red;"><b>Rechazar ciudadania de '.$pol['pais'].'</b>:</p>
 
 <ul>
-<li>Esta acci&oacute;n es irreversible.</li>
-<li>No es necesario rechazar la ciudadania para experimentar y participar (limitadamente) en otras plataformas.</li>
-<li>Siempre podr&aacute;s solicitar ciudadan&iacute;a de cualquier plataforma.</li>
+<li>Esta acción es irreversible.</li>
+<li>No es necesario tener el estatus de ciudadano para participar (parcialmente) en otras plataformas.</li>
+<li>Podrás solicitar ciudadanía en otra plataforma o regresar.</li>
+'.($pol['pais']=='Hispania'?'
 <li style="color:red;"><b>PERDERAS:</b> tus cuentas bancarias (pero tus monedas), <b>cargos</b>, examenes, <b>votos</b> en elecciones activas en este momento, tus empresas, tu partido, subastas de hoy y todos los derechos de ciudadano.</li>
 <li>CONSERVARAS: tus monedas (restando un arancel del <b style="color:red;">'.$pol['config']['arancel_salida'].'%</b>), tu antiguedad, online, mensajes privados, confianza, mensajes en foro... y todo lo dem&aacute;s.</li>
+':'').'
 </ul>';
 
 

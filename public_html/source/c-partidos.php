@@ -14,7 +14,7 @@ LIMIT 1", $link);
 
 		if (($_GET['b'] == 'editar')) { //edit/  AND ($r['ID_presidente'] == $pol['user_ID'])
 
-			$txt_title = 'Editar '.NOM_PARTIDOS;
+			$txt_title = 'Editar Partidos';
 			$txt_nav = array('/partidos'=>'Partidos', '/partidos/'.$_GET['a']=>$r['siglas'].' ('.$r['nombre'].')', 'Editar');
 
 			//print listas
@@ -52,10 +52,10 @@ ORDER BY nick DESC", $link);
 			if ($ciudadanos_num == 0) { $disabled = ' disabled="disabled"'; } else { $disabled = ''; }
 
 			include('inc-functions-accion.php');
-			$txt .= '<h1><a href="/partidos">'.NOM_PARTIDOS.'</a>: ' . $r['siglas'] . ' (' . $r['nombre'] . ')</h1>
+			$txt .= '<h1><a href="/partidos">Partidos</a>: ' . $r['siglas'] . ' (' . $r['nombre'] . ')</h1>
 <ul id="partido">
 
-<li><form action="/accion.php?a=partido-lista&b=add&ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos . '</select> <input type="submit" value="A&ntilde;adir a la lista"' . $disabled . ' /> (afiliados a tu '.NOM_PARTIDOS.')</form><br /></li>
+<li><form action="/accion.php?a=partido-lista&b=add&ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos . '</select> <input type="submit" value="A&ntilde;adir a la lista"' . $disabled . ' /> (afiliados a tu partido)</form><br /></li>
 
 <li><b>Lista:</b> Candidatos (' . $candidatos_num . ')
 <ol>
@@ -110,7 +110,7 @@ ORDER BY fecha_registro ASC", $link);
 			$txt_title = $r['siglas'] . ' - ' . $r['nombre'];
 			$txt_nav = array('/partidos'=>'Partidos', '/partidos/'.$_GET['a']=>$r['siglas'].' ('.$r['nombre'].')');
 
-			$txt .= '<h1><a href="/partidos/">'.NOM_PARTIDOS.'</a>: ' . $r['siglas'] . ' | ' . $r['nombre'] . '</h1>
+			$txt .= '<h1><a href="/partidos/">Partidos</a>: ' . $r['siglas'] . ' | ' . $r['nombre'] . '</h1>
 
 <p>' . $r['descripcion'] . '</p>
 
@@ -126,7 +126,7 @@ ORDER BY fecha_registro ASC", $link);
 		$siglas_lower = strtolower($r['siglas']);
 		$txt .= '<hr style="width:100%;" />';
 		if (($r['ID_presidente'] == $pol['user_ID']) AND (!$_GET['b'])) { //PARA PRESIDENTE
-			$txt .= '<span><form><input type="button" value="Editar" onClick="window.location.href=\'/partidos/' . $siglas_lower . '/editar/\';" /> <a href="/partidos/"><b>Ver '.strtolower(NOM_PARTIDOS).'</b></a></form></span>';
+			$txt .= '<span><form><input type="button" value="Editar" onClick="window.location.href=\'/partidos/' . $siglas_lower . '/editar/\';" /> <a href="/partidos/"><b>Ver partidos</b></a></form></span>';
 		} elseif ($_GET['b']) { $txt .= '<span style="float:right;"><form><input type="button" value="Eliminar" onClick="if (!confirm(\'&iquest;Estas convencido de que quieres ELIMINAR para siempre?\')) { return false; } else { window.location.href=\'/accion.php?a=eliminar-partido&siglas=' . $r['siglas'] . '\'; }"></form></span><span><a href="/partidos/' . $siglas_lower . '/"><b>Volver</b></a></span>';
 		} else { $txt .= '<span>' . boton('Afiliarse', '/form/afiliarse/' . $siglas_lower . '/') . ' <a href="/partidos/"><b>Ver todos</b></a></span>'; }
 
@@ -173,13 +173,13 @@ ORDER BY num_lista DESC, afiliados DESC, nombre DESC", $link);
 			$txt_otros .= '<span title="'.$r['afiliados'].' afiliados / '.strip_tags($num_lista).' candidatos">'.crear_link($r['siglas'], 'partido').'</span> ';
 		}
 	}
-	$txt .= '</table><p style="width:700px;">'.NOM_PARTIDOS.' que no participan en elecciones:<br />
+	$txt .= '</table><p style="width:700px;">Partidos que no participan en elecciones:<br />
 <b>'.$txt_otros.'</b></p>';
 
 	$txt .= (ECONOMIA?'<p>* Para poder participar en las Elecciones ha de tener al menos un candidato en su lista. Para poder a&ntilde;adir candidatos en la lista, se ha de ser el Presidente, el candidato ha de estar afiliado y con el examen de Diputado aprobado.</p>':'');
-	$txt_title = NOM_PARTIDOS;
+	$txt_title = 'Partidos';
 	$txt_nav = array('/partidos'=>'Partidos');
-	if (nucleo_acceso($vp['acceso']['crear_partido'])) { $txt_tab = array('/form/crear-partido'=>'Crear '.NOM_PARTIDOS); }
+	if (nucleo_acceso($vp['acceso']['crear_partido'])) { $txt_tab = array('/form/crear-partido'=>'Crear partido'); }
 }
 
 

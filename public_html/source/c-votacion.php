@@ -174,7 +174,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 <select name="cargo">';
 
 	$sel['cargo'][explodear('|', $edit['ejecutar'], 0)] = ' selected="selected"';
-	$result = mysql_query("SELECT cargo_ID, nombre FROM cargos ORDER BY nivel DESC", $link);
+	$result = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 	while($r = mysql_fetch_array($result)) { $txt .= '<option value="'.$r['cargo_ID'].'"'.$sel['cargo'][$r['cargo_ID']].'>'.$r['nombre'].'</option>'; }
 
 	$txt .= '

@@ -109,13 +109,13 @@ $(document).ready(function(){
 		if (amsg) {
 			var amsg = amsg.split("|");
 			switch (amsg[0]) {
-				case "v": var msg = "<span style=\"color:green;\"><b>En venta</b></span><br />" + amsg[1] + " (" + ID + ")<br /><span style=\"color:blue;\"><b>" + amsg[2] + "</span> '.MONEDA_NOMBRE.'</b>"; break;
+				case "v": var msg = "<span style=\"color:green;\"><b>En venta</b></span><br />" + amsg[1] + " (" + ID + ")<br /><span style=\"color:blue;\"><b>" + amsg[2] + "</span> monedas</b>"; break;
 				
 				case "e": if (amsg[1]) { var msg = "<span style=\"color:grey;font-size:22fpx;\"><b>" + amsg[1] + "</b></span>"; } break;
 				
 				default: var msg = "<span style=\"color:green;\"><b>" + amsg[0] + "</b></span><br />" + amsg[1] + " (" + ID + ")"; $(this).css("cursor", "pointer");
 			}
-		} else { var msg = "<span style=\"color:green;\">Comprar</span><br />Solar: " + ID + "<br /> <span style=\"color:blue;\"><b>' . $pol['config']['pols_solar'] . '</span> '.MONEDA_NOMBRE.'</b>"; }
+		} else { var msg = "<span style=\"color:green;\">Comprar</span><br />Solar: " + ID + "<br /> <span style=\"color:blue;\"><b>' . $pol['config']['pols_solar'] . '</span> monedas</b>"; }
 		$(this).css("border", "1px solid white");
 		$("#msg").html(msg).css("display", "inline");
 

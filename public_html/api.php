@@ -20,9 +20,9 @@ if (($_GET['a']) AND ($_GET['pass'])) {
 
 	$txt = 'error: pass';
 	//check PASS
-	$res = mysql_query("SELECT * FROM  ".SQL_USERS." WHERE api_pass = '".$_GET['pass']."' LIMIT 1", $link);
+	$res = mysql_query("SELECT * FROM  users WHERE api_pass = '".$_GET['pass']."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($res)){
-		mysql_query("UPDATE ".SQL_USERS." SET api_num = api_num + 1 WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+		mysql_query("UPDATE users SET api_num = api_num + 1 WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 		
 		$txt = 'ok';
 		
@@ -86,7 +86,7 @@ LIMIT 500", $link);
 						while($row = mysql_fetch_array($result)){ $destino = '-'.$row['ID']; }
 					} else {
 						// NICK
-						$result = mysql_query("SELECT ID FROM  ".SQL_USERS." WHERE nick = '".$_GET['destino']."' LIMIT 1", $link);
+						$result = mysql_query("SELECT ID FROM  users WHERE nick = '".$_GET['destino']."' LIMIT 1", $link);
 						while($row = mysql_fetch_array($result)){ $destino = $row['ID']; }
 					}
 

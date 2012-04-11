@@ -2,18 +2,8 @@
 
 $root_dir = '/var/www/vhosts/virtualpol.com/httpdocs/real/';
 
-
-// MICROTIME ON
-$mtime = explode(' ', microtime()); 
-$tiempoinicial = $mtime[1] + $mtime[0]; 
-
-
 include($root_dir.'config.php');
-include($root_dir.'source/inc-functions.php');
 include($root_dir.'source/inc-functions-accion.php');
-$link = conectar();
-
-
 
 
 
@@ -41,7 +31,7 @@ $margen_180dias	= date('Y-m-d 20:00:00', time() - (86400*180)); // 180 dias
 
 
 // LOAD CONFIG $pol['config'][]
-$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."'", $link);
+$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
 while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
@@ -63,22 +53,22 @@ if (ECONOMIA) {
 
 // REFERENCIAS 
 $result = mysql_query("SELECT ID, user_ID, new_user_ID,
-(SELECT nick FROM users WHERE ID = ".SQL_REFERENCIAS.".user_ID LIMIT 1) AS nick,
-(SELECT pais FROM users WHERE ID = ".SQL_REFERENCIAS.".user_ID LIMIT 1) AS nick_pais,
-(SELECT nick FROM users WHERE ID = ".SQL_REFERENCIAS.".new_user_ID LIMIT 1) AS new_nick,
-(SELECT online FROM users WHERE ID = ".SQL_REFERENCIAS.".new_user_ID LIMIT 1) AS online
-FROM ".SQL_REFERENCIAS." 
+(SELECT nick FROM users WHERE ID = referencias.user_ID LIMIT 1) AS nick,
+(SELECT pais FROM users WHERE ID = referencias.user_ID LIMIT 1) AS nick_pais,
+(SELECT nick FROM users WHERE ID = referencias.new_user_ID LIMIT 1) AS new_nick,
+(SELECT online FROM users WHERE ID = referencias.new_user_ID LIMIT 1) AS online
+FROM referencias 
 WHERE new_user_ID != '0' AND pagado = '0'", $link);
 while($r = mysql_fetch_array($result)){ 
 	$txt .= $r['nick'].' - '.$r['new_nick'].' - '.$pol['config']['pols_afiliacion'].'<br />';
 	if (($r['online'] >= $pol['config']['online_ref']) AND ($r['nick_pais'] == PAIS)) {
 		evento_chat('<b>[PROCESO] Referencia exitosa</b>, nuevo Ciudadano '.crear_link($r['new_nick']).', '.crear_link($r['nick']).' gana <em>'.pols($pol['config']['pols_afiliacion']).' '.MONEDA.'</em>');
 		pols_transferir($pol['config']['pols_afiliacion'], '-1', $r['user_ID'], 'Referencia: '.$r['new_nick']);
-		mysql_query("UPDATE ".SQL_REFERENCIAS." SET pagado = '1' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+		mysql_query("UPDATE referencias SET pagado = '1' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 		mysql_query("UPDATE users SET ref_num = ref_num + 1 WHERE ID = '".$r['user_ID']."' LIMIT 1", $link);
 	}
 }
-mysql_query("DELETE FROM ".SQL_REFERENCIAS." WHERE time < '".$margen_30dias."'", $link);
+mysql_query("DELETE FROM referencias WHERE time < '".$margen_30dias."'", $link);
 
 
 // SALARIOS
@@ -329,7 +319,7 @@ mysql_query("DELETE FROM chats WHERE pais = '".PAIS."' AND fecha_last < '".$marg
 */
 
 // ELIMINAR MENSAJES PRIVADOS
-mysql_query("DELETE FROM ".SQL_MENSAJES." WHERE time < '".$margen_15dias."'", $link);
+mysql_query("DELETE FROM mensajes WHERE time < '".$margen_15dias."'", $link);
 
 // ELIMINAR TRANSACCIONES ANTIGUAS
 mysql_query("DELETE FROM transacciones WHERE pais = '".PAIS."' AND time < '".$margen_60dias."'", $link);
@@ -502,12 +492,9 @@ include($root_dir.'source/cron/cron-elecciones.php');
 // Unifica y comprime archivos CSS y JS
 include($root_dir.'source/cron/cron-compress-all.php');
 
-// Calcula el tiempo de proceso
-$mtime = explode(' ', microtime()); 
-$tiempofinal = $mtime[1] + $mtime[0]; 
-$tiempototal = number_format($tiempofinal - $tiempoinicial, 3); 
 
-evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, '.$tiempototal.'s (<a href="/estadisticas/">estadisticas actualizadas</a>)');
+
+evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, '.num((microtime(true)-TIME_START)).'s (<a href="/estadisticas/">estadisticas actualizadas</a>)');
 
 mysql_close($link);
 ?>

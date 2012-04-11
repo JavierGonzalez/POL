@@ -73,7 +73,7 @@ if (isset($sc[$pol['user_ID']])) {
 <th>IP</th>
 </tr>';
 	$result = mysql_query("SELECT *,
-(SELECT COUNT(*) FROM ".SQL_MENSAJES." WHERE envia_ID = users.ID) AS num_priv,
+(SELECT COUNT(*) FROM mensajes WHERE envia_ID = users.ID) AS num_priv,
 (SELECT COUNT(*) FROM ".SQL."foros_msg WHERE user_ID = users.ID) AS num_foro,
 (SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '" . $pol['user_ID'] . "' AND item_ID = users.ID LIMIT 1) AS has_votado,
 (SELECT SUM(voto) AS voto_total FROM votos WHERE tipo = 'confianza' AND item_ID = users.ID AND emisor_ID IN (".implode(',', $sc_user_ID).") LIMIT 1) AS voto_confianza_SC
@@ -85,7 +85,7 @@ LIMIT 60", $link);
 		
 		$razon = '';
 		if ($r['estado'] == 'expulsado') {
-			$result2 = mysql_query("SELECT razon FROM ".SQL_EXPULSIONES." WHERE user_ID = '".$r['ID']."' LIMIT 1", $link);
+			$result2 = mysql_query("SELECT razon FROM expulsiones WHERE user_ID = '".$r['ID']."' LIMIT 1", $link);
 			while ($r2 = mysql_fetch_array($result2)) { $razon = '<b style="color:red;">'.$r2['razon'].'</b> '; }
 		}
 
@@ -306,14 +306,14 @@ WHERE ref = '" . $r['ID'] . "'", $link);
 <th>URL de referencia</th>
 </tr>';
 	$result = mysql_query("SELECT user_ID, COUNT(*) AS num, referer,
-(SELECT nick FROM users WHERE ID = ".SQL_REFERENCIAS.".user_ID LIMIT 1) AS nick,
-(SELECT COUNT(*) FROM ".SQL_REFERENCIAS." WHERE referer = ".SQL_REFERENCIAS.".referer AND new_user_ID != '0') AS num_registrados
-FROM ".SQL_REFERENCIAS." 
+(SELECT nick FROM users WHERE ID = referencias.user_ID LIMIT 1) AS nick,
+(SELECT COUNT(*) FROM referencias WHERE referer = referencias.referer AND new_user_ID != '0') AS num_registrados
+FROM referencias 
 GROUP BY referer HAVING COUNT(*) > 1
 ORDER BY num DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 
-		$result2 = mysql_query("SELECT COUNT(*) AS num_registrados FROM ".SQL_REFERENCIAS." WHERE referer = '" . $r['referer'] . "' AND new_user_ID != '0'", $link);
+		$result2 = mysql_query("SELECT COUNT(*) AS num_registrados FROM referencias WHERE referer = '" . $r['referer'] . "' AND new_user_ID != '0'", $link);
 		while($r2 = mysql_fetch_array($result2)) {
 			if ($r2['num_registrados'] != 0) { $num_registrados = '+' . $r2['num_registrados']; } else { $num_registrados = ''; }
 		}

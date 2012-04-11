@@ -44,8 +44,8 @@ if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { //
 }
 
 	$result = mysql_query("SELECT ID, user_ID, time, text, 
-(SELECT nick FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
-(SELECT avatar FROM ".SQL_USERS." WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS avatar
+(SELECT nick FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
+(SELECT avatar FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS avatar
 FROM ".SQL."foros_msg
 WHERE hilo_ID = '-1'
 ORDER BY time DESC

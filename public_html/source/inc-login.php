@@ -2,14 +2,11 @@
 define('TIME_START', microtime(true));
 
 include('../config.php');
-include(RAIZ.'source/inc-functions.php');
 include(RAIZ.'source/class-db.php');
-
 
 //INIT
 $date = date('Y-m-d H:i:s');
 $IP = direccion_IP('longip');
-$link = conectar();
 
 // Prevención de inyección
 foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val, false); }
@@ -42,11 +39,6 @@ if (isset($_COOKIE['teorizauser'])) {
 		if (($_SESSION['examen']['tiempo'] + 10) <= time()) { unset($_SESSION['examen']); } 
 	}
 }
-
-
-// LOAD CONFIG
-$result = mysql_unbuffered_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'si'", $link);
-while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 // USER OK
 if (isset($pol['user_ID'])) {

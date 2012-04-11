@@ -196,7 +196,7 @@ LIMIT 10", $link);
 
 	foreach(explode(";", $pol['config']['palabras']) as $t) {
 		$t = explode(":", $t);
-		$result = mysql_query("SELECT nick FROM ".SQL_USERS." WHERE ID = '" . $t[0] . "' LIMIT 1", $link);
+		$result = mysql_query("SELECT nick FROM users WHERE ID = '" . $t[0] . "' LIMIT 1", $link);
 		while($row = mysql_fetch_array($result)){ 
 			$txt .= crear_link($row['nick']) . ' ';
 		}

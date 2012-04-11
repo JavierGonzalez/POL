@@ -376,7 +376,7 @@ $txt .= '</ul>
 
 
 		if ($user_ID != $pol['user_ID']) {
-			$txt .= '<p class="quitar">' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/' . strtolower($nick) . '/').' &nbsp; '.(ECONOMIA?boton('Transferir '.MONEDA_NOMBRE.'', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/' . strtolower($nick) . '/'):'').'</p>';
+			$txt .= '<p class="quitar">' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/' . strtolower($nick) . '/').' &nbsp; '.(ECONOMIA?boton('Transferir monedas', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/' . strtolower($nick) . '/'):'').'</p>';
 		}
 		$txt .= '</div>';
 
@@ -391,7 +391,7 @@ $txt .= '</ul>
 		}
 
 		
-		$txt .= '<p class="quitar">' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$nick.'/').' &nbsp; '.(ECONOMIA?boton('Transferir '.MONEDA_NOMBRE.'', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/' . strtolower($nick) . '/'):'').'</p>';
+		$txt .= '<p class="quitar">' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$nick.'/').' &nbsp; '.(ECONOMIA?boton('Transferir monedas', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/' . strtolower($nick) . '/'):'').'</p>';
 
 
 		$txt_description = $txt_title . ' ' . str_replace("\"", "", strip_tags($r['text']));

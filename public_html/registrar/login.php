@@ -21,65 +21,90 @@ case 'panel':
 		$result = mysql_query("SELECT ser_SC FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) { $ser_SC = $r['ser_SC']; }
 
-		$txt .= '<h1>Opciones de usuario</h1><ul>';
+		$txt .= '<h1>Opciones de tu usuario ('.$pol['nick'].'):</h1>
 
-		//changepass
-		$txt .= '<li class="azul"><b>Cambio de contrase&ntilde;a:</b><br />
+<div style="max-width:640px;">
+
+<fieldset>
+<legend>Cambiar contraseña</legend>
+
 <form action="'.REGISTRAR.'login.php?a=changepass" method="POST">
-<input type="hidden" name="url" value="' . base64_encode(REGISTRAR.'login.php?a=panel') . '" />
+<input type="hidden" name="url" value="'.base64_encode(REGISTRAR.'login.php?a=panel').'" />
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td align="center" valign="top">Contrase&ntilde;a actual:<br /><input type="password" name="oldpass" value="" maxlength="30" /></td>
-<td align="center" valign="top">Nueva contrase&ntilde;a:<br /><input type="password" name="pass1" value="" maxlength="30" /><br />
+<td valign="middle" align="center" valign="top">Contrase&ntilde;a actual:<br /><input type="password" name="oldpass" value="" maxlength="30" /></td>
+<td valign="middle" align="center" valign="top">Nueva contrase&ntilde;a:<br /><input type="password" name="pass1" value="" maxlength="30" /><br />
 <input type="password" name="pass2" value="" maxlength="30" /></td>
-<td align="center" valign="top"><input type="submit" value="Cambiar contrase&ntilde;a" style="font-weight:bold;font-size:15px;color:green;" />
-</td></tr></table></form></li>
+<td valign="middle" align="center" valign="top">
+'.boton('Cambiar contraseña', 'submit', false, 'large blue').'
+</td></tr></table></form>
 
-<br />
-
-<li class="azul"><b>Cambio de nombre de usuario</b><br />
-<form action="'.REGISTRAR.'login.php?a=changenick" method="POST">
-<input type="hidden" name="url" value="' . base64_encode(REGISTRAR.'login.php?a=panel') . '" />
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
-<tr>
-<td align="center" valign="top">Nuevo nombre de usuario:<br /><input type="text" name="newnick" value="" maxlength="30" /></td>
-<td align="center" valign="top"><input type="submit" value="Cambiar nombre de usuario" style="font-weight:bold;font-size:15px;color:green;" onclick="if (confirm(\'¿Estás seguro de querer cambiar el nick?\n\n! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !\nSOLO PODRAS CAMBIARLO UNA VEZ AL AÑO.\n! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !\')) {} else { return false; }" />
-</td></tr></table></form></li>
-
-<br />
+</fieldset>
 
 
-<li class="azul"><b>Cambio de email:</b><br />
+
+<fieldset>
+<legend>Cambiar email</legend>
+
 <form action="'.REGISTRAR.'login.php?a=changemail" method="POST">
 <input type="hidden" name="url" value="' . base64_encode(REGISTRAR.'login.php?a=panel') . '" />
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td align="center" valign="top">Email: <input type="text" size="30" name="email" value="'.$pol['email'].'" maxlength="100" /></td>
-<td align="center" valign="top"><input type="submit" value="Cambiar email" style="font-weight:bold;font-size:15px;color:green;" />
-</td></tr></table></form></li>
+<td valign="middle" align="center" valign="top">Email: <input type="text" size="30" name="email" value="'.$pol['email'].'" maxlength="100" /></td>
+<td valign="middle" align="center" valign="top">
+'.boton('Cambiar email', 'submit', false, 'large blue').'
+</td></tr></table></form>
 
-<br />
+</fieldset>
 
-<li class="azul"><b>Supervisor del Censo:</b><br />
+
+
+<fieldset>
+<legend>Candidato a Supervisor del Censo</legend>
+
 <form action="'.REGISTRAR.'login.php?a=ser_SC" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td align="center" valign="top">
+<td valign="middle" align="center" valign="top">
 <input type="checkbox" name="ser_SC" value="true"'.($ser_SC=='true'?' checked="checked"':'').' /> Quiero ser candidato a Supervisor del Censo.
 </td>
-<td><input type="submit" value="Guardar" /></td>
-</tr></table></form></li>
-<br />
+<td valign="middle">'.boton('Guardar', 'submit', false, 'large blue').'</td>
+</tr></table></form>
 
-<li class="azul"><b>Borrar usuario y datos personales:</b><br />
+</fieldset>
+
+
+<fieldset>
+<legend>Cambiar nick</legend>
+
+<form action="'.REGISTRAR.'login.php?a=changenick" method="POST">
+<input type="hidden" name="url" value="' . base64_encode(REGISTRAR.'login.php?a=panel') . '" />
+<table border="0" cellpadding="2" cellspacing="0" width="100%">
+<tr>
+<td valign="middle" align="center" valign="top">Nuevo nombre de usuario:<br /><input type="text" name="newnick" value="" maxlength="30" /></td>
+<td valign="middle" align="center" valign="top">
+
+'.boton('Cambiar nick', 'submit', '¿Estás seguro de querer cambiar el nick?\n\n! ! !\nSOLO PODRAS CAMBIARLO UNA VEZ AL AÑO.\n! ! !', 'red large').'
+</td></tr></table></form>
+
+</fieldset>
+
+
+
+<fieldset>
+<legend>Eliminar usuario</legend>
+
 <form action="'.REGISTRAR.'login.php?a=borrar-usuario" method="POST">
 <input type="hidden" name="nick" value="'.$pol['nick'].'" />
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td align="center" valign="top"><input type="submit" value="Eliminar usuario definitivamente" style="font-weight:bold;font-size:16px;color:red;" onclick="if ((confirm(\'&iquest;Estas seguro de querer ELIMINAR PERMANENTEMENTE tu usuario y todos los datos asociados?\')) && (confirm(\'&iquest;De verdad estas seguro? Esta accion es irreversible.\')) && (confirm(\'Si aceptas, tu usuario sera eliminado junto con todos sus datos personales. &iquest;Estas de acuerdo?\'))) {} else { return false; }" />
-</td></tr></table></form></li>';
+<td valign="middle" align="center" valign="top">
+'.boton('ELIMINAR usuario permanentemente', 'submit', '¿Estas seguro de querer ELIMINAR PERMANENTEMENTE tu usuario y todos los datos asociados?\n\nEl proceso es automático y la eliminación se efectuará tras 10 días.', 'small pill red').'
+</td></tr></table></form>
 
-		$txt .= '</ul>';
+</fieldset>
+
+</div>';
 
 
 	} else { //Intruso

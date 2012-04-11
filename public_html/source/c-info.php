@@ -391,16 +391,18 @@ $txt .= '<br /><table border="0" cellspacing="0" cellpadding="2">
 
 </tr>';
 
-foreach ($vp['paises_economia'] AS $pais) {
+$result0 = mysql_query("SELECT pais FROM config WHERE dato = 'ECONOMIA' AND valor = 'true'");
+while($r0 = mysql_fetch_array($result0)) {
+		$pais = $r0['pais'];
 
-$result = mysql_query("SELECT SUM(pols + IFNULL((SELECT SUM(pols) FROM ".strtolower($pais)."_cuentas WHERE user_ID = users.ID GROUP BY user_ID),0)) AS pols_ciudadanos,
+$result = mysql_query("SELECT SUM(pols + IFNULL((SELECT SUM(pols) FROM cuentas WHERE pais = '".$pais."' AND user_ID = users.ID GROUP BY user_ID),0)) AS pols_ciudadanos,
 (SELECT COUNT(ID) FROM users WHERE pais = '".$pais."' AND estado = 'ciudadano') AS num_ciudadanos,
-(SELECT SUM(pols) FROM ".strtolower($pais)."_cuentas WHERE nivel > 0) AS pols_gobierno,
+(SELECT SUM(pols) FROM cuentas WHERE pais = '".$pais."' AND nivel > 0) AS pols_gobierno,
 (SELECT SUM(pols) FROM users WHERE pais = '".$pais."' AND pols < 0) AS pols_negativo,
-(SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'arancel_salida' LIMIT 1) AS arancel_salida,
-(SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'impuestos' LIMIT 1) AS impuestos,
-(SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'impuestos_minimo' LIMIT 1) AS impuestos_minimo,
-(SELECT valor FROM ".strtolower($pais)."_config WHERE dato = 'pols_inem' LIMIT 1) AS inem,
+(SELECT valor FROM config WHERE pais = '".$pais."' AND dato = 'arancel_salida' LIMIT 1) AS arancel_salida,
+(SELECT valor FROM config WHERE pais = '".$pais."' AND dato = 'impuestos' LIMIT 1) AS impuestos,
+(SELECT valor FROM config WHERE pais = '".$pais."' AND dato = 'impuestos_minimo' LIMIT 1) AS impuestos_minimo,
+(SELECT valor FROM config WHERE pais = '".$pais."' AND dato = 'pols_inem' LIMIT 1) AS inem,
 (SELECT AVG(salario) FROM cargos WHERE pais = '".$pais."') AS salario_medio
 FROM users
 WHERE pais = '".$pais."'");
@@ -408,7 +410,7 @@ WHERE pais = '".$pais."'");
 
 
 		$result2 = mysql_query("SELECT nick, pais,
-(pols + IFNULL((SELECT SUM(pols) FROM ".strtolower($pais)."_cuentas WHERE user_ID = users.ID GROUP BY user_ID),0)) AS pols_total
+(pols + IFNULL((SELECT SUM(pols) FROM cuentas WHERE pais = '".$pais."' AND user_ID = users.ID GROUP BY user_ID),0)) AS pols_total
 FROM users
 WHERE pais = '".$pais."'
 ORDER BY pols_total DESC 

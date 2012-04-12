@@ -34,19 +34,48 @@ function verbalizar_acceso($tipo, $valor='') {
 	switch ($tipo) { // ¿Quien tiene acceso?
 		case 'internet': case 'anonimos': $t = 'todo el mundo (Internet)'; break;
 		case 'ciudadanos_global': $t = 'todos los ciudadanos de VirtualPol'; break;
-		case 'ciudadanos': $t = 'todos los ciudadanos de '.($valor==''?'la plataforma '.PAIS:' las plataformas: '.$valor); break;
-		case 'excluir': $t = 'todos los ciudadanos excepto: '.$valor; break;
+		case 'ciudadanos': $t = 'todos los ciudadanos de '.($valor==''?'la plataforma '.PAIS:' las plataformas: <em>'.$valor.'</em>'); break;
+		case 'excluir': $t = 'todos los ciudadanos excepto: <em>'.$valor.'</em>'; break;
 		case 'privado': $t = 'los ciudadanos: '.$valor; break;
-		case 'afiliado': $t = 'ciudadanos de '.PAIS.' afiliados al partido: #'.$valor.' (<a href="/partidos">Ver partidos</a>)'; break;
 		case 'confianza': $t = 'ciudadanos con confianza mayor o igual a '.confianza($valor).' (<a href="/censo/confianza">Ver confianza</a>)'; break;
-		case 'nivel': $t = 'ciudadanos de '.PAIS.' con nivel '.$valor.' o mayor (<a href="/cargos">Ver cargos</a>)'; break;
-		case 'cargo': $t = 'ciudadanos de '.PAIS.' con cargo: '.$valor.' (<a href="/cargos">Ver cargos</a>)'; break;
-		case 'grupos': $t = 'ciudadanos de '.PAIS.' afiliados al grupo: '.$valor.' (<a href="/grupos">Ver grupos</a>)'; break;
-		case 'examenes': $t = 'ciudadanos de '.PAIS.' con los exámenes aprobados: '.$valor.' (<a href="/examenes">Ver exámenes</a>)'; break;
-		case 'monedas': $t = 'ciudadanos de '.PAIS.' con al menos '.$valor.' monedas'; break;
+		case 'nivel': $t = 'ciudadanos de '.PAIS.' con nivel <em>'.$valor.'</em> o mayor (<a href="/cargos">Ver cargos</a>)'; break;
+		
+		case 'examenes':
+			global $link;
+			$val = array();
+			$result = mysql_query("SELECT titulo AS nom FROM examenes WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")", $link);
+			while($r = mysql_fetch_array($result)) { $val[] = $r['nom']; }
+			$t = 'ciudadanos de '.PAIS.' con los exámenes aprobados: <a href="/examenes">'.implode(', ', $val).'</a>';
+			break;
+
+		case 'cargo':
+			global $link;
+			$val = array();
+			$result = mysql_query("SELECT cargo_ID, nombre AS nom FROM cargos WHERE pais = '".PAIS."' AND cargo_ID IN (".implode(',', explode(' ', $valor)).")", $link);
+			while($r = mysql_fetch_array($result)) { $val[] = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" title="'.$r['nom'].'" />'.$r['nom']; }
+			$t = 'ciudadanos de '.PAIS.' con cargo: '.implode(', ', $val).' (<a href="/cargos">Ver cargos</a>)';
+			break;
+
+		case 'afiliado':
+			global $link;
+			$val = array();
+			$result = mysql_query("SELECT siglas AS nom FROM partidos WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")", $link);
+			while($r = mysql_fetch_array($result)) { $val[] = $r['nom']; }
+			$t = 'ciudadanos de '.PAIS.' afiliados al partido <a href="/partidos">'.implode('', $val).'</a>';
+			break;
+
+		case 'grupos':
+			global $link;
+			$val = array();
+			$result = mysql_query("SELECT nombre AS nom FROM grupos WHERE pais = '".PAIS."' AND grupo_ID IN (".implode(',', explode(' ', $valor)).")", $link);
+			while($r = mysql_fetch_array($result)) { $val[] = $r['nom']; }
+			$t = 'ciudadanos de '.PAIS.' afiliados al grupo: <a href="/grupos">'.implode(', ', $val).'</a>';
+			break;
+		
+		case 'monedas': $t = 'ciudadanos de '.PAIS.' con al menos <em>'.$valor.'</em> monedas'; break;
 		case 'autentificados': $t = 'ciudadanos autentificados'; break;
 		case 'supervisores_censo': $t = 'Supervisores del Censo'; break;
-		case 'antiguedad': $t = 'ciudadanos con al menos '.$valor.' dias de antigüedad';  break;
+		case 'antiguedad': $t = 'ciudadanos con al menos <em>'.$valor.'</em> dias de antigüedad';  break;
 	}
 	return $t;
 }

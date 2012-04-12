@@ -249,7 +249,7 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais='') {
                         mysql_query("UPDATE ".$sql."cuentas SET pols = pols + " . $pols . " WHERE ID = '" . substr($receptor_ID, 1) . "' LIMIT 1", $link);
                 }
 
-                mysql_query("INSERT INTO ".$sql."transacciones (pols, emisor_ID, receptor_ID, concepto, time) VALUES (" . $pols . ", '" . $emisor_ID . "', '" . $receptor_ID . "', '" . $concepto . "', '" . date('Y-m-d H:i:s') . "')", $link);
+                mysql_query("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".$pais."', " . $pols . ", '" . $emisor_ID . "', '" . $receptor_ID . "', '" . $concepto . "', '" . date('Y-m-d H:i:s') . "')", $link);
 				notificacion($receptor_ID, 'Te han transferido '.$pols.' monedas', '/pols');
                 $return = true;
         }

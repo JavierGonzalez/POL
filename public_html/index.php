@@ -54,7 +54,7 @@ $txt .= '
 
 <li>Algunos datos: '.num($num_votaciones_votos).' votos procesados en '.num($num_votaciones).' votaciones y '.num($num_votos).' votos de otros tipos.</li>
 
-<li>Es <a href="/desarrollo">Software Libre</a>.</li>
+<li>Es <a href="/desarrollo">Software Libre</a>, gratuito y sin publicidad.</li>
 </ul>
 
 
@@ -157,7 +157,7 @@ $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="4"></td></tr>
 
 </td></tr></table>
 
-<p style="text-align:center;">'.boton((isset($pol['nick'])?'Solicitar ciudadania':'crear ciuadano'), REGISTRAR, false, 'large blue').'</p>';
+'.(isset($pol['nick'])?'':'<p style="text-align:center;">'.boton('Crear ciuadano', REGISTRAR, false, 'large blue').'</p>');
 
 
 $txt_header .= '<style type="text/css">td b { font-size:15px; }</style>';

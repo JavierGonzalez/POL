@@ -734,31 +734,9 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 
 
 case 'gobierno':
-	if (
-($_GET['b'] == 'config') AND 
-(nucleo_acceso($vp['acceso']['control_gobierno'])) AND  
-($_POST['online_ref'] >= 60) AND
-($_POST['pols_inem'] >= 0) AND ($_POST['pols_inem'] <= 500) AND
-($_POST['pols_afiliacion'] >= 0) AND ($_POST['pols_afiliacion'] <= 2000) AND
-($_POST['pols_empresa'] >= 0) AND
-($_POST['pols_cuentas'] >= 0) AND
-($_POST['pols_partido'] >= 0) AND
-($_POST['pols_solar'] >= 0) AND
-($_POST['pols_crearchat'] >= 0) AND
-($_POST['factor_propiedad'] <= 10) AND ($_POST['factor_propiedad'] >= 0) AND 
-($_POST['pols_mensajetodos'] >= 300) AND 
-($_POST['pols_examen'] >= 0) AND 
-($pol['config']['pols_mensajeurgente'] >= 0) AND
-($_POST['num_escanos'] <= 31) AND ($_POST['num_escanos'] >= 3) AND 
-(strlen($_POST['palabra_gob0']) <= 200) AND
-($_POST['impuestos'] <= 5) AND ($_POST['impuestos'] >= 0) AND
-($_POST['impuestos_minimo'] >= -1000) AND
-($_POST['impuestos_empresa'] <= 1000) AND ($_POST['impuestos_empresa'] >= 0) AND
-($_POST['arancel_salida'] <= 100) AND ($_POST['arancel_salida'] >= 0) AND
-($_POST['chat_diasexpira'] >= 10)
-) {
 
-$dato_array = array(
+
+	$dato_array = array(
 'online_ref'=>'Tiempo online en minutos para referencia',
 'pols_mensajetodos'=>'Coste mensaje Global',
 'pols_solar'=>'Coste solar del mapa',
@@ -784,15 +762,21 @@ $dato_array = array(
 'chat_diasexpira'=>'Dias expiracion chat',
 );
 
+	if (
+($_GET['b'] == 'config') AND 
+(nucleo_acceso($vp['acceso']['control_gobierno'])) AND  
+(entre($_POST['online_ref'], 60, 900000)) AND
+(entre($_POST['num_escanos'], 3, 31)) AND 
+(strlen($_POST['palabra_gob0']) <= 200) AND
+($_POST['chat_diasexpira'] >= 10)
+) {
+
 		foreach ($vp['paises'] AS $pais) {
-			if (PAIS != $pais) {
-					$dato_array['frontera_con_' . $pais] = 'Frontera con ' . $pais;
-			}
+			if (PAIS != $pais) { $dato_array['frontera_con_' . $pais] = 'Frontera con ' . $pais; }
 		}
 
 		foreach ($_POST AS $dato => $valor) {
 			if ((substr($dato, 0, 8) != 'salario_') AND ($dato != 'palabra_gob1')) {
-
 
 				if ($dato == 'online_ref') {
 					$valor = round($_POST['online_ref']*60);
@@ -813,22 +797,62 @@ $dato_array = array(
 					}
 					evento_chat('<b>[GOBIERNO]</b> Configuraci&oacute;n ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/gobierno/">Gobierno</a>)'); 
 				}
-			
 			}
 		}
 
-
-		// Salarios
-		$result = mysql_query("SELECT cargo_ID, salario, nombre FROM cargos WHERE pais = '".PAIS."'", $link);
-		while($r = mysql_fetch_array($result)){
-			$salario = $_POST['salario_'.$r['cargo_ID']];
-			if (($salario >= 0) AND ($salario <= 1000)) {
-				if ($salario != $r['salario']) { evento_chat('<b>[GOBIERNO]</b> El salario de <img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" /><b>'.$r['nombre'].'</b> se ha cambiado de '.pols($r['salario']).' '.MONEDA.' a '.pols($salario).' '.MONEDA.' ('.crear_link($pol['nick']).', <a href="/control/gobierno/">Gobierno</a>)');  }
-				mysql_query("UPDATE cargos SET salario = '".$salario."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1", $link);
-			}
-		}
-		evento_log('Gobierno configuración');
+		evento_log('Gobierno configuración principal');
 		$refer_url = 'control/gobierno';
+
+
+	} elseif (
+($_GET['b'] == 'economia') AND 
+(nucleo_acceso($vp['acceso']['control_gobierno'])) AND  
+($_POST['pols_inem'] >= 0) AND ($_POST['pols_inem'] <= 500) AND
+(entre($_POST['pols_afiliacion'], 0, 2000)) AND
+($_POST['pols_empresa'] >= 0) AND
+($_POST['pols_cuentas'] >= 0) AND
+($_POST['pols_partido'] >= 0) AND
+($_POST['pols_solar'] >= 0) AND
+($_POST['pols_crearchat'] >= 0) AND
+(entre($_POST['factor_propiedad'], 0, 10)) AND 
+($_POST['pols_mensajetodos'] >= 300) AND 
+($_POST['pols_examen'] >= 0) AND 
+($pol['config']['pols_mensajeurgente'] >= 0) AND
+($_POST['impuestos'] <= 5) AND ($_POST['impuestos'] >= 0) AND
+($_POST['impuestos_minimo'] >= -1000) AND
+($_POST['impuestos_empresa'] <= 1000) AND ($_POST['impuestos_empresa'] >= 0) AND
+($_POST['arancel_salida'] <= 100) AND ($_POST['arancel_salida'] >= 0)
+) {
+
+		foreach ($_POST AS $dato => $valor) {
+			if ((substr($dato, 0, 8) != 'salario_') AND ($dato != 'palabra_gob1')) {
+
+				mysql_query("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1", $link);
+			
+				if ($pol['config'][$dato] != $valor) { 
+					if ($valor == '') { $valor = '<em>null</em>'; }
+					if ($dato == 'online_ref') {
+						$valor = intval($valor)/60; 
+						$pol['config'][$dato] = $pol['config'][$dato]/60;
+					}
+					evento_chat('<b>[GOBIERNO]</b> Configuraci&oacute;n ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/gobierno/">Gobierno</a>)'); 
+				}
+			}
+		}
+
+		if (ECONOMIA) {
+			// Salarios
+			$result = mysql_query("SELECT cargo_ID, salario, nombre FROM cargos WHERE pais = '".PAIS."'", $link);
+			while($r = mysql_fetch_array($result)){
+				$salario = $_POST['salario_'.$r['cargo_ID']];
+				if (($salario >= 0) AND ($salario <= 1000)) {
+					if ($salario != $r['salario']) { evento_chat('<b>[GOBIERNO]</b> El salario de <img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" /><b>'.$r['nombre'].'</b> se ha cambiado de '.pols($r['salario']).' '.MONEDA.' a '.pols($salario).' '.MONEDA.' ('.crear_link($pol['nick']).', <a href="/control/gobierno/">Gobierno</a>)');  }
+					mysql_query("UPDATE cargos SET salario = '".$salario."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1", $link);
+				}
+			}
+		}
+		evento_log('Gobierno configuración economía');
+		$refer_url = 'control/gobierno/economia';
 
 	// FORO
 	} elseif (($_GET['b'] == 'subforo') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
@@ -1241,7 +1265,13 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 		while($r = mysql_fetch_array($result)){
 			if (nucleo_acceso($vp['acceso'][$r['tipo']])) {
 				$r['time_expire'] = date('Y-m-d H:i:s', time() + $r['duracion']); 
-				mysql_query("UPDATE votacion SET estado = 'ok', user_ID = '".$pol['user_ID']."', time = '".$date."', time_expire = '".$r['time_expire']."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+				
+
+				$result2 = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano'".($r['acceso_voto']=='ciudadanos_global'?'':" AND pais = '".PAIS."'")." LIMIT 1", $link);
+				while($r2 = mysql_fetch_array($result2)){ $censo_num = $r2['num']; }
+
+
+				mysql_query("UPDATE votacion SET estado = 'ok', user_ID = '".$pol['user_ID']."', time = '".$date."', time_expire = '".$r['time_expire']."', num_censo = '".$censo_num."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 				if ($r['acceso_ver'] == 'anonimos') {
 					evento_chat('<b>[VOTACIÓN] <a href="/votacion/'.$r['ID'].'">'.$r['pregunta'].'</a></b> <span style="color:grey;">('.duracion($r['time_expire']).')</span>');
 				}
@@ -1295,7 +1325,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 					unset($comprobante);
 					
 					if (in_array($acceso_ver, array('anonimos', 'ciudadanos_global', 'ciudadanos'))) {
-						evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').(is_numeric($num_censo)?' '.num(($num*100)/$num_censo, 2).'%':'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
+						evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').($tipo=='elecciones'&&is_numeric($num_censo)?' '.num(($num*100)/$num_censo, 2).'%':'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
 					}
 				}
 				unset($_POST['voto'], $_POST['mensaje'], $_POST['validez']);

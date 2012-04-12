@@ -154,7 +154,7 @@ function click_form(tipo) {
 </p>
 
 <p><b>Mensaje:</b><br />
-<textarea tabindex="2" name="text" style="font-weight:bold;width:550px;height:200px;"></textarea></p>
+<textarea tabindex="2" name="text" style="width:550px;height:200px;"></textarea></p>
 
 <input type="hidden" name="calidad" value="0" />
 

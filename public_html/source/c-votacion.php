@@ -437,7 +437,8 @@ LIMIT 1", $link);
 		if ($_GET['b'] == 'info') {
 			$time_expire = strtotime($r['time_expire']);
 			$time = strtotime($r['time']);
-			$txt .= '<h2>Información sobre esta votación:</h2>
+			
+			$txt .= '<fieldset><legend>Información sobre esta votación</legend>
 
 <table border="0">
 
@@ -448,7 +449,7 @@ LIMIT 1", $link);
 
 <tr>
 <td align="right">Estado de la votación:</td>
-<td><b>'.($r['estado']=='ok'?'En curso... quedan '.timer($r['time_expire']):'Finalizada, hace'.timer($r['time_expire'])).'</b> ('.num($r['num']).' votos)</td>
+<td><b>'.($r['estado']=='ok'?'En curso... quedan '.timer($r['time_expire']):'Finalizada, hace '.timer($r['time_expire'])).'</b> ('.num($r['num']).' votos)</td>
 </tr>
 
 
@@ -493,50 +494,54 @@ LIMIT 1", $link);
 </tr>
 
 </table>
+</fieldset>
 
-
-<br /><h3>Propiedades de la votación:</h3>
+<fieldset><legend>Propiedades de la votación</legend>
 <ul>
+<li><b title="Accuracy: el computo de los votos es exacto">Precisión:</b> SI, el computo de los votos es exacto.</b></li>
 
-<li><b title="Accuracy: el computo de los votos es exacto.">Precisión:</b> Si, el computo de los votos es exacto.</b></li>
+<li><b title="Consistency: los resultados son coherentes y estables en el tiempo">Consistencia:</b> SI, el resultado es coherente y estable en el tiempo. Una vez finalizadas no se puede eliminar o modificar las votaciones.</b></li>
 
-<li><b title="Consistency: los resultados son coherentes y estables en el tiempo.">Consistencia:</b> Si, el resultado es coherente y estable en el tiempo. Una vez finalizadas no se puede eliminar o modificar las votaciones.</b></li>
-
-<li><b title="Democracy: solo pueden votar personas autorizadas y una sola vez.">Democracia:</b> Autentificación solida mediante DNIe (y otros certificados) opcional, avanzado sistema de vigilancia del censo de eficacia elevada, con supervisores del censo electos por democracia directa (voto de confianza, cada 7 días).</li>
+<li><b title="Democracy: solo pueden votar personas autorizadas y una sola vez">Democracia:</b> Autentificación solida mediante <a href="'.SSL_URL.'dnie.php">DNIe</a> (y otros certificados) opcional, avanzado sistema de vigilancia del censo de eficacia elevada (demostrada desde 2008), con supervisores del censo electos por democracia directa (cada 7 días, mediante el <a href="/info/censo/SC">voto de confianza</a>).</li>
 
 '.($r['privacidad']=='true'?'
 
-<li><b title="Privacy: el sentido del voto es secreto.">Privacidad:</b> Si, siempre que el servidor no se comprometa mientras la votación está activa. Al finalizar la votación se rompe la relación Usuario-Voto de forma definitiva e irreversible.</li>
+<li><b title="Privacy: el sentido del voto es secreto">Privacidad:</b> SI, siempre que el servidor no se comprometa mientras la votación está activa. Al finalizar la votación se rompe la relación Usuario-Voto de forma definitiva e irreversible.</li>
 
-<li><b title="Veriability: capacidad publica de comprobar el recuento de votos.">Verificación:</b> Muy alta, con diferentes medidas de transparencia. 1. Se permite verificar el sentido del propio voto mientras la votación está activa. 2. Se hace publico CUANDO vota QUIEN. 3. Sistema de comprobantes que permite verificar -más allá de toda duda- el sentido del voto en el escrutinio público y completo.</li>
+<li><b title="Veriability: capacidad publica de comprobar el recuento de votos">Verificación:</b> Muy elevada, gracias a las siguientes medidas de transparencia:
+<ol>
+<li>Se permite verificar el sentido del propio voto mientras la votación está en curso.</li>
+<li>Comprobantes de voto que permiten verificar -más allá de toda duda- el sentido del propio voto situado en un <a href="/votacion/'.$r['ID'].'/verificacion">escrutinio público y completo</a>.</li>
+<li>Se hace público CUANDO vota QUIEN, de forma dinamica en chat y de forma <a href="/votacion/'.$r['ID'].'/verificacion">permanente</a>. Permitiendo que cualquiera se pueda poner en contacto con cualquier votante.</li>
+</ol>
+</li>
 
 ':'
 
-<li><b title="Privacy: el sentido del voto es secreto.">Privacidad:</b> NO, el voto es público. Cualquiera puede ver QUÉ vota QUIEN.</li>
+<li><b title="Privacy: el sentido del voto es secreto">Privacidad:</b> NO, el voto es público. Cualquiera puede ver QUÉ vota QUIEN.</li>
 
-<li><b title="Veriability: capacidad pública de comprobar el recuento de votos.">Verificación:</b> Si. Esta votación tiene verificabilidad universal ya que el voto no es secreto.</li>
+<li><b title="Veriability: capacidad pública de comprobar el recuento de votos">Verificación:</b> SI. Esta votación tiene verificabilidad universal ya que el voto no es secreto.</li>
 
 ').'
 
-<li><b title="Posibilidad de modificar el sentido del voto propio en una votación activa.">Rectificación</b> Si.</li>
+<li><b title="Posibilidad de modificar el sentido del voto propio en una votación en curso">Rectificación</b>: SI, se permite modificar el voto.</li>
 
-</ul>';
+<li><b title="Validez/nulidad de la votación">Impugnación</b>: SI, se realiza una votación de nulidad/validez paralela e independiente del sentido de voto.</li>
 
-
-
-			
+</ul>
+</fieldset>';
 
 			$result2 = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
 			while($r2 = mysql_fetch_array($result2)) { $comentarios_num = $r2['num']; }
 
-			$txt .= '<br /><h3>Comentarios anónimos ('.($r['estado']=='end'?$comentarios_num.' comentarios, '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</h3>';
-			
+			$txt .= '<fieldset><legend>Comentarios adjuntos al voto ('.($r['estado']=='end'?$comentarios_num.' comentarios, '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
 			if (nucleo_acceso('ciudadanos_global')) {
 				if ($r['estado'] == 'end') { 
 					$result2 = mysql_query("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
 					while($r2 = mysql_fetch_array($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
 				} else { $txt .= '<p>Los comentarios estarán visibles al finalizar la votación.</p>'; }
 			} else { $txt .= '<p>Para ver los comentarios debes ser ciudadano.</p>'; }
+			$txt .= '</fieldset>';
 	
 
 		} elseif ($_GET['b'] == 'verificacion') {
@@ -593,7 +598,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>Esta votación aún no ha finalizado. Cuando finalice se mostrará aquí la tabla de votos-comprobantes.</b></td></tr>';
 			}
 
-			$txt .= '</table><p><b>Votantes:</b><br />'.implode(', ', $txt_votantes).'</p>';
+			$txt .= '</table><p><b>Votantes:</b><br />'.implode(', ', $txt_votantes).'.</p>';
 
 		} else {
 
@@ -727,7 +732,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 				if ($validez == true) {
 
 					if ($r['tipo_voto'] == 'multiple') {
-						$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th>Escrutinio &nbsp; </th><th>SI</th><th>NO</th><th></th></tr>';
+						$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th></th><th colspan="2">SI</th><th></th><th colspan="2">NO</th></tr>';
 						
 						$puntos_total_sin_en_blanco = $puntos_total - $escrutinio['votos'][$en_blanco_ID];
 
@@ -738,20 +743,32 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 									$voto_no = ($escrutinio['votos_full'][$voto][2]?$escrutinio['votos_full'][$voto][2]:0);
 									$voto_en_blanco = ($escrutinio['votos_full'][$voto][0]?$escrutinio['votos_full'][$voto][0]:0);
 
-									$txt .= '<tr>
-<td'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'" class="punteado"':'').'>'.$respuestas[$voto].'</td>
-<td align="right"><b>'.$voto_si.'</b></td>
-<td align="right">'.$voto_no.'</td>
-<td align="right"><b title="Votos computables: '.num($voto_si+$voto_no).', En Blanco: '.$voto_en_blanco.'">'.num(($voto_si>0?($voto_si*100)/($voto_si + $voto_no):0),1).'%</b></td>
+									$porcentaje_si = ($voto_si>0?($voto_si*100)/($voto_si + $voto_no):0);
+									$porcentaje_no = ($voto_no>0?($voto_no*100)/($voto_si + $voto_no):0);
+
+									$txt .= '<tr title="En Blanco: '.num($voto_en_blanco).'">
+
+<td class="rich"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'" class="punteado"':'').'>'.$respuestas[$voto].'</td>
+
+<td align="right"'.($porcentaje_si>50?' style="font-weight:bold;"':'').'>'.num($voto_si).'</td>
+
+<td align="right"'.($porcentaje_si>50?' style="font-weight:bold;"':'').'>'.num($porcentaje_si,1).'%</td>
+
+<td> &nbsp; </td>
+
+<td align="right"'.($porcentaje_no>50?' style="font-weight:bold;"':'').'>'.num($voto_no).'</td>
+
+<td align="right"'.($porcentaje_no>50?' style="font-weight:bold;"':'').'>'.num($porcentaje_no,1).'%</td>
+
 </tr>';
 
 								} else { $votos_en_blanco = $num; }
 							} else { unset($escrutinio['votos'][$voto]);  }
 						}
-						$txt .= '</table>';
+						$txt .= '<tr><th></th><th colspan="2">SI</th><th></th><th colspan="2">NO</th></tr></table>';
 
 					} else {
-						$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th>Escrutinio</th><th>'.($r['tipo_voto']=='estandar'?'Votos':'Puntos').'</th><th></th></tr>';
+						$txt .= '<table border="0" cellpadding="1" cellspacing="0"><tr><th>Escrutinio</th><th>'.($r['tipo_voto']=='estandar'?'Votos':'Puntos').'</th><th></th></tr>';
 						
 						// Obtener ID del voto "En Blanco"
 						foreach ($escrutinio['votos'] AS $voto => $num) { if ($respuestas[$voto] == 'En Blanco') { $en_blanco_ID = $voto; } }
@@ -761,7 +778,7 @@ Fin: <em>' . $r['time_expire'] . '</em><br />
 						foreach ($escrutinio['votos'] AS $voto => $num) { 
 							if ($respuestas[$voto]) {
 								if ($respuestas[$voto] != 'En Blanco') {
-									$txt .= '<tr><td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'" class="punteado"':'').'>'.$respuestas[$voto].'</td><td align="right" title="'.num(($num*100)/$puntos_total, 1).'%"><b>'.num($num).'</b></td><td align="right">'.num(($num*100)/$puntos_total_sin_en_blanco, 1).'%</td></tr>';
+									$txt .= '<tr><td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'" class="punteado"':'').'>'.($r['tipo']=='elecciones'?crear_link($respuestas[$voto]):$respuestas[$voto]).'</td><td align="right" title="'.num(($num*100)/$puntos_total, 1).'%"><b>'.num($num).'</b></td><td align="right">'.num(($num*100)/$puntos_total_sin_en_blanco, 1).'%</td></tr>';
 								} else { $votos_en_blanco = $num; }
 							} else { unset($escrutinio['votos'][$voto]);  }
 						}
@@ -867,7 +884,7 @@ Validez de esta votación: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&n
 <td valign="top" align="center"><input type="radio" name="voto_'.$i.'" value="1"'.($ha_votado_array[$i]==1?' checked="checked"':'').' /></td>
 <td valign="top" align="center"><input type="radio" name="voto_'.$i.'" value="2"'.($ha_votado_array[$i]==2?' checked="checked"':'').' /></td>
 <td valign="top" align="center"><input type="radio" name="voto_'.$i.'" value="0"'.($ha_votado_array[$i]==0||!$ha_votado_array[$i]?' checked="checked"':'').' /></td>
-<td'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'" class="punteado"':'').'>'.$respuestas[$i].'</td>
+<td class="rich"'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'" class="punteado"':'').'>'.$respuestas[$i].'</td>
 </tr>';
 					} }
 					if ($r['aleatorio'] == 'true') { shuffle($votos_array); }

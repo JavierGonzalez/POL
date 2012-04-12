@@ -1,9 +1,8 @@
 <?php
 include('inc-login.php');
 
-$txt_title = 'VirtualPol | Red social democrática | _ VP Hispania RSSV 15M asamblea | democracia online simulador politico';
 
-$txt_description = 'Red social democrática. Simulador Politico y social Espa&ntilde;ol, experimento social o simulador de politica.'; 
+$txt_description = 'Red social democrática. Simulador Politico y social Español, experimento social o simulador de politica.'; 
 
 
 
@@ -152,7 +151,13 @@ $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="4"></td></tr>
 <td align="right" valign="top" colspan="2"><b>'.num($autentificados).'</b> Autentificados</td>
 </tr>
 
+
+<tr>
+<td colspan="4" align="right">'.boton('Solicitar nueva plataforma', '/crear-plataforma.php', false, 'small pill').'</td>
+</tr>
+
 </table>
+
 
 
 </td></tr></table>

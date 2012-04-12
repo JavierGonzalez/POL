@@ -5,8 +5,8 @@ if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN)
 if (!isset($txt)) { header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">ERROR 404: <b>Página inexistente</b></h1>'; }
 if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<h1 style="font-weight:normal;color:red;">ERROR: <b>'.escape(base64_decode($_GET['error'])).'</b></h1>'; }
 
-if (isset($txt_title)) { $txt_title .= ' | '.PAIS.' | VirtualPol'; }
-else { $txt_title = (isset($pol['config']['pais_des'])?$pol['config']['pais_des'].' de '.PAIS.' '.$kw.'| VirtualPol':PAIS.' '.$kw.'| VirtualPol'); }
+if (isset($txt_title)) { $txt_title .= ' | VirtualPol'; }
+else { $txt_title = 'VirtualPol - La primera red social democrática'; }
 
 $pol['config']['bg'] = 'tapiz-lineas-verdes.jpg';
 

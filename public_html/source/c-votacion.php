@@ -448,13 +448,13 @@ LIMIT 1", $link);
 </tr>
 
 <tr>
-<td align="right">Estado de la votación:</td>
+<td align="right">Estado:</td>
 <td><b>'.($r['estado']=='ok'?'En curso... quedan '.timer($r['time_expire']):'Finalizada, hace '.timer($r['time_expire'])).'</b> ('.num($r['num']).' votos)</td>
 </tr>
 
 
 <tr>
-<td align="right">Creado o aprobado por:</td>
+<td align="right">Creada o aprobada por:</td>
 <td>'.($r['user_ID']==0?'<b>Sistema VirtualPol</b> (automático, sin intervención humana)':'<b>'.crear_link($r['nick']).'</b>').'</td>
 </tr>
 
@@ -534,7 +534,7 @@ LIMIT 1", $link);
 			$result2 = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
 			while($r2 = mysql_fetch_array($result2)) { $comentarios_num = $r2['num']; }
 
-			$txt .= '<fieldset><legend>Comentarios adjuntos al voto ('.($r['estado']=='end'?$comentarios_num.' comentarios, '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
+			$txt .= '<fieldset><legend>Comentarios adjuntos al voto ('.($r['estado']=='end'?$comentarios_num.' comentarios &nbsp; '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
 			if (nucleo_acceso('ciudadanos_global')) {
 				if ($r['estado'] == 'end') { 
 					$result2 = mysql_query("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
@@ -626,7 +626,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 <td width="50"><g:plusone annotation="none" href="http://'.HOST.'/votacion/'.$r['ID'].'"></g:plusone></td>
 
-<td>'.boton('Donar', 'https://virtualpol.com/donaciones', false, 'pill orange').'</td>
+<td>'.boton('Donar', 'https://virtualpol.com/donaciones', false, 'small pill orange').'</td>
 
 <td><div id="fb-root"></div>
 <script>(function(d, s, id) {

@@ -1,13 +1,13 @@
 /*---------------------------------
 	FORMS
 -----------------------------------*/
-form{
+form {
 padding:0;
 margin:0;
 }
 
-fieldset{
-margin:30px 0 20px 0;
+fieldset {
+margin:20px 0 15px 0;
 padding:5px 15px 15px 15px;
 border:1px solid #ccc;
 background:#f5f5f5;
@@ -19,23 +19,23 @@ top:0;
 left:0;
 }
 
-	legend{
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px;
-	border:1px solid #ccc;
-	background:#fbfbfb;
-	padding:2px 10px;
-	margin:0 0 0 0;
-	display:block;
-	position: relative;
-	top:0;
-	left:0;
-	}
-	
-	/*IE ONLY - I know, this is a stop gap*/
-	.msie fieldset{padding-top:25px;}
-	.msie legend{position:absolute;top:-0.7em;left:10px;}
+legend {
+-moz-border-radius:5px;
+-webkit-border-radius:5px;
+border-radius:5px;
+border:1px solid #ccc;
+background:#fbfbfb;
+padding:2px 10px;
+margin:0 0 0 0;
+display:block;
+position: relative;
+top:0;
+left:0;
+}
+
+/*IE ONLY - I know, this is a stop gap*/
+.msie fieldset{padding-top:25px;}
+.msie legend{position:absolute;top:-0.7em;left:10px;}
 
 label{
 display:inline-block;
@@ -53,28 +53,28 @@ zoom:1;
 box-sizing: border-box;
 }
 
-	label.inline{
-	display:inline;
-	margin:0;
-	}
-	
-	label span{
-	color:#999;
-	font-size:0.9em;
-	}
-	
-	label span.right{
-	position:absolute;
-	bottom:0;
-	right:0;
-	text-align:right;
-	display:inline-block;
-	*display:inline;
-	}
-	
-	label.disabled{
-	color:#ccc;
-	}
+label.inline{
+display:inline;
+margin:0;
+}
+
+label span{
+color:#999;
+font-size:0.9em;
+}
+
+label span.right{
+position:absolute;
+bottom:0;
+right:0;
+text-align:right;
+display:inline-block;
+*display:inline;
+}
+
+label.disabled{
+color:#ccc;
+}
 
 input{
 display:inline-block;
@@ -100,50 +100,50 @@ box-shadow:inset 0px 1px 6px #ccc;
 box-sizing: border-box;
 }
 
-	input::-webkit-input-placeholder,
-	input:-moz-placeholder,
-	.placeholder{
-	color:#bbb;
-	}
-	
-	input::-moz-focus-inner {border:0;}
+input::-webkit-input-placeholder,
+input:-moz-placeholder,
+.placeholder{
+color:#bbb;
+}
 
-	input[disabled="disabled"], input.disabled{
-	color:#999;
-	background:#f5f5f5;
-	-moz-box-shadow:inset 0px 0px 2px #ddd;
-	-webkit-box-shadow:inset 0px 1px 2px #ddd;
-	box-shadow:inset 0px 1px 2px #ddd;
-	}
+input::-moz-focus-inner {border:0;}
+
+input[disabled="disabled"], input.disabled{
+color:#999;
+background:#f5f5f5;
+-moz-box-shadow:inset 0px 0px 2px #ddd;
+-webkit-box-shadow:inset 0px 1px 2px #ddd;
+box-shadow:inset 0px 1px 2px #ddd;
+}
+
+/* FOCUS STATES */
+input[type="text"]:focus,
+textarea:focus,
+button:focus,
+a.button:focus,
+select:focus,
+input[type="file"]:focus,
+input[type="password"]:focus{
+-webkit-box-shadow: 0 0 7px #6DB9FF;
+-moz-box-shadow   : 0 0 7px #6DB9FF;
+-o-box-shadow     : 0 0 7px #6DB9FF;
+box-shadow        : 0 0 7px #6DB9FF;
+border: 1px solid #50B1FE;
+outline: none;
+}
 	
-	/* FOCUS STATES */
-	input[type="text"]:focus,
-	textarea:focus,
-	button:focus,
-	a.button:focus,
-	select:focus,
-	input[type="file"]:focus,
-	input[type="password"]:focus{
-	-webkit-box-shadow: 0 0 7px #6DB9FF;
-	-moz-box-shadow   : 0 0 7px #6DB9FF;
-	-o-box-shadow     : 0 0 7px #6DB9FF;
-	box-shadow        : 0 0 7px #6DB9FF;
-	border: 1px solid #50B1FE;
-	outline: none;
-	}
-	
-	/* TRANSITION */
-	input[type="text"],
-	textarea,
-	button,
-	a.button,
-	a,
-	input[type="file"]{
-	transition: box-shadow 0.5s, border 0.5s, background 0.5s;
-	-moz-transition: -moz-box-shadow 0.5s, border 0.5s, background 0.5s;
-	-webkit-transition: -webkit-box-shadow 0.5s, border 0.5s, background 0.5s;
-	-o-transition:  -o-box-shadow 0.5s, border 0.5s, background 0.5s;
-	}
+/* TRANSITION */
+input[type="text"],
+textarea,
+button,
+a.button,
+a,
+input[type="file"]{
+transition: box-shadow 0.5s, border 0.5s, background 0.5s;
+-moz-transition: -moz-box-shadow 0.5s, border 0.5s, background 0.5s;
+-webkit-transition: -webkit-box-shadow 0.5s, border 0.5s, background 0.5s;
+-o-transition:  -o-box-shadow 0.5s, border 0.5s, background 0.5s;
+}
 
 input.checkbox,
 input[type="checkbox"]{
@@ -169,14 +169,14 @@ vertical-align:center;
 *vertical-align: top;
 }
 
-	input[type="radio"]:focus,
-	input[ type="checkbox"]:focus{
-	-webkit-box-shadow: 0 0 5px #6DB9FF;
-	-moz-box-shadow   : 0 0 5px #6DB9FF;
-	-o-box-shadow     : 0 0 5px #6DB9FF;
-	box-shadow        : 0 0 5px #6DB9FF;
-	outline-color: #6DB9FF;
-	}
+input[type="radio"]:focus,
+input[ type="checkbox"]:focus{
+-webkit-box-shadow: 0 0 5px #6DB9FF;
+-moz-box-shadow   : 0 0 5px #6DB9FF;
+-o-box-shadow     : 0 0 5px #6DB9FF;
+box-shadow        : 0 0 5px #6DB9FF;
+outline-color: #6DB9FF;
+}
 
 input.file,
 input[type="file"]{
@@ -254,19 +254,19 @@ form.vertical{
 
 }
 
-	form.vertical label{display:block;}
-	form.vertical input,
-	form.vertical select,
-	form.vertical textarea{width:100%;display:block;margin-bottom:10px;}
-	form.vertical .chzn-container{display:block;margin-bottom:10px;}
-	form.vertical .chzn-choices{display:block;margin-bottom:10px;}
-	
-	/* radios & checks */
-	form.vertical input.checkbox,
-	form.vertical input[type="checkbox"],
-	form.vertical input.radio,
-	form.vertical input[type="radio"],
-	form.vertical label.inline{display:inline;width:auto;margin:0;}
+form.vertical label{display:block;}
+form.vertical input,
+form.vertical select,
+form.vertical textarea{width:100%;display:block;margin-bottom:10px;}
+form.vertical .chzn-container{display:block;margin-bottom:10px;}
+form.vertical .chzn-choices{display:block;margin-bottom:10px;}
+
+/* radios & checks */
+form.vertical input.checkbox,
+form.vertical input[type="checkbox"],
+form.vertical input.radio,
+form.vertical input[type="radio"],
+form.vertical label.inline{display:inline;width:auto;margin:0;}
 /*---------------------------------
 	FORM VALIDATION
 -----------------------------------*/
@@ -294,10 +294,10 @@ left:0;
 clear:both;
 }
 
-	.notice.warning{}/*default*/
-	.notice.error{border:1px solid red;background:pink;color:red;}
-	.notice.success{border:1px solid green;background:lightgreen;color:green;}
-	.notice .icon{color:inherit;margin-right:10px;margin-bottom:-5px;*margin-top:-5px;}
-	.notice a.icon.close,
-	.notice a.icon.close:active,
-	.notice a.icon.close:visited{font-size:12px;position:absolute;top:5px;right:-5px;left:auto;color:inherit;}
+.notice.warning{}/*default*/
+.notice.error{border:1px solid red;background:pink;color:red;}
+.notice.success{border:1px solid green;background:lightgreen;color:green;}
+.notice .icon{color:inherit;margin-right:10px;margin-bottom:-5px;*margin-top:-5px;}
+.notice a.icon.close,
+.notice a.icon.close:active,
+.notice a.icon.close:visited{font-size:12px;position:absolute;top:5px;right:-5px;left:auto;color:inherit;}

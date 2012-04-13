@@ -67,7 +67,7 @@ Votos emitidos: <b'.($num_votos <= VOTO_CONFIANZA_MAX?'':' style="color:red;"').
 		$result2 = mysql_query("SELECT cargo_ID, cargo, nota, aprobado, time,
 (SELECT titulo FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre
 FROM cargos_users
-WHERE user_ID = '" . $user_ID . "'
+WHERE pais = '".PAIS."' AND user_ID = '" . $user_ID . "'
 ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 		while($r2 = mysql_fetch_array($result2)) {
 			if ($r2['cargo'] == 'true') { 
@@ -237,10 +237,10 @@ $txt .= '
 </fieldset>
 
 
-<fieldset><legend>Tu biografía (escribe sobre ti)</legend>
+<fieldset><legend>Biografía</legend>
 <form action="/accion.php?a=avatar&b=desc" method="post">
 <p>Espacio para lo que quieras: (<span id="desc_limit" style="color:blue;">'.$text_limit.'</span> caracteres)<br />
-<textarea name="desc" id="desc_area" style="background:#FFFFDD;border: 1px solid grey; padding:4px; color: green; font-weight: bold; width: 500px; height: 80px;">'.strip_tags($r['text'], '<b>').'</textarea> <input value="Guardar" type="submit" />
+<textarea name="desc" id="desc_area" style="width:500px;height:150px;">'.strip_tags($r['text'], '<b>').'</textarea> <input value="Guardar" type="submit" />
 </form></p>
 </fieldset>';
 
@@ -312,7 +312,7 @@ $txt .= '</div>
 
 <p>Foro: <a href="/foro/mis-respuestas/'.$r['nick'].'/" title="hilos+mensajes" style="font-weight:bold;">'.$r['num_hilos'].'+'.$r['num_msg'].'</a></p>
 <!--<p>Referencias: <b>' . $r['ref_num'] . '</b><br /><b>' . $refs . '</b></p>-->
-<p>Afiliado a: <b>' . crear_link($r['partido'], 'partido') . '</b></p>
+'.(ASAMBLEA?'':'<p>Afiliado a: <b>' . crear_link($r['partido'], 'partido') . '</b></p>').'
 <p>Ultimo acceso: <acronym title="' . $r['fecha_last'] . '"><b>' . duracion(time() - strtotime($r['fecha_last'])) . '</b></acronym><br />';
 
 

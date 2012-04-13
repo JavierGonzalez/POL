@@ -33,6 +33,7 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
 
 <fieldset><legend>Solicitar nueva plataforma en VirtualPol</legend>
 
+'.(isset($pol['user_ID'])?'':'<p style="color:red;">'.boton('Crear ciudadano', REGISTRAR, false, 'small blue').' Debes ser ciudadano para poder solicitar una nueva plataforma.</p>').'
 
 <table>
 
@@ -51,7 +52,7 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
 <li>Las plataformas serán ordenadas y priorizadas en función de su numero de ciudadanos inscritos.</li>
 <li>Las siguientes opciones de configuración no podrán ser modificadas en el futuro sin aprobación de VirtualPol.</li>
 <li><b>Cada plataforma es soberana</b> (es un principio de VirtualPol, ver principios en el <a href="/tos" target="_blank">TOS</a>, segundo apartado) y por lo tanto decide su propia gestión. Sin embargo la primera "legislatura" ostentará el poder el usuario que solicita la plataforma. Después el poder dependerá de unas elecciones automáticas y que -de ningún modo- se podrán detener u obstaculizar. Esto significa -explicitamente- que <b>el fundador inicial de la plataforma puede perder totalmente su control</b>, mediante principios democráticos.</li>
-<li>Si -del modo que fuera- en una plataforma se rompe el principio "Democracia", tendrá que ser intervenida por VirtualPol para restaurar de nuevo la democracia automática, de la forma menos intrusiva posible.</li>
+<li>Si -del modo que fuera- en una plataforma se rompe el principio "Democracia", cosa que tecnicamente es imposible, tendrá que ser intervenida por VirtualPol para restaurar de nuevo la democracia automática, de la forma menos intrusiva posible.</li>
 </ul>
 </td>
 </tr>
@@ -70,12 +71,12 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
 <td align="right" valign="top"><b>Esquema de Poder</b></td>
 <td colspan="2">
 <input type="radio" name="asamblea" value="false" checked="checked" /> <b>Presidencial: Un presidente electo.</b><br />
-Muy estable y operativo. Recomendado.<br />
+Organización muy estable y operativa.<br />
 <br />
-<input type="radio" name="asamblea" value="true" /> <b>Parlamentario/Asambleario: Nueve coordinadores electos (iguales entre sí).</b><br />
-Menos operativo, menos estable pero más "horizontal" (entendido como poder cercano a la base).<br />
+<input type="radio" name="asamblea" value="true" /> <b>Asambleario: Nueve coordinadores electos (iguales entre sí).</b><br />
+Organización menos estable y operativa, pero más "horizontal" (entendido como poder cercano a la base).<br />
 <br />
-<em>* El sistema permite establecer jerarquias completas de cargos y responsabilidades. Un organigrama completo y escalable. Sin embargo debe existir un cargo "primario" y electo, del que parte toda la responsabilidad. En cualquier caso siempre estará disponible una votación de tipo "ejecutiva" que -con el apoyo de la mayoría- el sistema puede destituir y reemplazar cualquier cargo.</em>
+<em>* El sistema permite establecer jerarquias completas de cargos y responsabilidades. Un organigrama completo y escalable. Incluso elecciones independientes para cada cargo. Sin embargo debe existir un cargo "primario" y electo, del que parte toda la responsabilidad. En cualquier caso siempre estará disponible una votación de tipo "ejecutiva" que -con el apoyo de la mayoría- el sistema puede destituir y reemplazar cualquier cargo.</em>
 </td>
 </tr>
 
@@ -97,7 +98,7 @@ Menos operativo, menos estable pero más "horizontal" (entendido como poder cerc
 <tr>
 <td align="right" nowrap="nowrap"><b>Previsión de participación</b></td>
 <td><input type="text" name="participacion" value="50" style="text-align:right;" size="5" maxlength="5" /></td>
-<td><b>Número de ciudadanos activos previstos tras 30 días</b>: Es importante que haya un potencial considerable. Una plataforma con solo 25 usuarios carece de sentido y no suele funciona al haber poca competencia para los cargos relevantes.</td>
+<td><b>Número de ciudadanos activos previstos tras 30 días</b>: Es importante que haya un potencial considerable. Una plataforma con solo 25 usuarios carece de sentido y no suele funcionar al tener poca competencia para los cargos relevantes.</td>
 </tr>
 
 <tr><td colspan="3">&nbsp;</td></tr>
@@ -105,7 +106,7 @@ Menos operativo, menos estable pero más "horizontal" (entendido como poder cerc
 
 <tr>
 <td align="right" valign="top"><b>Justificación</b></td>
-<td colspan="2">Razones y argumentos de porqué debe crearse esta plataforma en VirtualPol. Brevemente.<br />
+<td colspan="2"><p>Razones y argumentos de porqué debe crearse esta plataforma en VirtualPol. Brevemente.</p>
 <textarea name="descripcion" style="width:500px;height:200px;"></textarea><br />
 <em>* La aprobación o rechazo dependerá directamente de este paso.</em></td>
 </tr>
@@ -115,7 +116,7 @@ Menos operativo, menos estable pero más "horizontal" (entendido como poder cerc
 
 
 <tr>
-<td colspan="3">'.boton('Solicitar nueva plataforma', (isset($pol['user_ID'])?'submit':false), false, 'large orange').'<br />'.(isset($pol['user_ID'])?'':'<p>Debes ser ciudadano para poder solicitar una nueva plataforma.</p>').'</td>
+<td colspan="3">'.boton('Solicitar nueva plataforma', (isset($pol['user_ID'])?'submit':false), false, 'large orange').'</td>
 </tr>
 
 

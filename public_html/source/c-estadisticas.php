@@ -242,7 +242,7 @@ foreach ($vp['paises'] AS $PAIS) {
 	$g_datos = array();
 	$g_siglas = array();
 	$result = mysql_query("SELECT COUNT(ID) AS num, partido_afiliado,
-(SELECT siglas FROM ".strtolower($PAIS)."_partidos WHERE ID = users.partido_afiliado) AS siglas
+(SELECT siglas FROM partidos WHERE pais = '".$PAIS."' AND ID = users.partido_afiliado) AS siglas
 FROM users 
 WHERE estado = 'ciudadano' AND pais = '".$PAIS."'
 GROUP BY partido_afiliado

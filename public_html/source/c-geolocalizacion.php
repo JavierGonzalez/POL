@@ -137,8 +137,8 @@ for (var i = 0; i < eventos.length; i++) {
 	markers.push(marker);
 }
 
-
 var markerCluster = new MarkerClusterer(map, markers, {
+	gridSize: 40,
 	styles: [{
 		url: "'.IMG.'ico/m1.png",
 		height: 53,

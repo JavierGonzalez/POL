@@ -218,7 +218,7 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 /*** CONTENIDO GENERAL ***/
 #vpc_actividad { cursor:pointer; }
 .votacion_desc_min {
-	max-height:180px;
+	max-height:220px;
 	overflow-y:auto;
 	/*box-shadow:inset -8px -8px 15px #FEFEFE;*/
 	border-bottom:1px dashed #DDD;

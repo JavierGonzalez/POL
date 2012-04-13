@@ -389,12 +389,12 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysql
 
 			if (!$pol['user_ID']) { $txt .= '<p class="azul"><b>Para poder participar en esta conversacion has de <a href="'.REGISTRAR.'?p='.PAIS.'">registrar tu ciudadano</a></b></p>'; }
 			
-			$txt .= '<br /><hr /><p>'.$r['title'].'. Más hilos: ';
-			$result2 = mysql_query("SELECT url, title, (SELECT url FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS subforo FROM ".SQL."foros_hilos WHERE estado = 'ok' ORDER BY RAND() LIMIT 8", $link);
+			$txt .= '<fieldset><legend>Más hilos</legend><p>';
+			$result2 = mysql_query("SELECT url, title, (SELECT url FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS subforo FROM ".SQL."foros_hilos WHERE estado = 'ok' ORDER BY RAND() LIMIT 10", $link);
 			while($r2 = mysql_fetch_array($result2)) {
-				$txt .= '<a href="/foro/' . $r2['subforo'] . '/' . $r2['url'] . '/">' . $r2['title'] . '</a>, ';
+				$txt .= '<a href="/foro/'.$r2['subforo'].'/'.$r2['url'].'/">'.$r2['title'].'</a>, ';
 			}
-			$txt .= '<p>';
+			$txt .= '<p></fieldset>';
 			
 		} else { $txt .= '<p><b style="color:red;">No tienes acceso de lectura a este subforo.</b></p>'; }
 	}

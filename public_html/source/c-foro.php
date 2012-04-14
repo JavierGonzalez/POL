@@ -191,14 +191,12 @@ $txt .= mysql_error($link);
 	$txt_nav = array('/foro'=>'Foro', 'Tu actividad');
 	$txt_tab = array('/foro/'=>'Foro', '/foro/ultima-actividad/'=>'Última actividad', '/control/gobierno/foro/'=>'Configuración foro', );
 
-	$txt .= '<br /><table border="0" cellpadding="1" cellspacing="0">
+	$txt .= '<fieldset><legend>Últimos hilos</legend>
 
-<tr class="amarillo"><td colspan="4"><h2 style="font-size:18px;padding:8px;">últimos hilos:</h2></tr>';
+<table border="0" cellpadding="1" cellspacing="0">';
 
 	$result = mysql_query("SELECT ID, url FROM ".SQL."foros", $link);
 	while($r = mysql_fetch_array($result)) { $sub[$r['ID']] = $r['url']; }
-
-
 
 	$result = mysql_query("SELECT h.ID, h.cargo, h.time, h.votos, h.votos_num, h.num, h.sub_ID, h.url, h.title, h.text, u.nick
 FROM ".SQL."foros_hilos `h`
@@ -211,13 +209,12 @@ LIMIT 10", $link);
 	}
 
 
-	$txt .= '</table>';
+	$txt .= '</table></fieldset>
 
 
-	$txt .= '<br />
-<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
+<fieldset><legend>Últimos mensajes</legend>
 
-<tr class="amarillo"><td colspan="4"><h2 style="font-size:18px;padding:8px;">últimos mensajes:</h2></tr>';
+<table border="0" cellpadding="1" cellspacing="0">';
 
 	$result = mysql_query("SELECT ID, url FROM ".SQL."foros", $link);
 	while($r = mysql_fetch_array($result)) { $sub[$r['ID']] = $r['url']; }
@@ -241,13 +238,11 @@ LIMIT 50", $link);
 
 		if (!$repes[$r['hilo_ID']]) {
 			$repes[$r['hilo_ID']] = true;
-
 			$txt .= '<tr><td align="right" valign="top" colspan="2">' . print_lateral($r['nick'], $r['cargo'], $r['time'], '', $pol['user_ID'], '', $r['votos'], $r['votos_num'], false, 'msg', $r['ID']) . '</td><td align="right" valign="top"><acronym title="Nuevos mensajes"><b style="font-size:20px;">'.$resp_num.'</b></acronym></td><td valign="top" colspan="2" nowrap="nowrap" style="color:grey;"><a href="/foro/'.$sub[$r['sub_ID']].'/'.$r['hilo_url'].'"><b>'.$r['hilo_titulo'].'</b></a><br /><span title="Mensajes después del tuyo">(<b style="font-size:18px;">'.$resp_num.'</b> nuevos)</span> '.substr(strip_tags($r['text']), 0, 90).'..</td></tr>';
 		}
 	}
 
-
-	$txt .= '</table>';
+	$txt .= '</table></fieldset>';
 
 
 } elseif ($_GET['a'] == 'ultima-actividad') {
@@ -257,10 +252,9 @@ LIMIT 50", $link);
 	$txt_nav = array('/foro'=>'Foro', 'Última actividad');
 	$txt_tab = array('/foro'=>'Foro', '/foro/ultima-actividad'=>'Última actividad', '/control/gobierno/foro'=>'Configuración foro');
 
-	$txt .= '<br />
-<table border="0" cellpadding="1" cellspacing="0">
+	$txt .= '<fieldset><legend>Últimos 50 mensajes</legend>
 
-<tr class="amarillo"><td colspan="4"><h2 style="font-size:18px;padding:8px;">Ultimos 50 mensajes:</h2></tr>';
+<table border="0" cellpadding="1" cellspacing="0">';
 
 	$result = mysql_query("SELECT ID, url FROM ".SQL."foros", $link);
 	while($r = mysql_fetch_array($result)) { $sub[$r['ID']] = $r['url']; }
@@ -277,7 +271,6 @@ WHERE hilo_ID != '-1' AND estado = 'ok'
 ORDER BY time DESC
 LIMIT 50", $link);
 	while($r = mysql_fetch_array($result)) {
-
 		$result2 = mysql_query("SELECT acceso_leer, acceso_cfg_leer FROM ".SQL."foros WHERE ID = '".$r['sub_ID']."' LIMIT 1", $link);
 		while($r2 = mysql_fetch_array($result2)) {
 			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {
@@ -294,8 +287,7 @@ LIMIT 50", $link);
 		}
 	}
 
-	$txt .= '</table>';
-
+	$txt .= '</table></fieldset>';
 
 
 
@@ -405,13 +397,11 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysql
 	$txt_nav = array('/foro'=>'Foro', '/foro/papelera'=>'Papelera');
 	$txt_tab = array('/foro'=>'Foro', '/foro/ultima-actividad'=>'Última actividad', '/control/gobierno/foro'=>'Configuración foro');
 
-	$txt .= '<br />
-<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
-<tr class="azul"><td colspan="4"><h2 style="color:red;font-size:22px;padding:8px;">Hilos</h2></tr>';
+	$txt .= '<fieldset><legend>Hilos borrados</legend>
 
+<table border="0" cellpadding="1" cellspacing="0">';
 
-
-	$result = mysql_query("SELECT ID, sub_ID, user_ID, url, title, time, time_last, text, cargo, num, votos, votos_num
+	$result = mysql_query("SELECT ID, sub_ID, user_ID, url, title, time, time_last, text, cargo, num, votos, votos_num,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
 (SELECT avatar FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS avatar,
 (SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) FROM users WHERE ID = ".SQL."foros_hilos.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
@@ -425,7 +415,12 @@ ORDER BY time_last DESC", $link);
 		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['votos_num'], false, 'hilos') . '</td><td valign="top"><p class="pforo"><b style="color:blue;">' . $r['title'] . '</b><br />' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time_last'] . '"><span class="timer" value="'.strtotime($r['time_last']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
 	}
 
-$txt .= '<tr><td><br /></td></tr><tr class="azul"><td colspan="4"><h2 style="color:red;font-size:22px;padding:8px;">Mensajes</h2></tr>';
+$txt .= '</table></fieldset>
+
+
+<fieldset><legend>Mensajes borrados</legend>
+
+<table>';
 
 
 
@@ -444,7 +439,7 @@ ORDER BY time2 DESC", $link);
 	}
 
 
-	$txt .= '</table><br /><p class="gris">Los mensajes se eliminarán tras 10 días.</p>';
+	$txt .= '</table></fieldset><p class="gris">Los mensajes se eliminarán tras 10 días.</p>';
 
 	$txt_header = '<style type="text/css">.content-in hr { border: 1px solid grey; } .flateral { margin:0 0 0 5px; float:right; } .pforo { text-align:justify; font-size:11px; margin:2px; }</style>';
 
@@ -467,7 +462,7 @@ ORDER BY time2 DESC", $link);
 
 			$txt .= '
 
-<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
+<table border="0" cellpadding="1" cellspacing="0">
 <tr>
 <th>Autor</th>
 <th colspan="2">Mensajes</th>

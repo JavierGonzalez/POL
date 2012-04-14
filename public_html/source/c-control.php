@@ -884,9 +884,8 @@ $(function() {
 
 
 <tr><td align="right">Descripcion:</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'"'.$dis.' /></td></tr>
-<tr><td align="right">DEFCON:</td><td>' . $defcon . '</td></tr>
-<tr><td align="right">Referencia tras:</td><td><input style="text-align:right;" type="text" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '"'.$dis.' /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td></tr>
-<tr><td align="right">Escaños:</td><td><input style="text-align:right;" type="text" name="num_escanos" size="3" maxlength="10" value="' . $pol['config']['num_escanos'] . '"'.$dis.' /> Diputados</td></tr>';
+'.(ASAMBLEA?'<input type="hidden" name="defcon" value="5" />':'<tr><td align="right">DEFCON:</td><td>'.$defcon.'</td></tr>').'
+<tr><td align="right">Referencia tras:</td><td><input style="text-align:right;" type="text" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '"'.$dis.' /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td></tr>';
 
 $palabra_gob = explode(':', $pol['config']['palabra_gob']);
 

@@ -153,7 +153,7 @@ $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="4"></td></tr>
 
 
 <tr>
-<td colspan="4" align="right">'.boton('Solicitar nueva plataforma', '/crear-plataforma.php', false, 'small pill').'</td>
+<td colspan="4" align="right">'.(nucleo_acceso('antiguedad', 2)?boton('Solicitar nueva plataforma', '/crear-plataforma.php', false, 'small pill'):'').'</td>
 </tr>
 
 </table>

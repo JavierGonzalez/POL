@@ -740,7 +740,6 @@ case 'gobierno':
 'online_ref'=>'Tiempo online en minutos para referencia',
 'pols_mensajetodos'=>'Coste mensaje Global',
 'pols_solar'=>'Coste solar del mapa',
-'num_escanos'=>'Numero de esca&ntilde;os',
 'defcon'=>'DEFCON',
 'pols_inem'=>'INEM',
 'pols_afiliacion'=>'Pago por afiliado',
@@ -766,7 +765,6 @@ case 'gobierno':
 ($_GET['b'] == 'config') AND 
 (nucleo_acceso($vp['acceso']['control_gobierno'])) AND  
 (entre($_POST['online_ref'], 60, 900000)) AND
-(entre($_POST['num_escanos'], 3, 31)) AND 
 (strlen($_POST['palabra_gob0']) <= 200) AND
 ($_POST['chat_diasexpira'] >= 10)
 ) {
@@ -1200,7 +1198,6 @@ case 'votacion':
 				$_POST['privacidad'] = 'false';
 				$_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22';
 				$_POST['acceso_ver'] = 'anonimos'; $_POST['acceso_cfg_ver'] = '';
-				$_POST['votos_expire'] = $pol['config']['num_escanos'];
 				break;
 
 			case 'cargo':
@@ -1222,8 +1219,7 @@ case 'votacion':
 					$_POST['pregunta'] = '&iquest;Apruebas que el ciudadano '.$_POST['nick'].' ostente el cargo '.$cargo_nombre.'?';
 					$_POST['descripcion'] .= '<hr />&iquest;Estas a favor que <b>'.crear_link($_POST['nick']).'</b> tenga el cargo <b>'.$cargo_nombre.'</b>?<br /><br />Al finalizar esta votaci&oacute;n, si el resultado por mayor&iacute;a es a favor, se otorgar&aacute; el cargo autom&aacute;ticamente, si por el contrario el resultado es en contra se le destituir&aacute; del cargo.';
 					$respuestas = 'En Blanco|SI|NO|';
-					$_POST['votos_expire'] = 0;
-					if ($_POST['cargo'] == 22) { $_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22'; $_POST['votos_expire'] = $pol['config']['num_escanos']; }	
+					$_POST['votos_expire'] = 0;	
 				} else { exit; }
 				break;
 		}
@@ -1837,7 +1833,7 @@ case 'eliminar-documento':
 	
 	$result = mysql_query("SELECT ID, acceso_escribir, acceso_cfg_escribir, url FROM docs WHERE url = '".$_GET['url']."' AND pais = '".PAIS."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){ 
-		if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
+		if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 			mysql_query("UPDATE docs SET estado = 'del' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 			evento_log('Documento eliminado <a href="/doc/'.$r['url'].'">#'.$r['ID'].'</a>');
 			pad('delete', $r['ID']);

@@ -1,6 +1,5 @@
 <?php
 
-
 function actualizar($accion, $user_ID=false) {
 	global $pol, $link;
 	if ($user_ID == false) { $user_ID = $pol['user_ID']; }
@@ -180,7 +179,6 @@ function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 			evento_chat('<b>[CARGO]</b> El cargo de <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" /> '.$r['nombre'].' ha sido asignado a '.crear_link($nick_asignado).' por '.crear_link(($sistema==true?'VirtualPol':$pol['nick'])));
 			notificacion($user_ID, 'Te ha sido asignado el cargo '.$r['nombre'], '/cargos');
 		}
-
 		evento_log('Cargo '.$r['nombre'].' asignado a '.$nick_asignado.' por '.($sistema==true?'VirtualPol':$pol['nick']));
 	}
 }
@@ -206,7 +204,6 @@ LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)){ $nick_asignado = $r2['nick']; }
 			evento_chat('<b>[CARGO] '.crear_link(($sistema==true?'VirtualPol':$pol['nick'])).' quita</b> el cargo <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$r['nombre'].' a '. crear_link($nick_asignado));
 		}
-
 		evento_log('Cargo '.$r['nombre'].' quitado a '.$nick_asignado.' por '.($sistema==true?'VirtualPol':$pol['nick']));
 	}
 }
@@ -223,37 +220,35 @@ function enviar_email($user_ID, $asunto, $mensaje, $email='') {
 }
 
 function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais='') {
-        global $link, $pol;
+	global $link, $pol;
 
-        if (!$pais) { $sql = SQL; $pais = PAIS; } else { $sql = strtolower($pais).'_'; }
+	if (!$pais) { $sql = SQL; $pais = PAIS; } else { $sql = strtolower($pais).'_'; }
 
-        $return = false;
-        $pols = strval($pols);
-        if (($pols != 0) AND ($concepto)) {
-                $concepto = ucfirst($concepto);
+	$return = false;
+	$pols = strval($pols);
+	if (($pols != 0) AND ($concepto)) {
+		$concepto = ucfirst($concepto);
 
-                //quitar
-                if ($emisor_ID > 0) {
-                        mysql_query("UPDATE users SET pols = pols - " . $pols . " WHERE ID = '" . $emisor_ID . "' AND pais = '".$pais."' LIMIT 1", $link);
-                } else {
+		//quitar
+		if ($emisor_ID > 0) {
+			mysql_query("UPDATE users SET pols = pols - " . $pols . " WHERE ID = '" . $emisor_ID . "' AND pais = '".$pais."' LIMIT 1", $link);
+		} else {
+			if ($pol['nick']) { $concepto = '<b>'.$pol['nick'].'&rsaquo;</b> '.$concepto; }
+			mysql_query("UPDATE ".$sql."cuentas SET pols = pols - " . $pols . " WHERE ID = '" . substr($emisor_ID, 1) . "' LIMIT 1", $link);
+		}
 
-                        if ($pol['nick']) { $concepto = '<b>'.$pol['nick'].'&rsaquo;</b> '.$concepto; }
+		//ingresar
+		if ($receptor_ID > 0) {
+			mysql_query("UPDATE users SET pols = pols + " . $pols . " WHERE ID = '" . $receptor_ID . "' AND pais = '".$pais."' LIMIT 1", $link);
+		} else {
+			mysql_query("UPDATE ".$sql."cuentas SET pols = pols + " . $pols . " WHERE ID = '" . substr($receptor_ID, 1) . "' LIMIT 1", $link);
+		}
 
-                        mysql_query("UPDATE ".$sql."cuentas SET pols = pols - " . $pols . " WHERE ID = '" . substr($emisor_ID, 1) . "' LIMIT 1", $link);
-                }
-
-                //ingresar
-                if ($receptor_ID > 0) {
-                        mysql_query("UPDATE users SET pols = pols + " . $pols . " WHERE ID = '" . $receptor_ID . "' AND pais = '".$pais."' LIMIT 1", $link);
-                } else {
-                        mysql_query("UPDATE ".$sql."cuentas SET pols = pols + " . $pols . " WHERE ID = '" . substr($receptor_ID, 1) . "' LIMIT 1", $link);
-                }
-
-                mysql_query("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".$pais."', " . $pols . ", '" . $emisor_ID . "', '" . $receptor_ID . "', '" . $concepto . "', '" . date('Y-m-d H:i:s') . "')", $link);
-				notificacion($receptor_ID, 'Te han transferido '.$pols.' monedas', '/pols');
-                $return = true;
-        }
-        return $return;
+		mysql_query("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".$pais."', " . $pols . ", '" . $emisor_ID . "', '" . $receptor_ID . "', '" . $concepto . "', '" . date('Y-m-d H:i:s') . "')", $link);
+		notificacion($receptor_ID, 'Te han transferido '.$pols.' monedas', '/pols');
+		$return = true;
+	}
+	return $return;
 }
 
 function eliminar_ciudadano($ID) {
@@ -262,55 +257,53 @@ function eliminar_ciudadano($ID) {
 	$result3 = mysql_query("SELECT IP, pols, nick, ID, ref, estado".(ECONOMIA?",
 (SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$ID."') AS pols_cuentas":"")." 
 FROM users 
-WHERE ID = '" . $ID . "' 
+WHERE ID = '".$ID."' 
 LIMIT 1", $link);
 	while($r3 = mysql_fetch_array($result3)) {
-			$user_ID = $r3['ID']; 
-			$estado = $r3['estado']; 
-			$pols = ($r3['pols'] + $r3['pols_cuentas']); 
-			$nick = $r3['nick']; 
-			$ref = $r3['ref']; 
-			$IP = $r3['IP'];
+		$user_ID = $r3['ID']; 
+		$estado = $r3['estado']; 
+		$pols = ($r3['pols'] + $r3['pols_cuentas']); 
+		$nick = $r3['nick']; 
+		$ref = $r3['ref']; 
+		$IP = $r3['IP'];
 	}
 
-	if ($user_ID) { // ELIMINAR CIUDADANO
-			if (ECONOMIA) { pols_transferir($pols, $user_ID, '-1', '&dagger; Defuncion: <em>' . $nick . '</em>'); }
+	if (is_numeric($user_ID)) { 
+		// ELIMINAR CIUDADANO
 
-			if ((ECONOMIA) AND ($ref != '0')) { 
-					mysql_query("UPDATE users SET ref_num = ref_num - 1 WHERE ID = '" . $ref . "' LIMIT 1", $link);
-					mysql_query("DELETE FROM referencias WHERE IP = '" . $IP . "' OR user_ID = '" . $ref . "'", $link); 
-			}
-			mysql_query("DELETE FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
-			mysql_query("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM kicks WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM chats WHERE user_ID = '".$user_ID."'", $link);
-			mysql_query("DELETE FROM votos WHERE emisor_ID = '".$user_ID."' OR (tipo = 'confianza' AND item_ID = '".$user_ID."')", $link);
-			mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."' AND hilo_ID = '-1'", $link);
+		if (ECONOMIA) { pols_transferir($pols, $user_ID, '-1', '&dagger; Defuncion: <em>'.$nick.'</em>'); }
 
+		if ((ECONOMIA) AND ($ref != '0')) { 
+			mysql_query("UPDATE users SET ref_num = ref_num - 1 WHERE ID = '".$ref."' LIMIT 1", $link);
+		}
+		mysql_query("DELETE FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
+		mysql_query("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM kicks WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM chats WHERE user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM votos WHERE emisor_ID = '".$user_ID."' OR (tipo = 'confianza' AND item_ID = '".$user_ID."')", $link);
+		mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."' AND hilo_ID = '-1'", $link);
 
+		mysql_query("DELETE FROM referencias WHERE user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM mapa WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
+		mysql_query("DELETE FROM referencias WHERE IP = '".$IP."' OR user_ID = '".$ref."'", $link); 
 
-			if (ECONOMIA) {
-					mysql_query("DELETE FROM referencias WHERE user_ID = '".$user_ID."'", $link);
-					mysql_query("DELETE FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
-					mysql_query("DELETE FROM mapa WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
-					mysql_query("DELETE FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'", $link);
-			}
+		$img_root = RAIZ.'/img/a/'.$user_ID;
+		if (file_exists($img_root.'.jpg')) {
+			@unlink($img_root.'.jpg');
+			@unlink($img_root.'_40.jpg');
+		}
 
-			$img_root = RAIZ.'/img/a/'.$user_ID;
-			if (file_exists($img_root.'.jpg')) {
-					@unlink($img_root.'.jpg');
-					@unlink($img_root.'_40.jpg');
-			}
-
-			// eliminar
-			/* PENDIENTE DE ARREGLAR. CODIGO CORRECTO, EXCEPTO QUE NO DEBE BORRAR MENSAJES DE EXPULSADOS POR PETICION PROPIA.
-			if ($estado == 'expulsado') { 
-					mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."'", $link);
-					mysql_query("DELETE FROM ".SQL."foros_hilos WHERE user_ID = '".$user_ID."'", $link);
-			}
-			*/
+		// eliminar
+		/* PENDIENTE DE ARREGLAR. CODIGO CORRECTO, EXCEPTO QUE NO DEBE BORRAR MENSAJES DE EXPULSADOS POR PETICION PROPIA.
+		if ($estado == 'expulsado') { 
+				mysql_query("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."'", $link);
+				mysql_query("DELETE FROM ".SQL."foros_hilos WHERE user_ID = '".$user_ID."'", $link);
+		}
+		*/
 	}
 }
 
@@ -343,12 +336,6 @@ function gen_text($text, $type='') {
 		$text = str_replace("\n\n", "<br /><br />\n\n", $text); //LINUX
 		$text = str_replace("\r\n\r\n", "<br /><br />\r\n\r\n", $text); //WINDOWS
 	} 
-	//acentos
-	/*
-	$mal = array(chr(183), chr(231), chr(199), chr(128), 'º', 'ª', '©', '®', '°', 'á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú', 'ñ', 'Ñ', 'ü', 'Ü', chr(191), '¡', 'à', 'è', 'ì', 'ò', 'ù', 'À', 'È', 'Ì', 'Ò', 'Ù');
-	$ok = array('&#183;', '&#231;', '&#199;', '&#128;', '&ordm;', '&ordf;', '&copy;', '&reg;', '&deg;', '&aacute;', '&eacute;', '&iacute;', '&oacute;', '&uacute;', '&Aacute;', '&Eacute;', '&Iacute;', '&Oacute;', '&Uacute;', '&ntilde;', '&Ntilde;', '&uuml;', '&Uuml;', '&iquest;', '&iexcl;', '&agrave;', '&egrave;', '&igrave;', '&ograve;', '&ugrave;', '&Agrave;', '&Egrave;', '&Igrave;', '&Ograve;', '&Ugrave;');
-	$text = str_replace($mal, $ok, $text);
-	*/
 
 	return $text;
 }
@@ -387,9 +374,9 @@ function barajar_votos($votacion_ID) { // FUNCION CRITICA. Especialmente comenta
 	while($r = mysql_fetch_array($result)){ $ok = $r['privacidad']; }
 	if ($ok != 'true') { return false; }
 
-	$votos = array();
 	
 	// Extrae los IDs de votos y los guarda en array.
+	$votos = array();
 	$n = 0;
 	$result = mysql_query("SELECT * FROM votacion_votos WHERE ref_ID = '".$votacion_ID."'", $link);
 	while($r = mysql_fetch_array($result)){ 

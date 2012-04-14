@@ -7,7 +7,7 @@ function gen_grafico($datos, $fecha='', $cero=false) {
 	 
 
 	if ($cero) { $datos = strtr(chart_data($datos), 'A', '_'); } else { $datos = chart_data($datos); }
-	return 'http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|___|'.$dato_last.'&chd=s:'.$datos.'&chf=bg,s,ffffff01|c,s,ffffff01&chco=0066FF&chm=B,FFFFFF,0,0,0';
+	return 'http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|_____|'.$dato_last.'&chd=s:'.$datos.'&chf=bg,s,ffffff01|c,s,ffffff01&chco=0066FF&chm=B,FFFFFF,0,0,0';
 }
 
 function gen_datos($datos, $cero=false, $datos2=false) {
@@ -21,7 +21,7 @@ function gen_datos($datos, $cero=false, $datos2=false) {
 		if ($cero) { $datos = $datos.','.strtr(chart_data($datos2), 'A', '_'); } else { $datos = $datos.','.chart_data($datos2); }
 	}
 
-	return '&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|__|'.$dato_last.'&chd=s:'.$datos;
+	return '&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|_____|'.$dato_last.'&chd=s:'.$datos;
 }
 
 $txt_title = 'Estadísticas';
@@ -171,7 +171,7 @@ $txt .= '<span style="float:right;font-size:12px;margin-top:-15px;">('.num($i).'
 
 <div id="stats">
 
-<fieldset><legend>1. Demografía</legend>
+<fieldset><legend>Demografía</legend>
 
 <b id="1.1">1.1 <span style="color:#0000FF;">Ciudadanos</span>/<span style="color:#FF0000;">paises</span></b> (<a href="/info/censo/">Ver censo</a>)<br />
 <img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['ciudadanos'], false, $d['paises']):gen_datos($d['ciudadanos'], false)).'" alt="Ciudadanos/paises" border="0" />
@@ -181,7 +181,7 @@ $txt .= '<span style="float:right;font-size:12px;margin-top:-15px;">('.num($i).'
 <img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['nuevos'], false, $d['eliminados']):gen_datos($d['nuevos'], false)).'" alt="Ciudadanos nuevos/expirados" border="0" />
 </fieldset>
 
-<fieldset><legend>2. Actividad</legend>
+<fieldset><legend>Actividad</legend>
 
 
 <b id="2.1">2.1 Ciudadanos activos</b> (entraron en 24h)<br />
@@ -202,7 +202,7 @@ $txt .= '<span style="float:right;font-size:12px;margin-top:-15px;">('.num($i).'
 </fieldset>';
 
 if (ECONOMIA) {
-	$txt .= '<fieldset><legend>3. Economía</legend>
+	$txt .= '<fieldset><legend>Economía</legend>
 
 <b id="3.1">3.1 '.MONEDA.' en total</b> </b><br />
 <img src="'.gen_grafico($d['pols_total'], '', true).'" alt="monedas en total" border="0" />
@@ -231,7 +231,7 @@ if (ECONOMIA) {
 if (!ASAMBLEA) {
 	$txt .= '
 
-<fieldset><legend>4. Política</legend>
+<fieldset><legend>Política</legend>
 
 <b id="4.1">4.1 Afiliaciones</b></p><div style="background:FFFFDD;"><table border="0"><tr>';
 

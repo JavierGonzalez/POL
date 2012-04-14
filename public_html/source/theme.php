@@ -3,7 +3,7 @@
 // Errores y redirecciones.
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN); }
 if (isset($_GET['noti'])) { notificacion('visto', $_GET['noti']); }
-if (!isset($txt)) { header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">ERROR 404: <b>Página inexistente</b></h1>'; }
+if (!isset($txt)) { $txt_nav = array('Error'); header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">ERROR 404: <b>Página inexistente</b></h1>'; }
 if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<h1 style="font-weight:normal;color:red;">ERROR: <b>'.escape(base64_decode($_GET['error'])).'</b></h1>'; }
 if (!isset($pol['config']['pais_des'])) { $pol['config']['pais_des'] = 'Plataforma cerrada'; }
 if (isset($txt_title)) { $txt_title .= ' | '.PAIS.' | VirtualPol'; }
@@ -76,9 +76,9 @@ p_scroll = false;
 			<li><a href="/msg">Mensajes Privados</a></li>
 			<li><a href="#" style="cursor:default;">Redes sociales</a>
 				<ul>
-					<li><a href="<?=(ASAMBLEA?'https://twitter.com/#!/AsambleaVirtuaI':'https://twitter.com/#!/VirtualPol')?>">Twitter</a>
-					<?=(ASAMBLEA?'<li><a href="https://www.facebook.com/AsambleaVirtual">Facebook</a>':'')?>
-					<li><a href="/info/seguir">Seguir...</a>
+					<li><a href="<?=(ASAMBLEA?'https://twitter.com/#!/AsambleaVirtuaI':'https://twitter.com/#!/VirtualPol')?>">Twitter</a></li>
+					<?=(ASAMBLEA?'<li><a href="https://www.facebook.com/AsambleaVirtual">Facebook</a></li><li><a href="https://plus.google.com/108444972669760594358/posts?hl=es">Google+</a></li>':'')?>
+					<li><a href="/info/seguir">Seguir...</a></li>
 				</ul>
 			</li>
 		</ul>

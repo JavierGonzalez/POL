@@ -355,7 +355,7 @@ function opcion_nueva() {
 	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores de votación');
 	$txt_tab = array('/votacion/crear'=>'Crear votación');
 	
-	$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table">';
+	$txt .= '<table border="0" cellpadding="1" cellspacing="0">';
 
 	$result = mysql_query("SELECT ID, duracion, tipo_voto, pregunta, time, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
 (SELECT nick FROM users WHERE ID = votacion.user_ID LIMIT 1) AS nick
@@ -720,7 +720,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				if ($validez == true) {
 
 					if ($r['tipo_voto'] == 'multiple') {
-						$txt .= '<table border="0" cellpadding="1" cellspacing="0" class="pol_table"><tr><th></th><th colspan="2">SI</th><th></th><th colspan="2">NO</th></tr>';
+						$txt .= '<table border="0" cellpadding="1" cellspacing="0"><tr><th></th><th colspan="2">SI</th><th></th><th colspan="2">NO</th></tr>';
 						
 						$puntos_total_sin_en_blanco = $puntos_total - $escrutinio['votos'][$en_blanco_ID];
 
@@ -909,7 +909,7 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 
 			// Añade tabla de escrutinio publico si es votacion tipo parlamento.
 			if ($r['tipo'] == 'parlamento') {
-				$txt .= '<table border="0" cellpadding="0" cellspacing="3" class="pol_table"><tr><th>Diputado</th><th></th><th colspan="2">Voto</th><th>Mensaje</th></tr>';
+				$txt .= '<table border="0" cellpadding="0" cellspacing="3"><tr><th>Diputado</th><th></th><th colspan="2">Voto</th><th>Mensaje</th></tr>';
 				$result2 = mysql_query("SELECT user_ID,
 (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick,
 (SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS siglas,
@@ -1019,7 +1019,7 @@ $txt .= '<fieldset><legend>Finalizadas</legend>
 
 <hr />
 
-<table border="0" cellpadding="1" cellspacing="0" class="pol_table">
+<table border="0" cellpadding="1" cellspacing="0">
 ';
 	$mostrar_separacion = true;
 	$result = mysql_query("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver

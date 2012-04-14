@@ -377,7 +377,7 @@ LIMIT 1", $link);
 		if ($r['cargo_ID'] == 0) {
 			$txt .= 'Examen sin vinculaci&oacute;n con cargo.';
 		} else {
-			$result2 = mysql_query("SELECT nombre FROM cargos WHERE cargo_ID = '" . $r['cargo_ID'] . "' LIMIT 1", $link);
+			$result2 = mysql_query("SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)){ $txt .= 'Examen vinculado al cargo: <a href="/cargos/">' . $r2['nombre'] . '</a>.'; }	
 		}
 

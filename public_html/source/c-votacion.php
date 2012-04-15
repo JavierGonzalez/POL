@@ -69,9 +69,11 @@ while($r = mysql_fetch_array($result)){
 					}
 
 					// Asigna ordenando con mysql teniendo en cuenta la antiguedad para desempatar
-					$result2 = mysql_query("SELECT ID, nick FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND temp IS NOT NULL ORDER BY temp DESC, fecha_registro ASC LIMIT ".explodear('|', $r['ejecutar'], 2), $link);
-					while($r2 = mysql_fetch_array($result2)) { 
-						cargo_add($cargo_ID, $r2['ID'], true, true); 
+					$n = 0;
+					$result2 = mysql_query("SELECT ID, nick FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND temp IS NOT NULL ORDER BY temp DESC, fecha_registro ASC, voto_confianza DESC LIMIT 50", $link);
+					while($r2 = mysql_fetch_array($result2)) {
+						$n++;
+						if ($n <= explodear('|', $r['ejecutar'], 2)) { cargo_add($cargo_ID, $r2['ID'], true, true); }
 						$guardar[] = $r2['nick'].'.'.$votacion_preferencial_nick[$r2['nick']];
 					}
 					
@@ -489,7 +491,7 @@ LIMIT 1", $link);
 </tr>
 
 <tr>
-<td align="right">Duración:</td>
+<td align="right" valign="top">Duración:</td>
 <td><b>'.round($r['duracion']/24/60/60).' días</b>'.($r['estado']=='ok'?gbarra(((time()-$time)*100)/($time_expire-$time)):'').'</td>
 </tr>
 

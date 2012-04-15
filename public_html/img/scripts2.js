@@ -322,8 +322,9 @@ function print_msg(data) {
 
 					default:
 						if (minick != "") { 
-							var regexp = eval("/"+minick+"/gi");
-							var txt = txt.replace(regexp, "<b style=\"color:orange;\">" + minick + "</b>"); 
+							var txt = " " + txt;
+							var regexp = eval("/ "+minick+"/gi");
+							var txt = txt.replace(regexp, " <b style=\"color:orange;\">" + minick + "</b>"); 
 							if (txt.search(regexp) != -1) { chat_sin_leer_yo = chat_sin_leer_yo + "+"; } 
 						}
 
@@ -477,7 +478,7 @@ function enriquecer(m, bbcode) {
 
 	// URLs
 	m = m.replace(/(\s|^)(\/[-A-Z0-9\/_]{3,})/ig, ' <a href="$2" target="_blank">$2</a>'); // /url
-	m = m.replace(/(\s|^)@([-A-Z0-9_]{2,20})/ig, ' <a href="/perfil/$2">@<b>$2</b></a>'); // @nick
+	m = m.replace(/(\s|^)@([-A-Z0-9_]{2,20})/ig, ' <a href="/perfil/$2" class="nick">@<b>$2</b></a>'); // @nick
 	m = m.replace(/(\s|^)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, ' <a href="$2" target="_blank">$2</a>');
 
 	// BBCODE

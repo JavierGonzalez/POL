@@ -4,7 +4,7 @@ function actualizar($accion, $user_ID=false) {
 	global $pol, $link;
 	if ($user_ID == false) { $user_ID = $pol['user_ID']; }
 	switch ($accion) {
-
+		
 		case 'examenes':
 			$data_array = array();
 			$result = mysql_query("SELECT cargo_ID, (SELECT ID FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_ID FROM cargos_users WHERE user_ID = '".$user_ID."' AND aprobado = 'ok'", $link);
@@ -17,6 +17,13 @@ function actualizar($accion, $user_ID=false) {
 			$result = mysql_query("SELECT cargo_ID FROM cargos_users WHERE user_ID = '".$user_ID."' AND cargo = 'true'", $link);
 			while($r = mysql_fetch_array($result)){ $data_array[] = $r['cargo_ID']; }
 			mysql_query("UPDATE users SET cargos = '".implode(' ', $data_array)."' WHERE ID = '".$user_ID."' LIMIT 1", $link);
+			break;
+
+		case 'contador_docs':
+			$result = mysql_query("SELECT COUNT(ID) AS num FROM docs WHERE estado = 'ok' AND pais = '".PAIS."'", $link);
+			while($r = mysql_fetch_array($result)) {
+				mysql_query("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_documentos' LIMIT 1", $link);
+			}
 			break;
 	}
 }
@@ -83,31 +90,14 @@ function pad($control, $ID=false, $txt='') {
 		$e = new EtherpadLiteClient(CLAVE_API_ETHERPAD, 'http://www.'.DOMAIN.':9001/api');
 	}
 	switch ($control) {
-
 		case 'print':
 			global $pol;
 			return '<iframe src="http://www.virtualpol.com:9001/p/'.$ID.'?userName='.$pol['nick'].'" width="100%" height="500" frameborder="0" style="background:#FFF;margin:0 0 -9px -20px;"></iframe>';
 			break;
 
-		case 'create':
-			try {
-				$e->createPad($ID, html_entity_decode(strip_tags(str_replace("<br />", "\n", $txt)), null, 'UTF-8'));
-				return true;
-			} catch (Exception $error) { return false; }
-			break;
-
-		case 'get':
-			try {
-				return $e->getHTML($ID)->html;
-			} catch (Exception $error) { return false; }
-			break;
-
-		case 'delete':
-			try {
-				$e->deletePad($ID);
-				return true;
-			} catch (Exception $error) { return false; }
-			break;
+		case 'create': try { $e->createPad($ID, html_entity_decode(strip_tags(str_replace("<br />", "\n", $txt)), null, 'UTF-8')); return true; } catch (Exception $error) { return false; } break;
+		case 'get': try { return $e->getHTML($ID)->html; } catch (Exception $error) { return false; } break;
+		case 'delete': try { $e->deletePad($ID); return true; } catch (Exception $error) { return false; } break;
 	}
 }
 
@@ -116,23 +106,17 @@ function pad($control, $ID=false, $txt='') {
 // ELIMINACION DE TINYMCE EN CURSO
 function editor_enriquecido($name, $txt='') {
         $GLOBALS['txt_header'] .= '
-<script type="text/javascript">
-document.domain = "'.DOMAIN.'";
-</script>
 <script type="text/javascript" src="'.IMG.'tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
-
+document.domain = "'.DOMAIN.'";
 tinyMCE.init({
 mode : "textareas",
 theme : "advanced",
 language : "es",
 plugins : "style,table",
-
 elements : "abshosturls",
 relative_urls : false,
 remove_script_host : false,
-
-// Theme options
 theme_advanced_buttons1 : "bold,italic,underline,|,strikethrough,sub,sup,charmap,|,forecolor,fontselect,fontsizeselect,|,link,unlink,image,|,undo,redo,|,cleanup,removeformat,code",
 theme_advanced_buttons2 : "justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,hr,|,tablecontrols",
 theme_advanced_buttons3 : "",
@@ -140,11 +124,9 @@ theme_advanced_toolbar_location : "top",
 theme_advanced_toolbar_align : "left",
 theme_advanced_statusbar_location : "bottom",
 theme_advanced_resizing : true,
-
 });
 </script>';
-
-        return '<textarea name="' . $name . '" style="width:750px;height:350px;">' . $txt . '</textarea>';
+        return '<textarea name="'.$name.'" style="width:750px;height:350px;">'.$txt.'</textarea>';
 }
 
 function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', $pais='', $nick=false) {
@@ -207,6 +189,57 @@ LIMIT 1", $link);
 		evento_log('Cargo '.$r['nombre'].' quitado a '.$nick_asignado.' por '.($sistema==true?'VirtualPol':$pol['nick']));
 	}
 }
+
+
+
+
+// NUEVA FUNCION DE CARGOS EN DESARROLLO
+
+function cargo($accion, $cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
+	global $link, $pol;
+	
+
+	switch ($accion) {
+		case 'add':
+			break;
+
+		case 'del':
+			break;
+
+		case 'dimitir':
+			break;
+
+	}
+
+
+	// OLD
+	$result = mysql_query("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' LIMIT 1", $link);
+	while($r = mysql_fetch_array($result)){
+		
+		mysql_query("UPDATE cargos_users SET cargo = 'false' WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' AND user_ID = '".$user_ID."' LIMIT 1", $link);
+		$result = mysql_query("SELECT cargo_ID, 
+(SELECT nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nivel
+FROM cargos_users 
+WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."' AND cargo = 'true' 
+ORDER BY nivel DESC
+LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)){ $user_nivel_max = $r['nivel']; $user_nivel_sql = ", cargo = '" . $r['cargo_ID'] . "'"; }
+
+
+		if (!$user_nivel_max) { $user_nivel_max = 1; $user_nivel_sql = ", cargo = ''"; }
+		mysql_query("UPDATE users SET nivel = '" . $user_nivel_max . "'" . $user_nivel_sql . " WHERE ID = '".$user_ID."' LIMIT 1", $link);
+		actualizar('cargos', $user_ID);
+
+		if ($evento_chat) { 
+			$result2 = mysql_query("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1", $link);
+			while($r2 = mysql_fetch_array($result2)){ $nick_asignado = $r2['nick']; }
+			evento_chat('<b>[CARGO] '.crear_link(($sistema==true?'VirtualPol':$pol['nick'])).' quita</b> el cargo <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$r['nombre'].' a '. crear_link($nick_asignado));
+		}
+		evento_log('Cargo '.$r['nombre'].' quitado a '.$nick_asignado.' por '.($sistema==true?'VirtualPol':$pol['nick']));
+	}
+}
+
+
 
 
 function enviar_email($user_ID, $asunto, $mensaje, $email='') {

@@ -460,8 +460,6 @@ function auto_priv(nick) { $("#vpc_msg").attr("value","/msg " + nick + " ").css(
 
 
 function enriquecer(m, bbcode) {
-	
-	
 
 	// Emoticonos
 	m = m.replace(/(\s|^):\)/gi,			' <img src="'+IMG+'smiley/sonrie.gif" border="0" alt=":)" title=":)" width="15" height="15" />');
@@ -477,6 +475,21 @@ function enriquecer(m, bbcode) {
 	m = m.replace(/:moneda:/gi,				' <img src="'+IMG+'varios/m.gif" alt=":moneda:" border="0" title=":moneda:" width="16" height="16" />');
 	m = m.replace(/:troll:/gi,				' <img src="'+IMG+'smiley/troll.gif" alt=":troll:" border="0" title=":troll:" width="15" height="15" />');
 
+	// URLs
+	m = m.replace(/(\s|^)(\/[-A-Z0-9\/_]{3,})/ig, ' <a href="$2" target="_blank">$2</a>'); // /url
+	m = m.replace(/(\s|^)@([-A-Z0-9_]{2,20})/ig, ' <a href="/perfil/$2">@<b>$2</b></a>'); // @nick
+	m = m.replace(/(\s|^)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, ' <a href="$2" target="_blank">$2</a>');
+
+	// BBCODE
+	if (bbcode) {
+		m = m.replace(/\[(b|i|em|s)\](.*?)\[\/\1\]/gi, '<$1>$2</$1>'); 
+		m = m.replace(/\[img\](.*?)\[\/img\]/gi, '<img src="$1" alt="img" style="max-width:800px;" />');
+		m = m.replace(/\[youtube\]http\:\/\/www\.youtube\.com\/watch\?v=(.*?)\[\/youtube\]/gi, '<iframe width="520" height="390" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>');
+		m = m.replace(/\[quote\]/gi, '<blockquote><div class="quote">');
+		m = m.replace(/\[quote=(.*?)\]/gi, '<blockquote><div class="quote"><cite>$1 escribió:</cite>');
+		m = m.replace(/\[\/quote\]/gi, '</div></blockquote>');
+	}
+
 	// Botones Instant
 	if (bbcode) { var boton_width = 50; } else { var boton_width = 16; }
 	m = m.replace(/:aplauso:/gi, html_instant('aplauso', boton_width));
@@ -487,21 +500,6 @@ function enriquecer(m, bbcode) {
 	m = m.replace(/:porquenotecallas:/gi, html_instant('porquenotecallas', boton_width));
 	m = m.replace(/:zas:/gi, html_instant('zas', boton_width));
 	m = m.replace(/:aleluya:/gi, html_instant('aleluya', boton_width));
-
-	// URL
-	m = m.replace(/(\s|^)(\/[-A-Z0-9\/_]{3,})/ig, ' <a href="$2" target="_blank">$2</a>');
-	m = m.replace(/(\s|^)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, ' <a href="$2" target="_blank">$2</a>');
-
-
-	// BBCODE
-	if (bbcode) {
-		m = m.replace(/\[(b|i|em|s)\](.*?)\[\/\1\]/gi, "<$1>$2</$1>"); 
-		m = m.replace(/\[img\](.*?)\[\/img\]/gi, "<img src=\"$1\" alt=\"img\" style=\"max-width:800px;\" />");
-		m = m.replace(/\[youtube\]http\:\/\/www\.youtube\.com\/watch\?v=(.*?)\[\/youtube\]/gi, "<iframe width=\"520\" height=\"390\" src=\"http://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>");
-		m = m.replace(/\[quote\]/gi, "<blockquote><div class=\"quote\">");
-		m = m.replace(/\[quote=(.*?)\]/gi, "<blockquote><div class=\"quote\"><cite>$1 escribi&oacute;:</cite>");
-		m = m.replace(/\[\/quote\]/gi, "</div></blockquote>");
-	}
 
 	return m;
 }

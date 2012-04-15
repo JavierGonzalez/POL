@@ -271,7 +271,7 @@ $('ul.menu li').hover(function(){
 (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS partido,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
-FROM users WHERE nick = '".$_POST['nick']."' LIMIT 1", $link);
+FROM users WHERE nick = '".str_replace('@', '', $_POST['nick'])."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($res)) { 
 		include('inc-functions.php');
 		if ($r['avatar'] == 'true') { $r['avatar'] = 1; } else { $r['avatar'] = 0; }

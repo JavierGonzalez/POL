@@ -8,6 +8,11 @@ $txt .= '<h1>TEST</h1><hr />';
 
 
 
+
+
+
+
+
 $txt_title = 'Test';
 $txt_nav = array('Test');
 include('theme.php');

@@ -1707,26 +1707,33 @@ case 'cargo':
 
 		mysql_query("UPDATE cargos_users SET cargo = 'false', aprobado = 'no' WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1", $link);
 
-		// Si es cargo_ID 6 (Diputado o Coordinador), ceder al siguiente en la sucesión
-		/*
-		if ($_GET['ID'] == 6) {
-			$result = mysql_query("SELECT escrutinio FROM ".SQL."elec WHERE tipo = 'parl' ORDER BY time DESC LIMIT 1", $link);
-			while($r = mysql_fetch_array($result)){ $escrutinio = $r['escrutinio']; }
-
-			foreach(explode('|', $escrutinio) AS $data) {
-				$data = explode(':', $data);
-				$cargo_estado = null;
-				$result = mysql_query("SELECT ID, (SELECT cargo FROM cargos_users WHERE cargo_ID = 6 AND aprobado = 'ok' AND user_ID = u.ID LIMIT 1) AS cargo_estado FROM users `u` WHERE nick = '".$data[2]."' LIMIT 1", $link);
-				while($r = mysql_fetch_array($result)){ $el_user_ID = $r['ID']; $cargo_estado = $r['cargo_estado']; }
-
-				if ($cargo_estado == '0') {
-					cargo_add(6, $el_user_ID, true, true);
-					break;
+		// Asigna al siguiente en la cadena de sucesión si el cargo es electo
+		$result = mysql_query("SELECT cargo_ID FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['ID']."' AND elecciones IS NOT NULL LIMIT 1", $link);
+		while($r = mysql_fetch_array($result)){
+			// El cargo es electo.
+			$result2 = mysql_query("SELECT ejecutar FROM votacion WHERE pais = '".PAIS."' AND tipo = 'elecciones' AND estado = 'end' AND cargo_ID = '".$_GET['ID']."' ORDER BY time DESC LIMIT 1", $link);
+			while($r2 = mysql_fetch_array($result2)){
+				// Ultimas elecciones legitimas.
+				mysql_query("UPDATE users SET temp = NULL", $link);
+				foreach (explode(':', explodear('|', $r2['ejecutar'], 3)) AS $data) {
+					mysql_query("UPDATE users SET temp = ".explodear('.', $data, 1)." WHERE pais = '".PAIS."' AND nick = '".explodear('.', $data, 0)."' LIMIT 1", $link);
 				}
+				
+				$asignado = false;
+				$result3 = mysql_query("SELECT ID,
+(SELECT cargo FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['ID']."' AND user_ID = users.ID LIMIT 1) AS el_cargo,
+(SELECT aprobado FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['ID']."' AND user_ID = users.ID LIMIT 1) AS el_aprobado
+FROM users WHERE pais = '".PAIS."' AND estado = 'ciudadano' AND temp IS NOT NULL ORDER BY temp DESC, fecha_registro ASC", $link);
+				while($r3 = mysql_fetch_array($result3)){
+					// Recorre la cadena de sucesión por orden de votos, para asignar el cargo al primero sin cargo ejercido y con examen aprobado (candidato)
+					if (($asignado == false) AND ($r3['el_cargo'] == 'false') AND ($r3['el_aprobado'] == 'ok')) {
+						cargo_add($_GET['ID'], $r3['ID'], true, true);
+						$asignado = true;
+					}
+				}
+
 			}
 		}
-		*/
-
 		$refer_url = 'cargos';
 
 		

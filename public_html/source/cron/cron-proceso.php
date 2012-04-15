@@ -494,7 +494,7 @@ include($root_dir.'source/cron/cron-compress-all.php');
 
 
 
-evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, '.num((microtime(true)-TIME_START)).'s (<a href="/estadisticas/">estadisticas actualizadas</a>)');
+evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, '.num((microtime(true)-TIME_START)/1000000000).'s (<a href="/estadisticas/'.PAIS.'">estadisticas actualizadas</a>)');
 
 mysql_close($link);
 ?>

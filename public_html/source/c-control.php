@@ -39,7 +39,7 @@ if (isset($sc[$pol['user_ID']])) {
 
 	// nomenclatura
 	foreach ($vp['paises'] AS $pais) { $paises .= ' <span style="background:'.$vp['bg'][$pais].';" class="redondeado">'.$pais.'</span>'; }
-	$nomenclatura = '<span style="float:right;">Plataformas:'.$paises.' | Estados: <b class="ciudadano">Ciudadano</b> <b class="turista">Turista</b> <b class="validar">Validar</b> <b class="expulsado">Expulsado</b></span>';
+	$nomenclatura = '<fieldset><legend>Plataformas</legend>'.$paises.' | Estados: <b class="ciudadano">Ciudadano</b> <b class="turista">Turista</b> <b class="validar">Validar</b> <b class="expulsado">Expulsado</b></fieldset>';
 
 	// siglas partidos
 	$result = mysql_query("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."'", $link);
@@ -398,7 +398,7 @@ ORDER BY factor DESC LIMIT 30", $link);
 	$txt .= '<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>'.$supervisores.'</b></p>'.$nomenclatura;
 
 
-	$txt .= '<h1>1. Coincidencias de IP<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
+	$txt .= '<fieldset><legend>1. Coinciencias de IP ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
 	$result = mysql_query("SELECT nick, IP, COUNT(*) AS num, host
 FROM users 
 GROUP BY IP HAVING COUNT(*) > 1
@@ -425,12 +425,12 @@ ORDER BY fecha_registro DESC", $link);
 			$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td><span style="float:right;">'.ocultar_IP($r['host'], 'host').'</span>'.implode(' & ', $clones).'</td><td>'.ocultar_IP($r['IP']).'</td><td nowrap="nowrap">'.$nota_SC.'</td></tr>';
 		}
 	}
-	$txt .= '</table>';
+	$txt .= '</table></fieldset>';
 
 
 
 
-	$txt .= '<br /><h1>2. Coincidencia de clave<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
+	$txt .= '<fieldset><legend>2. Coinciencias de clave ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
 	$result = mysql_query("SELECT ID, IP, COUNT(*) AS num, pass
 FROM users 
 GROUP BY pass HAVING COUNT(*) > 1
@@ -458,13 +458,13 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 			}
 		}
 	}
-	$txt .= '</table>';
+	$txt .= '</table></fieldset>';
 
 
 
 
 	$trazas_rep = array();
-	$txt .= '<br /><h1>3. Coincidencia de dispositivo (Traza)<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
+	$txt .= '<fieldset><legend>3. Coinciencias de dispositivo "traza" ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
 	$result = mysql_query("SELECT ID AS user_ID, ID, nick, estado, pais, traza, nota_SC FROM users WHERE traza != '' ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$nota_SC .= print_nota_SC($r['nota_SC'], $r['ID']);
@@ -494,20 +494,18 @@ WHERE pass = '" . $r['pass'] . "'", $link);
 			$nota_SC = '';
 		}
 	}
-	$txt .= '</table>';
+	$txt .= '</table></fieldset>';
 
 
-	$txt .= '<br /><h1>4. Ocultación de conexión (proxys, TOR...)<span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span></h1><hr /><table border="0" cellspacing="4">';
+	$txt .= '<fieldset><legend>4. Ocultación (proxys, TOR...) ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
 	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%proxy%');
 	$sql_anon = '';
 	foreach ($array_searchtor AS $filtro) { if ($sql_anon != '') { $sql_anon .= ' OR ';  } $sql_anon .= "hosts LIKE '".$filtro."'"; }
 	$result = mysql_query("SELECT nick, estado, host, IP, nav, nota_SC FROM users WHERE ".$sql_anon." ORDER BY fecha_registro DESC", $link);
 	while($r = mysql_fetch_array($result)) {
-		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td><td nowrap="nowrap">'.print_nota_SC($r['nota_SC'], $r['ID']).'</td></tr>';
+		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td nowrap="nowrap"><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td><td nowrap="nowrap">'.print_nota_SC($r['nota_SC'], $r['ID']).'</td></tr>';
 	}
-	$txt .= '</table>';
-
-	$txt .= '<table border="0" cellspacing="4">';
+	$txt .= '</table><table border="0" cellspacing="4">';
 	$result = mysql_query("SELECT ID, IP, nick, estado, pais, IP_proxy, host
 FROM users 
 WHERE IP_proxy != ''
@@ -553,13 +551,13 @@ ORDER BY fecha_registro DESC", $link);
 <td valign="top"><b>' . crear_link($r['nick'], 'nick', $r['estado'], $r['pais']) . '</b></td>
 <td valign="top">' . $proxys_num . '<hr /></td>
 <td valign="top">' . $proxys . '<hr /></td>
-<td valign="top" align="right">' . $proxys_dns . '<hr /></td>
+<td valign="top" nowrap="nowrap" align="right">' . $proxys_dns . '<hr /></td>
 <td valign="top">' . $clones . '<hr /></td>
 </tr>';
 		}
 
 	}
-	$txt .= '</table><span style="float:right;">('.round((microtime(true)-TIME_START)*1000).'ms)</span>';
+	$txt .= '</table></fieldset>';
 
 	}
 

@@ -497,38 +497,71 @@ LIMIT 1", $link);
 </fieldset>
 
 <fieldset><legend>Propiedades de la votación</legend>
-<ul>
-<li><b title="Accuracy: el computo de los votos es exacto">Precisión:</b> SI, el computo de los votos es exacto.</b></li>
 
-<li><b title="Consistency: los resultados son coherentes y estables en el tiempo">Consistencia:</b> SI, el resultado es coherente y estable en el tiempo. Una vez finalizadas no se puede eliminar o modificar las votaciones.</b></li>
 
-<li><b title="Democracy: solo pueden votar personas autorizadas y una sola vez">Democracia:</b> Autentificación solida mediante <a href="'.SSL_URL.'dnie.php">DNIe</a> (y otros certificados) opcional, avanzado sistema de vigilancia del censo de eficacia elevada (demostrada desde 2008), con supervisores del censo electos por democracia directa (cada 7 días, mediante el <a href="/info/censo/SC">voto de confianza</a>).</li>
+<table>
+
+<tr>
+<td align="right" valign="top"><b title="Accuracy: el computo de los votos es exacto">Precisión:</b></td>
+<td>SI, el computo de los votos es exacto.</td>
+</tr>
+
+<tr>
+<td align="right" valign="top"><b title="Consistency: los resultados son coherentes y estables en el tiempo">Consistencia:</b></td>
+<td>SI, el resultado es coherente y estable en el tiempo. Una vez finalizadas no se puede eliminar o modificar las votaciones.</td>
+</tr>
+
+<tr>
+<td align="right" valign="top"><b title="Democracy: solo pueden votar personas autorizadas y una sola vez">Democracia:</b></td>
+<td>Autentificación solida mediante <a href="'.SSL_URL.'dnie.php">DNIe</a> (y otros certificados) opcional, avanzado sistema de vigilancia del censo de eficacia elevada (demostrada desde 2008), con supervisores del censo electos por democracia directa (cada 7 días, mediante el <a href="/info/censo/SC">voto de confianza</a>).</td>
+</tr>
+
+
 
 '.($r['privacidad']=='true'?'
 
-<li><b title="Privacy: el sentido del voto es secreto">Privacidad:</b> SI, siempre que el servidor no se comprometa mientras la votación está activa. Al finalizar la votación se rompe la relación Usuario-Voto de forma definitiva e irreversible.</li>
 
-<li><b title="Veriability: capacidad publica de comprobar el recuento de votos">Verificación:</b> Muy elevada, gracias a las siguientes medidas de transparencia:
+<tr>
+<td align="right" valign="top"><b title="Privacy: el sentido del voto es secreto">Privacidad:</b></td>
+<td>SI, siempre que el servidor no se comprometa mientras la votación está activa. Al finalizar la votación se rompe la relación Usuario-Voto de forma definitiva e irreversible.</td>
+</tr>
+
+<tr>
+<td align="right" valign="top"><b title="Veriability: capacidad publica de comprobar el recuento de votos">Verificación:</b></td>
+<td>Muy elevada, gracias a las siguientes medidas de transparencia:
 <ol>
 <li>Se permite verificar el sentido del propio voto mientras la votación está en curso.</li>
 <li>Comprobantes de voto que permiten verificar -más allá de toda duda- el sentido del propio voto situado en un <a href="/votacion/'.$r['ID'].'/verificacion">escrutinio público y completo</a>.</li>
 <li>Se hace público CUANDO vota QUIEN, de forma dinamica en chat y de forma <a href="/votacion/'.$r['ID'].'/verificacion">permanente</a>. Permitiendo que cualquiera se pueda poner en contacto con cualquier votante.</li>
-</ol>
-</li>
+</ol></td>
+</tr>
+
 
 ':'
 
-<li><b title="Privacy: el sentido del voto es secreto">Privacidad:</b> NO, el voto es público. Cualquiera puede ver QUÉ vota QUIEN.</li>
+<tr>
+<td align="right" valign="top"><b title="Privacy: el sentido del voto es secreto">Privacidad:</b></td>
+<td>NO, el voto es público. Cualquiera puede ver QUÉ vota QUIEN.</td>
+</tr>
 
-<li><b title="Veriability: capacidad pública de comprobar el recuento de votos">Verificación:</b> SI. Esta votación tiene verificabilidad universal ya que el voto no es secreto.</li>
+<tr>
+<td align="right" valign="top"><b title="Veriability: capacidad pública de comprobar el recuento de votos">Verificación:</b></td>
+<td>SI. Esta votación tiene verificabilidad universal ya que el voto no es secreto.</td>
+</tr>
 
 ').'
 
-<li><b title="Posibilidad de modificar el sentido del voto propio en una votación en curso">Rectificación</b>: SI, se permite modificar el voto.</li>
+<tr>
+<td align="right" valign="top"><b title="Posibilidad de modificar el sentido del voto propio en una votación en curso">Rectificación</b>:</td>
+<td>SI, se permite modificar el voto.</td>
+</tr>
 
-<li><b title="Validez/nulidad de la votación">Impugnación</b>: SI, se realiza una votación de nulidad/validez paralela e independiente del sentido de voto.</li>
+<tr>
+<td align="right" valign="top"><b title="Validez/nulidad de la votación">Impugnación:</b></td>
+<td>SI, se realiza una votación de nulidad/validez paralela e independiente del sentido de voto.</td>
+</tr>
 
-</ul>
+</table>
 </fieldset>';
 
 			$result2 = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
@@ -539,8 +572,8 @@ LIMIT 1", $link);
 				if ($r['estado'] == 'end') { 
 					$result2 = mysql_query("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
 					while($r2 = mysql_fetch_array($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
-				} else { $txt .= '<p>Los comentarios estarán visibles al finalizar la votación.</p>'; }
-			} else { $txt .= '<p>Para ver los comentarios debes ser ciudadano.</p>'; }
+				} else { $txt .= '<p style="color:red;">Los comentarios estarán visibles al finalizar la votación.</p>'; }
+			} else { $txt .= '<p style="color:red;">Para ver los comentarios debes ser ciudadano.</p>'; }
 			$txt .= '</fieldset>';
 	
 

@@ -46,7 +46,7 @@ if (isset($_GET['bg'])) {
 
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="<?=IMG?>scripts_all.js?v=13"></script>
+<script type="text/javascript" src="<?=IMG?>scripts_all.js?v=14"></script>
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '<?=IMG?>';

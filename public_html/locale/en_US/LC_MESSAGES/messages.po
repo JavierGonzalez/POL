@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VirtualPol\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-16 21:03+0100\n"
-"PO-Revision-Date: 2012-04-16 21:25+0100\n"
+"POT-Creation-Date: 2012-04-17 00:39+0100\n"
+"PO-Revision-Date: 2012-04-17 00:44+0100\n"
 "Last-Translator: GONZO <gonzomail@gmail.com>\n"
 "Language-Team: VirtualPol <desarrollo@virtualpol.com>\n"
 "MIME-Version: 1.0\n"
@@ -16,208 +16,260 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-SearchPath-0: D:\\www\\VirtualPol\\public_html\\.\n"
 
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:107
+msgid "Votación"
+msgstr "Vote"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:119
+msgid "Primer paso: Crea tu ciudadano"
+msgstr "tep one: create your citizen"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:120
+msgid "Notificaciones"
+msgstr "Notifications"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:120
+msgid "Proceso diario"
+msgstr "Daily process"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:120
+msgid "hace"
+msgstr "ago"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:120
+msgid "en"
+msgstr "in"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:120
+msgid "No hay notificaciones"
+msgstr "No notifications"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:120
+msgid "¿Qué hacer?"
+msgstr "What to do?"
+
 #: D:\www\VirtualPol\public_html\./source/test.php:18
 msgid "Hola mundo!"
 msgstr "Hello World!"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:66
+#: D:\www\VirtualPol\public_html\./source/theme.php:6
+msgid "Página inexistente"
+msgstr "Nonexistent page"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:8
+msgid "Plataforma cerrada"
+msgstr "Closed platform"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:10
+msgid "de"
+msgstr "of"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:54
 msgid "Comunicación"
 msgstr "Communication"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:69
+#: D:\www\VirtualPol\public_html\./source/theme.php:57
 msgid "Foros"
 msgstr "Forums"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:71
+#: D:\www\VirtualPol\public_html\./source/theme.php:59
 msgid "Última actividad"
 msgstr "Latest activity"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:72
+#: D:\www\VirtualPol\public_html\./source/theme.php:60
 msgid "Tu actividad"
 msgstr "Your activity"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:75
+#: D:\www\VirtualPol\public_html\./source/theme.php:63
 msgid "Voz"
 msgstr "Voice"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:75
+#: D:\www\VirtualPol\public_html\./source/theme.php:63
 msgid "Configurar"
 msgstr "Configure"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:76
+#: D:\www\VirtualPol\public_html\./source/theme.php:64
 msgid "Mensajes privados"
 msgstr "Private messages"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:77
+#: D:\www\VirtualPol\public_html\./source/theme.php:65
 msgid "Redes sociales"
 msgstr "Social Networks"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:81
+#: D:\www\VirtualPol\public_html\./source/theme.php:69
 msgid "Seguir"
 msgstr "Follow"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:87
+#: D:\www\VirtualPol\public_html\./source/theme.php:75
 msgid "Información"
 msgstr "Information"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:89
+#: D:\www\VirtualPol\public_html\./source/theme.php:77
 msgid "Censo"
 msgstr "Census"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:90
+#: D:\www\VirtualPol\public_html\./source/theme.php:78
 msgid "Documentos"
 msgstr "Documents"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:91
+#: D:\www\VirtualPol\public_html\./source/theme.php:79
 msgid "Mapa de ciudadanos"
 msgstr "Map of citizens"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:92
-#: D:\www\VirtualPol\public_html\./source/theme.php:94
+#: D:\www\VirtualPol\public_html\./source/theme.php:80
+#: D:\www\VirtualPol\public_html\./source/theme.php:82
 msgid "Estadísticas"
 msgstr "Statistics"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:95
+#: D:\www\VirtualPol\public_html\./source/theme.php:83
 msgid "Log de acciones"
 msgstr "Log of actions"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:98
+#: D:\www\VirtualPol\public_html\./source/theme.php:86
 msgid "Buscar"
 msgstr "Search"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:99
+#: D:\www\VirtualPol\public_html\./source/theme.php:87
 msgid "Sobre VirtualPol"
 msgstr "About VirtualPol"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:101
+#: D:\www\VirtualPol\public_html\./source/theme.php:89
 msgid "Vídeo de bienvenida"
 msgstr "Welcome video"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:102
+#: D:\www\VirtualPol\public_html\./source/theme.php:90
 msgid "Documentación"
 msgstr "Documentation"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:103
+#: D:\www\VirtualPol\public_html\./source/theme.php:91
 msgid "Condiciones de uso"
 msgstr "Conditions of use"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:104
+#: D:\www\VirtualPol\public_html\./source/theme.php:92
 msgid "Desarrollo"
 msgstr "development"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:105
+#: D:\www\VirtualPol\public_html\./source/theme.php:93
 msgid "Donaciones"
 msgstr "Donations"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:111
+#: D:\www\VirtualPol\public_html\./source/theme.php:99
 msgid "Democracia"
 msgstr "Democracy"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:113
+#: D:\www\VirtualPol\public_html\./source/theme.php:101
 msgid "Elecciones"
 msgstr "Elections"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:114
+#: D:\www\VirtualPol\public_html\./source/theme.php:102
 msgid "Votaciones"
 msgstr "Voting"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:115
+#: D:\www\VirtualPol\public_html\./source/theme.php:103
 msgid "Cargos"
 msgstr "Office"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:117
+#: D:\www\VirtualPol\public_html\./source/theme.php:105
 msgid "Grupos"
 msgstr "Groups"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:120
+#: D:\www\VirtualPol\public_html\./source/theme.php:108
 msgid "Gestión"
 msgstr "Management"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:122
+#: D:\www\VirtualPol\public_html\./source/theme.php:110
 msgid "Gobierno"
 msgstr "Government"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:123
+#: D:\www\VirtualPol\public_html\./source/theme.php:111
 msgid "Kicks"
 msgstr "Kicks"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:124
+#: D:\www\VirtualPol\public_html\./source/theme.php:112
 msgid "Exámenes"
 msgstr "Exams"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:125
+#: D:\www\VirtualPol\public_html\./source/theme.php:113
 msgid "Autentificación"
 msgstr "Autentication"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:128
+#: D:\www\VirtualPol\public_html\./source/theme.php:116
 msgid "Partidos"
 msgstr "Parties"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:133
+#: D:\www\VirtualPol\public_html\./source/theme.php:121
 msgid "Economía"
 msgstr "Economy"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:135
+#: D:\www\VirtualPol\public_html\./source/theme.php:123
 msgid "Cuentas"
 msgstr "Accounts"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:136
+#: D:\www\VirtualPol\public_html\./source/theme.php:124
 msgid "Empresas"
 msgstr "Companies"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:137
+#: D:\www\VirtualPol\public_html\./source/theme.php:125
 msgid "Tus monedas"
 msgstr "Yout coins"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:138
+#: D:\www\VirtualPol\public_html\./source/theme.php:126
 msgid "Subastas"
 msgstr "Auctions"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:139
+#: D:\www\VirtualPol\public_html\./source/theme.php:127
 msgid "Mapa"
 msgstr "Map"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:140
+#: D:\www\VirtualPol\public_html\./source/theme.php:128
 msgid "Economía global"
 msgstr "Global economy"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:163
+#: D:\www\VirtualPol\public_html\./source/theme.php:151
 msgid "mapa"
 msgstr "mapa"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:163
+#: D:\www\VirtualPol\public_html\./source/theme.php:151
 msgid "Subasta"
 msgstr "Auction"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:191
+#: D:\www\VirtualPol\public_html\./source/theme.php:177
+msgid "Salir"
+msgstr "Logout"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:179
 msgid "Entrar"
 msgstr "Login"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:191
+#: D:\www\VirtualPol\public_html\./source/theme.php:179
 msgid "Crear ciudadano"
 msgstr "Create citizen"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:222
+#: D:\www\VirtualPol\public_html\./source/theme.php:210
 msgid "VirtualPol, la primera <b>Red Social Democrática</b>"
 msgstr "VirtualPol, the first Democratic Social Network"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:222
+#: D:\www\VirtualPol\public_html\./source/theme.php:210
 msgid "Donar"
 msgstr "Donate"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:224
+#: D:\www\VirtualPol\public_html\./source/theme.php:212
 msgid "Vídeo"
 msgstr "Video"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:224
+#: D:\www\VirtualPol\public_html\./source/theme.php:212
 msgid "Ayuda / Documentación"
 msgstr "Help / Documentation"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:225
+#: D:\www\VirtualPol\public_html\./source/theme.php:213
 msgid "Desarrollo / Código fuente"
 msgstr "Development / Source Code"
 
-#: D:\www\VirtualPol\public_html\./source/theme.php:235
+#: D:\www\VirtualPol\public_html\./source/theme.php:219
+msgid "Reportar problema"
+msgstr "Report problem"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:223
 msgid "Época antigua en IRC"
 msgstr "Old age in IRC"
 

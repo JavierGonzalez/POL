@@ -4,7 +4,7 @@ define('TIME_START', microtime(true));
 include('config.php'); // config raiz
 
 
-$date = date('Y-m-d H:i:s'); // fija fecha actual $date en formato entendible por MySQL
+$date = date('Y-m-d H:i:s');
 $IP = direccion_IP('longip'); // obtiene la IP en formato numérico (longip)
 
 

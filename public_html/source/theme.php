@@ -3,24 +3,12 @@
 // Errores y redirecciones.
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN); }
 if (isset($_GET['noti'])) { notificacion('visto', $_GET['noti']); }
-if (!isset($txt)) { $txt_nav = array('Error'); header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">ERROR 404: <b>Página inexistente</b></h1>'; }
+if (!isset($txt)) { $txt_nav = array('Error'); header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">ERROR 404: <b>'._('Página inexistente').'</b></h1>'; }
 if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<h1 style="font-weight:normal;color:red;">ERROR: <b>'.escape(base64_decode($_GET['error'])).'</b></h1>'; }
-if (!isset($pol['config']['pais_des'])) { $pol['config']['pais_des'] = 'Plataforma cerrada'; }
+if (!isset($pol['config']['pais_des'])) { $pol['config']['pais_des'] = _('Plataforma cerrada'); }
 if (isset($txt_title)) { $txt_title .= ' | '.PAIS.' | VirtualPol'; }
-else { $txt_title = (isset($pol['config']['pais_des'])?$pol['config']['pais_des'].' de '.PAIS.' '.$kw.'| VirtualPol':PAIS.' '.$kw.'| VirtualPol'); }
+else { $txt_title = (isset($pol['config']['pais_des'])?$pol['config']['pais_des'].' '._('de').' '.PAIS.' '.$kw.'| VirtualPol':PAIS.' '.$kw.'| VirtualPol'); }
 
-// Genera info de elecciones.
-if ($pol['config']['elecciones_estado'] == 'normal') {
-	$txt_elec_time = timer(strtotime($pol['config']['elecciones_inicio']), true); 
-	$txt_elec = ''; 
-} elseif ($pol['config']['elecciones_estado'] == 'elecciones') {  
-	$elec_quedan = (strtotime($pol['config']['elecciones_inicio']) + $pol['config']['elecciones_duracion']);
-	switch ($pol['config']['elecciones']) {
-		case 'pres1': $txt_elec_time = timer(($elec_quedan - 86400), true); $txt_elec = ' <a href="/elecciones" style="color:red;font-weight:normal;">1&ordf; Vuelta, queda <b>'.$txt_elec_time.'</b></a> |';  break;
-		case 'pres2': $txt_elec_time = timer($elec_quedan, true); $txt_elec = ' <a href="/elecciones" style="color:red;font-weight:normal;">2&ordf; Vuelta, queda <b>'.$txt_elec_time.'</b></a> |'; break;
-		case 'parl': $txt_elec_time = timer($elec_quedan, true); $txt_elec = ' <a href="/elecciones" style="font-weight:normal;">Elecciones'.(ASAMBLEA?' a Coordinador':'').', queda <b>'.$txt_elec_time.'</b></a> |';  break;
-	}
-}
 
 // Tapiz de fondo (1400x100)
 if (isset($_GET['bg'])) { 
@@ -110,7 +98,7 @@ p_scroll = false;
 
 	<li id="menu-demo"<?=($txt_menu=='demo'?' class="menu-sel"':'')?>><a href="/votacion"><?=_('Democracia')?></a>
 		<ul>
-			<li><a href="/elecciones"><?=_('Elecciones')?><span class="md"><?=$txt_elec_time?></span></a></li>
+			<li><a href="/elecciones"><?=_('Elecciones')?></a></li>
 			<li><a href="/votacion"><b><?=_('Votaciones')?></b><span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
 			<li><a href="/cargos"><?=_('Cargos')?></a>
 				<ul>
@@ -186,7 +174,7 @@ if ((ECONOMIA) AND (substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa')) {
 <?php
 unset($txt_header);
 if (isset($pol['user_ID'])) {
-	echo '<span class="htxt"><b><a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(ECONOMIA&&$pol['estado']=='ciudadano'?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' |'.$txt_elec.' <a href="/accion.php?a=logout">Salir</a></b></span>';
+	echo '<span class="htxt"><b><a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(ECONOMIA&&$pol['estado']=='ciudadano'?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="/accion.php?a=logout">'._('Salir').'</a></b></span>';
 } else {
 	echo boton(_('Entrar'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), false, 'large').' &nbsp; '.boton(_('Crear ciudadano'), REGISTRAR.'?p='.PAIS, false, 'large blue');
 }
@@ -228,7 +216,7 @@ unset($txt);
 if (!isset($pol['user_ID'])) { 
 	echo '<a target="_blank" href="http://gonzo.teoriza.com" title="GONZO">Javier González</a> (<a target="_blank" href="http://www.teoriza.com" title="Blogs">Teoriza</a>, <a target="_blank" href="http://www.eventuis.com" title="Eventos">eventuis</a>, <a target="_blank" href="http://www.perfectcine.com" title="Cine">PerfectCine</a>)<br />'; 
 } else { 
-	echo boton('Reportar problema', 'https://github.com/JavierGonzalez/VirtualPol/issues/new', '¿Estás seguro de hacer un reporte a desarrollo?\n\nSolo reportar problemas tecnicos o del sistema.\nSé conciso y no olvides aportar datos.\n\n¡Gracias!', 'small pill grey').' &nbsp;'; 
+	echo boton(_('Reportar problema'), 'https://github.com/JavierGonzalez/VirtualPol/issues/new', '¿Estás seguro de hacer un reporte a desarrollo?\n\nSolo reportar problemas tecnicos o del sistema.\nSé conciso y no olvides aportar datos.\n\n¡Gracias!', 'small pill grey').' &nbsp;'; 
 	if ($pol['user_ID'] == 1) { echo num((microtime(true)-TIME_START)*1000).'ms '.num(memory_get_usage()/1000).'kb |'; } 
 }
 ?>

@@ -587,7 +587,7 @@ LIMIT 1");
 
 '.($r['tipo_voto']!='estandar'?'<p><em>* El tipo de voto de esta votación es múltiple o preferencial. Por razones tecnicas -provisionalmente- se muestra el campo "voto" en bruto.'.($r['tipo_voto']=='multiple'?' 0=En Blanco, 1=SI y 2=NO.':'').'</em></p>':'');
 
-if (substr($r['tipo_voto'], 1, 6) == 'puntos') {
+if (($r['tipo_voto'] == 'multiple') OR (substr($r['tipo_voto'], 1, 6) == 'puntos')) {
 	$txt .= '<p>Opciones de voto: ';
 	foreach ($respuestas AS $ID => $opcion) {
 		if ($opcion) { $txt .= $ID.'='.$opcion.', '; }

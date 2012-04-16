@@ -55,7 +55,7 @@ LIMIT 1000", $link);
 		$time = strtotime($r['time']);
 		if ($r['estado'] == 'end') { $n++; }
 		$txt .= '<tr>
-<td align="right" width="320"><b style="font-size:16px;">'.$r['pregunta'].'</b></td>
+<td align="right" width="320"><b style="font-size:16px;">'.($time>=strtotime('2012-04-05')?'<a href="/votacion/'.$r['ID'].'">'.$r['pregunta'].'</a>':$r['pregunta']).'</b></td>
 
 <td nowrap="nowrap">'.($r['estado']=='ok'?'<b>¡En curso!</b>':'Finalizada').'</td>
 

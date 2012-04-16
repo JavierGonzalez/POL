@@ -25,10 +25,12 @@ default:
 
 <form action="/accion.php?a=grupos&b=afiliarse" method="POST">
 
+<fieldset><legend>Grupos</legend>
+
 <table border="0">
 <tr>
 <th></th>
-<th>Nombre</th>
+<th></th>
 <th>Afiliados</th>
 <th>Foros asociados</th>
 <th align="right">ID</th>
@@ -57,7 +59,7 @@ default:
 </tr>';
 	}
 
-	$txt .= '</table>
+	$txt .= '</table></fieldset>
 
 <p>'.boton('Guardar afiliación', 'submit', false, 'blue').'</p>
 	

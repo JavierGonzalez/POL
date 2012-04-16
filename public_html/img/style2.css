@@ -135,8 +135,8 @@ h3 { font-size:18px; }
 #menu-comu.hover, #menu-comu .hover, #menu-comu.menu-sel { box-shadow:inset 8px 0 0 #FF6262; }
 #menu-info.hover, #menu-info .hover, #menu-info.menu-sel { box-shadow:inset 8px 0 0 #00DF00; }
 #menu-demo.hover, #menu-demo .hover, #menu-demo.menu-sel { box-shadow:inset 8px 0 0 #66BEFF; }
-#menu-econ.hover, #menu-econ .hover, #menu-econ.menu-sel { box-shadow:inset 8px 0 0 #FFFF51; }
-#menu-noti.hover, #menu-noti .hover { box-shadow:inset 8px 0 0 #DA7777; }
+#menu-econ.hover, #menu-econ .hover, #menu-econ.menu-sel { box-shadow:inset 8px 0 0 #DA7777; }
+#menu-noti.hover, #menu-noti .hover { box-shadow:inset 8px 0 0 #FFFF51; }
 
 
 #menu-noti ul li a { color:#CCC; overflow:hidden; }
@@ -218,7 +218,7 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 /*** CONTENIDO GENERAL ***/
 #vpc_actividad { cursor:pointer; }
 .votacion_desc_min {
-	max-height:180px;
+	max-height:220px;
 	overflow-y:auto;
 	/*box-shadow:inset -8px -8px 15px #FEFEFE;*/
 	border-bottom:1px dashed #DDD;

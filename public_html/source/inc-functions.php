@@ -1,5 +1,10 @@
 <?php
 
+// MySQL micro-framework v0.1
+function sql($q, $l=null) {global $link;return mysql_query($q, $link);}
+function r($q) {return mysql_fetch_assoc($q);}
+
+
 // ### NUCLEO ACCESO 3.0
 function nucleo_acceso($tipo, $valor='') {
 	global $_SESSION;
@@ -20,7 +25,7 @@ function nucleo_acceso($tipo, $valor='') {
 		case 'monedas': if ($_SESSION['pol']['pols'] >= $valor) { $rt = true; } break;
 		case 'autentificados': if ($_SESSION['pol']['dnie'] == 'true') { $rt = true; } break;
 		case 'supervisores_censo': if ($_SESSION['pol']['SC'] == 'true') { $rt = true; } break;
-		case 'antiguedad': if (($_SESSION['pol']['fecha_registro']) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($valor*86400)))) { $rt = true; } break;
+		case 'antiguedad': if ((isset($_SESSION['pol']['fecha_registro'])) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($valor*86400)))) { $rt = true; } break;
 		case 'print': 
 			if (ASAMBLEA) {	return array('privado'=>'Nick ...', 'excluir'=>'Nick ...', 'afiliado'=>'partido_ID', 'confianza'=>'0', 'cargo'=>'cargo_ID ...', 'grupos'=>'grupo_ID ...', 'nivel'=>'1', 'antiguedad'=>'365', 'autentificados'=>'', 'supervisores_censo'=>'', 'ciudadanos'=>'', 'ciudadanos_global'=>'', 'anonimos'=>''); } 
 			else { return array('privado'=>'Nick ...', 'excluir'=>'Nick ...', 'afiliado'=>'partido_ID', 'confianza'=>'0', 'cargo'=>'cargo_ID ...', 'grupos'=>'grupo_ID ...', 'nivel'=>'1', 'antiguedad'=>'365', 'monedas'=>'0', 'autentificados'=>'', 'supervisores_censo'=>'', 'ciudadanos'=>'', 'ciudadanos_global'=>'', 'anonimos'=>''); }
@@ -34,19 +39,48 @@ function verbalizar_acceso($tipo, $valor='') {
 	switch ($tipo) { // ¿Quien tiene acceso?
 		case 'internet': case 'anonimos': $t = 'todo el mundo (Internet)'; break;
 		case 'ciudadanos_global': $t = 'todos los ciudadanos de VirtualPol'; break;
-		case 'ciudadanos': $t = 'todos los ciudadanos de '.($valor==''?'la plataforma '.PAIS:' las plataformas: '.$valor); break;
-		case 'excluir': $t = 'todos los ciudadanos excepto: '.$valor; break;
+		case 'ciudadanos': $t = 'todos los ciudadanos de '.($valor==''?'la plataforma '.PAIS:' las plataformas: <em>'.$valor.'</em>'); break;
+		case 'excluir': $t = 'todos los ciudadanos excepto: <em>'.$valor.'</em>'; break;
 		case 'privado': $t = 'los ciudadanos: '.$valor; break;
-		case 'afiliado': $t = 'ciudadanos de '.PAIS.' afiliados al partido: #'.$valor.' (<a href="/partidos">Ver partidos</a>)'; break;
 		case 'confianza': $t = 'ciudadanos con confianza mayor o igual a '.confianza($valor).' (<a href="/censo/confianza">Ver confianza</a>)'; break;
-		case 'nivel': $t = 'ciudadanos de '.PAIS.' con nivel '.$valor.' o mayor (<a href="/cargos">Ver cargos</a>)'; break;
-		case 'cargo': $t = 'ciudadanos de '.PAIS.' con cargo: '.$valor.' (<a href="/cargos">Ver cargos</a>)'; break;
-		case 'grupos': $t = 'ciudadanos de '.PAIS.' afiliados al grupo: '.$valor.' (<a href="/grupos">Ver grupos</a>)'; break;
-		case 'examenes': $t = 'ciudadanos de '.PAIS.' con los exámenes aprobados: '.$valor.' (<a href="/examenes">Ver exámenes</a>)'; break;
-		case 'monedas': $t = 'ciudadanos de '.PAIS.' con al menos '.$valor.' monedas'; break;
+		case 'nivel': $t = 'ciudadanos de '.PAIS.' con nivel <em>'.$valor.'</em> o mayor (<a href="/cargos">Ver cargos</a>)'; break;
+		
+		case 'examenes':
+			global $link;
+			$val = array();
+			$result = sql("SELECT titulo AS nom FROM examenes WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")", $link);
+			while($r = r($result)) { $val[] = $r['nom']; }
+			$t = 'ciudadanos de '.PAIS.' con los exámenes aprobados: <a href="/examenes">'.implode(', ', $val).'</a>';
+			break;
+
+		case 'cargo':
+			global $link;
+			$val = array();
+			$result = sql("SELECT cargo_ID, nombre AS nom FROM cargos WHERE pais = '".PAIS."' AND cargo_ID IN (".implode(',', explode(' ', $valor)).")", $link);
+			while($r = r($result)) { $val[] = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" title="'.$r['nom'].'" />'.$r['nom']; }
+			$t = 'ciudadanos de '.PAIS.' con cargo: '.implode(', ', $val).' (<a href="/cargos">Ver cargos</a>)';
+			break;
+
+		case 'afiliado':
+			global $link;
+			$val = array();
+			$result = sql("SELECT siglas AS nom FROM partidos WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")", $link);
+			while($r = r($result)) { $val[] = $r['nom']; }
+			$t = 'ciudadanos de '.PAIS.' afiliados al partido <a href="/partidos">'.implode('', $val).'</a>';
+			break;
+
+		case 'grupos':
+			global $link;
+			$val = array();
+			$result = sql("SELECT nombre AS nom FROM grupos WHERE pais = '".PAIS."' AND grupo_ID IN (".implode(',', explode(' ', $valor)).")", $link);
+			while($r = r($result)) { $val[] = $r['nom']; }
+			$t = 'ciudadanos de '.PAIS.' afiliados al grupo: <a href="/grupos">'.implode(', ', $val).'</a>';
+			break;
+		
+		case 'monedas': $t = 'ciudadanos de '.PAIS.' con al menos <em>'.$valor.'</em> monedas'; break;
 		case 'autentificados': $t = 'ciudadanos autentificados'; break;
 		case 'supervisores_censo': $t = 'Supervisores del Censo'; break;
-		case 'antiguedad': $t = 'ciudadanos con al menos '.$valor.' dias de antigüedad';  break;
+		case 'antiguedad': $t = 'ciudadanos con al menos <em>'.$valor.'</em> dias de antigüedad';  break;
 	}
 	return $t;
 }
@@ -61,11 +95,11 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 
 				// NOTIFICACION VOTACIONES
 				$pol['config']['info_consultas'] = 0;
-				$result = mysql_query("SELECT v.ID, pais, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
+				$result = sql("SELECT v.ID, pais, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
 				FROM votacion `v`
 				LEFT OUTER JOIN votacion_votos `vv` ON v.ID = vv.ref_ID AND vv.user_ID = '".$pol['user_ID']."'
 				WHERE v.estado = 'ok' AND (v.pais = '".PAIS."' OR acceso_votar IN ('supervisores_censo', 'privado')) AND vv.ID IS null", $link);
-				while($r = mysql_fetch_array($result)) {
+				while($r = r($result)) {
 					if ((nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) { 
 						$pol['config']['info_consultas']++;
 						$nuevos_num++;
@@ -75,8 +109,8 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 				}
 
 				// NOTIFICACIONES
-				$result = mysql_query("SELECT noti_ID, visto, texto, url, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 7", $link);
-				while($r = mysql_fetch_array($result)) {
+				$result = sql("SELECT noti_ID, visto, texto, url, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 7", $link);
+				while($r = r($result)) {
 					$total_num += $r['num'];
 					if ($r['visto'] == 'false') { $nuevos_num += $r['num']; }
 					$t .= '<li><a href="'.($r['visto']=='false'?'/?noti='.$r['noti_ID']:$r['url']).'"'.($r['visto']=='false'?' class="noti-nuevo"':'').(substr($r['url'], 0, 4)=='http'?' target="_blank"':'').'>'.$r['texto'].($r['num']>1?'<span class="md">'.$r['num'].'</span>':'').'</a></li>';
@@ -88,17 +122,17 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 
 
 		case 'visto': 
-			$result = mysql_query("SELECT noti_ID, visto, texto, url FROM notificaciones WHERE noti_ID = '".$texto."' LIMIT 1", $link);
-			while($r = mysql_fetch_array($result)) {
+			$result = sql("SELECT noti_ID, visto, texto, url FROM notificaciones WHERE noti_ID = '".$texto."' LIMIT 1", $link);
+			while($r = r($result)) {
 				if ($r['visto'] == 'false') {
-					mysql_query("UPDATE notificaciones SET visto = 'true' WHERE visto = 'false' AND user_ID = '".$pol['user_ID']."' AND texto = '".$r['texto']."'", $link); 
+					sql("UPDATE notificaciones SET visto = 'true' WHERE visto = 'false' AND user_ID = '".$pol['user_ID']."' AND texto = '".$r['texto']."'", $link); 
 				}
 				redirect($r['url']);
 			}
 			break;
 
 		default: 
-			mysql_query("INSERT INTO notificaciones (user_ID, texto, url, emisor) VALUES ('".$user_ID."', '".$texto."', '".$url."', '".$emisor."')", $link);
+			sql("INSERT INTO notificaciones (user_ID, texto, url, emisor) VALUES ('".$user_ID."', '".$texto."', '".$url."', '".$emisor."')", $link);
 			return true;
 	}
 }
@@ -164,8 +198,8 @@ function redirect($url, $r301=true) {
 
 function get_supervisores_del_censo() {
 	global $link;
-	$result = mysql_query("SELECT ID, nick FROM users WHERE SC = 'true'", $link);
-	while($r = mysql_fetch_array($result)){ $supervisores_del_censo[$r['ID']] = $r['nick']; }
+	$result = sql("SELECT ID, nick FROM users WHERE SC = 'true'", $link);
+	while($r = r($result)){ $supervisores_del_censo[$r['ID']] = $r['nick']; }
 	return $supervisores_del_censo; // Devuelve un array con los Supervisores del Censo activos. Formato: $array[user_ID] = nick;
 }
 
@@ -225,12 +259,12 @@ function form_select_nivel($nivel_select='') {
 	global $pol, $link;
 	$f .= '<select name="nivel"><option value="1">&nbsp;1 &nbsp; Ciudadano</option>';
 	if ($pol['nivel'] > 1) {
-		$result = mysql_query("
+		$result = sql("
 SELECT nombre, nivel 
 FROM cargos 
 WHERE pais = '".PAIS."' AND asigna != '-1' AND nivel <= '" . $pol['nivel'] . "' 
 ORDER BY nivel ASC", $link);
-		while($row = mysql_fetch_array($result)){
+		while($row = r($result)){
 			if ($nivel_select == $row['nivel']) { $selected = ' selected="selected"'; } else { $selected = ''; }
 			$f .= '<option value="' . $row['nivel'] . '"' . $selected . '>' . $row['nivel'] . ' &nbsp; ' . $row['nombre'] . '</option>' . "\n";
 		}
@@ -242,12 +276,12 @@ ORDER BY nivel ASC", $link);
 function form_select_cat($tipo='docs', $cat_now='') {
 	global $pol, $link;
 	$f .= '<select name="cat">';
-	$result = mysql_query("
+	$result = sql("
 SELECT ID, nombre, nivel
 FROM cat
 WHERE pais = '".PAIS."' AND tipo = '" . $tipo . "'
 ORDER BY orden ASC", $link);
-	while($row = mysql_fetch_array($result)){
+	while($row = r($result)){
 		if ($cat_now == $row['ID']) { 
 			$selected = ' selected="selected"'; 
 		} elseif ($pol['nivel'] < $row['nivel']) {
@@ -268,11 +302,11 @@ function paginacion($type, $url, $ID, $num_ahora=null, $num_total=null, $num='10
 	if (!$num_total) {
 		switch ($type) {
 			case 'subforo': 
-				$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE ID = '" . $ID . "'", $link));
+				$result = mysql_fetch_row(sql("SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE ID = '" . $ID . "'", $link));
 				$num_total = $result[0];
 				break;
 			case 'eventos': 
-				$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM log WHERE pais = '".PAIS."'", $link));
+				$result = mysql_fetch_row(sql("SELECT COUNT(ID) FROM log WHERE pais = '".PAIS."'", $link));
 				$num_total = $result[0];
 				break;
 		}

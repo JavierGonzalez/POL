@@ -2,7 +2,7 @@
 define('TIME_START', microtime(true));
 
 include('../config.php');
-include(RAIZ.'source/class-db.php');
+//include(RAIZ.'source/class-db.php');
 
 //INIT
 $date = date('Y-m-d H:i:s');
@@ -19,8 +19,8 @@ if (isset($_COOKIE['teorizauser'])) {
 	session_start();
 	
 	if (!isset($_SESSION['pol'])) { //NO existe sesion
-		$result = mysql_query("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado, dnie, voto_confianza FROM users WHERE nick = '" .$_COOKIE['teorizauser']."' LIMIT 1", $link);
-		while ($r = mysql_fetch_array($result)) {
+		$result = sql("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado, dnie, voto_confianza FROM users WHERE nick = '" .$_COOKIE['teorizauser']."' LIMIT 1");
+		while ($r = r($result)) {
 			if (md5(CLAVE.$r['pass']) == $_COOKIE['teorizapass']) {
 				$session_new = true;
 				$_SESSION['pol']['nick'] = $r['nick'];
@@ -44,9 +44,9 @@ if (isset($_COOKIE['teorizauser'])) {
 if (isset($pol['user_ID'])) {
 
 	// LOAD: $pol
-	$result = mysql_unbuffered_query("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, cargos, examenes, fecha_legal, dnie, SC, IP, grupos
-FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) {
+	$result = sql("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, cargos, examenes, fecha_legal, dnie, SC, IP, grupos
+FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1");
+	while($r = r($result)) {
 		$pol['pols'] = $r['pols'];
 		$pol['pais'] = $r['pais'];
 		$pol['estado'] = $r['estado'];
@@ -95,15 +95,15 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 			}
 			if ($fecha_init != '0000-00-00 00:00:00') { $update .= ", online = online + " . (strtotime($fecha_last) - strtotime($fecha_init)); }
 		}
-		mysql_query("UPDATE LOW_PRIORITY users SET paginas = paginas + 1, fecha_last = '".$date."'".$update." WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		sql("UPDATE LOW_PRIORITY users SET paginas = paginas + 1, fecha_last = '".$date."'".$update." WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	} else { unset($pol); session_unset(); session_destroy(); } // impide el acceso a expulsados
 
 
 	// EXPULSADO?
-	$result = mysql_query("SELECT expire FROM kicks WHERE pais = '".PAIS."' AND estado = 'activo' AND (user_ID = '".$pol['user_ID']."' OR (IP != '0' AND IP = '" . $IP . "')) LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){ 
+	$result = sql("SELECT expire FROM kicks WHERE pais = '".PAIS."' AND estado = 'activo' AND (user_ID = '".$pol['user_ID']."' OR (IP != '0' AND IP = '" . $IP . "')) LIMIT 1");
+	while($r = r($result)){ 
 		if ($r['expire'] < $date) { // DESBANEAR!
-			mysql_query("UPDATE LOW_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'", $link); 
+			sql("UPDATE LOW_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'"); 
 		} else { // BANEADO 
 			$pol['estado'] = 'kickeado';
 		}

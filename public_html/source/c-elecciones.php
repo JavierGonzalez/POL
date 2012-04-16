@@ -18,8 +18,8 @@ $txt .= '
 	$result = mysql_query("SELECT * 
 FROM cargos
 WHERE pais = '".PAIS."' AND elecciones IS NOT NULL
-ORDER BY elecciones DESC
-LIMIT 50", $link);
+ORDER BY elecciones ASC
+LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)) {
 		$time_start = strtotime($r['elecciones']);
 		$time_anterior = strtotime($r['elecciones'])-($r['elecciones_cada']*24*60*60);
@@ -53,7 +53,7 @@ LIMIT 1000", $link);
 	while($r = mysql_fetch_array($result)) {
 		$time_expire = strtotime($r['time_expire']);
 		$time = strtotime($r['time']);
-
+		if ($r['estado'] == 'end') { $n++; }
 		$txt .= '<tr>
 <td align="right" width="320"><b style="font-size:16px;">'.$r['pregunta'].'</b></td>
 
@@ -70,7 +70,7 @@ LIMIT 1000", $link);
 <td>'.($r['estado']=='end'?'<button class="small blue" onclick="$(\'#escrutinio_'.$r['ID'].'\').toggle(\'slow\');">Ver resultados</button>':'').'</td>
 
 </tr>
-<tr id="escrutinio_'.$r['ID'].'" style="display:none;">
+<tr id="escrutinio_'.$r['ID'].'"'.($n==1?'':' style="display:none;"').'>
 <td colspan="7">';
 
 if ($r['estado'] == 'end') {

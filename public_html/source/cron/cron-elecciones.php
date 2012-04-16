@@ -6,7 +6,7 @@ $result = mysql_query("SELECT * FROM cargos WHERE pais = '".PAIS."' AND eleccion
 while($r = mysql_fetch_array($result)) {
 	
 	// Fija fecha de proximas elecciones (las siguientes)
-	mysql_query("UPDATE cargos SET elecciones = '".date('Y-m-d H:i:s', time()+($r['elecciones_cada']*24*60*60))."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1", $link);
+	mysql_query("UPDATE cargos SET elecciones = '".date('Y-m-d 20:00:00', time()+($r['elecciones_cada']*24*60*60))."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1", $link);
 
 	// Obtiene numero de elecciones de este cargo (para numerarlas en orden)
 	$result2 = mysql_query("SELECT COUNT(*) AS votaciones_num FROM votacion WHERE pais = '".PAIS."' AND tipo = 'elecciones' AND ejecutar LIKE 'elecciones|".$r['cargo_ID']."|%'", $link);

@@ -132,12 +132,12 @@ Pueden editar: '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribi
 <table border="0" cellspacing="0" cellpadding="4" class="pol_table" width="100%">
 <tr>
 <th></th>
+<th colspan="2">Publicado</th>
 <th>Lectura</th>
 <th>Escritura</th>
-<th align="right">Publicado</th>
 </tr>';
 		
-		$result2 = mysql_query("SELECT title, url, time, estado, time_last, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir
+		$result2 = mysql_query("SELECT title, url, time, estado, time_last, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir, version
 FROM docs
 WHERE estado = 'ok' AND cat_ID = '".$r['ID']."' AND pais = '".PAIS."'
 ORDER BY title ASC", $link);
@@ -147,11 +147,14 @@ ORDER BY title ASC", $link);
 				$txt .= '<tr>
 <td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])||nucleo_acceso($vp['acceso']['control_gobierno'])?' '.boton('Editar', '/doc/'.$r2['url'].'/editar', false, 'small').' ':'').'<a href="/doc/'.$r2['url'].'">'.$r2['title'].'</a></td>
 
-<td width="90" valign="top" style="background:#5CB3FF;">'.($r2['acceso_cfg_leer']?'<acronym title="['.$r2['acceso_cfg_leer'].']">':'').ucfirst($r2['acceso_leer']).($r2['acceso_cfg_leer']?'</acronym>':'').'</td>
-
-<td width="90" valign="top" style="background:#F97E7B;">'.($r2['acceso_cfg_escribir']?'<acronym title="['.$r2['acceso_cfg_escribir'].']">':'').ucfirst($r2['acceso_escribir']).($r2['acceso_cfg_escribir']?'</acronym>':'').'</td>
-
 <td width="80" align="right" nowrap="nowrap">'.timer($r2['time_last']).'</td>
+
+<td width="50" align="right" class="gris">'.$r2['version'].'v</td>
+
+<td width="135" valign="top" style="background:#5CB3FF;">'.($r2['acceso_cfg_leer']?'<acronym title="['.$r2['acceso_cfg_leer'].']">':'').ucfirst($r2['acceso_leer']).($r2['acceso_cfg_leer']?'</acronym>':'').'</td>
+
+<td width="135" valign="top" style="background:#F97E7B;">'.($r2['acceso_cfg_escribir']?'<acronym title="['.$r2['acceso_cfg_escribir'].']">':'').ucfirst($r2['acceso_escribir']).($r2['acceso_cfg_escribir']?'</acronym>':'').'</td>
+
 </tr>'."\n";
 			}
 

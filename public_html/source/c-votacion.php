@@ -5,12 +5,12 @@ $votaciones_tipo = array('sondeo', 'referendum', 'parlamento', 'cargo', 'eleccio
 
 
 // FINALIZAR VOTACIONES
-$result = mysql_query("SELECT ID, tipo, tipo_voto, num, pregunta, respuestas, ejecutar, privacidad, acceso_ver FROM votacion 
-WHERE estado = 'ok' AND pais = '".PAIS."' AND (time_expire <= '".$date."' OR ((votos_expire != 0) AND (num >= votos_expire)))", $link);
-while($r = mysql_fetch_array($result)){
+$result = sql("SELECT ID, tipo, tipo_voto, num, pregunta, respuestas, ejecutar, privacidad, acceso_ver FROM votacion 
+WHERE estado = 'ok' AND pais = '".PAIS."' AND (time_expire <= '".$date."' OR ((votos_expire != 0) AND (num >= votos_expire)))");
+while($r = r($result)){
 	
 	// Finaliza la votación
-	mysql_query("UPDATE votacion SET estado = 'end', time_expire = '".$date."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+	sql("UPDATE votacion SET estado = 'end', time_expire = '".$date."' WHERE ID = '".$r['ID']."' LIMIT 1");
 
 	include_once('inc-functions-accion.php');
 
@@ -21,8 +21,8 @@ while($r = mysql_fetch_array($result)){
 	if ($r['ejecutar'] != '') { // EJECUTAR ACCIONES
 
 		$validez_voto['true'] = 0; $validez_voto['false'] = 0; $voto[0] = 0; $voto[1] = 0; $voto[2] = 0; $voto_preferencial = array();
-		$result2 = mysql_query("SELECT validez, voto FROM votacion_votos WHERE ref_ID = ".$r['ID']."", $link);
-		while($r2 = mysql_fetch_array($result2)) {
+		$result2 = sql("SELECT validez, voto FROM votacion_votos WHERE ref_ID = ".$r['ID']."");
+		while($r2 = r($result2)) {
 			$validez_voto[$r2['validez']]++;
 			if ($r['tipo_voto'] == 'estandar') {
 				$voto[$r2['voto']]++;
@@ -53,32 +53,32 @@ while($r = mysql_fetch_array($result)){
 				case 'elecciones': // $r['ejecutar'] = elecciones|$cargo_ID|$numero_a_asignar
 					
 					// Quita todos los cargos de las elecciones (reset)
-					$result2 = mysql_query("SELECT user_ID FROM cargos_users WHERE cargo_ID = '".$cargo_ID."' AND pais = '".PAIS."' AND cargo = 'true'", $link);
-					while($r2 = mysql_fetch_array($result2)) { cargo_del($cargo_ID, $r2['user_ID'], true, true); }
+					$result2 = sql("SELECT user_ID FROM cargos_users WHERE cargo_ID = '".$cargo_ID."' AND pais = '".PAIS."' AND cargo = 'true'");
+					while($r2 = r($result2)) { cargo_del($cargo_ID, $r2['user_ID'], true, true); }
 
 					// Reset campo temporal (más simple que crear tablas temporales)
-					mysql_query("UPDATE users SET temp = NULL", $link);
+					sql("UPDATE users SET temp = NULL");
 					
 					// Añade los resultados de puntos en el campo temporal
 					$respuestas = explode('|', $r['respuestas']);
 					foreach ($voto_preferencial AS $opcion_ID => $puntos) {
 						if ($opcion_ID != 0) { // Ignora "En blanco" por ser no computable
-							mysql_query("UPDATE users SET temp = '".$puntos."' WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND nick = '".$respuestas[$opcion_ID]."' LIMIT 1", $link);
+							sql("UPDATE users SET temp = '".$puntos."' WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND nick = '".$respuestas[$opcion_ID]."' LIMIT 1");
 							$votacion_preferencial_nick[$respuestas[$opcion_ID]] = $puntos;
 						}
 					}
 
 					// Asigna ordenando con mysql teniendo en cuenta la antiguedad para desempatar
 					$n = 0;
-					$result2 = mysql_query("SELECT ID, nick FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND temp IS NOT NULL ORDER BY temp DESC, fecha_registro ASC, voto_confianza DESC LIMIT 50", $link);
-					while($r2 = mysql_fetch_array($result2)) {
+					$result2 = sql("SELECT ID, nick FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND temp IS NOT NULL ORDER BY temp DESC, fecha_registro ASC, voto_confianza DESC LIMIT 50");
+					while($r2 = r($result2)) {
 						$n++;
 						if ($n <= explodear('|', $r['ejecutar'], 2)) { cargo_add($cargo_ID, $r2['ID'], true, true); }
 						$guardar[] = $r2['nick'].'.'.$votacion_preferencial_nick[$r2['nick']];
 					}
 					
 					// Guarda escrutinio
-					mysql_query("UPDATE votacion SET ejecutar = '".$r['ejecutar']."|".implode(':', $guardar)."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+					sql("UPDATE votacion SET ejecutar = '".$r['ejecutar']."|".implode(':', $guardar)."' WHERE ID = '".$r['ID']."' LIMIT 1");
 					
 					break;
 			}
@@ -93,9 +93,9 @@ while($r = mysql_fetch_array($result)){
 	}
 
 	// Actualiza contador de votaciones activas
-	$result2 = mysql_query("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_ver = 'anonimos'", $link);
-	while($r2 = mysql_fetch_array($result2)) {
-		mysql_query("UPDATE config SET valor = '".$r2['num']."' WHERE pais = '".PAIS."' AND dato = 'info_consultas' LIMIT 1", $link);
+	$result2 = sql("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_ver = 'anonimos'");
+	while($r2 = r($result2)) {
+		sql("UPDATE config SET valor = '".$r2['num']."' WHERE pais = '".PAIS."' AND dato = 'info_consultas' LIMIT 1");
 	}
 }
 // FIN DE FINALIZAR VOTACIONES
@@ -121,8 +121,8 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 
 	// EDITAR
 	if (is_numeric($_GET['b'])) {
-		$result = mysql_query("SELECT * FROM votacion WHERE estado = 'borrador' AND ID = '".$_GET['b']."' LIMIT 1", $link);
-		$edit = mysql_fetch_array($result);
+		$result = sql("SELECT * FROM votacion WHERE estado = 'borrador' AND ID = '".$_GET['b']."' LIMIT 1");
+		$edit = r($result);
 	}
 
 
@@ -185,8 +185,8 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 <select name="cargo">';
 
 	$sel['cargo'][explodear('|', $edit['ejecutar'], 0)] = ' selected="selected"';
-	$result = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
-	while($r = mysql_fetch_array($result)) { $txt .= '<option value="'.$r['cargo_ID'].'"'.$sel['cargo'][$r['cargo_ID']].'>'.$r['nombre'].'</option>'; }
+	$result = sql("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC");
+	while($r = r($result)) { $txt .= '<option value="'.$r['cargo_ID'].'"'.$sel['cargo'][$r['cargo_ID']].'>'.$r['nombre'].'</option>'; }
 
 	$txt .= '
 </select><br />
@@ -359,13 +359,13 @@ function opcion_nueva() {
 	
 	$txt .= '<table border="0" cellpadding="1" cellspacing="0">';
 
-	$result = mysql_query("SELECT ID, duracion, tipo_voto, pregunta, time, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
+	$result = sql("SELECT ID, duracion, tipo_voto, pregunta, time, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
 (SELECT nick FROM users WHERE ID = votacion.user_ID LIMIT 1) AS nick
 FROM votacion
 WHERE estado = 'borrador' AND pais = '".PAIS."'
 ORDER BY time DESC
-LIMIT 500", $link);
-	while($r = mysql_fetch_array($result)) {
+LIMIT 500");
+	while($r = r($result)) {
 
 		if (nucleo_acceso($vp['acceso'][$r['tipo']])) {
 			$boton_borrar = boton('X', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Estás seguro de querer ELIMINAR este borrador de votación?', 'small');
@@ -389,7 +389,7 @@ Ver: <em title="'.$r['acceso_cfg_ver'].'">'.$r['acceso_ver'].'</em>, votar: <em 
 
 } elseif ($_GET['a']) { // VER VOTACION
 
-	$result = mysql_query("SELECT *,
+	$result = sql("SELECT *,
 (SELECT nick FROM users WHERE ID = votacion.user_ID LIMIT 1) AS nick, 
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado,
 (SELECT voto FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado,
@@ -398,8 +398,8 @@ Ver: <em title="'.$r['acceso_cfg_ver'].'">'.$r['acceso_ver'].'</em>, votar: <em 
 (SELECT comprobante FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS comprobante
 FROM votacion
 WHERE ID = '".$_GET['a']."' AND pais = '".PAIS."'
-LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) {
+LIMIT 1");
+	while($r = r($result)) {
 
 		if ((!nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver'])) AND ($r['estado'] != 'borrador')) { 
 			$txt .= '<p style="color:red;">Esta votación es privada. No tienes acceso para ver su contenido o resultado.</p>'; 
@@ -566,14 +566,14 @@ LIMIT 1", $link);
 </table>
 </fieldset>';
 
-			$result2 = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
-			while($r2 = mysql_fetch_array($result2)) { $comentarios_num = $r2['num']; }
+			$result2 = sql("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
+			while($r2 = r($result2)) { $comentarios_num = $r2['num']; }
 
 			$txt .= '<fieldset><legend>Comentarios adjuntos al voto ('.($r['estado']=='end'?$comentarios_num.' comentarios &nbsp; '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
 			if (nucleo_acceso('ciudadanos_global')) {
 				if ($r['estado'] == 'end') { 
-					$result2 = mysql_query("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''", $link);
-					while($r2 = mysql_fetch_array($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
+					$result2 = sql("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
+					while($r2 = r($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
 				} else { $txt .= '<p style="color:red;">Los comentarios estarán visibles al finalizar la votación.</p>'; }
 			} else { $txt .= '<p style="color:red;">Para ver los comentarios debes ser ciudadano.</p>'; }
 			$txt .= '</fieldset>';
@@ -614,10 +614,10 @@ $txt .= '
 				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>Tienes que ser ciudadano para ver la tabla de comprobantes.</b></td></tr>';
 			} else if (($r['estado'] == 'end') AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 				$contador_votos = 0;
-				$result2 = mysql_query("SELECT user_ID, voto, validez, comprobante, mensaje,
+				$result2 = mysql_unbuffered_query("SELECT user_ID, voto, validez, comprobante, mensaje,
 (SELECT nick FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS nick
 FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".($r['tipo_voto']=='estandar'?" ORDER BY voto ASC":""), $link);
-				while($r2 = mysql_fetch_array($result2)) { 
+				while($r2 = r($result2)) { 
 					$contador_votos++; 
 					if ($r2['user_ID'] != 0) { $txt_votantes[] = ($r2['nick']?$r2['nick']:'&dagger;'); }
 					$txt .= '<tr id="'.$r2['comprobante'].'">
@@ -643,7 +643,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 			$txt .= '
 <fieldset><legend>Votación</legend>
 
-<div class="rich'.($r['estado']=='end'?' votacion_desc_min':'').'">
+<div class="rich'.($r['estado']=='end'||isset($r['ha_votado'])?' votacion_desc_min':'').'">
 <h1>'.$r['pregunta'].'</h1>
 '.$r['descripcion'].'
 '.(substr($r['debate_url'], 0, 4)=='http'?'<hr /><p><b>Debate sobre esta votación: <a href="'.$r['debate_url'].'">aquí</a>.</b></p>':'').'
@@ -688,8 +688,8 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				$escrutinio['validez']['true'] = 0; $escrutinio['validez']['false'] = 0;
 				$puntos_total = ($r['tipo_voto']=='estandar'?$votos_total:0);
 
-				$result2 = mysql_query("SELECT voto, validez, autentificado, mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."'", $link);
-				while($r2 = mysql_fetch_array($result2)) {
+				$result2 = sql("SELECT voto, validez, autentificado, mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."'");
+				while($r2 = r($result2)) {
 					
 					switch ($r['tipo_voto']) {
 
@@ -945,15 +945,15 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 			// Añade tabla de escrutinio publico si es votacion tipo parlamento.
 			if ($r['tipo'] == 'parlamento') {
 				$txt .= '<table border="0" cellpadding="0" cellspacing="3"><tr><th>Diputado</th><th></th><th colspan="2">Voto</th><th>Mensaje</th></tr>';
-				$result2 = mysql_query("SELECT user_ID,
+				$result2 = sql("SELECT user_ID,
 (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick,
 (SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS siglas,
 (SELECT voto FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = cargos_users.user_ID LIMIT 1) AS ha_votado,
 (SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = cargos_users.user_ID LIMIT 1) AS ha_mensaje
 FROM cargos_users
 WHERE pais = '".PAIS."' AND cargo = 'true' AND cargo_ID = '6'
-ORDER BY siglas ASC", $link);
-				while($r2 = mysql_fetch_array($result2)) {
+ORDER BY siglas ASC");
+				while($r2 = r($result2)) {
 					if ($r2['ha_votado'] != null) { $ha_votado = ' style="background:blue;"';
 					} else { $ha_votado = ' style="background:red;"'; }
 					$txt .= '<tr><td><img src="'.IMG.'cargos/6.gif" /> <b>' . crear_link($r2['nick']) . '</b></td><td><b>' . crear_link($r2['siglas'], 'partido') . '</b></td><td' . $ha_votado . '></td><td><b>' . $respuestas[$r2['ha_votado']]  . '</b></td><td style="color:#555;font-size:12px;" class="rich">'.$r2['ha_mensaje'].'</td></tr>';
@@ -967,11 +967,11 @@ ORDER BY siglas ASC", $link);
 
 
 	// Calcular votos por hora
-	$result = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos WHERE time >= '".date('Y-m-d H:i:s', time() - 60*60*2)."'", $link);
-	while($r = mysql_fetch_array($result)) { $votos_por_hora = num($r['num']/2); }
+	$result = sql("SELECT COUNT(*) AS num FROM votacion_votos WHERE time >= '".date('Y-m-d H:i:s', time() - 60*60*2)."'");
+	while($r = r($result)) { $votos_por_hora = num($r['num']/2); }
 
-	$result = mysql_query("SELECT COUNT(*) AS num FROM votacion WHERE estado = 'borrador' AND pais = '".PAIS."'", $link);
-	while($r = mysql_fetch_array($result)) { $borradores_num = $r['num']; }
+	$result = sql("SELECT COUNT(*) AS num FROM votacion WHERE estado = 'borrador' AND pais = '".PAIS."'");
+	while($r = r($result)) { $borradores_num = $r['num']; }
 
 	$txt_title = 'Votaciones';
 	$txt_nav = array('/votacion'=>'Votaciones');
@@ -991,13 +991,13 @@ ORDER BY siglas ASC", $link);
 </tr>';
 	$mostrar_separacion = true;
 	
-	$result = mysql_query("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
+	$result = sql("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS ha_votado
 FROM votacion
 WHERE estado = 'ok' AND pais = '".PAIS."'
 ORDER BY time_expire ASC
-LIMIT 500", $link);
-	while($r = mysql_fetch_array($result)) {
+LIMIT 500");
+	while($r = r($result)) {
 		$time_expire = strtotime($r['time_expire']);
 		$time = strtotime($r['time']);
 
@@ -1057,12 +1057,12 @@ $txt .= '<fieldset><legend>Finalizadas</legend>
 <table border="0" cellpadding="1" cellspacing="0">
 ';
 	$mostrar_separacion = true;
-	$result = mysql_query("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver
+	$result = sql("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver
 FROM votacion
 WHERE estado = 'end' AND pais = '".PAIS."'
 ORDER BY time_expire DESC
-LIMIT 500", $link);
-	while($r = mysql_fetch_array($result)) {
+LIMIT 500");
+	while($r = r($result)) {
 		$time_expire = strtotime($r['time_expire']);
 		
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {

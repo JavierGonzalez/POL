@@ -21,8 +21,8 @@ define('DOMAIN', 'virtualpol.com');
 function acceso_check($chat_ID, $ac=null) {
 	global $link;
 	if (isset($ac)) { $check = array($ac); } else { $check = array('leer','escribir','escribir_ex'); }
-	$result = mysql_query("SELECT HIGH_PRIORITY acceso_leer, acceso_escribir, acceso_escribir_ex, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_ex, pais FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
-	while ($r = mysql_fetch_array($result)) { 
+	$result = mysql_unbuffered_query("SELECT HIGH_PRIORITY acceso_leer, acceso_escribir, acceso_escribir_ex, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_ex, pais FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1");
+	while ($r = r($result)) { 
 		foreach ($check AS $a) { $acceso[$a] = nucleo_acceso($r['acceso_'.$a], $r['acceso_cfg_'.$a]); }
 	}
 	if (isset($ac)) { return $acceso[$ac]; } else { return $acceso; }
@@ -40,13 +40,12 @@ function chat_refresh($chat_ID, $msg_ID=0) {
 
 	if (acceso_check($chat_ID, 'leer') === true) { // Permite leer  
 		$res = mysql_unbuffered_query("SELECT HIGH_PRIORITY * FROM chats_msg 
-WHERE chat_ID = '".$chat_ID."' AND 
-msg_ID > '".$msg_ID."' AND 
-(user_ID = '0' OR user_ID = '".$_SESSION['pol']['user_ID']."' OR (tipo = 'p' AND nick LIKE '".$_SESSION['pol']['nick']."&rarr;%')) 
-ORDER BY msg_ID DESC LIMIT 50", $link);
-		while ($r = @mysql_fetch_array($res)) { 
-			if ($r['tipo'] != 'm') { $r['cargo'] = $r['tipo']; }
-			$t = $r['msg_ID'].' '.$r['cargo'].' '.substr($r['time'], 11, 5).' '.$r['nick'].' '.$r['msg']."\n".$t; 
+WHERE chat_ID = ".$chat_ID." AND 
+msg_ID > ".$msg_ID." AND 
+(user_ID = '0' OR user_ID = ".$_SESSION['pol']['user_ID']." OR (tipo = 'p' AND nick LIKE '".$_SESSION['pol']['nick']."&rarr;%')) 
+ORDER BY msg_ID DESC LIMIT 50");
+		while ($r = r($res)) { 
+			$t = $r['msg_ID'].' '.($r['tipo']!='m'?$r['tipo']:$r['cargo']).' '.substr($r['time'], 11, 5).' '.$r['nick'].' '.$r['msg']."\n".$t; 
 		}
 		return $t;
 	}
@@ -57,7 +56,7 @@ ORDER BY msg_ID DESC LIMIT 50", $link);
 foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val, true, false); }
 
 
-if ((!isset($_POST['a'])) AND (is_numeric($_POST['chat_ID']))) {
+if ((!isset($_POST['a'])) AND (is_numeric($_POST['chat_ID'])) AND (is_numeric($_POST['n']))) {
 
 	echo chat_refresh($_POST['chat_ID'], $_POST['n']);
 
@@ -67,19 +66,19 @@ if ((!isset($_POST['a'])) AND (is_numeric($_POST['chat_ID']))) {
 	$chat_ID = $_POST['chat_ID'];
 
 	// EXPULSADO?
-	$result = mysql_unbuffered_query("SELECT HIGH_PRIORITY ID FROM expulsiones WHERE estado = 'expulsado' AND user_ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){ 
+	$result = sql("SELECT HIGH_PRIORITY ID FROM expulsiones WHERE estado = 'expulsado' AND user_ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1");
+	while($r = r($result)){ 
 		$expulsado = true;
 		session_destroy();
 	}
 
 	// KICKEADO?
-	$result = mysql_unbuffered_query("SELECT HIGH_PRIORITY expire FROM kicks 
+	$result = sql("SELECT HIGH_PRIORITY expire FROM kicks 
 WHERE pais = '".PAIS."' AND estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = inet_aton('".$_SERVER['REMOTE_ADDR']."'))) 
-LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){ 
+LIMIT 1");
+	while($r = r($result)){ 
 		if ($r['expire'] < $date) { // QUITAR KICK
-			mysql_query("UPDATE HIGH_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'", $link); 
+			sql("UPDATE HIGH_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'"); 
 		} else { $expulsado = true; }
 	}
 
@@ -88,8 +87,8 @@ LIMIT 1", $link);
 	if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_check($chat_ID, 'escribir')) OR (($_SESSION['pol']['pais'] != PAIS) AND (acceso_check($chat_ID, 'escribir_ex'))))) {
 		
 		if ((!isset($_SESSION['pol']['nick'])) AND (substr($_POST['anonimo'], 0, 1) == '-') AND (strlen($_POST['anonimo']) >= 3) AND (strlen($_POST['anonimo']) <= 15) AND (!stristr($_POST['anonimo'], '__'))) { 
-			$result = mysql_query("SELECT nick FROM users WHERE nick='".substr($_POST['anonimo'], 1)."'", $link);
-			if (mysql_fetch_array($result)) { 
+			$result = sql("SELECT nick FROM users WHERE nick='".substr($_POST['anonimo'], 1)."'");
+			if (r($result)) { 
 				$borrar_msg = true;
 				echo 'n 0 ---- - <b style="color:#FF0000;">Nick inv&aacute;lido por estar registrado.</b>'. "\n"; 
 			}
@@ -133,15 +132,15 @@ LIMIT 1", $link);
 					break;
 
 				case 'acceso':
-					$result = mysql_query("SELECT admin, acceso_cfg_escribir, acceso_escribir FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
-					while($r = mysql_fetch_array($result)){
+					$result = sql("SELECT admin, acceso_cfg_escribir, acceso_escribir FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1");
+					while($r = r($result)){
 						$admins = explode(' ', trim(strtolower($r['admin'])));
 						if ((in_array(strtolower($_SESSION['pol']['nick']), $admins)) AND (in_array($r['acceso_escribir'], array('privado', 'excluir')))) {
 							$escribir = explode(' ', $r['acceso_cfg_escribir']);
 							if ($msg_array[1] == 'add') { $escribir[] = $msg_array[2]; } 
 							elseif ($msg_array[1] == 'del') { $escribir = array_diff($escribir, array(strtolower($msg_array[2]))); }
 							$escribir = trim(strtolower(implode(' ', $escribir)));
-							mysql_query("UPDATE chats SET acceso_cfg_escribir = '".$escribir."' WHERE chat_ID = '".$chat_ID."' LIMIT 1", $link);
+							sql("UPDATE chats SET acceso_cfg_escribir = '".$escribir."' WHERE chat_ID = '".$chat_ID."' LIMIT 1");
 							$elmsg = 'Acceso cambiado a: <b>'.$escribir.'</b>';
 							$target_ID = $_SESSION['pol']['user_ID'];
 							$tipo = 'p';
@@ -198,8 +197,8 @@ LIMIT 1", $link);
 				case 'msg':
 					if (isset($_SESSION['pol']['user_ID'])) {
 						$nick_receptor = trim($msg_array[1]);
-						$result = mysql_unbuffered_query("SELECT HIGH_PRIORITY ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1", $link);
-						while($r = mysql_fetch_array($result)){ 
+						$result = sql("SELECT HIGH_PRIORITY ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1");
+						while($r = r($result)){ 
 							$elmsg = substr($msg_rest, (strlen($r['nick'])));
 							$target_ID = $r['ID'];
 							$tipo = 'p';
@@ -220,12 +219,12 @@ LIMIT 1", $link);
 			$elcargo = $_SESSION['pol']['cargo'];
 			if (($_SESSION['pol']['pais'] != PAIS) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $elcargo = 99; } // Extrangero
 
-			mysql_query("INSERT DELAYED INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.")", $link);
+			sql("INSERT DELAYED INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.")");
 
-			mysql_query("
+			sql("
 UPDATE users SET fecha_last = '".$date."' WHERE ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1;
 UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMIT 1;
-", $link);
+");
 
 		}
 
@@ -259,27 +258,27 @@ $('ul.menu li').hover(function(){
 } else if (($_GET['a'] == 'geo') AND (nucleo_acceso('ciudadanos_global'))) {
 	header('Content-Type: application/javascript');
 	echo 'var eventos = [';
-	$result = mysql_query("SELECT pais, nick, x, y FROM users WHERE estado = 'ciudadano' AND x IS NOT NULL LIMIT 5000", $link); 
+	$result = sql("SELECT pais, nick, x, y FROM users WHERE estado = 'ciudadano' AND x IS NOT NULL LIMIT 5000"); 
 	// .($_GET['b']?" AND pais = '".$_GET['b']."'":"")
-	while ($r = mysql_fetch_array($result)) { echo '{"q":"'.$r['nick'].'","x":'.$r['y'].',"y":'.$r['x'].'},'; }
+	while ($r = r($result)) { echo '{"q":"'.$r['nick'].'","x":'.$r['y'].',"y":'.$r['x'].'},'; }
 	echo '];';
 
 
 } else if (($_POST['a'] == 'whois') AND (isset($_POST['nick']))) {
 
-	$res = mysql_query("SELECT ID, fecha_registro, partido_afiliado, fecha_last, nivel, online, nota, avatar, voto_confianza, estado, pais, cargo,
+	$res = sql("SELECT ID, fecha_registro, partido_afiliado, fecha_last, nivel, online, nota, avatar, voto_confianza, estado, pais, cargo,
 (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS partido,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
-FROM users WHERE nick = '".str_replace('@', '', $_POST['nick'])."' LIMIT 1", $link);
-	while ($r = mysql_fetch_array($res)) { 
+FROM users WHERE nick = '".str_replace('@', '', $_POST['nick'])."' LIMIT 1");
+	while ($r = r($res)) { 
 		include('inc-functions.php');
 		if ($r['avatar'] == 'true') { $r['avatar'] = 1; } else { $r['avatar'] = 0; }
 		if (!isset($r['partido'])) { $r['partido'] = '-'; }
 
 		if ($r['estado'] == 'expulsado') {
-			$res2 = mysql_query("SELECT razon FROM expulsiones WHERE user_ID = '".$r['ID']."' AND estado = 'expulsado' ORDER BY expire DESC LIMIT 1", $link);
-			while ($r2 = mysql_fetch_array($res2)) { $expulsion = str_replace(':', '', $r2['razon']); }
+			$res2 = sql("SELECT razon FROM expulsiones WHERE user_ID = '".$r['ID']."' AND estado = 'expulsado' ORDER BY expire DESC LIMIT 1");
+			while ($r2 = r($res2)) { $expulsion = str_replace(':', '', $r2['razon']); }
 		}
 
 		echo $r['ID'] . ':' . round((time() - strtotime($r['fecha_registro'])) / 60 / 60 / 24) . ' dias:' . duracion(time() - strtotime($r['fecha_last'])) . ':' . $r['nivel'] . ':' . $r['nota'] . ':' . duracion($r['online']) . ':' . $r['avatar'] . ':' . $r['partido'] . ':' . $r['num_hilos'] . '+' . $r['num_msg'] . ':' . $r['estado'] . ':' . $r['pais'] . ':' . $r['cargo'] . ':'.$expulsion.':'.$r['voto_confianza'].':';

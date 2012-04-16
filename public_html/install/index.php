@@ -213,7 +213,10 @@ switch($_GET['step']){
 
 				//aqui instalamos las tablas
 				$vp_tables=""; //liberando ram
-
+				$db_file = preg_split("/;\s*[\r\n]+/", file_get_contents(DBPATH) );
+				foreach($db_file as $query){
+					if( ! mysql_query($query, $link)){ $runinfo.="********".mysql_error()."********<br />"; }
+				}
 
 				$theme->addvar("{RUNINFO}",$runinfo);
 

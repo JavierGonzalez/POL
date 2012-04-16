@@ -44,8 +44,8 @@ if (isset($_COOKIE['teorizauser'])) {
 if (isset($pol['user_ID'])) {
 
 	// LOAD: $pol
-	$result = sql("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, cargos, examenes, fecha_legal, dnie, SC, IP, grupos
-FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1");
+	$result = sql("SELECT lang, online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, cargos, examenes, fecha_legal, dnie, SC, IP, grupos
+FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	while($r = r($result)) {
 		$pol['pols'] = $r['pols'];
 		$pol['pais'] = $r['pais'];
@@ -61,6 +61,8 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1");
 		$pol['grupos'] = $r['grupos'];
 		$fecha_init = $r['fecha_init'];
 		$fecha_last = $r['fecha_last'];
+		
+		if (isset($r['lang'])) { $pol['config']['lang'] = $r['lang']; }
 		
 
 		$_SESSION['pol']['cargo'] = $r['cargo'];
@@ -110,6 +112,15 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1");
 	}
 
 	if ($pol['estado'] == 'expulsado') {  session_unset(); session_destroy(); }
+}
+
+if ($pol['config']['lang'] != 'es_ES') {
+	// Carga internacionalización
+	$locale = $pol['config']['lang'];
+	putenv("LC_ALL=$locale");
+	setlocale(LC_ALL, $locale);
+	bindtextdomain('messages', '../locale');
+	textdomain('messages');
 }
 
 $txt_nav = array(); 

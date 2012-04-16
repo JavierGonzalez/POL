@@ -741,6 +741,7 @@ case 'gobierno':
 'pols_mensajetodos'=>'Coste mensaje Global',
 'pols_solar'=>'Coste solar del mapa',
 'defcon'=>'DEFCON',
+'lang'=>'Idioma',
 'pols_inem'=>'INEM',
 'pols_afiliacion'=>'Pago por afiliado',
 'pols_empresa'=>'Coste creacion empresa',
@@ -764,14 +765,10 @@ case 'gobierno':
 	if (
 ($_GET['b'] == 'config') AND 
 (nucleo_acceso($vp['acceso']['control_gobierno'])) AND  
-(entre($_POST['online_ref'], 60, 900000)) AND
+(entre($_POST['online_ref'], 0, 900000)) AND
 (strlen($_POST['palabra_gob0']) <= 200) AND
 ($_POST['chat_diasexpira'] >= 10)
 ) {
-
-		foreach ($vp['paises'] AS $pais) {
-			if (PAIS != $pais) { $dato_array['frontera_con_' . $pais] = 'Frontera con ' . $pais; }
-		}
 
 		foreach ($_POST AS $dato => $valor) {
 			if ((substr($dato, 0, 8) != 'salario_') AND ($dato != 'palabra_gob1')) {

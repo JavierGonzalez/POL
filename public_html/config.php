@@ -28,6 +28,11 @@ while ($r = r($result)) {
 	} 
 }
 
+// LENGUAJES ACTIVADOS
+$vp['langs'] = array(
+	'es_ES'=>'Español',
+	'en_US'=>'English (Experimental)',
+);
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)
 $vp['paises'] = array('15M', 'Hispania', 'RSSV'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)

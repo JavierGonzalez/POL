@@ -21,15 +21,43 @@ case 'panel':
 		$result = mysql_query("SELECT ser_SC FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) { $ser_SC = $r['ser_SC']; }
 
-		$txt .= '<h1>Opciones de tu usuario ('.$pol['nick'].'):</h1>
+		$txt .= '<h1>Opciones de usuario ('.$pol['nick'].'):</h1>
 
 <div style="max-width:640px;">
 
-<fieldset>
-<legend>Cambiar contraseña</legend>
+
+
+
+<fieldset><legend>Cambiar idioma</legend>
+
+
+<form action="'.REGISTRAR.'login.php?a=changelang" method="POST">
+<table border="0" cellpadding="2" cellspacing="0" width="100%">
+<tr>
+<td valign="middle" align="center" valign="top">Idioma: 
+<select name="lang">
+<option value="">Idioma por defecto de plataformas</option>';
+	$result = sql("SELECT lang FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+	while ($r = r($result)) { $the_lang = $r['lang']; }
+
+	foreach ($vp['langs'] AS $loc => $lang) {
+		$txt .= '<option value="'.$loc.'"'.($loc==$the_lang?' selected="selected"':'').'>'.$lang.'</option>';
+	}
+	$txt .= '</select>
+</td>
+<td valign="middle" align="center" valign="top">
+'.boton('Cambiar idioma', 'submit', false, 'large blue').'
+</td></tr></table></form>
+
+
+
+</fieldset>
+
+
+
+<fieldset><legend>Cambiar contraseña</legend>
 
 <form action="'.REGISTRAR.'login.php?a=changepass" method="POST">
-<input type="hidden" name="url" value="'.base64_encode(REGISTRAR.'login.php?a=panel').'" />
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td valign="middle" align="center" valign="top">Contrase&ntilde;a actual:<br /><input type="password" name="oldpass" value="" maxlength="30" /></td>
@@ -43,11 +71,9 @@ case 'panel':
 
 
 
-<fieldset>
-<legend>Cambiar email</legend>
+<fieldset><legend>Cambiar email</legend>
 
 <form action="'.REGISTRAR.'login.php?a=changemail" method="POST">
-<input type="hidden" name="url" value="' . base64_encode(REGISTRAR.'login.php?a=panel') . '" />
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td valign="middle" align="center" valign="top">Email: <input type="text" size="30" name="email" value="'.$pol['email'].'" maxlength="100" /></td>
@@ -59,8 +85,7 @@ case 'panel':
 
 
 
-<fieldset>
-<legend>Candidato a Supervisor del Censo</legend>
+<fieldset><legend>Candidato a Supervisor del Censo</legend>
 
 <form action="'.REGISTRAR.'login.php?a=ser_SC" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
@@ -74,11 +99,9 @@ case 'panel':
 </fieldset>
 
 
-<fieldset>
-<legend>Cambiar nick</legend>
+<fieldset><legend>Cambiar nick</legend>
 
 <form action="'.REGISTRAR.'login.php?a=changenick" method="POST">
-<input type="hidden" name="url" value="' . base64_encode(REGISTRAR.'login.php?a=panel') . '" />
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td valign="middle" align="center" valign="top">Nuevo nombre de usuario:<br /><input type="text" name="newnick" value="" maxlength="30" /></td>
@@ -91,8 +114,7 @@ case 'panel':
 
 
 
-<fieldset>
-<legend>Eliminar usuario</legend>
+<fieldset><legend>Eliminar usuario</legend>
 
 <form action="'.REGISTRAR.'login.php?a=borrar-usuario" method="POST">
 <input type="hidden" name="nick" value="'.$pol['nick'].'" />
@@ -239,8 +261,6 @@ case 'changepass':
 	$oldpass = md5(trim($_POST['oldpass']));
 	$newpass = md5(trim($_POST['pass1']));
 	$newpass2 = md5(trim($_POST['pass2']));
-	if (substr($_POST['url'], 0, 4) == 'http') { $url = $_POST['url']; } else { $url = escape(base64_decode($_POST['url'])); }
-
 	$pre_login = true;
 	
 	if ($pol['user_ID']) {
@@ -252,16 +272,11 @@ case 'changepass':
 		}
 	}
 
-	redirect($url);
+	redirect(REGISTRAR.'login.php?a=panel');
 	break;
 	
 case 'changenick':
 		$nick_new = trim($_POST['newnick']);
-		if (substr($_POST['url'], 0, 4) == 'http') {
-			$url = $_POST['url'];
-		} else { 
-			$url = escape(base64_decode($_POST['url']));
-		}
 	
 		$pre_login = true;
 	
@@ -297,20 +312,26 @@ case 'changenick':
 			}
 		}
 
-		redirect($url);
+		redirect(REGISTRAR.'login.php?a=panel');
 		break;
 	
 	
 case 'changemail':
 	$email = trim($_POST['email']);
-	$url = escape(base64_decode($_POST['url']));
 	$pre_login = true;
 	if ($pol['user_ID']) {
 		mysql_query("UPDATE users SET email = '".$email."' WHERE ID = '".$pol['user_ID']."' AND fecha_registro < '".date('Y-m-d 20:00:00', time() - 864000)."' LIMIT 1", $link);
 	}
-	redirect($url);
+	redirect(REGISTRAR.'login.php?a=panel');
 	break;
 
+case 'changelang':
+	$pre_login = true;
+	if ($pol['user_ID']) {
+		mysql_query("UPDATE users SET lang = ".($_POST['lang']?"'".$_POST['lang']."'":"NULL")." WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+	}
+	redirect(REGISTRAR.'login.php?a=panel');
+	break;
 
 case 'borrar-usuario':
 	if ($_POST['nick'] == $pol['nick']) { 

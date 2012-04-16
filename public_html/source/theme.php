@@ -279,7 +279,7 @@ if (!ASAMBLEA) {
 ?>	
 		</div>
 	</div>
-<div>
+</div>
 
 <div id="pnick" class="azul" style="display:none;"></div>
 

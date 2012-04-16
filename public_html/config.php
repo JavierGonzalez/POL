@@ -10,8 +10,8 @@ $pais = explodear('.', $_SERVER['HTTP_HOST'], 0);
 
 
 // LOAD CONFIG
-$result = mysql_unbuffered_query("SELECT dato, valor FROM config WHERE pais = '".escape($pais)."' AND autoload = 'si'", $link);
-while ($r = mysql_fetch_array($result)) { 
+$result = mysql_unbuffered_query("SELECT dato, valor FROM config WHERE pais = '".escape($pais)."' AND autoload = 'si'");
+while ($r = r($result)) { 
 	switch ($r['dato']) {
 		case 'PAIS': define('PAIS', $r['valor']); break;
 		case 'ASAMBLEA': define('ASAMBLEA', ($r['valor']=='true'?true:false)); break;

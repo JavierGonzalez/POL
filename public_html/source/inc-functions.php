@@ -104,7 +104,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 						$pol['config']['info_consultas']++;
 						$nuevos_num++;
 						$total_num++;
-						$t .= '<li><a href="http://'.$r['pais'].'.'.DOMAIN.'/votacion/'.$r['ID'].'" class="noti-nuevo">Votación: '.$r['pregunta'].'</a></li>';
+						$t .= '<li><a href="http://'.$r['pais'].'.'.DOMAIN.'/votacion/'.$r['ID'].'" class="noti-nuevo">'._('Votación').': '.$r['pregunta'].'</a></li>';
 					}
 				}
 
@@ -116,8 +116,8 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 					$t .= '<li><a href="'.($r['visto']=='false'?'/?noti='.$r['noti_ID']:$r['url']).'"'.($r['visto']=='false'?' class="noti-nuevo"':'').(substr($r['url'], 0, 4)=='http'?' target="_blank"':'').'>'.$r['texto'].($r['num']>1?'<span class="md">'.$r['num'].'</span>':'').'</a></li>';
 				}
 
-			} else { $t = '<li><a href="'.REGISTRAR.'?p='.PAIS.'" class="noti-nuevo">Primer paso: Crea tu ciudadano</a></li>'; $total_num = 1; $nuevos_num = 1; }
-			return '<li id="menu-noti"'.($nuevos_num!=0?' class="menu-sel"':'').'><a href="/hacer">Notificaciones<span class="md">'.$nuevos_num.'</span></a><ul><li style="border-bottom:1px dotted #DDD;"><a href="/elecciones">Proceso diario '.(time()>strtotime(date('Y-m-d 20:00:00'))?'hace':'en').' <b>'.timer(date('Y-m-d 20:00:00')).'</b></a></li>'.$t.($total_num==0?'<li>No hay notificaciones</li>':'').'<li style="text-align:right;"><a href="/hacer"><b>¿Qué hacer?</b></a></li></ul></li>'.($nuevos!=0?'':'<script type="text/javascript">p_scroll = true;</script>');
+			} else { $t = '<li><a href="'.REGISTRAR.'?p='.PAIS.'" class="noti-nuevo">'._('Primer paso: Crea tu ciudadano').'</a></li>'; $total_num = 1; $nuevos_num = 1; }
+			return '<li id="menu-noti"'.($nuevos_num!=0?' class="menu-sel"':'').'><a href="/hacer">'._('Notificaciones').'<span class="md">'.$nuevos_num.'</span></a><ul><li style="border-bottom:1px dotted #DDD;"><a href="/elecciones">'._('Proceso diario').' '.(time()>strtotime(date('Y-m-d 20:00:00'))?_('hace'):_('en')).' <b>'.timer(date('Y-m-d 20:00:00')).'</b></a></li>'.$t.($total_num==0?'<li>'._('No hay notificaciones').'</li>':'').'<li style="text-align:right;"><a href="/hacer"><b>'._('¿Qué hacer?').'</b></a></li></ul></li>'.($nuevos!=0?'':'<script type="text/javascript">p_scroll = true;</script>');
 			break;
 
 

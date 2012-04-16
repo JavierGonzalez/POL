@@ -14,8 +14,7 @@ $result = mysql_unbuffered_query("SELECT dato, valor FROM config WHERE pais = '"
 while ($r = r($result)) { 
 	switch ($r['dato']) {
 		case 'PAIS': define('PAIS', $r['valor']); break;
-		case 'ASAMBLEA': define('ASAMBLEA', ($r['valor']=='true'?true:false)); break;
-		case 'ECONOMIA': define('ECONOMIA', ($r['valor']=='true'?true:false)); break;
+		case 'ASAMBLEA': case 'ECONOMIA':  define($r['dato'], ($r['valor']=='true'?true:false)); break;
 
 		case 'acceso': 
 			foreach(explode('|', $r['valor']) AS $item) {

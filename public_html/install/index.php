@@ -17,10 +17,14 @@ switch($_GET['step']){
 			if(!isset($_SESSION['i_dbpass']) 
 			|| ($_SESSION['i_dbpass'] != $_POST['dbpass'] 
 			&& strlen($_POST['dbpass']) > 0 ) )
-			{
+			{	//Mantenemos la pass guardada
+				//Pero permitimos que se pueda
+				//Cambiar
 				$_SESSION['i_dbpass']=$_POST['dbpass'];
 			}
-				
+			
+			//si todos los campos del formulario
+			//se han introducido	
 			if( strlen($_SESSION['i_domain']) > 0 &&
 			strlen($_SESSION['i_ctmail']) > 0 &&
 			strlen($_SESSION['i_dbname']) > 0 &&
@@ -102,7 +106,7 @@ switch($_GET['step']){
 					}
 				}
 				
-			}else{
+			}else{ //Algun dato del formulario no se ha introducido
 				$theme->addvar("{ERROR}", "Todos los campos son obligatorios");
 			}
 		}

@@ -142,13 +142,6 @@ switch($_GET['step']){
 		if( !$link ){
 			$theme->addvar("{ERROR}", "Error: Parece que los valores de conexi&oacute;n no se han escrito correctamente ".mysql_error());
 		}else{
-
-			$result = mysql_query("SELECT count(table_name) as cantidad FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '".$_SESSION["i_dbname"]."'", $link);
-			$r = mysql_fetch_array($result);
-			if( $r['cantidad'] > 0 ){
-				$theme->addvar("{ERROR}", "Parece que su base de datos contiene algunas tablas. Si continua, las tablas de VirtualPol ser&aacute;n reseteadas. Perder&aacute; todos los datos almacenados. &iexcl;Haga Backup!");
-			}
-
 			if(isset($_POST['send'])){
 				$vp_tables = array
 						(	
@@ -183,6 +176,7 @@ switch($_GET['step']){
 							"notificaciones",
 							"partidos",
 							"partidos_listas",
+							"plataformas",
 							"pol_foros",
 							"pol_foros_hilos",
 							"pol_foros_msg",
@@ -207,14 +201,20 @@ switch($_GET['step']){
 
 				foreach( $vp_tables as $vp_table ){
 					$runinfo.="- Eliminando $vp_table <br />";
-					if( ! mysql_query("drop table if exists $vp_table", $link)){ $runinfo.="********".mysql_error()."********<br />"; }
+					if( ! mysql_query("drop table if exists $vp_table", $link))
+					{ 
+						$theme->concvar("{ERROR}", "Error Eliminando tabla $vp_table: ".mysql_error()."<br />");
+					}
 
 				}
 
 				//aqui instalamos las tablas
 				$db_file = preg_split("/;\s*[\r\n]+/", file_get_contents(DBPATH) );
 				foreach($db_file as $query){
-					if( ! mysql_query($query, $link)){ $runinfo.="********".mysql_error()."********<br />"; }
+					if( ! mysql_query($query, $link))
+					{ 
+						$theme->concvar("{ERROR}", "Incidencia volcando DB: ".mysql_error()."<br />");
+					}
 				}
 
 				foreach($vp_tables as $vp_table){
@@ -224,10 +224,13 @@ switch($_GET['step']){
 								TABLE_SCHEMA = '".$_SESSION["i_dbname"]."' AND 
 								TABLE_NAME = '".$vp_table."'", $link);
 		                        $r = mysql_fetch_array($result);
-		                        if( $r['cantidad'] > 0 ){
+		                        if( $r['cantidad'] > 0 )
+					{
 						$runinfo.=" OK<br />";
-					}else{
-						$runinfo.="*******ERROR********".mysql_error()."<br />";
+					}
+					else
+					{
+						$theme->concvar("{ERROR}", "Error Verificando tablas. La tabla $vp_table No Existe<br />");
 					}
 
 
@@ -236,6 +239,16 @@ switch($_GET['step']){
 				$vp_tables=""; //liberando ram
 
 				$theme->addvar("{RUNINFO}",$runinfo);
+
+			}else{
+				$result = mysql_query("SELECT count(table_name) as cantidad 
+							FROM INFORMATION_SCHEMA.TABLES WHERE 
+							TABLE_SCHEMA = '".$_SESSION["i_dbname"]."'", $link);
+				$r = mysql_fetch_array($result);
+				if( $r['cantidad'] > 0 ){
+					$theme->addvar("{ERROR}", "Parece que su base de datos contiene algunas tablas. Si continua, las tablas de VirtualPol ser&aacute;n reseteadas. Perder&aacute; todos los datos almacenados. &iexcl;Haga Backup!");
+				}
+
 
 			}
 		}

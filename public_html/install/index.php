@@ -88,7 +88,7 @@ switch($_GET['step']){
 
 							//comprobamos que todo se ha configurado correctamente
 							include("../config-pwd.php");
-							$link = conectar();
+							$link = conectar(true);
 							if( !$link )
 							{
 								$theme->addvar("{ERROR}", "Error: Parece que los valores de conexi&oacute;n no se han escrito correctamente ".mysql_error());
@@ -138,18 +138,18 @@ switch($_GET['step']){
 	case 1:
 
 		include("../config-pwd.php");
-		$link = conectar();
+		$link = conectar(true);
 		if( !$link ){
 			$theme->addvar("{ERROR}", "Error: Parece que los valores de conexi&oacute;n no se han escrito correctamente ".mysql_error());
 		}else{
 
-			$result = mysql_query("SELECT count(table_name) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '".$_SESSION["i_dbname"]."'", $link);
-			if( mysql_num_rows ($result) > 0 ){
+			$result = mysql_query("SELECT count(table_name) as cantidad FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '".$_SESSION["i_dbname"]."'", $link);
+			$r = mysql_fetch_array($result);
+			if( $r['cantidad'] > 0 ){
 				$theme->addvar("{ERROR}", "Parece que su base de datos contiene algunas tablas. Si continua, las tablas de VirtualPol ser&aacute;n reseteadas. Perder&aacute; todos los datos almacenados. Haga Backup!");
 			}
 
 			if(isset($_POST['send'])){
-				
 				$vp_tables = array
 						(	
 							"15m_foros",

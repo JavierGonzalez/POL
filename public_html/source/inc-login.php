@@ -114,7 +114,7 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	if ($pol['estado'] == 'expulsado') {  session_unset(); session_destroy(); }
 }
 
-if ($pol['config']['lang'] != 'es_ES') {
+if ((isset($pol['config']['lang'])) AND ($pol['config']['lang'] != 'es_ES')) {
 	// Carga internacionalización
 	$locale = $pol['config']['lang'];
 	putenv("LC_ALL=$locale");

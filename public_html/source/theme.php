@@ -135,8 +135,8 @@ p_scroll = false;
 	<div id="menu-next">
 
 <?php 
-echo '<p style="color:#999;"><b>'.timer('2012-04-18 00:00:00').'</b> para poder <a href="http://www.goteo.org/project/expansion-de-virtualpol/supporters" target="_blank" title="Campaña de crowdfunding en Goteo.org para poder desarrollar la Expansión Internacional"><b>donar</b></a>.</p>';
-if (PAIS == '15M') { echo '<p style="color:#999;"><b>'.timer('2012-05-12 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="12 de Mayo: Movilización Global"><b>12M</b></a>.</p>'; } 
+//echo '<p style="color:#999;"><b>'.timer('2012-04-18 00:00:00').'</b> para poder <a href="http://www.goteo.org/project/expansion-de-virtualpol/supporters" target="_blank" title="Campaña de crowdfunding en Goteo.org para poder desarrollar la Expansión Internacional"><b>donar</b></a>.</p>';
+if (PAIS == '15M') { echo '<p style="color:#999;"><b>'.timer('2012-05-12 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="12 de Mayo: Movilización Global"><b>12M</b></a>.</p><p style="color:#999;"><b>'.timer('2012-05-15 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="15 de Mayo"><b>15M</b></a>.</p>'; }
 
 echo '<p id="palabras">';
 

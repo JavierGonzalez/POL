@@ -146,7 +146,7 @@ switch($_GET['step']){
 			$result = mysql_query("SELECT count(table_name) as cantidad FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '".$_SESSION["i_dbname"]."'", $link);
 			$r = mysql_fetch_array($result);
 			if( $r['cantidad'] > 0 ){
-				$theme->addvar("{ERROR}", "Parece que su base de datos contiene algunas tablas. Si continua, las tablas de VirtualPol ser&aacute;n reseteadas. Perder&aacute; todos los datos almacenados. Haga Backup!");
+				$theme->addvar("{ERROR}", "Parece que su base de datos contiene algunas tablas. Si continua, las tablas de VirtualPol ser&aacute;n reseteadas. Perder&aacute; todos los datos almacenados. &iexcl;Haga Backup!");
 			}
 
 			if(isset($_POST['send'])){
@@ -212,11 +212,28 @@ switch($_GET['step']){
 				}
 
 				//aqui instalamos las tablas
-				$vp_tables=""; //liberando ram
 				$db_file = preg_split("/;\s*[\r\n]+/", file_get_contents(DBPATH) );
 				foreach($db_file as $query){
 					if( ! mysql_query($query, $link)){ $runinfo.="********".mysql_error()."********<br />"; }
 				}
+
+				foreach($vp_tables as $vp_table){
+					$runinfo.="- Comprobando ".$vp_table;
+					$result = mysql_query("SELECT count(table_name) as cantidad 
+								FROM INFORMATION_SCHEMA.TABLES WHERE 
+								TABLE_SCHEMA = '".$_SESSION["i_dbname"]."' AND 
+								TABLE_NAME = '".$vp_table."'", $link);
+		                        $r = mysql_fetch_array($result);
+		                        if( $r['cantidad'] > 0 ){
+						$runinfo.=" OK<br />";
+					}else{
+						$runinfo.="*******ERROR********".mysql_error()."<br />";
+					}
+
+
+
+				}
+				$vp_tables=""; //liberando ram
 
 				$theme->addvar("{RUNINFO}",$runinfo);
 

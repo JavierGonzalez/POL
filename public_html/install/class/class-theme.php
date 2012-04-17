@@ -14,6 +14,15 @@ class theme{
 		$this->replace[]=$replace;
 	}
 
+	public function concvar($search, $replace){
+		$key = array_search($search, $this->search);
+		if($key === FALSE){
+			$this->addvar($search, $replace);
+		}else{
+			$this->replace[$key].=$replace;
+		}
+	}
+
 	public function return_html(){
 		$this->process_vars();
 		return $this->html;

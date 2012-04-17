@@ -102,6 +102,8 @@ switch($_GET['step']){
 					}
 				}
 				
+			}else{
+				$theme->addvar("{ERROR}", "Todos los campos son obligatorios");
 			}
 		}
 

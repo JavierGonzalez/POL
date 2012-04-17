@@ -15,10 +15,10 @@ if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['
 $result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
 while ($r = mysql_fetch_array($result)) { 
 	
-	$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo']);
-	$txt_tab = array('/chats/'.$r['url'].'/log'=>'Log', '/chats/'.$r['url'].'/opciones'=>'Opciones');
+	$txt_nav = array('/chats'=>_('Chats'), '/chats/'.$r['url']=>$r['titulo']);
+	$txt_tab = array('/chats/'.$r['url'].'/log'=>_('Log'), '/chats/'.$r['url'].'/opciones'=>_('Opciones'));
 
-	if ($r['pais'] != PAIS) { header('Location: http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'.($_GET['b']?$_GET['b'].'/':'')); exit; }
+	if ($r['pais'] != PAIS) { redirect('http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'.$_GET['b']); }
 
 
 	if ($pol['user_ID']) { mysql_query("UPDATE chats SET stats_visitas = stats_visitas + 1, fecha_last = '".$date."' WHERE chat_ID = ".$r['chat_ID']." LIMIT 1", $link); }
@@ -57,12 +57,12 @@ $txt .= '
 
 if ($externo) {
 	if ($_SESSION['pol']['user_ID']) {
-		$txt .= '<span style="float:right;"><a href="http://www.'.DOMAIN.'">Volver a VirtualPOL</a></span>'.$titulo;
+		$txt .= '<span style="float:right;"><a href="http://www.'.DOMAIN.'">'._('Volver a VirtualPol').'</a></span>'.$titulo;
 	} else {
-		$txt .= '<span style="float:right;"><a href="'.REGISTRAR.'">Crear ciudadano</a></span>'.$titulo;
+		$txt .= '<span style="float:right;"><a href="'.REGISTRAR.'">'._('Crear ciudadano').'</a></span>'.$titulo;
 	}
 } else {
-	$txt .= '<span class="quitar"><span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones">Opciones</a>] [<a href="/chats/'.$_GET['a'].'/log">Log</a>]</span><a href="/chats/">Chat</a>: '.$titulo.'</span>';
+	$txt .= '<span class="quitar"><span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones">'._('Opciones').'</a>] [<a href="/chats/'.$_GET['a'].'/log">'._('Log').'</a>]</span><a href="/chats/">'._('Chat').'</a>: '.$titulo.'</span>';
 }
 
 
@@ -84,7 +84,7 @@ Acceso leer: '.$acceso_leer.($acceso_cfg_leer?' [<em>'.$acceso_cfg_leer.'</em>]'
 Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_escribir.'</em>]':'').'<br />
 <span style="float:right;">'.date('Y-m-d H:i:s').' &nbsp;</span>Nick: '.($pol['nick']?$pol['nick']:'Anonimo').'<br />
 <hr />
-':'<span style="color:red;">No tienes acceso de lectura, lo siento.</span>').'
+':'<span style="color:red;">'.verbalizar_acceso($acceso_leer, $acceso_cfg_leer).'</span>').'
 </b></li></ul>
 </div>
 </div>
@@ -98,11 +98,11 @@ Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_e
 
 <td width="46" align="right" valign="middle"><img id="vpc_actividad" onclick="actualizar_ahora();" src="'.IMG.'ico/punto_gris.png" width="16" height="16" title="Actualizar chat" style="margin-top:4px;" /></td>
 
-<td valign="middle">'.(isset($pol['user_ID'])?'<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%;" autofocus="autofocus" />':boton('¡Crea tu ciudadano para participar!', REGISTRAR.'?p='.PAIS, false, 'large blue')).'</td>
+<td valign="middle">'.(isset($pol['user_ID'])?'<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%;" autofocus="autofocus" />':boton(_('¡Crea tu ciudadano para participar!'), REGISTRAR.'?p='.PAIS, false, 'large blue')).'</td>
 
-<td nowrap="nowrap" valign="middle" title="Marcar para ocultar eventos del chat">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">Ocultar eventos</label></td>
+<td nowrap="nowrap" valign="middle" title="Marcar para ocultar eventos del chat">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">'._('Ocultar eventos').'</label></td>
 
-<td align="right">'.boton('Enviar', 'submit', false, '', '', ' id="botonenviar"').'</td>
+<td align="right">'.boton(_('Enviar'), 'submit', false, '', '', ' id="botonenviar"').'</td>
 
 </tr>
 </table>

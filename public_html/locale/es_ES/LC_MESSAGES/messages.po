@@ -1,23 +1,18 @@
-# 
-# Translators:
-# Javier González <gonzomail@gmail.com>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: VirtualPol\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-17 18:41+0100\n"
-"PO-Revision-Date: 2012-04-17 21:07+0100\n"
+"POT-Creation-Date: 2012-04-17 21:05+0100\n"
+"PO-Revision-Date: 2012-04-17 21:05+0100\n"
 "Last-Translator: GONZO <gonzomail@gmail.com>\n"
-"Language-Team: English (United States) (http://www.transifex.net/projects/p/virtualpol/language/en_US/)\n"
+"Language-Team: VirtualPol <desarrollo@virtualpol.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en_US\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Poedit-Basepath: .\n"
-"X-Poedit-Country: SPAIN\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: .\n"
 "X-Poedit-Language: Spanish\n"
+"X-Poedit-Country: SPAIN\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-SearchPath-0: D:\\www\\VirtualPol\\public_html\\.\n"
 
@@ -27,11 +22,11 @@ msgstr "Chats"
 
 #: D:\www\VirtualPol\public_html\./source/c-chats.php:121
 msgid "Solicitar chat"
-msgstr "Chat request"
+msgstr "Solicitar chat"
 
 #: D:\www\VirtualPol\public_html\./source/c-chats.php:135
 msgid "Acceso"
-msgstr "Access"
+msgstr "Acceso"
 
 #: D:\www\VirtualPol\public_html\./source/c-chats.php:142
 msgid "Chat"
@@ -39,15 +34,15 @@ msgstr "Chat"
 
 #: D:\www\VirtualPol\public_html\./source/c-chats.php:143
 msgid "Leer"
-msgstr "Read"
+msgstr "Leer"
 
 #: D:\www\VirtualPol\public_html\./source/c-chats.php:144
 msgid "Escribir"
-msgstr "Write"
+msgstr "Escribir"
 
 #: D:\www\VirtualPol\public_html\./source/c-chats.php:145
 msgid "Visitas"
-msgstr "Page views"
+msgstr "Visitas"
 
 #: D:\www\VirtualPol\public_html\./source/c-chats.php:146
 msgid "Admin"
@@ -55,11 +50,11 @@ msgstr "Admin"
 
 #: D:\www\VirtualPol\public_html\./source/c-chats.php:147
 msgid "Hace"
-msgstr "Ago"
+msgstr "Hace"
 
 #: D:\www\VirtualPol\public_html\./source/c-chats.php:167
 msgid "Sistema"
-msgstr "System"
+msgstr "Sistema"
 
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:19
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:65
@@ -69,192 +64,188 @@ msgstr "Log"
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:19
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:65
 msgid "Opciones"
-msgstr "Options"
+msgstr "Opciones"
 
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:60
 msgid "Volver a VirtualPol"
-msgstr "Back to VirtualPol"
+msgstr "Volver a VirtualPol"
 
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:62
 msgid "Crear ciudadano"
-msgstr "Create citizen"
+msgstr "Crear ciudadano"
 
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:101
 msgid "¡Crea tu ciudadano para participar!"
-msgstr "Create your citizen to participate!"
+msgstr "¡Crea tu ciudadano para participar!"
 
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:103
 msgid "Ocultar eventos"
-msgstr "Hide events"
+msgstr "Ocultar eventos"
 
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:105
 msgid "Enviar"
-msgstr "Send"
+msgstr "Enviar"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:107
 msgid "Votación"
-msgstr "Vote"
+msgstr "Votación"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:119
 msgid "Primer paso: Crea tu ciudadano"
-msgstr "Step one: create your citizen"
+msgstr "Primer paso: Crea tu ciudadano"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:120
 msgid "Notificaciones"
-msgstr "Notifications"
+msgstr "Notificaciones"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:120
 msgid "Proceso diario"
-msgstr "Daily process"
+msgstr "Proceso diario"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:120
 msgid "hace"
-msgstr "ago"
+msgstr "hace"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:120
 msgid "en"
-msgstr "in"
+msgstr "en"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:120
 msgid "No hay notificaciones"
-msgstr "No notifications"
+msgstr "No hay notificaciones"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:120
 msgid "¿Qué hacer?"
-msgstr "What to do?"
-
-#: D:\www\VirtualPol\public_html\./source/test.php:18
-msgid "Hola mundo!"
-msgstr "Hello World!"
+msgstr "¿Qué hacer?"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:6
 msgid "Página inexistente"
-msgstr "Nonexistent page"
+msgstr "Página inexistente"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:8
 msgid "Plataforma cerrada"
-msgstr "Closed platform"
+msgstr "Plataforma cerrada"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:10
 msgid "de"
-msgstr "of"
+msgstr "de"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:54
 msgid "Comunicación"
-msgstr "Communication"
+msgstr "Comunicación"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:57
 msgid "Foros"
-msgstr "Forums"
+msgstr "Foros"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:59
 msgid "Última actividad"
-msgstr "Latest activity"
+msgstr "Última actividad"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:60
 msgid "Tu actividad"
-msgstr "Your activity"
+msgstr "Tu actividad"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:63
 msgid "Voz"
-msgstr "Voice"
+msgstr "Voz"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:63
 msgid "Configurar"
-msgstr "Configure"
+msgstr "Configurar"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:64
 msgid "Mensajes privados"
-msgstr "Private messages"
+msgstr "Mensajes privados"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:65
 msgid "Redes sociales"
-msgstr "Social Networks"
+msgstr "Redes sociales"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:69
 msgid "Seguir"
-msgstr "Follow"
+msgstr "Seguir"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:75
 msgid "Información"
-msgstr "Information"
+msgstr "Información"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:77
 msgid "Censo"
-msgstr "Census"
+msgstr "Censo"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:78
 msgid "Documentos"
-msgstr "Documents"
+msgstr "Documentos"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:79
 msgid "Mapa de ciudadanos"
-msgstr "Map of citizens"
+msgstr "Mapa de ciudadanos"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:80
 #: D:\www\VirtualPol\public_html\./source/theme.php:82
 msgid "Estadísticas"
-msgstr "Statistics"
+msgstr "Estadísticas"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:83
 msgid "Log de acciones"
-msgstr "Log of actions"
+msgstr "Log de acciones"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:86
 msgid "Buscar"
-msgstr "Search"
+msgstr "Buscar"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:87
 msgid "Sobre VirtualPol"
-msgstr "About VirtualPol"
+msgstr "Sobre VirtualPol"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:89
 msgid "Vídeo de bienvenida"
-msgstr "Welcome video"
+msgstr "Vídeo de bienvenida"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:90
 msgid "Documentación"
-msgstr "Documentation"
+msgstr "Documentación"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:91
 msgid "Condiciones de uso"
-msgstr "Conditions of use"
+msgstr "Condiciones de uso"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:92
 msgid "Desarrollo"
-msgstr "development"
+msgstr "Desarrollo"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:93
 msgid "Donaciones"
-msgstr "Donations"
+msgstr "Donaciones"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:99
 msgid "Democracia"
-msgstr "Democracy"
+msgstr "Democracia"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:101
 msgid "Elecciones"
-msgstr "Elections"
+msgstr "Elecciones"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:102
 msgid "Votaciones"
-msgstr "Voting"
+msgstr "Votaciones"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:103
 msgid "Cargos"
-msgstr "Office"
+msgstr "Cargos"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:105
 msgid "Grupos"
-msgstr "Groups"
+msgstr "Grupos"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:108
 msgid "Gestión"
-msgstr "Management"
+msgstr "Gestión"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:110
 msgid "Gobierno"
-msgstr "Government"
+msgstr "Gobierno"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:111
 msgid "Kicks"
@@ -262,43 +253,43 @@ msgstr "Kicks"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:112
 msgid "Exámenes"
-msgstr "Exams"
+msgstr "Exámenes"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:113
 msgid "Autentificación"
-msgstr "Autentication"
+msgstr "Autentificación"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:116
 msgid "Partidos"
-msgstr "Parties"
+msgstr "Partidos"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:121
 msgid "Economía"
-msgstr "Economy"
+msgstr "Economía"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:123
 msgid "Cuentas"
-msgstr "Accounts"
+msgstr "Cuentas"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:124
 msgid "Empresas"
-msgstr "Companies"
+msgstr "Empresas"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:125
 msgid "Tus monedas"
-msgstr "Yout coins"
+msgstr "Tus monedas"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:126
 msgid "Subastas"
-msgstr "Auctions"
+msgstr "Subastas"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:127
 msgid "Mapa"
-msgstr "Map"
+msgstr "Mapa"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:128
 msgid "Economía global"
-msgstr "Global economy"
+msgstr "Economía global"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:151
 msgid "mapa"
@@ -306,43 +297,46 @@ msgstr "mapa"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:151
 msgid "Subasta"
-msgstr "Auction"
+msgstr "Subasta"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:177
 msgid "Salir"
-msgstr "Logout"
+msgstr "Salir"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:179
 msgid "Entrar"
-msgstr "Login"
+msgstr "Entrar"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:210
 msgid "VirtualPol, la primera <b>Red Social Democrática</b>"
-msgstr "VirtualPol, the first Democratic Social Network"
+msgstr "VirtualPol, la primera <b>Red Social Democrática</b>"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:210
 msgid "Donar"
-msgstr "Donate"
+msgstr "Donar"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:212
 msgid "Vídeo"
-msgstr "Video"
+msgstr "Vídeo"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:212
 msgid "Ayuda / Documentación"
-msgstr "Help / Documentation"
+msgstr "Ayuda / Documentación"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:213
 msgid "Desarrollo / Código fuente"
-msgstr "Development / Source Code"
+msgstr "Desarrollo / Código fuente"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:219
 msgid "Reportar problema"
-msgstr "Report problem"
+msgstr "Reportar problema"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:223
 msgid "Época antigua en IRC"
-msgstr "Old age in IRC"
+msgstr "Época antigua en IRC"
+
+#~ msgid "Hola mundo!"
+#~ msgstr "Hola mundo!"
 
 #~ msgid "Otra prueba"
 #~ msgstr "Other test"

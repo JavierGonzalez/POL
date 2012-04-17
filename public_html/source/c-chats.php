@@ -117,8 +117,8 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 	include('inc-chats.php');
 } else { // Listado de chats
 	$txt_title = 'Chats';
-	$txt_nav = array('/chats'=>'Chats');
-	$txt_tab = array('/chats/solicitar-chat'=>'Solicitar chat');
+	$txt_nav = array('/chats'=>_('Chats'));
+	$txt_tab = array('/chats/solicitar-chat'=>_('Solicitar chat'));
 
 	$result = mysql_query("SELECT COUNT(*) AS num FROM chats_msg WHERE time > '".date('Y-m-d H:i:s', time() - 600)."'", $link);
 	while ($r = mysql_fetch_array($result)) { 
@@ -128,25 +128,23 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 
 	
 	$txt .= '<span style="float:right;color:#888;font-size:18px;"><b>'.round(($msgnum_10min / 10), 1).'</b> msg/min</span>
-	
-<h1 class="quitar"><a href="/chats">Chats</a>:</h1>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="4">
 <tr>
 <th colspan="3"></th>
-<th colspan="2" align="center">Acceso</th>
+<th colspan="2" align="center">'._('Acceso').'</th>
 <th colspan="4"></th>
 </tr>
 
 <tr>
 <th></th>
 <th align="right"><acronym title="Online en los ultimos 30 minutos.">#</acronym></th>
-<th>Chat</th>
-<th style="background:#5CB3FF;">Leer</th>
-<th style="background:#F97E7B;">Escribir</th>
-<th>Visitas</th>
-<th>Admin</th>
-<th>Hace...</th>
+<th>'._('Chat').'</th>
+<th style="background:#5CB3FF;">'._('Leer').'</th>
+<th style="background:#F97E7B;">'._('Escribir').'</th>
+<th>'._('Visitas').'</th>
+<th>'._('Admin').'</th>
+<th>'._('Hace').'...</th>
 <th></th>
 <th></th>
 </tr>';
@@ -166,7 +164,7 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 
 <td valign="top" align="right">'.num($r['stats_visitas']).'</td>
 
-<td valign="top">'.($r['user_ID']==0?'<em>Sistema</em>':$r['admin']).'</td>
+<td valign="top">'.($r['user_ID']==0?'<em>'._('Sistema').'</em>':$r['admin']).'</td>
 
 <td valign="top" align="right" nowrap="nowrap">'.timer($r['fecha_creacion']).'</td>
 <td valign="top" align="right"></td>

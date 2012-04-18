@@ -85,9 +85,9 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 '.$txt_li['escribir_ex'].' <input type="text" name="acceso_cfg_escribir_ex" size="25" maxlength="900" autocomplete="off" id="acceso_cfg_escribir_ex_var" value="'.$r['acceso_cfg_escribir_ex'].'" /></td>
 
 </tr>
-<tr><td colspan="2" align="center">
+<tr><td colspan="3" align="center">
 
-'.boton('Guardar', ((nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))?'submit':''), false, 'large').'
+'.boton('Guardar', (nucleo_acceso('privado', $r['admin'])||nucleo_acceso($vp['acceso']['control_gobierno'])?'submit':''), false, 'large blue').'
 
 </td></tr>
 </table>
@@ -100,12 +100,12 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 <input type="hidden" name="chat_ID" value="'.$r['chat_ID'].'" />
 
 <fieldset><legend>Administradores</legend>
-<p><input type="text" name="admin" size="40" maxlength="900" value="'.$r['admin'].'" /> <input type="submit" value="Cambiar Administradores"'.(($r['user_ID'] == $pol['user_ID']) OR (nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND (nucleo_acceso('nivel', 98)))?'':' disabled="disabled"').' /></p>
+<p><input type="text" name="admin" size="40" maxlength="900" value="'.$r['admin'].'" /> <input type="submit" value="Cambiar Administradores"'.($r['user_ID']==$pol['user_ID'] || nucleo_acceso('privado', $r['admin']) || nucleo_acceso($vp['acceso']['control_gobierno'])?'':' disabled="disabled"').' /></p>
 </fieldset>
 </form>';
 		}
 
-		if (($r['estado'] == 'activo') AND ($r['user_ID'] != 0) AND (($r['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= 95) AND ($r['acceso_escribir'] == 'anonimos')))) { 
+		if (($r['estado'] == 'activo') AND ($r['user_ID'] != 0) AND (($r['user_ID'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['control_gobierno'])))) { 
 			$txt .= boton('Bloquear', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=bloquear&chat_ID='.$r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?');
 		}
 
@@ -138,11 +138,11 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 
 <tr>
 <th></th>
-<th align="right"><acronym title="Online en los ultimos 30 minutos.">#</acronym></th>
-<th>'._('Chat').'</th>
+<th align="right"></th>
+<th align="left">'._('Chat').'</th>
+<th>'._('Visitas').'</th>
 <th style="background:#5CB3FF;">'._('Leer').'</th>
 <th style="background:#F97E7B;">'._('Escribir').'</th>
-<th>'._('Visitas').'</th>
 <th>'._('Admin').'</th>
 <th>'._('Hace').'...</th>
 <th></th>
@@ -153,25 +153,26 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creacion ASC", $link);
 	while ($r = mysql_fetch_array($result)) { 
 		
+		//  style="background:'.$vp['bg'][$r['pais']].';"
 		$txt .= '<tr>
 <td valign="top" align="right">'.($r['estado']=='activo'?'':'<b style="color:#888;">#</b>').'</td>
 <td valign="top" align="right"><b>'.$r['online'].'</b></td>
-<td valign="top" nowrap="nowrap" style="background:'.$vp['bg'][$r['pais']].';" title="'.$r['pais'].'">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'"><b>'.$r['titulo'].'</b></a>':'<b>'.$r['titulo'].'</b>').'</td>
+<td valign="top" nowrap="nowrap" title="'.$r['pais'].'">'.($r['estado']=='activo'?'<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'"><b>'.$r['titulo'].'</b></a>':'<b>'.$r['titulo'].'</b>').'</td>
+
+<td valign="top" align="right">'.num($r['stats_visitas']).'</td>
 
 <td valign="top" style="background:#5CB3FF;">'.($r['acceso_cfg_leer']?'<acronym title="['.$r['acceso_cfg_leer'].']">':'').ucfirst($r['acceso_leer']).($r['acceso_cfg_leer']?'</acronym>':'').'</td>
 
 <td valign="top" style="background:#F97E7B;">'.($r['acceso_cfg_escribir']?'<acronym title="['.$r['acceso_cfg_escribir'].']">':'').ucfirst($r['acceso_escribir']).($r['acceso_cfg_escribir']?'</acronym>':'').'</td>
 
-<td valign="top" align="right">'.num($r['stats_visitas']).'</td>
-
 <td valign="top">'.($r['user_ID']==0?'<em>'._('Sistema').'</em>':$r['admin']).'</td>
 
 <td valign="top" align="right" nowrap="nowrap">'.timer($r['fecha_creacion']).'</td>
 <td valign="top" align="right"></td>
-<td>';
+<td align="right" nowrap>';
 
-		$txt .= ((($r['estado'] != 'activo') AND ($pol['pais'] == $r['pais']) AND ($pol['nivel'] >= 95))?boton('Activar', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=activar&chat_ID='.$r['chat_ID']):'').
-((($r['estado'] == 'bloqueado') AND ($pol['user_ID'] == $r['user_ID']))?boton('Borrar', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=eliminar&chat_ID='.$r['chat_ID']):'').'</td>
+		$txt .= ((($r['estado'] != 'activo') AND ($pol['pais'] == $r['pais']) AND (nucleo_acceso($vp['acceso']['control_gobierno'])))?boton('Activar', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=activar&chat_ID='.$r['chat_ID'], false, 'small orange'):'').' '.
+($pol['user_ID'] == $r['user_ID'] || nucleo_acceso('privado', $r['admin']) || nucleo_acceso($vp['acceso']['control_gobierno'])?boton('Borrar', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=eliminar&chat_ID='.$r['chat_ID'], '¿Estás seguro de querer ELIMINAR este chat?', 'small red pill'):'').'</td>
 </tr>';
 	}
 	$txt .= '</table>';

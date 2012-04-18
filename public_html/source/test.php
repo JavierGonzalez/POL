@@ -10,7 +10,7 @@ function crono($new='') {
 }
 $txt .= '<h1>TEST</h1><hr />';
 
-
+$txt .= direccion_IP();
 
 
 $txt_title = 'Test';

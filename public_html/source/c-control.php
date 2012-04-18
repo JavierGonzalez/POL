@@ -13,7 +13,7 @@ switch ($_GET['a']) {
 
 case 'supervisor-censo':
 
-if (isset($sc[$pol['user_ID']])) {
+if (nucleo_acceso('supervisores_censo')) {
 
 	// extrae user_ID de SC
 	foreach ($sc AS $user_ID => $nick) { $sc_user_ID[] = $user_ID; }
@@ -45,12 +45,12 @@ if (isset($sc[$pol['user_ID']])) {
 	$result = sql("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."'");
 	while($r = r($result)) { $siglas[$r['ID']] = $r['siglas']; }
 
-	$txt_tab = array('/control/supervisor-censo'=>'Principal', '/control/supervisor-censo/factores-secundarios'=>'Extra', '/control/supervisor-censo/nuevos-ciudadanos'=>'Nuevos ciudadanos', '/control/expulsiones'=>'Expulsiones');
+	$txt_tab = array('/control/supervisor-censo'=>'Principal', '/control/supervisor-censo/factores-secundarios'=>'Extra', '/control/supervisor-censo/nuevos-ciudadanos'=>'Nuevos', '/control/supervisor-censo/bloqueos'=>'Bloqueos', '/control/expulsiones'=>'Expulsiones');
 
 	if ($_GET['b'] == 'nuevos-ciudadanos') {
 
 			$txt_title = 'Control: SC | Nuevos ciudadanos';
-			$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC', 'Nuevos ciudadanos');
+			$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC', 'Nuevos');
 
 			$txt .= '<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp;  Supervisores del Censo: <b>' . $supervisores . '</b></p>'.$nomenclatura;
 
@@ -58,25 +58,19 @@ if (isset($sc[$pol['user_ID']])) {
 <table border="0" cellspacing="0" cellpadding="2">
 <tr>
 <th></th>
+<th></th>
 <th align="right" colspan="2"><acronym title="Tiempo desde que se registró">Registro</acronym></th>
 <th align="right">Online</th>
 <th align="right"><acronym title="Tiempo desde el ultimo acceso">Ultimo</acronym></th>
 <th align="right"><acronym title="Plataforma">P</acronym></th>
-<th align="right"><acronym title="Votos ejercidos en Elecciones">E</acronym></th>
 <th align="center" colspan="2"><acronym title="Confianza de SC, actualizada en tiempo real">C_SC</acronym></th>
 <th align="right"><acronym title="Visitas">V</acronym></th>
 <th align="right"><acronym title="Paginas vistas">PV</acronym></th>
-<th align="right"><acronym title="Mensajes en foro">F</acronym></th>
-<th align="right"><acronym title="Mensajes privados enviados">P</acronym></th>
-<th align="right">Email</th>
-<th></th>
 <th>IP</th>
+<th></th>
+<th align="right">Email</th>
 </tr>';
-	$result = sql("SELECT *,
-(SELECT COUNT(*) FROM mensajes WHERE envia_ID = users.ID) AS num_priv,
-(SELECT COUNT(*) FROM ".SQL."foros_msg WHERE user_ID = users.ID) AS num_foro,
-(SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '" . $pol['user_ID'] . "' AND item_ID = users.ID LIMIT 1) AS has_votado,
-(SELECT SUM(voto) AS voto_total FROM votos WHERE tipo = 'confianza' AND item_ID = users.ID AND emisor_ID IN (".implode(',', $sc_user_ID).") LIMIT 1) AS voto_confianza_SC
+	$result = sql("SELECT *
 FROM users 
 ORDER BY fecha_registro DESC
 LIMIT 60");
@@ -107,28 +101,63 @@ LIMIT 60");
 		
 		if (!$r['voto_confianza_SC']) { $r['voto_confianza_SC'] = 0; }
 		
-		$txt .= '<tr' . $td_bg . '>
+		$txt .= '<tr'.$td_bg.'>
+<td><a href="/control/expulsiones/expulsar/'.$r['nick'].'" target="_blank" style="color:yellow;"><b>Expulsar</b></a></td>
 <td align="right"><b>' . $dia_registro . '</b></td>
 <td style="background:'.$vp['bg'][$r['pais']].';"><b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
 <td align="right" nowrap="nowrap">'.timer($r['fecha_registro']).'</td>
 <td align="right" nowrap="nowrap">' . $online . '</td>
 <td align="right" nowrap="nowrap">'.timer($r['fecha_last']) . '</td>
 <td nowrap="nowrap">' . $siglas[$r['partido_afiliado']] . '</td>
-<td align="right"><b>' . $r['num_elec'] . '</b></td>
-<td align="right"><span id="confianza'.$r['ID'].'">'.confianza($r['voto_confianza_SC']).'</span></td>
+<td align="right"><span id="confianza'.$r['ID'].'">'.confianza($r['voto_confianza']).'</span></td>
 <td align="right" nowrap="nowrap">'.($r['ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['ID'].'" class="votar" type="confianza" name="'.$r['ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
 <td align="right" nowrap="nowrap"><acronym title="' . $r['fecha_init'] . '">' . $r['visitas'] . '</acronym></td>
 <td align="right">' . $r['paginas'] . '</td>
-<td align="right">' . $r['num_foro'] . '</td>
-<td align="right">' . $r['num_priv'] . '</td>
+<td>'.long2ip($r['IP']).'</td>
+<td nowrap="nowrap" align="right" style="font-size:10px;">'.ocultar_IP($r['host'], 'host').'</td>
 <td align="right" style="font-size:10px;">' . $r['email'] . '</td>
-<td align="right" nowrap="nowrap" style="font-size:10px;">'.ocultar_IP($r['host'], 'host').'</td>
-<td style="font-size:10px;">'.ocultar_IP($r['IP']).'</td>
 <td nowrap="nowrap" style="font-size:10px;">'.$razon.$r['nota_SC'].'</td>
 </tr>';
 		$dia_registro_last = $dia_registro;
 	}
 	$txt .= '</table>';
+
+
+
+
+
+} else if ($_GET['b'] == 'bloqueos') {
+
+	$txt_title = 'Control: SC | bloqueos';
+	$txt_nav = array('/control'=>'Control', '/control/supervisor-censo'=>'SC', 'Bloqueos');
+
+	$result = sql("SELECT valor, dato FROM config WHERE PAIS IS NULL");
+	while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
+
+	$backlists = array('backlist_IP'=>400, 'backlist_emails'=>180, 'backlist_nicks'=>120);
+
+	$txt .= '<form action="/accion.php?a=bloqueos" method="post">
+
+<p>Listas negras para bloquear masivamente con filtros. Un elemento por linea. Elementos de al menos 5 caracteres (para minimizar el riesgo de filtros masivos). Precaución, hay riesgo de producir bloqueos masivos.</p>
+
+<table>
+<tr>';
+
+	foreach ($backlists AS $tipo => $width) {
+		$txt .= '<td><fieldset><legend>'.ucfirst(str_replace('_', ' ', $tipo)).'</legend>
+	<textarea style="width:'.$width.'px;height:400px;white-space:nowrap;" name="'.$tipo.'">'.$pol['config'][$tipo].'</textarea></fieldset></td>';
+	}
+	
+	$txt .= '
+</tr>
+
+<tr>
+<td colspan="'.count($backlists).'" align="center">'.boton('GUARDAR', 'submit', '¿Estás seguro de activar estos BLOQUEOS?\n\nPRECAUCION: RIESGO DE BLOQUEOS MASIVOS INVOLUNTARIOS.', 'large red').'</td>
+</tr>
+</table>
+
+</form>
+';
 
 
 
@@ -161,7 +190,6 @@ while($r = r($result)) {
 	} else {
 		$confianzas_amigos[$r['item_nick'].'--'.$r['emisor_nick']]++;
 	}
-
 }
 
 foreach ($confianzas_amigos AS $emisor_item => $num) {
@@ -980,7 +1008,7 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 
 <ol>
 <li><b>Nick:</b> el usuario a expulsar.<br />
-<input type="text" value="'.$_GET['c'].'" name="nick" size="20" maxlength="20" />
+<input type="text" value="'.$_GET['c'].'" name="nick" size="20" maxlength="20" style="font-weight:bold;" />
 <br /><br /></li>
 
 <li><b>Motivo de expulsión:</b> si son varios elegir el mas claro.<br />
@@ -1018,11 +1046,11 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 <li><b>Caso <input type="text" name="caso" size="8" maxlength="20" /></b> Solo en caso de clones.<br /><br /></li>
 
 <li><b>Pruebas:</b> anotaciones o pruebas sobre la expulsion. Confidencial, solo visible por los SC.<br />
-<textarea name="motivo" cols="70" rows="6" style="color: green; font-weight: bold;"></textarea>
+<textarea name="motivo" style="color:green;font-weight:bold;width:500px;height:120px;"></textarea>
 <br /><br /></li>
 
 
-<li>'.boton('EXPULSAR', ($disabled?false:'submit'), '¿Seguro que debes EXPULSAR a este usuario?', 'large red').'</li></ol></form>	
+<li>'.boton('EXPULSAR', ($disabled?false:'submit'), false, 'large red').'</li></ol></form>	
 ';
 
 

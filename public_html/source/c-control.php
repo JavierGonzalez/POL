@@ -145,7 +145,7 @@ LIMIT 60");
 
 	foreach ($backlists AS $tipo => $width) {
 		$txt .= '<td><fieldset><legend>'.ucfirst(str_replace('_', ' ', $tipo)).'</legend>
-	<textarea style="width:'.$width.'px;height:400px;white-space:nowrap;" name="'.$tipo.'">'.$pol['config'][$tipo].'</textarea></fieldset></td>';
+	<textarea style="width:'.$width.'px;height:400px;white-space:nowrap;" name="'.$tipo.'">'.$pol['config'][$tipo]."\n".'</textarea></fieldset></td>';
 	}
 	
 	$txt .= '

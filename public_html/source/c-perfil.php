@@ -303,6 +303,7 @@ $txt .= '</div>
 
 
 		$txt .= '<table border="0" cellspacing="8"><tr><td valign="top" width="220">
+'.($r['donacion']&&$pol['user_ID']?'<p>Donación: <b>'.pols($r['donacion']).' euros</b></p>':'').'
 '.(ASAMBLEA?'':'<p>Nivel: <b>' . $r['nivel'] . '</b></p>').'
 <p>Nota media: <b><span class="gris">' . $nota . '</span></b></p>
 <p>Tiempo online: <b><acronym title="' . $r['online'] . '">' . duracion($r['online']) . '</acronym></b></p>

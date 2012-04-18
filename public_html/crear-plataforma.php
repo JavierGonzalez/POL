@@ -8,7 +8,6 @@ include('inc-login.php');
 if (($_GET['a'] == 'accion') AND ($pol['user_ID'] == 1)) {
 	// ACCIONES
 
-
 	if (($_GET['b'] == 'add') AND (entre(strlen($_POST['pais']), 2, 10)) AND (is_numeric($_POST['participacion'])) AND ($_POST['condiciones']== 'true') AND ($_POST['condiciones_extra']== 'true')) {
 
 		mysql_query("INSERT INTO plataformas (estado, pais, asamblea, economia, user_ID, time, descripcion, participacion) 

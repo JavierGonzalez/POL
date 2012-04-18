@@ -66,6 +66,12 @@ case 'aceptar-condiciones':
 	break;
 
 
+case 'donacion':
+	sql("UPDATE users SET donacion = ".($_POST['donacion']>=5?"'".$_POST['donacion']."'":"NULL")." WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+	$refer_url = 'perfil/'.$pol['nick'];
+	break;
+
+
 case 'SC':
 	if (($_GET['b'] == 'nota') AND (nucleo_acceso('supervisores_censo')) AND ($_GET['ID'])) {
 		sql("UPDATE users SET nota_SC = '".strip_tags($_POST['nota_SC'])."' WHERE ID = '".$_GET['ID']."' LIMIT 1");

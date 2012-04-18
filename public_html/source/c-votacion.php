@@ -1,4 +1,12 @@
-<?php 
+<?php
+/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
+** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
+** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
+** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
+*/
+
 include('inc-login.php');
 
 $votaciones_tipo = array('sondeo', 'referendum', 'parlamento', 'cargo', 'elecciones');
@@ -467,7 +475,7 @@ LIMIT 1");
 
 <tr>
 <td align="right">Tipo de voto:</td>
-<td><b>'.ucfirst((substr($r['tipo_voto'], 1, 6)=='puntos'?'preferencial, repartir '.substr($r['tipo_voto'], 0, 1).' puntos':$r['tipo_voto'])).'</b> ('.($r['privacidad']=='true'?'voto secreto':'voto público, no secreto').($r['aleatorio']=='true'?', orden de opciones aleatorio':'').')</td>
+<td><b>'.ucfirst((substr($r['tipo_voto'], 1, 6)=='puntos'?'preferencial, repartir '.substr($r['tipo_voto'], 0, 1).' puntos':$r['tipo_voto'])).'</b> ('.($r['privacidad']=='true'?'voto secreto':'voto público, no secreto').($r['aleatorio']=='true'?', opciones ordenadas aleatoriamente':'').')</td>
 </tr>
 
 <tr>

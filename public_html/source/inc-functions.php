@@ -244,6 +244,9 @@ function num($num, $dec=0) { return number_format(round($num, $dec), $dec, ',', 
 function explodear($pat, $str, $num) { $exp = explode($pat, $str); return $exp[$num]; }
 function implodear($pat, $str, $num) { $exp = implode($pat, $str); return $exp[$num]; }
 function entre($num, $min, $max) { if ((is_numeric($num)) AND ($num >= $min) AND ($num <= $max)) { return true; } else { return false; } }
+function direccion_IP($tipo='ip') { return ($tipo=='longip'?ip2long($_SERVER['REMOTE_ADDR']):$_SERVER['REMOTE_ADDR']); }
+function avatar($user_ID, $size='') { return '<img src="'.IMG.'a/'.$user_ID.($size?'_'.$size:'').'.jpg" alt="'.$user_ID.'"'.($size!=''?' width="'.$size.'" height="'.$size.'" class="redondeado"':'').' />'; }
+
 
 function boton($texto, $url=false, $confirm=false, $size=false, $pols='', $html_extra=false) {
 	if (($pols=='') OR (ECONOMIA == false)) {
@@ -376,17 +379,6 @@ function confianza($num, $votos_num=false) {
 	elseif ($num > -10) { $t = 'vcn">'; }
 	else { $t = 'vcnn">'; }
 	return '<span'.($votos_num!=false?' title="+'.(($votos_num+$num)/2).' -'.($votos_num-(($votos_num+$num)/2)).' ('.$votos_num.' votos)"':'').' class="'.$t.$num.'</span>';
-}
-
-function direccion_IP($tipo='') {
-	$IP = $_SERVER['REMOTE_ADDR'];
-	if ($tipo == 'longip') { $IP = ip2long($IP); }
-	return $IP;
-}
-
-function avatar($user_ID, $size='') {
-	if ($size) { $extra = '_' . $size; } else { $extra = ''; }
-	return '<img src="'.IMG.'a/' . $user_ID . $extra . '.jpg" alt="' . $user_ID . '"'.($size!=''?' width="'.$size.'" height="'.$size.'" class="redondeado"':'').' />'; 
 }
 
 ?>

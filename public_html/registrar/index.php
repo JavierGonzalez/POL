@@ -4,90 +4,14 @@ include('../source/inc-functions-accion.php');
 
 
 
+$result = sql("SELECT valor, dato FROM config WHERE PAIS IS NULL");
+while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
+
 function comprobar_email($email){
+	global $pol;
+
     $mail_correcto = false;
-	$emails_falsos = '
-binkmail.com
-chogmail.com
-devnullmail.com
-frapmail.com
-guerrillamailblock.com
-mailcatch.com
-mailinator.com
-meltmail.com
-obobbo.com
-putthisinyourspamdatabase.com
-sendspamhere.com
-shinedyoureyes.com
-spamavert.com
-spamcorptastic.com
-spamgourmet.com
-spamherelots.com
-spamhereplease.com
-tempinbox.com
-temporaryinbox.com
-thisisnotmyrealemail.com
-trash-mail.com
-trashmail.net
-filzmail.com
-brefmail.com
-tempemail.net
-mytrashmail.com
-tempemail.co.za
-emaxpro.com
-zzn.com
-tyldd.com
-alone.la
-anal.la
-bang.la
-bisex.la
-bitch.la
-klzlk.com
-bizarre.la
-buff.la
-cumshot.la
-devote.la
-dick.la
-dolly.la
-ecstasy.la
-erotic.la
-extreme.la
-fetish.la
-freesex.la
-fuckme.la
-fuckyou.la
-gangbang.la
-heat.la
-honey.la
-horny.la
-inlove.la
-kiss.la
-lonely.la
-lovely.la
-lulu.la
-nancy.la
-oral.la
-randy.la
-slave.la
-stripper.la
-sweet.la
-sweetheart.la
-sweetly.la
-trash2009.com
-slopsbox.com
-dgraficos.com
-navarro.at
-acelerados.com
-espalpsp.com
-espalnds.com
-espalwii.com
-uggsrock.com
-yopmail.com
-owlpic.com
-666.joliekemulder.nl
-yopmail.com
-klzlk.com
-';
+	$emails_falsos = $pol['config']['backlist_emails'];
 	$emails_falsos = explode("\n", $emails_falsos);
 	$domain = explode("@", $email); $domain = strtolower($domain[1]);	
     if ((strlen($email) >= 6) && (substr_count($email,"@") == 1) && (substr($email,0,1) != "@") && (substr($email,strlen($email)-1,1) != "@")){
@@ -115,8 +39,6 @@ function onlynumbers($string) {
 }
 
 
-
-
 foreach ($vp['paises'] AS $pais) {
 	$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$pais."'", $link);
 	while($r = mysql_fetch_array($result)) {
@@ -134,29 +56,7 @@ case 'registrar': //CHECK
 	$pass1 = trim($_POST['pass1']);
 	$pass2 = trim($_POST['pass2']);
 
-	$nicks_prohibidos = '
-admin
-hispania
-vulcan
-pol
-atlantis
-vp
-virtualpol
-virtual
-pais
-administrador
-presidente
-teoriza
-god
-dios
-policia
-15m
-dry
-acampadas
-occupy
-coordinador
-diputado
-';
+	$nicks_prohibidos = $pol['config']['backlist_nicks'];
 	$nicks_prohibidos = explode("\n", $nicks_prohibidos);
 	$crono = $_POST['crono'];
 
@@ -164,6 +64,20 @@ diputado
 	//CONTROL: captcha
 	include('animal-captcha-check.php');
 	if ($_POST['condiciones'] == 'ok') {
+
+		// Bloquea registro si la IP coincide con otro expulsado
+		$margen_3h = date('Y-m-d H:i:s', time() - (60*60*3));
+		$bloquear_registro = false;
+		$result = sql("SELECT ID FROM users WHERE (estado = 'expulsado' OR fecha_registro > '".$margen_3h."') AND (IP = '".direccion_IP('longip')."' OR hosts LIKE '%".direccion_IP()."%') LIMIT 1");
+		while ($r = r($result)) { $bloquear_registro = true; }
+
+		foreach (explode("\n", $pol['config']['backlist_IP']) AS $la_IP) {
+			if ((strlen($la_IP) >= 4) AND (stristr(' '.direccion_IP(), ' '.explodear(' ', $la_IP, 0)))) { $bloquear_registro = true; }
+		}
+		
+		if ($bloquear_registro === false) {
+
+
 		if (animal_captcha_check($_POST['animal']) == true) {
 
 			//CONTROL: solo letras y numeros en nick
@@ -227,17 +141,20 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . str
 
 									mail($email, "[VirtualPol] Verificar " . $nick, $texto_email, "FROM: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: ".CONTACTO_EMAIL." \nX-Sender: ".CONTACTO_EMAIL." \nMIME-Version: 1.0\n"); 
 
-									$registro_txt .= '<p><span style="color:blue;"><b>OK</b></span>. El usuario se ha creado correctamente. Su estado actual es: <em>En espera de validaci&oacute;n</em>.</p>';
-									$registro_txt .= '<p><b>Te hemos enviado un email de verificaci&oacute;n</b>, rev&iacute;salo ahora. En el email te hemos indicado una direccion web que debes visitar para as&iacute; verificar tu usuario.</p><p class="gris">(<b>Rescata el email si est&aacute; como no deseado o spam!</b>)</p>';
+									$registro_txt .= '<p><span style="color:green;"><b>¡Bien!</b></span>. Tu usuario se ha creado correctamente.</p>';
+									$registro_txt .= '<p>Ahora <b>debes revisar tu email, te hemos enviado un email para validar tu usuario</b>. Es por seguridad. Rescata el email si lo encuentras en la carpeta de spam.</p>';
 
-								} else {$nick = ''; $verror .= '<p class="vmal"><b>Error 1.</b> Ese nick ya est&aacute; registrado, lo siento.</p>';}
-							} else {$nick = ''; $verror .= '<p class="vmal"><b>Error 1.</b> Tu apodo debe tener entre 3 y 14 caracteres.</p>';}
-						} else {$email = ''; $verror .= '<p class="vmal"><b>Error 3.</b> La direcci&oacute;n de email ya esta usandose.</p>';}
-					} else {$email = ''; $verror .= '<p class="vmal"><b>Error 3.</b> El email no es valido.</p>';}
-				} else { $pass1 = ''; $pass2 = '';  $verror .= '<p class="vmal"><b>Error 4.</b> Debes escribir la misma contrase&ntilde;a dos veces.</p>';}
-			} else { $pass1 = ''; $pass2 = '';  $verror .= '<p class="vmal"><b>Error 1.</b> El nick solo puede tener letras, numeros y el caracter: "_". La inicial nunca debe ser un numero.</p>';}
-		} else { $verror .= '<p class="vmal"><b>Error 5.</b> No has acertado la pregunta captcha.</p>'; }
-	} else { $verror .= '<p class="vmal"><b>Error 2.</b> Has de aceptar las condiciones.</p>'; }
+								} else {$nick = ''; $verror .= '<p class="vmal"><b>Error</b>: Ese nick ya está registrado ¡elige otro!</p>';}
+							} else {$nick = ''; $verror .= '<p class="vmal"><b>Error</b>: ¡Tu nick debe tener entre 3 y 14 caracteres!</p>';}
+						} else {$email = ''; $verror .= '<p class="vmal"><b>Error</b>: ¡La dirección de email ya esta usandose, <a href="'.REGISTRAR.'login.php?a=recuperar-pass"><b>debes recuperar tu usuario</b></a>!</p>';}
+					} else {$email = ''; $verror .= '<p class="vmal"><b>Error</b>: ¡El email no es valido!</p>';}
+				} else { $pass1 = ''; $pass2 = '';  $verror .= '<p class="vmal"><b>Error</b>: ¡Debes escribir la misma contraseña dos veces!</p>';}
+			} else { $pass1 = ''; $pass2 = '';  $verror .= '<p class="vmal"><b>Error</b>: El nick solo puede tener letras, numeros y el caracter: "_". La inicial nunca debe ser un numero.</p>';}
+		} else { $verror .= '<p class="vmal"><b>Error</b>: ¡No has acertado captcha!</p>'; }
+
+		} else { $verror .= '<p class="vmal"><b>Error</b>: ¿No has acertado captcha?</p>'; }
+
+	} else { $verror .= '<p class="vmal"><b>Error</b>: ¡Has de aceptar las condiciones!</p>'; }
 	break;
 
 

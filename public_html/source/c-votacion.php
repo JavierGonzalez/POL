@@ -402,7 +402,7 @@ LIMIT 1");
 	while($r = r($result)) {
 
 		if ((!nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver'])) AND ($r['estado'] != 'borrador')) { 
-			$txt .= '<p style="color:red;">Esta votación es privada. No tienes acceso para ver su contenido o resultado.</p>'; 
+			$txt .= '<p style="color:red;">No puedes ver esta votación. Solo pueden verla <b>'.verbalizar_acceso($r['acceso_ver'], $r['acceso_cfg_ver']).'</b></p>'; 
 			break; 
 		}
 

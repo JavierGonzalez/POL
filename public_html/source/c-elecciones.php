@@ -18,8 +18,8 @@ $txt .= '
 	$result = mysql_query("SELECT * 
 FROM cargos
 WHERE pais = '".PAIS."' AND elecciones IS NOT NULL
-ORDER BY elecciones ASC
-LIMIT 1", $link);
+ORDER BY elecciones DESC
+LIMIT 50", $link);
 	while($r = mysql_fetch_array($result)) {
 		$time_start = strtotime($r['elecciones']);
 		$time_anterior = strtotime($r['elecciones'])-($r['elecciones_cada']*24*60*60);

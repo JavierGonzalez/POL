@@ -66,9 +66,9 @@ case 'registrar': //CHECK
 	if ($_POST['condiciones'] == 'ok') {
 
 		// Bloquea registro si la IP coincide con otro expulsado
-		$margen_3h = date('Y-m-d H:i:s', time() - (60*60*3));
+		$margen = date('Y-m-d H:i:s', time() - (60*60));
 		$bloquear_registro = false;
-		$result = sql("SELECT ID FROM users WHERE (estado = 'expulsado' OR fecha_registro > '".$margen_3h."') AND (IP = '".direccion_IP('longip')."' OR hosts LIKE '%".direccion_IP()."%') LIMIT 1");
+		$result = sql("SELECT ID FROM users WHERE (estado = 'expulsado' OR fecha_registro > '".$margen."') AND (IP = '".direccion_IP('longip')."' OR hosts LIKE '%".direccion_IP()."%') LIMIT 1");
 		while ($r = r($result)) { $bloquear_registro = true; }
 
 		foreach (explode("\n", $pol['config']['backlist_IP']) AS $la_IP) {
@@ -152,7 +152,7 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . str
 			} else { $pass1 = ''; $pass2 = '';  $verror .= '<p class="vmal"><b>Error</b>: El nick solo puede tener letras, numeros y el caracter: "_". La inicial nunca debe ser un numero.</p>';}
 		} else { $verror .= '<p class="vmal"><b>Error</b>: ¡No has acertado captcha!</p>'; }
 
-		} else { $verror .= '<p class="vmal"><b>Error</b>: ¿No has acertado captcha?</p>'; }
+		} else { $verror .= '<p class="vmal"><b>Error</b>: Se ha activado un bloqueo de registro. Si lo necesitas contacta: '.CONTACTO_EMAIL.'</p>'; }
 
 	} else { $verror .= '<p class="vmal"><b>Error</b>: ¡Has de aceptar las condiciones!</p>'; }
 	break;

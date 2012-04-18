@@ -9,8 +9,8 @@ $date = date('Y-m-d H:i:s');
 $IP = direccion_IP('longip');
 
 // Prevención de inyección
-foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val, false); }
 foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape($val); }
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val, false); }
 foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
 foreach ($_COOKIE AS $nom => $val) { $_COOKIE[$nom] = escape($val); }
 

@@ -456,4 +456,28 @@ function distancia($lat1, $lng1, $lat2, $lng2, $dec=0) {
 	return round($km, $dec);
 }
 
+
+function form_select_cat($tipo='docs', $cat_now='') {
+	global $pol, $link;
+	$f .= '<select name="cat">';
+	$result = sql("
+SELECT ID, nombre, nivel
+FROM cat
+WHERE pais = '".PAIS."' AND tipo = '" . $tipo . "'
+ORDER BY orden ASC", $link);
+	while($row = r($result)){
+		if ($cat_now == $row['ID']) { 
+			$selected = ' selected="selected"'; 
+		} elseif ($pol['nivel'] < $row['nivel']) {
+			$selected = ' disabled="disabled"'; 
+			$row['nombre'] = $row['nombre'] . ' (Nivel: ' . $row['nivel'] . ')';
+		} else { 
+			$selected = ''; 
+		}
+		$f .= '<option value="' . $row['ID'] . '"' . $selected . '>' . $row['nombre'] . '</option>' . "\n";
+	}
+	$f .= '</select>';
+	return $f;
+}
+
 ?>

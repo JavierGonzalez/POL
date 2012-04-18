@@ -9,7 +9,7 @@ HAY QUE REEMPLAZAR Y ELIMINAR ESTE TROZO DE CODIGO CUANTO ANTES.
 ES UN FRACASO ESPERPENTICO. UN HORROR.
 
 */
-
+include('inc-functions-accion.php');
 
 function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 	global $pol, $link;
@@ -57,7 +57,17 @@ function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 					break;
 
 				case 'select_nivel':
-					$f .= '<li><b>Nivel de acceso:</b> Selecciona el nivel minimo necesario para editar el documento.<br />' . form_select_nivel() . '</li>' . "\n";
+					$f .= '<li><b>Nivel de acceso:</b> Selecciona el nivel minimo necesario para editar el documento.<br />';
+				
+					$f .= '<select name="nivel"><option value="1">&nbsp;1 &nbsp; Ciudadano</option>';
+					if ($pol['nivel'] > 1) {
+						$result = sql("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND asigna != '-1' AND nivel <= '".$pol['nivel']."' ORDER BY nivel ASC", $link);
+						while($row = r($result)){
+							if ($nivel_select == $row['nivel']) { $selected = ' selected="selected"'; } else { $selected = ''; }
+							$f .= '<option value="' . $row['nivel'] . '"' . $selected . '>' . $row['nivel'] . ' &nbsp; ' . $row['nombre'] . '</option>' . "\n";
+						}
+					}
+					$f .= '</select></li>' . "\n";
 					break;
 
 				case 'select_cat':

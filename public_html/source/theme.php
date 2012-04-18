@@ -47,7 +47,7 @@ p_scroll = false;
 
 <div id="content-left">
 	
-	<a href="http://www.virtualpol.com"><img src="<?=IMG?>media/logo-virtualpol-1_200.gif" width="200" height="60" alt="VirtualPol" /></a>
+	<a href="http://www.virtualpol.com"><img src="<?=IMG?>logo/vp2.png" width="200" height="60" alt="VirtualPol" /></a>
 	
 	<ul class="menu vertical">
 
@@ -60,8 +60,8 @@ p_scroll = false;
 					<?=(isset($pol['user_ID'])?'<li><a href="/foro/mis-respuestas">'._('Tu actividad').'</a></li>':'')?>
 				</ul>
 			</li>
-			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@cryptious.net/Other/?version=1.2.0">'._('Voz').'</a><ul><li><a href="/info/voz">'._('Configurar').' <em>Mumble</em></a></li></ul></li>':'')?>
 			<li><a href="/msg"><?=_('Mensajes privados')?></a></li>
+			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@cryptious.net/Other/?version=1.2.0">'._('Voz').'</a><ul><li><a href="/info/voz">'._('Configurar').' <em>Mumble</em></a></li></ul></li>':'')?>
 			<li><a href="#" style="cursor:default;"><?=_('Redes sociales')?></a>
 				<ul>
 					<li><a href="<?=(ASAMBLEA?'https://twitter.com/#!/AsambleaVirtuaI':'https://twitter.com/#!/VirtualPol')?>">Twitter</a></li>

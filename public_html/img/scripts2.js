@@ -1,3 +1,11 @@
+/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
+** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
+** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
+** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
+*/
+
 /* VirtualPol JS */
 
 
@@ -470,11 +478,8 @@ function enriquecer(m, bbcode) {
 	m = m.replace(/(\s|^):\*/gi,			' <img src="'+IMG+'smiley/muacks.gif" alt=":*" border="0" title=":*" width="15" height="15" />');
 	m = m.replace(/(\s|^);\)/gi,			' <img src="'+IMG+'smiley/guino.gif" alt=";)" border="0" title=";)" width="15" height="15" />');
 	m = m.replace(/(\s|^):O/gi,				' <img src="'+IMG+'smiley/bocaabierta.gif" alt=":O" border="0" title=":O" width="15" height="15" />');
-	m = m.replace(/:tarta:/gi,				' <img src="'+IMG+'smiley/tarta.gif" alt=":tarta:" border="0" title=":tarta:" width="16" height="16" />');
-	m = m.replace(/:roto2:/gi,				' <img src="'+IMG+'smiley/roto2.gif" alt=":roto2:" border="0" title=":roto2:" width="16" height="16" />');
-	m = m.replace(/:(palm|facepalm):/gi,	' <img src="'+IMG+'smiley/palm.gif" alt=":palm:" border="0" title=":palm:" width="15" height="15" />');
-	m = m.replace(/:moneda:/gi,				' <img src="'+IMG+'varios/m.gif" alt=":moneda:" border="0" title=":moneda:" width="16" height="16" />');
 	m = m.replace(/:troll:/gi,				' <img src="'+IMG+'smiley/troll.gif" alt=":troll:" border="0" title=":troll:" width="15" height="15" />');
+	m = m.replace(/:(tarta|roto2|palm|moneda):/gi,				' <img src="'+IMG+'smiley/$1.gif" alt=":$1:" border="0" title=":$1:" width="16" height="16" />');
 
 	// URLs
 	m = m.replace(/(\s|^)(\/[-A-Z0-9\/_]{3,})/ig, ' <a href="$2" target="_blank">$2</a>'); // /url
@@ -493,14 +498,7 @@ function enriquecer(m, bbcode) {
 
 	// Botones Instant
 	if (bbcode) { var boton_width = 50; } else { var boton_width = 16; }
-	m = m.replace(/:aplauso:/gi, html_instant('aplauso', boton_width));
-	m = m.replace(/:noo:/gi, html_instant('noo', boton_width));
-	m = m.replace(/:rickroll:/gi, html_instant('rickroll', boton_width));
-	m = m.replace(/:relax:/gi, html_instant('relax', boton_width));
-	m = m.replace(/:alarmanuclear:/gi, html_instant('alarmanuclear', boton_width));
-	m = m.replace(/:porquenotecallas:/gi, html_instant('porquenotecallas', boton_width));
-	m = m.replace(/:zas:/gi, html_instant('zas', boton_width));
-	m = m.replace(/:aleluya:/gi, html_instant('aleluya', boton_width));
+	m = m.replace(/:(aplauso|noo|rickroll|relax|alarmanuclear|porquenotecallas|zas|aleluya):/gi, html_instant('$1', boton_width));
 
 	return m;
 }

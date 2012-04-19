@@ -16,7 +16,7 @@ $centro = '40.180,-3.669'; // Madrid
 
 // GEN
 if (!isset($pol['user_ID'])) {
-	$txt .= '<p>El mapa de ciudadanos solo está disponible para ciudadanos.</p>';
+	$txt .= '<p>'._('El mapa de ciudadanos solo está disponible para ciudadanos').'.</p>';
 
 
 } elseif ($_GET['a'] == 'vecinos') {
@@ -27,16 +27,16 @@ if (!isset($pol['user_ID'])) {
 	while ($r = mysql_fetch_array($result)) { $user_x = $r['x']; $user_y = $r['y']; $geo = true; }
 
 	if ($geo) {
-		$txt .= '<p>Los ciudadanos más cercanos a ti.</p>';
+		$txt .= '<p>'._('Los ciudadanos más cercanos a ti').'.</p>';
 	} else {
-		$txt .= '<p>No estás geolocalizado '.boton('Geolocalízate', '/geolocalizacion/fijar', false, 'large red').'</p>';
+		$txt .= '<p>'._('No estás geolocalizado').' '.boton(_('Geolocalízate'), '/geolocalizacion/fijar', false, 'large red').'</p>';
 	}
 	
 	
 	$txt .= '<table border="0">';
 	$result = mysql_query("SELECT ID, nick, pais, avatar, x, y, POW(x-".$user_x.",2)+POW(y-".$user_y.",2) AS dist FROM users WHERE estado = 'ciudadano' AND ID != '".$pol['user_ID']."' AND x IS NOT NULL ORDER BY dist ASC LIMIT 50", $link);
 	while ($r = mysql_fetch_array($result)) { 
-		$txt .= '<tr><td height="40">'.($r['avatar']=='true'?avatar($r['ID'], 40):'').'</td><td><b style="font-size:16px;">'.crear_link($r['nick']).'</b></td><td align="right">'.distancia($user_x, $user_y, $r['x'], $r['y'], 0).' km</td><td>'.boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$r['nick']).'</td></tr>';
+		$txt .= '<tr><td height="40">'.($r['avatar']=='true'?avatar($r['ID'], 40):'').'</td><td><b style="font-size:16px;">'.crear_link($r['nick']).'</b></td><td align="right">'.distancia($user_x, $user_y, $r['x'], $r['y'], 0).' km</td><td>'.boton(_('Enviar mensaje'), 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$r['nick']).'</td></tr>';
 	}
 	$txt .= '</table>';
 
@@ -89,17 +89,17 @@ function initialize() {
 <table border="0" width="100%">
 <tr>
 
-<td>'.boton('Fijar mi localización', 'submit', false, 'blue').'</td>
+<td>'.boton(_('Fijar mi localización'), 'submit', false, 'blue').'</td>
 
 <td align="right" nowrap="nowrap">
-Latitud: <input name="y" size="3" type="text" id="geo_y" value="'.$center['y'].'" style="text-align:right;" readonly="readonly" /><br />
-Longitud: <input name="x" size="3" type="text" id="geo_x" value="'.$center['x'].'" style="text-align:right;" readonly="readonly" />
+'._('Latitud').': <input name="y" size="3" type="text" id="geo_y" value="'.$center['y'].'" style="text-align:right;" readonly="readonly" /><br />
+'._('Longitud').': <input name="x" size="3" type="text" id="geo_x" value="'.$center['x'].'" style="text-align:right;" readonly="readonly" />
 </td>
 
-<td>Marca tu lugar haciendo clic. La información será pública.<br />
-Por privacidad la precisión guardada es de solo 1.112 metros a la redonda.</td>
+<td>'._('Marca tu lugar haciendo clic. La información será pública').'.<br />
+'._('Por privacidad la precisión guardada es de solo 1.112 metros a la redonda').'.</td>
 
-<td align="right">'.boton('Eliminar tu geolocalización', '/accion.php?a=geolocalizacion&b=del', '¿Estás seguro de querer borrar tu geolocalización de forma permanente?\n\nDebes saber que -para proteger la privacidad- la precisión guardada es de 1112 metros a la redonda, aleatoriamente.', 'red small').'</td>
+<td align="right">'.boton(_('Eliminar tu geolocalización'), '/accion.php?a=geolocalizacion&b=del', _('¿Estás seguro de querer borrar tu geolocalización de forma permanente?\n\nDebes saber que -para proteger la privacidad- la precisión guardada es de 1112 metros a la redonda, aleatoriamente.'), 'red small').'</td>
 
 </tr>
 </table>
@@ -116,7 +116,7 @@ Por privacidad la precisión guardada es de solo 1.112 metros a la redonda.</td>
 	$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { $geo = true; }
 
-	if ($geo != true) { $txt .= '<p>No estás geolocalizado '.boton('Geolocalízate', '/geolocalizacion/fijar', false, 'large red').'</p>'; }
+	if ($geo != true) { $txt .= '<p>'._('No estás geolocalizado').' '.boton(_('Geolocalízate'), '/geolocalizacion/fijar', false, 'large red').'</p>'; }
 
 
 	$txt .='
@@ -197,14 +197,14 @@ google.maps.event.addDomListener(window, "load", initialize);
 
 
 //THEME
-$txt_title = 'Mapa de ciudadanos';
-$txt_nav = array('/geolocalizacion'=>'Mapa');
-if ($_GET['a'] == 'fijar') { $txt_nav[] = 'Geolocalízate'; } 
-elseif ($_GET['a'] == 'vecinos') { $txt_nav[] = 'Ciudadanos cercanos'; } 
-else { $txt_nav[] = $geo_num.' ciudadanos'; }
+$txt_title = _('Mapa de ciudadanos');
+$txt_nav = array('/geolocalizacion'=>_('Mapa'));
+if ($_GET['a'] == 'fijar') { $txt_nav[] = _('Geolocalízate'); } 
+elseif ($_GET['a'] == 'vecinos') { $txt_nav[] = _('Ciudadanos cercanos'); } 
+else { $txt_nav[] = $geo_num.' '._('ciudadanos'); }
 
 
-$txt_tab = array('/geolocalizacion'=>'Mapa', '/geolocalizacion/vecinos'=>'Ciudadanos cercanos', '/geolocalizacion/fijar'=>'Geolocalízate');
+$txt_tab = array('/geolocalizacion'=>_('Mapa'), '/geolocalizacion/vecinos'=>_('Ciudadanos cercanos'), '/geolocalizacion/fijar'=>_('Geolocalízate'));
 $txt_menu = 'info';
 include('theme.php');
 ?>

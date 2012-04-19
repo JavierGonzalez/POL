@@ -12,9 +12,9 @@ include('inc-login.php');
 
 
 if ($_GET['a'] == 'solicitar-chat') { // Crear chat
-	$txt_title = 'Solicitar chat';
-	$txt_nav = array('/chats'=>'Chats', 'Solicitar chat');
-	$txt_tab = array('/chats/solicitar-chat'=>'Solicitar chat');
+	$txt_title = _('Solicitar chat');
+	$txt_nav = array('/chats'=>'Chats', _('Solicitar chat'));
+	$txt_tab = array('/chats/solicitar-chat'=>_('Solicitar chat'));
 
 	if (($pol['pais']) AND ($pol['pais'] != PAIS)) { redirect('http://'.strtolower($pol['pais']).'.'.DOMAIN.'/chats/'.$_GET['a']); }
 
@@ -24,11 +24,11 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 	$txt .= '<form action="/accion.php?a=chat&b=solicitar" method="post">
 
 <ol>
-<li><b>Nombre del chat:</b><br />
-<input type="text" name="nombre" size="20" maxlength="20" /> (No modificable)
+<li><b>'._('Nombre del chat').':</b><br />
+<input type="text" name="nombre" size="20" maxlength="20" /> ('._('No modificable').')
 <br /><br /></li>
 
-<li>' . boton('Solicitar chat', false, false, '', $pol['config']['pols_crearchat']) . '</li>
+<li>' . boton(_('Solicitar chat'), false, false, '', $pol['config']['pols_crearchat']) . '</li>
 </ol>
 </form>';
 
@@ -38,19 +38,19 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 	$result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
 
-		$txt_title = 'Chat: '.$r['titulo'].' | log';
-		$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo'], 'Log');
-		$txt_tab = array('/chats/'.$r['url']=>'Chat', '/chats/'.$r['url'].'/log'=>'Log', '/chats/'.$r['url'].'/opciones'=>'Opciones');
+		$txt_title = _('Chat').': '.$r['titulo'].' | log';
+		$txt_nav = array('/chats'=>_('Chats'), '/chats/'.$r['url']=>$r['titulo'], _('Log'));
+		$txt_tab = array('/chats/'.$r['url']=>'Chat', '/chats/'.$r['url'].'/log'=>_('Log'), '/chats/'.$r['url'].'/opciones'=>_('Opciones'));
 		
 		if ((nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) AND (isset($pol['user_ID']))) {
-			$txt .= '<p>Log de las ultimas 24 horas:</p><p class="rich" style="background:#FFFFFF;padding:15px;font-size:14px;text-align:left;">VirtualPol: Plataforma '.PAIS.'. Sala: '.$r['titulo'].'. A fecha de '.date('Y-m-d').'.<br />...<br />';
+			$txt .= '<p>'._('Log de las últimas 24 horas').':</p><p class="rich" style="background:#FFFFFF;padding:15px;font-size:14px;text-align:left;">VirtualPol: '._('Plataforma').' '.PAIS.'. '._('Sala').': '.$r['titulo'].'. '._('A fecha de').' '.date('Y-m-d').'.<br />...<br />';
 			$result2 = mysql_query("SELECT * FROM chats_msg WHERE chat_ID = '".$r['chat_ID']."' AND tipo != 'p' ORDER BY msg_ID ASC", $link);
 			while ($r2 = mysql_fetch_array($result2)) { 
 				$txt .= '<span'.($r2['tipo']!='m'?' style="color:green;"':'').'>'.date('H:i', strtotime($r2['time'])).' <img src="'.IMG.'cargos/'.$r2['cargo'].'.gif" width="16" height="16" border="0"> <b>'.$r2['nick'].'</b>: '.$r2['msg']."</span><br />\n"; 
 			}
-			$txt .= '<b>FIN</b>: '.$date.'</p>';
+			$txt .= '<b>'._('FIN').'</b>: '.$date.'</p>';
 		} else {
-			$txt .= '<p style="color:red;">No tienes acceso de lectura.</p>';
+			$txt .= '<p style="color:red;">'._('No tienes acceso de lectura').'.</p>';
 		}
 	}
 
@@ -59,9 +59,9 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 	$result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
 
-		$txt_title = 'Chat: '.$r['titulo'].' | Opciones';
-		$txt_nav = array('/chats'=>'Chats', '/chats/'.$r['url']=>$r['titulo'], 'Opciones');
-		$txt_tab = array('/chats/'.$r['url']=>'Chat', '/chats/'.$r['url'].'/log'=>'Log', '/chats/'.$r['url'].'/opciones'=>'Opciones');
+		$txt_title = _('Chat').': '.$r['titulo'].' | '._('Opciones');
+		$txt_nav = array('/chats'=>_('Chats'), '/chats/'.$r['url']=>$r['titulo'], _('Opciones'));
+		$txt_tab = array('/chats/'.$r['url']=>_('Chat'), '/chats/'.$r['url'].'/log'=>_('Log'), '/chats/'.$r['url'].'/opciones'=>_('Opciones'));
 
 		foreach (nucleo_acceso('print') AS $at => $at_var) { 
 			$txt_li['leer'] .= '<input type="radio" name="acceso_leer" value="'.$at.'"'.($at==$r['acceso_leer']?' checked="checked"':'').' onclick="$(\'#acceso_cfg_leer_var\').val(\''.$at_var.'\');" /> '.ucfirst(str_replace("_", " ", $at)).'<br />';
@@ -79,22 +79,22 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 <input type="hidden" name="chat_ID" value="'.$r['chat_ID'].'" />
 <input type="hidden" name="chat_nom" value="'.$_GET['a'].'" />
 
-<fieldset><legend>Opciones de acceso</legend>
+<fieldset><legend>'._('Opciones de acceso').'</legend>
 <table border="0" cellpadding="9">
 <tr>
-<td valign="top"><b>Acceso leer:</b><br />
+<td valign="top"><b>'._('Acceso leer').':</b><br />
 '.$txt_li['leer'].' <input type="text" name="acceso_cfg_leer" size="25" maxlength="900" autocomplete="off" id="acceso_cfg_leer_var" value="'.$r['acceso_cfg_leer'].'" /></td>
 
-<td valign="top"><b>Acceso escribir:</b><br />
+<td valign="top"><b>'._('Acceso escribir').':</b><br />
 '.$txt_li['escribir'].' <input type="text" name="acceso_cfg_escribir" size="25" maxlength="900" autocomplete="off" id="acceso_cfg_escribir_var" value="'.$r['acceso_cfg_escribir'].'" /></td>
 
-<td valign="top"><b>Acceso escribir extranjeros:</b><br />
+<td valign="top"><b>'._('Acceso escribir').' '._('extranjeros').':</b><br />
 '.$txt_li['escribir_ex'].' <input type="text" name="acceso_cfg_escribir_ex" size="25" maxlength="900" autocomplete="off" id="acceso_cfg_escribir_ex_var" value="'.$r['acceso_cfg_escribir_ex'].'" /></td>
 
 </tr>
 <tr><td colspan="3" align="center">
 
-'.boton('Guardar', (nucleo_acceso('privado', $r['admin'])||nucleo_acceso($vp['acceso']['control_gobierno'])?'submit':''), false, 'large blue').'
+'.boton(_('Guardar'), (nucleo_acceso('privado', $r['admin'])||nucleo_acceso($vp['acceso']['control_gobierno'])?'submit':''), false, 'large blue').'
 
 </td></tr>
 </table>
@@ -106,24 +106,24 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 			$txt .= '<form action="/accion.php?a=chat&b=cambiarfundador" method="post">
 <input type="hidden" name="chat_ID" value="'.$r['chat_ID'].'" />
 
-<fieldset><legend>Administradores</legend>
-<p><input type="text" name="admin" size="40" maxlength="900" value="'.$r['admin'].'" /> <input type="submit" value="Cambiar Administradores"'.($r['user_ID']==$pol['user_ID'] || nucleo_acceso('privado', $r['admin']) || nucleo_acceso($vp['acceso']['control_gobierno'])?'':' disabled="disabled"').' /></p>
+<fieldset><legend>'._('Administradores').'</legend>
+<p><input type="text" name="admin" size="40" maxlength="900" value="'.$r['admin'].'" /> <input type="submit" value="'._('Cambiar administradores').'"'.($r['user_ID']==$pol['user_ID'] || nucleo_acceso('privado', $r['admin']) || nucleo_acceso($vp['acceso']['control_gobierno'])?'':' disabled="disabled"').' /></p>
 </fieldset>
 </form>';
 		}
 
 		if (($r['estado'] == 'activo') AND ($r['user_ID'] != 0) AND (($r['user_ID'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['control_gobierno'])))) { 
-			$txt .= boton('Bloquear', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=bloquear&chat_ID='.$r['chat_ID'], '&iquest;Seguro que quieres BLOQUEAR este chat?');
+			$txt .= boton(_('Bloquear'), 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=bloquear&chat_ID='.$r['chat_ID'], '¿Seguro que quieres BLOQUEAR este chat?');
 		}
 
-		$txt .= '<p>Codigo HTML: <input type="text" style="color:grey;font-weight:normal;" value="&lt;iframe width=&quot;730&quot; height=&quot;480&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; transparency=&quot;transparency&quot; src=&quot;http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'/e/&quot;&gt;&lt;p&gt;&lt;a href=&quot;http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'/&quot;&gt;&lt;b&gt;Entra al chat&lt;/b&gt;&lt;/a&gt;&lt;/p&gt;&lt;/iframe&gt;" size="70" /></p>';
+		$txt .= '<p>'._('Código HTML').': <input type="text" style="color:grey;font-weight:normal;" value="&lt;iframe width=&quot;730&quot; height=&quot;480&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; transparency=&quot;transparency&quot; src=&quot;http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'/e/&quot;&gt;&lt;p&gt;&lt;a href=&quot;http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$r['url'].'/&quot;&gt;&lt;b&gt;Entra al chat&lt;/b&gt;&lt;/a&gt;&lt;/p&gt;&lt;/iframe&gt;" size="70" /></p>';
 	}
 
 
 } elseif ($_GET['a']) { // Chats
 	include('inc-chats.php');
 } else { // Listado de chats
-	$txt_title = 'Chats';
+	$txt_title = _('Chats');
 	$txt_nav = array('/chats'=>_('Chats'));
 	$txt_tab = array('/chats/solicitar-chat'=>_('Solicitar chat'));
 
@@ -178,8 +178,8 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 <td valign="top" align="right"></td>
 <td align="right" nowrap>';
 
-		$txt .= ((($r['estado'] != 'activo') AND ($pol['pais'] == $r['pais']) AND (nucleo_acceso($vp['acceso']['control_gobierno'])))?boton('Activar', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=activar&chat_ID='.$r['chat_ID'], false, 'small orange'):'').' '.
-($pol['user_ID'] == $r['user_ID'] || nucleo_acceso('privado', $r['admin']) || nucleo_acceso($vp['acceso']['control_gobierno'])?boton('Borrar', 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=eliminar&chat_ID='.$r['chat_ID'], '¿Estás seguro de querer ELIMINAR este chat?', 'small red pill'):'').'</td>
+		$txt .= ((($r['estado'] != 'activo') AND ($pol['pais'] == $r['pais']) AND (nucleo_acceso($vp['acceso']['control_gobierno'])))?boton(_('Activar'), 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=activar&chat_ID='.$r['chat_ID'], false, 'small orange'):'').' '.
+($pol['user_ID'] == $r['user_ID'] || nucleo_acceso('privado', $r['admin']) || nucleo_acceso($vp['acceso']['control_gobierno'])?boton(_('Borrar'), 'http://'.strtolower($r['pais']).'.'.DOMAIN.'/accion.php?a=chat&b=eliminar&chat_ID='.$r['chat_ID'], '¿Estás seguro de querer ELIMINAR este chat?', 'small red pill'):'').'</td>
 </tr>';
 	}
 	$txt .= '</table>';

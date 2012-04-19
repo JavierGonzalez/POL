@@ -54,7 +54,7 @@ p_scroll = false;
 
 <div id="content-left">
 	
-	<a href="http://www.virtualpol.com"><img src="<?=IMG?>media/logo-virtualpol-1_200.gif" width="200" height="60" alt="VirtualPol" /></a>
+	<a href="http://www.virtualpol.com"><img src="<?=IMG?>logo/vp2.png" width="200" height="60" alt="VirtualPol" /></a>
 	
 	<ul class="menu vertical">
 		<li><a href="http://www.virtualpol.com/video">Vídeo bienvenida</a></li>
@@ -68,13 +68,14 @@ p_scroll = false;
 
 
 <?php
-$result = mysql_query("SELECT nick, pais, estado
+$result = mysql_query("SELECT nick, pais
 FROM users 
 WHERE fecha_last > '".date('Y-m-d H:i:00', time() - 3600)."' AND estado != 'expulsado'
-ORDER BY fecha_last DESC LIMIT 50", $link);
+ORDER BY fecha_last DESC", $link);
 while($r = mysql_fetch_array($result)){ 
 	$li_online_num++; 
-	$li_online .= '<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'" style="color:#AAA;">'.$r['nick'].'</a> '; 
+	if ($li_online_num <= 50) {
+	$li_online .= '<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'" style="color:#AAA;">'.$r['nick'].'</a> '; }
 }
 
 echo '<p><b>'.num($li_online_num).' ciudadanos</b> online:<br />

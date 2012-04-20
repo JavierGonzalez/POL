@@ -10,14 +10,11 @@
 include('inc-login.php');
 
 
-$txt_description = 'Red social democrática. Simulador Politico y social Español, experimento social o simulador de politica.'; 
+$txt_description = 'La primera Red Social Democrática. Simulador Politico y social Español, democracia participativa, simulador, politica'; 
 
 
 
-
-
-// Datos estadisticos
-/*
+/* Datos estadisticos
 Se contabilizan los siguientes datos antiguos conservadas en tablas antiguas.
 Plataforma votaciones votos
 Atlantis 402 4540
@@ -35,7 +32,7 @@ while($r = mysql_fetch_array($result)) { $num_votaciones_votos = $r['num']+46133
 $result = mysql_query("SELECT COUNT(*) AS num FROM votos", $link);
 while($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
 
-$txt_nav = array('Bienvenido a VirtualPol');
+$txt_nav = array(_('Bienvenido a VirtualPol'));
 
 $txt .= '
 
@@ -96,7 +93,7 @@ foreach ($vp['paises'] AS $pais) {
 	// Presidente
 	$pais_presidente = '';
 	$result = mysql_query("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '7'", $link);
-	while($r = mysql_fetch_array($result)) { $pais_presidente = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'" class="nick"><b style="font-size:18px;">' . $r['nick'] . '</b></a>'; }
+	while($r = mysql_fetch_array($result)) { $pais_presidente = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'" class="nick"><b style="font-size:18px;">'.$r['nick'].'</b></a>'; }
 
 	$pais_vice = '';
 	$result = mysql_query("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '19'", $link);

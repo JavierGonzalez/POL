@@ -1977,6 +1977,6 @@ if ($_GET['a'] == 'logout') {
 }
 
 
-if (!isset($refer_url)) { $refer_url = '?error='.base64_encode('Acción no permitida o erronea ('.$_GET['a'].')'); }
+if (!isset($refer_url)) { $refer_url = '?error='.base64_encode(_('Acción no permitida o erronea').' ('.$_GET['a'].')'); }
 redirect('http://'.HOST.'/'.$refer_url);
 ?>

@@ -19,7 +19,7 @@ $txt .= '
 <input type="hidden" name="cof" value="FORID:9" />
 <input type="hidden" name="ie" value="UTF-8" />
 <input type="text" name="q" id="iq" size="60" style="font-size:18px;" value="'.$_GET['q'].'" />
-<input type="submit" name="sa" value="Buscar" />
+<input type="submit" name="sa" value="'._('Buscar').'" />
 </form>
 </p>
 
@@ -36,13 +36,13 @@ $txt .= '
 <script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
 
 
-<p style="color:#999;margin-top:50px;">Buscador en fase de desarrollo.</p>
+<p style="color:#999;margin-top:50px;">'._('Buscador en fase de desarrollo').'.</p>
 ';
 
 
 //THEME
-$txt_title = 'Buscar';
+$txt_title = _('Buscar');
 $txt_menu = 'info';
-$txt_nav = array('Buscador');
+$txt_nav = array(_('Buscar'));
 include('theme.php');
 ?>

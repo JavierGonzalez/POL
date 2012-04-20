@@ -29,7 +29,7 @@ if (!isset($_SESSION)) { session_start(); } // inicia sesion PHP
 
 // nucleo del sistema de usuarios, comienza la verificación
 if (isset($_COOKIE['teorizauser'])) {
-	$result = mysql_query("SELECT ID, pass, nick, estado, pols, pais, email, fecha_registro, rechazo_last, cargo, cargos, examenes, nivel, dnie FROM users WHERE nick = '".$_COOKIE['teorizauser']."' LIMIT 1", $link);
+	$result = mysql_query("SELECT ID, pass, lang, nick, estado, pols, pais, email, fecha_registro, rechazo_last, cargo, cargos, examenes, nivel, dnie FROM users WHERE nick = '".$_COOKIE['teorizauser']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
 		if (md5(CLAVE.$r['pass']) == $_COOKIE['teorizapass']) { // cookie pass OK
 			$session_new = true;
@@ -41,6 +41,8 @@ if (isset($_COOKIE['teorizauser'])) {
 			$pol['pais'] = $r['pais'];
 			$pol['rechazo_last'] = $r['rechazo_last'];
 			$pol['fecha_registro'] = $r['fecha_registro'];
+
+			if (isset($r['lang'])) { $pol['config']['lang'] = $r['lang']; }
 
 			// variables perdurables en la sesion, solo se guarda el nick e ID de usuario
 			$_SESSION['pol']['nick'] = $r['nick'];
@@ -56,5 +58,16 @@ if (isset($_COOKIE['teorizauser'])) {
 		}
 	}  
 }
+
+
+if ((isset($pol['config']['lang'])) AND ($pol['config']['lang'] != 'es_ES')) {
+	// Carga internacionalización
+	$locale = $pol['config']['lang'];
+	putenv("LC_ALL=$locale");
+	setlocale(LC_ALL, $locale);
+	bindtextdomain('messages', '/locale');
+	textdomain('messages');
+}
+
 
 ?>

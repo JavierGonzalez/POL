@@ -45,20 +45,20 @@ function nucleo_acceso($tipo, $valor='') {
 function verbalizar_acceso($tipo, $valor='') {
 	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
 	switch ($tipo) { // ¿Quien tiene acceso?
-		case 'internet': case 'anonimos': $t = 'todo el mundo (Internet)'; break;
-		case 'ciudadanos_global': $t = 'todos los ciudadanos de VirtualPol'; break;
-		case 'ciudadanos': $t = 'todos los ciudadanos de '.($valor==''?'la plataforma '.PAIS:' las plataformas: <em>'.$valor.'</em>'); break;
-		case 'excluir': $t = 'todos los ciudadanos excepto: <em>'.$valor.'</em>'; break;
-		case 'privado': $t = 'los ciudadanos: '.$valor; break;
-		case 'confianza': $t = 'ciudadanos con confianza mayor o igual a '.confianza($valor).' (<a href="/censo/confianza">Ver confianza</a>)'; break;
-		case 'nivel': $t = 'ciudadanos con nivel <em>'.$valor.'</em> o mayor (<a href="/cargos">Ver cargos</a>)'; break;
+		case 'internet': case 'anonimos': $t = _('todo el mundo (Internet)'); break;
+		case 'ciudadanos_global': $t = _('todos los ciudadanos de VirtualPol'); break;
+		case 'ciudadanos': $t = _('todos los ciudadanos de').' '.($valor==''?_('la plataforma').' '.PAIS:' '._('las plataformas').': <em>'.$valor.'</em>'); break;
+		case 'excluir': $t = _('todos los ciudadanos excepto').': <em>'.$valor.'</em>'; break;
+		case 'privado': $t = _('los ciudadanos').': '.$valor; break;
+		case 'confianza': $t = _('ciudadanos con confianza mayor o igual a').' '.confianza($valor).' (<a href="/censo/confianza">'._('Ver confianza').'</a>)'; break;
+		case 'nivel': $t = _('ciudadanos con nivel').' <em>'.$valor.'</em> '._('o mayor').' (<a href="/cargos">'._('Ver cargos').'</a>)'; break;
 		
 		case 'examenes':
 			global $link;
 			$val = array();
 			$result = sql("SELECT titulo AS nom FROM examenes WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")", $link);
 			while($r = r($result)) { $val[] = $r['nom']; }
-			$t = 'ciudadanos con los exámenes aprobados: <a href="/examenes">'.implode(', ', $val).'</a>';
+			$t = _('ciudadanos con los exámenes aprobados').': <a href="/examenes">'.implode(', ', $val).'</a>';
 			break;
 
 		case 'cargo':
@@ -66,7 +66,7 @@ function verbalizar_acceso($tipo, $valor='') {
 			$val = array();
 			$result = sql("SELECT cargo_ID, nombre AS nom FROM cargos WHERE pais = '".PAIS."' AND cargo_ID IN (".implode(',', explode(' ', $valor)).")", $link);
 			while($r = r($result)) { $val[] = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" title="'.$r['nom'].'" />'.$r['nom']; }
-			$t = 'ciudadanos con cargo: '.implode(', ', $val).' (<a href="/cargos">Ver cargos</a>)';
+			$t = _('ciudadanos con cargo').': '.implode(', ', $val).' (<a href="/cargos">'._('Ver cargos').'</a>)';
 			break;
 
 		case 'afiliado':
@@ -74,7 +74,7 @@ function verbalizar_acceso($tipo, $valor='') {
 			$val = array();
 			$result = sql("SELECT siglas AS nom FROM partidos WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")", $link);
 			while($r = r($result)) { $val[] = $r['nom']; }
-			$t = 'ciudadanos afiliados al partido <a href="/partidos">'.implode('', $val).'</a>';
+			$t = _('ciudadanos afiliados al partido').' <a href="/partidos">'.implode('', $val).'</a>';
 			break;
 
 		case 'grupos':
@@ -82,14 +82,14 @@ function verbalizar_acceso($tipo, $valor='') {
 			$val = array();
 			$result = sql("SELECT nombre AS nom FROM grupos WHERE pais = '".PAIS."' AND grupo_ID IN (".implode(',', explode(' ', $valor)).")", $link);
 			while($r = r($result)) { $val[] = $r['nom']; }
-			$t = 'ciudadanos afiliados al grupo: <a href="/grupos">'.implode(', ', $val).'</a>';
+			$t = _('ciudadanos afiliados al grupo:').' <a href="/grupos">'.implode(', ', $val).'</a>';
 			break;
 		
-		case 'monedas': $t = 'ciudadanos con al menos <em>'.$valor.'</em> monedas'; break;
-		case 'autentificados': $t = 'ciudadanos autentificados'; break;
-		case 'supervisores_censo': $t = 'Supervisores del Censo'; break;
-		case 'antiguedad': $t = 'ciudadanos con al menos <em>'.$valor.'</em> dias de antigüedad';  break;
-		case 'nadie': $t = 'nadie'; break;
+		case 'monedas': $t = _('ciudadanos con al menos').' <em>'.$valor.'</em> '._('monedas'); break;
+		case 'autentificados': $t = _('ciudadanos autentificados'); break;
+		case 'supervisores_censo': $t = _('Supervisores del Censo'); break;
+		case 'antiguedad': $t = _('ciudadanos con al menos').' <em>'.$valor.'</em> '._('días de antigüedad');  break;
+		case 'nadie': $t = _('nadie'); break;
 	}
 	return $t;
 }
@@ -224,10 +224,10 @@ function get_supervisores_del_censo() {
 }
 
 function duracion($t) {
-	if ($t > 172800) { $d = round($t/86400).' días'; }
-	elseif ($t > 7200) { $d = round($t/3600).' horas'; }
-	elseif ($t > 120) { $d = round($t/60).' min'; }
-	else { $d = $t.' seg'; }
+	if ($t > 172800) { $d = round($t/86400).' '._('días'); }
+	elseif ($t > 7200) { $d = round($t/3600).' '._('horas'); }
+	elseif ($t > 120) { $d = round($t/60).' '._('min'); }
+	else { $d = $t.' '._('seg'); }
 	return $d;
 }
 
@@ -249,7 +249,7 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 					return '<a href="/perfil/'.$a.'" class="nick'.$add_class.'"'.$bg.'>'.$a.'</a>';
 				}
 			} else { 
-				return '<span title="Usuario expirado">&dagger;</span>'; 
+				return '<span title="Expirado">&dagger;</span>'; 
 			} 
 			break;
 		case 'partido': if ($a) { return '<a href="/partidos/'.strtolower($a).'">'.$a.'</a>'; } else { return 'Ninguno'; } break;

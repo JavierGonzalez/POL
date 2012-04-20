@@ -9,7 +9,11 @@
 
 include('inc-login.php');
 
-paginacion('eventos', '/log', null, $_GET['a'], null, '500');
+if (is_numeric($_GET['a'])) { 
+	paginacion('eventos', '/log/', null, $_GET['a'], null, '500');
+} else { 
+	paginacion('eventos', '/log/'.$_GET['a'].'/'.$_GET['b'].'/', null, $_GET['c'], null, '500');
+}
 
 $txt .= '<br />'.$p_paginas.'
 
@@ -22,7 +26,7 @@ $txt .= '<br />'.$p_paginas.'
 
 $result = mysql_query("SELECT *
 FROM log 
-WHERE pais = '".PAIS."'
+WHERE pais = '".PAIS."'".($_GET['a']=='nick'?" AND nick = '".$_GET['b']."'":"")."
 ORDER BY time DESC LIMIT ".mysql_real_escape_string($p_limit), $link);
 while($r = mysql_fetch_array($result)){
 	$txt .= '<tr>

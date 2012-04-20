@@ -37,7 +37,7 @@ function nucleo_acceso($tipo, $valor='') {
 		case 'print': 
 			if (ASAMBLEA) {	return array('privado'=>'Nick ...', 'excluir'=>'Nick ...', 'afiliado'=>'partido_ID', 'confianza'=>'0', 'cargo'=>'cargo_ID ...', 'grupos'=>'grupo_ID ...', 'nivel'=>'1', 'antiguedad'=>'365', 'autentificados'=>'', 'supervisores_censo'=>'', 'ciudadanos'=>'', 'ciudadanos_global'=>'', 'anonimos'=>''); } 
 			else { return array('privado'=>'Nick ...', 'excluir'=>'Nick ...', 'afiliado'=>'partido_ID', 'confianza'=>'0', 'cargo'=>'cargo_ID ...', 'grupos'=>'grupo_ID ...', 'nivel'=>'1', 'antiguedad'=>'365', 'monedas'=>'0', 'autentificados'=>'', 'supervisores_censo'=>'', 'ciudadanos'=>'', 'ciudadanos_global'=>'', 'anonimos'=>''); }
-		exit;
+			exit;
 	}
 	return $rt;
 }
@@ -89,9 +89,25 @@ function verbalizar_acceso($tipo, $valor='') {
 		case 'autentificados': $t = 'ciudadanos autentificados'; break;
 		case 'supervisores_censo': $t = 'Supervisores del Censo'; break;
 		case 'antiguedad': $t = 'ciudadanos con al menos <em>'.$valor.'</em> dias de antigüedad';  break;
+		case 'nadie': $t = 'nadie'; break;
 	}
 	return $t;
 }
+
+
+function control_acceso($titulo=false, $name='', $acceso='', $cfg='', $quitar_array='') {
+	$html = ($titulo==false?'':'<fieldset><legend>'.$titulo.'</legend>').'<select name="'.$name.'">';
+	$quitar_array = explode(' ', $quitar_array);
+	$array = nucleo_acceso('print');
+	foreach ($array AS $a => $b) { if (in_array($a, $quitar_array)) { unset($array[$a]); } }
+	foreach ($array AS $at => $at_var) {
+		$html .= '<option value="'.$at.'"'.($at==$acceso?' selected="selected"':'').' />'.ucfirst(str_replace('_', ' ', $at)).'</option>';
+	}
+	$html .= '</select><br /><input type="text" name="'.$name.'_cfg" size="18" maxlength="900" id="'.$name.'_cfg_var" value="'.$cfg.'" /><br />'.($titulo==false?'':'</fieldset>');
+	return $html;
+}
+
+
 
 function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 	global $pol, $link;

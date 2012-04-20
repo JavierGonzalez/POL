@@ -751,7 +751,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 					foreach ($escrutinio['votos'] AS $voto => $num) {
 						if ($respuestas[$voto] != 'En Blanco') {
 							$grafico_array_votos[] = $num;
-							$grafico_array_respuestas[] = (strlen($respuestas[$voto])>=13?trim(substr($respuestas[$voto], 0, 13)).'..':$respuestas[$voto]);
+							$grafico_array_respuestas[] = htmlspecialchars_decode((strlen($respuestas[$voto])>=13?trim(substr($respuestas[$voto], 0, 13)).'..':$respuestas[$voto]));
 						}
 					}
 

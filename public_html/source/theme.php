@@ -112,10 +112,12 @@ p_scroll = false;
 					<li><a href="/grupos"><?=_('Grupos')?></a></li>
 				</ul>
 			</li>
-			<li><a href="/control"><?=_('Gestión')?></a>
+			<li><a href="/control/gobierno"><?=_('Gobierno')?></a>
 				<ul>
-					<li><a href="/control/gobierno"><?=_('Gobierno')?></a></li>
-					<li title="Bloqueos de moderación"><a href="/control/kick"><?=_('Kicks')?></a></li>
+					<li><a href="/control/gobierno/privilegios"><?=_('Privilegios')?></a></li>
+					<li><a href="/control/gobierno/notificaciones"><?=_('Notificaciones')?></a></li>
+					<li><a href="/control/gobierno/foro"><?=_('Configuración foro')?></a></li>
+					<li><a href="/control/kick"><?=_('Kicks')?></a></li>
 					<li><a href="/examenes"><?=_('Exámenes')?></a></li>
 					<li><a href="<?=SSL_URL?>dnie.php"><?=_('Autentificación')?></a></li>
 				</ul>
@@ -181,7 +183,7 @@ if ((ECONOMIA) AND (substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa')) {
 <?php
 unset($txt_header);
 if (isset($pol['user_ID'])) {
-	echo '<span class="htxt"><b><a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(ECONOMIA&&$pol['estado']=='ciudadano'?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="/accion.php?a=logout">'._('Salir').'</a></b></span>';
+	echo '<span class="htxt"><b><a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').' | </b><a href="/msg">'._('Mensajes privados').'</a><b>'.(ECONOMIA&&$pol['estado']=='ciudadano'?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="/accion.php?a=logout">'._('Salir').'</a></b></span>';
 } else {
 	echo boton(_('Entrar'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), false, 'large').' &nbsp; '.boton(_('Crear ciudadano'), REGISTRAR.'?p='.PAIS, false, 'large blue');
 }

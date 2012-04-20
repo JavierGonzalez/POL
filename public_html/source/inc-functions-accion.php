@@ -40,7 +40,8 @@ function actualizar($accion, $user_ID=false) {
 function evento_log($accion, $es_sistema=false) {
 	global $pol, $link, $_REQUEST;
 	if (!isset($pol['user_ID'])) { $es_sistema = true; }
-	mysql_query("INSERT INTO log (pais, user_ID, nick, time, accion, accion_a) VALUES ('".PAIS."', '".($es_sistema==false?$pol['user_ID']:0)."', '".($es_sistema==false?$pol['nick']:'Sistema')."', '".date('Y-m-d H:i:s')."', '".$accion."', '".$_REQUEST['a']."')", $link);
+	if (PAIS == 'Ninguno') { $pais = $pol['pais']; } else { $pais = PAIS; }
+	mysql_query("INSERT INTO log (pais, user_ID, nick, time, accion, accion_a) VALUES ('".$pais."', '".($es_sistema==false?$pol['user_ID']:0)."', '".($es_sistema==false?$pol['nick']:'Sistema')."', '".date('Y-m-d H:i:s')."', '".$accion."', '".$_REQUEST['a']."')", $link);
 }
 
 function presentacion($titulo, $html, $url='http://www.virtualpol.com') {
@@ -202,7 +203,6 @@ LIMIT 1", $link);
 
 
 // NUEVA FUNCION DE CARGOS EN DESARROLLO
-
 function cargo($accion, $cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 	global $link, $pol;
 	

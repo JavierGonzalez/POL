@@ -29,22 +29,22 @@ case 'panel':
 		$result = mysql_query("SELECT ser_SC FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) { $ser_SC = $r['ser_SC']; }
 
-		$txt .= '<h1>Opciones de usuario ('.$pol['nick'].'):</h1>
+		$txt .= '<h1>'._('Opciones de usuario').' ('.$pol['nick'].'):</h1>
 
 <div style="max-width:640px;">
 
 
 
 
-<fieldset><legend>Cambiar idioma</legend>
+<fieldset><legend>'._('Cambiar idioma').'</legend>
 
 
 <form action="'.REGISTRAR.'login.php?a=changelang" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td valign="middle" align="center" valign="top">Idioma: 
+<td valign="middle" align="center" valign="top">'._('Idioma').': 
 <select name="lang">
-<option value="">Idioma por defecto de plataformas</option>';
+<option value="">'._('Idioma por defecto de plataformas').'</option>';
 	$result = sql("SELECT lang FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	while ($r = r($result)) { $the_lang = $r['lang']; }
 
@@ -53,8 +53,8 @@ case 'panel':
 	}
 	$txt .= '</select>
 </td>
-<td valign="middle" align="center" valign="top">
-'.boton('Cambiar idioma', 'submit', false, 'large blue').'
+<td valign="middle" align="right" valign="top">
+'.boton(_('Cambiar idioma'), 'submit', false, 'large blue').'
 </td></tr></table></form>
 
 
@@ -63,88 +63,85 @@ case 'panel':
 
 
 
-<fieldset><legend>Cambiar contraseña</legend>
+<fieldset><legend>'._('Cambiar contraseña').'</legend>
 
 <form action="'.REGISTRAR.'login.php?a=changepass" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td valign="middle" align="center" valign="top">Contrase&ntilde;a actual:<br /><input type="password" name="oldpass" value="" maxlength="30" /></td>
-<td valign="middle" align="center" valign="top">Nueva contrase&ntilde;a:<br /><input type="password" name="pass1" value="" maxlength="30" /><br />
+<td valign="middle" align="center" valign="top">'._('Contraseña actual').':<br /><input type="password" name="oldpass" value="" maxlength="30" /></td>
+<td valign="middle" align="center" valign="top">'._('Nueva contraseña').':<br /><input type="password" name="pass1" value="" maxlength="30" /><br />
 <input type="password" name="pass2" value="" maxlength="30" /></td>
-<td valign="middle" align="center" valign="top">
-'.boton('Cambiar contraseña', 'submit', false, 'large blue').'
+<td valign="middle" align="right" valign="top">
+'.boton(_('Cambiar contraseña'), 'submit', false, 'large blue').'
 </td></tr></table></form>
 
 </fieldset>
 
 
 
-<fieldset><legend>Cambiar email</legend>
+<fieldset><legend>'._('Cambiar email').'</legend>
 
 <form action="'.REGISTRAR.'login.php?a=changemail" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td valign="middle" align="center" valign="top">Email: <input type="text" size="30" name="email" value="'.$pol['email'].'" maxlength="100" /></td>
-<td valign="middle" align="center" valign="top">
-'.boton('Cambiar email', 'submit', false, 'large blue').'
+<td valign="middle" align="center" valign="top">'._('Email').': <input type="text" size="30" name="email" value="'.$pol['email'].'" maxlength="100" /></td>
+<td valign="middle" align="right" valign="top">
+'.boton(_('Cambiar email'), 'submit', false, 'large blue').'
 </td></tr></table></form>
 
 </fieldset>
 
 
 
-<fieldset><legend>Candidato a Supervisor del Censo</legend>
+<fieldset><legend>'._('Candidato a Supervisor del Censo').'</legend>
 
 <form action="'.REGISTRAR.'login.php?a=ser_SC" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td valign="middle" align="center" valign="top">
-<input type="checkbox" name="ser_SC" value="true"'.($ser_SC=='true'?' checked="checked"':'').' /> Quiero ser candidato a Supervisor del Censo.
+<input type="checkbox" name="ser_SC" value="true"'.($ser_SC=='true'?' checked="checked"':'').' /> '._('Quiero ser candidato a Supervisor del Censo').'.
 </td>
-<td valign="middle">'.boton('Guardar', 'submit', false, 'large blue').'</td>
+<td valign="middle" align="right">'.boton(_('Guardar'), 'submit', false, 'large blue').'</td>
 </tr></table></form>
 
 </fieldset>
 
 
-<fieldset><legend>Cambiar nick</legend>
+<fieldset><legend>'._('Cambiar nick').'</legend>
 
 <form action="'.REGISTRAR.'login.php?a=changenick" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td valign="middle" align="center" valign="top">Nuevo nombre de usuario:<br /><input type="text" name="newnick" value="" maxlength="30" /></td>
-<td valign="middle" align="center" valign="top">
+<td valign="middle" align="center" valign="top">'._('Nuevo nombre de usuario').':<br /><input type="text" name="newnick" value="" maxlength="30" /></td>
+<td valign="middle" align="right" valign="top">
 
-'.boton('Cambiar nick', 'submit', '¿Estás seguro de querer cambiar el nick?\n\n! ! !\nSOLO PODRAS CAMBIARLO UNA VEZ AL AÑO.\n! ! !', 'red large').'
+'.boton(_('Cambiar nick'), 'submit', '¿Estás seguro de querer cambiar el nick?\n\n! ! !\nSOLO PODRAS CAMBIARLO UNA VEZ AL AÑO.\n! ! !', 'red large').'
 </td></tr></table></form>
 
 </fieldset>
 
 
-
-<fieldset><legend>Eliminar usuario</legend>
+<fieldset><legend>'._('Eliminar usuario').'</legend>
 
 <form action="'.REGISTRAR.'login.php?a=borrar-usuario" method="POST">
 <input type="hidden" name="nick" value="'.$pol['nick'].'" />
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td valign="middle" align="center" valign="top">
-'.boton('ELIMINAR usuario permanentemente', 'submit', '¿Estas seguro de querer ELIMINAR PERMANENTEMENTE tu usuario y todos los datos asociados?\n\nEl proceso es automático y la eliminación se efectuará tras 10 días.', 'small pill red').'
+'.boton(_('ELIMINAR usuario permanentemente'), 'submit', '¿Estas seguro de querer ELIMINAR PERMANENTEMENTE tu usuario y todos los datos asociados?\n\nEl proceso es automático y la eliminación se efectuará tras 10 días.', 'small pill red').'
 </td></tr></table></form>
 
 </fieldset>
 
 </div>';
 
-
 	} else { //Intruso
-		$txt .= '<p><b style="color:blue;">Cambio efectuado correctamente.</b> Debes entrar de nuevo con tu usuario y contraseña.</p>';
-
+		$txt .= '<p><b style="color:blue;">'._('Cambio efectuado correctamente.</b> Debes entrar de nuevo con tu usuario y contraseña').'.</p>';
 	}
 
 
-	$txt_title = 'Panel de Usuarios';
-	$txt_nav = array('Panel de usuario');
+	$txt_title = _('Panel de Usuario');
+	$txt_nav = array(_('Panel de usuario'));
 	include('../theme.php');
 	break;
 
@@ -157,32 +154,29 @@ case 'panel':
 case 'recuperar-pass':
 	if ($pol['user_ID']) { redirect(REGISTRAR.'login.php?a=panel'); exit; }
 
-	$txt .= '<h2>&iquest;Has olvidado tu contrase&ntilde;a?</h2>';
+	$txt .= '<h2>'._('¿Has olvidado tu contraseña?').'</h2>';
 
 	if ($_GET['b']=='no-existe') {
-		$txt .= '<p style="color:red;"><b>No existe ningun usuario con ese email. Probablemente ha sido eliminado por inactividad, puedes registrarlo de nuevo.</b></p>';
+		$txt .= '<p style="color:red;"><b>'._('No existe ningún usuario con ese email. Probablemente ha sido eliminado por inactividad, puedes registrarte de nuevo').'.</b></p>';
 	} elseif ($_GET['b']=='no-24h') {
-		$txt .= '<p style="color:red;"><b>Solo se puede hacer un reseteo de contrase&ntilde;a cada 24 horas. Debes esperar.</b></p>';
+		$txt .= '<p style="color:red;"><b>'._('Solo se puede hacer una recuperación de contraseña cada 24 horas. Debes esperar').'.</b></p>';
 	}
 
-	$txt .= '
-<p>No te preocupes, puedes solicitar un reset de la contrase&ntilde;a. Siguiendo estos pasos:</p>
+	$txt .= '<p>'._('No te preocupes, puedes solicitar una recuperación de contraseña. Siguiendo estos pasos').':</p>
 
 <ol>
-<li><form action="'.REGISTRAR.'login.php?a=start-reset-pass" method="POST">Tu email: <input type="text" name="email" value="" style="width:250px;" /> <input type="submit" value="Iniciar reset" style="font-weight:bold;" onclick="alert(\'Recibir&aacute;s en segundos un email en tu correo.\n\nSi no lo recibes escribe a '.CONTACTO_EMAIL.'\');" /></form></li>
-<li>Recibir&aacute;s inmediatamente un email con una direcci&oacute;n web que te permitir&aacute; cambiar la contrase&ntilde;a. (Quiz&aacute; est&eacute; en la carpeta spam).</li>
+<li><form action="'.REGISTRAR.'login.php?a=start-reset-pass" method="POST">'._('Tu email').': <input type="text" name="email" value="" style="width:250px;" /> <input type="submit" value="'._('Iniciar recuperación de contraseña').'" style="font-weight:bold;" onclick="alert(\'Recibirás en segundos un email en tu correo.\n\nSi no lo recibes escribe a '.CONTACTO_EMAIL.'\');" /></form></li>
+<li>'._('Recibirás inmediatamente un email con una dirección web que te permitirá cambiar la contraseña. (Quizá esté en la carpeta spam)').'.</li>
 </ol>
 
-<p>Por seguridad, esta acci&oacute;n <b>solo se puede iniciar una vez cada 24h</b> y el cambio de contrase&ntilde;a ha de realizarse dentro de este periodo.</p>
+<p>'._('Por seguridad, esta acción <b>solo se puede iniciar una vez cada 24h</b> y el cambio de contraseña ha de realizarse dentro de este periodo').'.</p>
 
-<p>Si esto no te ayuda a recuperar tu usuario, en ultima instancia, puedes escribirnos un email a <em>'.CONTACTO_EMAIL.'</em></p>
+<p>'._('Si esto no te ayuda a recuperar tu usuario, en ultima instancia, puedes escribirnos un email a').' <em>'.CONTACTO_EMAIL.'</em></p>
 ';
-	$txt_title = 'Recuperar contrase&ntilde;a';
-	$txt_nav = array('Recuperar contraseña');
+	$txt_title = _('Recuperar contraseña');
+	$txt_nav = array(_('Recuperar contraseña'));
 	include('../theme.php');
 	break;
-
-
 
 
 case 'reset-pass':
@@ -191,24 +185,24 @@ case 'reset-pass':
 	while ($r = mysql_fetch_array($result)) { 
 		$check = true;
 		
-		$txt .= '<h2>Cambio de contrase&ntilde;a:</h2>
+		$txt .= '<h2>'._('Cambio de contraseña').':</h2>
 
-<p>Escribe tu nueva contrase&ntilde;a para efectuar el cambio:</p>
+<p>'._('Escribe tu nueva contraseña para efectuar el cambio').':</p>
 
 <form action="'.REGISTRAR.'login.php?a=reset-pass-change" method="POST">
 <input type="hidden" name="user_ID" value="'.$_GET['user_ID'].'" />
 <input type="hidden" name="check" value="'.$_GET['check'].'" />
 <input type="password" name="pass_new" value="" /><br />
-<input type="password" name="pass_new2" value="" /> (introducir otra vez)<br />
+<input type="password" name="pass_new2" value="" /> ('._('introducir otra vez').')<br />
 <br />
-<input type="submit" value="Cambiar contrase&ntilde;a" style="font-weight:bold;"/>
+<input type="submit" value="'._('Cambiar contraseña').'" style="font-weight:bold;"/>
 </form>';
 		
 	}
-	if ($check != true) { $txt .= 'Error.'; }
+	if ($check != true) { $txt .= _('Error').'.'; }
 
-	$txt_title = 'Recuperar contrase&ntilde;a';
-	$txt_nav = array('Recuperar contraseña');
+	$txt_title = _('Recuperar contraseña');
+	$txt_nav = array(_('Recuperar contraseña'));
 	include('../theme.php');
 	break;
 
@@ -221,7 +215,7 @@ case 'reset-pass-change':
 	if ($_POST['pass_new'] === $_POST['pass_new2']) {
 		mysql_query("UPDATE users SET pass = '".pass_key($_POST['pass_new'], 'md5')."', pass2 = '".pass_key($_POST['pass_new'])."', api_pass = '".rand(1000000,9999999)."', reset_last = '".$date."' WHERE ID = '".$_POST['user_ID']."' AND api_pass = '".$_POST['check']."' AND reset_last >= '".$date."' LIMIT 1", $link);
 	}
-	redirect('http://www.'.DOMAIN.'/');
+	redirect('http://www.'.DOMAIN);
 	break;
 
 case 'start-reset-pass':
@@ -232,20 +226,20 @@ case 'start-reset-pass':
 		$reset_pass = rand(1000000000, 9999999999);
 		mysql_query("UPDATE users SET api_pass = '".$reset_pass."', reset_last = '".date('Y-m-d H:00:00', time() + (86400*1))."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 
-		$texto_email = "<p>Hola ".$r['nick']."!</p>
-<p>Ha solicitado un reset de la contraseña, con la intención de efectuar una recuperación y posterior cambio de contraseña.</p>
+		$texto_email = "<p>"._("Hola")." ".$r['nick']."!</p>
+<p>"._("Has solicitado un reset de la contraseña, con la intención de efectuar una recuperación y posterior cambio de contraseña").".</p>
 
-<p>Si has solicitado esta acción, continúa entrando en el siguiente enlace. <b>De lo contrario ignora este email</b>.</p>
+<p>"._("Si has solicitado esta acción, continúa entrando en el siguiente enlace. <b>De lo contrario ignora este email</b>").".</p>
 
 <blockquote>
-Reset de contraseña:<br />
+"._("Reset de contraseña").":<br />
 <a href=\"".REGISTRAR."login.php?a=reset-pass&user_ID=".$r['ID']."&check=".$reset_pass."\"><b>".REGISTRAR."login.php?a=reset-pass&user_ID=".$r['ID']."&check=".$reset_pass."</b></a>
 </blockquote>
 
 <p>_________<br />
 VirtualPol</p>";
 
-		mail($r['email'], "[VirtualPol] Cambio de contraseña del usuario: ".$r['nick'], $texto_email, "FROM: VirtualPol <".CONTACTO_EMAIL.">\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n"); 
+		mail($r['email'], "[VirtualPol] "._("Cambio de contraseña de usuario").": ".$r['nick'], $texto_email, "FROM: VirtualPol <".CONTACTO_EMAIL.">\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n"); 
 	}
 
 	if ($enviado == false) {
@@ -259,7 +253,7 @@ VirtualPol</p>";
 			redirect(REGISTRAR.'login.php?a=recuperar-pass&b=no-existe');
 		}
 	} else {
-		redirect('http://www.'.DOMAIN.'/');
+		redirect('http://www.'.DOMAIN);
 	}
 	break;
 
@@ -343,8 +337,8 @@ case 'changelang':
 
 case 'borrar-usuario':
 	if ($_POST['nick'] == $pol['nick']) { 
-		mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link); 
 		evento_log('Eliminación de usuario permanente y voluntaria.');
+		mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link); 
 	}
 	redirect('http://www.'.DOMAIN.'/');
 	break;
@@ -373,9 +367,6 @@ case 'ser_SC':
 
 
 
-
-
-
 case 'login':
 	$nick = strtolower(trim($_REQUEST['user']));
 	if ($_REQUEST['pass_md5']) { $pass = $_REQUEST['pass_md5']; } else { $pass = md5(trim($_REQUEST['pass'])); }
@@ -385,7 +376,7 @@ case 'login':
 	} elseif ($_REQUEST['url']) { 
 		$url = escape(base64_decode($_REQUEST['url'])); 
 	} else {
-		$url = 'http://vp.'.DOMAIN.'/'; 
+		$url = 'http://15m.'.DOMAIN; 
 	}
 
 	$link = conectar();
@@ -405,7 +396,7 @@ case 'login':
 			echo '<html>
 <header>
 <title></title>
-<meta http-equiv="refresh" content="6;url=http://www.'.DOMAIN.'/">
+<meta http-equiv="refresh" content="7;url=http://www.'.DOMAIN.'/">
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="'.IMG.'lib/evercookie/swfobject-2.2.min.js"></script>
 <script type="text/javascript" src="'.IMG.'lib/evercookie/evercookie.js"></script>
@@ -438,10 +429,10 @@ body, a { color:#FFFFFF; }
 		while ($r = mysql_fetch_array($result)) { $nick_estado = $r['estado']; }
 
 		switch ($nick_estado) {
-			case 'turista': case 'ciudadano': $msg_error = 'Contrase&ntilde;a incorrecta'; break;
-			case 'expulsado': $msg_error = 'Est&aacute;s expulsado de VirtualPol por infracci&oacute;n del <a href="/TOS">TOS</a>'; break;
-			case 'validar': $msg_error = 'Usuario no validado, revisa tu email'; break;
-			default: $msg_error = 'Usuario inexistente, probablemente expirado por inactividad'; break;
+			case 'turista': case 'ciudadano': $msg_error = _('Contraseña incorrecta'); break;
+			case 'expulsado': $msg_error = _('Estás expulsado de VirtualPol por infracción del').' <a href="/TOS">TOS</a>'; break;
+			case 'validar': $msg_error = _('Usuario no validado, revisa tu email'); break;
+			default: $msg_error = _('Usuario inexistente, probablemente expirado por inactividad'); break;
 		}
 
 		redirect(REGISTRAR.'login.php?error='.base64_encode($msg_error));
@@ -468,10 +459,10 @@ default:
 	$txt_header .= '<style type="text/css">.content { width:400px; margin: 0 auto; padding: 2px 12px 0 12px; }</style>';
 
 
-	$txt .= '<center><h1>Entrar con tu ciudadano</h1></center>';
+	$txt .= '<center><h1>'._('Entrar con tu ciudadano').'</h1></center>';
 
 	if (isset($pol['user_ID'])) {
-		$txt .= '<p>Ya est&aacute;s logueado correctamente como <b>'.$pol['nick'].'</b>.</p>';
+		$txt .= '<p>'._('Ya estás logueado correctamente como').' <b>'.$pol['nick'].'</b>.</p>';
 	} else {
 		$txt .= '
 <script type="text/javascript" src="'.IMG.'lib/md5.js"></script>
@@ -486,22 +477,22 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 <table border="0" style="margin:20px auto;">
 
 <tr>
-<td align="right">Usuario:</td>
+<td align="right">'._('Usuario').':</td>
 <td><input name="user" value="" size="10" maxlength="20" onfocus="vlgn(this)" type="text" style="font-size:20px;font-weight:bold;" /></td>
 </tr>
 
 <tr>
-<td align="right">Contrase&ntilde;a:</td>
+<td align="right">'._('Contraseña').':</td>
 <td><input id="login_pass" name="pass" type="password" value="" size="10" maxlength="200" onfocus="vlgn(this)" style="font-size:20px;font-weight:bold;" /></td>
 </tr>
 
 <tr>
 <td colspan="2" align="center">
 '.($_GET['error']?'<em style="color:red;">'.escape(base64_decode($_GET['error'])).'.</em><br /><br />':'').'
-<button onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" class="large blue">Entrar</button><br /><br />
-<a href="'.REGISTRAR.'login.php?a=recuperar-pass">&iquest;Has olvidado tu contrase&ntilde;a?</a><br /><br />
-<a href="'.REGISTRAR.'">&iquest;A&uacute;n no tienes usuario registrado?</a><br /><br /><br />
-<span style="color:#888;">Contacto: '.CONTACTO_EMAIL.'</span>
+<button onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" class="large blue">'._('Entrar').'</button><br /><br />
+<a href="'.REGISTRAR.'login.php?a=recuperar-pass">'._('¿Has olvidado tu contraseña?').'</a><br /><br />
+<a href="'.REGISTRAR.'">'._('¿Aún no tienes usuario registrado?').'</a><br /><br /><br />
+<span style="color:#888;">'._('Contacto').': '.CONTACTO_EMAIL.'</span>
 </td>
 </tr>
 
@@ -510,15 +501,13 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 </form>';
 	}
 
-	$txt_title = 'Entrar';
-	$txt_nav = array('Entrar');
+	$txt_title = _('Entrar');
+	$txt_nav = array(_('Entrar'));
 	include('../theme.php');
 	break;
 
 }
  
-
-
 
 if ($link) { @mysql_close($link); }
 ?>

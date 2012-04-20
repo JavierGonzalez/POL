@@ -71,8 +71,8 @@ if ($_GET['a']) {
 
 <div style="margin:5px 0;">
 <input type="text" name="titulo" value="'.$r['title'].'" size="30" maxlength="50" style="font-size:22px;" /> &nbsp; 
-<button onclick="$(\'#doc_opciones\').slideToggle(\'slow\');return false;" style="font-size:16px;color:#666;">'._('Opciones').'</button> &nbsp; 
-<input type="submit" value="'._('Publicar').'" style="font-size:22px;" /> <a href="/doc/'.$r['url'].'">'._('Última publicación hace').' <span class="timer" value="'.strtotime($r['time_last']).'"></span></a>.</div>
+<button onclick="$(\'#doc_opciones\').slideToggle(\'slow\');return false;">'._('Opciones').'</button> &nbsp; 
+'.boton(_('Publicar'), 'submit', false, 'large blue').' <a href="/doc/'.$r['url'].'">'._('Última publicación hace').' <span class="timer" value="'.strtotime($r['time_last']).'"></span></a>.</div>
 
 </form>
 

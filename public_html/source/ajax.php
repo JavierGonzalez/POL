@@ -130,24 +130,6 @@ LIMIT 1");
 					$elmsg = '<b>[$]</b> <em>' . $_SESSION['pol']['nick'] . '</em> tira el <b>dado'.$result_type.': <span style="font-size:16px;">'.$result_rand.'</span></b>';
 					break;
 
-				case 'acceso':
-					$result = sql("SELECT admin, acceso_cfg_escribir, acceso_escribir FROM chats WHERE chat_ID = '".$chat_ID."' LIMIT 1");
-					while($r = r($result)){
-						$admins = explode(' ', trim(strtolower($r['admin'])));
-						if ((in_array(strtolower($_SESSION['pol']['nick']), $admins)) AND (in_array($r['acceso_escribir'], array('privado', 'excluir')))) {
-							$escribir = explode(' ', $r['acceso_cfg_escribir']);
-							if ($msg_array[1] == 'add') { $escribir[] = $msg_array[2]; } 
-							elseif ($msg_array[1] == 'del') { $escribir = array_diff($escribir, array(strtolower($msg_array[2]))); }
-							$escribir = trim(strtolower(implode(' ', $escribir)));
-							sql("UPDATE chats SET acceso_cfg_escribir = '".$escribir."' WHERE chat_ID = '".$chat_ID."' LIMIT 1");
-							$elmsg = 'Acceso cambiado a: <b>'.$escribir.'</b>';
-							$target_ID = $_SESSION['pol']['user_ID'];
-							$tipo = 'p';
-							$elnick = $_SESSION['pol']['nick'];
-						}
-					}
-					break;
-
 				case 'calc': 
 					if (ereg("^[0-9\+-\/\*\(\)\.]{1,100}$", strtolower($msg_rest))) { 
 						@eval("\$result=" . $msg_rest . ";");
@@ -262,6 +244,24 @@ $('ul.menu li').hover(function(){
 	while ($r = r($result)) { echo '{"q":"'.$r['nick'].'","x":'.$r['y'].',"y":'.$r['x'].'},'; }
 	echo '];';
 
+
+} else if ($_GET['a'] == 'data_extra') {
+	header('Content-Type: application/javascript');
+	echo 'data_acceso = [';
+	foreach (nucleo_acceso('print') AS $acceso => $cfg) { echo '"'.$acceso.'",'; }
+	echo ']; data_cargo = {';
+	$result = sql("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC"); 
+	while ($r = r($result)) { echo $r['cargo_ID'].':"'.$r['nombre'].'",'; }
+	echo '}; data_examenes = {';
+	$result = sql("SELECT ID, titulo FROM examenes WHERE pais = '".PAIS."'"); 
+	while ($r = r($result)) { echo $r['ID'].':"'.$r['titulo'].'",'; }
+	echo '}; data_afiliado = {';
+	$result = sql("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."'"); 
+	while ($r = r($result)) { echo $r['ID'].':"'.$r['siglas'].'",'; }
+	echo '}; data_grupos = {';
+	$result = sql("SELECT grupo_ID, nombre FROM grupos WHERE pais = '".PAIS."' ORDER BY num DESC"); 
+	while ($r = r($result)) { echo $r['grupo_ID'].':"'.$r['nombre'].'",'; }
+	echo '};';
 
 } else if (($_POST['a'] == 'whois') AND (isset($_POST['nick']))) {
 

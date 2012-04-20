@@ -114,7 +114,9 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 			
 			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;">Editar perfil</button> '.boton('Opciones de usuario', REGISTRAR.'login.php?a=panel').'
 
-<div id="editarperfil" style="display:none;">';
+<div id="editarperfil" style="display:none;">
+
+<fieldset><legend>Editar perfil</legend>';
 
 if (ECONOMIA) {
 			
@@ -281,9 +283,7 @@ $txt .= '</p></fieldset>
 </fieldset>';
 
 
-$txt .= '</div>
-
-<br />';
+$txt .= '</fieldset></div>';
 
 
 		} 

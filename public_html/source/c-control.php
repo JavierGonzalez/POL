@@ -608,33 +608,61 @@ case 'gobierno':
 	$txt_nav = array('/control'=>'Control', '/control/gobierno'=>'Gobierno');
 
 	$txt_tab['/control/gobierno'] = 'Gobierno';
+	$txt_tab['/control/gobierno/privilegios'] = 'Privilegios';
 	if (ECONOMIA) { $txt_tab['/control/gobierno/economia'] = 'Economía'; }
 	$txt_tab['/control/gobierno/notificaciones'] = 'Notificaciones';
 	$txt_tab['/control/gobierno/foro'] = 'Configuración foro';
 	
 	if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $dis = null; } else { $dis = ' disabled="disabled"'; }
 
-	$result = sql("SELECT (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS elnick
-	 FROM cargos_users WHERE cargo_ID = '7' AND cargo = 'true' LIMIT 1");
-	while($r = r($result)) { $presidente = $r['elnick']; }
-
-	$result = sql("SELECT (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS elnick
-	 FROM cargos_users WHERE cargo_ID = '19' AND cargo = 'true' LIMIT 1");
-	while($r = r($result)) { $vicepresidente = $r['elnick']; }
 
 	$defcon_bg = array('1' => 'white','2' => 'red','3' => 'yellow','4' => 'green','5' => 'blue');
 
 
+	if ($_GET['b'] == 'privilegios') {
+		$txt_nav[] = 'Privilegios';
+		
+		if (!ECONOMIA) { unset($vp['acceso']['control_sancion']); }
+		if (ASAMBLEA) { unset($vp['acceso']['parlamento']); }
 
-	if ($_GET['b'] == 'notificaciones') {
-		
-		$txt_nav = array('/control'=>'Control', '/control/gobierno'=>'Gobierno', 'Notificaciones');
-		
-		$txt .= '<h1 class="quitar"><a href="/control">Control</a>: <a href="/control/gobierno">Gobierno</a> | Notificaciones</h1>
-		
-<br />
+		$privilegios_array = array(
+'control_gobierno'=>'Configuración principal',
+'control_cargos'=>'Configurar cargos',
+'control_grupos'=>'Configurar grupos',
+'control_sanciones'=>'Imponer sanciones',
+'crear_partido'=>'Crear partido',
+'examenes_decano'=>'Gestionar exámenes',
+'examenes_profesor'=>'Crear preguntas de examen',
+'foro_borrar'=>'Moderar foro',
+'kick'=>'Kickear (bloqueos temporales)',
+'kick_quitar'=>'Quitar kicks',
+'parlamento'=>'Aprobar votación de parlamento',
+'referendum'=>'Aprobar referendums',
+'sondeo'=>'Aprobar sondeos',
+'votacion_borrador'=>'Crear borradores de votación',
+);
+		$txt .= '<p>Los privilegios permiten realizar acciones especiales. Este panel muestra los privilegios y quien los ejerce actualmente.</p>
+<fieldset><legend>Privilegios</legend><form action="/accion.php?a=gobierno&b=privilegios" method="POST"><table>
+<tr>
+<th></th>
+<th>Configuración</th>
+<th>¿Quien tiene acceso?</th>
+</tr>';
+		foreach ($vp['acceso'] AS $acceso => $cfg) {
+			$txt .= '<tr>
+<td align="right"><b>'.$privilegios_array[$acceso].'</b></td>
+<td>'.($acceso=='control_gobierno'?'':control_acceso(false, $acceso, $cfg[0], $cfg[1], 'anonimos ciudadanos_global')).'</td>
+<td>'.ucfirst(verbalizar_acceso($cfg[0],$cfg[1])).'</td>
+</tr>';
+		}
+		$txt .= '<tr><td colspan="3" align="center">'.boton('Guardar', (nucleo_acceso($vp['acceso']['control_gobierno'])?'submit':false), '¿Estás seguro de querer MODIFICAR los privilegios?', 'large red').'</td></tr></table></form></fieldset>';
 
-<form action="/accion.php?a=gobierno&b=notificaciones&c=add" method="post">
+
+	} elseif ($_GET['b'] == 'notificaciones') {
+		
+		$txt_nav[] = 'Notificaciones';
+		
+		$txt .= '<form action="/accion.php?a=gobierno&b=notificaciones&c=add" method="post">
 
 <table border="0">
 <tr>
@@ -688,7 +716,7 @@ case 'gobierno':
 
 	} elseif ($_GET['b'] == 'foro') {
 		
-		$txt_nav = array('/control'=>'Control', '/control/gobierno'=>'Gobierno', 'Configuración foro');
+		$txt_nav[] = 'Configuración foro';
 
 		$txt .= '<h1 class="quitar"><a href="/control/">Control</a>: <a href="/control/gobierno/">Gobierno</a> | Control Foro</h1>
 		
@@ -774,20 +802,17 @@ ORDER BY time ASC");
 
 <br />
 
+<fieldset><legend>Crear nuevo foro</legend>
 <form action="/accion.php?a=gobierno&b=crearsubforo" method="post">
-<table border="0" cellspacing="3" cellpadding="0" class="pol_table">
-<tr>
-<td class="amarillo"colspan="7"><b class="big">Crear nuevo foro</b></td>
-</tr>
-
+<table border="0" cellspacing="3" cellpadding="0">
 <tr>
 <td>Nombre:</td>
 <td><input type="text" name="nombre" size="10" maxlength="15" value="" /></td>
 <td><input value="Crear subforo" style="font-size:18px;" type="submit"'.$dis.' /></td>
 </tr>
-
 </table>
-</form>';
+</form>
+</fieldset>';
 
 
 
@@ -865,7 +890,7 @@ ORDER BY salario DESC");
 
 </td></tr></table>
 
-<p style="text-align:center;">'.boton('EJECUTAR', ($dis?false:'submit'), false, 'large red').'</p>
+<p style="text-align:center;">'.boton('Guardar', ($dis?false:'submit'), false, 'large red').'</p>
 
 </form>';
 
@@ -987,7 +1012,7 @@ $txt .= '</select>
 </td></tr></table>
 
 
-<p style="text-align:center;">'.boton('EJECUTAR', ($dis?false:'submit'), false, 'large red').'</p>
+<p style="text-align:center;">'.boton('Guardar', ($dis?false:'submit'), false, 'large red').'</p>
 
 </form>';
 
@@ -1196,7 +1221,7 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['c']."' LIMIT 1");
 <br /><br /></li>
 
 
-<li><input type="submit" value="Ejecutar KICK"' . $disabled . ' /></li></ol></form>
+<li>'.boton('Ejecutar KICK', ($disabled==''?'submit':false), false, 'red').'</li></ol></form>
 			
 ';
 	} else {

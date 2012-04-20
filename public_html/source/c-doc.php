@@ -148,7 +148,7 @@ if ($_GET['a']) {
 		$result2 = mysql_query("SELECT title, url, time, estado, time_last, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir, version
 FROM docs
 WHERE estado = 'ok' AND cat_ID = '".$r['ID']."' AND pais = '".PAIS."'
-ORDER BY title ASC", $link);
+ORDER BY time_last DESC", $link);
 		while($r2 = mysql_fetch_array($result2)){
 
 			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {

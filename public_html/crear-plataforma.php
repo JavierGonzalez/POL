@@ -80,8 +80,8 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
 <input type="radio" name="asamblea" value="false" checked="checked" /> <b>Presidencial: Un presidente electo.</b><br />
 Organización muy estable y operativa.<br />
 <br />
-<input type="radio" name="asamblea" value="true" /> <b>Asambleario: Nueve coordinadores electos (iguales entre sí).</b><br />
-Organización menos estable y operativa, pero más "horizontal" (entendido como poder cercano a la base).<br />
+<input type="radio" name="asamblea" value="true" /> <b>Parlamentario: Nueve coordinadores electos (iguales entre sí).</b><br />
+Organización menos estable y operativa, pero más representativo.<br />
 <br />
 <em>* El sistema permite establecer jerarquias completas de cargos y responsabilidades. Un organigrama completo y escalable. Incluso elecciones independientes para cada cargo. Sin embargo debe existir un cargo "primario" y electo, del que parte toda la responsabilidad. En cualquier caso siempre estará disponible una votación de tipo "ejecutiva" que -con el apoyo de la mayoría- el sistema puede destituir y reemplazar cualquier cargo.</em>
 </td>

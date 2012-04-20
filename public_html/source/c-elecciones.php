@@ -17,7 +17,7 @@ $txt .= '
 <th>'._('Estado').'</th>
 <th>'._('Cuando').'</th>
 <th></th>
-<th colspan="2" title="Votos / Participación">'._('Votos').'</th>
+<th colspan="2"></th>
 <th></th>
 </tr>
 ';
@@ -35,15 +35,12 @@ while($r = mysql_fetch_array($result)) {
 	$txt .= '<tr>
 <td align="right" width="320"><b style="font-size:16px;">'._('Elecciones a').' '.$r['nombre'].'</b></td>
 
-<td nowrap="nowrap">'._('Próximamente').'...</td>
+<td nowrap="nowrap"><em>'._('Próximamente').'...</em></td>
 
 <td>'._('En').' '.timer($time_start, true).'</td>
 
-<td>'.gbarra(((time()-$time_anterior)*100)/($time_start-$time_anterior)).'</td>
+<td colspan="4">'.gbarra(((time()-$time_anterior)*100)/($time_start-$time_anterior)).'</td>
 
-<td></td>
-<td></td>
-<td></td>
 </tr>';
 }
 
@@ -72,10 +69,10 @@ while($r = mysql_fetch_array($result)) {
 <td>'.($r['estado']=='ok'?gbarra(((time()-$time)*100)/($time_expire-$time)):'').'</td>
 
 
-<td align="right" title="Votos / Participación"'.($r['estado']=='ok'?' style="font-style:italic;"':'').'><b>'.num($r['num']).'</b></td>
+<td align="right" title="Votos / Participación"'.($r['estado']=='ok'?' style="font-style:italic;"':'').'><b>'.num($r['num']).'</b> votos</td>
 <td align="right">'.num(($r['num']*100)/$r['num_censo'], 2).'%</td>
 
-<td>'.($r['estado']=='end'?'<button class="small blue" onclick="$(\'#escrutinio_'.$r['ID'].'\').toggle(\'slow\');">'._('Ver resultados').'</button>':'').'</td>
+<td>'.($r['estado']=='end'?'<button class="small blue" onclick="$(\'#escrutinio_'.$r['ID'].'\').toggle(\'slow\');">'._('Ver resultado').'</button>':'').'</td>
 
 </tr>
 <tr id="escrutinio_'.$r['ID'].'"'.($n==1?'':' style="display:none;"').'>

@@ -426,7 +426,7 @@ ORDER BY factor DESC LIMIT 30");
 	$result = sql("SELECT nick, IP, COUNT(*) AS num, host
 FROM users 
 GROUP BY IP HAVING COUNT(*) > 1
-ORDER BY num DESC, fecha_registro DESC");
+ORDER BY num DESC, IP ASC");
 	while($r = r($result)) {
 		$clones = array();
 		$nota_SC = '';
@@ -625,7 +625,7 @@ case 'gobierno':
 'kick'=>_('Kickear (bloqueos temporales)'),
 'kick_quitar'=>_('Quitar kicks'),
 'parlamento'=>_('Aprobar votación de parlamento'),
-'referendum'=>_('Aprobar referendums'),
+'referendum'=>_('Aprobar referéndums'),
 'sondeo'=>_('Aprobar sondeos'),
 'votacion_borrador'=>_('Crear borradores de votación'),
 );

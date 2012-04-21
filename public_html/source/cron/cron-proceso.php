@@ -358,22 +358,29 @@ Autentificados NO expiran.
 */
 $st['eliminados'] = 0;
 $result = mysql_query("SELECT ID, estado FROM users
-WHERE dnie = 'false' AND 
-((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".$margen_90dias."' AND fecha_last <= '".$margen_60dias."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".$margen_90dias."' AND fecha_registro <= '".$margen_30dias."' AND fecha_last <= '".$margen_30dias."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND estado = 'expulsado' AND fecha_last <= '".$margen_10dias."') OR
-(estado = 'validar' AND fecha_last <= '".$margen_5dias."')
+WHERE dnie = 'false' AND donacion IS NULL AND 
+(pais IN ('ninguno', '".PAIS."') AND fecha_registro <= '".$margen_90dias."' AND fecha_last <= '".$margen_60dias."') OR
+(pais IN ('ninguno', '".PAIS."') AND fecha_registro > '".$margen_90dias."' AND fecha_registro <= '".$margen_30dias."' AND fecha_last <= '".$margen_30dias."')
 ", $link);
 while($r = mysql_fetch_array($result)) {
 	if ($r['estado'] == 'ciudadano') { $st['eliminados']++; }
 	eliminar_ciudadano($r['ID']);
 }
 
+$result = mysql_query("SELECT ID, estado FROM users
+WHERE estado IN ('validar', 'expulsado') AND fecha_last <= '".$margen_10dias."'", $link);
+while($r = mysql_fetch_array($result)) {
+	if ($r['estado'] == 'ciudadano') { $st['eliminados']++; }
+	eliminar_ciudadano($r['ID']);
+}
+
+
+
 
 // Avisos por email 48h antes de la eliminación
 function retrasar_t($t) { return date('Y-m-d 20:00:00', (strtotime($t)+(86400*2))); }
 $result = mysql_query("SELECT ID, nick, email FROM users
-WHERE dnie = 'false' AND estado != 'expulsado' AND 
+WHERE dnie = 'false' AND donacion IS NULL AND estado != 'expulsado' AND 
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".retrasar_t($margen_90dias)."' AND fecha_last <= '".retrasar_t($margen_60dias)."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_90dias)."' AND fecha_registro <= '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_30dias)."') OR
 ((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_15dias)."') OR

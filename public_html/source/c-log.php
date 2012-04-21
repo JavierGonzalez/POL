@@ -19,9 +19,9 @@ $txt .= '<br />'.$p_paginas.'
 
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<th colspan="2">Fecha</th>
-<th>Quien</th>
-<th>Acción</th>
+<th colspan="2">'._('Fecha').'</th>
+<th>'._('Quien').'</th>
+<th>'._('Acción').'</th>
 </tr>';
 
 $result = mysql_query("SELECT *
@@ -38,8 +38,8 @@ $txt .= '</table>';
 
 
 //THEME
-$txt_title = 'Log de eventos';
-$txt_nav = array('Log');
+$txt_title = _('Log de eventos');
+$txt_nav = array(_('Log'));
 $txt_menu = 'info';
 include('theme.php');
 ?>

@@ -7,6 +7,25 @@
 ** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
 */
 
+function indexar_i18n() {
+	// Funcion inutil, cuyo unico fin es indexar textos del sistema en el sistema gettext de i18n
+	
+	// tipos votacion
+	$null = _('sondeo')._('referendum')._('parlamento')._('cargo')._('elecciones');
+	
+	// Tipos nucleo acceso
+	$null = _('privado') . _('excluir')._('afiliado')._('confianza')._('cargo')._('grupos') . _('nivel')._('antiguedad')._('autentificacion')._('supervisores_censo')._('ciudadanos') . _('ciudadanos_global')._('anonimos');
+	
+	// Estados votacion
+	$null = _('ok')._('end')._('del')._('borrador');
+	
+	// Tiempos
+	$null = _('años')._('meses')._('semanas')._('días')._('horas')._('minutos')._('segundos')._('Pocos segundos');
+
+	// Otros
+	$null = _('puntos')._('estandar')._('multiple')._('ninguno') . _('turista')._('extranjero')._('ciudadano')._('expulsado')._('validar')._('borrado')._('activo')._('inactivo')._('cancelado')._('cancelar');
+
+}
 
 function actualizar($accion, $user_ID=false) {
 	global $pol, $link;

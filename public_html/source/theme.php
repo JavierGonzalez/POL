@@ -87,6 +87,7 @@ p_scroll = false;
 			<li><a href="#" style="cursor:default;"><?=_('Estadísticas')?></a>
 				<ul>
 					<li><a href="/estadisticas"><?=_('Estadísticas')?></a></li>
+					<li><a href="http://chartbeat.com/dashboard/?url=virtualpol.com&k=ecc15496e00f415838f6912422024d06" target="_blank"><?=_('Estadísticas online')?></a></li>
 					<li><a href="/log"><?=_('Log de acciones')?></a></li>
 				</ul>
 			</li>
@@ -144,7 +145,7 @@ p_scroll = false;
 	<div id="menu-next">
 
 <?php 
-echo '<p style="color:#999;"><b>9%</b> <a href="http://15m.virtualpol.com/foro/desarrollo/internacionalizacion-de-virtualpol-necesitamos-traductores" target="_blank" title="Expansión Internacional de VirtualPol.">Traducción VirtualPol</a></p>';
+echo '<p style="color:#999;"><b>22%</b> <a href="http://15m.virtualpol.com/foro/desarrollo/internacionalizacion-de-virtualpol-necesitamos-traductores" target="_blank" title="Expansión Internacional de VirtualPol.">Traducción VirtualPol</a></p>';
 if (PAIS == '15M') { echo '<p style="color:#999;"><b>'.timer('2012-05-12 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="12 de Mayo: Movilización Global"><b>12M</b></a>.</p><p style="color:#999;"><b>'.timer('2012-05-15 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="15 de Mayo"><b>15M</b></a>.</p>'; }
 
 echo '<p id="palabras">';

@@ -281,7 +281,7 @@ function paginacion($type, $url, $ID, $num_ahora=null, $num_total=null, $num='10
 	if (!$num_total) {
 		switch ($type) {
 			case 'subforo': 
-				$result = mysql_fetch_row(sql("SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE ID = '" . $ID . "'", $link));
+				$result = mysql_fetch_row(sql("SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE ID = '".$ID."'", $link));
 				$num_total = $result[0];
 				break;
 			case 'eventos': 
@@ -301,7 +301,7 @@ function paginacion($type, $url, $ID, $num_ahora=null, $num_total=null, $num='10
 			if ($i == 1) { $el_url = $url;
 			} else { $el_url = $url . $i . '/'; }
 			if ($i == $num_ahora) {
-				$html .= '<span class="amarillo">&nbsp;<b><a href="' . $el_url . '">' . $i . '</a></b>&nbsp;</span> ';
+				$html .= '<span class="amarillo">&nbsp;<b><a href="'.$el_url.'">'.$i.'</a></b>&nbsp;</span> ';
 			} else {
 				$html .= '<a href="' . $el_url . '">' . $i . '</a> ';
 			}

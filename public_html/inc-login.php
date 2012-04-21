@@ -67,6 +67,7 @@ if ((isset($pol['config']['lang'])) AND ($pol['config']['lang'] != 'es_ES')) {
 	setlocale(LC_ALL, $locale);
 	bindtextdomain('messages', '/locale');
 	textdomain('messages');
+	bind_textdomain_codeset('messages', 'UTF-8');
 }
 
 

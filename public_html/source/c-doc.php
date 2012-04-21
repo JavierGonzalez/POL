@@ -20,10 +20,10 @@ if ($_GET['a']) {
 			// EDITAR!
 
 			foreach (nucleo_acceso('print') AS $at => $at_var) { 
-				$txt_li['leer'] .= '<option value="'.$at.'"'.($at==$r['acceso_leer']?' selected="selected"':'').' />'.ucfirst(str_replace("_", " ", $at)).'</option>';
+				$txt_li['leer'] .= '<option value="'.$at.'"'.($at==$r['acceso_leer']?' selected="selected"':'').' />'.ucfirst(str_replace("_", " ", _($at))).'</option>';
 			}
 			foreach (nucleo_acceso('print') AS $at => $at_var) { 
-				$txt_li['escribir'] .= '<option value="'.$at.'"'.($at==$r['acceso_escribir']?' selected="selected"':'').'>'.ucfirst(str_replace("_", " ", $at)).'</option>';
+				$txt_li['escribir'] .= '<option value="'.$at.'"'.($at==$r['acceso_escribir']?' selected="selected"':'').'>'.ucfirst(str_replace("_", " ", _($at))).'</option>';
 			}
 
 			
@@ -137,7 +137,7 @@ if ($_GET['a']) {
 		// CAT
 		$txt .= '<fieldset><legend>'.$r['nombre'].'</legend>
 
-<table border="0" cellspacing="0" cellpadding="4" class="pol_table" width="100%">
+<table border="0" cellspacing="0" cellpadding="4" width="100%">
 <tr>
 <th></th>
 <th colspan="2">'._('Publicado').'</th>
@@ -159,9 +159,9 @@ ORDER BY time_last DESC", $link);
 
 <td width="50" align="right" class="gris">'.$r2['version'].'v</td>
 
-<td width="135" valign="top" style="background:#5CB3FF;">'.($r2['acceso_cfg_leer']?'<acronym title="['.$r2['acceso_cfg_leer'].']">':'').ucfirst($r2['acceso_leer']).($r2['acceso_cfg_leer']?'</acronym>':'').'</td>
+<td width="135" valign="top" style="background:#5CB3FF;">'.($r2['acceso_cfg_leer']?'<acronym title="['.$r2['acceso_cfg_leer'].']">':'').ucfirst(_($r2['acceso_leer'])).($r2['acceso_cfg_leer']?'</acronym>':'').'</td>
 
-<td width="135" valign="top" style="background:#F97E7B;">'.($r2['acceso_cfg_escribir']?'<acronym title="['.$r2['acceso_cfg_escribir'].']">':'').ucfirst($r2['acceso_escribir']).($r2['acceso_cfg_escribir']?'</acronym>':'').'</td>
+<td width="135" valign="top" style="background:#F97E7B;">'.($r2['acceso_cfg_escribir']?'<acronym title="['.$r2['acceso_cfg_escribir'].']">':'').ucfirst(_($r2['acceso_escribir'])).($r2['acceso_cfg_escribir']?'</acronym>':'').'</td>
 
 </tr>'."\n";
 			}

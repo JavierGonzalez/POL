@@ -37,8 +37,12 @@ while ($r = r($result)) {
 
 // LENGUAJES ACTIVADOS
 $vp['langs'] = array(
-	'es_ES'=>'Español',
-	'en_US'=>'English (Experimental)',
+'es_ES'=>'Español',
+'en_US'=>'English (30%)',
+'ca_ES'=>'Català (30%)',
+'eu'=>'Euskera (30%)',
+'gl_ES'=>'Galego (30%)',
+'de_DE'=>'Deutsch (30%)',
 );
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)

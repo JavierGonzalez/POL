@@ -266,7 +266,7 @@ switch($_GET['step']){
 					$theme->concvar("{INCIDENCIAS}","Se encontraron algunas incidencias ($incidencias) instalando la base de datos. Puede continuar con la instalaci&oacute;n pero no se asegura el correcto funcionamiento del sistema.");
 				}	
 
-				$theme->incfile("{SIGUIENTE}","nextstep3");
+				$theme->incfile("{SIGUIENTE}","nextstep2");
 
 
 			}else{

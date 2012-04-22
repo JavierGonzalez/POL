@@ -80,9 +80,9 @@ switch($_GET['step']){
 									'define(\'CONTACTO_EMAIL\', \'desarrollo@virtualpol.com\');'
 								),
 								array(
-									'define(\'DOMAIN\', \''.$_SESSION["domain"].'\');',
-									'define(\'DOMAIN\', \''.$_SESSION["domain"].'\');',
-									'define(\'CONTACTO_EMAIL\', \''.$_SESSION["ctmail"].'\');'
+									'define(\'DOMAIN\', \''.$_SESSION["i_domain"].'\');',
+									'define(\'DOMAIN\', \''.$_SESSION["i_domain"].'\');',
+									'define(\'CONTACTO_EMAIL\', \''.$_SESSION["i_ctmail"].'\');'
 								),
 								$conf);
 						if(file_put_contents("../config.php",$conf) === FALSE)

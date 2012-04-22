@@ -8,7 +8,7 @@ h1{
 }
 
 #step{
-	width: 400px;
+	width: 500px;
 	padding: 20px;
 	margin-left: auto;
 	margin-right: auto;
@@ -35,4 +35,13 @@ h1{
 	text-align: left;
 	margin-left: auto;
 	background-color: #FF8177;
+}
+
+#botonerabox{
+	height: 50px;
+}
+
+.botonera input{
+	float: right;
+	margin: 8px; 
 }

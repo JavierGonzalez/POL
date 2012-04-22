@@ -283,6 +283,8 @@ switch($_GET['step']){
 		}
 
 
+		$theme->incfile("{INSTALLDB}","installdb");
+
 		$theme->addvar("{TITLE}","step1");
 		$theme->putfile("step1");
 		break;

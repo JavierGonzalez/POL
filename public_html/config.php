@@ -1,4 +1,12 @@
 <?php
+/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
+** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
+** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
+** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
+*/
+
 
 // INICIALIZACION
 date_default_timezone_set('Europe/Madrid');
@@ -14,8 +22,7 @@ $result = mysql_unbuffered_query("SELECT dato, valor FROM config WHERE pais = '"
 while ($r = r($result)) { 
 	switch ($r['dato']) {
 		case 'PAIS': define('PAIS', $r['valor']); break;
-		case 'ASAMBLEA': define('ASAMBLEA', ($r['valor']=='true'?true:false)); break;
-		case 'ECONOMIA': define('ECONOMIA', ($r['valor']=='true'?true:false)); break;
+		case 'ASAMBLEA': case 'ECONOMIA':  define($r['dato'], ($r['valor']=='true'?true:false)); break;
 
 		case 'acceso': 
 			foreach(explode('|', $r['valor']) AS $item) {
@@ -28,16 +35,25 @@ while ($r = r($result)) {
 	} 
 }
 
+// LENGUAJES ACTIVADOS
+$vp['langs'] = array(
+'es_ES'=>'Español',
+'en_US'=>'English (30%)',
+'ca_ES'=>'Català (30%)',
+'eu'=>'Euskera (30%)',
+'gl_ES'=>'Galego (30%)',
+'de_DE'=>'Deutsch (30%)',
+);
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)
-$vp['paises'] = array('15M', 'Hispania', 'RSSV'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
-$vp['paises_chat'] = array(''=>4, 'VP'=>4, '15M'=>5, 'Hispania'=>6, 'RSSV'=>7);
-$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'RSSV'=>'#FFD7D7', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'www'=>'#eeeeee');
+$vp['paises'] = array('15M', 'Hispania', 'MIC'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
+$vp['paises_chat'] = array(''=>4, 'VP'=>4, '15M'=>5, 'Hispania'=>6, 'MIC'=>7);
+$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'MIC'=>'#FFD7D7', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'www'=>'#eeeeee');
 
 switch ($pais) { 
 	case '15m': break;
 	case 'hispania': break;
-	case 'rssv': break;
+	case 'mic': break;
 
 	// PLATAFORMAS INACTIVAS
 	case 'pol':			define('PAIS', 'POL'); break;

@@ -13,3 +13,4 @@ redirect 301 /contenido http://creativecommons.org/licenses/by-sa/3.0/deed.es_ES
 
 RewriteEngine on 
 RewriteRule ^(TOS|legal|manual|documentacion|donaciones|donar|desarrollo|presentacion|video)$ /pages.php?a=$1 [L]
+

@@ -23,8 +23,9 @@ legend {
 -moz-border-radius:5px;
 -webkit-border-radius:5px;
 border-radius:5px;
+font-size:16px;
 border:1px solid #ccc;
-background:#fbfbfb;
+background:#FFF;
 padding:2px 10px;
 margin:0 0 0 0;
 display:block;

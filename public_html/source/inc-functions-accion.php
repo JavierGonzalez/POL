@@ -1,4 +1,31 @@
 <?php
+/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
+** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
+** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
+** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
+*/
+
+function indexar_i18n() {
+	// Funcion inutil, cuyo unico fin es indexar textos del sistema en el sistema gettext de i18n
+	
+	// tipos votacion
+	$null = _('sondeo')._('referendum')._('parlamento')._('cargo')._('elecciones');
+	
+	// Tipos nucleo acceso
+	$null = _('privado') . _('excluir')._('afiliado')._('confianza')._('cargo')._('grupos') . _('nivel')._('antiguedad')._('autentificacion')._('supervisores_censo')._('ciudadanos') . _('ciudadanos_global')._('anonimos');
+	
+	// Estados votacion
+	$null = _('ok')._('end')._('del')._('borrador');
+	
+	// Tiempos
+	$null = _('años')._('meses')._('semanas')._('días')._('horas')._('minutos')._('segundos')._('Pocos segundos');
+
+	// Otros
+	$null = _('puntos')._('estandar')._('multiple')._('ninguno') . _('turista')._('extranjero')._('ciudadano')._('expulsado')._('validar')._('borrado')._('activo')._('inactivo')._('cancelado')._('cancelar');
+
+}
 
 function actualizar($accion, $user_ID=false) {
 	global $pol, $link;
@@ -32,7 +59,8 @@ function actualizar($accion, $user_ID=false) {
 function evento_log($accion, $es_sistema=false) {
 	global $pol, $link, $_REQUEST;
 	if (!isset($pol['user_ID'])) { $es_sistema = true; }
-	mysql_query("INSERT INTO log (pais, user_ID, nick, time, accion, accion_a) VALUES ('".PAIS."', '".($es_sistema==false?$pol['user_ID']:0)."', '".($es_sistema==false?$pol['nick']:'Sistema')."', '".date('Y-m-d H:i:s')."', '".$accion."', '".$_REQUEST['a']."')", $link);
+	if (PAIS == 'Ninguno') { $pais = $pol['pais']; } else { $pais = PAIS; }
+	mysql_query("INSERT INTO log (pais, user_ID, nick, time, accion, accion_a) VALUES ('".$pais."', '".($es_sistema==false?$pol['user_ID']:0)."', '".($es_sistema==false?$pol['nick']:'Sistema')."', '".date('Y-m-d H:i:s')."', '".$accion."', '".$_REQUEST['a']."')", $link);
 }
 
 function presentacion($titulo, $html, $url='http://www.virtualpol.com') {
@@ -194,7 +222,6 @@ LIMIT 1", $link);
 
 
 // NUEVA FUNCION DE CARGOS EN DESARROLLO
-
 function cargo($accion, $cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 	global $link, $pol;
 	
@@ -454,6 +481,30 @@ function distancia($lat1, $lng1, $lat2, $lng2, $dec=0) {
 	$c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 	$km = $r * $c;
 	return round($km, $dec);
+}
+
+
+function form_select_cat($tipo='docs', $cat_now='') {
+	global $pol, $link;
+	$f .= '<select name="cat">';
+	$result = sql("
+SELECT ID, nombre, nivel
+FROM cat
+WHERE pais = '".PAIS."' AND tipo = '" . $tipo . "'
+ORDER BY orden ASC", $link);
+	while($row = r($result)){
+		if ($cat_now == $row['ID']) { 
+			$selected = ' selected="selected"'; 
+		} elseif ($pol['nivel'] < $row['nivel']) {
+			$selected = ' disabled="disabled"'; 
+			$row['nombre'] = $row['nombre'] . ' (Nivel: ' . $row['nivel'] . ')';
+		} else { 
+			$selected = ''; 
+		}
+		$f .= '<option value="' . $row['ID'] . '"' . $selected . '>' . $row['nombre'] . '</option>' . "\n";
+	}
+	$f .= '</select>';
+	return $f;
 }
 
 ?>

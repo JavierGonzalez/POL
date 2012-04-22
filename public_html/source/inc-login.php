@@ -1,4 +1,12 @@
 <?php
+/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
+** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
+** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
+** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
+*/
+
 define('TIME_START', microtime(true));
 
 include('../config.php');
@@ -9,8 +17,8 @@ $date = date('Y-m-d H:i:s');
 $IP = direccion_IP('longip');
 
 // Prevención de inyección
-foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val, false); }
 foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape($val); }
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val, false); }
 foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
 foreach ($_COOKIE AS $nom => $val) { $_COOKIE[$nom] = escape($val); }
 
@@ -44,8 +52,8 @@ if (isset($_COOKIE['teorizauser'])) {
 if (isset($pol['user_ID'])) {
 
 	// LOAD: $pol
-	$result = sql("SELECT online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, cargos, examenes, fecha_legal, dnie, SC, IP, grupos
-FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1");
+	$result = sql("SELECT lang, online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, cargos, examenes, fecha_legal, dnie, SC, IP, grupos
+FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	while($r = r($result)) {
 		$pol['pols'] = $r['pols'];
 		$pol['pais'] = $r['pais'];
@@ -61,6 +69,8 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1");
 		$pol['grupos'] = $r['grupos'];
 		$fecha_init = $r['fecha_init'];
 		$fecha_last = $r['fecha_last'];
+		
+		if (isset($r['lang'])) { $pol['config']['lang'] = $r['lang']; }
 		
 
 		$_SESSION['pol']['cargo'] = $r['cargo'];
@@ -110,6 +120,16 @@ FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1");
 	}
 
 	if ($pol['estado'] == 'expulsado') {  session_unset(); session_destroy(); }
+}
+
+if ((isset($pol['config']['lang'])) AND ($pol['config']['lang'] != 'es_ES')) {
+	// Carga internacionalización
+	$locale = $pol['config']['lang'];
+	putenv("LC_ALL=$locale");
+	setlocale(LC_ALL, $locale);
+	bindtextdomain('messages', '../locale');
+	textdomain('messages');
+	bind_textdomain_codeset('messages', 'UTF-8');
 }
 
 $txt_nav = array(); 

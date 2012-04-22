@@ -1,12 +1,19 @@
-<?php /******* THEME *******/
+<?php
+/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
+** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
+** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
+** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
+*/
 
 // Errores y redirecciones.
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN); }
-if (!isset($txt)) { header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">ERROR 404: <b>Página inexistente</b></h1>'; }
+if (!isset($txt)) { header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">ERROR 404: <b>'._('Página inexistente').'</b></h1>'; }
 if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<h1 style="font-weight:normal;color:red;">ERROR: <b>'.escape(base64_decode($_GET['error'])).'</b></h1>'; }
 
 if (isset($txt_title)) { $txt_title .= ' | VirtualPol'; }
-else { $txt_title = 'VirtualPol - La primera red social democrática'; }
+else { $txt_title = 'VirtualPol - '._('La primera Red Social Democrática'); }
 
 $pol['config']['bg'] = 'tapiz-lineas-verdes.jpg';
 
@@ -24,7 +31,7 @@ if (isset($_GET['bg'])) {
 <title><?=$txt_title?></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="language" content="es_ES" />
-<meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS)?> | La primera Red social democratica | VirtualPol" />
+<meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS)?> | <?=_('La primera Red Social Democrática')?> | VirtualPol" />
 <link rel="shortcut icon" href="/favicon.ico" />
 
 <link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css" media="all" />
@@ -47,30 +54,32 @@ p_scroll = false;
 
 <div id="content-left">
 	
-	<a href="http://www.virtualpol.com"><img src="<?=IMG?>media/logo-virtualpol-1_200.gif" width="200" height="60" alt="VirtualPol" /></a>
+	<a href="http://www.virtualpol.com"><img src="<?=IMG?>logo/vp2.png" width="200" height="60" alt="VirtualPol" /></a>
 	
 	<ul class="menu vertical">
-		<li><a href="http://www.virtualpol.com/video">Vídeo bienvenida</a></li>
-		<li><a href="http://www.virtualpol.com/documentacion">Documentación</a></li>
-		<li><a href="http://www.virtualpol.com/TOS">Condiciones de uso</a></li>
-		<li><a href="http://www.virtualpol.com/desarrollo">Desarrollo</a></li>
+		<?=(isset($pol['pais'])?'<li><a href="http://'.strtolower($pol['pais']).'.'.DOMAIN.'"><b>'._('Ir a').' '.$pol['pais'].'</b></a></li>':'')?>
+		<li><a href="http://www.virtualpol.com/video"><?=_('Vídeo bienvenida')?></a></li>
+		<li><a href="http://www.virtualpol.com/documentacion"><?=_('Documentación')?></a></li>
+		<li><a href="http://www.virtualpol.com/TOS"><?=_('Condiciones de uso')?></a></li>
+		<li><a href="http://www.virtualpol.com/desarrollo"><?=_('Desarrollo')?></a></li>
 	</ul>
 
 	<div id="menu-next">
-		<p style="text-align:center;"><?=boton('Donaciones', 'http://www.virtualpol.com/donaciones', false, 'small pill orange')?></p>
+		<p style="text-align:center;"><?=boton(_('Donaciones'), 'http://www.virtualpol.com/donaciones', false, 'small pill orange')?></p>
 
 
 <?php
-$result = mysql_query("SELECT nick, pais, estado
+$result = mysql_query("SELECT nick, pais
 FROM users 
 WHERE fecha_last > '".date('Y-m-d H:i:00', time() - 3600)."' AND estado != 'expulsado'
-ORDER BY fecha_last DESC LIMIT 50", $link);
+ORDER BY fecha_last DESC", $link);
 while($r = mysql_fetch_array($result)){ 
 	$li_online_num++; 
-	$li_online .= '<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'" style="color:#AAA;">'.$r['nick'].'</a> '; 
+	if ($li_online_num <= 50) {
+	$li_online .= '<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'" style="color:#AAA;">'.$r['nick'].'</a> '; }
 }
 
-echo '<p><b>'.num($li_online_num).' ciudadanos</b> online:<br />
+echo '<p><b>'.num($li_online_num).' '._('ciudadanos').'</b> '._('online').':<br />
 '.$li_online.'</td>'; 
 ?>
 
@@ -85,7 +94,7 @@ echo '<p><b>'.num($li_online_num).' ciudadanos</b> online:<br />
 	<div id="header">
 
 		<div id="header-logo">
-			<span class="htxt" id="header-logo-p">La primera Red Social Democrática</span>
+			<span class="htxt" id="header-logo-p" style="font-size:20px;"><?=_('La primera Red Social Democrática')?></span>
 		</div>
 
 
@@ -93,9 +102,9 @@ echo '<p><b>'.num($li_online_num).' ciudadanos</b> online:<br />
 <?php
 unset($txt_header);
 if (isset($pol['user_ID'])) {
-	echo '<span class="htxt"><b><a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').' |'.$txt_elec.' <a href="'.REGISTRAR.'login.php?a=logout">Salir</a></b></span>';
+	echo '<span class="htxt"><b><a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst(_($pol['estado'])).'</b>)':'').' | <a href="'.REGISTRAR.'login.php?a=logout">'._('Salir').'</a></b></span>';
 } else {
-	echo boton('Crear ciudadano', REGISTRAR.'?p='.PAIS, false, 'large blue').' &nbsp; '.boton('Entrar', REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
+	echo boton(_('Crear ciudadano'), REGISTRAR.'?p='.PAIS, false, 'large blue').' &nbsp; '.boton(_('Entrar'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
 }
 ?>
 		</div>
@@ -126,33 +135,32 @@ if (isset($pol['user_ID'])) {
 	<div id="footer">
 
 		<div id="footer-right">
-			<p>VirtualPol, la primera <b>Red Social Democrática</b> <?=boton('Donar', 'https://virtualpol.com/donaciones', false, 'small pill orange')?></p>
-			<p>
-			<a target="_blank" href="http://www.virtualpol.com/video">Vídeo</a> | <a target="_blank" href="http://www.virtualpol.com/documentacion">Documentación / Ayuda</a><br />
-			<a target="_blank" href="http://www.virtualpol.com/TOS" title="Condiciones de Uso">TOS</a> | <a target="_blank" href="http://www.virtualpol.com/desarrollo">Desarrollo / Código fuente</a><br />
+			<p><?=_('VirtualPol, la primera <b>Red Social Democrática</b>')?> <?=boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange')?></p>
+			
+			<p><a target="_blank" href="http://www.virtualpol.com/video"><?=_('Vídeo')?></a> | <a target="_blank" href="http://www.virtualpol.com/documentacion"><?=_('Ayuda / Documentación')?></a><br />
+			<a target="_blank" href="http://www.virtualpol.com/desarrollo"><?=_('Desarrollo / Código fuente')?></a> | <a target="_blank" href="http://www.virtualpol.com/TOS" title="Condiciones de Uso">TOS</a><br />
 <?php
 unset($txt);
 if (!isset($pol['user_ID'])) { echo '<a target="_blank" href="http://gonzo.teoriza.com" title="GONZO">Javier González</a> (<a target="_blank" href="http://www.teoriza.com" title="Blogs">Teoriza</a>, <a target="_blank" href="http://www.eventuis.com" title="Eventos">eventuis</a>, <a target="_blank" href="http://www.perfectcine.com" title="Cine">PerfectCine</a>)<br />'; }
 if ($pol['user_ID'] == 1) { echo num((microtime(true)-TIME_START)*1000).'ms '.num(memory_get_usage()/1000).'kb | '; }
 ?>
-				<span title="Época antigua en IRC" style="color:#BBB;">2004-</span>2008-2012
+				<span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2012
 			</p>
 		</div>
 		
 		<div id="footer-left">
 <?php
-echo '<table border="0"><tr><td height="30" nowrap="nowrap"><b>VirtualPol, la primera red social democrática</b></td>';
+echo '<table border="0"><tr><td height="30" nowrap="nowrap"><b>'._('VirtualPol, la primera red social democrática').'</b></td>';
 echo '</tr></table>';
 ?>	
 		</div>
 	</div>
-<div>
+</div>
 
 <div id="pnick" class="azul" style="display:none;"></div>
 
 
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js">
-/* GA */
 {lang: 'es'}
 </script>
 

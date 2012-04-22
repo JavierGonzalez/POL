@@ -1,4 +1,12 @@
-<?php 
+<?php
+/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
+** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
+** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
+** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
+*/
+
 include('inc-login.php');
 
 
@@ -19,9 +27,9 @@ elecciones_votan (nucleo_acceso)
 
 if ($_GET['a'] == 'organigrama') { // ORGANIGRAMA
 	
-	$txt_title = 'Organigrama';
-	$txt_nav = array('/cargos'=>'Cargos', 'Organigrama');
-	$txt_tab = array('/cargos/organigrama'=>'Organigrama', '/examenes'=>'Exámenes');
+	$txt_title = _('Organigrama');
+	$txt_nav = array('/cargos'=>_('Cargos'), _('Organigrama'));
+	$txt_tab = array('/cargos/organigrama'=>_('Organigrama'), '/examenes'=>_('Exámenes'));
 
 	function cargo_bien($c){ return str_replace(' ', '_', $c); }
 
@@ -36,7 +44,7 @@ WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 		$data_cargos[] = cargo_bien($r['asigna_nombre'].' '.$r['asigna_num'].'').'->'.cargo_bien($r['nombre'].' '.$r['cargo_num'].'');
 	}
 
-	$txt .= '<a href="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" target="_blank"><img style="max-width:1800px;margin-left:-20px;" src="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" alt="grafico confianza" /></a><p>Organigrama de la jerarquía de cargos. Grafico experimental, alpha.</p>
+	$txt .= '<a href="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" target="_blank"><img style="max-width:1800px;margin-left:-20px;" src="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" alt="grafico confianza" /></a><p>'._('Organigrama de la jerarquía de cargos. Grafico experimental, alpha').'.</p>
 
 <style>
 #header { z-index:1010; }
@@ -80,7 +88,7 @@ ORDER BY voto_confianza DESC, nota DESC", $link);
 				} else {
 					$candidatos[] = '<tr>
 <td>'.($asignador?'<form action="/accion.php?a=cargo&b=add&ID='.$r['cargo_ID'].'" method="POST">
-<input type="hidden" name="user_ID" value="'.$r2['user_ID'].'"  />'.boton('Asignar', 'submit', false, 'small blue').'</form>':'').'</td>
+<input type="hidden" name="user_ID" value="'.$r2['user_ID'].'"  />'.boton(_('Asignar'), 'submit', false, 'small blue').'</form>':'').'</td>
 <td><b>'.crear_link($r2['nick']).'</b></td>
 <td align="right" class="gris">'.timer($r2['fecha_last']).'</td>
 <td align="right">'.confianza($r2['voto_confianza']).'</td>
@@ -97,7 +105,7 @@ ORDER BY voto_confianza DESC, nota DESC", $link);
 <tr>
 <th></th>
 <th colspan="2" align="left"></th>
-<th style="font-weight:normal;">Último acceso</th>
+<th style="font-weight:normal;">'._('Último acceso').'</th>
 </tr>
 '.implode('', $activos).'
 </table>
@@ -107,36 +115,35 @@ ORDER BY voto_confianza DESC, nota DESC", $link);
 
 
 
-<fieldset><legend>Candidatos a '.strtolower($r['nombre']).' ('.count($candidatos).')</legend>
+<fieldset><legend>'._('Candidatos a').' '.strtolower($r['nombre']).' ('.count($candidatos).')</legend>
 <table border="0">
 <tr>
 <th></th>
 <th></th>
-<th style="font-weight:normal;">Último acceso</th>
-<th style="font-weight:normal;">Confianza</th>
-<th style="font-weight:normal;">Nota</th>
+<th style="font-weight:normal;">'._('Último acceso').'</th>
+<th style="font-weight:normal;">'._('Confianza').'</th>
+<th style="font-weight:normal;">'._('Nota').'</th>
 </tr>
 '.implode('', $candidatos).'
 </table>
 </fieldset>
-
 
 </td></tr></table>';
 
 	}
 
 } else { // VER CARGOS
-	$txt_nav = array('/cargos'=>'Cargos');
-	$txt_tab = array('/cargos/organigrama'=>'Organigrama', '/examenes'=>'Exámenes');
+	$txt_nav = array('/cargos'=>_('Cargos'));
+	$txt_tab = array('/cargos/organigrama'=>_('Organigrama'), '/examenes'=>_('Exámenes'));
 	if (nucleo_acceso($vp['acceso']['control_cargos'])) {
-		$txt_tab['/cargos'] = 'Ver cargos';
-		$txt_tab['/cargos/editar'] = 'Editar';
-		$txt_tab['/cargos/editar/elecciones'] = 'Editar elecciones';
+		$txt_tab['/cargos'] = _('Ver cargos');
+		$txt_tab['/cargos/editar'] = _('Editar');
+		$txt_tab['/cargos/editar/elecciones'] = _('Editar elecciones');
 	}
 
 	if ($_GET['a'] == 'editar') { 
 		$editar = true; 
-		if (nucleo_acceso($vp['acceso']['control_cargos'])) { $txt_nav[] = 'Editar cargos'; }
+		if (nucleo_acceso($vp['acceso']['control_cargos'])) { $txt_nav[] = _('Editar cargos'); }
 		$txt .= '<form action="/accion.php?a=cargo&b=editar" method="POST">'.($_GET['b']=='elecciones'?'<input type="hidden" name="editar_elecciones" value="true" />':'');
 	} else { $editar = false; }
 
@@ -174,26 +181,26 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 			}
 			$txt_el_td .= '</select></td>';
 		} elseif (($editar) AND ($r['asigna'] <= 0)) {
-			$txt_el_td .= '<td><b>Sistema</b></td>';
+			$txt_el_td .= '<td><b>'._('Sistema').'</b></td>';
 		} else {
 			$txt_el_td .= '<td>';
 			
 			if ($pol['pais'] == PAIS) {
 				if ($r['cargo'] == 'true') {
-					$txt_el_td .= boton('Dimitir', '/accion.php?a=cargo&b=dimitir&ID='.$r['cargo_ID'], '¿Estás seguro de querer DIMITIR?\n\n¡NUNCA LO HAGAS EN CALIENTE!', 'red');
+					$txt_el_td .= boton(_('Dimitir'), '/accion.php?a=cargo&b=dimitir&ID='.$r['cargo_ID'], '¿Estás seguro de querer DIMITIR?\n\n¡ES IRREVERSIBLE!', 'red');
 				} else if ($r['aprobado'] == 'ok') {
-					$txt_el_td .= boton('Repetir examen ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue').' '.boton('Retirar candidatura', '/accion.php?a=examenes&b=retirar_examen&ID='.$r['cargo_ID'], false, 'red');
+					$txt_el_td .= boton(_('Repetir examen').' ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue').' '.boton(_('Retirar candidatura'), '/accion.php?a=examenes&b=retirar_examen&ID='.$r['cargo_ID'], false, 'red');
 				} else if ($r['aprobado'] == 'no') {
 					if (($r['autocargo'] == 'true') AND (nucleo_acceso('cargo', implode(' ', $cargos_automaticos)))) { // Tienes al menos un cargo automatico
-						$txt_el_td .= '<span class="gris">Solo puedes ejercer un cargo automático.</span>';
+						$txt_el_td .= '<span class="gris">'._('Solo puedes ejercer un cargo automático').'.</span>';
 					} else {
-						$txt_el_td .= boton('Ser candidato (examen, '.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue');
+						$txt_el_td .= boton(_('Ser candidato').' ('._('examen').', '.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue');
 					}
 				} else {
 					if (($r['autocargo'] == 'true') AND (nucleo_acceso('cargo', implode(' ', $cargos_automaticos)))) { // Tienes al menos un cargo automatico
-						$txt_el_td .= '<span class="gris">Solo puedes ejercer un cargo automático.</span>';
+						$txt_el_td .= '<span class="gris">'._('Solo puedes ejercer un cargo automático').'.</span>';
 					} else {
-						$txt_el_td .= boton('Ser candidato (examen)', '/examenes/'.$r['examen_ID'], false, 'blue');
+						$txt_el_td .= boton(_('Ser candidato').' ('._('examen').')', '/examenes/'.$r['examen_ID'], false, 'blue');
 					}
 				}
 			}
@@ -201,21 +208,21 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 		}
 
 		$txt_el_td .= '
-<td align="right" title="Con cargo / Candidatos"><b style="font-size:16px;">'.$r['cargo_num'].'</b> / '.$r['candidatos_num'].'</td>
-<td nowrap="nowrap" class="gris" align="center">'.($r['asigna']>0&&$cargo_editar?'<input type="checkbox" name="autocargo_'.$r['cargo_ID'].'" value="true" id="autocargo_'.$r['cargo_ID'].'"'.($r['autocargo']=='true'?' checked="checked"':'').' /> <label for="autocargo_'.$r['cargo_ID'].'" class="inline" title="Asignación de cargo automático al aprobar examen">Cargo automático</label>':'').(!$editar&&$r['autocargo']=='true'?'Cargo automático.':'').($r['elecciones']!=''?' <a href="/elecciones"><b>Elecciones en '.timer($r['elecciones']).'</b></a>':'').'</td>
+<td align="right" title="'._('Con cargo / Candidatos').'"><b style="font-size:16px;">'.$r['cargo_num'].'</b> / '.$r['candidatos_num'].'</td>
+<td nowrap="nowrap" class="gris" align="center">'.($r['asigna']>0&&$cargo_editar?'<input type="checkbox" name="autocargo_'.$r['cargo_ID'].'" value="true" id="autocargo_'.$r['cargo_ID'].'"'.($r['autocargo']=='true'?' checked="checked"':'').' /> <label for="autocargo_'.$r['cargo_ID'].'" class="inline" title="Asignación de cargo automático al aprobar examen">'._('Cargo automático').'</label>':'').(!$editar&&$r['autocargo']=='true'?_('Cargo automático.'):'').($r['elecciones']!=''?' <a href="/elecciones"><b>'._('Elecciones en').' '.timer($r['elecciones']).'</b></a>':'').'</td>
 <td align="right">'.($cargo_editar?'<input type="text" name="nivel_'.$r['cargo_ID'].'" value="'.$r['nivel'].'" size="3" maxlength="2" style="text-align:right;" />':$r['nivel']).'</td>
 '.(ECONOMIA?'<td align="right">'.pols($r['salario']).'</td>':'').'
-<td>'.($editar_examen?boton('Editar examen', '/examenes/editar/'.$r['examen_ID']):'').'</td>
+<td>'.($editar_examen?boton(_('Editar examen'), '/examenes/editar/'.$r['examen_ID']):'').'</td>
 <td align="right" style="color:grey;">'.$r['cargo_ID'].'</td></tr>
 
 '.($editar&&$_GET['b']=='elecciones'?'
 <tr>
-<td align="right" colspan="6" nowrap>'.($r['elecciones']?'Próximas elecciones en '.timer($r['elecciones']).':':'¿Próximas elecciones?').' <input type="text" name="elecciones_'.$r['cargo_ID'].'" value="'.$r['elecciones'].'" size="16"'.($cargo_editar?'':'readonly').' /> 
-&nbsp; Electos: <input type="text" name="elecciones_electos_'.$r['cargo_ID'].'" style="text-align:right;" value="'.$r['elecciones_electos'].'" size="1"'.($cargo_editar?'':'readonly').' /> 
-&nbsp; Cada: <input type="text" name="elecciones_cada_'.$r['cargo_ID'].'" style="text-align:right;" value="'.$r['elecciones_cada'].'" size="2"'.($cargo_editar?'':'readonly').' /> 
+<td align="right" colspan="6" nowrap>'.($r['elecciones']?_('Próximas elecciones en').' '.timer($r['elecciones']).':':_('¿Próximas elecciones?')).' <input type="text" name="elecciones_'.$r['cargo_ID'].'" value="'.$r['elecciones'].'" size="16"'.($cargo_editar?'':'readonly').' /> 
+&nbsp; '._('Electos').': <input type="text" name="elecciones_electos_'.$r['cargo_ID'].'" style="text-align:right;" value="'.$r['elecciones_electos'].'" size="1"'.($cargo_editar?'':'readonly').' /> 
+&nbsp; '._('Cada').': <input type="text" name="elecciones_cada_'.$r['cargo_ID'].'" style="text-align:right;" value="'.$r['elecciones_cada'].'" size="2"'.($cargo_editar?'':'readonly').' /> 
 días
-&nbsp; Votan: <input type="text" name="elecciones_votan_'.$r['cargo_ID'].'" value="'.$r['elecciones_votan'].'" size="10"'.($cargo_editar?'':'readonly').' />
-&nbsp; Durante: <input type="text" name="elecciones_durante_'.$r['cargo_ID'].'" style="text-align:right;" value="'.$r['elecciones_durante'].'" size="1"'.($cargo_editar?'':'readonly').' /> días</td>
+&nbsp; '._('Votan').': <input type="text" name="elecciones_votan_'.$r['cargo_ID'].'" value="'.$r['elecciones_votan'].'" size="10"'.($cargo_editar?'':'readonly').' />
+&nbsp; '._('Durante').': <input type="text" name="elecciones_durante_'.$r['cargo_ID'].'" style="text-align:right;" value="'.$r['elecciones_durante'].'" size="1"'.($cargo_editar?'':'readonly').' /> '._('días').'</td>
 </tr>
 <tr><td colspan="6">&nbsp;<br />&nbsp;</td></tr>
 ':'');
@@ -234,11 +241,11 @@ días
 <table border="0" cellspacing="3" cellpadding="0">
 <tr>
 <th></th>
-<th title="De quien depende el cargo">'.($editar?'Supeditado a':'').'</th>
-<th title="Con cargo / Candidatos">Con cargo</th>
-<th title="Cómo/quien asigna el cargo">Asignación</th>
-<th>Nivel</th>
-'.(ECONOMIA?'<th title="Salario por dia trabajado">Salario</th>':'').'
+<th title="De quien depende el cargo">'.($editar?_('Supeditado a'):'').'</th>
+<th title="Con cargo / Candidatos">'._('Con cargo').'</th>
+<th title="Cómo/quien asigna el cargo">'._('Asignación').'</th>
+<th>'._('Nivel').'</th>
+'.(ECONOMIA?'<th title="Salario por dia trabajado">'._('Salario').'</th>':'').'
 <th></th>
 <th>ID</th>
 </tr>';
@@ -263,18 +270,18 @@ días
 		} }
 
 	if ($editar) {
-		$txt .= '<tr><td colspan="6" align="center">'.boton('Editar cargos', 'submit', '¿Estás seguro que quieres EDITAR toda la configuracion de cargos?\n\nCUIDADO ESTA ACCION PUEDE TENER CONSECUENCIAS IMPORTANTES.', 'large orange').'</form></td></tr>';
+		$txt .= '<tr><td colspan="6" align="center">'.boton(_('Editar cargos'), 'submit', '¿Estás seguro que quieres EDITAR toda la configuracion de cargos?\n\nCUIDADO ESTA ACCION PUEDE TENER CONSECUENCIAS IMPORTANTES.', 'large orange').'</form></td></tr>';
 	}
 	$txt .= '</table>';
 
 	if ($editar) {
 		$txt .= '<form action="/accion.php?a=cargo&b=crear" method="POST">
 
-<fieldset><legend>Crear cargo</legend>
+<fieldset><legend>'._('Crear cargo').'</legend>
 
-<p>Nombre: <input type="text" name="nombre" value="" /></p>
+<p>'._('Nombre').': <input type="text" name="nombre" value="" /></p>
 
-<p><table><tr><td valign="top">Icono:</td>';
+<p><table><tr><td valign="top">'._('Icono').':</td>';
 		$directorio = opendir(RAIZ.'/img/cargos/');
 		while ($archivo = readdir($directorio)) {
 			$img_cargo_ID = explodear('.', $archivo, 0);
@@ -286,15 +293,15 @@ días
 		}
 		closedir($directorio); 
 
-		$txt .= '</tr></table></p><p>Cargo supeditado a: <select name="asigna">';
+		$txt .= '</tr></table></p><p>'._('Cargo supeditado a').': <select name="asigna">';
 		
 		$result2 = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 		while($r2 = mysql_fetch_array($result2)){
 			$txt .= '<option value="'.$r2['cargo_ID'].'">'.$r2['nombre'].'</option>';
 		}
-		$txt .= '</select> Nivel: <input type="text" name="nivel" value="5" maxlength="2" size="2" style="text-align:right;" /></p>
+		$txt .= '</select> '._('Nivel').': <input type="text" name="nivel" value="5" maxlength="2" size="2" style="text-align:right;" /></p>
 
-<p>'.boton('Crear cargo', 'submit', '¿Estás seguro de querer CREAR este nuevo cargo?', 'red').'</p>
+<p>'.boton(_('Crear cargo'), 'submit', '¿Estás seguro de querer CREAR este nuevo cargo?', 'red').'</p>
 
 </fieldset>
 
@@ -304,7 +311,7 @@ días
 
 
 //THEME
-$txt_title = 'Cargos';
+$txt_title = _('Cargos');
 $txt_menu = 'demo';
 include('theme.php');
 ?>

@@ -1,4 +1,12 @@
 <?php 
+/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
+** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
+** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
+** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
+*/
+
 include('inc-login.php');
 include('inc-functions-accion.php');
 
@@ -14,9 +22,9 @@ OR (($pol['estado'] == 'extranjero') AND (in_array($_GET['a'], array('voto', 'me
 ) {
 
 
-switch ($_GET['a']) { 
-// ######################### BIG ACTION SWITCH ############
-
+//###################################################################
+switch ($_GET['a']) { //############## BIG ACTION SWITCH ############
+//###################################################################
 
 case 'grupos';
 	if (($_GET['b'] == 'crear') AND (nucleo_acceso($vp['acceso']['control_grupos']))) {
@@ -66,11 +74,31 @@ case 'aceptar-condiciones':
 	break;
 
 
+case 'donacion':
+	sql("UPDATE users SET donacion = ".($_POST['donacion']>=5?"'".$_POST['donacion']."'":"NULL")." WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+	$refer_url = 'perfil/'.$pol['nick'];
+	break;
+
+
 case 'SC':
-	$sc = get_supervisores_del_censo();
-	if (($_GET['b'] == 'nota') AND (isset($sc[$pol['user_ID']])) AND ($_GET['ID'])) {
+	if (($_GET['b'] == 'nota') AND (nucleo_acceso('supervisores_censo')) AND ($_GET['ID'])) {
 		sql("UPDATE users SET nota_SC = '".strip_tags($_POST['nota_SC'])."' WHERE ID = '".$_GET['ID']."' LIMIT 1");
 		$refer_url = 'control/supervisor-censo';
+	}
+	break;
+
+
+case 'bloqueos':
+	if (nucleo_acceso('supervisores_censo')) {
+		foreach (array('backlist_emails', 'backlist_IP', 'backlist_nicks') AS $tipo) {
+			$data = array();
+			foreach (explode("\n", $_POST[$tipo]) AS $linea) {
+				$linea = strtolower(trim(strip_tags($linea)));
+				if (strlen($linea) >= 5) { $data[] = $linea; }
+			}
+			if (count($data) > 0) { sort($data); sql("UPDATE config SET valor = '".implode("\n", $data)."' WHERE dato = '".$tipo."' LIMIT 1"); }
+		}
+		$refer_url = 'control/supervisor-censo/bloqueos';
 	}
 	break;
 
@@ -90,9 +118,11 @@ case 'exencion_impuestos':
 	} 
 	break;
 
+
+
 case 'chat':
 
-	if (($_GET['b'] == 'solicitar') AND ($pol['pols'] >= $pol['config']['pols_crearchat']) AND ($_POST['nombre'])) {
+	if (($_GET['b'] == 'solicitar') AND ($_POST['nombre'])) {
 		$nombre = $_POST['nombre'];
 		$url = gen_url($nombre);
 
@@ -109,7 +139,7 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 		
 		$result = sql("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1");
 		while($r = r($result)) {
-			if ((nucleo_acceso('privado', $r['admin'])) OR ($r['user_ID'] == $pol['user_ID'])) {
+			if ((nucleo_acceso('privado', $r['admin'])) OR ($r['user_ID'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 				sql("UPDATE chats SET admin = '".strtolower(strip_tags($_POST['admin']))."' WHERE chat_ID = '".$_POST['chat_ID']."' LIMIT 1");
 			}
 			$refer_url = 'chats/'.$r['url'].'/opciones';
@@ -119,7 +149,7 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 		$result = sql("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1");
 		while($r = r($result)) {
 			
-			if ((nucleo_acceso('privado', $r['admin'])) OR (($r['user_ID'] == 0) AND ($pol['nivel'] >= 98))) {
+			if ((nucleo_acceso('privado', $r['admin'])) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 				if ($_POST['acceso_cfg_leer']) { 
 					$_POST['acceso_cfg_leer'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_leer']))); 
 				}
@@ -142,15 +172,14 @@ WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS
 		}
 		$refer_url = 'chats/'.$_POST['chat_nom'].'/opciones';
 
-
-	} elseif (($_GET['b'] == 'activar') AND ($_GET['chat_ID']) AND (nucleo_acceso('nivel', 98))) {
+	} elseif (($_GET['b'] == 'activar') AND ($_GET['chat_ID']) AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 		sql("UPDATE chats SET estado = 'activo' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado != 'activo' AND pais = '".PAIS."' LIMIT 1");
 		$refer_url = 'chats';
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['chat_ID'])) {
-		sql("DELETE FROM chats WHERE chat_ID = '".$_GET['chat_ID']."' AND estado = 'bloqueado' AND pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+		sql("DELETE FROM chats WHERE chat_ID = '".$_GET['chat_ID']."' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false')."') LIMIT 1");
 		$refer_url = 'chats';
 	} elseif (($_GET['b'] == 'bloquear') AND ($_GET['chat_ID'])) {
-		sql("UPDATE chats SET estado = 'bloqueado' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR ((acceso_escribir = 'anonimos') AND ('".$pol['nivel']."' >= 95))) LIMIT 1");
+		sql("UPDATE chats SET estado = 'bloqueado' WHERE chat_ID = '".$_GET['chat_ID']."' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false')."') LIMIT 1");
 		$refer_url = 'chats';
 	}
 	break;
@@ -328,9 +357,9 @@ case 'expulsar':
 			//evento_chat('<span class="expulsado"><img src="'.IMG.'varios/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['nick'].'</b> ha sido expulsado de VirtualPol. Razon: <b>'.$_POST['razon'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
 
 			evento_log('Expulsión a '.$r['nick'].', razón: '.$r['razon']);
+			$refer_url = 'perfil/'.$r['nick'];
 		}
 	}
-	$refer_url = 'control/expulsiones';
 	break;
 
 
@@ -741,6 +770,7 @@ case 'gobierno':
 'pols_mensajetodos'=>'Coste mensaje Global',
 'pols_solar'=>'Coste solar del mapa',
 'defcon'=>'DEFCON',
+'lang'=>'Idioma',
 'pols_inem'=>'INEM',
 'pols_afiliacion'=>'Pago por afiliado',
 'pols_empresa'=>'Coste creacion empresa',
@@ -764,14 +794,10 @@ case 'gobierno':
 	if (
 ($_GET['b'] == 'config') AND 
 (nucleo_acceso($vp['acceso']['control_gobierno'])) AND  
-(entre($_POST['online_ref'], 60, 900000)) AND
+(entre($_POST['online_ref'], 0, 900000)) AND
 (strlen($_POST['palabra_gob0']) <= 200) AND
 ($_POST['chat_diasexpira'] >= 10)
 ) {
-
-		foreach ($vp['paises'] AS $pais) {
-			if (PAIS != $pais) { $dato_array['frontera_con_' . $pais] = 'Frontera con ' . $pais; }
-		}
 
 		foreach ($_POST AS $dato => $valor) {
 			if ((substr($dato, 0, 8) != 'salario_') AND ($dato != 'palabra_gob1')) {
@@ -852,7 +878,18 @@ case 'gobierno':
 		evento_log('Gobierno configuración: economía');
 		$refer_url = 'control/gobierno/economia';
 
-	// FORO
+	} elseif (($_GET['b'] == 'privilegios') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
+		$result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'acceso'");
+		while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
+		$accesos = array();
+		foreach (explode('|', $pol['config']['acceso']) AS $el_acceso) {
+			$acceso = explodear(';', $el_acceso, 0);
+			if ($acceso == 'control_gobierno') { $accesos[] = $el_acceso; } else { $accesos[] = $acceso.';'.$_POST[$acceso].':'.$_POST[$acceso.'_cfg']; }
+		}
+		sql("UPDATE config SET valor = '".implode('|', $accesos)."' WHERE pais = '".PAIS."' AND dato = 'acceso' LIMIT 1");
+		evento_log('Gobierno configuración: privilegios');
+		$refer_url = 'control/gobierno/privilegios';
+
 	} elseif (($_GET['b'] == 'subforo') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 		$subforos = explode('.', $_POST['subforos']);
 		foreach ($subforos AS $subforo_ID) {
@@ -1940,6 +1977,6 @@ if ($_GET['a'] == 'logout') {
 }
 
 
-if (!isset($refer_url)) { $refer_url = '?error='.base64_encode('Acción no permitida o erronea ('.$_GET['a'].')'); }
+if (!isset($refer_url)) { $refer_url = '?error='.base64_encode(_('Acción no permitida o erronea').' ('.$_GET['a'].')'); }
 redirect('http://'.HOST.'/'.$refer_url);
 ?>

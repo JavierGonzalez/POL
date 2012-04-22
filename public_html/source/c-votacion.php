@@ -1,4 +1,12 @@
-<?php 
+<?php
+/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
+** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
+** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
+** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
+*/
+
 include('inc-login.php');
 
 $votaciones_tipo = array('sondeo', 'referendum', 'parlamento', 'cargo', 'elecciones');
@@ -115,9 +123,9 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 
 	unset($votaciones_tipo[4]); 
 
-	$txt_title = 'Borrador de votación';
-	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores', 'Crear votación');
-	$txt_tab = array('/votacion/borradores'=>'Ver borradores', '/votacion/'.$_GET['b']=>'Previsualizar', '/votacion/crear/'.$_GET['b']=>'Editar borrador');
+	$txt_title = _('Borrador de votación');
+	$txt_nav = array('/votacion'=>_('Votaciones'), '/votacion/borradores'=>_('Borradores'), _('Crear votación'));
+	$txt_tab = array('/votacion/borradores'=>_('Ver borradores'), '/votacion/'.$_GET['b']=>_('Previsualizar'), '/votacion/crear/'.$_GET['b']=>_('Editar borrador'));
 
 	// EDITAR
 	if (is_numeric($_GET['b'])) {
@@ -144,15 +152,15 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 <table border="0"><tr><td valign="top">
 
 
-<fieldset><legend>Tipo de votación</legend>
+<fieldset><legend>'._('Tipo de votación').'</legend>
 <p>
 <span id="tipo_select">';
 
 	$tipo_extra = array(
-'sondeo'=>'<span style="float:right;margin-left:6px;" class="gris">(informativo, no vinculante)</span>', 
-'referendum'=>'<span style="float:right;" class="gris">(vinculante)</span>',
-'parlamento'=>'<span style="float:right;" class="gris">(vinculante)</span>',
-'cargo'=>'<span style="float:right;" title="Se ejecuta una acción automática tras su finalización." class="gris">(ejecutiva)</span>',
+'sondeo'=>'<span style="float:right;margin-left:6px;" class="gris">('._('informativo, no vinculante').')</span>', 
+'referendum'=>'<span style="float:right;" class="gris">('._('vinculante').')</span>',
+'parlamento'=>'<span style="float:right;" class="gris">('._('vinculante').')</span>',
+'cargo'=>'<span style="float:right;" title="Se ejecuta una acción automática tras su finalización." class="gris">('._('ejecutiva').')</span>',
 );
 
 	if (ASAMBLEA) { unset($votaciones_tipo[2]); } // Quitar tipo de votacion de parlamento.
@@ -167,21 +175,21 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 </fieldset>
 
 
-<fieldset><legend>Opciones de votación</legend>
+<fieldset><legend>'._('Opciones de votación').'</legend>
 
 <span id="time_expire">
-<b>Duración</b>:
+<b>'._('Duración').'</b>:
 
 <input type="text" name="time_expire" value="'.(isset($edit['ID'])?round($edit['duracion']/3600):'24').'" style="text-align:right;width:50px;" />
 
 <select name="time_expire_tipo">
-<option value="3600" selected="selected">horas</option>
-<option value="86400">días</option>
+<option value="3600" selected="selected">'._('horas').'</option>
+<option value="86400">'._('días').'</option>
 </select></span>
 
 
 <span id="cargo_form" style="display:none;">
-<b>Cargo</b>: 
+<b>'._('Cargo').'</b>: 
 <select name="cargo">';
 
 	$sel['cargo'][explodear('|', $edit['ejecutar'], 0)] = ' selected="selected"';
@@ -190,42 +198,42 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 
 	$txt .= '
 </select><br />
-Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
+'._('Ciudadano').': <input type="text" name="nick" value="" size="10" /></span>
 
 
 <br /><span id="votos_expire">
-<b>Finalizar con</b>: <input type="text" name="votos_expire" value="'.($edit['votos_expire']?$edit['votos_expire']:'').'" size="1" maxlength="5" style="text-align:right;" /> votos</span>
+<b>'._('Finalizar con').'</b>: <input type="text" name="votos_expire" value="'.($edit['votos_expire']?$edit['votos_expire']:'').'" size="1" maxlength="5" style="text-align:right;" /> '._('votos').'</span>
 
 </fieldset>
 
 
-<fieldset><legend>Opciones de voto</legend>
+<fieldset><legend>'._('Opciones de voto').'</legend>
 
 <span id="tipo_voto">
-<b>Tipo de voto</b>: 
+<b>'._('Tipo de voto').'</b>: 
 <select name="tipo_voto">
-<option value="estandar"'.$sel['tipo_voto']['estandar'].'>Una elección (estándar)</option>
-<option value="multiple"'.$sel['tipo_voto']['multiple'].'>Múltiple</option>
+<option value="estandar"'.$sel['tipo_voto']['estandar'].'>'._('Una elección (estándar)').'</option>
+<option value="multiple"'.$sel['tipo_voto']['multiple'].'>'._('Mùltiple').'</option>
 
 <optgroup label="Preferencial">
-<option value="3puntos"'.$sel['tipo_voto']['3puntos'].'>3 votos (6 puntos)</option>
-<option value="5puntos"'.$sel['tipo_voto']['5puntos'].'>5 votos (15 puntos)</option>
-<option value="8puntos"'.$sel['tipo_voto']['8puntos'].'>8 votos (36 puntos)</option>
+<option value="3puntos"'.$sel['tipo_voto']['3puntos'].'>3 '._('votos').' (6 '._('puntos').')</option>
+<option value="5puntos"'.$sel['tipo_voto']['5puntos'].'>5 '._('votos').' (15 '._('puntos').')</option>
+<option value="8puntos"'.$sel['tipo_voto']['8puntos'].'>8 '._('votos').' (36 '._('puntos').')</option>
 </optgroup>
 </select></span>
 
 
 <br />
 <span id="privacidad">
-<b>Voto</b>: 
+<b>'._('Voto').'</b>: 
 <select name="privacidad">
-<option value="true"'.$sel['privacidad']['true'].'>Secreto (estándar)</option>
-<option value="false"'.$sel['privacidad']['false'].'>Público</option>
+<option value="true"'.$sel['privacidad']['true'].'>'._('Secreto (estándar)').'</option>
+<option value="false"'.$sel['privacidad']['false'].'>'._('Público').'</option>
 </select>
 
 <br />
 
-<b>Orden de opciones:</b> <input type="checkbox" name="aleatorio" value="true"'.($edit['aleatorio']=='true'?' checked="checked"':'').' /> Aleatorio.
+<b>'._('Orden de opciones').':</b> <input type="checkbox" name="aleatorio" value="true"'.($edit['aleatorio']=='true'?' checked="checked"':'').' /> '._('Aleatorio').'.
 </span>
 
 
@@ -234,9 +242,9 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 
 </td><td valign="top" align="right">
 
-<fieldset><legend>Accesos</legend>
+<fieldset><legend>'._('Accesos').'</legend>
 
-<fieldset><legend>Para poder votar</legend>
+<fieldset><legend>'._('Para poder votar').'</legend>
 <p>
 <select name="acceso_votar">';
 
@@ -254,7 +262,7 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 </fieldset>
 
 
-<fieldset><legend>Para ver votación</legend>
+<fieldset><legend>'._('Para ver votación').'</legend>
 <p>
 <select name="acceso_ver">';
 
@@ -274,19 +282,19 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 
 </td></tr></table>
 
-<fieldset><legend>Redacción</legend>
+<fieldset><legend>'._('Redacción').'</legend>
 
 <div class="votar_form">
-<p><b>Pregunta</b>: 
+<p><b>'._('Pregunta').'</b>: 
 <input type="text" name="pregunta" size="57" maxlength="70" value="'.$edit['pregunta'].'" /></p>
 </div>
 
-<p><b>Descripción</b>:<br />
+<p><b>'._('Descripción').'</b>:<br />
 <textarea name="descripcion" style="width:600px;height:260px;">
 '.strip_tags($edit['descripcion']).'
 </textarea></p>
 
-<p><b>URL de debate</b>: (opcional, debe empezar por http://...)<br />
+<p><b>'._('URL de debate').'</b>: ('._('opcional, debe empezar por').' http://...)<br />
 <input type="text" name="debate_url" size="57" maxlength="300" value="'.$edit['debate_url'].'" /></p>
 
 </fieldset>
@@ -297,10 +305,10 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 <div class="votar_form">
 
 
-<fieldset><legend>Opciones de voto</legend>
+<fieldset><legend>'._('Opciones de voto').'</legend>
 <p>
 <ul style="margin-bottom:-16px;">
-<li><input type="text" name="respuesta0" size="22" value="En Blanco" readonly="readonly" style="color:grey;" /> &nbsp; <a href="#" id="a_opciones" onclick="opcion_nueva();return false;">Añadir opción</a></li>
+<li><input type="text" name="respuesta0" size="22" value="En Blanco" readonly="readonly" style="color:grey;" /> &nbsp; <a href="#" id="a_opciones" onclick="opcion_nueva();return false;">'._('Añadir opción').'</a></li>
 </ul>
 <ol id="li_opciones" style="margin-top:10px;">';
 
@@ -327,7 +335,7 @@ Ciudadano: <input type="text" name="nick" value="" size="10" /></span>
 </fieldset>
 
 </div>
-<p><input type="submit" value="Guardar borrador"'.(nucleo_acceso($vp['acceso']['votacion_borrador'])?'':' disabled="disabled"').' style="font-size:18px;" /></p>';
+<p><input type="submit" value="'._('Guardar borrador').'"'.(nucleo_acceso($vp['acceso']['votacion_borrador'])?'':' disabled="disabled"').' style="font-size:18px;" /></p>';
 
 	$txt_header .= '<script type="text/javascript">
 campos_num = '.($respuestas_num+1).';
@@ -353,9 +361,9 @@ function opcion_nueva() {
 
 } elseif ($_GET['a'] == 'borradores') { // VER BORRADORES
 
-	$txt_title = 'Borradores de votaciones';
-	$txt_nav = array('/votacion'=>'Votaciones', '/votacion/borradores'=>'Borradores de votación');
-	$txt_tab = array('/votacion/crear'=>'Crear votación');
+	$txt_title = _('Borradores de votaciones');
+	$txt_nav = array('/votacion'=>_('Votaciones'), '/votacion/borradores'=>_('Borradores de votación'));
+	$txt_tab = array('/votacion/crear'=>_('Crear votación'));
 	
 	$txt .= '<table border="0" cellpadding="1" cellspacing="0">';
 
@@ -369,18 +377,18 @@ LIMIT 500");
 
 		if (nucleo_acceso($vp['acceso'][$r['tipo']])) {
 			$boton_borrar = boton('X', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Estás seguro de querer ELIMINAR este borrador de votación?', 'small');
-			$boton_iniciar = boton('Iniciar', '/accion.php?a=votacion&b=iniciar&ref_ID='.$r['ID'], '¿Estás seguro de querer INICIAR esta votación?', 'small');
+			$boton_iniciar = boton(_('Iniciar'), '/accion.php?a=votacion&b=iniciar&ref_ID='.$r['ID'], '¿Estás seguro de querer INICIAR esta votación?', 'small');
 		} else {
 			$boton_borrar = boton('X', false, false, 'small');
-			$boton_iniciar = boton('Iniciar', false, false, 'small');
+			$boton_iniciar = boton(_('Iniciar'), false, false, 'small');
 		}
 		
 		$txt .= '<tr>
-<td valign="top" align="right" nowrap="nowrap"><b>'.ucfirst($r['tipo']).'</b><br />'.$boton_borrar.' '.$boton_iniciar.'<br />'.boton('Previsualizar', '/votacion/'.$r['ID'], false, 'small').'</td>
+<td valign="top" align="right" nowrap="nowrap"><b>'.ucfirst($r['tipo']).'</b><br />'.$boton_borrar.' '.$boton_iniciar.'<br />'.boton(_('Previsualizar'), '/votacion/'.$r['ID'], false, 'small').'</td>
 <td><a href="/votacion/crear/'.$r['ID'].'"><b style="font-size:18px;">'.$r['pregunta'].'</b></a><br />
-Creado hace <b><span class="timer" value="'.strtotime($r['time']).'"></span></b> por '.crear_link($r['nick']).', editado hace <span class="timer" value="'.strtotime($r['time_expire']).'"></span>
+'._('Creado hace').' <b><span class="timer" value="'.strtotime($r['time']).'"></span></b> '._('por').' '.crear_link($r['nick']).', '._('editado hace').' <span class="timer" value="'.strtotime($r['time_expire']).'"></span>
 <br />
-Ver: <em title="'.$r['acceso_cfg_ver'].'">'.$r['acceso_ver'].'</em>, votar: <em title="'.$r['acceso_cfg_votar'].'">'.$r['acceso_votar'].'</em>, tipo voto: <em>'.$r['tipo_voto'].'</em>, duración: <em>'.duracion($r['duracion']).'</em></td>
+'._('Ver').': <em title="'.$r['acceso_cfg_ver'].'">'.$r['acceso_ver'].'</em>, '._('votar').': <em title="'.$r['acceso_cfg_votar'].'">'.$r['acceso_votar'].'</em>, '._('tipo voto').': <em>'.$r['tipo_voto'].'</em>, '._('duración').': <em>'.duracion($r['duracion']).'</em></td>
 </tr>';
 	}
 	$txt .= '</table>';
@@ -402,7 +410,7 @@ LIMIT 1");
 	while($r = r($result)) {
 
 		if ((!nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver'])) AND ($r['estado'] != 'borrador')) { 
-			$txt .= '<p style="color:red;">Esta votación es privada. No tienes acceso para ver su contenido o resultado.</p>'; 
+			$txt .= '<p style="color:red;">'._('No puedes ver esta votación. Solo pueden verla').' <b>'.verbalizar_acceso($r['acceso_ver'], $r['acceso_cfg_ver']).'</b></p>'; 
 			break; 
 		}
 
@@ -415,24 +423,24 @@ LIMIT 1");
 		$respuestas_desc = explode("][", $r['respuestas_desc']);
 		$respuestas_num = count($respuestas) - 1;
 		
-		$txt_title = 'Votacion: ' . strtoupper($r['tipo']) . ' | ' . $r['pregunta'];
-		$txt_nav = array('/votacion'=>'Votaciones', '/votacion/'.$r['ID']=>strtoupper($r['tipo']));
+		$txt_title = _('Votación').': ' . strtoupper($r['tipo']) . ' | ' . $r['pregunta'];
+		$txt_nav = array('/votacion'=>_('Votaciones'), '/votacion/'.$r['ID']=>strtoupper($r['tipo']));
 
 		if ($r['estado'] == 'ok') { 
-			$txt_nav['/votacion/'.$r['ID']] = 'En curso: '.num($votos_total).' votos';
-			$txt_tab = array('/votacion/'.$r['ID']=>'Votación', '/votacion/'.$r['ID'].'/info'=>'Más información');
+			$txt_nav['/votacion/'.$r['ID']] = _('En curso').': '.num($votos_total).' '._('votos');
+			$txt_tab = array('/votacion/'.$r['ID']=>_('Votación'), '/votacion/'.$r['ID'].'/info'=>_('Más información'));
 
-			$tiempo_queda =  '<span style="color:blue;">Quedan '.timer($time_expire, true).'.</span>'; 
+			$tiempo_queda =  '<span style="color:blue;">'._('Quedan').' '.timer($time_expire, true).'.</span>'; 
 		} elseif ($r['estado'] == 'borrador') {
-			$txt_nav[] = 'Borrador';
-			$txt_tab = array('/votacion/borradores'=>'Ver borradores', '/votacion/'.$r['ID']=>'Previsualizar', '/votacion/crear/'.$r['ID']=>'Editar borrador');
+			$txt_nav[] = _('Borrador');
+			$txt_tab = array('/votacion/borradores'=>_('Ver borradores'), '/votacion/'.$r['ID']=>_('Previsualizar'), '/votacion/crear/'.$r['ID']=>_('Editar borrador'));
 
-			$tiempo_queda =  '<span style="color:red;">Borrador <span style="font-weight:normal;">(Previsualización de votación)</span></span> ';
+			$tiempo_queda =  '<span style="color:red;">'._('Borrador').' <span style="font-weight:normal;">('._('Previsualización de votación').')</span></span> ';
 		} else { 
-			$txt_nav['/votacion/'.$r['ID']] = 'Finalizado: '.num($votos_total).' votos';
-			$txt_tab = array('/votacion/'.$r['ID']=>'Votación', '/votacion/'.$r['ID'].'/info'=>'Más información');
-			if (isset($pol['user_ID'])) { $txt_tab['/votacion/'.$r['ID'].'/verificacion'] = 'Verificación'; }
-			$tiempo_queda =  '<span style="color:grey;">Finalizado</span>'; 
+			$txt_nav['/votacion/'.$r['ID']] = _('Finalizado').': '.num($votos_total).' '._('votos');
+			$txt_tab = array('/votacion/'.$r['ID']=>_('Votación'), '/votacion/'.$r['ID'].'/info'=>_('Más información'));
+			if (isset($pol['user_ID'])) { $txt_tab['/votacion/'.$r['ID'].'/verificacion'] = _('Verificación'); }
+			$tiempo_queda =  '<span style="color:grey;">'._('Finalizado').'</span>'; 
 		}
 
 
@@ -440,82 +448,82 @@ LIMIT 1");
 			$time_expire = strtotime($r['time_expire']);
 			$time = strtotime($r['time']);
 			
-			$txt .= '<fieldset><legend>Información sobre esta votación</legend>
+			$txt .= '<fieldset><legend>'._('Información sobre esta votación').'</legend>
 
 <table border="0">
 
 <tr>
-<td align="right">Título/Pregunta:</td>
+<td align="right">'._('Título/Pregunta').':</td>
 <td><a href="/votacion/'.$r['ID'].'"><b>'.$r['pregunta'].'</b></a></td>
 </tr>
 
 <tr>
-<td align="right">Estado:</td>
-<td><b>'.($r['estado']=='ok'?'En curso... quedan '.timer($r['time_expire']):'Finalizada, hace '.timer($r['time_expire'])).'</b> ('.num($r['num']).' votos)</td>
+<td align="right">'._('Estado').':</td>
+<td><b>'.($r['estado']=='ok'?_('En curso').'... '._('quedan').' '.timer($r['time_expire']):_('Finalizada').', '._('hace').' '.timer($r['time_expire'])).'</b> ('.num($r['num']).' '._('votos').')</td>
 </tr>
 
 
 <tr>
-<td align="right">Creada o aprobada por:</td>
-<td>'.($r['user_ID']==0?'<b>Sistema VirtualPol</b> (automático, sin intervención humana)':'<b>'.crear_link($r['nick']).'</b>').'</td>
+<td align="right">'._('Creada o aprobada por').':</td>
+<td>'.($r['user_ID']==0?'<b>'._('Sistema VirtualPol').'</b> ('._('automático, sin intervención humana').')':'<b>'.crear_link($r['nick']).'</b>').'</td>
 </tr>
 
 <tr>
-<td align="right">Tipo de votación:</td>
-<td><b>'.ucfirst($r['tipo']).'</b> '.($r['tipo']=='sondeo'?'(No vinculante, informativo)':'(Vinculante)').'</td>
+<td align="right">'._('Tipo de votación').':</td>
+<td><b>'.ucfirst($r['tipo']).'</b> '.($r['tipo']=='sondeo'?'('._('No vinculante, informativo').')':'('._('Vinculante').')').'</td>
 </tr>
 
 <tr>
-<td align="right">Tipo de voto:</td>
-<td><b>'.ucfirst((substr($r['tipo_voto'], 1, 6)=='puntos'?'preferencial, repartir '.substr($r['tipo_voto'], 0, 1).' puntos':$r['tipo_voto'])).'</b> ('.($r['privacidad']=='true'?'voto secreto':'voto público, no secreto').($r['aleatorio']=='true'?', orden de opciones aleatorio':'').')</td>
+<td align="right">'._('Tipo de voto').':</td>
+<td><b>'.ucfirst((substr($r['tipo_voto'], 1, 6)=='puntos'?_('preferencial, repartir').' '.substr($r['tipo_voto'], 0, 1).' '._('puntos'):$r['tipo_voto'])).'</b> ('.($r['privacidad']=='true'?_('voto secreto'):_('voto público, no secreto')).($r['aleatorio']=='true'?', '._('opciones ordenadas aleatoriamente'):'').')</td>
 </tr>
 
 <tr>
-<td align="right">Pueden votar:</td>
+<td align="right">'._('Pueden votar').':</td>
 <td><b>'.ucfirst(verbalizar_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])).'</b></td>
 </tr>
 
 <tr>
-<td align="right">Pueden ver la votación:</td>
+<td align="right">'._('Pueden ver la votación').':</td>
 <td><b>'.ucfirst(verbalizar_acceso($r['acceso_ver'], $r['acceso_cfg_ver'])).'</b></td>
 </tr>
 
 <tr>
-<td align="right">Fecha creación:</td>
+<td align="right">'._('Fecha creación').':</td>
 <td><b>'.$r['time'].'</b> ('.timer($r['time'], false, true).')</td>
 </tr>
 
 <tr>
-<td align="right">Fecha finalización:</td>
+<td align="right">'._('Fecha finalización').':</td>
 <td><b>'.$r['time_expire'].'</b> ('.timer($r['time_expire'], false, true).')</td>
 </tr>
 
 <tr>
-<td align="right" valign="top">Duración:</td>
+<td align="right" valign="top">'._('Duración').':</td>
 <td><b>'.round($r['duracion']/24/60/60).' días</b>'.($r['estado']=='ok'?gbarra(((time()-$time)*100)/($time_expire-$time)):'').'</td>
 </tr>
 
 </table>
 </fieldset>
 
-<fieldset><legend>Propiedades de la votación</legend>
+<fieldset><legend>'._('Propiedades de la votación').'</legend>
 
 
 <table>
 
 <tr>
-<td align="right" valign="top"><b title="Accuracy: el computo de los votos es exacto">Precisión:</b></td>
-<td>SI, el computo de los votos es exacto.</td>
+<td align="right" valign="top"><b title="Accuracy: el computo de los votos es exacto">'._('Precisión').':</b></td>
+<td>'._('SI, el computo de los votos es exacto').'.</td>
 </tr>
 
 <tr>
-<td align="right" valign="top"><b title="Consistency: los resultados son coherentes y estables en el tiempo">Consistencia:</b></td>
-<td>SI, el resultado es coherente y estable en el tiempo. Una vez finalizadas no se puede eliminar o modificar las votaciones.</td>
+<td align="right" valign="top"><b title="Consistency: los resultados son coherentes y estables en el tiempo">'._('Consistencia').':</b></td>
+<td>'._('SI, el resultado es coherente y estable en el tiempo. Una vez finalizadas no se puede eliminar o modificar las votaciones').'.</td>
 </tr>
 
 <tr>
-<td align="right" valign="top"><b title="Democracy: solo pueden votar personas autorizadas y una sola vez">Democracia:</b></td>
-<td>Autentificación solida mediante <a href="'.SSL_URL.'dnie.php">DNIe</a> (y otros certificados) opcional, avanzado sistema de vigilancia del censo de eficacia elevada (demostrada desde 2008), con supervisores del censo electos por democracia directa (cada 7 días, mediante el <a href="/info/censo/SC">voto de confianza</a>).</td>
+<td align="right" valign="top"><b title="Democracy: solo pueden votar personas autorizadas y una sola vez">'._('Democracia').':</b></td>
+<td>'._('Autentificación solida mediante').' <a href="'.SSL_URL.'dnie.php">DNIe</a> ('._('y otros certificados').') '._('opcional, avanzado sistema de vigilancia del censo de eficacia elevada (demostrada desde 2008), con supervisores del censo electos por democracia directa (cada 7 días, mediante el <a href="/info/censo/SC">voto de confianza</a>').').</td>
 </tr>
 
 
@@ -524,17 +532,17 @@ LIMIT 1");
 
 
 <tr>
-<td align="right" valign="top"><b title="Privacy: el sentido del voto es secreto">Privacidad:</b></td>
-<td>SI, siempre que el servidor no se comprometa mientras la votación está activa. Al finalizar la votación se rompe la relación Usuario-Voto de forma definitiva e irreversible.</td>
+<td align="right" valign="top"><b title="Privacy: el sentido del voto es secreto">'._('Privacidad').':</b></td>
+<td>'._('SI, siempre que el servidor no se comprometa mientras la votación está activa. Al finalizar la votación se rompe la relación Usuario-Voto de forma definitiva e irreversible').'.</td>
 </tr>
 
 <tr>
-<td align="right" valign="top"><b title="Veriability: capacidad publica de comprobar el recuento de votos">Verificación:</b></td>
-<td>Muy elevada, gracias a las siguientes medidas de transparencia:
+<td align="right" valign="top"><b title="Veriability: capacidad publica de comprobar el recuento de votos">'._('Verificación').':</b></td>
+<td>'._('Muy elevada, gracias a las siguientes medidas de transparencia').':
 <ol>
-<li>Se permite verificar el sentido del propio voto mientras la votación está en curso.</li>
-<li>Comprobantes de voto que permiten verificar -más allá de toda duda- el sentido del propio voto situado en un <a href="/votacion/'.$r['ID'].'/verificacion">escrutinio público y completo</a>.</li>
-<li>Se hace público CUANDO vota QUIEN, de forma dinamica en chat y de forma <a href="/votacion/'.$r['ID'].'/verificacion">permanente</a>. Permitiendo que cualquiera se pueda poner en contacto con cualquier votante.</li>
+<li>'._('Se permite verificar el sentido del propio voto mientras la votación está en curso').'.</li>
+<li>'._('Comprobantes de voto que permiten verificar -más allá de toda duda- el sentido del propio voto situado en un <a href="/votacion/'.$r['ID'].'/verificacion">escrutinio público y completo</a>').'.</li>
+<li>'._('Se hace público CUANDO vota QUIEN, de forma dinamica en chat y de forma <a href="/votacion/'.$r['ID'].'/verificacion">permanente</a>. Permitiendo que cualquiera se pueda poner en contacto con cualquier votante').'.</li>
 </ol></td>
 </tr>
 
@@ -542,25 +550,25 @@ LIMIT 1");
 ':'
 
 <tr>
-<td align="right" valign="top"><b title="Privacy: el sentido del voto es secreto">Privacidad:</b></td>
-<td>NO, el voto es público. Cualquiera puede ver QUÉ vota QUIEN.</td>
+<td align="right" valign="top"><b title="Privacy: el sentido del voto es secreto">'._('Privacidad').':</b></td>
+<td>'._('NO, el voto es público. Cualquiera puede ver QUÉ vota QUIEN').'.</td>
 </tr>
 
 <tr>
-<td align="right" valign="top"><b title="Veriability: capacidad pública de comprobar el recuento de votos">Verificación:</b></td>
-<td>SI. Esta votación tiene verificabilidad universal ya que el voto no es secreto.</td>
+<td align="right" valign="top"><b title="Veriability: capacidad pública de comprobar el recuento de votos">'._('Verificación').':</b></td>
+<td>'._('SI. Esta votación tiene verificabilidad universal ya que el voto no es secreto').'.</td>
 </tr>
 
 ').'
 
 <tr>
-<td align="right" valign="top"><b title="Posibilidad de modificar el sentido del voto propio en una votación en curso">Rectificación</b>:</td>
-<td>SI, se permite modificar el voto.</td>
+<td align="right" valign="top"><b title="Posibilidad de modificar el sentido del voto propio en una votación en curso">'._('Rectificación').'</b>:</td>
+<td>'._('SI, se permite modificar el voto').'.</td>
 </tr>
 
 <tr>
-<td align="right" valign="top"><b title="Validez/nulidad de la votación">Impugnación:</b></td>
-<td>SI, se realiza una votación de nulidad/validez paralela e independiente del sentido de voto.</td>
+<td align="right" valign="top"><b title="Validez/nulidad de la votación">'._('Impugnación').':</b></td>
+<td>'._('SI, se realiza una votación de nulidad/validez paralela e independiente del sentido de voto').'.</td>
 </tr>
 
 </table>
@@ -569,26 +577,26 @@ LIMIT 1");
 			$result2 = sql("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
 			while($r2 = r($result2)) { $comentarios_num = $r2['num']; }
 
-			$txt .= '<fieldset><legend>Comentarios adjuntos al voto ('.($r['estado']=='end'?$comentarios_num.' comentarios &nbsp; '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
+			$txt .= '<fieldset><legend>'._('Comentarios adjuntos al voto').' ('.($r['estado']=='end'?$comentarios_num.' '._('comentarios').' &nbsp; '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
 			if (nucleo_acceso('ciudadanos_global')) {
 				if ($r['estado'] == 'end') { 
 					$result2 = sql("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
 					while($r2 = r($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
-				} else { $txt .= '<p style="color:red;">Los comentarios estarán visibles al finalizar la votación.</p>'; }
-			} else { $txt .= '<p style="color:red;">Para ver los comentarios debes ser ciudadano.</p>'; }
+				} else { $txt .= '<p style="color:red;">'._('Los comentarios estarán visibles al finalizar la votación').'.</p>'; }
+			} else { $txt .= '<p style="color:red;">'._('Para ver los comentarios debes ser ciudadano').'.</p>'; }
 			$txt .= '</fieldset>';
 	
 
 		} elseif ($_GET['b'] == 'verificacion') {
 
-			$txt .= '<h2>Verificación de votación</h2>
+			$txt .= '<h2>'._('Verificación de votación').'</h2>
 
-<p>La información presentada a continuación es la tabla de comprobantes que muestra el escrutinio completo y la relación Voto-Comprobante de esta votación. Esto permite a cualquier votante comprobar el sentido de su voto ejercido más allá de toda duda. Todo ello sin romper el secreto de voto.</p>
+<p>'._('La información presentada a continuación es la tabla de comprobantes que muestra el escrutinio completo y la relación Voto-Comprobante de esta votación. Esto permite a cualquier votante comprobar el sentido de su voto ejercido más allá de toda duda. Todo ello sin romper el secreto de voto').'.</p>
 
-'.($r['tipo_voto']!='estandar'?'<p><em>* El tipo de voto de esta votación es múltiple o preferencial. Por razones tecnicas -provisionalmente- se muestra el campo "voto" en bruto.'.($r['tipo_voto']=='multiple'?' 0=En Blanco, 1=SI y 2=NO.':'').'</em></p>':'');
+'.($r['tipo_voto']!='estandar'?'<p><em>* '._('El tipo de voto de esta votación es múltiple o preferencial. Por razones tecnicas -provisionalmente- se muestra el campo "voto" en bruto').'.'.($r['tipo_voto']=='multiple'?' 0='._('En Blanco').', 1='._('SI').' y 2='._('NO').'.':'').'</em></p>':'');
 
-if (substr($r['tipo_voto'], 1, 6) == 'puntos') {
-	$txt .= '<p>Opciones de voto: ';
+if (($r['tipo_voto'] == 'multiple') OR (substr($r['tipo_voto'], 1, 6) == 'puntos')) {
+	$txt .= '<p>'._('Opciones de voto').': ';
 	foreach ($respuestas AS $ID => $opcion) {
 		if ($opcion) { $txt .= $ID.'='.$opcion.', '; }
 	}
@@ -604,14 +612,14 @@ $txt .= '
 
 <table border="0" style="font-family:\'Courier New\',Courier,monospace;" id="tabla_comprobantes">
 <tr>
-<th title="Conteo de los diferentes sentidos de votos">Contador</th>
-<th title="Sentido del voto emitido">Sentido de voto</th>
-<th title="Voto de validez/nulidad, es una votación binaria paralela a la votación para determinar la validez de la misma.">Validez</th>
-<th title="Código aleatorio relacionado a cada voto">Comprobante</th>
-<th title="Comentario emitido junto al voto, anónimo y opcional">Comentario</th>
+<th title="Conteo de los diferentes sentidos de votos">'._('Contador').'</th>
+<th title="Sentido del voto emitido">'._('Sentido de voto').'</th>
+<th title="Voto de validez/nulidad, es una votación binaria paralela a la votación para determinar la validez de la misma.">'._('Validez').'</th>
+<th title="Código aleatorio relacionado a cada voto">'._('Comprobante').'</th>
+<th title="Comentario emitido junto al voto, anónimo y opcional">'._('Comentario').'</th>
 </tr>';
 			if ((!nucleo_acceso('ciudadanos')) AND ($r['estado'] == 'end')) {
-				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>Tienes que ser ciudadano para ver la tabla de comprobantes.</b></td></tr>';
+				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>'._('Tienes que ser ciudadano para ver la tabla de comprobantes').'.</b></td></tr>';
 			} else if (($r['estado'] == 'end') AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 				$contador_votos = 0;
 				$result2 = mysql_unbuffered_query("SELECT user_ID, voto, validez, comprobante, mensaje,
@@ -623,48 +631,47 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 					$txt .= '<tr id="'.$r2['comprobante'].'">
 <td align="right">'.($r['tipo_voto']=='estandar'?++$contador[$r2['voto']]:++$contador).'.</td>
 <td nowrap>'.($r['tipo_voto']=='estandar'?'<b>'.$respuestas[$r2['voto']].'</b>':$r2['voto']).'</td>
-<td'.($r2['validez']=='true'?' class="tcb">Válida':' class="tcr">Nula').'</td>
+<td'.($r2['validez']=='true'?' class="tcb">'._('Válida'):' class="tcr">'._('Nula')).'</td>
 <td nowrap>'.$r['ID'].'-'.$r2['comprobante'].'</td>
-'.($r2['mensaje']?'<td title="'.$r2['mensaje'].'">Comentario</td>':'').'
+'.($r2['mensaje']?'<td title="'.$r2['mensaje'].'">'._('Comentario').'</td>':'').'
 </tr>'."\n"; 
 				}
-				if ($contador_votos == 0) { $txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>Esta votación es anterior al sistema de comprobantes, por lo tanto esta comprobación no es posible.</b></td></tr>'; }
+				if ($contador_votos == 0) { $txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>'._('Esta votación es anterior al sistema de comprobantes, por lo tanto esta comprobación no es posible').'.</b></td></tr>'; }
 			} else {
-				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>Esta votación aún no ha finalizado. Cuando finalice se mostrará aquí la tabla de votos-comprobantes.</b></td></tr>';
+				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>'._('Esta votación aún no ha finalizado. Cuando finalice se mostrará aquí la tabla de votos-comprobantes').'.</b></td></tr>';
 			}
 
-			$txt .= '</table><p><b>Votantes:</b><br />'.implode(', ', $txt_votantes).'.</p>';
+			$txt .= '</table><p><b>'._('Votantes').':</b><br />'.implode(', ', $txt_votantes).'.</p>';
 
 		} else {
 
-
-			$txt_description = 'Votación, '.ucfirst($r['tipo']).' de '.PAIS.' - '.$r['pregunta'].' - VirtualPol, la primera red social democrática';
+			$txt_description = _('Votación').', '.ucfirst($r['tipo']).' '._('de').' '.PAIS.' - '.$r['pregunta'].' - VirtualPol, '._('la primera red social democrática');
 
 			$txt .= '
-<fieldset><legend>Votación</legend>
+<fieldset><legend>'._('Votación').'</legend>
 
 <div class="rich'.($r['estado']=='end'||isset($r['ha_votado'])?' votacion_desc_min':'').'">
 <h1>'.$r['pregunta'].'</h1>
 '.$r['descripcion'].'
-'.(substr($r['debate_url'], 0, 4)=='http'?'<hr /><p><b>Debate sobre esta votación: <a href="'.$r['debate_url'].'">aquí</a>.</b></p>':'').'
+'.(substr($r['debate_url'], 0, 4)=='http'?'<hr /><p><b>'._('Debate sobre esta votación').': <a href="'.$r['debate_url'].'">'._('aquí').'</a>.</b></p>':'').'
 </div>
 </fieldset>
 
 '.($r['acceso_ver']=='anonimos'&&((!isset($pol['user_ID'])) || ($r['ha_votado']) || ($r['estado']=='end'))?'<center><table border="0">
 <tr>
-'.(!isset($pol['user_ID'])?'<td>'.boton('¡Crea tu ciudadano para votar!', REGISTRAR.'?p='.PAIS, false, 'large blue').'</td>':'').'
+'.(!isset($pol['user_ID'])?'<td>'.boton(_('¡Crea tu ciudadano para votar!'), REGISTRAR.'?p='.PAIS, false, 'large blue').'</td>':'').'
 <td width="20"></td>
-<td nowrap="nowrap"><b style="font-size:20px;color:#777;">¡Difúnde '.($r['estado']=='end'?'este resultado':'esta votación').'!</b> &nbsp;</td>
+<td nowrap="nowrap"><b style="font-size:20px;color:#777;">¡'._('Difúnde').' '.($r['estado']=='end'?_('este resultado'):_('esta votación')).'!</b> &nbsp;</td>
 
 <td width="140" height="35">
-<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.HOST.'/votacion/'.$r['ID'].'" data-text="'.($r['estado']=='ok'?'VOTACIÓN':'RESULTADO').': '.substr($r['pregunta'], 0, 83).'" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="15M">Twittear</a>
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.HOST.'/votacion/'.$r['ID'].'" data-text="'.($r['estado']=='ok'?_('VOTACIÓN'):_('RESULTADO')).': '.substr($r['pregunta'], 0, 83).'" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="15M">Twittear</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </td>
 
 
 <td width="50"><g:plusone annotation="none" href="http://'.HOST.'/votacion/'.$r['ID'].'"></g:plusone></td>
 
-<td>'.boton('Donar', 'https://virtualpol.com/donaciones', false, 'small pill orange').'</td>
+<td>'.boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange').'</td>
 
 <td><div id="fb-root"></div>
 <script>(function(d, s, id) {
@@ -736,14 +743,14 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				arsort($escrutinio['votos']);
 
 				// Imprime escrutinio en texto.
-				$txt .= '<fieldset><legend>Resultado</legend><table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">';
+				$txt .= '<fieldset><legend>'._('Resultado').'</legend><table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">';
 
 				// Imprime escrutinio en grafico.
 				if ($validez == true) { // Solo si el resultado es válido (menos de 50% de votos nulos).
 					foreach ($escrutinio['votos'] AS $voto => $num) {
 						if ($respuestas[$voto] != 'En Blanco') {
 							$grafico_array_votos[] = $num;
-							$grafico_array_respuestas[] = (strlen($respuestas[$voto])>=13?trim(substr($respuestas[$voto], 0, 13)).'..':$respuestas[$voto]);
+							$grafico_array_respuestas[] = htmlspecialchars_decode((strlen($respuestas[$voto])>=13?trim(substr($respuestas[$voto], 0, 13)).'..':$respuestas[$voto]));
 						}
 					}
 
@@ -755,7 +762,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				if ($validez == true) {
 
 					if ($r['tipo_voto'] == 'multiple') {
-						$txt .= '<table border="0" cellpadding="1" cellspacing="0"><tr><th></th><th colspan="2">SI</th><th></th><th colspan="2">NO</th></tr>';
+						$txt .= '<table border="0" cellpadding="1" cellspacing="0"><tr><th></th><th colspan="2">'._('SI').'</th><th></th><th colspan="2">'._('NO').'</th></tr>';
 						
 						$puntos_total_sin_en_blanco = $puntos_total - $escrutinio['votos'][$en_blanco_ID];
 
@@ -769,7 +776,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 									$porcentaje_si = ($voto_si>0?($voto_si*100)/($voto_si + $voto_no):0);
 									$porcentaje_no = ($voto_no>0?($voto_no*100)/($voto_si + $voto_no):0);
 
-									$txt .= '<tr title="En Blanco: '.num($voto_en_blanco).'">
+									$txt .= '<tr title="'._('En Blanco').': '.num($voto_en_blanco).'">
 
 <td class="rich"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'" class="punteado"':'').'>'.$respuestas[$voto].'</td>
 
@@ -788,10 +795,10 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 								} else { $votos_en_blanco = $num; }
 							} else { unset($escrutinio['votos'][$voto]);  }
 						}
-						$txt .= '<tr><th></th><th colspan="2">SI</th><th></th><th colspan="2">NO</th></tr></table>';
+						$txt .= '<tr><th></th><th colspan="2">'._('SI').'</th><th></th><th colspan="2">'._('NO').'</th></tr></table>';
 
 					} else {
-						$txt .= '<table border="0" cellpadding="1" cellspacing="0"><tr><th>Escrutinio</th><th>'.($r['tipo_voto']=='estandar'?'Votos':'Puntos').'</th><th></th></tr>';
+						$txt .= '<table border="0" cellpadding="1" cellspacing="0"><tr><th>'._('Escrutinio').'</th><th>'.($r['tipo_voto']=='estandar'?_('Votos'):_('Puntos')).'</th><th></th></tr>';
 						
 						// Obtener ID del voto "En Blanco"
 						foreach ($escrutinio['votos'] AS $voto => $num) { if ($respuestas[$voto] == 'En Blanco') { $en_blanco_ID = $voto; } }
@@ -805,7 +812,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 								} else { $votos_en_blanco = $num; }
 							} else { unset($escrutinio['votos'][$voto]);  }
 						}
-						$txt .= '<tr><td nowrap="nowrap" title="Voto no computable. Equivale a: No sabe/No contesta."><em>En Blanco</em></td><td align="right" title="'.num(($votos_en_blanco*100)/$puntos_total, 1).'%"><b>'.num($votos_en_blanco).'</b></td><td></td></tr></table>';
+						$txt .= '<tr><td nowrap="nowrap" title="Voto no computable. Equivale a: No sabe/No contesta."><em>'._('En Blanco').'</em></td><td align="right" title="'.num(($votos_en_blanco*100)/$puntos_total, 1).'%"><b>'.num($votos_en_blanco).'</b></td><td></td></tr></table>';
 					}
 				}
 				
@@ -813,8 +820,8 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				// Imprime datos de legitimidad y validez
 				$txt .= '</td>
 <td valign="top" style="color:#888;"><br />
-Legitimidad: <span style="color:#555;"><b>'.num($votos_total).'</b>&nbsp;votos</span>, <b>'.$escrutinio['votos_autentificados'].'</b>&nbsp;autentificados.<br />
-Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>NULO</b>&nbsp;'.$porcentaje_validez.'%</span>').'<br />
+'._('Legitimidad').': <span style="color:#555;"><b>'.num($votos_total).'</b>&nbsp;'._('votos').'</span>, <b>'.$escrutinio['votos_autentificados'].'</b>&nbsp;'._('autentificados').'.<br />
+'._('Validez').': '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>'._('NULO').'</b>&nbsp;'.$porcentaje_validez.'%</span>').'<br />
 <img width="200" height="120" title="Votos de validez: OK: '.num($escrutinio['validez']['true']).', NULO: '.$escrutinio['validez']['false'].'" src="http://chart.apis.google.com/chart?cht=p&chp=4.71&chd=t:'.$escrutinio['validez']['true'].','.$escrutinio['validez']['false'].'&chs=200x120&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>
 </tr></table>
 
@@ -826,13 +833,13 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 				$tiene_acceso_votar = nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']);
 
 
-				$txt .= '<fieldset><legend>Votar</legend><form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=votacion&b=votar" method="post">
+				$txt .= '<fieldset><legend>'._('Votar').'</legend><form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=votacion&b=votar" method="post">
 <input type="hidden" name="ref_ID" value="'.$r['ID'].'"  /><p>';
 
 
 				if ($r['tipo_voto'] == 'estandar') {
 
-					if (($r['privacidad'] == 'false') AND (!isset($r['ha_votado']))) { $txt .= '<p style="color:red;">El voto es público en esta votación, por lo tanto NO será secreto.</p>'; }
+					if (($r['privacidad'] == 'false') AND (!isset($r['ha_votado']))) { $txt .= '<p style="color:red;">'._('El voto es público en esta votación, por lo tanto NO será secreto').'.</p>'; }
 
 					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
 							$votos_array[] = '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
@@ -846,10 +853,10 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 
 					//if ($r['ha_votado']) { $txt .= 'Tu voto preferencial ha sido recogido <b>correctamente</b>.<br /><br />'; }
 
-					$txt .= '<span style="color:red;">Debes repartir <b>los puntos más altos a tus opciones preferidas</b>. Puntos no acumulables.</span>
+					$txt .= '<span style="color:red;">'._('Debes repartir <b>los puntos más altos a tus opciones preferidas</b>. Puntos no acumulables').'.</span>
 <table border="0">
 <tr>
-<th colspan="'.substr($r['tipo_voto'], 0, 1).'" align="center">Puntos</th>
+<th colspan="'.substr($r['tipo_voto'], 0, 1).'" align="center">'._('Puntos').'</th>
 <th></th>
 </tr>
 <tr>
@@ -858,7 +865,7 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 <th align="center">3</th>
 '.($r['tipo_voto']=='5puntos'?'<th align="center">4</th><th align="center">5</th>':'').'
 '.($r['tipo_voto']=='8puntos'?'<th align="center">4</th><th align="center">5</th><th align="center">6</th><th align="center">7</th><th align="center">8</th>':'').'
-<th>'.($r['tipo']=='elecciones'?'Candidatos':'Opciones').'</th>
+<th>'.($r['tipo']=='elecciones'?_('Candidatos'):_('Opciones')).'</th>
 </tr>';				if ($r['ha_votado']) { $ha_votado_array = explode(' ', $r['que_ha_votado']); }
 					else { $ha_votado_array = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); }
 					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
@@ -877,7 +884,7 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 <td valign="top"><input type="radio" name="voto_7" value="'.$i.'"'.($ha_votado_array[6]==$i?' checked="checked"':'').' /></td>
 <td valign="top"><input type="radio" name="voto_8" value="'.$i.'"'.($ha_votado_array[7]==$i?' checked="checked"':'').' /></td>
 ':'').'
-<td nowrap="nowrap"'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'" class="punteado"':'').'>'.($respuestas[$i]==='En Blanco'?'<em title="Equivale a No sabe/No contesta. No computable.">En Blanco</em>':($r['tipo']=='elecciones'?'<b>'.crear_link($respuestas[$i]).'</b>':$respuestas[$i])).'</td>
+<td nowrap="nowrap"'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'" class="punteado"':'').'>'.($respuestas[$i]==='En Blanco'?'<em title="Equivale a No sabe/No contesta. No computable.">'._('En Blanco').'</em>':($r['tipo']=='elecciones'?'<b>'.crear_link($respuestas[$i]).'</b>':$respuestas[$i])).'</td>
 </tr>';
 					} }
 					if ($r['aleatorio'] == 'true') { shuffle($votos_array); }
@@ -893,13 +900,13 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 </table>';
 				} elseif ($r['tipo_voto'] == 'multiple') { // VOTAR MULTIPLE
 
-					if ($r['ha_votado']) { $txt .= 'Tus votos múltiples han sido recogidos <b>correctamente</b>. '; }
+					if ($r['ha_votado']) { $txt .= _('Tus votos múltiples han sido recogidos <b>correctamente</b>').'. '; }
 
 					$txt .= '<table border="0">
 <tr>
-<th>SI</th>
-<th>NO</th>
-<th nowrap="nowrap"><em>En Blanco</em></th>
+<th>'._('SI').'</th>
+<th>'._('NO').'</th>
+<th nowrap="nowrap"><em>'._('En Blanco').'</em></th>
 <th></th>
 </tr>';				if ($r['ha_votado']) { $ha_votado_array = explode(' ', $r['que_ha_votado']); }
 					else { $ha_votado_array = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); }
@@ -914,9 +921,9 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 					} }
 					if ($r['aleatorio'] == 'true') { shuffle($votos_array); }
 					$txt .= implode('', $votos_array).'<tr>
-<th>SI</th>
-<th>NO</th>
-<th nowrap="nowrap"><em>En Blanco</em></th>
+<th>'._('SI').'</th>
+<th>'._('NO').'</th>
+<th nowrap="nowrap"><em>'._('En Blanco').'</em></th>
 <th></th>
 </tr>
 </table>';
@@ -926,25 +933,25 @@ Validez: '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrut
 
 
 				// Imprime boton para votar, aviso de tiempo y votacion correcta/nula.
-				$txt .= ' '.boton(($r['ha_votado']?'Modificar voto':'Votar'), ($r['estado']!='borrador'&&$tiene_acceso_votar?'submit':false), false, 'large blue').' <span style="white-space:nowrap;">'.($tiene_acceso_votar?($r['ha_votado']?'<span style="color:#2E64FE;">Puedes modificar tu voto durante <span class="timer" value="'.$time_expire.'"></span>.</span>':'<span style="color:#2E64FE;">Tienes <span class="timer" value="'.$time_expire.'"></span> para votar.</span>'):'<span style="color:red;white-space:nowrap;">'.(!$pol['user_ID']?'<b>Para votar debes <a href="'.REGISTRAR.'?p='.PAIS.'">crear tu ciudadano</a>.</b>':'No tienes acceso para votar, pueden votar '.verbalizar_acceso($r['acceso_votar'], $r['acceso_cfg_votar']).'.').'</span>').'</span></p>
+				$txt .= ' '.boton(($r['ha_votado']?_('Modificar voto'):_('Votar')), ($r['estado']!='borrador'&&$tiene_acceso_votar?'submit':false), false, 'large blue').' <span style="white-space:nowrap;">'.($tiene_acceso_votar?($r['ha_votado']?'<span style="color:#2E64FE;">'._('Puedes modificar tu voto durante').' <span class="timer" value="'.$time_expire.'"></span>.</span>':'<span style="color:#2E64FE;">'._('Tienes').' <span class="timer" value="'.$time_expire.'"></span> '._('para votar').'.</span>'):'<span style="color:red;white-space:nowrap;">'.(!$pol['user_ID']?'<b>'._('Para votar debes').' <a href="'.REGISTRAR.'?p='.PAIS.'">'._('crear tu ciudadano').'</a>.</b>':_('No tienes acceso para votar, pueden votar').' '.verbalizar_acceso($r['acceso_votar'], $r['acceso_cfg_votar']).'.').'</span>').'</span></p>
 
 <p>
-<input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> Votación válida.<br />
-<input type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> Votación nula (inválida, inapropiada o tendenciosa).
+<input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> '._('Votación válida').'.<br />
+<input type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> '._('Votación nula (inválida, inapropiada o tendenciosa)').'.
 </p>
 
-<p>Comentario (opcional, secreto y público al finalizar la votación).<br />
+<p>'._('Comentario (opcional, secreto y público al finalizar la votación)').'.<br />
 <input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="60" maxlength="160" /></p>
 </form>
 
-'.($r['ha_votado']?'<p style="margin-top:30px;">Comprobante de voto:<br />
-<input type="text" value="'.$r['ID'].'-'.$r['comprobante'].'" size="60" readonly="readonly" style="color:#AAA;" /> '.boton('Enviar al email', '/accion.php?a=votacion&b=enviar_comprobante&comprobante='.$r['ID'].'-'.$r['comprobante'], false, 'pill').'</p>':'').'</fieldset>';
+'.($r['ha_votado']?'<p style="margin-top:30px;">'._('Comprobante de voto').':<br />
+<input type="text" value="'.$r['ID'].'-'.$r['comprobante'].'" size="60" readonly="readonly" style="color:#AAA;" /> '.boton(_('Enviar al email'), '/accion.php?a=votacion&b=enviar_comprobante&comprobante='.$r['ID'].'-'.$r['comprobante'], false, 'pill').'</p>':'').'</fieldset>';
 
 			}
 
 			// Añade tabla de escrutinio publico si es votacion tipo parlamento.
 			if ($r['tipo'] == 'parlamento') {
-				$txt .= '<table border="0" cellpadding="0" cellspacing="3"><tr><th>Diputado</th><th></th><th colspan="2">Voto</th><th>Mensaje</th></tr>';
+				$txt .= '<table border="0" cellpadding="0" cellspacing="3"><tr><th>'._('Diputado').'</th><th></th><th colspan="2">'._('Voto').'</th><th>'._('Mensaje').'</th></tr>';
 				$result2 = sql("SELECT user_ID,
 (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick,
 (SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS siglas,
@@ -973,21 +980,21 @@ ORDER BY siglas ASC");
 	$result = sql("SELECT COUNT(*) AS num FROM votacion WHERE estado = 'borrador' AND pais = '".PAIS."'");
 	while($r = r($result)) { $borradores_num = $r['num']; }
 
-	$txt_title = 'Votaciones';
-	$txt_nav = array('/votacion'=>'Votaciones');
-	$txt_tab = array('/elecciones'=>'Elecciones', '/votacion/borradores'=>'Borradores ('.$borradores_num.')', '/votacion/crear'=>'Crear votación');
+	$txt_title = _('Votaciones');
+	$txt_nav = array('/votacion'=>_('Votaciones'));
+	$txt_tab = array('/elecciones'=>_('Elecciones'), '/votacion/borradores'=>_('Borradores').' ('.$borradores_num.')', '/votacion/crear'=>_('Crear votación'));
 	
 	$txt .= '
 <span style="float:right;text-align:right;margin-top:-20px;">
-<b title="Promedio global de las ultimas 2 horas">'.$votos_por_hora.'</b> votos/hora</span>
+<b title="Promedio global de las ultimas 2 horas">'.$votos_por_hora.'</b> '._('votos/hora').'</span>
 
-<fieldset><legend>En curso</legend>
+<fieldset><legend>'._('En curso').'</legend>
 <table border="0" cellpadding="1" cellspacing="0">
 <tr>
 <th></th>
-<th>Votos</th>
+<th>'._('Votos').'</th>
 <th></th>
-<th colspan="3">Finaliza en...</th>
+<th colspan="3">'._('Finaliza en').'...</th>
 </tr>';
 	$mostrar_separacion = true;
 	
@@ -1002,13 +1009,13 @@ LIMIT 500");
 		$time = strtotime($r['time']);
 
 		if ((!isset($pol['user_ID'])) OR ((!$r['ha_votado']) AND ($r['estado'] == 'ok') AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])))) { 
-			$votar = boton('Votar', (isset($pol['user_ID'])?'/votacion/'.$r['ID']:REGISTRAR.'?p='.PAIS), false, 'small blue').' ';
+			$votar = boton(_('Votar'), (isset($pol['user_ID'])?'/votacion/'.$r['ID']:REGISTRAR.'?p='.PAIS), false, 'small blue').' ';
 		} else { $votar = ''; }
 
 		$boton = '';
 		if ($r['user_ID'] == $pol['user_ID']) {
 			if ($r['estado'] == 'ok') {
-				if ($r['tipo'] != 'cargo') { $boton .= boton('Finalizar', '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '¿Seguro que quieres FINALIZAR esta votacion?', 'small orange'); }
+				if ($r['tipo'] != 'cargo') { $boton .= boton(_('Finalizar'), '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '¿Seguro que quieres FINALIZAR esta votacion?', 'small orange'); }
 				$boton .= boton('X', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Seguro que quieres ELIMINAR esta votacion?', 'small red');
 			}
 		}
@@ -1042,14 +1049,14 @@ function ver_votacion(tipo) {
 </script>';
 	
 
-$txt .= '<fieldset><legend>Finalizadas</legend>
+$txt .= '<fieldset><legend>'._('Finalizadas').'</legend>
 
 <span style="color:#666;padding:3px 4px;border:1px solid #999;border-bottom:none;margin-left:100px;" class="redondeado"><b>
-<input type="checkbox" onclick="ver_votacion(\'referendum\');" id="c_referendum" checked="checked" /> Referendums &nbsp; 
-'.(ASAMBLEA?'':'<input type="checkbox" onclick="ver_votacion(\'parlamento\');" id="c_parlamento" checked="checked" /> Parlamento &nbsp; ').' 
-<input type="checkbox" onclick="ver_votacion(\'sondeo\');" id="c_sondeo" checked="checked" /> Sondeos</b> &nbsp; 
-<input type="checkbox" onclick="ver_votacion(\'cargo\');" id="c_cargo" /> Cargos &nbsp; 
-<input type="checkbox" onclick="ver_votacion(\'privadas\');" id="c_privadas" /> <span style="color:red;">Privadas</span> &nbsp; 
+<input type="checkbox" onclick="ver_votacion(\'referendum\');" id="c_referendum" checked="checked" /> '._('Referéndums').' &nbsp; 
+'.(ASAMBLEA?'':'<input type="checkbox" onclick="ver_votacion(\'parlamento\');" id="c_parlamento" checked="checked" /> '._('Parlamento').' &nbsp; ').' 
+<input type="checkbox" onclick="ver_votacion(\'sondeo\');" id="c_sondeo" checked="checked" /> '._('Sondeos').'</b> &nbsp; 
+<input type="checkbox" onclick="ver_votacion(\'cargo\');" id="c_cargo" /> '._('Cargos').' &nbsp; 
+<input type="checkbox" onclick="ver_votacion(\'privadas\');" id="c_privadas" /> <span style="color:red;">'._('Privadas').'</span> &nbsp; 
 </span>
 
 <hr />
@@ -1076,8 +1083,6 @@ LIMIT 500");
 		}
 	}
 	$txt .= '</table></fieldset>';
-
-
 
 }
 

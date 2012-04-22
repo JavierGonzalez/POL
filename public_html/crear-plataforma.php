@@ -1,4 +1,12 @@
 <?php
+/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
+** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
+** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
+** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
+*/
+
 include('inc-login.php');
 
 
@@ -7,7 +15,6 @@ include('inc-login.php');
 
 if (($_GET['a'] == 'accion') AND ($pol['user_ID'] == 1)) {
 	// ACCIONES
-
 
 	if (($_GET['b'] == 'add') AND (entre(strlen($_POST['pais']), 2, 10)) AND (is_numeric($_POST['participacion'])) AND ($_POST['condiciones']== 'true') AND ($_POST['condiciones_extra']== 'true')) {
 
@@ -73,8 +80,8 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
 <input type="radio" name="asamblea" value="false" checked="checked" /> <b>Presidencial: Un presidente electo.</b><br />
 Organización muy estable y operativa.<br />
 <br />
-<input type="radio" name="asamblea" value="true" /> <b>Asambleario: Nueve coordinadores electos (iguales entre sí).</b><br />
-Organización menos estable y operativa, pero más "horizontal" (entendido como poder cercano a la base).<br />
+<input type="radio" name="asamblea" value="true" /> <b>Parlamentario: Nueve coordinadores electos (iguales entre sí).</b><br />
+Organización menos estable y operativa, pero más representativo.<br />
 <br />
 <em>* El sistema permite establecer jerarquias completas de cargos y responsabilidades. Un organigrama completo y escalable. Incluso elecciones independientes para cada cargo. Sin embargo debe existir un cargo "primario" y electo, del que parte toda la responsabilidad. En cualquier caso siempre estará disponible una votación de tipo "ejecutiva" que -con el apoyo de la mayoría- el sistema puede destituir y reemplazar cualquier cargo.</em>
 </td>

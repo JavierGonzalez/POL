@@ -1,4 +1,12 @@
-<?php 
+<?php
+/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
+** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
+** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
+** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
+*/
+
 include('inc-login.php');
 include('inc-functions-accion.php');
 
@@ -17,7 +25,7 @@ if (false) {
 		$result2 = mysql_query("SELECT ID, pais, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$r['ID']."' LIMIT 1) AS ha_votado
 FROM votacion
-WHERE estado = 'ok' AND pais = '15M' AND acceso_votar IN ('ciudadanos_global', 'ciudadanos')
+WHERE estado = 'ok' AND pais = '15M' AND acceso_votar IN ('ciudadanos_global', 'ciudadanos') AND acceso_ver IN ('ciudadanos_global', 'ciudadanos')
 ORDER BY num DESC", $link);
 		while($r2 = mysql_fetch_array($result2)) {
 			if (!$r2['ha_votado']) {

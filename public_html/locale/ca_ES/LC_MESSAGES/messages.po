@@ -1,0 +1,1757 @@
+# 
+# Translators:
+#   <jmanuelmn@gmail.com>, 2012.
+# Víctor García <victorgc81@gmail.com>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: VirtualPol\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-20 23:50+0100\n"
+"PO-Revision-Date: 2012-04-21 04:40+0100\n"
+"Last-Translator: GONZO <gonzomail@gmail.com>\n"
+"Language-Team: Catalan (Spain) (http://www.transifex.net/projects/p/virtualpol/language/ca_ES/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ca_ES\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Country: SPAIN\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: D:\\www\\VirtualPol\\public_html\\.\n"
+
+#: D:\www\VirtualPol\public_html\./index.php:35
+msgid "Bienvenido a VirtualPol"
+msgstr "Benvingut a VirtualPol"
+
+#: D:\www\VirtualPol\public_html\./theme.php:12
+msgid "Página inexistente"
+msgstr "Pàgina inexistent"
+
+#: D:\www\VirtualPol\public_html\./theme.php:16
+#: D:\www\VirtualPol\public_html\./theme.php:34
+#: D:\www\VirtualPol\public_html\./theme.php:97
+msgid "La primera Red Social Democrática"
+msgstr "La primera Xarxa Social Democràtica"
+
+#: D:\www\VirtualPol\public_html\./theme.php:60
+msgid "Ir a"
+msgstr "Anar fins"
+
+#: D:\www\VirtualPol\public_html\./theme.php:61
+msgid "Vídeo bienvenida"
+msgstr "Video de benvinguda"
+
+#: D:\www\VirtualPol\public_html\./theme.php:62
+msgid "Documentación"
+msgstr "Documentació"
+
+#: D:\www\VirtualPol\public_html\./theme.php:63
+msgid "Condiciones de uso"
+msgstr "Condicions d'utilització"
+
+#: D:\www\VirtualPol\public_html\./theme.php:64
+msgid "Desarrollo"
+msgstr "desenvolupament"
+
+#: D:\www\VirtualPol\public_html\./theme.php:68
+msgid "Donaciones"
+msgstr "Donacions"
+
+#: D:\www\VirtualPol\public_html\./theme.php:82
+msgid "ciudadanos"
+msgstr "ciutadans"
+
+#: D:\www\VirtualPol\public_html\./theme.php:82
+msgid "online"
+msgstr "online"
+
+#: D:\www\VirtualPol\public_html\./theme.php:105
+msgid "Salir"
+msgstr "Sortir"
+
+#: D:\www\VirtualPol\public_html\./theme.php:107
+msgid "Crear ciudadano"
+msgstr "Crear ciutadà"
+
+#: D:\www\VirtualPol\public_html\./theme.php:107
+msgid "Entrar"
+msgstr "Entrar"
+
+#: D:\www\VirtualPol\public_html\./theme.php:138
+msgid "VirtualPol, la primera <b>Red Social Democrática</b>"
+msgstr "VirtualPol, la primera <b>Xarxa Social Democràtica</b>"
+
+#: D:\www\VirtualPol\public_html\./theme.php:138
+msgid "Donar"
+msgstr "Donar"
+
+#: D:\www\VirtualPol\public_html\./theme.php:140
+msgid "Vídeo"
+msgstr "Video"
+
+#: D:\www\VirtualPol\public_html\./theme.php:140
+msgid "Ayuda / Documentación"
+msgstr "Ajuda / Documentació"
+
+#: D:\www\VirtualPol\public_html\./theme.php:141
+msgid "Desarrollo / Código fuente"
+msgstr "Desenvolupament / Codi font"
+
+#: D:\www\VirtualPol\public_html\./theme.php:147
+msgid "Época antigua en IRC"
+msgstr "Època antiga a l'IRC"
+
+#: D:\www\VirtualPol\public_html\./theme.php:153
+msgid "VirtualPol, la primera red social democrática"
+msgstr "Virtualpol, la primer xarxa social democràtica"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:32
+msgid "Opciones de usuario"
+msgstr "Opcions d'usuari"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:39
+#: D:\www\VirtualPol\public_html\./registrar/login.php:57
+msgid "Cambiar idioma"
+msgstr "Canviar idioma"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:45
+msgid "Idioma"
+msgstr "Idioma"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:47
+msgid "Idioma por defecto de plataformas"
+msgstr "Idioma per defecte per a les plataformes"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:66
+#: D:\www\VirtualPol\public_html\./registrar/login.php:75
+#: D:\www\VirtualPol\public_html\./registrar/login.php:198
+msgid "Cambiar contraseña"
+msgstr "Canviar contrassenya"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:71
+msgid "Contraseña actual"
+msgstr "Contrassenya actual"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:72
+msgid "Nueva contraseña"
+msgstr "Nova contrassenya"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:82
+#: D:\www\VirtualPol\public_html\./registrar/login.php:89
+msgid "Cambiar email"
+msgstr "Canviar correu"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:87
+#: D:\www\VirtualPol\public_html\./source/c-control.php:79
+msgid "Email"
+msgstr "Correu"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:96
+msgid "Candidato a Supervisor del Censo"
+msgstr "Candidat a Supervisor del cens"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:102
+msgid "Quiero ser candidato a Supervisor del Censo"
+msgstr "Vull ser candidat a Supervisor del cens"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:104
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:97
+#: D:\www\VirtualPol\public_html\./source/c-control.php:162
+#: D:\www\VirtualPol\public_html\./source/c-control.php:647
+#: D:\www\VirtualPol\public_html\./source/c-control.php:879
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1001
+msgid "Guardar"
+msgstr "Desà"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:110
+#: D:\www\VirtualPol\public_html\./registrar/login.php:118
+msgid "Cambiar nick"
+msgstr "Canviar nick"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:115
+msgid "Nuevo nombre de usuario"
+msgstr "Nou nom d'usuari"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:124
+msgid "Eliminar usuario"
+msgstr "Eliminar usuari"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:131
+msgid "ELIMINAR usuario permanentemente"
+msgstr "ELIMINAR usuari permanentment"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:139
+msgid "Cambio efectuado correctamente.</b> Debes entrar de nuevo con tu usuario y contraseña"
+msgstr "Canvi efectuat correctament.</b> Has d'entrar de nou amb el teu usuari i contrassenya"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:143
+msgid "Panel de Usuario"
+msgstr "Panell d'usuari"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:144
+msgid "Panel de usuario"
+msgstr "Panell d'usuari"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:157
+#: D:\www\VirtualPol\public_html\./registrar/login.php:493
+msgid "¿Has olvidado tu contraseña?"
+msgstr "Has oblidat la teva contrassenya?"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:160
+msgid "No existe ningún usuario con ese email. Probablemente ha sido eliminado por inactividad, puedes registrarte de nuevo"
+msgstr "No existeix cap usuari amb aquest correu. Possiblement has sigut eliminat per inactivitat, pots registrar-te de nou"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:162
+msgid "Solo se puede hacer una recuperación de contraseña cada 24 horas. Debes esperar"
+msgstr "Sols es pot fer una recuperació de contrassenya cada 24 hores. Has d'esperar."
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:165
+msgid "No te preocupes, puedes solicitar una recuperación de contraseña. Siguiendo estos pasos"
+msgstr "No et preocupis, pots sol·licitar una recuperació de contrassenya seguint aquests passos"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:168
+msgid "Tu email"
+msgstr "El teu correu"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:168
+msgid "Iniciar recuperación de contraseña"
+msgstr "Iniciar recuperació de contrassenya"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:169
+msgid "Recibirás inmediatamente un email con una dirección web que te permitirá cambiar la contraseña. (Quizá esté en la carpeta spam)"
+msgstr "Rebràs inmediatament un correu amb una adreça web que et permetrà canviar la contrassenya. (Podria anar a la carpeta de spam)"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:172
+msgid "Por seguridad, esta acción <b>solo se puede iniciar una vez cada 24h</b> y el cambio de contraseña ha de realizarse dentro de este periodo"
+msgstr "Per seguretat, aquesta acció<b>sols pot iniciar-se un cop cada 24h</b> i el canvi de contrassenya ha de realitzar-se dins d'aquest període."
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:174
+msgid "Si esto no te ayuda a recuperar tu usuario, en ultima instancia, puedes escribirnos un email a"
+msgstr "Si això no t'ajuda a recuperar el teu usuari, en última instancia, pots escriurens un correu a"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:176
+#: D:\www\VirtualPol\public_html\./registrar/login.php:177
+#: D:\www\VirtualPol\public_html\./registrar/login.php:204
+#: D:\www\VirtualPol\public_html\./registrar/login.php:205
+msgid "Recuperar contraseña"
+msgstr "Recuperar contrassenya"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:188
+msgid "Cambio de contraseña"
+msgstr "Canvi de contrassenya"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:190
+msgid "Escribe tu nueva contraseña para efectuar el cambio"
+msgstr "Escriu la teva nova contrassenya per a fer el canvi"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:196
+msgid "introducir otra vez"
+msgstr "introduir un altre cop"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:202
+msgid "Error"
+msgstr "Error"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:229
+msgid "Hola"
+msgstr "Hola"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:230
+msgid "Has solicitado un reset de la contraseña, con la intención de efectuar una recuperación y posterior cambio de contraseña"
+msgstr "Has solicitado una recuperación de contrassenya per a modificar-la posteriorment"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:232
+msgid "Si has solicitado esta acción, continúa entrando en el siguiente enlace. <b>De lo contrario ignora este email</b>"
+msgstr "Cancel·lar"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:235
+msgid "Reset de contraseña"
+msgstr "Recuperació de contrassenya"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:242
+msgid "Cambio de contraseña de usuario"
+msgstr "Canvi de contrassenya d'usuari"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:432
+msgid "Contraseña incorrecta"
+msgstr "Contrassenya incorrecta"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:433
+msgid "Estás expulsado de VirtualPol por infracción del"
+msgstr "Estàs expulsat de VirtualPol per infracció del"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:434
+msgid "Usuario no validado, revisa tu email"
+msgstr "Usuari invàlid, revisa el teu correu"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:435
+msgid "Usuario inexistente, probablemente expirado por inactividad"
+msgstr "Usuari inexistent, possiblement expirat per inactivitat"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:462
+msgid "Entrar con tu ciudadano"
+msgstr "Entrar amb el teu ciutadà"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:465
+msgid "Ya estás logueado correctamente como"
+msgstr "Ja estàs loggat correctament com a"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:480
+msgid "Usuario"
+msgstr "Usuari"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:485
+msgid "Contraseña"
+msgstr "Contrasenya"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:494
+msgid "¿Aún no tienes usuario registrado?"
+msgstr "Encara no tens usuari registrat?"
+
+#: D:\www\VirtualPol\public_html\./registrar/login.php:495
+msgid "Contacto"
+msgstr "Contacte"
+
+#: D:\www\VirtualPol\public_html\./source/accion.php:1980
+msgid "Acción no permitida o erronea"
+msgstr "Acció no permesa o errònia"
+
+#: D:\www\VirtualPol\public_html\./source/c-buscar.php:22
+#: D:\www\VirtualPol\public_html\./source/c-buscar.php:44
+#: D:\www\VirtualPol\public_html\./source/c-buscar.php:46
+msgid "Buscar"
+msgstr "cercar"
+
+#: D:\www\VirtualPol\public_html\./source/c-buscar.php:39
+msgid "Buscador en fase de desarrollo"
+msgstr "Cercador en fase de desenvolupament"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:30
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:31
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:32
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:137
+msgid "Organigrama"
+msgstr "Organigrama"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:31
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:136
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:314
+msgid "Cargos"
+msgstr "Càrrecs"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:32
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:137
+msgid "Exámenes"
+msgstr "Exàmens"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:47
+msgid "Organigrama de la jerarquía de cargos. Grafico experimental, alpha"
+msgstr "Organigrama de la jerarquía de càrrecs. Gràfic experimental, alfa"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:91
+msgid "Asignar"
+msgstr "Assignar"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:108
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:123
+msgid "Último acceso"
+msgstr "Últim accés"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:118
+msgid "Candidatos a"
+msgstr "Candidats a"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:124
+msgid "Confianza"
+msgstr "Confiança"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:125
+msgid "Nota"
+msgstr "Nota"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:139
+msgid "Ver cargos"
+msgstr "Veure càrrecs"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:140
+msgid "Editar"
+msgstr "Editar"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:141
+msgid "Editar elecciones"
+msgstr "Editar eleccions"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:146
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:273
+msgid "Editar cargos"
+msgstr "Editar càrrecs"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:184
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:175
+msgid "Sistema"
+msgstr "Sistema"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:190
+msgid "Dimitir"
+msgstr "Dimitir"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:192
+msgid "Repetir examen"
+msgstr "Repetir examen"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:192
+msgid "Retirar candidatura"
+msgstr "Retirar candidatura"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:195
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:201
+msgid "Solo puedes ejercer un cargo automático"
+msgstr "Només pots exercir un càrrec automàtic"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:197
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:203
+msgid "Ser candidato"
+msgstr "Ser candidat"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:197
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:203
+msgid "examen"
+msgstr "examen"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:211
+msgid "Con cargo / Candidatos"
+msgstr "Amb càrrec / Candidats"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:212
+msgid "Cargo automático"
+msgstr "Càrrec automàtic"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:212
+msgid "Cargo automático."
+msgstr "Càrrec automàtic."
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:212
+msgid "Elecciones en"
+msgstr "Elecciones en"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:215
+msgid "Editar examen"
+msgstr "Editar examen"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:220
+msgid "Próximas elecciones en"
+msgstr "Pròximes eleccions en"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:220
+msgid "¿Próximas elecciones?"
+msgstr "Pròximes eleccions?"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:221
+msgid "Electos"
+msgstr "Electes"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:222
+msgid "Cada"
+msgstr "Cada"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:224
+msgid "Votan"
+msgstr "Voten"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:225
+msgid "Durante"
+msgstr "Durant"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:225
+#: D:\www\VirtualPol\public_html\./source/c-control.php:958
+#: D:\www\VirtualPol\public_html\./source/c-control.php:959
+#: D:\www\VirtualPol\public_html\./source/c-control.php:966
+msgid "días"
+msgstr "dies"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:244
+msgid "Supeditado a"
+msgstr "Sotmès a"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:245
+msgid "Con cargo"
+msgstr "Amb càrrec"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:246
+msgid "Asignación"
+msgstr "Assignació"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:247
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:302
+msgid "Nivel"
+msgstr "Nivell"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:248
+msgid "Salario"
+msgstr "Salari"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:280
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:304
+msgid "Crear cargo"
+msgstr "Crear càrrec"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:282
+#: D:\www\VirtualPol\public_html\./source/c-control.php:795
+msgid "Nombre"
+msgstr "Nom"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:284
+msgid "Icono"
+msgstr "Icona"
+
+#: D:\www\VirtualPol\public_html\./source/c-cargos.php:296
+msgid "Cargo supeditado a"
+msgstr "Càrrec sotmès a"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:15
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:16
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:17
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:31
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:128
+msgid "Solicitar chat"
+msgstr "Demanar xat"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:27
+msgid "Nombre del chat"
+msgstr "Nom del xat"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:28
+msgid "No modificable"
+msgstr "No modificable"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:41
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:62
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:64
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:149
+msgid "Chat"
+msgstr "Xat"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:42
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:63
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:126
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:127
+msgid "Chats"
+msgstr "Xats"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:42
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:43
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:64
+msgid "Log"
+msgstr "Log"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:43
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:62
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:63
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:64
+msgid "Opciones"
+msgstr "Opcions"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:46
+msgid "Log de las últimas 24 horas"
+msgstr "Log de les últimes 24 hores"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:46
+msgid "Plataforma"
+msgstr "Plataforma"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:46
+msgid "Sala"
+msgstr "Sala"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:46
+msgid "A fecha de"
+msgstr "A data de"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:51
+msgid "FIN"
+msgstr "FI"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:53
+msgid "No tienes acceso de lectura"
+msgstr "No tens accés de lectura"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:82
+msgid "Opciones de acceso"
+msgstr "Opcions d'accés"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:85
+msgid "Acceso leer"
+msgstr "Accés a llegir"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:88
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:91
+msgid "Acceso escribir"
+msgstr "Accés a escriure"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:91
+msgid "extranjeros"
+msgstr "estrangers"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:109
+msgid "Administradores"
+msgstr "Administradors"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:110
+msgid "Cambiar administradores"
+msgstr "Canvi d'administradors"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:116
+msgid "Bloquear"
+msgstr "Bloquejar"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:119
+msgid "Código HTML"
+msgstr "Codi HTML"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:142
+#: D:\www\VirtualPol\public_html\./source/c-control.php:716
+msgid "Acceso"
+msgstr "Accés"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:150
+msgid "Visitas"
+msgstr "Visites"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:151
+#: D:\www\VirtualPol\public_html\./source/c-control.php:723
+msgid "Leer"
+msgstr "Llegir"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:152
+msgid "Escribir"
+msgstr "Escriure"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:153
+msgid "Admin"
+msgstr "Admin"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:154
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1272
+msgid "Hace"
+msgstr "Fa"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:181
+msgid "Activar"
+msgstr "Activar"
+
+#: D:\www\VirtualPol\public_html\./source/c-chats.php:182
+msgid "Borrar"
+msgstr "Esborrar"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:50
+msgid "Plataformas"
+msgstr "Plataformas"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:50
+msgid "Estados"
+msgstr "Estats"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:50
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1271
+msgid "Ciudadano"
+msgstr "Ciutadà"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:50
+msgid "Turista"
+msgstr "Turista"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:50
+msgid "Validar"
+msgstr "Validar"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:50
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1105
+msgid "Expulsado"
+msgstr "Expulsat"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:56
+msgid "Principal"
+msgstr "Principal"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:56
+msgid "Extra"
+msgstr "Extra"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:56
+#: D:\www\VirtualPol\public_html\./source/c-control.php:61
+#: D:\www\VirtualPol\public_html\./source/c-control.php:329
+msgid "Nuevos"
+msgstr "Nous"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:56
+#: D:\www\VirtualPol\public_html\./source/c-control.php:140
+msgid "Bloqueos"
+msgstr "Bloqueigs"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:56
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1017
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1018
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1097
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1098
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1331
+msgid "Expulsiones"
+msgstr "Expulsions"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:60
+#: D:\www\VirtualPol\public_html\./source/c-control.php:61
+#: D:\www\VirtualPol\public_html\./source/c-control.php:139
+#: D:\www\VirtualPol\public_html\./source/c-control.php:140
+#: D:\www\VirtualPol\public_html\./source/c-control.php:175
+#: D:\www\VirtualPol\public_html\./source/c-control.php:176
+#: D:\www\VirtualPol\public_html\./source/c-control.php:252
+#: D:\www\VirtualPol\public_html\./source/c-control.php:253
+#: D:\www\VirtualPol\public_html\./source/c-control.php:419
+#: D:\www\VirtualPol\public_html\./source/c-control.php:420
+#: D:\www\VirtualPol\public_html\./source/c-control.php:595
+#: D:\www\VirtualPol\public_html\./source/c-control.php:596
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1018
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1098
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1148
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1149
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1171
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1261
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1262
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1312
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1313
+msgid "Control"
+msgstr "Control"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:60
+msgid "Nuevos ciudadanos"
+msgstr "Nous ciutadans"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:63
+#: D:\www\VirtualPol\public_html\./source/c-control.php:178
+#: D:\www\VirtualPol\public_html\./source/c-control.php:255
+#: D:\www\VirtualPol\public_html\./source/c-control.php:422
+msgid "Supervisores del censo"
+msgstr "Supervisors del cens"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:65
+msgid "Actividad de nuevos ciudadanos (últimos 60)"
+msgstr "Activitat de nous ciutadans (últims 60)"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:70
+msgid "Registro"
+msgstr "Registre"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:72
+msgid "Último"
+msgstr "Últim"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:113
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1017
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1018
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1072
+msgid "Expulsar"
+msgstr "Expulsar"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:139
+msgid "bloqueos"
+msgstr "bloqueigs"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:149
+msgid "Listas negras para bloquear masivamente con filtros. Un elemento por linea. Elementos de al menos 5 caracteres (para minimizar el riesgo de filtros masivos). Precaución, hay riesgo de producir bloqueos masivos"
+msgstr ""
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:175
+#: D:\www\VirtualPol\public_html\./source/c-control.php:176
+#: D:\www\VirtualPol\public_html\./source/c-control.php:236
+msgid "Confianza mutua"
+msgstr "Confiança mutua"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:229
+msgid "Grafico confianza"
+msgstr "Gràfic de confiança"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:242
+msgid "Desconfianza mutua"
+msgstr "Desconfiança mutua"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:252
+#: D:\www\VirtualPol\public_html\./source/c-control.php:253
+msgid "Extras"
+msgstr "Extres"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:258
+msgid "Referencias"
+msgstr "Referencies"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:309
+msgid "Emails atípicos"
+msgstr "Correus atípics"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:325
+msgid "URLs de referencia"
+msgstr "URLs de referencia"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:352
+msgid "Más votos y menos actividad"
+msgstr "Més vots i menys activitat"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:373
+msgid "Navegadores"
+msgstr "Navegadors"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:388
+msgid "navegador muy común"
+msgstr "navegador molt comú"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:396
+msgid "Más antigüedad y menos actividad"
+msgstr "Més antiguitat i menys activitat"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:399
+msgid "Antigüedad"
+msgstr "Antiguitat"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:425
+msgid "Coincidencias de IP"
+msgstr "Coincidències de IP"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:457
+msgid "Coincidencias de clave"
+msgstr "Coincidències de clau"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:491
+msgid "Coincidencia de traza"
+msgstr "Coincidències de traça"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:524
+msgid "Ocultación (proxys, TOR...)"
+msgstr "Ocultació (proxys, TOR...)"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:588
+msgid "Acceso restringido"
+msgstr "Accés restringit"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:595
+#: D:\www\VirtualPol\public_html\./source/c-control.php:596
+#: D:\www\VirtualPol\public_html\./source/c-control.php:598
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1320
+msgid "Gobierno"
+msgstr "Gobern"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:599
+#: D:\www\VirtualPol\public_html\./source/c-control.php:611
+#: D:\www\VirtualPol\public_html\./source/c-control.php:634
+msgid "Privilegios"
+msgstr "Privilegis"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:600
+msgid "Economía"
+msgstr "Economia"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:601
+#: D:\www\VirtualPol\public_html\./source/c-control.php:652
+msgid "Notificaciones"
+msgstr "Notificacions"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:602
+#: D:\www\VirtualPol\public_html\./source/c-control.php:708
+msgid "Configuración foro"
+msgstr "Configuració del fòrum"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:617
+msgid "Configuración principal"
+msgstr "Configuració principal"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:618
+msgid "Configurar cargos"
+msgstr "Configurar càrrecs"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:619
+msgid "Configurar grupos"
+msgstr "Configurar grups"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:620
+msgid "Imponer sanciones"
+msgstr "Imposar sancions"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:621
+#: D:\www\VirtualPol\public_html\./source/c-control.php:825
+msgid "Crear partido"
+msgstr "Crear partit"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:622
+msgid "Gestionar exámenes"
+msgstr "Gestionar examens"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:623
+msgid "Crear preguntas de examen"
+msgstr "Crear preguntes d'examen"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:624
+msgid "Moderar foro"
+msgstr "Moderar fòrum"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:625
+msgid "Kickear (bloqueos temporales)"
+msgstr "Bloquejar (temporal)"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:626
+msgid "Quitar kicks"
+msgstr "Treure bloqueig"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:627
+msgid "Aprobar votación de parlamento"
+msgstr "Aprovar votació de parlament"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:628
+msgid "Aprobar referendums"
+msgstr "Arpovar referèndums"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:629
+msgid "Aprobar sondeos"
+msgstr "Aprovar sondeigs"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:630
+msgid "Crear borradores de votación"
+msgstr "Crear borradors de votació"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:633
+msgid "Los privilegios permiten realizar acciones especiales. Este panel muestra los privilegios y quien los ejerce actualmente"
+msgstr "Els privilegis permeten realitzar accions especials. Aquest panell mostra els privilegis i qui els té actualment"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:637
+msgid "Configuración"
+msgstr "Configuració"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:638
+msgid "Quien tiene acceso"
+msgstr "Qui té accés"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:658
+msgid "Texto"
+msgstr "Text"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:663
+msgid "si no cabe usa un acortador"
+msgstr "si no cap fes servir un escorçador de URL"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:668
+msgid "Crear notificación"
+msgstr "Crear notificació"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:668
+msgid "Cuidado"
+msgstr "Compte"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:668
+msgid "Lo recibirán todos los ciudadanos de"
+msgstr "Ho rebran tots els ciutadans de"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:681
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1106
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1221
+msgid "Cuando"
+msgstr "Quan"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:682
+msgid "Mensaje"
+msgstr "Missatge"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:683
+msgid "Emitidas"
+msgstr "Emeses"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:721
+msgid "Orden"
+msgstr "Ordre"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:722
+msgid "Foro/descripción"
+msgstr "Fòrum/descripció"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:724
+msgid "Crear hilos"
+msgstr "Crear fils"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:725
+msgid "Responder mensajes"
+msgstr "Respondre missatges"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:726
+msgid "Mostrar"
+msgstr "Mostrar"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:773
+msgid "hilos"
+msgstr "fils"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:774
+msgid "mensajes"
+msgstr "missatges"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:784
+msgid "Guardar cambios"
+msgstr "Desar canvis"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:791
+msgid "Crear nuevo foro"
+msgstr "Crea nou fòrum"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:797
+msgid "Crear subforo"
+msgstr "Crea subfòrum"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:817
+msgid "Economía principal"
+msgstr "Economia principal"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:821
+msgid "Subsidio por desempleo"
+msgstr "Subsidi d'atur"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:821
+msgid "por día activo"
+msgstr "per dia actiu"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:822
+#: D:\www\VirtualPol\public_html\./source/c-control.php:942
+msgid "Referencia"
+msgstr "Referencia"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:823
+msgid "Crear empresa"
+msgstr "Crear empresa"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:824
+msgid "Crear cuenta bancaria"
+msgstr "Crear conta bancaria"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:826
+msgid "Hacer examen"
+msgstr "Fer examen"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:827
+msgid "mensaje global"
+msgstr "missatge global"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:827
+msgid "mínimo"
+msgstr "mínim"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:828
+msgid "Mensaje urgente"
+msgstr "Missatge urgent"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:829
+msgid "Crear chat"
+msgstr "Crear xat"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:833
+msgid "Economía Internacional"
+msgstr "Economia internacional"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:835
+msgid "Arancel de salida"
+msgstr "Arantzel de sortida"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:839
+msgid "Impuestos"
+msgstr "Impostos"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:841
+msgid "Impuesto de patrimonio"
+msgstr "Impost de patrimoni"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:842
+msgid "Mínimo patrimonio"
+msgstr "Mínim patrimoni"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:843
+msgid "Impuesto de empresa"
+msgstr "Impost d'empresa"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:847
+msgid "Mapa"
+msgstr "Mapa"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:849
+msgid "Precio solar"
+msgstr "Preu per solar"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:850
+msgid "Factor de propiedad"
+msgstr "Factor de propietat"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:850
+msgid "superficie = coste"
+msgstr "superfície = cost"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:862
+msgid "Salarios"
+msgstr "Sous"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:926
+msgid "Configuración de Gobierno"
+msgstr "Configuració del Govern"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:931
+msgid "Descripción"
+msgstr "Descripció"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:950
+msgid "Mensaje global"
+msgstr "Missatge global"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:954
+msgid "Caducidad exámenes"
+msgstr "Caducitat d'examens"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:956
+#: D:\www\VirtualPol\public_html\./source/c-control.php:957
+msgid "meses"
+msgstr "mesos"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:966
+msgid "Expiración chats"
+msgstr "Expiració de xats"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:975
+msgid "Diseño"
+msgstr "Diseny"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:977
+msgid "Imagen tapiz"
+msgstr "Imatge tapís"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:980
+msgid "Por defecto"
+msgstr "Per defecte"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1024
+msgid "Las expulsiones son efectuadas por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminación forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href=\"http://www.virtualpol.com/TOS\">Condiciones de Uso</a>"
+msgstr ""
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1029
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1181
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1297
+msgid "Nick"
+msgstr "Nick"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1029
+msgid "el usuario a expulsar"
+msgstr "l'usuari a expulsar"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1033
+msgid "<b>Motivo de expulsión:</b> si son varios elegir el mas claro"
+msgstr "<b>Motiu d'expulsió:</b> si son més d'un triar el més evident"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1065
+msgid "Solo en caso de clones"
+msgstr "Sols en cas de clons"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1086
+msgid "fue expulsado por"
+msgstr "fou expulsat per"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1088
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1223
+msgid "Razón"
+msgstr "Raó"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1090
+msgid "Fecha"
+msgstr "Data"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1092
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1164
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1206
+msgid "Pruebas"
+msgstr "Proves"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1101
+msgid "Las expulsiones son efectuadas por los Supervisores del Censo (SC). Consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminación forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href=\"http://www.virtualpol.com/TOS\">Condiciones de Uso</a> (con la excepción de Registro erroneo y Test de desarrollo). Los Supervisores del Censo son ciudadanos con más de 1 año de antiguedad y elegidos por democracia directa, mediante el \"voto de confianza\", actualizado cada Domingo a las 20:00"
+msgstr ""
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1107
+msgid "Por"
+msgstr "Per"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1108
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1162
+msgid "Motivo"
+msgstr "Motiu"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1123
+msgid "Cancelar"
+msgstr "Cancel·lar"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1124
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1244
+msgid "Cancelado"
+msgstr "Cancel·lat"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1148
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1149
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1171
+msgid "Kicks"
+msgstr "Bloqueigs"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1150
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1171
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1211
+msgid "Kickear"
+msgstr "Bloquejar"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1176
+msgid "Esta acción privilegiada bloquea totalmente las acciones de un Ciudadano y los que comparten su IP"
+msgstr "Aquesta acció privilegiada bloqueja totalment les accions d'un ciutadà i els que comparteixin la seva IP"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1181
+msgid "el ciudadano"
+msgstr "el ciutadà"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1183
+msgid "Duración"
+msgstr "Durada"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1183
+msgid "duración temporal de este kick"
+msgstr "duració temporal d'aquest bloqueig"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1204
+msgid "Motivo breve"
+msgstr "Motiu breu"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1204
+msgid "frase con el motivo de este kick, se preciso"
+msgstr "frase amb el motiu d'aquest bloqueig, sigues precís"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1206
+msgid "puedes pegar aquí las pruebas sobre el kick"
+msgstr "pots enganxar aquí les proves sobre el bloqueig"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1218
+msgid "Estado"
+msgstr "Estat"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1219
+msgid "Afectado"
+msgstr "Afectat"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1220
+msgid "Autor"
+msgstr "Autor"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1222
+msgid "Tiempo"
+msgstr "Temps"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1242
+msgid "Activo"
+msgstr "Actiu"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1246
+msgid "Inactivo"
+msgstr "Inactiu"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1261
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1262
+msgid "Judicial"
+msgstr "Judicial"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1266
+msgid "Sanciones"
+msgstr "Sancions"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1303
+msgid "Efectuar sanción"
+msgstr "Imposar sanció"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1316
+msgid "Zonas de control cuyo acceso está reservado a los ciudadanos que ejercen estos cargos"
+msgstr "Zones de control l'accés de la qual està reservat als ciutadans que exerceixin càrrecs"
+
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1340
+#: D:\www\VirtualPol\public_html\./source/c-control.php:1342
+msgid "Supervisión del censo"
+msgstr "Supervisor del cens"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:37
+msgid "Documento"
+msgstr "Documents"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:43
+msgid "Categoría"
+msgstr "Categories"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:57
+msgid "El texto del editor se guarda automáticamente como borrador en tiempo real. Para guardar estas opciones y hacer públicos los cambios hay que dar al botón \"Publicar\""
+msgstr "El text del editor es desa automaticament com a esborrany en temps real. Per a desar aquestes opcions y fer públic els canvis hi ha que donar al botó \"Publicar\""
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:58
+msgid "Presentación"
+msgstr "Presentació"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:61
+msgid "Restaurar última publicación"
+msgstr "Restaura  la darrera sessió"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:62
+msgid "Eliminar documento"
+msgstr "Esborrar documents"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:75
+msgid "Publicar"
+msgstr "Publicar"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:75
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:114
+msgid "Última publicación hace"
+msgstr "Darrera publicació feta"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:80
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:128
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:129
+msgid "Documentos"
+msgstr "Documents"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:81
+msgid "Ver documento"
+msgstr "Veure document"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:100
+msgid "Ver presentación"
+msgstr "Veure presentació"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:113
+msgid "Info"
+msgstr "Informació"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:114
+msgid "Creado hace"
+msgstr "Creat fa"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:114
+msgid "versión"
+msgstr "versió"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:115
+msgid "Pueden ver"
+msgstr "Poden veure"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:116
+msgid "Pueden editar"
+msgstr "Poden editar"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:130
+msgid "Crear documento"
+msgstr "Crear document"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:143
+msgid "Publicado"
+msgstr "Publicat"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:144
+msgid "Lectura"
+msgstr "lectura"
+
+#: D:\www\VirtualPol\public_html\./source/c-doc.php:145
+msgid "Escritura"
+msgstr "Escriptura"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:36
+msgid "Elecciones a"
+msgstr "Eleccions a"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:38
+msgid "Próximamente"
+msgstr "Próximament"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:40
+msgid "En"
+msgstr "En"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:65
+msgid "En curso"
+msgstr "En procés"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:65
+msgid "Finalizada"
+msgstr "Finalitzada"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:67
+msgid "Quedan"
+msgstr "Queden"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:75
+msgid "Ver resultado"
+msgstr "Veure resultat"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:82
+msgid "Participación"
+msgstr "Participació"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:82
+msgid "Abstención"
+msgstr "Abstenció"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:84
+msgid "Candidato"
+msgstr "Candidat"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:84
+msgid "Puntos"
+msgstr "Punts"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:97
+msgid "Escrutinio"
+msgstr "Escrutini"
+
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:108
+#: D:\www\VirtualPol\public_html\./source/c-elecciones.php:109
+msgid "Elecciones"
+msgstr "Eleccions"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:19
+msgid "El mapa de ciudadanos solo está disponible para ciudadanos"
+msgstr "El mapa de ciutadans només està disponible per a ciutadans"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:30
+msgid "Los ciudadanos más cercanos a ti"
+msgstr "Els ciutadans més propers a tu"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:32
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:119
+msgid "No estás geolocalizado"
+msgstr "No estàs geolocalitzat"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:32
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:119
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:202
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:207
+msgid "Geolocalízate"
+msgstr "Geolocalitzat"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:39
+msgid "Enviar mensaje"
+msgstr "Enviar missatge"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:92
+msgid "Fijar mi localización"
+msgstr "Fixar la meva localització"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:95
+msgid "Latitud"
+msgstr "Latitud"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:96
+msgid "Longitud"
+msgstr "Longitud"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:99
+msgid "Marca tu lugar haciendo clic. La información será pública"
+msgstr "Marca la teva ubicació fent clic. La informació serà pública"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:100
+msgid "Por privacidad la precisión guardada es de solo 1.112 metros a la redonda"
+msgstr "Per privacitat la precisió enregistrada es de només 1.112 metres a la rodona"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:102
+msgid "Eliminar tu geolocalización"
+msgstr "Eliminar la teva geolocalització"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:102
+msgid ""
+"¿Estás seguro de querer borrar tu geolocalización de forma permanente?\\n"
+"\\n"
+"Debes saber que -para proteger la privacidad- la precisión guardada es de 1112 metros a la redonda, aleatoriamente."
+msgstr ""
+"Estàs segur de voler esborrar la teva geolocalització de manera permanent? \\n"
+"\\n"
+"Has de saber que -per a protegir la privacitat- la precisió s'enregistra amb un error de 1112 metres a la rodona."
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:200
+msgid "Mapa de ciudadanos"
+msgstr "Mapa de ciutadans"
+
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:203
+#: D:\www\VirtualPol\public_html\./source/c-geolocalizacion.php:207
+msgid "Ciudadanos cercanos"
+msgstr "Ciutadans propers"
+
+#: D:\www\VirtualPol\public_html\./source/inc-chats.php:68
+msgid "Volver a VirtualPol"
+msgstr "Tornar a VirtualPol"
+
+#: D:\www\VirtualPol\public_html\./source/inc-chats.php:109
+msgid "¡Crea tu ciudadano para participar!"
+msgstr "Crea el teu ciutadà per participar!"
+
+#: D:\www\VirtualPol\public_html\./source/inc-chats.php:111
+msgid "Ocultar eventos"
+msgstr "Amagar successos"
+
+#: D:\www\VirtualPol\public_html\./source/inc-chats.php:113
+msgid "Enviar"
+msgstr "Enviar"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:48
+msgid "todo el mundo (Internet)"
+msgstr "tot el món (Internet)"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:49
+msgid "todos los ciudadanos de VirtualPol"
+msgstr "tots els ciutadans de VirtualPol"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:50
+msgid "todos los ciudadanos de"
+msgstr "tots els ciutadans de"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:50
+msgid "la plataforma"
+msgstr "la plataforma"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:50
+msgid "las plataformas"
+msgstr "les plataformes"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:51
+msgid "todos los ciudadanos excepto"
+msgstr "tots els ciutadans excepte"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:52
+msgid "los ciudadanos"
+msgstr "els ciutadans"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:53
+msgid "ciudadanos con confianza mayor o igual a"
+msgstr "ciutadans amb confiança major o igual "
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:53
+msgid "Ver confianza"
+msgstr "Veure confiança"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:54
+msgid "ciudadanos con nivel"
+msgstr "ciutadans amb nivell"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:54
+msgid "o mayor"
+msgstr "o major"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:61
+msgid "ciudadanos con los exámenes aprobados"
+msgstr "ciutadans amb examens aprovats"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:69
+msgid "ciudadanos con cargo"
+msgstr "ciutadans amb càrrec"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:77
+msgid "ciudadanos afiliados al partido"
+msgstr "ciutadans afiliats al partit"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:85
+msgid "ciudadanos afiliados al grupo:"
+msgstr "ciutadans afiliats al grup:"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:88
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:91
+msgid "ciudadanos con al menos"
+msgstr "ciutadans amb almenys"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:88
+msgid "monedas"
+msgstr "monedes"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:89
+msgid "ciudadanos autentificados"
+msgstr "ciutadans autentificats"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:90
+msgid "Supervisores del Censo"
+msgstr "Supervisors del cens"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:91
+msgid "días de antigüedad"
+msgstr "dies d'antiguitat"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:92
+msgid "nadie"
+msgstr "ningú"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:131
+msgid "Votación"
+msgstr "Votació"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:143
+msgid "Primer paso: Crea tu ciudadano"
+msgstr "Primer pas: Crea el teu ciutadà"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:144
+msgid "Proceso diario"
+msgstr "Procés diari"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:144
+msgid "hace"
+msgstr "fa"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:144
+msgid "en"
+msgstr "en"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:144
+msgid "No hay notificaciones"
+msgstr "No hi ha notificacions"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:144
+msgid "¿Qué hacer?"
+msgstr "Que fer?"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:228
+msgid "horas"
+msgstr "hores"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:229
+msgid "min"
+msgstr "min"
+
+#: D:\www\VirtualPol\public_html\./source/inc-functions.php:230
+msgid "seg"
+msgstr "seg"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:15
+msgid "Plataforma cerrada"
+msgstr "Plataforma tancada"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:17
+msgid "de"
+msgstr "de"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:61
+msgid "Comunicación"
+msgstr "Comunicació"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:64
+msgid "Foros"
+msgstr "Fòrums"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:66
+msgid "Última actividad"
+msgstr "Darrera activitat"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:67
+msgid "Tu actividad"
+msgstr "La teva activitat"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:70
+#: D:\www\VirtualPol\public_html\./source/theme.php:186
+msgid "Mensajes privados"
+msgstr "Missatge privat"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:71
+msgid "Voz"
+msgstr "Veu"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:71
+msgid "Configurar"
+msgstr "Configurar"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:72
+msgid "Redes sociales"
+msgstr "Xarxes socials"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:76
+msgid "Seguir"
+msgstr "seguiment"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:82
+msgid "Información"
+msgstr "Informació"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:84
+msgid "Censo"
+msgstr "Cens"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:87
+#: D:\www\VirtualPol\public_html\./source/theme.php:89
+msgid "Estadísticas"
+msgstr "Estadístiques"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:90
+msgid "Log de acciones"
+msgstr "Log d'accions"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:94
+msgid "Sobre VirtualPol"
+msgstr "Sobre VirtualPol"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:96
+msgid "Vídeo de bienvenida"
+msgstr "Video de benvinguda"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:106
+msgid "Democracia"
+msgstr "Democràcia"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:109
+msgid "Votaciones"
+msgstr "Votacions"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:112
+msgid "Grupos"
+msgstr "Grups"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:122
+msgid "Autentificación"
+msgstr "Autentificació"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:125
+msgid "Partidos"
+msgstr "Partits"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:132
+msgid "Cuentas"
+msgstr "Comptes"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:133
+msgid "Empresas"
+msgstr "Empreses"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:134
+msgid "Tus monedas"
+msgstr "Les teves monedes"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:135
+msgid "Subastas"
+msgstr "Subastes"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:137
+msgid "Economía global"
+msgstr "Economia global"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:160
+msgid "mapa"
+msgstr "mapa"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:160
+msgid "Subasta"
+msgstr "Subasta"
+
+#: D:\www\VirtualPol\public_html\./source/theme.php:228
+msgid "Reportar problema"
+msgstr "Notificar problema"
+
+#~ msgid "Votos"
+#~ msgstr "Votos"
+
+#~ msgid "Gestión"
+#~ msgstr "Gestión"
+
+#~ msgid "Hola mundo!"
+#~ msgstr "Hola mundo!"
+
+#~ msgid "Otra prueba"
+#~ msgstr "Other test"

@@ -1,10 +1,18 @@
 <?php
+/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
+** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
+** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
+** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
+*/
+
 define('TIME_START', microtime(true));
 
 include('config.php'); // config raiz
 
 
-$date = date('Y-m-d H:i:s'); // fija fecha actual $date en formato entendible por MySQL
+$date = date('Y-m-d H:i:s');
 $IP = direccion_IP('longip'); // obtiene la IP en formato numérico (longip)
 
 
@@ -21,7 +29,7 @@ if (!isset($_SESSION)) { session_start(); } // inicia sesion PHP
 
 // nucleo del sistema de usuarios, comienza la verificación
 if (isset($_COOKIE['teorizauser'])) {
-	$result = mysql_query("SELECT ID, pass, nick, estado, pols, pais, email, fecha_registro, rechazo_last, cargo, cargos, examenes, nivel, dnie FROM users WHERE nick = '".$_COOKIE['teorizauser']."' LIMIT 1", $link);
+	$result = mysql_query("SELECT ID, pass, lang, nick, estado, pols, pais, email, fecha_registro, rechazo_last, cargo, cargos, examenes, nivel, dnie FROM users WHERE nick = '".$_COOKIE['teorizauser']."' LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
 		if (md5(CLAVE.$r['pass']) == $_COOKIE['teorizapass']) { // cookie pass OK
 			$session_new = true;
@@ -33,6 +41,8 @@ if (isset($_COOKIE['teorizauser'])) {
 			$pol['pais'] = $r['pais'];
 			$pol['rechazo_last'] = $r['rechazo_last'];
 			$pol['fecha_registro'] = $r['fecha_registro'];
+
+			if (isset($r['lang'])) { $pol['config']['lang'] = $r['lang']; }
 
 			// variables perdurables en la sesion, solo se guarda el nick e ID de usuario
 			$_SESSION['pol']['nick'] = $r['nick'];
@@ -48,5 +58,17 @@ if (isset($_COOKIE['teorizauser'])) {
 		}
 	}  
 }
+
+
+if ((isset($pol['config']['lang'])) AND ($pol['config']['lang'] != 'es_ES')) {
+	// Carga internacionalización
+	$locale = $pol['config']['lang'];
+	putenv("LC_ALL=$locale");
+	setlocale(LC_ALL, $locale);
+	bindtextdomain('messages', '/locale');
+	textdomain('messages');
+	bind_textdomain_codeset('messages', 'UTF-8');
+}
+
 
 ?>

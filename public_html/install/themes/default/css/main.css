@@ -32,5 +32,7 @@ h1{
 }
 
 #error{
+	text-align: left;
+	margin-left: auto;
 	background-color: #FF8177;
 }

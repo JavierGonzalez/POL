@@ -2,9 +2,12 @@
 
 class theme{
 	private $html;
-	private $search = array();
-	private $replace = array();
-	
+	private $search 	= array();
+	private $replace 	= array();
+	private $incsearch 	= array();
+	private $incfile 	= array();	
+
+
 	public function putfile($file){
 		$this->html.=file_get_contents(THEME."/".$file.THEME_MIME);
 	}
@@ -23,6 +26,11 @@ class theme{
 		}
 	}
 
+	public function incfile($search, $file){
+		$this->incsearch[]=$search;
+		$this->incfile[]='{INCLUDE:'.$file.THEME_MIME.'}';
+	}
+
 	public function return_html(){
 		$this->process_vars();
 		return $this->html;
@@ -32,6 +40,9 @@ class theme{
 		// esta funciones es mejorable,
 		// quizas se pueda hacer todo de una pasada evitando
 		// ciclos y consumo de ram 
+
+		//parseamos includes desde php
+		$this->html=str_replace($this->incsearch, $this->incfile, $this->html);
 
 		//parseamos los includes
 		$found=array();

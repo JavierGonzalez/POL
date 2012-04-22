@@ -76,9 +76,11 @@ switch($_GET['step']){
 						$conf = str_replace(
 								array(
 									'define(\'DOMAIN\', \'virtualpol.com\');',
+									'define(\'DOMAIN\', \'\');',
 									'define(\'CONTACTO_EMAIL\', \'desarrollo@virtualpol.com\');'
 								),
 								array(
+									'define(\'DOMAIN\', \''.$_SESSION["domain"].'\');',
 									'define(\'DOMAIN\', \''.$_SESSION["domain"].'\');',
 									'define(\'CONTACTO_EMAIL\', \''.$_SESSION["ctmail"].'\');'
 								),
@@ -146,9 +148,11 @@ switch($_GET['step']){
 		include("../config-pwd.php");
 		$link = conectar(true);
 		if( !$link ){
-			$theme->addvar("{ERROR}", "Error: Parece que los valores de conexi&oacute;n no se han escrito correctamente ".mysql_error());
+			$theme->addvar("{ERROR}", "- Error: Parece que los valores de conexi&oacute;n no se han escrito correctamente ".mysql_error());
 		}else{
 			if(isset($_POST['send'])){
+				$incidencias=0;
+				$tablasok=0;
 				$vp_tables = array
 						(	
 							"15m_foros",
@@ -209,7 +213,8 @@ switch($_GET['step']){
 					$runinfo.="- Eliminando $vp_table <br />";
 					if( ! mysql_query("drop table if exists $vp_table", $link))
 					{ 
-						$theme->concvar("{ERROR}", "Error Eliminando tabla $vp_table: ".mysql_error()."<br />");
+						$incidencias++;
+						$theme->concvar("{ERROR}", "- Error Eliminando tabla $vp_table: ".mysql_error()."<br />");
 					}
 
 				}
@@ -217,9 +222,12 @@ switch($_GET['step']){
 				//aqui instalamos las tablas
 				$db_file = preg_split("/;\s*[\r\n]+/", file_get_contents(DBPATH) );
 				foreach($db_file as $query){
-					if( ! mysql_query($query, $link))
-					{ 
-						$theme->concvar("{ERROR}", "Incidencia volcando DB: ".mysql_error()."<br />");
+					if(strlen($query) > 0){
+						if( ! mysql_query($query, $link))
+						{ 
+							$incidencias++;
+							$theme->concvar("{ERROR}", "- Incidencia volcando DB: ".mysql_error()."<br />");
+						}
 					}
 				}
 
@@ -236,7 +244,9 @@ switch($_GET['step']){
 					}
 					else
 					{
-						$theme->concvar("{ERROR}", "Error Verificando tablas. La tabla $vp_table No Existe<br />");
+						$tablasok++;
+						$incidencias++;
+						$theme->concvar("{ERROR}", "- Error Verificando tablas. La tabla $vp_table No Existe<br />");
 					}
 
 
@@ -245,6 +255,19 @@ switch($_GET['step']){
 				$vp_tables=""; //liberando ram
 
 				$theme->addvar("{RUNINFO}",$runinfo);
+
+
+				if($tablasok > 0){
+					$theme->addvar("{INCIDENCIAS}", "Error: $tablasok tablas no fueron instaladas");
+				}
+
+
+				if($tablasok > 0 || $incidencias > 0){
+					$theme->concvar("{INCIDENCIAS}","Se encontraron algunas incidencias ($incidencias) instalando la base de datos. Puede continuar con la instalaci&oacute;n pero no se asegura el correcto funcionamiento del sistema.");
+				}	
+
+				$theme->incfile("{SIGUIENTE}","nextstep3");
+
 
 			}else{
 				$result = mysql_query("SELECT count(table_name) as cantidad 

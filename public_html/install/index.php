@@ -51,19 +51,19 @@ switch($_GET['step']){
 					mysql_close($link);
 					$conf_pwd=file_get_contents("../config-pwd-sample.php");
 					$conf_pwd=str_replace(
-							array(
-								'$mysql_host = \'...\';',
-								'$mysql_db = \'...\';',
-								'$mysql_user = \'...\';',
-								'$mysql_pass = \'...\';'
-							),
-							array(
-								'$mysql_host = \''.$_SESSION["i_dbhost"].'\';',
-								'$mysql_db = \''.$_SESSION["i_dbname"].'\';',
-								'$mysql_user = \''.$_SESSION["i_dbuser"].'\';',
-								'$mysql_pass = \''.$_SESSION["i_dbpass"].'\';'
-							), 
-							$conf_pwd);
+						array(
+							'$mysql_host = \'...\';',
+							'$mysql_db = \'...\';',
+							'$mysql_user = \'...\';',
+							'$mysql_pass = \'...\';'
+						),
+						array(
+							'$mysql_host = \''.$_SESSION["i_dbhost"].'\';',
+							'$mysql_db = \''.$_SESSION["i_dbname"].'\';',
+							'$mysql_user = \''.$_SESSION["i_dbuser"].'\';',
+							'$mysql_pass = \''.$_SESSION["i_dbpass"].'\';'
+						), 
+						$conf_pwd);
 					if(file_put_contents("../config-pwd.php",$conf_pwd) === FALSE)
 					{
 						$theme->addvar(
@@ -162,8 +162,9 @@ switch($_GET['step']){
 			);
 		}else{
 			if(isset($_POST['send'])){
-				$incidencias=0;
-				$tablasok=0;
+				$incidencias=0; //control de incidencias
+				$tablasok=0; //control de tablas instaladas correctamente 0 = Todas OK
+				//las tablas a comprobar
 				$vp_tables = array
 						(	
 							"15m_foros",
@@ -311,17 +312,17 @@ switch($_GET['step']){
 		}
 
 
-		$theme->incfile("{INSTALLDB}","installdb");
+		$theme->incfile("{INSTALLDB}","installdb"); //incluimos el archivo installdb.*** en {INSTALLDB}
 
-		$theme->addvar("{TITLE}","step1");
-		$theme->putfile("step1");
+		$theme->addvar("{TITLE}","step1"); 
+		$theme->putfile("step1"); //insertamos el archivo step1
 		break;
 	default:
 		header("Location: ?step=0");
 }
 
-$theme->putfile("footer");
-echo $theme->return_html();
+$theme->putfile("footer"); //insertamos el archivo de pie de pagina
+echo $theme->return_html(); //procesamos y mostramos el html
 
 
 ?>

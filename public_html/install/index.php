@@ -220,7 +220,7 @@ switch($_GET['step']){
 							"vulcan_foros_hilos",
 							"vulcan_foros_msg"
 						);
-
+				$runinfo.="<br /><strong>Eliminando tablas:</strong><br />";
 				foreach( $vp_tables as $vp_table ){
 					$runinfo.="- Eliminando $vp_table <br />";
 					if( ! mysql_query("drop table if exists $vp_table", $link))
@@ -233,7 +233,7 @@ switch($_GET['step']){
 					}
 
 				}
-
+				$runinfo.="<br /><strong>Instalando tablas:</strong><br />";
 				//aqui instalamos las tablas
 				$db_file = preg_split("/;\s*[\r\n]+/", file_get_contents(DBPATH) );
 				foreach($db_file as $query){
@@ -248,7 +248,8 @@ switch($_GET['step']){
 						}
 					}
 				}
-
+				$runinfo.="Incidencias: $incidencias<br />";
+				$runinfo.="<br /><strong>Comprobando tablas:</strong><br />";
 				foreach($vp_tables as $vp_table){
 					$runinfo.="- Comprobando ".$vp_table;
 					$result = mysql_query("SELECT count(table_name) as cantidad 
@@ -268,6 +269,7 @@ switch($_GET['step']){
 							"{ERROR}", "- Error Verificando tablas.".
 							" La tabla $vp_table No Existe<br />"
 						);
+						$runinfo.=" FAIL<br />";
 					}
 				}
 				$vp_tables=""; //liberando ram
@@ -276,7 +278,7 @@ switch($_GET['step']){
 
 
 				if($tablasok > 0){
-					$theme->addvar("{INCIDENCIAS}", "Error: $tablasok tablas no fueron instaladas");
+					$theme->addvar("{INCIDENCIAS}", "Error: $tablasok tablas no fueron instaladas. ");
 				}
 
 
@@ -316,6 +318,21 @@ switch($_GET['step']){
 
 		$theme->addvar("{TITLE}","step1"); 
 		$theme->putfile("step1"); //insertamos el archivo step1
+		break;
+
+	case 2:
+		$theme->addvar("{TITLE}","step2");
+		$theme->putfile("step2");
+		$theme->addvar(
+				"{FINMSG}", 
+				"Si se han completado correctamente todos los pasos anteriores,".
+				" es hora de realizar algunos ajustes:<br />".
+				"1) Configure los subdominios adecuados para las plataformas.<br />".
+				"2) Configure 'cron' para ejecutar los guiones dentro de source/cron/<br />".
+				"3) Si la instalaci&oacute;n fue correcta, elimine el directorio install/".
+				" de instalaci&oacute;n para evitar problemas de seguridad. Es en serio, ".
+				"elimina el directorio o podr&iacute;as lamentarlo." 
+		);
 		break;
 	default:
 		header("Location: ?step=0");

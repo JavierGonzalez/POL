@@ -45,3 +45,7 @@ h1{
 	float: right;
 	margin: 8px; 
 }
+
+#fin p{
+	text-align: left;
+}

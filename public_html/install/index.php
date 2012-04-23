@@ -66,11 +66,13 @@ switch($_GET['step']){
 							$conf_pwd);
 					if(file_put_contents("../config-pwd.php",$conf_pwd) === FALSE)
 					{
-						$theme->addvar("{ERROR}", "No se pudo escribir en config-pwd.php, compruebe los permisos.");
+						$theme->addvar(
+							"{ERROR}", "No se pudo escribir en config-pwd.php,".
+							" compruebe los permisos.
+						");
 					}
 					else
 					{
-
 						//aqui escribimos config.php
 						$conf = file_get_contents("../config-sample.php");
 						$conf = str_replace(
@@ -87,17 +89,23 @@ switch($_GET['step']){
 								$conf);
 						if(file_put_contents("../config.php",$conf) === FALSE)
 						{
-							$theme->addvar("{ERROR}", "No se pudo escribir en config.php, compruebe los permisos.");
+							$theme->addvar(
+								"{ERROR}", "No se pudo escribir en config.php, compruebe".
+								" los permisos."
+							);
 						}
 						else
 						{
-
 							//comprobamos que todo se ha configurado correctamente
 							include("../config-pwd.php");
 							$link = conectar(true);
 							if( !$link )
 							{
-								$theme->addvar("{ERROR}", "Error: Parece que los valores de conexi&oacute;n no se han escrito correctamente ".mysql_error());
+								$theme->addvar(
+									"{ERROR}", 
+									"Error: Parece que los valores de conexi&oacute;n".
+									" no se han escrito correctamente ".mysql_error()
+								);
 							}
 							else
 							{
@@ -148,7 +156,10 @@ switch($_GET['step']){
 		include("../config-pwd.php");
 		$link = conectar(true);
 		if( !$link ){
-			$theme->addvar("{ERROR}", "- Error: Parece que los valores de conexi&oacute;n no se han escrito correctamente ".mysql_error());
+			$theme->addvar(
+				"{ERROR}", "- Error: Parece que los valores de conexi&oacute;n".
+				" no se han escrito correctamente ".mysql_error()
+			);
 		}else{
 			if(isset($_POST['send'])){
 				$incidencias=0;
@@ -214,7 +225,10 @@ switch($_GET['step']){
 					if( ! mysql_query("drop table if exists $vp_table", $link))
 					{ 
 						$incidencias++;
-						$theme->concvar("{ERROR}", "- Error Eliminando tabla $vp_table: ".mysql_error()."<br />");
+						$theme->concvar(
+							"{ERROR}", "- Error Eliminando tabla".
+							" $vp_table: ".mysql_error()."<br />"
+						);
 					}
 
 				}
@@ -226,7 +240,10 @@ switch($_GET['step']){
 						if( ! mysql_query($query, $link))
 						{ 
 							$incidencias++;
-							$theme->concvar("{ERROR}", "- Incidencia volcando DB: ".mysql_error()."<br />");
+							$theme->concvar(
+								"{ERROR}", "- Incidencia volcando DB: ".
+								mysql_error()."<br />"
+							);
 						}
 					}
 				}
@@ -246,11 +263,11 @@ switch($_GET['step']){
 					{
 						$tablasok++;
 						$incidencias++;
-						$theme->concvar("{ERROR}", "- Error Verificando tablas. La tabla $vp_table No Existe<br />");
+						$theme->concvar(
+							"{ERROR}", "- Error Verificando tablas."
+							" La tabla $vp_table No Existe<br />"
+						);
 					}
-
-
-
 				}
 				$vp_tables=""; //liberando ram
 
@@ -263,11 +280,16 @@ switch($_GET['step']){
 
 
 				if($tablasok > 0 || $incidencias > 0){
-					$theme->concvar("{INCIDENCIAS}","Se encontraron algunas incidencias ($incidencias) instalando la base de datos. Puede continuar con la instalaci&oacute;n pero no se asegura el correcto funcionamiento del sistema.");
+					$theme->concvar(
+						"{INCIDENCIAS}",
+						"Se encontraron algunas incidencias ($incidencias)".
+						" instalando la base de datos. Puede continuar con".
+						" la instalaci&oacute;n pero no se asegura el correcto".
+						" funcionamiento del sistema."
+					);
 				}	
 
 				$theme->incfile("{SIGUIENTE}","nextstep2");
-
 
 			}else{
 				$result = mysql_query("SELECT count(table_name) as cantidad 
@@ -275,7 +297,13 @@ switch($_GET['step']){
 							TABLE_SCHEMA = '".$_SESSION["i_dbname"]."'", $link);
 				$r = mysql_fetch_array($result);
 				if( $r['cantidad'] > 0 ){
-					$theme->addvar("{ERROR}", "Parece que su base de datos contiene algunas tablas. Si continua, las tablas de VirtualPol ser&aacute;n reseteadas. Perder&aacute; todos los datos almacenados. &iexcl;Haga Backup!");
+					$theme->addvar(
+						"{ERROR}", 
+						"Parece que su base de datos contiene algunas".
+						" tablas. Si continua, las tablas de VirtualPol".
+						" ser&aacute;n reseteadas. Perder&aacute; todos".
+						" los datos almacenados. &iexcl;Haga Backup!
+					");
 				}
 
 

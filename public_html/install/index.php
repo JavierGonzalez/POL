@@ -264,7 +264,7 @@ switch($_GET['step']){
 						$tablasok++;
 						$incidencias++;
 						$theme->concvar(
-							"{ERROR}", "- Error Verificando tablas."
+							"{ERROR}", "- Error Verificando tablas.".
 							" La tabla $vp_table No Existe<br />"
 						);
 					}

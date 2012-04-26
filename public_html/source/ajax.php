@@ -239,11 +239,9 @@ $('ul.menu li').hover(function(){
 } else if (($_GET['a'] == 'geo') AND (nucleo_acceso('ciudadanos_global'))) {
 	header('Content-Type: application/javascript');
 	echo 'var eventos = [';
-	$result = sql("SELECT pais, nick, x, y FROM users WHERE estado = 'ciudadano' AND x IS NOT NULL LIMIT 5000"); 
-	// .($_GET['b']?" AND pais = '".$_GET['b']."'":"")
+	$result = sql("SELECT nick, x, y FROM users WHERE estado = 'ciudadano' ".($_GET['b']?" AND pais = '".$_GET['b']."'":"")." AND x IS NOT NULL LIMIT 5000"); 
 	while ($r = r($result)) { echo '{"q":"'.$r['nick'].'","x":'.$r['y'].',"y":'.$r['x'].'},'; }
 	echo '];';
-
 
 } else if ($_GET['a'] == 'data_extra') {
 	header('Content-Type: application/javascript');

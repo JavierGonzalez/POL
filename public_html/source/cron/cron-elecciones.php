@@ -30,8 +30,12 @@ while($r = r($result)) {
 	$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE pais = '".PAIS."' AND estado = 'ciudadano'");
 	while($r2 = r($result2)) { $votos_num = $r2['num']; }
 
-	// Crear votacion, ya activada
-	sql("INSERT INTO votacion 
+	$candidatos_num = count($candidatos_nick);
+
+	if ($candidatos_num > 0) {
+	
+		// Crear votacion, ya activada
+		sql("INSERT INTO votacion 
 (pais, pregunta, descripcion, respuestas, respuestas_desc, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, ejecutar, votos_expire, tipo_voto, privacidad, debate_url, aleatorio, duracion, num_censo, cargo_ID) 
 VALUES (
 '".PAIS."', 
@@ -59,25 +63,26 @@ Realizadas cada <b>".$r['elecciones_cada']." días</b>, durante <b>".$r['eleccio
 ".(is_numeric($votos_num)?$votos_num:'NULL').",
 ".$r['cargo_ID'].")");
 
-	// Imprime evento en el chat
-	$result2 = sql("SELECT ID FROM votacion WHERE pais = '".PAIS."' AND estado = 'ok' ORDER BY ID DESC LIMIT 1");
-	while($r2 = r($result2)) { 
-		$votacion_ID = $r2['ID'];
-		evento_chat('<b>[ELECCIONES]</b> <a href="/votacion/'.$r2['ID'].'"><b>Comienzan las elecciones a '.$r['nombre'].'</b></a>'); 
-	}
+		// Imprime evento en el chat
+		$result2 = sql("SELECT ID FROM votacion WHERE pais = '".PAIS."' AND estado = 'ok' ORDER BY ID DESC LIMIT 1");
+		while($r2 = r($result2)) { 
+			$votacion_ID = $r2['ID'];
+			evento_chat('<b>[ELECCIONES]</b> <a href="/votacion/'.$r2['ID'].'"><b>Comienzan las elecciones a '.$r['nombre'].'</b></a>'); 
+		}
 
-	// Enviar emails.
-	if (($r['asigna'] == 0) AND (explodear('|', $r['elecciones_votan'], 0) == 'ciudadanos')) {
-		$result2 = sql("SELECT nick, email FROM users WHERE pais = '".PAIS."' AND estado != 'expulsado'");
-		while($r2 = r($result2)){ 
-			$mensaje = '<p>Hola '.$r2['nick'].':</p>
+		// Enviar emails.
+		if (($r['asigna'] == 0) AND (explodear('|', $r['elecciones_votan'], 0) == 'ciudadanos')) {
+			$result2 = sql("SELECT nick, email FROM users WHERE pais = '".PAIS."' AND estado != 'expulsado'");
+			while($r2 = r($result2)){ 
+				$mensaje = '<p>Hola '.$r2['nick'].':</p>
 
 <p>Han comenzado las elecciones de '.PAIS.'. Tu participación es importante para el funcionamiento democrático.</p>
 
 <p><a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion/'.$votacion_ID.'"><b style="font-size:18px">Entrar a votar</b></a></p>
 
 <p>VirtualPol | La primera red social democrática</p>';
-			enviar_email(null, 'Comienzan las elecciones a '.$r['nombre'], $mensaje, $r2['email']); 
+				enviar_email(null, 'Comienzan las elecciones a '.$r['nombre'], $mensaje, $r2['email']); 
+			}
 		}
 	}
 }

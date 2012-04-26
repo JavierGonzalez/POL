@@ -37,13 +37,12 @@ while($r = mysql_fetch_array($result)) {
 
 <td nowrap="nowrap"><em>'._('Próximamente').'...</em></td>
 
-<td>'._('En').' '.timer($time_start, true).'</td>
+<td>'._('En').' '.timer($r['elecciones']).'</td>
 
 <td colspan="4">'.gbarra(((time()-$time_anterior)*100)/($time_start-$time_anterior)).'</td>
 
 </tr>';
 }
-
 
 
 
@@ -60,7 +59,7 @@ while($r = mysql_fetch_array($result)) {
 	$time = strtotime($r['time']);
 	if ($r['estado'] == 'end') { $n++; }
 	$txt .= '<tr>
-<td align="right" width="320"><b style="font-size:16px;">'.($time>=strtotime('2012-04-05')?'<a href="/votacion/'.$r['ID'].'">'.$r['pregunta'].'</a>':$r['pregunta']).'</b></td>
+<td align="right" nowrap="nowrap"><b style="font-size:16px;">'.($time>=strtotime('2012-04-05')?'<a href="/votacion/'.$r['ID'].'">'.$r['pregunta'].'</a>':$r['pregunta']).'</b></td>
 
 <td nowrap="nowrap">'.($r['estado']=='ok'?'<b>¡'._('En curso').'!</b>':_('Finalizada')).'</td>
 
@@ -107,6 +106,7 @@ $txt .= '</table>';
 //THEME
 $txt_title = _('Elecciones');
 $txt_nav = array('/elecciones'=>_('Elecciones'));
+$txt_tab = array('/cargos'=>'Cargos', '/cargos/organigrama'=>_('Organigrama'), '/elecciones'=>_('Elecciones'));
 $txt_menu = 'demo';
 include('theme.php');
 ?>

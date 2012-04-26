@@ -109,7 +109,7 @@ function initialize() {
 
 } else { // MAPA
 
-	$result = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND x IS NOT NULL", $link); //  AND pais = '".PAIS."'
+	$result = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND x IS NOT NULL", $link); //  AND pais = '".PAIS."'
 	while ($r = mysql_fetch_array($result)) { $geo_num = $r['num']; }
 
 
@@ -121,7 +121,7 @@ function initialize() {
 
 	$txt .='
 <script src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
-<script type="text/javascript" src="/ajax.php?a=geo"></script>
+<script type="text/javascript" src="/ajax.php?a=geo&b='.PAIS.'"></script>
 <script type="text/javascript" src="'.IMG.'lib/markerclusterer_packed.js"></script>
 <script type="text/javascript">
 function initialize() {

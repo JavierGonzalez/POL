@@ -101,9 +101,9 @@ if ($_GET['a']) {
 
 			$txt .= '
 <div>
-<h1 style="font-size:28px;">'.$r['title'].' </h1>
+<h1 style="font-size:28px;">'.$r['title'].'</h1>
 
-<div id="doc_pad">
+<div id="doc_pad" style="min-height:250px;">
 '.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])||nucleo_acceso($vp['acceso']['control_gobierno'])?$r['text']:'<b style="color:red;">'._('No tienes acceso de lectura').'.</b>').'
 </div>
 
@@ -153,7 +153,7 @@ ORDER BY time_last DESC", $link);
 
 			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {
 				$txt .= '<tr>
-<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])||nucleo_acceso($vp['acceso']['control_gobierno'])?' '.boton(_('Editar'), '/doc/'.$r2['url'].'/editar', false, 'small').' ':'').'<a href="/doc/'.$r2['url'].'">'.$r2['title'].'</a></td>
+<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])||nucleo_acceso($vp['acceso']['control_gobierno'])?' '.boton(_('Editar'), '/doc/'.$r2['url'].'/editar', false, 'small').' ':'').'<a href="/doc/'.$r2['url'].'"><b>'.$r2['title'].'</b></a></td>
 
 <td width="80" align="right" nowrap="nowrap">'.timer($r2['time_last']).'</td>
 
@@ -169,6 +169,7 @@ ORDER BY time_last DESC", $link);
 		}
 		$txt .= '</table></fieldset>';
 	}
+	$txt .= '</div>';
 }
 
 

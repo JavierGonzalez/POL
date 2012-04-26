@@ -73,16 +73,19 @@ case 'registrar': //CHECK
 	include('animal-captcha-check.php');
 	if ($_POST['condiciones'] == 'ok') {
 
-		// Bloquea registro si la IP coincide con otro expulsado
-		$margen = date('Y-m-d H:i:s', time() - (60*60));
+
 		$bloquear_registro = false;
-		$result = sql("SELECT ID FROM users WHERE (estado = 'expulsado' OR fecha_registro > '".$margen."') AND (IP = '".direccion_IP('longip')."' OR hosts LIKE '%".direccion_IP()."%') LIMIT 1");
+
+		// Bloquea registro si la IP coincide con otro expulsado
+		$margen = date('Y-m-d H:i:s', time() - (60*60)); // 1 h
+		$result = sql("SELECT ID FROM users WHERE (estado = 'expulsadoNO' OR fecha_registro > '".$margen."') AND (IP = '".direccion_IP('longip')."' OR hosts LIKE '%".direccion_IP()."%') LIMIT 1");
 		while ($r = r($result)) { $bloquear_registro = true; }
 
 		foreach (explode("\n", $pol['config']['backlist_IP']) AS $la_IP) {
 			$la_IP = trim($la_IP);
 			if ((strlen($la_IP) >= 4) AND (stristr(' '.direccion_IP(), ' '.explodear(' ', $la_IP, 0)))) { $bloquear_registro = true; }
 		}
+
 		
 		if ($bloquear_registro === false) {
 
@@ -286,47 +289,46 @@ $txt .= '</blockquote>';
 	$txt .= '<h1><span class="gris">1. Crear usuario |</span> 2. Solicitar Ciudadan&iacute;a <span class="gris">| 3. Ser Ciudadano</span></h1><hr /><p>Tu solicitud de ciudadan&iacute;a en ' . $pol['pais'] . ' est&aacute; en proceso.</p>';
 
 } elseif (($pol['estado'] == 'turista') AND ($pol['pais'] == 'ninguno')) {
-	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';
-	$txt_nav = array('Crear ciudadano');
+	$txt_title = 'Solicitar Ciudadanía';
+	$txt_nav = array('Solicitar ciudadanía');
 	$atrack = '"/atrack/registro/solicitar.html"'; 
 
 	if (!$_GET['pais']) { $_GET['pais'] = $vp['paises'][0]; }
 
-	$txt .= '<h1><span class="gris">1. Crear usuario |</span> 2. Solicitar Ciudadan&iacute;a <span class="gris">| 3. Ser Ciudadano</span></h1>
-	
-<hr /><br />';
-
-
 	$txt .= '
-<form action="?a=solicitar-ciudadania" method="post">
-<h1>Solicitar ciudadania:</h1>
-<p style="text-align:left;">Dentro de VirtualPol hay diversas plataformas democraticas que son 100% independientes entre s&iacute;. Elige en la que quieres participar.</p>
-<b>Plataformas:</b><br />
-<table border="0" cellspacing="4">';
+<p>Dentro de VirtualPol hay diversas plataformas democraticas que son 100% independientes entre sí. Elige en la que quieres participar.</p>
 
+<form action="?a=solicitar-ciudadania" method="post">
+
+<fieldset><legend>Plataformas</legend>
+
+<table border="0" cellspacing="4">';
+	$n = 0;
 	foreach ($vp['paises'] as $pais) {
 		// ciudadanos
 		$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE pais = '".$pais."'", $link);
 		while($r = mysql_fetch_array($result)) { $ciudadanos_num = $r['num']; }
 
 		// pais_des
-		$result = mysql_query("SELECT valor FROM config WHERE pais = '".strtolower($pais)."' AND dato = 'pais_des' LIMIT 1", $link);
+		$result = mysql_query("SELECT valor FROM config WHERE pais = '".$pais."' AND dato = 'pais_des' LIMIT 1", $link);
 		while($r = mysql_fetch_array($result)) { $pais_des = $r['valor']; }
-
-		$txt .= ($pais=='VP'?'<tr><td>&nbsp;</td></tr>':'').'
+		$n++;
+		$txt .= '
 <tr style="font-size:19px;">
-<td><input type="radio" name="pais" id="pr_'.$pais.'" value="'.$pais.'"'.($pais=='15M'?' checked="checked"':'').' /></td>
-<td nowrap="nowrap">'.$pais_des.' de <b>'.$pais.'</b></td>
-<td></td>
-<td align="right">'.$ciudadanos_num.' ciudadanos</td>
+<td valign="middle"><img src="'.IMG.'banderas/'.$pais.'_60.gif" width="60" height="50" border="0" /></td>
+<td><input type="radio" name="pais" id="pr_'.$pais.'" value="'.$pais.'"'.($n==1?' checked="checked"':'').' /></td>
+<td valign="middle" nowrap="nowrap"><b>'.$pais.'</b>, '.$pais_des.'</td>
+<td valign="middle" align="right">'.num($ciudadanos_num).' ciudadanos</td>
 </tr>';
 	}
 
-
 	$txt .= '</table>
+</fieldset>
+
 <input value="Solicitar Ciudadania" style="font-size:20px;margin:30px 0 0 0;" type="submit" onClick="javascript:pageTracker._trackPageview(\'/atrack/registro/ciudadano.html\');" /> 
 
-</form>';
+</form>
+';
 
 } elseif ($registro_txt) {
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';
@@ -361,18 +363,18 @@ $(document).ready(function() {
 
 
 
-
+<p>Este es el formulario para registar tu usuario en VirtualPol y así poder participar. Por favor, lée con atención.</p>
 
 <div style="color:red;font-weight:bold;">' . $verror . '</div>
 
 <ol>
-<li><b>Nick</b>: ser&aacute; tu identidad.<br />
+<li><b>Nick</b>: será tu identidad. Solo letras, numeros y "_". Sin espacios.<br />
 <input type="text" name="nick" value="' . $nick . '" size="10" maxlength="14" /><br /><br /></li>
 
-<li><b>Email</b>: recibir&aacute;s un email de verificaci&oacute;n. No se enviar&aacute; spam.<br />
+<li><b>Email</b>: recibirás un email de verificación. No se enviará spam.<br />
 <input type="text" name="email" value="' . $email . '" size="30" maxlength="50" /><br /><br /></li>
 
-<li><b>Contrase&ntilde;a</b>: introduce dos veces.<br />
+<li><b>Contrase&ntilde;a</b>: Más de 5 caracteres.<br />
 <input id="pass1" class="password" type="password" autocomplete="off" name="pass1" value="" maxlength="40" />
 <div class="password-meter" style="float:right;margin-right:400px;color:#666;">
 	<div class="password-meter-message">&nbsp;</div>
@@ -384,7 +386,7 @@ $(document).ready(function() {
 
 
 <br />
-<input id="pass2" type="password" autocomplete="off" name="pass2" value="" maxlength="40" style="margin-top:1px;" /><br /><br /></li>
+<input id="pass2" type="password" autocomplete="off" name="pass2" value="" maxlength="40" style="margin-top:1px;" /> (introduce otra vez)<br /><br /></li>
 
 
 <li><b>&iquest;Qu&eacute; animal es?</b> Un nombre, sin espacios, nivel primaria. <a href="http://www.teoriza.com/captcha/example.php" target="_blank">Animal Captcha</a>.<br />

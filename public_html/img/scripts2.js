@@ -6,9 +6,6 @@
 ** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
 */
 
-/* VirtualPol JS */
-
-
 // VARIABLES
 pnick = '';
 whois_cache = new Array();
@@ -135,11 +132,11 @@ function search_timers() {
 
 function hace(cuando, ts, num, pre) {
 	tiempo = (cuando - ts);
-	if (pre) { if (tiempo >= 0) { pre = "En"; } else { pre = "Hace"; } }
+	if (pre) { if (tiempo >= 0) { pre = _["En"]; } else { pre = _["Hace"]; } }
 	tiempo = Math.abs(tiempo);
 	
 	var periods_sec = new Array(2419200, 86400, 3600, 60, 1);
-	var periods_txt = new Array("meses", "días", "horas", "min", "seg");
+	var periods_txt = new Array(_["meses"], _["días"], _["horas"], _["min"], _["seg"]);
 
 	if (pre) { var duracion = pre + " "; } else { var duracion = ""; }
 
@@ -150,7 +147,7 @@ function hace(cuando, ts, num, pre) {
 		if ((nm < num) && ((tiempo_cont >= (sec*2)) || (n == 4))) {
 			period = Math.floor(tiempo_cont / sec);
 			if (n == 4) { 
-				duracion += "Pocos segundos";
+				duracion += _["Pocos segundos"];
 			} else {
 				duracion += period + " " + periods_txt[n];
 			}

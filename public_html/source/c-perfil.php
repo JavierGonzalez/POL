@@ -91,7 +91,7 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 <td>' . $sello . '</td>
 <td align="right" class="gris">' . $r2['nota'] . '</td>
 <td>' . $cargo_img . '</td>
-<td><b>' . $r2['nombre'] . '</b></td>
+<td><b><a href="/cargos/'.$r2['cargo_ID'].'">'.$r2['nombre'].'</a></b></td>
 <td style="color:#999;" align="right"><acronym title="'.$r2['time'].'">'.duracion(time()-strtotime($r2['time'])).'</acronym></td>
 <td nowrap="nowrap"><b>' . $dimitir . '</b></td>
 </tr>';
@@ -112,7 +112,9 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 			
 			
 			
-			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;">Editar perfil</button> '.boton('Opciones de usuario', REGISTRAR.'login.php?a=panel').'
+			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;" class="pill">Editar perfil</button> '.boton('Opciones de usuario', REGISTRAR.'login.php?a=panel').' '.boton('Autentificar con DNIe', SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton('Rechazar Ciudadania', REGISTRAR, false, 'red').' ':'').'
+
+
 
 <div id="editarperfil" style="display:none;">
 
@@ -188,15 +190,6 @@ $txt .= '
 } // fin ECONOMIA
 
 // <p>Clave API: <input class="api_box" type="text" size="12" value="' . $r['api_pass'] . '" readonly="readonly" /> ' . boton('Generar clave', '/accion.php?a=api&b=gen_pass', '&iquest;Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua no funcionar&aacute;.') . ' (Equivale a tu contrase&ntilde;a, mantenla en secreto. M&aacute;s info: <a href="'.SSL_URL.'api.php">API</a>)</p>
-
-
-$txt .= '
-
-<fieldset><legend>Opciones</legend>
-
-<p>'.boton('Cambiar contrase&ntilde;a', REGISTRAR.'login.php?a=panel').' '.boton('Autentificar con DNIe', SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton('Rechazar Ciudadania', REGISTRAR, false, 'red').' ':'').'</p>
-
-</fieldset>';
 
 
 if (!ASAMBLEA) {

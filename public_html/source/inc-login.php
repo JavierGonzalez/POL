@@ -10,7 +10,6 @@
 define('TIME_START', microtime(true));
 
 include('../config.php');
-//include(RAIZ.'source/class-db.php');
 
 //INIT
 $date = date('Y-m-d H:i:s');
@@ -62,7 +61,6 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 		$pol['bando'] = $r['bando'];
 		$pol['fecha_registro'] = $r['fecha_registro'];
 		$pol['nivel'] = $r['nivel'];
-		//$pol['msg'] = $r['msg'];
 		$pol['online'] = $r['online'];
 		$pol['cargo'] = $r['cargo'];
 		$pol['IP'] = $r['IP'];
@@ -71,7 +69,6 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 		$fecha_last = $r['fecha_last'];
 		
 		if (isset($r['lang'])) { $pol['config']['lang'] = $r['lang']; }
-		
 
 		$_SESSION['pol']['cargo'] = $r['cargo'];
 		$_SESSION['pol']['cargos'] = $r['cargos'];
@@ -103,14 +100,14 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 				$update .= ", IP = '".$IP."', host = '".$host."', hosts = CONCAT(hosts,'|".$host."')";
 				if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { $update .= ", IP_proxy = '".$_SERVER['HTTP_X_FORWARDED_FOR']."'"; }
 			}
-			if ($fecha_init != '0000-00-00 00:00:00') { $update .= ", online = online + " . (strtotime($fecha_last) - strtotime($fecha_init)); }
+			if ($fecha_init != '0000-00-00 00:00:00') { $update .= ", online = online + ".(strtotime($fecha_last)-strtotime($fecha_init)); }
 		}
 		sql("UPDATE LOW_PRIORITY users SET paginas = paginas + 1, fecha_last = '".$date."'".$update." WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	} else { unset($pol); session_unset(); session_destroy(); } // impide el acceso a expulsados
 
 
 	// EXPULSADO?
-	$result = sql("SELECT expire FROM kicks WHERE pais = '".PAIS."' AND estado = 'activo' AND (user_ID = '".$pol['user_ID']."' OR (IP != '0' AND IP = '" . $IP . "')) LIMIT 1");
+	$result = sql("SELECT expire FROM kicks WHERE pais = '".PAIS."' AND estado = 'activo' AND (user_ID = '".$pol['user_ID']."' OR (IP != '0' AND IP = '".$IP."')) LIMIT 1");
 	while($r = r($result)){ 
 		if ($r['expire'] < $date) { // DESBANEAR!
 			sql("UPDATE LOW_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'"); 

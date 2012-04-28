@@ -34,27 +34,16 @@ if ($_GET['a'] == 'organigrama') { // ORGANIGRAMA
 	function cargo_bien($c){ return str_replace(' ', '_', $c); }
 
 	$result = mysql_query("SELECT nombre, asigna, elecciones,
-(SELECT COUNT(ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = c.cargo_ID AND cargo = 'true') AS cargo_num,
-(SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = c.asigna LIMIT 1) AS asigna_nombre,
-(SELECT COUNT(ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = c.asigna AND cargo = 'true') AS asigna_num
+(SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = c.asigna LIMIT 1) AS asigna_nombre
 FROM cargos `c`
 WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 	while($r = mysql_fetch_array($result)) {
-		if ($r['asigna'] <= 0) { $r['asigna_nombre'] = 'CIUDADANOS'; $r['asigna_num'] = $pol['config']['info_censo']; }
+		if ($r['asigna'] <= 0) { $r['asigna_nombre'] = 'CIUDADANOS'; }
 
-		if (($r['elecciones']) AND ($r['asigna'] > 0)) { 
-			$data_cargos[] = cargo_bien('CIUDADANOS '.$pol['config']['info_censo']).'->'.cargo_bien($r['nombre'].($r['cargo_num']>0?' '.$r['cargo_num']:'')); 
-		}
-
-		$data_cargos[] = cargo_bien($r['asigna_nombre'].($r['asigna_num']>0?' '.$r['asigna_num']:'')).'->'.cargo_bien($r['nombre'].($r['cargo_num']>0?' '.$r['cargo_num']:''));
+		$data_cargos[] = cargo_bien($r['asigna_nombre']).'->'.cargo_bien($r['nombre']);
 	}
 
-	$txt .= '<a href="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" target="_blank"><img style="max-width:1800px;margin-left:-20px;" src="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" alt="grafico confianza" /></a><p>'._('Organigrama de la jerarquía de cargos. Grafico experimental, alpha').'.</p>
-
-<style>
-#header { z-index:1010; }
-</style>
-';
+	$txt .= '<a href="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" target="_blank"><img style="max-width:1400px;margin-left:-20px;" src="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" alt="grafico confianza" /></a><p>'._('Organigrama de la jerarquía de cargos. Grafico experimental, alpha').'.</p>';
 
 } elseif (is_numeric($_GET['a'])) { // VER CARGO
 
@@ -76,7 +65,7 @@ FROM cargos_users
 WHERE pais = '".PAIS."' 
 AND cargo_ID = '".$r['cargo_ID']."'
 AND aprobado = 'ok'
-ORDER BY voto_confianza DESC, nota DESC", $link);
+ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
 		while($r2 = mysql_fetch_array($result2)){
 
 			if ($r['asigna'] > 0) { $asignador = nucleo_acceso('cargo', $r['asigna']); } else { $asignador = false; }
@@ -97,7 +86,7 @@ ORDER BY voto_confianza DESC, nota DESC", $link);
 <td><b>'.crear_link($r2['nick']).'</b></td>
 <td align="right" class="gris">'.timer($r2['fecha_last']).'</td>
 <td align="right">'.confianza($r2['voto_confianza']).'</td>
-<td align="right"><b>'.num($r2['nota'],1).'</b></td>
+<td align="right">'.num($r2['nota'],1).'</td>
 </tr>';
 				}
 			}
@@ -177,15 +166,16 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 		if (($editar) AND ($r['asigna'] > 0)) { $cargo_editar = true; } else { $cargo_editar = false; }
 
 		$cargos_nick = array();
-		$result2 = mysql_query("SELECT (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND cargo = 'true' ORDER BY time ASC LIMIT 20", $link);
-		while($r2 = mysql_fetch_array($result2)){ $cargos_nick[] = crear_link($r2['nick']); }
+		if ($r['cargo_num'] > 0) {
+			$result2 = mysql_query("SELECT (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick, (SELECT voto_confianza FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS confianza FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND cargo = 'true' ORDER BY confianza DESC LIMIT 10", $link);
+			while($r2 = mysql_fetch_array($result2)){ $cargos_nick[] = crear_link($r2['nick']); }
+		}
 
-
-		$txt_el_td = '
-<span nowrap="nowrap"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" /> 
+		$txt_el_td = '<span style="white-space:nowrap;">
+<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" /> 
 '.($cargo_editar?'<input type="text" name="nombre_'.$r['cargo_ID'].'" value="'.$r['nombre'].'" size="18" style="font-weight:bold;" /> <input type="text" name="nombre_extra_'.$r['cargo_ID'].'" value="'.$r['nombre_extra'].'" size="15" maxlength="160"  />':
 
-'<a href="/cargos/'.$r['cargo_ID'].'"'.($r['nombre_extra']?' title="'.$r['nombre_extra'].'"':'').'><b style="font-size:20px;">'.$r['nombre'].'</b></a></span>'.(count($cargos_nick)>0?'<br /><span style="font-size:11px;margin-left:22px;">'.implode(', ', $cargos_nick).(count($cargos_nick)==20?'...':'.'):'')).'</span></td>';
+'<a href="/cargos/'.$r['cargo_ID'].'"'.($r['nombre_extra']?' title="'.$r['nombre_extra'].'"':'').'><b style="font-size:20px;">'.$r['nombre'].'</b></a></span>'.($r['nombre_extra']!=''?'<br /><span style="font-size:12px;color:grey;margin-left:22px;">'.$r['nombre_extra'].'</span>':'').(count($cargos_nick)>0||$r['nombre_extra']?'<br /><span style="font-size:11px;margin-left:22px;">'.implode(', ', $cargos_nick).(count($cargos_nick)==10?'...':'.'):'')).'</span></td>';
 
 		if ($cargo_editar) {
 			$txt_el_td .= '<td align="right">'.($r['asigna']>0&&$r['cargo_num']==0?boton('X', '/accion.php?a=cargo&b=eliminar&cargo_ID='.$r['cargo_ID'], '¿Estás seguro de querer ELIMINAR este cargo?', 'small red').' ':'').'<select name="asigna_'.$r['cargo_ID'].'">';

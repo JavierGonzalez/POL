@@ -100,14 +100,6 @@ function control_acceso_cambiar(name, value) {
 
 
 
-
-
-
-
-
-
-
-
 $txt_title = 'Test';
 $txt_nav = array('Test');
 include('theme.php');

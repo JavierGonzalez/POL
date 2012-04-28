@@ -398,12 +398,18 @@ mysql_query("UPDATE users SET voto_confianza = '0'", $link);
 $result = mysql_query("SELECT item_ID, SUM(voto) AS num_confianza FROM votos WHERE tipo = 'confianza' GROUP BY item_ID", $link);
 while ($r = mysql_fetch_array($result)) { 
 	mysql_query("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['item_ID']."' LIMIT 1", $link);
-} 
+}
 mysql_query("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '".$margen_180dias."')", $link);
 
 
 if (date('N') == 7) { // SOLO DOMINGO
 
+	// Guardar historico de confianza (un dato por semana)
+	$result = mysql_query("SELECT ID, voto_confianza FROM users", $link);
+	while ($r = mysql_fetch_array($result)) { 
+		mysql_query("UPDATE users SET confianza_historico = CONCAT(confianza_historico,'|".$r['voto_confianza']."') WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+	}
+	
 	// Actualizar nuevos SC
 	$SC_num = 8; // 8 SC + Custodiador = 9 SC
 	$margen_365d = date('Y-m-d 20:00:00', time() - 86400*365); // Antiguedad minima: 365 dias.
@@ -412,6 +418,8 @@ if (date('N') == 7) { // SOLO DOMINGO
 	while($r = mysql_fetch_array($result)){ 
 		mysql_query("UPDATE users SET SC = 'true' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 	}
+
+
 	evento_chat('<b>[PROCESO] Supervisores del Censo:</b> '.implode(' ', get_supervisores_del_censo()));
 	
 }

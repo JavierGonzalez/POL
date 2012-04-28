@@ -64,8 +64,8 @@ function verbalizar_acceso($tipo, $valor='') {
 		case 'cargo':
 			global $link;
 			$val = array();
-			$result = sql("SELECT cargo_ID, nombre AS nom FROM cargos WHERE pais = '".PAIS."' AND cargo_ID IN (".implode(',', explode(' ', $valor)).")", $link);
-			while($r = r($result)) { $val[] = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" title="'.$r['nom'].'" alt="'.$r['nom'].'" width="16" height="16" />'; }
+			$result = sql("SELECT cargo_ID, nombre AS nom FROM cargos WHERE pais = '".PAIS."' AND cargo_ID IN (".implode(',', explode(' ', $valor)).") ORDER BY nivel DESC", $link);
+			while($r = r($result)) { $val[] = '<a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" title="'.$r['nom'].'" alt="'.$r['nom'].'" width="16" height="16" /></a>'; }
 			$t = _('ciudadanos con cargo').': '.implode(' ', $val).' (<a href="/cargos">'._('Ver cargos').'</a>)';
 			break;
 

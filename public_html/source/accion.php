@@ -1852,10 +1852,10 @@ case 'eliminar-partido':
 
 
 case 'restaurar-documento':
-	$result = sql("SELECT ID, url, acceso_escribir, acceso_cfg_escribir FROM docs WHERE ID = '".$_GET['ID']."' LIMIT 1");
+	$result = sql("SELECT ID, pad_ID, url, acceso_escribir, acceso_cfg_escribir FROM docs WHERE ID = '".$_GET['ID']."' LIMIT 1");
 	while($r = r($result)){ 
 		if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
-			pad('delete', $r['ID']);
+			pad('delete', $r['pad_ID']);
 		}
 		$refer_url = 'doc/'.$r['url'].'/editar';
 	}
@@ -1863,12 +1863,12 @@ case 'restaurar-documento':
 
 case 'eliminar-documento':
 	
-	$result = sql("SELECT ID, acceso_escribir, acceso_cfg_escribir, url FROM docs WHERE url = '".$_GET['url']."' AND pais = '".PAIS."' LIMIT 1");
+	$result = sql("SELECT ID, pad_ID, acceso_escribir, acceso_cfg_escribir, url FROM docs WHERE url = '".$_GET['url']."' AND pais = '".PAIS."' LIMIT 1");
 	while($r = r($result)){ 
 		if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 			sql("UPDATE docs SET estado = 'del' WHERE ID = '".$r['ID']."' LIMIT 1");
 			evento_log('Documento eliminado <a href="/doc/'.$r['url'].'">#'.$r['ID'].'</a>');
-			pad('delete', $r['ID']);
+			pad('delete', $r['pad_ID']);
 		}
 		$refer_url = 'doc';
 	}
@@ -1880,10 +1880,10 @@ case 'editar-documento':
 	if (($_POST['titulo']) AND ($_POST['cat'])) {
 		$_POST['titulo'] = strip_tags($_POST['titulo']);
 
-		$result = sql("SELECT ID, pais, url, title, acceso_leer, acceso_escribir, acceso_cfg_escribir FROM docs WHERE ID = '".$_POST['doc_ID']."' LIMIT 1");
+		$result = sql("SELECT ID, pad_ID, pais, url, title, acceso_leer, acceso_escribir, acceso_cfg_escribir FROM docs WHERE ID = '".$_POST['doc_ID']."' LIMIT 1");
 		while($r = r($result)){ 
 
-			$text = str_replace("'", "&#39;", pad('get', $r['ID']));
+			$text = str_replace("'", "&#39;", pad('get', $r['pad_ID']));
 			
 			// Prevent SSX basic
 			$text = str_replace("<script", "nojs", $text);
@@ -1906,19 +1906,19 @@ case 'editar-documento':
 	break;
 
 case 'crear-documento':
-	if ((strlen($_POST['title']) > 1) AND (strlen($_POST['title']) < 80) AND (isset($_POST['cat']))) {
+	if ((entre(strlen($_POST['title']), 1, 80)) AND (isset($_POST['cat']))) {
 		
 		$url = gen_url($_POST['title']);
 
-		$result = sql("SELECT ID FROM docs WHERE estado = 'ok' AND pais = '".PAIS."' AND url = '".$url."' LIMIT 1");
-		while($r = r($result)) { $doc_existe = true; }
-		
-		if ($doc_existe == true) { $url .= '_'.time(); }
+		$result = sql("SELECT ID FROM docs WHERE pais = '".PAIS."' AND url = '".$url."' LIMIT 1");
+		while($r = r($result)) { $url .= '_'.time(); }
 
 		sql("INSERT INTO docs 
 (pais, url, title, text, time, time_last, estado, cat_ID, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir) 
-VALUES ('".PAIS."', '".$url."', '".$_POST['title']."', '', '".$date."', '".$date."', 'ok', '".$_POST['cat']."', '".$_POST['acceso_leer']."', '".$_POST['acceso_escribir']."', '".$_POST['acceso_cfg_leer']."', '".$_POST['acceso_cfg_escribir']."')");
-		evento_log('Documento creado <a href="/doc/'.$url.'">#</a>');
+VALUES ('".PAIS."', '".$url."', '".$_POST['title']."', '', '".$date."', '".$date."', 'ok', '".$_POST['cat']."', 'privado', 'privado', '".strtolower($pol['nick'])."', '".strtolower($pol['nick'])."')");
+		
+		$result = sql("SELECT ID FROM docs WHERE pais = '".PAIS."' AND url = '".$url."' LIMIT 1");
+		while($r = r($result)){ sql("UPDATE docs SET pad_ID = '".$r['ID'].".".rand(100000,999999)."' WHERE ID = '".$r['ID']."' LIMIT 1"); }
 
 		actualizar('contador_docs');
 		evento_log('Documento creado: <a href="/doc/'.$url.'">'.$_POST['title'].'</a>');

@@ -65,10 +65,11 @@ while($r = r($result)){
 					while($r2 = r($result2)) { cargo_del($cargo_ID, $r2['user_ID'], true, true); }
 
 					// Reset campo temporal (más simple que crear tablas temporales)
-					sql("UPDATE users SET temp = NULL");
+					sql("UPDATE users SET temp = NULL WHERE temp IS NOT NULL");
 					
 					// Añade los resultados de puntos en el campo temporal
 					$respuestas = explode('|', $r['respuestas']);
+					$votacion_preferencial_nick = array();
 					foreach ($voto_preferencial AS $opcion_ID => $puntos) {
 						if ($opcion_ID != 0) { // Ignora "En blanco" por ser no computable
 							sql("UPDATE users SET temp = '".$puntos."' WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND nick = '".$respuestas[$opcion_ID]."' LIMIT 1");
@@ -78,6 +79,7 @@ while($r = r($result)){
 
 					// Asigna ordenando con mysql teniendo en cuenta la antiguedad para desempatar
 					$n = 0;
+					$guardar = array();
 					$result2 = sql("SELECT ID, nick FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND temp IS NOT NULL ORDER BY temp DESC, fecha_registro ASC, voto_confianza DESC LIMIT 50");
 					while($r2 = r($result2)) {
 						$n++;
@@ -163,7 +165,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 'cargo'=>'<span style="float:right;" title="Se ejecuta una acción automática tras su finalización." class="gris">('._('ejecutiva').')</span>',
 );
 
-	if (ASAMBLEA) { unset($votaciones_tipo[2]); } // Quitar tipo de votacion de parlamento.
+	//if (ASAMBLEA) { unset($votaciones_tipo[2]); } // Quitar tipo de votacion de parlamento.
 
 	foreach ($votaciones_tipo AS $tipo) {
 		$txt .= '<span style="font-size:18px;"><input type="radio" name="tipo" value="'.$tipo.'" onclick="cambiar_tipo_votacion(\''.$tipo.'\');"'.$sel['tipo'][$tipo].' />'.$tipo_extra[$tipo].ucfirst($tipo).'</span><br >';
@@ -242,7 +244,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 
 </td><td valign="top" align="right">
 
-<fieldset><legend>'._('Accesos').'</legend>
+<fieldset><legend>'._('Acceso').'</legend>
 
 <fieldset><legend>'._('Para poder votar').'</legend>
 <p>
@@ -335,7 +337,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 </fieldset>
 
 </div>
-<p><input type="submit" value="'._('Guardar borrador').'"'.(nucleo_acceso($vp['acceso']['votacion_borrador'])?'':' disabled="disabled"').' style="font-size:18px;" /></p>';
+<p>'.boton(_('Guardar borrador'), (nucleo_acceso($vp['acceso']['votacion_borrador'])?'submit':false), false, 'large blue').'</p>';
 
 	$txt_header .= '<script type="text/javascript">
 campos_num = '.($respuestas_num+1).';
@@ -934,7 +936,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 
 				// Imprime boton para votar, aviso de tiempo y votacion correcta/nula.
-				$txt .= ' '.boton(($r['ha_votado']?_('Modificar voto'):_('Votar')), ($r['estado']!='borrador'&&$tiene_acceso_votar?'submit':false), false, 'large blue').' <span style="white-space:nowrap;">'.($tiene_acceso_votar?($r['ha_votado']?'<span style="color:#2E64FE;">'._('Puedes modificar tu voto durante').' <span class="timer" value="'.$time_expire.'"></span>.</span>':'<span style="color:#2E64FE;">'._('Tienes').' <span class="timer" value="'.$time_expire.'"></span> '._('para votar').'.</span>'):'<span style="color:red;white-space:nowrap;">'.(!$pol['user_ID']?'<b>'._('Para votar debes').' <a href="'.REGISTRAR.'?p='.PAIS.'">'._('crear tu ciudadano').'</a>.</b>':_('No tienes acceso para votar, pueden votar').' '.verbalizar_acceso($r['acceso_votar'], $r['acceso_cfg_votar']).'.').'</span>').'</span></p>
+				$txt .= ' '.boton(($r['ha_votado']?_('Modificar voto'):_('Votar')), ($r['estado']!='borrador'&&$tiene_acceso_votar?'submit':false), false, 'large '.($tiene_acceso_votar?'blue':'red')).' <span style="white-space:nowrap;">'.($tiene_acceso_votar?($r['ha_votado']?'<span style="color:#2E64FE;">'._('Puedes modificar tu voto durante').' <span class="timer" value="'.$time_expire.'"></span>.</span>':'<span style="color:#2E64FE;">'._('Tienes').' <span class="timer" value="'.$time_expire.'"></span> '._('para votar').'.</span>'):'<span style="color:red;white-space:nowrap;">'.(!$pol['user_ID']?'<b>'._('Para votar debes').' <a href="'.REGISTRAR.'?p='.PAIS.'">'._('crear tu ciudadano').'</a>.</b>':_('No tienes acceso para votar, pueden votar').' '.verbalizar_acceso($r['acceso_votar'], $r['acceso_cfg_votar']).'.').'</span>').'</span></p>
 
 <p>
 <input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> '._('Votación válida').'.<br />
@@ -952,7 +954,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 			// Añade tabla de escrutinio publico si es votacion tipo parlamento.
 			if ($r['tipo'] == 'parlamento') {
-				$txt .= '<table border="0" cellpadding="0" cellspacing="3"><tr><th>'._('Diputado').'</th><th></th><th colspan="2">'._('Voto').'</th><th>'._('Mensaje').'</th></tr>';
+				$txt .= '<fieldset><legend>'._('Parlamento').'</legend><table border="0" cellpadding="0" cellspacing="3"><tr><th>'.(ASAMBLEA?_('Coordinador'):_('Diputado')).'</th><th></th><th colspan="2">'._('Voto').'</th><th>'._('Mensaje').'</th></tr>';
 				$result2 = sql("SELECT user_ID,
 (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick,
 (SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS siglas,
@@ -964,9 +966,9 @@ ORDER BY siglas ASC");
 				while($r2 = r($result2)) {
 					if ($r2['ha_votado'] != null) { $ha_votado = ' style="background:blue;"';
 					} else { $ha_votado = ' style="background:red;"'; }
-					$txt .= '<tr><td><img src="'.IMG.'cargos/6.gif" /> <b>' . crear_link($r2['nick']) . '</b></td><td><b>' . crear_link($r2['siglas'], 'partido') . '</b></td><td' . $ha_votado . '></td><td><b>' . $respuestas[$r2['ha_votado']]  . '</b></td><td style="color:#555;font-size:12px;" class="rich">'.$r2['ha_mensaje'].'</td></tr>';
+					$txt .= '<tr><td><img src="'.IMG.'cargos/6.gif" /> <b>'.crear_link($r2['nick']) . '</b></td><td><b>'.(ASAMBLEA?'':crear_link($r2['siglas'], 'partido')).'</b></td><td'.$ha_votado.'></td><td><b>' . $respuestas[$r2['ha_votado']].'</b></td><td style="color:#555;font-size:12px;" class="rich">'.$r2['ha_mensaje'].'</td></tr>';
 				}
-				$txt .= '</table>';
+				$txt .= '</table></fieldset>';
 			}
 		}
 	}

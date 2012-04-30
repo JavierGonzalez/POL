@@ -56,6 +56,7 @@ WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 		$a = 0;
 		$activos = array();
 		$candidatos = array();
+		$activos_nick = array();
 		$result2 = mysql_query("SELECT *, 
 (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick,
 (SELECT estado FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick_estado,
@@ -72,6 +73,8 @@ ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
 
 			if ($r2['nick_estado'] == 'ciudadano') {
 				if ($r2['cargo'] == 'true') {
+					$activos_nick[] = $r2['nick'];
+					$activos_last[$r2['nick']] = $r2['fecha_last'];
 					$activos[] = '<tr>
 <td>'.($asignador?'<form action="/accion.php?a=cargo&b=del&ID='.$r['cargo_ID'].'" method="post">
 <input type="hidden" name="user_ID" value="'.$r2['user_ID'].'"  />'.boton('X', 'submit', '¿Seguro que quieres QUITAR el cargo a '.strtoupper($r2['nick']).'?', 'small red').'</form>':'').'</td>
@@ -79,29 +82,62 @@ ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
 <td><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" style="margin-bottom:-3px;" /> <b>'.crear_link($r2['nick']).'</b></td>
 <td align="right" class="gris">'.timer($r2['fecha_last']).'</td>
 </tr>';
-				} else {
-					$candidatos[] = '<tr>
-<td>'.($asignador?'<form action="/accion.php?a=cargo&b=add&ID='.$r['cargo_ID'].'" method="POST">
+				}
+				$candidatos[] = '<tr>
+<td>'.($asignador&&$r2['cargo']!='true'?'<form action="/accion.php?a=cargo&b=add&ID='.$r['cargo_ID'].'" method="POST">
 <input type="hidden" name="user_ID" value="'.$r2['user_ID'].'"  />'.boton(_('Asignar'), 'submit', false, 'small blue').'</form>':'').'</td>
-<td><b>'.crear_link($r2['nick']).'</b></td>
+<td>'.($r2['cargo']=='true'?'<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" style="margin-bottom:-3px;" />':'<img src="'.IMG.'cargos/0.gif" alt="icono" width="16" height="16" border="0" style="margin-bottom:-3px;" />').' <b>'.crear_link($r2['nick']).'</b></td>
 <td align="right" class="gris">'.timer($r2['fecha_last']).'</td>
 <td align="right">'.confianza($r2['voto_confianza']).'</td>
 <td align="right">'.num($r2['nota'],1).'</td>
 </tr>';
-				}
 			}
 		}
 
 		$txt .= '<table border="0"><tr><td valign="top">
 
-<fieldset><legend>'.$r['nombre'].' ('.count($activos).')</legend>
+<fieldset><legend><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" style="margin-bottom:-3px;" /> '.$r['nombre'].' ('.count($activos).')</legend>
+
 <table border="0">
 <tr>
-<th></th>
-<th colspan="2" align="left"></th>
+'.(isset($r['elecciones'])?'<th colspan="2" align="left">'._('Cadena de sucesión').'</th>':'<th colspan="3"></th>').'
 <th style="font-weight:normal;">'._('Último acceso').'</th>
-</tr>
-'.implode('', $activos).'
+</tr>';
+
+		if (isset($r['elecciones'])) {
+
+			// CADENA DE SUCESION
+			$result2 = mysql_query("SELECT * 
+FROM votacion
+WHERE tipo = 'elecciones' AND pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND estado = 'end'
+ORDER BY time_expire DESC
+LIMIT 1", $link);
+			while($r2 = mysql_fetch_array($result2)) {
+
+				$cnum = 0;
+				$elecciones_electos = explodear('|', $r2['ejecutar'], 2);
+				foreach (explode(':', explodear('|', $r2['ejecutar'], 3)) AS $d) {
+					$d = explode('.', $d);
+					if ($d[2] != 'B') {
+						$cnum++;
+						if ($d[0]) {
+							$txt .= '<tr><td align="right">'.++$n.'.</td><td>'.(in_array($d[0], $activos_nick)?'<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" style="margin-bottom:-3px;" /> <b>'.crear_link($d[0]).'</b>':'<img src="'.IMG.'cargos/0.gif" alt="icono null" width="16" height="16" border="0" style="margin-bottom:-3px;" /> '.crear_link($d[0])).'</td><td align="right" class="gris">'.(isset($activos_last[$d[0]])?timer($activos_last[$d[0]]):'').'</td></tr>';
+						}
+						$ya_mostrado[$d[0]] = true;
+					}
+				}
+			}
+			foreach ($activos_nick AS $nick) {
+				if (!isset($ya_mostrado[$nick])) {
+					$txt .= '<tr><td align="right"></td><td><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" style="margin-bottom:-3px;" /> <b>'.crear_link($nick).'</b></td><td align="right" class="gris">'.(isset($activos_last[$nick])?timer($activos_last[$nick]):'').'</td></tr>';
+				}
+			}
+		} else {
+			$txt .= implode('', $activos);
+		}
+
+
+		$txt .= '
 </table>
 </fieldset>
 

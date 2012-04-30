@@ -14,6 +14,7 @@ $txt .= '
 <table border="0" cellpadding="1" cellspacing="0">
 <tr>
 <th></th>
+<th></th>
 <th>'._('Estado').'</th>
 <th>'._('Cuando').'</th>
 <th></th>
@@ -34,6 +35,8 @@ while($r = mysql_fetch_array($result)) {
 
 	$txt .= '<tr>
 <td align="right" width="320"><b style="font-size:16px;">'._('Elecciones a').' '.$r['nombre'].'</b></td>
+
+<td><a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /></a></td>
 
 <td nowrap="nowrap"><em>'._('Próximamente').'...</em></td>
 
@@ -60,6 +63,8 @@ while($r = mysql_fetch_array($result)) {
 	if ($r['estado'] == 'end') { $n++; }
 	$txt .= '<tr>
 <td align="right" nowrap="nowrap"><b style="font-size:16px;">'.($time>=strtotime('2012-04-05')?'<a href="/votacion/'.$r['ID'].'">'.$r['pregunta'].'</a>':$r['pregunta']).'</b></td>
+
+<td><a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /></a></td>
 
 <td nowrap="nowrap">'.($r['estado']=='ok'?'<b>¡'._('En curso').'!</b>':_('Finalizada')).'</td>
 

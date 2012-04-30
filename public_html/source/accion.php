@@ -1227,7 +1227,7 @@ case 'votacion':
 		switch ($_POST['tipo']) {
 			case 'parlamento':
 				$_POST['privacidad'] = 'false';
-				$_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6 22';
+				$_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6';
 				$_POST['acceso_ver'] = 'anonimos'; $_POST['acceso_cfg_ver'] = '';
 				break;
 

@@ -878,6 +878,23 @@ case 'gobierno':
 		evento_log('Gobierno configuración: economía');
 		$refer_url = 'control/gobierno/economia';
 
+	} elseif (($_GET['b'] == 'categorias') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
+		
+		if ($_GET['c'] == 'editar') {
+			$result = sql("SELECT ID FROM cat WHERE pais = '".PAIS."'");
+			while ($r = r($result)) { 
+				sql("UPDATE cat SET url = '". gen_url($_POST[$r['ID'].'_nombre'])."', nombre = '".$_POST[$r['ID'].'_nombre']."', nivel = '".$_POST[$r['ID'].'_nivel']."', orden = '".$_POST[$r['ID'].'_orden']."' WHERE ID = '".$r['ID']."' LIMIT 1");
+			}
+		} elseif ($_GET['c'] == 'crear') {
+			sql("INSERT INTO cat (pais, url, nombre, nivel, orden, tipo) VALUES ('".PAIS."', '".gen_url($_POST['nombre'])."', '".substr($_POST['nombre'], 0, 40)."', '0', '10', '".($_POST['tipo']?$_POST['tipo']:'docs')."')");
+
+		} elseif ($_GET['c'] == 'eliminar') {
+			sql("DELETE FROM cat WHERE ID = '".$_GET['ID']."' LIMIT 1");
+		}
+		
+		evento_log('Gobierno configuración: categorías');
+		$refer_url = 'control/gobierno/categorias';
+
 	} elseif (($_GET['b'] == 'privilegios') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 		$result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'acceso'");
 		while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
@@ -1890,13 +1907,6 @@ case 'editar-documento':
 			$text = str_replace("&lt;script", "nojs", $text);
 
 			if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
-
-				// Impide fijar acceso que no tienes.
-				if ((!nucleo_acceso($_POST['acceso_escribir'], $_POST['acceso_cfg_escribir'])) AND (!nucleo_acceso($vp['acceso']['control_gobierno']))) { 
-					$_POST['acceso_escribir'] = $r['acceso_escribir']; 
-					$_POST['acceso_cfg_escribir'] = $r['acceso_cfg_escribir']; 
-				}
-
 				sql("UPDATE docs SET cat_ID = '".$_POST['cat']."', text = '".$text."', title = '".$_POST['titulo']."', time_last = '".$date."', acceso_leer = '".$_POST['acceso_leer']."', acceso_escribir = '".$_POST['acceso_escribir']."', acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."', version = version + 1 WHERE ID = '".$r['ID']."' LIMIT 1");
 			}
 			if (in_array($r['acceso_leer'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))) { evento_log('Documento editado: <a href="/doc/'.$r['url'].'">'.$r['title'].'</a>'); }

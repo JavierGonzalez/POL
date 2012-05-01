@@ -597,14 +597,79 @@ case 'gobierno':
 	if (ECONOMIA) { $txt_tab['/control/gobierno/economia'] = _('Economía'); }
 	$txt_tab['/control/gobierno/notificaciones'] = _('Notificaciones');
 	$txt_tab['/control/gobierno/foro'] = _('Configuración foro');
+	$txt_tab['/control/gobierno/categorias'] = _('Categorías');
 	
 	if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $dis = null; } else { $dis = ' disabled="disabled"'; }
 
-
 	$defcon_bg = array('1' => 'white','2' => 'red','3' => 'yellow','4' => 'green','5' => 'blue');
 
+	if ($_GET['b'] == 'categorias') {
+		$txt_nav[] = _('Categorías');
 
-	if ($_GET['b'] == 'privilegios') {
+		if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
+
+		$txt .= '<form action="/accion.php?a=gobierno&b=categorias&c=editar" method="post">
+
+<table border="0" cellspacing="0" cellpadding="4">
+
+<tr>
+<th>'._('Orden').'</th>
+<th>'._('Nombre').'</th>
+<th>'._('Tipo').'</th>
+<th>'._('Nivel').'</th>
+</tr>';
+	$subforos = '';
+	$result = sql("SELECT * FROM cat WHERE pais = '".PAIS."' ORDER BY tipo DESC, orden ASC");
+	while($r = r($result)){
+		
+		$num = 0;
+		if ($r['tipo'] == 'docs') {
+			$result2 = sql("SELECT COUNT(*) AS el_num FROM docs WHERE pais = '".PAIS."' AND cat_ID = '".$r['ID']."'");
+			while($r2 = r($result2)){ $num = $r2['el_num']; }
+		} elseif ($r['tipo'] == 'empresas') {
+			$result2 = sql("SELECT COUNT(*) AS el_num FROM empresas WHERE pais = '".PAIS."' AND cat_ID = '".$r['ID']."'");
+			while($r2 = r($result2)){ $num = $r2['el_num']; }
+		}
+
+		$txt .= '<tr>
+<td><input type="text" style="text-align:right;" name="'.$r['ID'].'_orden" size="1" maxlength="3" value="'.$r['orden'].'" /></td>
+
+<td><input type="text" name="'.$r['ID'].'_nombre" size="30" maxlength="50" value="'.$r['nombre'].'" style="font-weight:bold;" /></td>
+
+<td>'.ucfirst($r['tipo']).'</td>
+
+<td><input type="text" style="text-align:right;" name="'.$r['ID'].'_nivel" size="1" maxlength="3" value="'.$r['nivel'].'" /></td>
+
+<td align="right" style="color:#999;" nowrap="nowrap"><b>'.$num.'</b></td>
+
+<td>'.($num==0?boton('Eliminar', '/accion.php?a=gobierno&b=categorias&c=eliminar&ID='.$r['ID'], false, 'small red'):'').'</td>
+</tr>'."\n";
+	}
+
+		$txt .= '
+<tr>
+<td align="center" colspan="8"><input value="'._('Guardar cambios').'" style="font-size:22px;" type="submit"'.$dis.' /></td>
+</tr>
+</table>
+</form>
+
+
+<fieldset><legend>'._('Crear categoría').'</legend>
+<form action="/accion.php?a=gobierno&b=categorias&c=crear" method="post">
+<table border="0" cellspacing="3" cellpadding="0">
+<tr>
+<td>'._('Nombre').':</td>
+<td><input type="text" name="nombre" size="10" maxlength="30" value="" /></td>
+'.(ECONOMIA?'<td><select name="tipo"><option value="doc">'._('Documentos').'</option><option value="empresas">'._('Empresas').'</option></select></td>':'').'
+<td><input value="'._('Crear categoría').'" style="font-size:18px;" type="submit"'.$dis.' /></td>
+</tr>
+</table>
+</form>
+</fieldset>';
+
+
+
+	} else if ($_GET['b'] == 'privilegios') {
 		$txt_nav[] = _('Privilegios');
 		
 		if (!ECONOMIA) { unset($vp['acceso']['control_sancion']); }
@@ -725,6 +790,7 @@ case 'gobierno':
 <th style="background:#F97E7B;">'._('Responder mensajes').'</th>
 <th title="Numero de hilos mostrados en la home del foro">'._('Mostrar').'</th>
 <th></th>
+<th></th>
 </tr>';
 	$subforos = '';
 	$result = sql("SELECT *,
@@ -733,11 +799,6 @@ case 'gobierno':
 FROM ".SQL."foros WHERE estado = 'ok'
 ORDER BY time ASC");
 	while($r = r($result)){
-
-		if ($r['num_hilos'] == 0) { $del = '<br /><input style="margin-bottom:-16px;" type="button" value="Eliminar" onClick="window.location.href=\'/accion.php?a=gobierno&b=eliminarsubforo&ID=' . $r['ID'] . '/\';">';
-		} else { $del = ''; }
-
-
 
 		$txt_li['leer'] = ''; $txt_li['escribir'] = ''; $txt_li['escribir_msg'] = '';
 		foreach (nucleo_acceso('print') AS $at => $at_var) { 
@@ -771,7 +832,8 @@ ORDER BY time ASC");
 <td align="right"><input type="text" style="text-align:right;" name="'.$r['ID'].'_limite" size="1" maxlength="2" value="'.$r['limite'].'" /></td>
 
 <td align="right" style="color:#999;" nowrap="nowrap">'.number_format($r['num_hilos'], 0, ',', '.').' '._('hilos').'<br />
-'.number_format($r['num_msg'], 0, ',', '.').' '._('mensajes').''.$del.'</td>
+'.number_format($r['num_msg'], 0, ',', '.').' '._('mensajes').'</td>
+<td>'.($r['num_hilos']==0?boton('Eliminar', '/accion.php?a=gobierno&b=eliminarsubforo&ID='.$r['ID'], false, 'small red'):'').'</td>
 </tr>'."\n";
 
 		if ($subforos) { $subforos .= '.'; }
@@ -785,8 +847,6 @@ ORDER BY time ASC");
 </tr>
 </table>
 </form>
-
-<br />
 
 <fieldset><legend>'._('Crear nuevo foro').'</legend>
 <form action="/accion.php?a=gobierno&b=crearsubforo" method="post">

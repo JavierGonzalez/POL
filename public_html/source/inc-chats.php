@@ -39,9 +39,13 @@ while ($r = mysql_fetch_array($result)) {
 	}
 
 	$acceso_leer = $r['acceso_leer'];
-	$acceso_escribir = $r['acceso_escribir'];
 	$acceso_cfg_leer = $r['acceso_cfg_leer'];
+
+	$acceso_escribir = $r['acceso_escribir'];
 	$acceso_cfg_escribir = $r['acceso_cfg_escribir'];
+
+	$acceso_escribir_ex = $r['acceso_escribir_ex'];
+	$acceso_cfg_escribir_ex = $r['acceso_cfg_escribir_ex'];
 }
 
 // genera array js, nombres cargos
@@ -75,6 +79,7 @@ if ($externo) {
 
 $a_leer = nucleo_acceso($acceso_leer, $acceso_cfg_leer);
 $a_escribir = nucleo_acceso($acceso_escribir, $acceso_cfg_escribir);
+$a_escribir_ex = nucleo_acceso($acceso_escribir_ex, $acceso_cfg_escribir_ex);
 
 $txt .= '</h1>
 
@@ -99,7 +104,7 @@ Chat de '.PAIS.': <b>'.$titulo.'</b><br />
 
 <tr>
 <td align="right">'._('Acceso escribir').':</td>
-<td><b style="color:'.($a_escribir?'blue;">'._('SI'):'red;">'._('NO')).'</b>. '.ucfirst(verbalizar_acceso($acceso_escribir, $acceso_cfg_escribir)).'</td>
+'.($pol['estado']=='extranjero'?'<td><b style="color:'.($a_escribir_ex?'blue;">'._('SI'):'red;">'._('NO')).'</b>. '.ucfirst(verbalizar_acceso($acceso_escribir_ex, $acceso_cfg_escribir_ex)).'</td>':'<td><b style="color:'.($a_escribir?'blue;">'._('SI'):'red;">'._('NO')).'</b>. '.ucfirst(verbalizar_acceso($acceso_escribir, $acceso_cfg_escribir)).'</td>').'
 </tr>
 
 </table>

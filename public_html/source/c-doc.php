@@ -136,6 +136,7 @@ if ($_GET['a']) {
 	$txt_title = _('Documentos');
 	$txt_nav = array('/doc'=>_('Documentos'));
 	$txt_tab = array('/form/crear-documento'=>_('Crear documento'));
+	if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $txt_tab['/control/gobierno/categorias'] = _('Editar categorías'); }
 
 	$txt .= '<div id="docs">';
 

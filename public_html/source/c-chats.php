@@ -28,7 +28,7 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 <input type="text" name="nombre" size="20" maxlength="20" /> ('._('No modificable').')
 <br /><br /></li>
 
-<li>' . boton(_('Solicitar chat'), false, false, '', $pol['config']['pols_crearchat']) . '</li>
+<li>' . boton(_('Solicitar chat'), 'submit', false, '', $pol['config']['pols_crearchat']) . '</li>
 </ol>
 </form>';
 

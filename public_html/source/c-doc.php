@@ -13,6 +13,8 @@ if ($_GET['a']) {
 
 	$result = mysql_query("SELECT * FROM docs WHERE url = '".$_GET['a']."' AND pais = '".PAIS."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
+		
+		$pad_ID = $r['pad_ID'];
 
 		include('inc-functions-accion.php');
 
@@ -27,7 +29,7 @@ if ($_GET['a']) {
 			}
 
 			
-			pad('create', $r['ID'], $r['text']);
+			pad('create', $pad_ID, $r['text']);
 
 			$txt .= '
 <form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=editar-documento&ID='.$r['ID'].'" method="POST">
@@ -37,29 +39,35 @@ if ($_GET['a']) {
 <h1 class="quitar" style="margin-bottom:6px;"><a href="/doc">'._('Documento').'</a>: '._('Editar').'</a></h1>
 
 <div id="doc_opciones" style="display:none;">
-<table border="0" cellpadding="9">
+<table>
+
 <tr>
-
-<td valign="bottom">'._('Categoría').':<br />'.form_select_cat('docs', $r['cat_ID']).'</td>
-
-<td valign="bottom"><b>'._('Acceso leer').':</b><br />
-<select name="acceso_leer">'.$txt_li['leer'].'</select><br />
-<input type="text" name="acceso_cfg_leer" size="18" maxlength="900" id="acceso_cfg_leer_var" value="'.$r['acceso_cfg_leer'].'" />
-</td>
-
-<td valign="bottom"><b>'._('Acceso escribir').':</b><br />
-<select name="acceso_escribir">'.$txt_li['escribir'].'</select><br />
-<input type="text" name="acceso_cfg_escribir" size="18" maxlength="900" id="acceso_cfg_escribir_var" value="'.$r['acceso_cfg_escribir'].'" />
-</td>
-
+<td align="right">'._('Categoría').':</td>
+<td>'.form_select_cat('docs', $r['cat_ID']).'</td>
 </tr>
 
-<tr><td colspan="2" valign="top">* '._('El texto del editor se guarda automáticamente como borrador en tiempo real. Para guardar estas opciones y hacer públicos los cambios hay que dar al botón "Publicar"').'.<br /><br />
-* <a href="/doc/'.$r['url'].'/presentacion" target="_blank"><b>'._('Presentación').'</b></a> (HTML para <a href="https://github.com/bartaz/impress.js" target="_blank">impress.js</a>, <a href="https://github.com/bartaz/impress.js/blob/master/index.html" target="_blank">código de ejemplo</a>)</td>
 
-<td align="right" valign="top">
-'.boton(_('Restaurar última publicación'), '/accion.php?a=restaurar-documento&ID='.$r['ID'], '¿Estas seguro de RESTAURAR este documento?\n\nATENCION: SE PERDERA EL FORMATO, ADEMAS DE LOS CAMBIOS DESDE LA ULTIMA PUBLICACION.', 'small').'<br />
-'.boton(_('Eliminar documento'), '/accion.php?a=eliminar-documento&url='.$r['url'], '¿Estas convencido de que quieres ELIMINAR para siempre este Documento?', 'small').'</td>
+<tr>
+<td align="right"><b>'._('Acceso leer').'</b>:</td>
+<td><select name="acceso_leer">'.$txt_li['leer'].'</select> <input type="text" name="acceso_cfg_leer" size="18" maxlength="900" id="acceso_cfg_leer_var" value="'.$r['acceso_cfg_leer'].'" /> '.ucfirst(verbalizar_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])).'</td>
+</tr>
+
+<tr>
+<td align="right"><b>'._('Acceso escribir').'</b>:</td>
+<td><select name="acceso_escribir">'.$txt_li['escribir'].'</select> <input type="text" name="acceso_cfg_escribir" size="18" maxlength="900" id="acceso_cfg_escribir_var" value="'.$r['acceso_cfg_escribir'].'" /> '.ucfirst(verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])).'</td>
+</tr>
+
+
+
+<tr><td colspan="2" valign="top">
+
+<span style="float:right;">
+'.boton(_('Eliminar documento'), '/accion.php?a=eliminar-documento&url='.$r['url'], '¿Estas convencido de que quieres ELIMINAR para siempre este Documento?', 'small red').'<br />
+'.boton(_('Restaurar última publicación'), '/accion.php?a=restaurar-documento&ID='.$r['ID'], '¿Estas seguro de RESTAURAR este documento?\n\nATENCION: SE PERDERA EL FORMATO, ADEMAS DE LOS CAMBIOS DESDE LA ULTIMA PUBLICACION.', 'small red').'
+</span>
+
+* '._('El texto del editor se guarda automáticamente como borrador en tiempo real. Para guardar estas opciones y hacer públicos los cambios hay que dar al botón "Publicar"').'.<br />
+* <a href="/doc/'.$r['url'].'/presentacion" target="_blank">'._('Presentación').'</a> (HTML para <a href="https://github.com/bartaz/impress.js" target="_blank">impress.js</a>, <a href="https://github.com/bartaz/impress.js/blob/master/index.html" target="_blank">código de ejemplo</a>)</td>
 
 </tr>
 
@@ -76,7 +84,7 @@ if ($_GET['a']) {
 
 </form>
 
-'.pad('print', $r['ID']);
+'.pad('print', $pad_ID);
 			$txt_nav = array('/doc'=>_('Documentos'), '/doc/'.$r['url']=>$r['title'], _('Editar'));
 			$txt_tab['/doc/'.$r['url']] = _('Ver documento');
 			$txt_tab['/doc/'.$r['url'].'/editar'] = _('Editar');
@@ -101,9 +109,9 @@ if ($_GET['a']) {
 
 			$txt .= '
 <div>
-<h1 style="font-size:28px;">'.$r['title'].' </h1>
+<h1 style="font-size:28px;">'.$r['title'].'</h1>
 
-<div id="doc_pad">
+<div id="doc_pad" style="min-height:250px;">
 '.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])||nucleo_acceso($vp['acceso']['control_gobierno'])?$r['text']:'<b style="color:red;">'._('No tienes acceso de lectura').'.</b>').'
 </div>
 
@@ -128,6 +136,7 @@ if ($_GET['a']) {
 	$txt_title = _('Documentos');
 	$txt_nav = array('/doc'=>_('Documentos'));
 	$txt_tab = array('/form/crear-documento'=>_('Crear documento'));
+	if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $txt_tab['/control/gobierno/categorias'] = _('Editar categorías'); }
 
 	$txt .= '<div id="docs">';
 
@@ -153,7 +162,7 @@ ORDER BY time_last DESC", $link);
 
 			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {
 				$txt .= '<tr>
-<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])||nucleo_acceso($vp['acceso']['control_gobierno'])?' '.boton(_('Editar'), '/doc/'.$r2['url'].'/editar', false, 'small').' ':'').'<a href="/doc/'.$r2['url'].'">'.$r2['title'].'</a></td>
+<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])||nucleo_acceso($vp['acceso']['control_gobierno'])?' '.boton(_('Editar'), '/doc/'.$r2['url'].'/editar', false, 'small').' ':'').'<a href="/doc/'.$r2['url'].'"><b>'.$r2['title'].'</b></a></td>
 
 <td width="80" align="right" nowrap="nowrap">'.timer($r2['time_last']).'</td>
 
@@ -169,6 +178,7 @@ ORDER BY time_last DESC", $link);
 		}
 		$txt .= '</table></fieldset>';
 	}
+	$txt .= '</div>';
 }
 
 

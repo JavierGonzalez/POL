@@ -47,7 +47,7 @@ function verbalizar_acceso($tipo, $valor='') {
 	switch ($tipo) { // ¿Quien tiene acceso?
 		case 'internet': case 'anonimos': $t = _('todo el mundo (Internet)'); break;
 		case 'ciudadanos_global': $t = _('todos los ciudadanos de VirtualPol'); break;
-		case 'ciudadanos': $t = _('todos los ciudadanos de').' '.($valor==''?_('la plataforma').' '.PAIS:' '._('las plataformas').': <em>'.$valor.'</em>'); break;
+		case 'ciudadanos': $t = _('todos los ciudadanos de').' '.($valor==''?_('la plataforma').' '.PAIS:' '._('las plataformas').': <em>'.PAIS.' '.$valor.'</em>'); break;
 		case 'excluir': $t = _('todos los ciudadanos excepto').': <em>'.$valor.'</em>'; break;
 		case 'privado': $t = _('los ciudadanos').': '.$valor; break;
 		case 'confianza': $t = _('ciudadanos con confianza mayor o igual a').' '.confianza($valor).' (<a href="/censo/confianza">'._('Ver confianza').'</a>)'; break;
@@ -64,9 +64,9 @@ function verbalizar_acceso($tipo, $valor='') {
 		case 'cargo':
 			global $link;
 			$val = array();
-			$result = sql("SELECT cargo_ID, nombre AS nom FROM cargos WHERE pais = '".PAIS."' AND cargo_ID IN (".implode(',', explode(' ', $valor)).")", $link);
-			while($r = r($result)) { $val[] = '<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" title="'.$r['nom'].'" />'.$r['nom']; }
-			$t = _('ciudadanos con cargo').': '.implode(', ', $val).' (<a href="/cargos">'._('Ver cargos').'</a>)';
+			$result = sql("SELECT cargo_ID, nombre AS nom FROM cargos WHERE pais = '".PAIS."' AND cargo_ID IN (".implode(',', explode(' ', $valor)).") ORDER BY nivel DESC", $link);
+			while($r = r($result)) { $val[] = '<a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" title="'.$r['nom'].'" alt="'.$r['nom'].'" width="16" height="16" /></a>'; }
+			$t = _('ciudadanos con cargo').': '.implode(' ', $val).' (<a href="/cargos">'._('Ver cargos').'</a>)';
 			break;
 
 		case 'afiliado':

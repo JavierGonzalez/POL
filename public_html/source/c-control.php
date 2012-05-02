@@ -42,7 +42,7 @@ if (nucleo_acceso('supervisores_censo')) {
 
 	function print_nota_SC($nota_SC, $user_ID) {
 		global $pol;
-		return ($nota_SC!=''?'<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=SC&b=nota&ID='.$user_ID.'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$nota_SC.'" /> '.boton('OK', 'submit', false, 'small pill').'</form>':'');
+		return ($nota_SC!=''?'<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=SC&b=nota&ID='.$user_ID.'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$nota_SC.'"'.(substr($nota_SC, 0, 7)=='Cuidado'?' style="color:red;"':'').(substr($nota_SC, 0, 12)=='Comparte con'?' style="color:green;"':'').(substr($nota_SC, 0, 3)=='OK '?' style="color:blue;"':'').' /> '.boton('OK', 'submit', false, 'small pill').'</form>':'');
 	}
 
 	// nomenclatura
@@ -434,19 +434,17 @@ ORDER BY num DESC, IP ASC");
 		$clones_expulsados = true;
 		$confianza_total = 0;
 		$result2 = sql("SELECT ID, nick, estado, pais, partido_afiliado, nota_SC, 
-(SELECT SUM(voto) AS voto_total FROM votos WHERE tipo = 'confianza' AND item_ID = users.ID AND emisor_ID IN (".implode(',', $sc_user_ID).") LIMIT 1) AS voto_confianza_SC, 
 (SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = users.ID LIMIT 1) AS has_votado
 FROM users 
 WHERE IP = '" . $r['IP'] . "' 
 ORDER BY fecha_registro DESC");
 		while($r2 = r($result2)) {
 			$nota_SC .= print_nota_SC($r2['nota_SC'], $r2['ID']);
-			$confianza_total += $r2['voto_confianza_SC'];
 			if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 			$clones[] = '<b>'.crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']).'</b>';
 		}
 		if ((!$desarrollador) AND (!$clones_expulsados)) {
-			$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td><span style="float:right;">'.ocultar_IP($r['host'], 'host').'</span>'.implode(' & ', $clones).'</td><td>'.ocultar_IP($r['IP']).'</td><td nowrap="nowrap">'.$nota_SC.'</td></tr>';
+			$txt .= '<tr><td>' . $r['num'] . '</td><td><span style="float:right;">'.ocultar_IP($r['host'], 'host').'</span>'.implode(' & ', $clones).'</td><td>'.long2ip($r['IP']).'</td><td nowrap="nowrap">'.$nota_SC.'</td></tr>';
 		}
 	}
 	$txt .= '</table></fieldset>';
@@ -465,20 +463,19 @@ ORDER BY num DESC, fecha_registro DESC");
 			$clones = array();
 			$nota_SC = '';
 			$confianza_total = 0;
-			$result2 = sql("SELECT ID, nick, pais, partido_afiliado, estado, nota_SC, (SELECT SUM(voto) AS voto_total FROM votos WHERE tipo = 'confianza' AND item_ID = users.ID AND emisor_ID IN (".implode(',', $sc_user_ID).") LIMIT 1) AS voto_confianza_SC
+			$result2 = sql("SELECT ID, nick, pais, partido_afiliado, estado, nota_SC
 FROM users 
 WHERE pass = '" . $r['pass'] . "'");
 			$clones_expulsados = true;
 			while($r2 = r($result2)) { 
 				if ($r2['nick']) {
 					$nota_SC .= print_nota_SC($r2['nota_SC'], $r2['ID']);
-					$confianza_total += $r2['voto_confianza_SC'];
 					if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 					$clones[] = crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']);
 				} 
 			}
 			if (!$clones_expulsados) {
-				$txt .= '<tr><td>' . $r['num'] . '</td><td>'.confianza($confianza_total).'</td><td><b>'.implode(' & ', $clones).'</b></td><td nowrap="nowrap">'.$nota_SC.'</td></tr>';
+				$txt .= '<tr><td>' . $r['num'] . '</td><td><b>'.implode(' & ', $clones).'</b></td><td nowrap="nowrap">'.$nota_SC.'</td></tr>';
 			}
 		}
 	}
@@ -600,14 +597,79 @@ case 'gobierno':
 	if (ECONOMIA) { $txt_tab['/control/gobierno/economia'] = _('Economía'); }
 	$txt_tab['/control/gobierno/notificaciones'] = _('Notificaciones');
 	$txt_tab['/control/gobierno/foro'] = _('Configuración foro');
+	$txt_tab['/control/gobierno/categorias'] = _('Categorías');
 	
 	if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $dis = null; } else { $dis = ' disabled="disabled"'; }
 
-
 	$defcon_bg = array('1' => 'white','2' => 'red','3' => 'yellow','4' => 'green','5' => 'blue');
 
+	if ($_GET['b'] == 'categorias') {
+		$txt_nav[] = _('Categorías');
 
-	if ($_GET['b'] == 'privilegios') {
+		if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
+
+		$txt .= '<form action="/accion.php?a=gobierno&b=categorias&c=editar" method="post">
+
+<table border="0" cellspacing="0" cellpadding="4">
+
+<tr>
+<th>'._('Orden').'</th>
+<th>'._('Nombre').'</th>
+<th>'._('Tipo').'</th>
+<th>'._('Nivel').'</th>
+</tr>';
+	$subforos = '';
+	$result = sql("SELECT * FROM cat WHERE pais = '".PAIS."' ORDER BY tipo DESC, orden ASC");
+	while($r = r($result)){
+		
+		$num = 0;
+		if ($r['tipo'] == 'docs') {
+			$result2 = sql("SELECT COUNT(*) AS el_num FROM docs WHERE pais = '".PAIS."' AND cat_ID = '".$r['ID']."'");
+			while($r2 = r($result2)){ $num = $r2['el_num']; }
+		} elseif ($r['tipo'] == 'empresas') {
+			$result2 = sql("SELECT COUNT(*) AS el_num FROM empresas WHERE pais = '".PAIS."' AND cat_ID = '".$r['ID']."'");
+			while($r2 = r($result2)){ $num = $r2['el_num']; }
+		}
+
+		$txt .= '<tr>
+<td><input type="text" style="text-align:right;" name="'.$r['ID'].'_orden" size="1" maxlength="3" value="'.$r['orden'].'" /></td>
+
+<td><input type="text" name="'.$r['ID'].'_nombre" size="30" maxlength="50" value="'.$r['nombre'].'" style="font-weight:bold;" /></td>
+
+<td>'.ucfirst($r['tipo']).'</td>
+
+<td><input type="text" style="text-align:right;" name="'.$r['ID'].'_nivel" size="1" maxlength="3" value="'.$r['nivel'].'" /></td>
+
+<td align="right" style="color:#999;" nowrap="nowrap"><b>'.$num.'</b></td>
+
+<td>'.($num==0?boton('Eliminar', '/accion.php?a=gobierno&b=categorias&c=eliminar&ID='.$r['ID'], false, 'small red'):'').'</td>
+</tr>'."\n";
+	}
+
+		$txt .= '
+<tr>
+<td align="center" colspan="8"><input value="'._('Guardar cambios').'" style="font-size:22px;" type="submit"'.$dis.' /></td>
+</tr>
+</table>
+</form>
+
+
+<fieldset><legend>'._('Crear categoría').'</legend>
+<form action="/accion.php?a=gobierno&b=categorias&c=crear" method="post">
+<table border="0" cellspacing="3" cellpadding="0">
+<tr>
+<td>'._('Nombre').':</td>
+<td><input type="text" name="nombre" size="10" maxlength="30" value="" /></td>
+'.(ECONOMIA?'<td><select name="tipo"><option value="doc">'._('Documentos').'</option><option value="empresas">'._('Empresas').'</option></select></td>':'').'
+<td><input value="'._('Crear categoría').'" style="font-size:18px;" type="submit"'.$dis.' /></td>
+</tr>
+</table>
+</form>
+</fieldset>';
+
+
+
+	} else if ($_GET['b'] == 'privilegios') {
 		$txt_nav[] = _('Privilegios');
 		
 		if (!ECONOMIA) { unset($vp['acceso']['control_sancion']); }
@@ -653,6 +715,8 @@ case 'gobierno':
 		
 		$txt .= '<form action="/accion.php?a=gobierno&b=notificaciones&c=add" method="post">
 
+<fieldset><legend>'._('Crear notificación (para todos los ciudadanos)').'</legend>
+
 <table border="0">
 <tr>
 <td>'._('Texto').': </td>
@@ -665,15 +729,16 @@ case 'gobierno':
 
 <tr>
 <td></td>
-<td><input type="submit" value="'._('Crear notificación').'"'.(nucleo_acceso($vp['acceso']['control_gobierno'])?'':' disabled="disabled"').' /> <span style="color:red;"><b>'._('Cuidado').'.</b> '._('Lo recibirán todos los ciudadanos de').' '.PAIS.'.</span></td>
+<td>
+'.boton(_('Crear notificación'), (nucleo_acceso($vp['acceso']['control_gobierno'])?'submit':false), false, 'red').'
+ <span style="color:red;"><b>'._('Cuidado').'.</b> '._('Lo recibirán todos los ciudadanos de').' '.PAIS.'.</span></td>
 </tr>
 </table>
-
-
-<hr />
+</fieldset>
 
 </form>
 
+<fieldset><legend>'._('Notificaciones').'</legend>
 <table border="0" cellspacing="0" cellpadding="4">
 
 
@@ -701,7 +766,7 @@ case 'gobierno':
 </tr>';
 		}
 
-		$txt .= '</table>';
+		$txt .= '</table></fieldset>';
 
 	} elseif ($_GET['b'] == 'foro') {
 		
@@ -725,6 +790,7 @@ case 'gobierno':
 <th style="background:#F97E7B;">'._('Responder mensajes').'</th>
 <th title="Numero de hilos mostrados en la home del foro">'._('Mostrar').'</th>
 <th></th>
+<th></th>
 </tr>';
 	$subforos = '';
 	$result = sql("SELECT *,
@@ -733,11 +799,6 @@ case 'gobierno':
 FROM ".SQL."foros WHERE estado = 'ok'
 ORDER BY time ASC");
 	while($r = r($result)){
-
-		if ($r['num_hilos'] == 0) { $del = '<br /><input style="margin-bottom:-16px;" type="button" value="Eliminar" onClick="window.location.href=\'/accion.php?a=gobierno&b=eliminarsubforo&ID=' . $r['ID'] . '/\';">';
-		} else { $del = ''; }
-
-
 
 		$txt_li['leer'] = ''; $txt_li['escribir'] = ''; $txt_li['escribir_msg'] = '';
 		foreach (nucleo_acceso('print') AS $at => $at_var) { 
@@ -771,7 +832,8 @@ ORDER BY time ASC");
 <td align="right"><input type="text" style="text-align:right;" name="'.$r['ID'].'_limite" size="1" maxlength="2" value="'.$r['limite'].'" /></td>
 
 <td align="right" style="color:#999;" nowrap="nowrap">'.number_format($r['num_hilos'], 0, ',', '.').' '._('hilos').'<br />
-'.number_format($r['num_msg'], 0, ',', '.').' '._('mensajes').''.$del.'</td>
+'.number_format($r['num_msg'], 0, ',', '.').' '._('mensajes').'</td>
+<td>'.($r['num_hilos']==0?boton('Eliminar', '/accion.php?a=gobierno&b=eliminarsubforo&ID='.$r['ID'], false, 'small red'):'').'</td>
 </tr>'."\n";
 
 		if ($subforos) { $subforos .= '.'; }
@@ -785,8 +847,6 @@ ORDER BY time ASC");
 </tr>
 </table>
 </form>
-
-<br />
 
 <fieldset><legend>'._('Crear nuevo foro').'</legend>
 <form action="/accion.php?a=gobierno&b=crearsubforo" method="post">

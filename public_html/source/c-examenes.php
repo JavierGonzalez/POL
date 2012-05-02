@@ -373,29 +373,30 @@ LIMIT 1", $link);
 		$txt_nav = array('/examenes'=>'Exámenes', $r['titulo']);
 		$txt_tab = array('/cargos'=>'Cargos');
 
-		$txt .= '<h1 class="quitar">' . $r['titulo'] . ' (<a href="/examenes/">Ver examenes</a>)</h1>
-<table border="0" width="100%"><tr><td valign="top" width="60%">
+		$txt .= '<table border="0" width="100%"><tr><td valign="top" width="60%">
 
-<p class="amarillo"><b>Temario:</b><br />' . $r['descripcion'] . '</p>
+<fieldset><legend>Temario</legend>
+'.$r['descripcion'].'
+</fieldset>
 
-<p>Nota minima para aprobar: <b class="gris">' . $r['nota'] . '</b>. Examen tipo test, tiempo limitado, <b>' . $r['num_preguntas'] . '</b> preguntas de entre <b>' . $r['num_preguntas_especificas'] . '</b> en total.</p>
+<p>Nota mínima para aprobar: <b class="gris">' . $r['nota'] . '</b>. Examen tipo test, tiempo limitado, <b>' . $r['num_preguntas'] . '</b> preguntas de entre <b>' . $r['num_preguntas_especificas'] . '</b> en total.</p>
 
-<p>No podr&aacute;s repetir este examen hasta <b>' . duracion($pol['config']['examen_repe']) . '</b> despu&eacute;s. ';
+<p>No podrás repetir este examen hasta <b>' . duracion($pol['config']['examen_repe']) . '</b> después. ';
 
 		if ($r['cargo_ID'] == 0) {
-			$txt .= 'Examen sin vinculaci&oacute;n con cargo.';
+			$txt .= 'Examen sin vinculación con cargo.';
 		} else {
 			$result2 = mysql_query("SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1", $link);
-			while($r2 = mysql_fetch_array($result2)){ $txt .= 'Examen vinculado al cargo: <a href="/cargos/">' . $r2['nombre'] . '</a>.'; }	
+			while($r2 = mysql_fetch_array($result2)){ $txt .= 'Examen vinculado al cargo: <a href="/cargos/">' . $r2['nombre'] . '</a>.'; $cargo_nom = $r2['nombre']; }	
 		}
 
 		$txt .= '</p>';
 
 		$margen_ultimoexamen = strtotime($r['fecha_ultimoexamen']) + $pol['config']['examen_repe'];
 		if ((!$r['fecha_ultimoexamen']) OR ($margen_ultimoexamen < time())) {
-			$txt .= '<p>' . boton('HACER EXAMEN', '/examenes/examen/'.$r['ID'], '¿Estás preparado para EXAMINARTE?\n\nSolo podrás intentarlo UNA VEZ cada ' . duracion($pol['config']['examen_repe']) . '.\n\nSi ejerces el cargo y suspendes lo perder&aacute;s!', 'large blue', $pol['config']['pols_examen']) . '</p>';
+			$txt .= '<p>'.boton('HACER EXAMEN', '/examenes/examen/'.$r['ID'], '¿Estás preparado para EXAMINARTE?\n\nSolo podrás intentarlo UNA VEZ cada '.duracion($pol['config']['examen_repe']).'.\n\nSi ejerces el cargo y suspendes lo perderás!', 'large blue', $pol['config']['pols_examen']).' '.($cargo_nom?' [para postularse como candidato a <img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" /> <b>'.$cargo_nom.'</b>]':'').'</p>';
 		} else {
-			$txt .= '<p><b class="amarillo">No puedes repetir el examen hasta dentro de ' . duracion($margen_ultimoexamen - time()) . '</b></p>';
+			$txt .= '<p><b class="amarillo">No puedes repetir el examen hasta dentro de '.duracion($margen_ultimoexamen - time()).'</b></p>';
 		}
 
 		$txt .= '</td><td valign="top" width="40%"></td></tr></table>';
@@ -404,14 +405,11 @@ LIMIT 1", $link);
 
 
 
-} else {							// VER LISTA EXAMENES
+} else {	// VER LISTA EXAMENES
 
 	$txt_title = 'Exámenes';
 	$txt_nav = array('/examenes'=>'Exámenes');
 	$txt_tab = array('/cargos'=>'Cargos');
-
-	$txt .= '<h1 class="quitar">Examenes: <a href="/examenes/mis-examenes">Mis examenes</a></h1>';
-
 
 	$result = mysql_query("SELECT examen_ID FROM examenes_preg WHERE pais = '".PAIS."'", $link);
 	while($r = mysql_fetch_array($result)){ 
@@ -436,15 +434,15 @@ LIMIT 1", $link);
 
 	$result = mysql_query("SELECT ID, titulo, user_ID, time, cargo_ID, nota, num_preguntas,
 (SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_preguntas_especificas,
-(SELECT COUNT(*) FROM cargos_users WHERE cargo_ID = examenes.cargo_ID AND nota != '') AS examinados,
-(SELECT COUNT(*) FROM cargos_users WHERE cargo_ID = examenes.cargo_ID AND nota != '' AND aprobado = 'ok') AS aprobados
+(SELECT COUNT(*) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = examenes.cargo_ID) AS examinados,
+(SELECT COUNT(*) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = examenes.cargo_ID AND aprobado = 'ok') AS aprobados
 FROM examenes
 WHERE pais = '".PAIS."' AND ID != 0
 ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 	while($r = mysql_fetch_array($result)){
 
 		if (substr($r['cargo_ID'], 0, 1) != '-') {
-			$result2 = mysql_query("SELECT nombre FROM cargos WHERE cargo_ID = '" . $r['cargo_ID'] . "' LIMIT 1", $link);
+			$result2 = mysql_query("SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '" . $r['cargo_ID'] . "' LIMIT 1", $link);
 			while($r2 = mysql_fetch_array($result2)){ $cargo = '<img src="'.IMG.'cargos/' . $r['cargo_ID'] . '.gif" title="' . $r2['nombre'] . '" />'; }
 		} else { $cargo = ''; }
 

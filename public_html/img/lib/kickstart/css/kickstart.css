@@ -365,8 +365,11 @@ font-size:0;
 	ul.breadcrumbs.alt1 li.last a{
 	background:none;
 	border-right:1px solid #efefef;
+	font-size: 14px;
 	}
-	
+
+
+
 /*---------------------------------
 	IMAGES
 -----------------------------------*/

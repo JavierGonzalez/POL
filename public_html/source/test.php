@@ -16,94 +16,60 @@ function crono($new='') {
 	 $crono = microtime(true);
 	 return '<h3>'.$the_ms.'ms '.$new.'</h3></hr>';
 }
-$txt .= '<h1>TEST</h1><hr />';
 
 
 
-$txt_header .= '<script type="text/javascript" src="http://15m.virtualpol.com/ajax.php?a=data_extra"></script>';
+exit;
 
-$txt .= '
+// ENVIO DE EMAILS DE AVISO
 
+$emails_enviados = 0;
+$result = mysql_query("SELECT ID, nick, email FROM users WHERE estado = 'ciudadano' AND email != '' LIMIT 100000", $link);
+while($r = mysql_fetch_array($result)) {
 
-<script>
-
-
-
-$(document).ready(function(){
+		$txt_email = '<p>Hola '.$r['nick'].'!</p>
 	
-	$(".nucleo_acceso").each(function (i) { $(this).html(control_acceso($(this).attr("data-title"), $(this).attr("data-name"), $(this).attr("data-acceso"), $(this).attr("data-cfg"), $(this).attr("data-excluir"))); });
+<p>Como debes saber, completamos con éxito la primera ronda de financiación de crowdfunding (Goteo.org) para expandir VirtualPol. Hemos comenzado la segunda y última ronda.</p>
 
-});
+<p>Con tu ayuda cumplirémos el objetivo final: La expansión internacional de VirtualPol y grandes avances en el desarrollo del código fuente.</p>
+
+<p>Desde el 6 de Abril se han realizado los siguientes desarrollos gracias a tu apoyo:</p>
+
+<ul>
+
+<li><b>Traducción a los principales idiomas</b>: este es el mayor desarrollo (junto con el nuevo diseño). Vamos a buen ritmo, aproximadamente el 22% del trabajo ya está hecho, se terminará durante la segunda ronda. Puedes probarlo <a href="https://virtualpol.com/registrar/login.php?a=panel">cambiando tu idioma</a>. Además la traducción -propiamente dicha- es colaborativa, <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/">puedes ver el progreso y ayudar aquí</a>.</li>
+
+<li><b>Nuevo sistema de Elecciones</b>: Re-diseñado desde cero. Con muchos avances: más simple, más seguro, más eficiente, voto preferencial (más democrático y preciso), modificación de voto, comprobantes de voto, elecciones independientes para cada cargo totalmente configurables y además <a href="http://15m.virtualpol.com/elecciones">resultados históricos completos</a>. Todo totalmente automático.</li>
+
+<li><b>Cadena de sucesión automática</b>: de forma que si una persona dimite de un cargo electo el sistema asigna al siguiente más votado en las útimas elecciones. De forma 100% automática, así la democracia está garantizada. <a href="http://15m.virtualpol.com/cargos/6">Ejemplo visual de la cadena de sucesión</a>.</li>
+
+<li><b>Comprobantes de voto</b>: te permite verificar en cualquier momento que tu voto ha sido computado correctamente -más allá de toda duda-. Esto aporta una enorme seguridad y transparencia en todas las votaciones y elecciones de VirtualPol.</li>
+
+<li><b>Creación de plataformas</b>: para realizar esto fue necesario reestructurar la base de datos y modificar gran parte del código. Esto permite solicitar la creación de <a href="http://www.virtualpol.com/crear-plataforma.php">nuevas plataformas</a>.</li>
+
+</ul>
+
+<p>Todos estos desarrollos (y muchos más) se han realizado por anticipado, antes si quiera de empezar el plazo prometido. Nuestro compromiso con los participantes de VirtualPol es absoluto. Gracias por hacer esto posible.</p>
+
+<p><a href="http://www.goteo.org/project/expansion-de-virtualpol" style="font-size:18px;"><b>¡Contribuye donando, impulsa VirtualPol!</b></a> (participarás en la segunda y última ronda)</p>
+
+<p>Un fuerte abrazo.</p>
+
+<p>_____<br />
 
 
-function control_acceso(title, name, acceso, cfg, excluir) {
-	var html = "<div id=\"control_" + name + "\">";
-	if (title != "") { html += "<fieldset><legend>" + title + "</legend>"; }
+Javier González González,<br />
+VirtualPol <a href="http://www.virtualpol.com">http://www.virtualpol.com</a><br />
+</p>';
 
-	html += "<select name=\"" + name + "\" onchange=\"control_acceso_cambiar(name, this.value);\">";
+		enviar_email($r['ID'], '¡Segunda y última ronda de donaciones!', $txt_email); 
+		$emails_enviados++;
 
-	for(var i in data_acceso) {
-		if (data_acceso[i] == acceso) { var selected = " selected=\"selected\""; } else { var selected = ""; }
-		html += "<option value=\"" + data_acceso[i] + "\"" + selected + ">" + data_acceso[i] + "</option>";
-	}
-
-	html += "</select><br />";
-
-	var cfg_array = cfg.split(" ");
-
-	for(var i in data_acceso) {
-		switch (data_acceso[i]) {
-			case "cargo":
-				html += "<select class=\"cfg cfg_" + data_acceso[i] + "\" name=\"" + name + "_cfg\" multiple=\"multiple\" class=\"fancy\" style=\"display:none;\">";
-				for(var e in data_cargo) {
-					var selected = "";
-					for(var d in cfg_array) { if (cfg_array[d] == e) { var selected = " selected=\"selected\""; } }
-					html += "<option value=\"" + e + "\"" + selected + ">" + data_cargo[e] + "</option>";	
-				}
-				html += "</select>";
-				break;
-
-			default: html += "<input class=\"cfg cfg_" + data_acceso[i] + "\" type=\"text\" name=\"" + name + "_cfg\" value=\"" + cfg + "\" style=\"display:none;\" />";
-		}
-	}
-
-	if (title != "") { html += "</fieldset>"; }
-	html += "</div>";
-	return html;
+		$txt .= $votar_num.' '.$r['nick'].'<br />';
 
 }
 
-function control_acceso_cambiar(name, value) {
-	$("#control_" + name + " .cfg").hide();
-	$("#control_" + name + " .cfg_" + value).show();
-}
-
-
-</script>
-
-<form>
-<span class="nucleo_acceso" data-title="tal pascual" data-name="test" data-acceso="cargo" data-cfg="6 59" data-excluir="anonimos"></span>
-<input type="submit" value="ok">
-</form>
-
-
-<select multiple="multiple" class="fancy" name="adsd">
-<option value="0">-- Choose --</option>
-<option value="1">Option 1</option>
-<option value="2">Option 2</option>
-<option value="3">Option 3</option>
-</select>
-
-
-
-';
-
-
-
-
-
-
-
+$txt .= '<hr />'.$contador;
 
 
 

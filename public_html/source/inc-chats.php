@@ -39,9 +39,13 @@ while ($r = mysql_fetch_array($result)) {
 	}
 
 	$acceso_leer = $r['acceso_leer'];
-	$acceso_escribir = $r['acceso_escribir'];
 	$acceso_cfg_leer = $r['acceso_cfg_leer'];
+
+	$acceso_escribir = $r['acceso_escribir'];
 	$acceso_cfg_escribir = $r['acceso_cfg_escribir'];
+
+	$acceso_escribir_ex = $r['acceso_escribir_ex'];
+	$acceso_cfg_escribir_ex = $r['acceso_cfg_escribir_ex'];
 }
 
 // genera array js, nombres cargos
@@ -73,6 +77,9 @@ if ($externo) {
 	$txt .= '<span class="quitar"><span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones">'._('Opciones').'</a>] [<a href="/chats/'.$_GET['a'].'/log">'._('Log').'</a>]</span><a href="/chats/">'._('Chat').'</a>: '.$titulo.'</span>';
 }
 
+$a_leer = nucleo_acceso($acceso_leer, $acceso_cfg_leer);
+$a_escribir = nucleo_acceso($acceso_escribir, $acceso_cfg_escribir);
+$a_escribir_ex = nucleo_acceso($acceso_escribir_ex, $acceso_cfg_escribir_ex);
 
 $txt .= '</h1>
 
@@ -84,21 +91,35 @@ $txt .= '</h1>
 <div id="vpc_fondo">
 <div id="vpc">
 <ul id="vpc_ul">
-<li style="margin-top:280px;color:#AAA;"><b>
-'.($acceso['leer']?'
+<li style="margin-top:600px;color:#666;">
 <img src="'.IMG.'logo/vp2.png" alt="VirtualPol" border="0" width="200" height="60" /><br />
-'.$titulo.'. Plataforma '.PAIS.'<br />
-Acceso leer: '.$acceso_leer.($acceso_cfg_leer?' [<em>'.$acceso_cfg_leer.'</em>]':'').'<br />
-Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_escribir.'</em>]':'').'<br />
-<span style="float:right;">'.date('Y-m-d H:i:s').' &nbsp;</span>Nick: '.($pol['nick']?$pol['nick']:'Anonimo').'<br />
+<span style="float:right;">'.date('Y-m-d H:i').' &nbsp;</span>
+Chat de '.PAIS.': <b>'.$titulo.'</b><br />
+
+<table>
+<tr>
+<td align="right">'._('Acceso leer').':</td>
+<td><b style="color:'.($a_leer?'blue;">'._('SI'):'red;">'._('NO')).'</b>. '.ucfirst(verbalizar_acceso($acceso_leer, $acceso_cfg_leer)).'</td>
+</tr>
+
+<tr>
+<td align="right">'._('Acceso escribir').':</td>
+'.($pol['estado']=='extranjero'?'<td><b style="color:'.($a_escribir_ex?'blue;">'._('SI'):'red;">'._('NO')).'</b>. '.ucfirst(verbalizar_acceso($acceso_escribir_ex, $acceso_cfg_escribir_ex)).'</td>':'<td><b style="color:'.($a_escribir?'blue;">'._('SI'):'red;">'._('NO')).'</b>. '.ucfirst(verbalizar_acceso($acceso_escribir, $acceso_cfg_escribir)).'</td>').'
+</tr>
+
+</table>
+
 <hr />
-':'<span style="color:red;">'.verbalizar_acceso($acceso_leer, $acceso_cfg_leer).'</span>').'
-</b></li></ul>
+
+</li>
+</ul>
 </div>
 </div>
 
 
-</div><div id="chatform">
+</div>
+
+<div id="chatform">
 <form action="" method="POST" onSubmit="return enviarmsg();">
 
 <table border="0" width="100%">
@@ -106,7 +127,10 @@ Acceso escribir: '.$acceso_escribir.($acceso_cfg_escribir?' [<em>'.$acceso_cfg_e
 
 <td width="46" align="right" valign="middle"><img id="vpc_actividad" onclick="actualizar_ahora();" src="'.IMG.'ico/punto_gris.png" width="16" height="16" title="Actualizar chat" style="margin-top:4px;" /></td>
 
-<td valign="middle">'.(isset($pol['user_ID'])?'<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%;" autofocus="autofocus" />':boton(_('¡Crea tu ciudadano para participar!'), REGISTRAR.'?p='.PAIS, false, 'large blue')).'</td>
+<td valign="middle">
+'.(isset($pol['user_ID'])?'
+<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%;" autofocus="autofocus" value="" />':boton(_('¡Crea tu ciudadano para participar!'), REGISTRAR.'?p='.PAIS, false, 'large blue')).'
+</td>
 
 <td nowrap="nowrap" valign="middle" title="Marcar para ocultar eventos del chat">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">'._('Ocultar eventos').'</label></td>
 

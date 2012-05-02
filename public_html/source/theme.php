@@ -46,6 +46,7 @@ if (isset($_GET['bg'])) {
 var _sf_startpt=(new Date()).getTime();
 IMG = '<?=IMG?>';
 p_scroll = false;
+_ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos segundos','En','Hace') AS $d) { echo '"'.$d.'":"'._($d).'",'; } ?>};
 </script>
 
 <?=$txt_header?>
@@ -145,7 +146,8 @@ p_scroll = false;
 	<div id="menu-next">
 
 <?php 
-echo '<p style="color:#999;"><b>22%</b> <a href="http://15m.virtualpol.com/foro/desarrollo/internacionalizacion-de-virtualpol-necesitamos-traductores" target="_blank" title="Expansión Internacional de VirtualPol.">Traducción VirtualPol</a></p>';
+
+if (PAIS != 'DRY') { echo '<p style="color:#999;"><b>22%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="Expansión Internacional de VirtualPol.">Traducción VirtualPol</a></p>'; }
 if (PAIS == '15M') { echo '<p style="color:#999;"><b>'.timer('2012-05-12 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="12 de Mayo: Movilización Global"><b>12M</b></a>.</p><p style="color:#999;"><b>'.timer('2012-05-15 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="15 de Mayo"><b>15M</b></a>.</p>'; }
 
 echo '<p id="palabras">';
@@ -176,7 +178,7 @@ if ((ECONOMIA) AND (substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa')) {
 	<div id="header">
 
 		<div id="header-logo">
-			<?=(ASAMBLEA?'':'<a href="/"><img src="'.IMG.'banderas/'.PAIS.'_60.gif" height="50" border="0" /></a>')?>
+			<?=(PAIS=='15M'?'':'<a href="/"><img src="'.IMG.'banderas/'.PAIS.'_60.gif" height="50" border="0" /></a>')?>
 			<span class="htxt" id="header-logo-p"><?=$pol['config']['pais_des'].', '.PAIS?></span>
 		</div>
 

@@ -331,12 +331,20 @@ switch($_GET['step']){
 				"{FINMSG}", 
 				"Si se han completado correctamente todos los pasos anteriores,".
 				" es hora de realizar algunos ajustes:<br />".
-				"1) Configure los subdominios adecuados para las plataformas.<br />".
+				"1) Configure los subdominios adecuados para las plataformas: ".
+				"hispania, 15m, mic<br />".
 				"2) Configure 'cron' para ejecutar los guiones dentro de source/cron/<br />".
 				"3) Si la instalaci&oacute;n fue correcta, elimine el directorio install/".
 				" de instalaci&oacute;n para evitar problemas de seguridad. Es en serio, ".
 				"elimina el directorio o podr&iacute;as lamentarlo." 
 		);
+		unset($_SESSION['i_domain']);
+		unset($_SESSION['i_ctmail']);
+		unset($_SESSION['i_dbname']);
+		unset($_SESSION['i_dbuser']);
+		unset($_SESSION['i_dbhost']);
+		unset($_SESSION['i_dbpass']);
+	
 		break;
 	default:
 		header("Location: ?step=0");

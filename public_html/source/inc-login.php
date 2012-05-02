@@ -113,6 +113,7 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 			sql("UPDATE LOW_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'"); 
 		} else { // BANEADO 
 			$pol['estado'] = 'kickeado';
+			$_SESSION['pol']['estado'] = 'kickeado';
 		}
 	}
 

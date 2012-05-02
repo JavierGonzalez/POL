@@ -166,7 +166,7 @@ ORDER BY time_last DESC", $link);
 
 <td width="80" align="right" nowrap="nowrap">'.timer($r2['time_last']).'</td>
 
-<td width="50" align="right" class="gris">'.$r2['version'].'v</td>
+<td width="50" align="right" class="gris" title="Versión">'.$r2['version'].'v</td>
 
 <td width="135" valign="top" style="background:#5CB3FF;">'.($r2['acceso_cfg_leer']?'<acronym title="['.$r2['acceso_cfg_leer'].']">':'').ucfirst(_($r2['acceso_leer'])).($r2['acceso_cfg_leer']?'</acronym>':'').'</td>
 

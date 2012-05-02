@@ -285,7 +285,7 @@ $txt .= '
 
 	$sc = get_supervisores_del_censo();
 
-	$result = mysql_query("SELECT ID, ID AS user_ID, nick, estado, pais, nivel, online, ref, ref_num, num_elec, voto_confianza, fecha_registro, nota, fecha_last, cargo, avatar, datos,
+	$result = mysql_query("SELECT ID, ID AS user_ID, nick, nombre, estado, pais, nivel, online, ref, ref_num, num_elec, voto_confianza, fecha_registro, nota, fecha_last, cargo, avatar, datos,
 (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas".$sql_extra."
 FROM users ".$order_by." LIMIT ".mysql_real_escape_string($p_limit), $link);
 	while($r = mysql_fetch_array($result)){
@@ -300,7 +300,7 @@ FROM users ".$order_by." LIMIT ".mysql_real_escape_string($p_limit), $link);
 <td align="right" class="gris">' . $orden++ . '</td>
 '.(ASAMBLEA?'':'<td align="right">' . $r['nivel'] . '</td>').'
 <td height="38">' . $avatar . '</td>
-<td nowrap="nowrap">'.(isset($sc[$r['ID']])?'<span style="float:right;color:red;margin-left:5px;" title="'._('Supervisor del Censo').'">'._('SC').'</span>':'').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" width="16" height="16" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
+<td nowrap="nowrap">'.(isset($sc[$r['ID']])?'<span style="float:right;color:red;margin-left:5px;" title="'._('Supervisor del Censo').'">'._('SC').'</span>':'').'<img src="'.IMG.'cargos/' . $r['cargo'] . '.gif" width="16" height="16" /> <b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b>'.(isset($r['nombre'])&&nucleo_acceso('ciudadanos')?'<br /><span style="color:grey;font-size:12px;">'.$r['nombre'].'</span>':'').'</td>
 <td align="right" nowrap="nowrap"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span></td>
 <td nowrap="nowrap">'.($pol['user_ID']&&$r['user_ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['user_ID'].'" class="votar" type="confianza" name="'.$r['user_ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
 '.(ASAMBLEA?'':'<td>' . $partido . '</td>').'

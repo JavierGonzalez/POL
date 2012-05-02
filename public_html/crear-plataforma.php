@@ -16,7 +16,7 @@ include('inc-login.php');
 if (($_GET['a'] == 'accion') AND ($pol['user_ID'] == 1)) {
 	// ACCIONES
 
-	if (($_GET['b'] == 'add') AND (entre(strlen($_POST['pais']), 2, 10)) AND (is_numeric($_POST['participacion'])) AND ($_POST['condiciones']== 'true') AND ($_POST['condiciones_extra']== 'true')) {
+	if (($_GET['b'] == 'add') AND (entre(strlen($_POST['pais']), 2, 10)) AND (is_numeric($_POST['participacion'])) AND ($_POST['condiciones_extra']== 'true')) {
 
 		mysql_query("INSERT INTO plataformas (estado, pais, asamblea, economia, user_ID, time, descripcion, participacion) 
 VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".$_POST['asamblea']."', '".$_POST['economia']."', '".$pol['user_ID']."', '".$date."', '".strip_tags($_POST['descripcion'])."', '".$_POST['participacion']."')", $link);
@@ -47,10 +47,6 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
 <tr><td colspan="3">&nbsp;</td></tr>
 
 <tr>
-<td colspan="3"><input type="checkbox" name="condiciones" value="true" /> <b>He leído y acepto las <a href="/TOS" target="_blank">condiciones de uso de VirtualPol</a></b>.</td>
-</tr>
-
-<tr>
 <td colspan="3"><input type="checkbox" name="condiciones_extra" value="true" /> <b>He leído y acepto las siguientes condiciones adicionales</b>:<br />
 <ul>
 <li>No se aprobarán nuevas plataformas que supongan una duplicación de otras ya existentes, excepto que sea necesario.</li>
@@ -63,8 +59,6 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
 </ul>
 </td>
 </tr>
-
-<tr><td colspan="3">&nbsp;</td></tr>
 
 <tr>
 <td align="right"><b>Nombre</b></td>

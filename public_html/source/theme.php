@@ -30,14 +30,15 @@ if (isset($_GET['bg'])) {
 <head>
 <title><?=$txt_title?></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<meta name="language" content="es_ES" />
+<meta name="language" content="<?=(isset($pol['config']['lang'])?$pol['config']['lang']:'es_ES')?>" />
 <meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS.' | VirtualPol')?>" />
-<link rel="shortcut icon" href="/favicon.ico" />
 
 <link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css" media="all" />
 <style type="text/css">
 #header { background:#FFF <?=$body_bg?> repeat scroll top left; }
 </style>
+
+<link rel="shortcut icon" href="/favicon.ico" />
 
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -51,6 +52,8 @@ _ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos s
 
 <?=$txt_header?>
 </head>
+
+
 <body>
 
 <div id="content-left">
@@ -147,7 +150,7 @@ _ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos s
 
 <?php 
 
-if (PAIS != 'DRY') { echo '<p style="color:#999;"><b>22%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="Expansión Internacional de VirtualPol.">Traducción VirtualPol</a></p>'; }
+if (PAIS != 'DRY') { echo '<p style="color:#999;"><b>33%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="Expansión Internacional de VirtualPol.">Traducción VirtualPol</a></p>'; }
 if (PAIS == '15M') { echo '<p style="color:#999;"><b>'.timer('2012-05-12 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="12 de Mayo: Movilización Global"><b>12M</b></a>.</p><p style="color:#999;"><b>'.timer('2012-05-15 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="15 de Mayo"><b>15M</b></a>.</p>'; }
 
 echo '<p id="palabras">';

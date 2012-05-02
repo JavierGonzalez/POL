@@ -13,17 +13,17 @@ if (($pol['user_ID']) AND ($pol['pais'] == PAIS)) {
 
 if ($_GET['a'] == 'mensajes-enviados') {
 
-	$txt_title = 'Tus mensajes enviados';
-	$txt_nav = array('/msg'=>'Mensajes Privados', 'Enviados');
-	$txt_tab = array('/msg'=>'Recibidos', '/msg/mensajes-enviados'=>'Enviados');
+	$txt_title = _('Tus mensajes enviados');
+	$txt_nav = array('/msg'=>_('Mensajes Privados'), _('Enviados'));
+	$txt_tab = array('/msg'=>_('Recibidos'), '/msg/mensajes-enviados'=>_('Enviados'));
 
-	$txt .= '<p>'.boton('Enviar mensaje', '/msg/enviar').' &nbsp; <span class="gris">Mensajes enviados por ti.</span></p>';
+	$txt .= '<p>'.boton(_('Enviar mensaje'), '/msg/enviar').' &nbsp; <span class="gris">'._('Mensajes enviados por tí').'.</span></p>';
 
-	$txt .= '<table border="0" cellspacing="0" cellpadding="0" width="100%" class="pol_table" id="msg_table">
+	$txt .= '<table border="0" cellspacing="0" cellpadding="0" width="100%" id="msg_table">
 <tr>
 <th></th>
-<th>Receptor</th>
-<th width="100%">Tu mensaje</th>
+<th>'._('Receptor').'</th>
+<th width="100%">'._('Tu mensaje').'</th>
 <th></th>
 </tr>';
 
@@ -38,21 +38,21 @@ LIMIT 50", $link);
 	while($r = mysql_fetch_array($result)){
 
 
-		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>' . crear_link($r['nick_envia']) . '</b><br /><b>' . str_replace(' ', '&nbsp;', $r['cargo']) . '</b><acronym title="' . $r['time'] . '" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top" class="rich">' . $r['text'] . '<hr class="quitar" /></td><td valign="top">' . boton('Responder', '/msg/' . strtolower($r['nick_envia'])) . '</td><td valign="top"></td></tr>' . "\n";
+		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>'.crear_link($r['nick_envia']).'</b><br /><b>'.str_replace(' ', '&nbsp;', $r['cargo']).'</b><acronym title="'.$r['time'].'" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top" class="rich">'.$r['text'].'</td><td valign="top">'.boton(_('Responder'), '/msg/'.strtolower($r['nick_envia'])).'</td><td valign="top"></td></tr>'."\n";
 	}
 
-	$txt .= '</table><p><b>(*)</b> <em>Esta p&aacute;gina est&aacute; en versi&oacute;n ALPHA, el motivo es que cabe la "extra&ntilde;a" posibilidad de que falten algunos mensajes. Esto suceder&aacute; cuando el RECEPTOR elimine tu mensaje enviado (ya que el mensaje se borra de la base de datos). Puede resultar incoherente la ausencia de algun mensaje enviado.</em></p>';
+	$txt .= '</table><p><b>(*)</b> <em>Esta página está en versión ALPHA, el motivo es que cabe la "extraña" posibilidad de que falten algunos mensajes. Esto suceder&aacute; cuando el RECEPTOR elimine tu mensaje enviado (ya que el mensaje se borra de la base de datos). Puede resultar incoherente la ausencia de algun mensaje enviado.</em></p>';
 
 } else {
-	$txt_title = $pol['msg'] . ' mensajes recibidos';
-	$txt_nav = array('/msg'=>'Mensajes Privados', 'Recibidos');
-	$txt_tab = array('/msg'=>'Recibidos', '/msg/mensajes-enviados'=>'Enviados');
+	$txt_title = $pol['msg'].' '._('mensajes recibidos');
+	$txt_nav = array('/msg'=>_('Mensajes Privados'), _('Recibidos'));
+	$txt_tab = array('/msg'=>_('Recibidos'), '/msg/mensajes-enviados'=>_('Enviados'));
 
 	$txt .= '
 
 <br />
 
-<div><button onclick="$(\'#box_msg\').toggle(\'slow\');">Escribir mensaje</button> &nbsp; <span class="gris">Tienes <b>'.$pol['msg'].'</b> mensajes sin leer</span> '.boton('Marcar todo como leído', '/accion.php?a=mensaje-leido&ID=all', false, 'small pill').'</div>';
+<div><button onclick="$(\'#box_msg\').toggle(\'slow\');">'._('Escribir mensaje').'</button> &nbsp; <span class="gris">'._('Tienes').' <b>'.$pol['msg'].'</b> '._('mensajes sin leer').'</span> '.boton(_('Marcar todo como leído'), '/accion.php?a=mensaje-leido&ID=all', false, 'small pill').'</div>';
 
 
 
@@ -78,7 +78,7 @@ WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 			$select_todoscargos .= '<option value="' . $r['cargo_ID'] . '"'.($pre_cargo==$r['cargo_ID']?' selected="selected"':'').'>'.$r['nombre'].' ('.$r['cargos_num'].')</option>';
 		}
 	}
-	$select_todoscargos .= '<option value="SC"'.($pre_cargo=='SC'?' selected="selected"':'').'>&nbsp; &nbsp; Supervisores del Censo</option>';
+	$select_todoscargos .= '<option value="SC"'.($pre_cargo=='SC'?' selected="selected"':'').'>&nbsp; &nbsp; '._('Supervisores del Censo').'</option>';
 
 	//tus cargos
 	$result = mysql_query("SELECT cargo_ID, 
@@ -132,41 +132,41 @@ function click_form(tipo) {
 
 <form action="/accion.php?a=enviar-mensaje" method="post">
 
-<p><b>Destino:</b><table border="0" style="margin-top:-15px;">
+<p><b>'._('Destino').':</b><table border="0" style="margin-top:-15px;">
 <tr onclick="click_form(\'ciudadano\');">
-<td nowrap="nowrap"><input id="radio_ciudadano" type="radio" name="para" value="ciudadano"'.(!$pre_cargo?' checked="checked"':'').' />Ciudadano:</td>
-<td nowrap="nowrap"><input id="ciudadano" tabindex="1" type="text" name="nick" value="' . $pre_nick . '" style="font-size:17px;width:300px;" /> (hasta 9 ciudadanos separados por espacios)</td>
+<td nowrap="nowrap"><input id="radio_ciudadano" type="radio" name="para" value="ciudadano"'.(!$pre_cargo?' checked="checked"':'').' />'._('Ciudadano').':</td>
+<td nowrap="nowrap"><input id="ciudadano" tabindex="1" type="text" name="nick" value="' . $pre_nick . '" style="font-size:17px;width:300px;" /> ('._('hasta').' 9 '._('ciudadanos separados por espacios').')</td>
 </tr>
 <tr onclick="click_form(\'cargos\');">
-<td nowrap="nowrap"><input id="radio_cargos" type="radio" name="para" value="cargo"'.($pre_cargo?' checked="checked"':'').' />Cargos:</td>
-<td nowrap="nowrap"><select name="cargo_ID" style="font-weight:bold;font-size:16px;"><option name="" value=""></option>'.$select_todoscargos.'</select> (envío múltiple)</td>
+<td nowrap="nowrap"><input id="radio_cargos" type="radio" name="para" value="cargo"'.($pre_cargo?' checked="checked"':'').' />'._('Cargos').':</td>
+<td nowrap="nowrap"><select name="cargo_ID" style="font-weight:bold;font-size:16px;"><option name="" value=""></option>'.$select_todoscargos.'</select> ('._('envío múltiple').')</td>
 </tr>
 
 '.(isset($select_grupos)?'
 
 <tr onclick="click_form(\'grupos\');">
-<td><input id="radio_grupos" type="radio" name="para" value="grupos"'.($pre_grupos?' checked="checked"':'').' />Grupos:</td>
+<td><input id="radio_grupos" type="radio" name="para" value="grupos"'.($pre_grupos?' checked="checked"':'').' />'._('Grupos').':</td>
 <td><select name="grupo_ID" style="font-weight:bold;font-size:16px;">
 <option name="" value=""></option>
 '.$select_grupos.'
-</select> (env&iacute;o m&uacute;ltiple)</td>
+</select> ('._('envío múltiple').')</td>
 </tr>
 
 ':'').'
 
 
 <tr>
-'.(ECONOMIA?'<td colspan="2" nowrap="nowrap"><input id="radio_todos" type="radio" name="para" value="todos"' . $disabled_todos . ' onclick="click_form(\'todos\');" />Mensaje Global a todos los Ciudadanos (' . $pol['config']['info_censo'] . '). ' . pols($pol['config']['pols_mensajetodos']) . ' '.MONEDA.'.</td>':'').'
+'.(ECONOMIA?'<td colspan="2" nowrap="nowrap"><input id="radio_todos" type="radio" name="para" value="todos"' . $disabled_todos . ' onclick="click_form(\'todos\');" />'._('Mensaje global').' (' . $pol['config']['info_censo'] . '). ' . pols($pol['config']['pols_mensajetodos']) . ' '.MONEDA.'.</td>':'').'
 </tr>
 </table>
 </p>
 
-<p><b>Mensaje:</b><br />
+<p><b>'._('Mensaje').':</b><br />
 <textarea tabindex="2" name="text" style="width:550px;height:200px;"></textarea></p>
 
 <input type="hidden" name="calidad" value="0" />
 
-<p>'.boton('Enviar', 'submit', false, 'large blue').' &nbsp; <input type="checkbox" name="urgente" value="1" id="urgente" /> Env&iacute;o urgente. (el receptor recibir&aacute; un email)'.(ECONOMIA?' '.pols($pol['config']['pols_mensajeurgente']) . ' '.MONEDA:'').'</form></p>
+<p>'.boton(_('Enviar'), 'submit', false, 'large blue').' &nbsp; <input type="checkbox" name="urgente" value="1" id="urgente" /> '._('Envío urgente').'. ('._('el receptor recibirá un email').')'.(ECONOMIA?' '.pols($pol['config']['pols_mensajeurgente']) . ' '.MONEDA:'').'</form></p>
 <hr />
 <br /><br />
 </div>
@@ -175,9 +175,9 @@ function click_form(tipo) {
 
 <table border="0" cellspacing="0" cellpadding="4">
 <tr>
-<th colspan="2"><span style="float:right;">Emisor &nbsp; &nbsp;</span>
+<th colspan="2"><span style="float:right;">'._('Emisor').' &nbsp; &nbsp;</span>
 </th>
-<th>Mensaje</th>
+<th>'._('Mensaje').'</th>
 <th></th>
 </tr>';
 
@@ -205,13 +205,13 @@ LIMIT 100", $link);
 		$txt .= '<tr'.$fondo.'>
 <td valign="top">'.$boton.'</td>
 <td valign="top" align="right" nowrap="nowrap"><b>'.crear_link($r['nick_envia']).'</b>'.$cargo.'<br /><acronym title="'.$r['time'].'" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td>
-<td valign="top" class="rich">'.$r['text'].'<hr class="quitar" /></td>
-<td valign="top"><button onclick="$(\'#ciudadano\').val(\''.$r['nick_envia'].'\');$(\'#box_msg\').toggle(\'slow\');">Responder</button></td>
+<td valign="top" class="rich">'.$r['text'].'</td>
+<td valign="top"><button onclick="$(\'#ciudadano\').val(\''.$r['nick_envia'].'\');$(\'#box_msg\').toggle(\'slow\');">'._('Responder').'</button></td>
 <td valign="top">'.boton('X', '/accion.php?a=borrar-mensaje&ID='.$r['ID'], false, 'small red').'</td>
 </tr>'."\n";
 	}
 
-	if (!$boton) { $txt .= '<tr><td colspan="5"><b>No tienes ning&uacute;n mensaje.</b></td></tr>'; }
+	if (!$boton) { $txt .= '<tr><td colspan="5"><b>'._('No tienes ningún mensaje').'.</b></td></tr>'; }
 
 	$txt .= '</table>';
 

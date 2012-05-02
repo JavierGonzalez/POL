@@ -214,16 +214,21 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 <span id="tipo_voto">
 <b>'._('Tipo de voto').'</b>: 
 <select name="tipo_voto">
-<option value="estandar"'.$sel['tipo_voto']['estandar'].'>'._('Una elección (estándar)').'</option>
-<option value="multiple"'.$sel['tipo_voto']['multiple'].'>'._('Mùltiple').'</option>
 
-<optgroup label="Preferencial">
+<optgroup label="'._('Voto único').'">
+<option value="estandar"'.$sel['tipo_voto']['estandar'].'>'._('Una elección').'</option>
+</optgroup>
+
+<optgroup label="'._('Voto aprobatorio').'">
+<option value="multiple"'.$sel['tipo_voto']['multiple'].'>'._('Múltiple').'</option>
+</optgroup>
+
+<optgroup label="'._('Voto preferencial').'">
 <option value="3puntos"'.$sel['tipo_voto']['3puntos'].'>3 '._('votos').' (6 '._('puntos').')</option>
 <option value="5puntos"'.$sel['tipo_voto']['5puntos'].'>5 '._('votos').' (15 '._('puntos').')</option>
 <option value="8puntos"'.$sel['tipo_voto']['8puntos'].'>8 '._('votos').' (36 '._('puntos').')</option>
 </optgroup>
 </select></span>
-
 
 <br />
 <span id="privacidad">
@@ -235,7 +240,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 
 <br />
 
-<b>'._('Orden de opciones').':</b> <input type="checkbox" name="aleatorio" value="true"'.($edit['aleatorio']=='true'?' checked="checked"':'').' /> '._('Aleatorio').'.
+<b>'._('Orden de opciones').'</b>: <input type="checkbox" name="aleatorio" value="true"'.($edit['aleatorio']=='true'?' checked="checked"':'').' /> '._('Aleatorio').'.
 </span>
 
 
@@ -244,9 +249,9 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 
 </td><td valign="top" align="right">
 
-<fieldset><legend>'._('Acceso').'</legend>
+<fieldset><legend>'._('Accesos').'</legend>
 
-<fieldset><legend>'._('Para poder votar').'</legend>
+<fieldset><legend>'._('Votar').'</legend>
 <p>
 <select name="acceso_votar">';
 
@@ -264,7 +269,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 </fieldset>
 
 
-<fieldset><legend>'._('Para ver votación').'</legend>
+<fieldset><legend>'._('Ver votación').'</legend>
 <p>
 <select name="acceso_ver">';
 

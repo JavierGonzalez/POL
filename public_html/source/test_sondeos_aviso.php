@@ -17,7 +17,7 @@ if (false) {
 	evento_chat('<b>[#] Comienzo de envio de emails</b> de aviso de votaciones.');
 	
 	$emails_enviados = 0;
-	$result = mysql_query("SELECT ID, nick, email FROM users WHERE estado = 'ciudadano' AND email != '' ORDER BY fecha_registro ASC LIMIT 1000000", $link);
+	$result = mysql_query("SELECT ID, nick, email FROM users WHERE estado = 'ciudadano' AND pais = '15M' AND email != '' ORDER BY fecha_registro ASC LIMIT 1000000", $link);
 	while($r = mysql_fetch_array($result)) {
 
 		$txt_votaciones = '';
@@ -25,7 +25,7 @@ if (false) {
 		$result2 = mysql_query("SELECT ID, pais, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$r['ID']."' LIMIT 1) AS ha_votado
 FROM votacion
-WHERE estado = 'ok' AND pais = '15M' AND acceso_votar IN ('ciudadanos_global', 'ciudadanos') AND acceso_ver IN ('ciudadanos_global', 'ciudadanos')
+WHERE estado = 'ok' AND pais = '15M' AND acceso_votar IN ('ciudadanos_global', 'ciudadanos') AND acceso_ver IN ('ciudadanos_global', 'ciudadanos', 'anonimos')
 ORDER BY num DESC", $link);
 		while($r2 = mysql_fetch_array($result2)) {
 			if (!$r2['ha_votado']) {

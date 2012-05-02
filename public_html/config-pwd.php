@@ -8,87 +8,45 @@
 */
 
 
-// INICIALIZACION
-date_default_timezone_set('Europe/Madrid');
-define('RAIZ', dirname(__FILE__).'/');
-include(RAIZ.'config-pwd.php');						// Passwords y claves
-include(RAIZ.'source/inc-functions.php');			// Funciones basicas
-$link = conectar();									// Conecta MySQL
-$pais = explodear('.', $_SERVER['HTTP_HOST'], 0);
+function conectar($nodie=false) { 
+// nodie=false -> La instalacion hace include 
+// de este fichero de configuracion una vez 
+// modificado para comprobar 100% que ha sido 
+// satisfactoria la configuracion y la base
+// de datos funciona. Por esto se hace
+// necesario evitar que la ejecucion muera
+// con un exit; si la conexion no se
+// realiza. De este modo conectar(true)
+// evitara que la ejecucion termine con exit;
+// Si no se especifica nada como parametro
+// seguir'a funcionando como hasta ahora.
 
+	$mysql_db = '...';
+	$mysql_user = '...';
+	$mysql_pass = '...';
+	$mysql_host = '...';
 
-// LOAD CONFIG
-$result = mysql_unbuffered_query("SELECT dato, valor FROM config WHERE pais = '".escape($pais)."' AND autoload = 'si'");
-while ($r = r($result)) { 
-	switch ($r['dato']) {
-		case 'PAIS': define('PAIS', $r['valor']); break;
-		case 'ASAMBLEA': case 'ECONOMIA':  define($r['dato'], ($r['valor']=='true'?true:false)); break;
-
-		case 'acceso': 
-			foreach(explode('|', $r['valor']) AS $item) {
-				$elem = explode(';', $item);
-				$vp['acceso'][$elem[0]] = array(explodear(':', $elem[1], 0), explodear(':', $elem[1], 1));
-			}
-			break;
-
-		default: $pol['config'][$r['dato']] = $r['valor']; 
-	} 
+	$error_msg = '<h1>MySQL Error</h1><p>Lo siento, la base de datos no funciona temporalmente.</p>';
+	if (!($l=@mysql_connect($mysql_host, $mysql_user, $mysql_pass))) { echo $error_msg; if(!$nodie){exit;} }
+	if (!@mysql_select_db($mysql_db, $l)) { echo $error_msg; if(!$nodie){exit;} }
+	mysql_query("SET NAMES 'utf8'");
+	return $l;
 }
 
-// LENGUAJES ACTIVADOS
-$vp['langs'] = array(
-'es_ES'=>'Español',
-'en_US'=>'English (30%)',
-'ca_ES'=>'Català (30%)',
-'eu'=>'Euskera (30%)',
-'gl_ES'=>'Galego (30%)',
-'de_DE'=>'Deutsch (30%)',
+define('CLAVE', '...'); // clave de coockie (cambiar en caso de robo de claves md5)
+define('CLAVE_SHA', '...'); // elemento concatenado a la contraseña para generar una clave en SHA256, guardado en el campo 'pass2' en la tabla 'users' (si se cambia se tendrán que resetear las claves)
+define('CLAVE_DNIE', '...');
+define('CLAVE_API_TRACTIS', '...'); 
+define('CLAVE_API_ETHERPAD', '...'); 
+
+
+$twitter_key = array(
+'consumer_key'    => '...',
+'consumer_secret' => '...',
+'user_token'      => '...',
+'user_secret'     => '...',
 );
 
-// CONFIG PLATAFORMAS (pendiente de desmantelar)
-$vp['paises'] = array('15M', 'Hispania', 'DRY', 'MIC'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
-$vp['paises_chat'] = array(''=>4, 'VP'=>4, '15M'=>5, 'Hispania'=>6, 'MIC'=>7, 'DRY'=>1);
-$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'MIC'=>'#FFD7D7', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'DRY' => '#FBDB03', 'www'=>'#eeeeee');
 
-
-//CONFIG DOMAIN, WITHOUT WWW
-define('DOMAIN', 'virtualpol.com');
-
-switch ($pais) { 
-	case '15m': break;
-	case 'hispania': break;
-	case 'mic': break;
-	case 'dry': break;
-
-	// PLATAFORMAS INACTIVAS
-	case 'pol':			define('PAIS', 'POL'); break;
-	case 'vulcan':		define('PAIS', 'Vulcan'); break;
-	case 'atlantis':	define('PAIS', 'Atlantis'); break;
-	case 'vp':			define('PAIS', 'VP'); break;
-	
-	case 'www': case '': case 'virtualpol': define('PAIS', 'Ninguno'); break; 
-	default: header('HTTP/1.1 301 Moved Permanently'); header('Location: http://'.DOMAIN); exit;
-}
-
-
-// CONFIG
-//define('DOMAIN', 'virtualpol.com');
-define('SQL', strtolower(PAIS).'_');
-define('CONTACTO_EMAIL', 'desarrollo@virtualpol.com');
-define('USERCOOKIE', '.'.DOMAIN);
-define('HOST', $_SERVER['HTTP_HOST']);
-define('VOTO_CONFIANZA_MAX', 50); // numero maximo de votos de confianza emitibles
-$datos_perfil = array('Blog', 'Twitter', 'Facebook', 'Google+', '', 'Menéame');
-$columnas = 14; $filas = 14; // Dimensiones mapa
-
-// URLS (SSL, IMG, REGISTRAR)
-define('REGISTRAR', 'https://'.DOMAIN.'/registrar/');
-define('SSL_URL', 'https://'.DOMAIN.'/'); // SSL_URL | http://www.virtualpol.com/ = https://virtualpol.com/
-if ($_SERVER['HTTPS']) {
-	define('IMG', 'https://'.DOMAIN.'/img/');
-} else {
-	define('IMG', 'http://www.'.DOMAIN.'/img/');;
-}
-
-define('MONEDA', '<img src="'.IMG.'varios/m.gif" border="0" />');
+define('DEV', '');
 ?>

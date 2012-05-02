@@ -50,6 +50,9 @@ $vp['paises'] = array('15M', 'Hispania', 'MIC'); // PLATAFORMAS ACTIVAS (TAMBIEN
 $vp['paises_chat'] = array(''=>4, 'VP'=>4, '15M'=>5, 'Hispania'=>6, 'MIC'=>7);
 $vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'MIC'=>'#FFD7D7', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'www'=>'#eeeeee');
 
+//CONFIG DOMAIN, WITHOUT WWW
+define('DOMAIN', 'virtualpol.com');
+
 switch ($pais) { 
 	case '15m': break;
 	case 'hispania': break;
@@ -62,12 +65,12 @@ switch ($pais) {
 	case 'vp':			define('PAIS', 'VP'); break;
 	
 	case 'www': case '': case 'virtualpol': define('PAIS', 'Ninguno'); break; 
-	default: header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com'); exit;
+	default: header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.'.DOMAIN); exit;
 }
 
 
 // CONFIG
-define('DOMAIN', 'virtualpol.com');
+//define('DOMAIN', 'virtualpol.com');
 define('SQL', strtolower(PAIS).'_');
 define('CONTACTO_EMAIL', 'desarrollo@virtualpol.com');
 define('USERCOOKIE', '.'.DOMAIN);

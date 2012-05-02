@@ -204,9 +204,6 @@ switch($_GET['step']){
 							"pol_foros_msg",
 							"pujas",
 							"referencias",
-							"rssv_foros",
-							"rssv_foros_hilos",
-							"rssv_foros_msg",
 							"stats",
 							"transacciones",
 							"users",
@@ -218,7 +215,14 @@ switch($_GET['step']){
 							"vp_foros_msg",
 							"vulcan_foros",
 							"vulcan_foros_hilos",
-							"vulcan_foros_msg"
+							"vulcan_foros_msg",
+							"dry_foros",
+							"dry_foros_hilos",
+							"dry_foros_msg",
+							"mic_foros",
+							"mic_foros_hilos",
+							"mic_foros_msg"
+
 						);
 				$runinfo.="<br /><strong>Eliminando tablas:</strong><br />";
 				foreach( $vp_tables as $vp_table ){

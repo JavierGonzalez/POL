@@ -49,7 +49,7 @@ switch($_GET['step']){
 				else
 				{
 					mysql_close($link);
-					$conf_pwd=file_get_contents("../config-pwd-sample.php");
+					$conf_pwd=file_get_contents("res/config-pwd.php");
 					$conf_pwd=str_replace(
 						array(
 							'$mysql_host = \'...\';',
@@ -74,7 +74,7 @@ switch($_GET['step']){
 					else
 					{
 						//aqui escribimos config.php
-						$conf = file_get_contents("../config-sample.php");
+						$conf = file_get_contents("res/config-sample.php");
 						$conf = str_replace(
 								array(
 									'define(\'DOMAIN\', \'virtualpol.com\');',
@@ -103,7 +103,7 @@ switch($_GET['step']){
 							{
 								$theme->addvar(
 									"{ERROR}", 
-									"Error: Parece que los valores de conexi&oacute;n".
+									"Error: Parece que los valores de conexión".
 									" no se han escrito correctamente ".mysql_error()
 								);
 							}
@@ -157,7 +157,7 @@ switch($_GET['step']){
 		$link = conectar(true);
 		if( !$link ){
 			$theme->addvar(
-				"{ERROR}", "- Error: Parece que los valores de conexi&oacute;n".
+				"{ERROR}", "- Error: Parece que los valores de conexión".
 				" no se han escrito correctamente ".mysql_error()
 			);
 		}else{
@@ -291,7 +291,7 @@ switch($_GET['step']){
 						"{INCIDENCIAS}",
 						"Se encontraron algunas incidencias ($incidencias)".
 						" instalando la base de datos. Puede continuar con".
-						" la instalaci&oacute;n pero no se asegura el correcto".
+						" la instalación pero no se asegura el correcto".
 						" funcionamiento del sistema."
 					);
 				}	
@@ -308,8 +308,8 @@ switch($_GET['step']){
 						"{ERROR}", 
 						"Parece que su base de datos contiene algunas".
 						" tablas. Si continua, las tablas de VirtualPol".
-						" ser&aacute;n reseteadas. Perder&aacute; todos".
-						" los datos almacenados. &iexcl;Haga Backup!
+						" serán reseteadas. Perderá todos".
+						" los datos almacenados. ¡Haga Backup!
 					");
 				}
 
@@ -334,9 +334,9 @@ switch($_GET['step']){
 				"1) Configure los subdominios adecuados para las plataformas: ".
 				"hispania, 15m, mic<br />".
 				"2) Configure 'cron' para ejecutar los guiones dentro de source/cron/<br />".
-				"3) Si la instalaci&oacute;n fue correcta, elimine el directorio install/".
-				" de instalaci&oacute;n para evitar problemas de seguridad. Es en serio, ".
-				"elimina el directorio o podr&iacute;as lamentarlo." 
+				"3) Si la instalación fue correcta, elimine el directorio install/".
+				" de instalación para evitar problemas de seguridad. Es en serio, ".
+				"elimina el directorio o podrías lamentarlo." 
 		);
 		unset($_SESSION['i_domain']);
 		unset($_SESSION['i_ctmail']);

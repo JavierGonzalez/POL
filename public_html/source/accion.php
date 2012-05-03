@@ -61,7 +61,7 @@ case 'perfil':
 	} elseif ($_GET['b'] == 'nombre') {
 		sql("UPDATE users SET nombre = '".strip_tags($_POST['nombre'])."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	}
-	$refer_url = 'perfil/'.$pol['nick'];
+	$refer_url = 'perfil/editar';
 	break;
 
 case 'aceptar-condiciones':
@@ -454,12 +454,12 @@ case 'avatar':
 		unlink($img_root.$pol['user_ID'].'_40.jpg');
 		unlink($img_root.$pol['user_ID'].'_80.jpg');
 		sql("UPDATE users SET avatar = 'false' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
-		$refer_url = 'perfil/'.strtolower($pol['nick']).'/';
+		$refer_url = 'perfil/editar';
 	} elseif (($_GET['b'] == 'desc') AND (strlen($_POST['desc']) <= 2000)) {
 		$_POST['desc'] = gen_text($_POST['desc'], 'plain');
 		sql("UPDATE users SET text = '".$_POST['desc']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	}
-	$refer_url = 'perfil/'.strtolower($pol['nick']);
+	$refer_url = 'perfil/editar';
 	break;
 
 
@@ -950,7 +950,7 @@ case 'api':
 	exit; // CANCELADO HASTA RE ACTIVACION
 	if (($pol['user_ID']) AND ($_GET['b'] == 'gen_pass')) {
 		sql("UPDATE users SET api_pass = '".substr(md5(mt_rand(1000000000,9999999999)), 0, 12)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
-		$refer_url = 'perfil/'.strtolower($pol['nick']);
+		$refer_url = 'perfil/editar';
 	}
 	break;
 
@@ -1943,7 +1943,7 @@ case 'afiliarse':
 		sql("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."'");
 		evento_log('Afiliado a #'.$_POST['partido']);
 	}
-	$refer_url = 'perfil/'.$pol['nick'];
+	$refer_url = 'perfil/editar';
 	break;
 
 case 'crear-partido':

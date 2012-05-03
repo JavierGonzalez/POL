@@ -9,6 +9,9 @@
 
 include('inc-login.php');
 
+if (($_GET['a'] == 'editar') AND (isset($pol['nick']))) { redirect('/perfil/'.$pol['nick'].'/editar'); }
+if ((!$_GET['a']) AND (isset($pol['nick']))) { redirect('/perfil/'.$pol['nick']); }
+
 $result = mysql_query("SELECT *, 
 (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS partido,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
@@ -118,14 +121,14 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 
 
 
-<div id="editarperfil" style="display:none;">
+<div id="editarperfil"'.($_GET['b']=='editar'?'':' style="display:none;"').'>
 
 <fieldset><legend>'._('Editar perfil').'</legend>
 
 
 <fieldset><legend>'._('Tu nombre').'</legend>
 <form action="/accion.php?a=perfil&b=nombre" method="post">
-<p>Introduce tu nombre y apellidos. No es obligatorio, pero si decides aportar esta información debe ser veráz. Esta información será pública para ciudadanos de tu plataforma.<br />
+<p>Introduce tu nombre y apellidos. No es obligatorio, pero debe ser veráz. Será visible para los ciudadanos de '.PAIS.'.<br />
 <input type="text" name="nombre" value="'.$r['nombre'].'" size="40" maxlength="90"  />
  '.boton(_('Guardar'), 'submit', false, 'blue').'
 </form></p>
@@ -226,9 +229,27 @@ if (!ASAMBLEA) {
 }
 
 $txt .= '
-<form action="/accion.php?a=perfil&b=datos" method="POST">
 
-<fieldset><legend>'._('Tus redes sociales').'</legend>
+
+
+
+<fieldset><legend>'._('Biografía').'</legend>
+<form action="/accion.php?a=avatar&b=desc" method="post">
+<p><textarea name="desc" id="desc_area" style="width:500px;height:150px;">'.strip_tags($r['text'], '<b>').'</textarea><br />
+'.boton(_('Guardar'), 'submit', false, 'blue').' (<span id="desc_limit" style="color:blue;">'.$text_limit.'</span> '._('caracteres').')
+</form></p>
+</fieldset>
+
+
+'.(!isset($r['x'])?'
+<fieldset><legend>'._('Geolocalización').'</legend>
+<p>'.boton(_('Sitúate en el mapa de usuarios'), '/geolocalizacion/fijar', false, 'large blue').'</p>
+</fieldset>
+':'').'
+
+
+<fieldset><legend>'._('Tus perfiles en otras redes sociales').'</legend>
+<form action="/accion.php?a=perfil&b=datos" method="POST">
 <table border="0">
 <tr>
 <td colspan="2"><b>'._('Perfiles').'</b></td>
@@ -246,17 +267,21 @@ foreach ($datos_perfil AS $id => $dato) {
 }
 
 $txt .= '
-<tr><td colspan="2"></td><td><input type="submit" value="'._('Guardar').'" /></td></tr>
-</table></form>
+<tr><td colspan="2"></td><td>'.boton(_('Guardar'), 'submit', false, 'blue').'</td></tr>
+</table>
+</form>
 </fieldset>
 
 
-<fieldset><legend>'._('Biografía').'</legend>
-<form action="/accion.php?a=avatar&b=desc" method="post">
-<p>'._('Espacio para lo que quieras').': (<span id="desc_limit" style="color:blue;">'.$text_limit.'</span> '._('caracteres').')<br />
-<textarea name="desc" id="desc_area" style="width:500px;height:150px;">'.strip_tags($r['text'], '<b>').'</textarea> <input value="'._('Guardar').'" type="submit" />
-</form></p>
-</fieldset>';
+<fieldset><legend>Avatar ('._('tu foto').')</legend>
+<form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">
+<p><input name="avatar" type="file" /> '.boton(_('Guardar'), 'submit', false, 'blue').' | ' . boton(_('Borrar avatar'), '/accion.php?a=avatar&b=borrar', false, 'red') . ' (jpg, max 1mb)</p>
+</form>
+</fieldset>
+
+
+
+';
 
 
 // numero de votos emitidos
@@ -278,13 +303,7 @@ while($r2 = mysql_fetch_array($result2)) {
 	$txt .= crear_link($r2['nick'], 'nick', null, $r2['pais']) . ' ';
 }
 
-$txt .= '</p></fieldset>
-
-<fieldset><legend>Avatar ('._('tu foto').')</legend>
-<form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">
-<p>Avatar: <input name="avatar" type="file" /><input type="submit" value="'._('Guardar avatar').'" /> | ' . boton(_('Borrar avatar'), '/accion.php?a=avatar&b=borrar') . ' (jpg, max 1mb)</p>
-</form>
-</fieldset>';
+$txt .= '</p></fieldset>';
 
 
 $txt .= '</fieldset></div>';

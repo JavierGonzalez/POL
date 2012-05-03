@@ -53,7 +53,7 @@ function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 					break;
 
 				case 'select_partidos':
-					$f .= '<li><b>Partidos:</b><br /><select name="partido"><option value="0">Ninguno</option>';
+					$f .= '<li><b>'._('Partidos').':</b><br /><select name="partido"><option value="0">'._('Ninguno').'</option>';
 					
 					$result = mysql_query("SELECT siglas, ID FROM partidos WHERE pais = '".PAIS."' AND estado = 'ok' ORDER BY siglas ASC", $link);
 					while($row = mysql_fetch_array($result)){
@@ -65,9 +65,9 @@ function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 					break;
 
 				case 'select_nivel':
-					$f .= '<li><b>Nivel de acceso:</b> Selecciona el nivel minimo necesario para editar el documento.<br />';
+					$f .= '<li><b>'._('Nivel de acceso').':</b><br />';
 				
-					$f .= '<select name="nivel"><option value="1">&nbsp;1 &nbsp; Ciudadano</option>';
+					$f .= '<select name="nivel"><option value="1">&nbsp;1 &nbsp; '._('Ciudadano').'</option>';
 					if ($pol['nivel'] > 1) {
 						$result = sql("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND asigna != '-1' AND nivel <= '".$pol['nivel']."' ORDER BY nivel ASC", $link);
 						while($row = r($result)){
@@ -79,25 +79,25 @@ function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 					break;
 
 				case 'select_cat':
-					$f .= '<li><b>Categor&iacute;a:</b><br />' . form_select_cat('docs') . '</li>' . "\n";
+					$f .= '<li><b>'._('Categoría').':</b><br />' . form_select_cat('docs') . '</li>' . "\n";
 					break;
 
 
 				case 'selectexpire':
-					$f .= '<li><b>Duraci&oacute;n:</b> tiempo de expiraci&oacute;n de la expulsi&oacute;n.<br />
+					$f .= '<li><b>'._('Duración').':</b>.<br />
 <select name="expire">
-<option value="60">1 minuto</option>
-<option value="120">2 minutos</option>
-<option value="300">5 minutos</option>
-<option value="600">10 minutos</option>
-<option value="900">15 minutos</option>
-<option value="1800">30 minutos</option>
-<option value="3600">1 hora</option>
-<option value="18000">5 horas</option>
-<option value="86400">1 d&iacute;a</option>
-<option value="259200">3 d&iacute;as</option>
-<option value="518400">6 d&iacute;as</option>
-<option value="777600">9 d&iacute;as</option>
+<option value="60">60 '._('segundos').'</option>
+<option value="120">2 '._('minutos').'</option>
+<option value="300">5 '._('minutos').'</option>
+<option value="600">10 '._('minutos').'</option>
+<option value="900">15 '._('minutos').'</option>
+<option value="1800">30 '._('minutos').'</option>
+<option value="3600">60 '._('minutos').'</option>
+<option value="18000">5 '._('horas').'</option>
+<option value="86400">24 '._('horas').'</option>
+<option value="259200">3 '._('días').'</option>
+<option value="518400">6 '._('días').'</option>
+<option value="777600">9 '._('días').'</option>
 </select></li>' . "\n";
 					break;
 
@@ -131,22 +131,20 @@ case 'crear-documento':
 	array('type'=>'hidden', 'name'=>'acceso_escribir', 'value'=>'privado'),
 	array('type'=>'hidden', 'name'=>'acceso_cfg_leer', 'value'=>''),
 	array('type'=>'hidden', 'name'=>'acceso_cfg_escribir', 'value'=>strtolower($pol['nick'])),
-	array('type'=>'text', 'name'=>'title', 'size'=>'60', 'maxlegth'=>'200', 'nombre'=>'T&iacute;tulo', 'desc'=>'Frase &uacute;nica a modo de titular del documento.'),
+	array('type'=>'text', 'name'=>'title', 'size'=>'60', 'maxlegth'=>'200', 'nombre'=>'Título', 'desc'=>'Frase &uacute;nica a modo de titular del documento.'),
 	array('type'=>'hidden', 'name'=>'text', 'value'=>''),
 	);
-	$txt .= polform($_GET['a'], $pol_form, 'Crear documento');
+	$txt .= polform($_GET['a'], $pol_form, _('Crear documento'));
 
 
 	break;
 
-case 'solicitar-ciudadania':
-	header('Location: '.REGISTRAR); exit;
-	break;
+case 'solicitar-ciudadania': redirect(REGISTRAR); break;
 
 
 case 'afiliarse':
 
-	$txt .= '<p>Afiliaci&oacute;n partidos:</p>';
+	$txt .= '<p>'._('Afiliación').' '._('partidos').':</p>';
 
 	$pol_form = array(
 	array('type'=>'select_partidos', 'partido'=>$_GET['b']),
@@ -159,30 +157,24 @@ case 'afiliarse':
 
 case 'crear-partido':
 
-	$txt .= '<h2>Crear partido:</h2>';
+	$txt .= '<h2>'._('Crear partido').':</h2>';
 
 	$pol_form = array(
 	array('type'=>'text', 'name'=>'siglas', 'value'=>'', 'size'=>'6', 'maxlegth'=>'10', 'nombre'=>'Siglas', 'desc'=>'Escribe entre 2 y 10 letras may&uacute;sculas, guion permitido.'),
 	array('type'=>'text', 'name'=>'nombre', 'value'=>'', 'size'=>'', 'maxlegth'=>'40', 'nombre'=>'Nombre', 'desc'=>'Frase a modo de nombre que concuerda con las siglas anteriormente dadas.'),
 	array('type'=>'textrico', 'name'=>'descripcion', 'size'=>'10', 'nombre'=>'Introducci&oacute;n'),
 	);
-	$txt .= polform($_GET['a'], $pol_form, 'Crear partido');
+	$txt .= polform($_GET['a'], $pol_form, _('Crear partido'));
 
 
 	break;
 
 
 
-
-default: header('Location: http://'.HOST.'/');
+default: redirect('http://'.HOST.'/');
 }
 
 
-
-
-
-
 //THEME
-if (!$txt_title) { $txt_title = 'Formulario'; }
 include('theme.php');
 ?>

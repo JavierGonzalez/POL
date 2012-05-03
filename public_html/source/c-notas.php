@@ -9,31 +9,26 @@
 
 include('inc-login.php');
 
-/*
-pol_foros			(`ID` `url` `title` `descripcion` `acceso` `time` `estado`)
-pol_foros_hilos		(`ID` `sub_ID``url` `user_ID` `title` `time` `time_last` `text` `cargo` `num`)
-pol_foros_msg		(`ID``hilo_ID` `user_ID` `time` `text` `cargo`)
-*/
 
 if ($_GET['a'] == 'mmm') {
 
 } else {						// NOTAS HOME
-	$txt_title = 'Notas';
-	$txt_nav = array('/notas'=>'Notas');
+	$txt_title = _('Notas');
+	$txt_nav = array('/notas'=>_('Notas'));
 
 	$notame_max = 160;			// Restaurados los 160 caracteres
 
 	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."foros_msg WHERE hilo_ID = '-1'", $link);
 	while($row = mysql_fetch_array($result)) { $notas_num = $row['num']; }
 
-	$txt .= '<h1>Notas ' . $notas_num . ' (<a href="/notas/">Actualizar</a>)</h1>
+	$txt .= '<h1>'._('Notas').' '.$notas_num.' (<a href="/notas">'._('Actualizar').'</a>)</h1>
 
 <br />
 
 
 <table border="0" cellpadding="0" width="700" cellspacing="5" class="pol_table">';
 
-if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { //eliminada limitacion a extranjeros
+if ($pol['estado'] == 'ciudadano') { //eliminada limitacion a extranjeros
 	$txt .= '
 <form action="/accion.php?a=foro&b=reply" method="post">
 <input type="hidden" name="subforo" value="-1"  />
@@ -42,7 +37,7 @@ if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) { //
 <input type="hidden" name="encalidad" value="0"  />
 
 <tr>
-<td valign="top" align="right"><input id="notas_boton" value="Enviar" disabled="disabled" type="submit" style="padding:5px;" /><br /><span id="notas_limit" style="font-weight:bold;font-size:24px;"><span style="color:blue;">' . $notame_max . '</span></span></td>
+<td valign="top" align="right"><input id="notas_boton" value="'._('Enviar').'" disabled="disabled" type="submit" style="padding:5px;" /><br /><span id="notas_limit" style="font-weight:bold;font-size:24px;"><span style="color:blue;">' . $notame_max . '</span></span></td>
 <td class="amarillo" colspan="2">
 <input type="text" id="notas_msg" name="text" autocomplete="off" style="color:green;font-weight:bold;padding:15px 0 15px 0;width:700px;" />
 </td>
@@ -119,7 +114,7 @@ window.onload = function(){
 
 
 //THEME
-$txt_title = 'Notas - Tablon de anuncios';
+$txt_title = _('Notas');
 $txt_menu = 'comu';
 include('theme.php');
 ?>

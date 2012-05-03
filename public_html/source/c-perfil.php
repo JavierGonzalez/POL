@@ -14,29 +14,29 @@ $result = mysql_query("SELECT *,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
 FROM users 
-WHERE nick = '" . $_GET['a'] . "'
+WHERE nick = '".$_GET['a']."'
 LIMIT 1", $link);
 while($r = mysql_fetch_array($result)){
 
 	$user_ID = $r['ID'];
 	if ((PAIS != $r['pais']) AND ($r['estado'] == 'ciudadano') AND ($r['pais'] != 'ninguno')) {
-		header('HTTP/1.1 301 Moved Permanently'); header('Location: http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick']); exit;
+		redirect('http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick']);
 	} elseif ($user_ID) { //nick existe
 
 		$nick = $r['nick'];
-		if ($r['avatar'] == 'true') { $p_avatar = '<span width="120" height="120"><img src="'.IMG.'a/' . $r['ID'] . '.jpg" alt="'.$nick.'" /></span>'; }
+		if ($r['avatar'] == 'true') { $p_avatar = '<span width="120" height="120"><img src="'.IMG.'a/'.$r['ID'].'.jpg" alt="'.$nick.'" /></span>'; }
 
 		$extras = '';
 		if (nucleo_acceso('supervisores_censo')) {
 	
 			$extras = '
 <tr>
-<td colspan="2"><div style="float:right;">'.boton('Expulsar', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/control/expulsiones/expulsar/'.$r['nick'], false, 'red').'</div>('.$r['ID'].', <span title="'.$r['avatar_localdir'].'" style="font-size:12px;">'.$r['email'].'</span>, '.num($r['visitas']).' v, '.num($r['paginas']).' pv,  <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-30,30)).'">'.ocultar_IP($r['host'], 'host').'</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
+<td colspan="2"><div style="float:right;">'.boton(_('Expulsar'), 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/control/expulsiones/expulsar/'.$r['nick'], false, 'red').'</div>('.$r['ID'].', <span title="'.$r['avatar_localdir'].'" style="font-size:12px;">'.$r['email'].'</span>, '.num($r['visitas']).' v, '.num($r['paginas']).' pv,  <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-30,30)).'">'.ocultar_IP($r['host'], 'host').'</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
 <tr><td colspan="3" align="right">
 
 <form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post">
-Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="255" value="'.$r['nota_SC'].'" />
-'.boton('OK', 'submit', false, 'pill small').'
+'._('Anotación').': <input type="text" name="nota_SC" size="35" maxlength="255" value="'.$r['nota_SC'].'" />
+'.boton(_('OK'), 'submit', false, 'pill small').'
 </form>
 
 </td>
@@ -48,7 +48,11 @@ Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="2
 			$extras .= '</div></td></tr>';
 		} else { $extras = ''; }
 		
-		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="3" valign="top" align="center">'.($r['avatar']=='true'?'<img src="'.IMG.'a/' . $r['ID'] . '.jpg" alt="'.$nick.'" />':'').($r['dnie']=='true'?'<br /><img src="'.IMG.'varios/autentificacion.png" border="0" style="margin-top:6px;" />':'').'</td><td nowrap="nowrap"><h1><span class="amarillo"><img src="'.IMG.'cargos/'.$r['cargo'].'.gif" alt="Cargo" style="margin-bottom:0;" border="0" /> ' . $nick . ' &nbsp; <span style="color:grey;"><span class="' . $r['estado'] . '">' . ucfirst($r['estado']) . '</span> de ' . $r['pais'] . '</span></span></h1></td><td nowrap="nowrap">';
+		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="3" valign="top" align="center">'.($r['avatar']=='true'?'<img src="'.IMG.'a/'.$r['ID'].'.jpg" alt="'.$nick.'" />':'').($r['dnie']=='true'?'<br /><img src="'.IMG.'varios/autentificacion.png" border="0" style="margin-top:6px;" />':'').'</td><td nowrap="nowrap">
+<div class="amarillo">		
+<h1>'.$nick.' &nbsp; <span style="color:grey;"><span'.($r['estado']!='ciudadano'?' class="'.$r['estado'].'"':'').'>'.ucfirst($r['estado']).'</span> de '.$r['pais'].'</span></h1>'.(isset($r['nombre'])&&nucleo_acceso('ciudadanos')?'<span class="gris" style="font-size:16px;">'.$r['nombre'].'</span>':'').'
+</div>
+</td><td nowrap="nowrap">';
 
 
 		// CONFIANZA
@@ -62,10 +66,10 @@ Anotaci&oacute;n de SC: <input type="text" name="nota_SC" size="35" maxlength="2
 			while ($r2 = mysql_fetch_array($result2)) { $hay_v_c = $r2['voto']; }
 			if (!$hay_v_c) { $hay_v_c = '0'; }
 
-			$txt .= 'Confianza: '.confianza($r['voto_confianza']).' 
+			$txt .= _('Confianza').': '.confianza($r['voto_confianza']).' 
 <span id="data_confianza'.$user_ID.'" class="votar" type="confianza" name="'.$user_ID.'" value="'.$hay_v_c.'"></span><br />
 Votos emitidos: <b'.($num_votos <= VOTO_CONFIANZA_MAX?'':' style="color:red;"').'>'.$num_votos.'</b> de '.VOTO_CONFIANZA_MAX.'.';
-		} else { $txt .= 'Confianza: ' . confianza($r['voto_confianza']); }
+		} else { $txt .= _('Confianza').': ' . confianza($r['voto_confianza']); }
 
 
 		$txt .= '</td></tr>'.$extras.'</table><div id="info">';
@@ -80,18 +84,18 @@ WHERE pais = '".PAIS."' AND user_ID = '" . $user_ID . "'
 ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 		while($r2 = mysql_fetch_array($result2)) {
 			if ($r2['cargo'] == 'true') { 
-				$dimitir = ' <span class="gris"> (Cargo Ejercido)</span>';
+				$dimitir = ' <span class="gris"> ('._('Cargo Ejercido').')</span>';
 			}
 			$los_cargos_num++;
 			if ($r2['aprobado'] == 'ok') { 
 				$sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" /> '; 
 			} else { $sello = ''; }
 
-			if ($r2['cargo_ID'] > 0) { $cargo_img = '<img src="'.IMG.'cargos/' . $r2['cargo_ID'] . '.gif" border="0" />'; } else { $cargo_img = ''; }
+			if ($r2['cargo_ID'] > 0) { $cargo_img = '<img src="'.IMG.'cargos/'.$r2['cargo_ID'].'.gif" border="0" />'; } else { $cargo_img = ''; }
 			$los_cargos .= '<tr>
-<td>' . $sello . '</td>
-<td align="right" class="gris">' . $r2['nota'] . '</td>
-<td>' . $cargo_img . '</td>
+<td>'.$sello.'</td>
+<td align="right" class="gris">'.$r2['nota'].'</td>
+<td>'.$cargo_img.'</td>
 <td><b><a href="/cargos/'.$r2['cargo_ID'].'">'.($r2['nombre']?$r2['nombre']:$r2['examen_nombre']).'</a></b></td>
 <td style="color:#999;" align="right"><acronym title="'.$r2['time'].'">'.duracion(time()-strtotime($r2['time'])).'</acronym></td>
 <td nowrap="nowrap"><b>' . $dimitir . '</b></td>
@@ -100,7 +104,7 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 			$dimitir = '';
 		}
 
-		$los_cargos = '<table border="0" cellpadding="0" cellspacing="4">' . $los_cargos . '</table>';
+		$los_cargos = '<table border="0" cellpadding="0" cellspacing="4">'.$los_cargos.'</table>';
 
 		if ($user_ID == $pol['user_ID']) { //es USER
 
@@ -110,16 +114,22 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 			$text_limit = 1600 - strlen(strip_tags($r['text']));
 			
 			
-			
-			
-			
-			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;" class="pill">Editar perfil</button> '.boton('Opciones de usuario', REGISTRAR.'login.php?a=panel').' '.boton('Autentificar con DNIe', SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton('Rechazar Ciudadania', REGISTRAR, false, 'red').' ':'').'
+			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;" class="pill">'._('Editar perfil').'</button> '.boton(_('Opciones de usuario'), REGISTRAR.'login.php?a=panel').' '.boton(_('Autentificación'), SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton(_('Rechazar Ciudadania'), REGISTRAR, false, 'red').' ':'').'
 
 
 
 <div id="editarperfil" style="display:none;">
 
-<fieldset><legend>Editar perfil</legend>';
+<fieldset><legend>'._('Editar perfil').'</legend>
+
+
+<fieldset><legend>'._('Tu nombre').'</legend>
+<form action="/accion.php?a=perfil&b=nombre" method="post">
+<p>Introduce tu nombre y apellidos. No es obligatorio, pero si decides aportar esta información debe ser veráz. Esta información será pública para ciudadanos de tu plataforma.<br />
+<input type="text" name="nombre" value="'.$r['nombre'].'" size="40" maxlength="90"  />
+ '.boton(_('Guardar'), 'submit', false, 'blue').'
+</form></p>
+</fieldset>';
 
 if (ECONOMIA) {
 			
@@ -131,14 +141,14 @@ $patrimonio_libre_impuestos = 0;
 $txt .= '
 
 
-<fieldset><legend>Tu economia</legend>
+<fieldset><legend>'._('Tu economía').'</legend>
 
 <table border="0">
 
 <tr>
-<td align="right">Personal</td>
-<td align="right">' . pols($r['pols']) . ' '.MONEDA.'</td>
-<td><a href="/pols/">Info</a></td>
+<td align="right">'._('Personal').'</td>
+<td align="right">'.pols($r['pols']).' '.MONEDA.'</td>
+<td><a href="/pols">'._('Info').'</a></td>
 </tr>';
 
 
@@ -146,7 +156,7 @@ $result2 = mysql_query("SELECT ID, pols, nombre, exenta_impuestos FROM cuentas W
 while($r2 = mysql_fetch_array($result2)){
 	if ($r2['exenta_impuestos'] == 1) {
 		$patrimonio_libre_impuestos += $r2['pols'];
-		$sin_impuestos = ' - <em style="#AAA">Sin impuestos</em>';
+		$sin_impuestos = ' - <em style="#AAA">'._('Sin impuestos').'</em>';
 	}
 	else {
 		$sin_impuestos = '';
@@ -154,9 +164,9 @@ while($r2 = mysql_fetch_array($result2)){
 	$patrimonio += $r2['pols'];
 	$txt .= '
 <tr>
-<td align="right">Cuenta</td>
-<td align="right">' . pols($r2['pols']) . ' '.MONEDA.'</td>
-<td><a href="/pols/cuentas/'.$r2['ID'].'/"><em>'.$r2['nombre'].'</em></a>'.$sin_impuestos.'</td>
+<td align="right">'._('Cuenta').'</td>
+<td align="right">'.pols($r2['pols']).' '.MONEDA.'</td>
+<td><a href="/pols/cuentas/'.$r2['ID'].'"><em>'.$r2['nombre'].'</em></a>'.$sin_impuestos.'</td>
 </tr>';
 }
 
@@ -164,16 +174,16 @@ $patrimonio_con_impuestos = $patrimonio - $patrimonio_libre_impuestos;
 if ($patrimonio_con_impuestos >= $pol['config']['impuestos_minimo']) {
 	if ($pol['config']['impuestos_minimo'] < 0) { $patrimonio_con_impuestos -= $pol['config']['impuestos_minimo']; }
 	$impuesto = ceil( ( $patrimonio_con_impuestos * $pol['config']['impuestos']) / 100);
-	$impuestos = '<em>Impuestos al dia: '.pols(-$impuesto).' '.MONEDA.'</em>';
+	$impuestos = '<em>'._('Impuestos al día').': '.pols(-$impuesto).' '.MONEDA.'</em>';
 } else {
-	$impuestos = '<em style="#AAA">Sin impuestos.</em>';
+	$impuestos = '<em style="#AAA">'._('Sin impuestos').'.</em>';
 }
 
 $txt .= '
 <tr><td></td><td><hr style="border:1px solid #AAA; margin:-3px; padding:0;" /></td><td></td></tr>
 
 <tr>
-<td align="right">Patrimonio Total</td>
+<td align="right">'._('Patrimonio total').'</td>
 <td align="right">' . pols($patrimonio) . ' '.MONEDA.'</td>
 <td>&nbsp;&nbsp; '.$impuestos.'</td>
 </tr>
@@ -181,7 +191,7 @@ $txt .= '
 
 </fieldset>
 
-<fieldset><legend>Referencia</legend>
+<fieldset><legend>'._('Referencia').'</legend>
 
 <p><input style="background:#FFFFDD;border: 1px solid grey;" type="text" size="35" value="http://'.HOST.'/r/' . strtolower($nick) . '/" readonly="readonly" /><br />
 (Ganar&aacute;s <b>' . pols($pols_afiliacion) . ' '.MONEDA.'</b> por cada nuevo Ciudadano autentico que se registre por este enlace y cumpla el minimo tiempo online en sus 30 primeros dias)</p>
@@ -196,9 +206,9 @@ $txt .= '
 if (!ASAMBLEA) {
 	$txt .= '<form action="/accion.php?a=afiliarse" method="post">
 
-<fieldset><legend>Afiliación</legend>
+<fieldset><legend>'._('Afiliación').'</legend>
 
-<p><select name="partido"><option value="0">Ninguno</option>';
+<p><select name="partido"><option value="0">'._('Ninguno').'</option>';
 
 
 	$result2 = mysql_query("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."' ORDER BY siglas ASC", $link);
@@ -209,7 +219,7 @@ if (!ASAMBLEA) {
 	$txt .= '
 </select>
 
-<input value="Afiliarse" type="submit"'.($pol['config']['elecciones_estado']=='elecciones'?' disabled="disabled"':'').'>
+<input value="'._('Afiliarse').'" type="submit"'.($pol['config']['elecciones_estado']=='elecciones'?' disabled="disabled"':'').'>
 </form>
 </p></fieldset>';
 
@@ -218,11 +228,11 @@ if (!ASAMBLEA) {
 $txt .= '
 <form action="/accion.php?a=perfil&b=datos" method="POST">
 
-<fieldset><legend>Tus redes sociales</legend>
+<fieldset><legend>'._('Tus redes sociales').'</legend>
 <table border="0">
 <tr>
-<td colspan="2"><b>Perfiles</b></td>
-<td>&nbsp; <b>Solo Direcciones web</b> (<span style="color:red;">Debe empezar por: <span style="font-weight:bold;">http://</span> o <span style="font-weight:bold;">https://</span></span>)</td>
+<td colspan="2"><b>'._('Perfiles').'</b></td>
+<td>&nbsp; <b>'._('Solo direcciones web').'</b> (<span style="color:red;">'._('Debe empezar por').': <span style="font-weight:bold;">http://</span> o <span style="font-weight:bold;">https://</span></span>)</td>
 </tr>';
 
 
@@ -236,15 +246,15 @@ foreach ($datos_perfil AS $id => $dato) {
 }
 
 $txt .= '
-<tr><td colspan="2"></td><td><input type="submit" value="Guardar" /></td></tr>
+<tr><td colspan="2"></td><td><input type="submit" value="'._('Guardar').'" /></td></tr>
 </table></form>
 </fieldset>
 
 
-<fieldset><legend>Biografía</legend>
+<fieldset><legend>'._('Biografía').'</legend>
 <form action="/accion.php?a=avatar&b=desc" method="post">
-<p>Espacio para lo que quieras: (<span id="desc_limit" style="color:blue;">'.$text_limit.'</span> caracteres)<br />
-<textarea name="desc" id="desc_area" style="width:500px;height:150px;">'.strip_tags($r['text'], '<b>').'</textarea> <input value="Guardar" type="submit" />
+<p>'._('Espacio para lo que quieras').': (<span id="desc_limit" style="color:blue;">'.$text_limit.'</span> '._('caracteres').')<br />
+<textarea name="desc" id="desc_area" style="width:500px;height:150px;">'.strip_tags($r['text'], '<b>').'</textarea> <input value="'._('Guardar').'" type="submit" />
 </form></p>
 </fieldset>';
 
@@ -253,7 +263,7 @@ $txt .= '
 $result2 = mysql_query("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
 while ($r2 = mysql_fetch_array($result2)) { $num_votos = $r2['num']; }
 
-$txt .= '<fieldset><legend>Votos de confianza emitidos ('.$num_votos.' de '.VOTO_CONFIANZA_MAX.')</legend><p>';
+$txt .= '<fieldset><legend>'._('Votos de confianza emitidos').' ('.$num_votos.' '._('de').' '.VOTO_CONFIANZA_MAX.')</legend><p>';
 
 $voto_anterior = '';
 $result2 = mysql_query("SELECT voto, time,
@@ -270,9 +280,9 @@ while($r2 = mysql_fetch_array($result2)) {
 
 $txt .= '</p></fieldset>
 
-<fieldset><legend>Avatar (tu imagen)</legend>
+<fieldset><legend>Avatar ('._('tu foto').')</legend>
 <form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">
-<p>Avatar: <input name="avatar" type="file" /><input type="submit" value="Guardar Avatar" /> | ' . boton('Borrar Avatar', '/accion.php?a=avatar&b=borrar') . ' (jpg, max 1mb)</p>
+<p>Avatar: <input name="avatar" type="file" /><input type="submit" value="'._('Guardar avatar').'" /> | ' . boton(_('Borrar avatar'), '/accion.php?a=avatar&b=borrar') . ' (jpg, max 1mb)</p>
 </form>
 </fieldset>';
 
@@ -282,7 +292,7 @@ $txt .= '</fieldset></div>';
 
 		} 
 
-		if ($r['text']) { $txt .= '<fieldset><legend>Biografia</legend><p>'.$r['text'].'</p></fieldset>'; }
+		if ($r['text']) { $txt .= '<fieldset><legend>'._('Biografía').'</legend><p>'.$r['text'].'</p></fieldset>'; }
 
 		if ($r['ref_num'] != 0) {
 			$result = mysql_query("SELECT IP, nick, pais, online FROM users WHERE ref = '" . $r['ID'] . "' ORDER BY fecha_last DESC", $link);
@@ -296,30 +306,29 @@ $txt .= '</fieldset></div>';
 		if (ECONOMIA) { 
 			// empresas y partidos
 			$empresas_num = 0;
-			$result = mysql_query("SELECT nombre, url, cat_ID, (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url FROM empresas WHERE pais = '".PAIS."' AND user_ID = '" . $r['ID'] . "' ORDER BY time DESC", $link);
+			$result = mysql_query("SELECT nombre, url, cat_ID, (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' ORDER BY time DESC", $link);
 			while($r2 = mysql_fetch_array($result)) {
 				$empresas_num++;
-				$empresas .= '<a href="/empresas/'.$r2['cat_url'].'/'.$r2['url'].'/">' . $r2['nombre'] . '</a><br />' . "\n";
+				$empresas .= '<a href="/empresas/'.$r2['cat_url'].'/'.$r2['url'].'">'.$r2['nombre'].'</a><br />'."\n";
 			}
 		}
 
 
 		$txt .= '<table border="0" cellspacing="8"><tr><td valign="top" width="220">
-'.($r['donacion']&&$pol['user_ID']?'<p>Donación: <b>'.pols($r['donacion']).' euros</b></p>':'').'
-'.(ASAMBLEA?'':'<p>Nivel: <b>' . $r['nivel'] . '</b></p>').'
-<p>Nota media: <b><span class="gris">' . $nota . '</span></b></p>
-<p>Tiempo online: <b><acronym title="' . $r['online'] . '">' . duracion($r['online']) . '</acronym></b></p>
-<p>Elecciones: <b>' . $r['num_elec'] . '</b></p>
+'.($r['donacion']&&$pol['user_ID']?'<p>'._('Donación').': <b>'.pols($r['donacion']).' euros</b></p>':'').'
+'.(ASAMBLEA?'':'<p>'._('Nivel').': <b>' . $r['nivel'] . '</b></p>').'
+<p>'._('Nota media').': <b><span class="gris">' . $nota . '</span></b></p>
+<p>'._('Tiempo online').': <b><acronym title="' . $r['online'] . '">' . duracion($r['online']) . '</acronym></b></p>
+<p>'._('Elecciones').': <b>' . $r['num_elec'] . '</b></p>
 
-'.(ECONOMIA?'<p>Empresas: <b>' . $empresas_num . '</b><br /><b>' . $empresas . '</b></p>':'').'
+'.(ECONOMIA?'<p>'._('Empresas').': <b>' . $empresas_num . '</b><br /><b>' . $empresas . '</b></p>':'').'
 
-<p>Foro: <a href="/foro/mis-respuestas/'.$r['nick'].'/" title="hilos+mensajes" style="font-weight:bold;">'.$r['num_hilos'].'+'.$r['num_msg'].'</a></p>
-<!--<p>Referencias: <b>' . $r['ref_num'] . '</b><br /><b>' . $refs . '</b></p>-->
-'.(ASAMBLEA?'':'<p>Afiliado a: <b>' . crear_link($r['partido'], 'partido') . '</b></p>').'
-<p>Ultimo acceso: <acronym title="' . $r['fecha_last'] . '"><b>' . duracion(time() - strtotime($r['fecha_last'])) . '</b></acronym><br />';
+<p>'._('Foro').': <a href="/foro/mis-respuestas/'.$r['nick'].'" title="hilos+mensajes" style="font-weight:bold;">'.$r['num_hilos'].'+'.$r['num_msg'].'</a></p>
+'.(ASAMBLEA?'':'<p>'._('Afiliado a').': <b>' . crear_link($r['partido'], 'partido') . '</b></p>').'
+<p>'._('Último acceso').': <acronym title="' . $r['fecha_last'] . '"><b>' . duracion(time() - strtotime($r['fecha_last'])) . '</b></acronym><br />';
 
 
-$txt .= 'Registrado hace: <b><acronym title="' . $r['fecha_registro'] . '">'.round((time() - strtotime($r['fecha_registro'])) / 60 / 60 / 24).' dias</acronym></b><br />
+$txt .= _('Registrado hace').': <b><acronym title="' . $r['fecha_registro'] . '">'.round((time() - strtotime($r['fecha_registro'])) / 60 / 60 / 24).' '._('días').'</acronym></b><br />
 ';
 
 
@@ -337,7 +346,7 @@ if ($time_registro <= $margen_90dias) {
 } else {
 	$tiempo_inactividad = 2592000; // tras 30 dias
 }
-$txt .= 'Expira '.($r['dnie']=='true'?'<b>Nunca</b> (Autentificado)':'<b>tras '.round($tiempo_inactividad / 60 / 60 / 24).' dias</b> inactivo').'
+$txt .= _('Expira').' '.($r['dnie']=='true'?'<b>'._('Nunca').'</b> ('._('Autentificado').')':'<b>'._('tras').' '.round($tiempo_inactividad / 60 / 60 / 24).' '._('días').'</b> '._('inactivo')).'
 
 
 </p></td><td valign="top">
@@ -359,12 +368,12 @@ foreach ($datos_perfil AS $id => $dato) {
 }
 $txt .= '
 
-(<a href="/info/seguir/">Seguir desde redes sociales</a>)</p>
+(<a href="/info/seguir">'._('Seguir desde redes sociales').'</a>)</p>
 
 
-<b>&Uacute;ltimas 5 notas:</b>
+<b>'._('Últimas notas').':</b>
 
-<table border="0" cellpadding="0" cellspacing="3" class="pol_table">';
+<table border="0" cellpadding="0" cellspacing="3">';
 
 
 $result2 = mysql_query("SELECT ID, user_ID, time, text
@@ -377,11 +386,11 @@ while($r2 = mysql_fetch_array($result2)){
 }
 $txt .= '</table>
 
-<p style="margin-bottom:0px;">Cargos y Examenes: <b>' . $los_cargos_num . '</b> (<a href="/examenes/">Ver examenes</a>)</p>
+<p style="margin-bottom:0px;">'._('Cargos y exámenes').': <b>' . $los_cargos_num . '</b> (<a href="/examenes">'._('Ver exámenes').'</a>)</p>
 '.$los_cargos.'<br />';
 
 if ($r['grupos'] != '') {
-	$txt .= '<b>Grupos</b>:<ul>';
+	$txt .= '<b>'._('Grupos').'</b>:<ul>';
 	$result2 = mysql_query("SELECT nombre FROM grupos WHERE grupo_ID IN (".str_replace(' ', ',', $r['grupos']).")");
 	while ($r2 = mysql_fetch_array($result2)) {
 	  $txt .= '<li><a href="/grupos">'.$r2['nombre'].'</a></li>';
@@ -397,33 +406,26 @@ $result2 = mysql_query("SELECT pais, titulo, url, fecha_creacion, fecha_last
 FROM chats WHERE user_ID = '".$r['ID']."' 
 ORDER BY fecha_creacion ASC", $link);
 while ($r2 = mysql_fetch_array($result2)) { 
-	$txt .= '<li>'.duracion(time() - strtotime($r2['fecha_creacion'])).' <a href="http://'.strtolower($r2['pais']).'.'.DOMAIN.'/chats/'.$r2['url'].'/"><b>'.$r2['titulo'].'</b></a> (hace '.duracion(time() - strtotime($r2['fecha_last'])).')</li>';
+	$txt .= '<li>'.duracion(time() - strtotime($r2['fecha_creacion'])).' <a href="http://'.strtolower($r2['pais']).'.'.DOMAIN.'/chats/'.$r2['url'].'"><b>'.$r2['titulo'].'</b></a> ('._('hace').' '.duracion(time() - strtotime($r2['fecha_last'])).')</li>';
 }
 
 
 $txt .= '</ul>
 
-</td></tr></table>';
+</td></tr></table>
 
 
-		if ($user_ID != $pol['user_ID']) {
-			$txt .= '<p class="quitar">' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/' . strtolower($nick) . '/').' &nbsp; '.(ECONOMIA?boton('Transferir monedas', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/' . strtolower($nick) . '/'):'').'</p>';
-		}
-		$txt .= '</div>';
+</div>';
 
-		$txt_title = $nick.' - '.ucfirst($r['estado']) . ' de '.$r['pais'];
-		$txt_nav = array('/info/censo'=>'Censo', '/perfil/'.$nick=>$nick);
+		$txt_title = $nick.' - '.ucfirst($r['estado']) . ' '._('de').' '.$r['pais'];
+		$txt_nav = array('/info/censo'=>_('Censo'), '/perfil/'.$nick=>$nick);
 
 		if ($user_ID != $pol['user_ID']) {
-			$txt_tab['http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$nick.'/'] = 'Enviar mensaje';
-			if (ECONOMIA) { $txt_tab['http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/' . strtolower($nick) . '/'] = 'Transferir'; }
+			$txt_tab['http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$nick.'/'] = _('Enviar mensaje');
+			if (ECONOMIA) { $txt_tab['http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/'.strtolower($nick) . '/'] = _('Transferir'); }
 		} else {
 			
 		}
-
-		
-		$txt .= '<p class="quitar">' . boton('Enviar mensaje', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$nick.'/').' &nbsp; '.(ECONOMIA?boton('Transferir monedas', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/' . strtolower($nick) . '/'):'').'</p>';
-
 
 		$txt_description = $txt_title . ' ' . str_replace("\"", "", strip_tags($r['text']));
 

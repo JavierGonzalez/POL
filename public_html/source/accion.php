@@ -56,12 +56,12 @@ case 'grupos';
 
 case 'perfil':
 	if ($_GET['b'] == 'datos') {		
-		foreach ($datos_perfil AS $id => $dato) {
-			$datos_array[] = $_POST[$dato];
-		}
+		foreach ($datos_perfil AS $id => $dato) { $datos_array[] = $_POST[$dato]; }
 		sql("UPDATE users SET datos = '".implode('][', $datos_array)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
-		$refer_url = 'perfil/'.$pol['nick'];
+	} elseif ($_GET['b'] == 'nombre') {
+		sql("UPDATE users SET nombre = '".strip_tags($_POST['nombre'])."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	}
+	$refer_url = 'perfil/'.$pol['nick'];
 	break;
 
 case 'aceptar-condiciones':

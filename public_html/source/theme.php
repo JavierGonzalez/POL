@@ -191,7 +191,7 @@ unset($txt_header);
 if (isset($pol['user_ID'])) {
 	echo '<span class="htxt"><b><a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').' | </b><a href="/msg">'._('Mensajes privados').'</a><b>'.(ECONOMIA&&$pol['estado']=='ciudadano'?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="/accion.php?a=logout">'._('Salir').'</a></b></span>';
 } else {
-	echo boton(_('Entrar'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), false, 'large').' &nbsp; '.boton(_('Crear ciudadano'), REGISTRAR.'?p='.PAIS, false, 'large blue');
+	echo boton(_('Crear ciudadano'), REGISTRAR.'?p='.PAIS, false, 'large blue').' '.boton(_('Entrar'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), false, 'large');
 }
 ?>
 		</div>

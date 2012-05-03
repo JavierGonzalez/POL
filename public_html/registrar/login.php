@@ -379,15 +379,15 @@ case 'login':
 		$url = 'http://15m.'.DOMAIN; 
 	}
 
-	$link = conectar();
-	
-	if (strlen($pass) != 32) { $pass = md5($pass); }
-	$result = mysql_query("SELECT ID AS user_ID, nick FROM users WHERE nick = '".$nick."' AND pass = '".$pass."' LIMIT 1", $link);
-	while ($r = mysql_fetch_array($result)) { $user_ID = $r['user_ID']; }
+	$user_ID = false;
 
-	if ($user_ID) {
+	if (strlen($pass) != 32) { $pass = md5($pass); }
+	$result = mysql_query("SELECT ID, nick FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." AND pass = '".$pass."' LIMIT 1", $link);
+	while ($r = mysql_fetch_array($result)) { $user_ID = $r['ID']; $nick = $r['nick']; }
+
+	if (is_numeric($user_ID)) {
 		
-		$expire = time() + (86400*60);
+		$expire = ($_REQUEST['no_cerrar_sesion']=='true'?time()+(86400*30):0);
 		setcookie('teorizauser', $nick, $expire, '/', USERCOOKIE);
 		setcookie('teorizapass', md5(CLAVE.$pass), $expire, '/', USERCOOKIE);
 
@@ -444,8 +444,8 @@ case 'logout':
 	unset($_SESSION); 
 	session_destroy();
 
-	setcookie('teorizauser', '', time()-3600, '/', USERCOOKIE);
-	setcookie('teorizapass', '', time()-3600, '/', USERCOOKIE);
+	setcookie('teorizauser', '', time()-36000, '/', USERCOOKIE);
+	setcookie('teorizapass', '', time()-36000, '/', USERCOOKIE);
 
 	if ($_SERVER['HTTP_REFERER']) { $url = $_SERVER['HTTP_REFERER']; }
 	else { $url = 'http://'.HOST.'/'; }
@@ -456,10 +456,7 @@ case 'logout':
 
 default:
 
-	$txt_header .= '<style type="text/css">.content { width:400px; margin: 0 auto; padding: 2px 12px 0 12px; }</style>';
-
-
-	$txt .= '<center><h1>'._('Entrar con tu ciudadano').'</h1></center>';
+	$txt .= '<div style="width:350px;margin:0 auto;">';
 
 	if (isset($pol['user_ID'])) {
 		$txt .= '<p>'._('Ya estás logueado correctamente como').' <b>'.$pol['nick'].'</b>.</p>';
@@ -471,35 +468,47 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 </script>
 
 
+
+
 <form action="'.REGISTRAR.'login.php?a=login" method="post">
 <input name="url" value="'.($_GET['r']?$_GET['r']:base64_encode('http://www.'.DOMAIN.'/')).'" type="hidden" />
+
+
+<fieldset><legend>'._('Iniciar sesión').'</legend>
 
 <table border="0" style="margin:20px auto;">
 
 <tr>
-<td align="right">'._('Usuario').':</td>
-<td><input name="user" value="" size="10" maxlength="20" onfocus="vlgn(this)" type="text" style="font-size:20px;font-weight:bold;" /></td>
+<td align="right">'._('Usuario o email').':</td>
+<td><input name="user" value="" size="14" maxlength="200" onfocus="vlgn(this)" type="text" style="font-size:20px;font-weight:bold;" /></td>
 </tr>
 
 <tr>
 <td align="right">'._('Contraseña').':</td>
-<td><input id="login_pass" name="pass" type="password" value="" size="10" maxlength="200" onfocus="vlgn(this)" style="font-size:20px;font-weight:bold;" /></td>
+<td><input id="login_pass" name="pass" type="password" value="" size="14" maxlength="200" onfocus="vlgn(this)" style="font-size:20px;font-weight:bold;" /></td>
+</tr>
+
+<tr>
+<td align="center" colspan="2"><input type="checkbox" name="no_cerrar_sesion" value="true" /> '._('No cerrar sesión en 30 días').'.</td>
 </tr>
 
 <tr>
 <td colspan="2" align="center">
-'.($_GET['error']?'<em style="color:red;">'.escape(base64_decode($_GET['error'])).'.</em><br /><br />':'').'
-<button onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" class="large blue">'._('Entrar').'</button><br /><br />
-<a href="'.REGISTRAR.'login.php?a=recuperar-pass">'._('¿Has olvidado tu contraseña?').'</a><br /><br />
-<a href="'.REGISTRAR.'">'._('¿Aún no tienes usuario registrado?').'</a><br /><br /><br />
-<span style="color:#888;">'._('Contacto').': '.CONTACTO_EMAIL.'</span>
-</td>
-</tr>
 
+'.($_GET['error']?'<em style="color:red;">'.escape(base64_decode($_GET['error'])).'.</em><br /><br />':'').'
+
+<button onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" class="large blue">'._('Iniciar sesión').'</button>
 </table>
+</fieldset>
+
+
+<a href="'.REGISTRAR.'login.php?a=recuperar-pass">'._('¿Has olvidado tu contraseña?').'</a><br /><br />
+<span style="color:#888;">'._('Contacto').': '.CONTACTO_EMAIL.'</span>
 
 </form>';
 	}
+
+	$txt .= '</div>';
 
 	$txt_title = _('Entrar');
 	$txt_nav = array(_('Entrar'));

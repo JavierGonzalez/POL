@@ -181,7 +181,7 @@ $txt .= '<span style="float:right;font-size:12px;margin-top:-15px;">('.num($i).'
 
 <fieldset><legend>'._('Demografía').'</legend>
 
-<b id="1.1">1.1 <span style="color:#0000FF;">'._('Ciudadanos').'</span>/<span style="color:#FF0000;">'._('países').'</span></b> (<a href="/info/censo">'._('Cer censo').'</a>)<br />
+<b id="1.1">1.1 <span style="color:#0000FF;">'._('Ciudadanos').'</span>/<span style="color:#FF0000;">'._('países').'</span></b> (<a href="/info/censo">'._('Ver censo').'</a>)<br />
 <img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['ciudadanos'], false, $d['paises']):gen_datos($d['ciudadanos'], false)).'" alt="Ciudadanos/paises" border="0" />
 
 

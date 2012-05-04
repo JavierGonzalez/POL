@@ -156,7 +156,7 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 <th></th>
 </tr>';
 	$result = mysql_query("SELECT *,
-(SELECT COUNT(DISTINCT nick) FROM chats_msg WHERE chat_ID = chats.chat_ID AND user_ID = 0 AND tipo != 'e' AND time > '".date('Y-m-d H:i:s', time() - 1800)."') AS online
+(SELECT COUNT(DISTINCT nick) FROM chats_msg WHERE chat_ID = chats.chat_ID AND user_ID = 0 AND tipo != 'e' AND time > '".date('Y-m-d H:i:s', time() - 60*30)."') AS online
 FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creacion ASC", $link);
 	while ($r = mysql_fetch_array($result)) { 
 		

@@ -12,14 +12,14 @@ include('inc-login.php');
 if (($_GET['a'] == 'editar') AND (isset($pol['nick']))) { redirect('/perfil/'.$pol['nick'].'/editar'); }
 if ((!$_GET['a']) AND (isset($pol['nick']))) { redirect('/perfil/'.$pol['nick']); }
 
-$result = mysql_query("SELECT *, 
+$result = sql("SELECT *, 
 (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS partido,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
 FROM users 
 WHERE nick = '".$_GET['a']."'
-LIMIT 1", $link);
-while($r = mysql_fetch_array($result)){
+LIMIT 1");
+while($r = r($result)){
 
 	$user_ID = $r['ID'];
 	if ((PAIS != $r['pais']) AND ($r['estado'] == 'ciudadano') AND ($r['pais'] != 'ninguno')) {
@@ -51,9 +51,14 @@ while($r = mysql_fetch_array($result)){
 			$extras .= '</div></td></tr>';
 		} else { $extras = ''; }
 		
+		if (($r['socio'] == 'true') AND (nucleo_acceso('socios'))) {
+			$result2 = sql("SELECT socio_ID, PAIS FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' LIMIT 1");
+			while ($r2 = r($result2)) { $socio_ID = PAIS.$r2['socio_ID']; }
+		}
+
 		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="3" valign="top" align="center">'.($r['avatar']=='true'?'<img src="'.IMG.'a/'.$r['ID'].'.jpg" alt="'.$nick.'" />':'').($r['dnie']=='true'?'<br /><img src="'.IMG.'varios/autentificacion.png" border="0" style="margin-top:6px;" />':'').'</td><td nowrap="nowrap">
 <div class="amarillo">		
-<h1>'.$nick.' &nbsp; <span style="color:grey;"><span'.($r['estado']!='ciudadano'?' class="'.$r['estado'].'"':'').'>'.ucfirst($r['estado']).'</span> de '.$r['pais'].'</span></h1>'.(isset($r['nombre'])&&nucleo_acceso('ciudadanos')?'<span class="gris" style="font-size:16px;">'.$r['nombre'].'</span>':'').'
+<h1>'.$nick.' &nbsp; <span style="color:grey;"><span'.($r['estado']!='ciudadano'?' class="'.$r['estado'].'"':'').'>'.ucfirst($r['estado']).'</span> de '.$r['pais'].'</span></h1>'.(isset($socio_ID)&&nucleo_acceso('socios')?'<span class="gris" style="float:right;font-size:16px;">'._('Socio').': <b>'.$socio_ID.'</b></span>':'').(isset($r['nombre'])&&nucleo_acceso('ciudadanos')?'<span class="gris" style="font-size:16px;">'.$r['nombre'].'</span>':'').'
 </div>
 </td><td nowrap="nowrap">';
 
@@ -62,11 +67,11 @@ while($r = mysql_fetch_array($result)){
 		if ((($user_ID != $pol['user_ID']) AND ($pol['user_ID']) AND ($pol['estado'] != 'expulsado'))) {
 
 			// numero de votos emitidos
-			$result2 = mysql_query("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
-			while ($r2 = mysql_fetch_array($result2)) { $num_votos = $r2['num']; }
+			$result2 = sql("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'");
+			while ($r2 = r($result2)) { $num_votos = $r2['num']; }
 
-			$result2 = mysql_query("SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = '".$user_ID."' LIMIT 1", $link);
-			while ($r2 = mysql_fetch_array($result2)) { $hay_v_c = $r2['voto']; }
+			$result2 = sql("SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = '".$user_ID."' LIMIT 1");
+			while ($r2 = r($result2)) { $hay_v_c = $r2['voto']; }
 			if (!$hay_v_c) { $hay_v_c = '0'; }
 
 			$txt .= _('Confianza').': '.confianza($r['voto_confianza']).' 
@@ -79,13 +84,13 @@ Votos emitidos: <b'.($num_votos <= VOTO_CONFIANZA_MAX?'':' style="color:red;"').
 
 		$cargos_num = 0;
 		$los_cargos_num = 0;
-		$result2 = mysql_query("SELECT cargo_ID, cargo, nota, aprobado, time,
+		$result2 = sql("SELECT cargo_ID, cargo, nota, aprobado, time,
 (SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre,
 (SELECT titulo FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_nombre
 FROM cargos_users
 WHERE pais = '".PAIS."' AND user_ID = '" . $user_ID . "'
-ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
-		while($r2 = mysql_fetch_array($result2)) {
+ORDER BY cargo DESC, aprobado ASC, nota DESC");
+		while($r2 = r($result2)) {
 			if ($r2['cargo'] == 'true') { 
 				$dimitir = ' <span class="gris"> ('._('Cargo Ejercido').')</span>';
 			}
@@ -111,8 +116,8 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 
 		if ($user_ID == $pol['user_ID']) { //es USER
 
-			$result2 = mysql_query("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'pols_afiliacion' LIMIT 1", $link);
-			while($r2 = mysql_fetch_array($result2)){ if ($r2['pols'] >= $pols) { $pols_afiliacion = $r2['valor']; } }
+			$result2 = sql("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'pols_afiliacion' LIMIT 1");
+			while($r2 = r($result2)){ if ($r2['pols'] >= $pols) { $pols_afiliacion = $r2['valor']; } }
 
 			$text_limit = 1600 - strlen(strip_tags($r['text']));
 			
@@ -136,8 +141,8 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC", $link);
 
 if (ECONOMIA) {
 			
-$result2 = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'impuestos' OR dato = 'impuestos_minimo'", $link);
-while($r2 = mysql_fetch_array($result2)){ $pol['config'][$r2['dato']] = $r2['valor']; }
+$result2 = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'impuestos' OR dato = 'impuestos_minimo'");
+while($r2 = r($result2)){ $pol['config'][$r2['dato']] = $r2['valor']; }
 
 $patrimonio = $r['pols'];
 $patrimonio_libre_impuestos = 0;
@@ -155,8 +160,8 @@ $txt .= '
 </tr>';
 
 
-$result2 = mysql_query("SELECT ID, pols, nombre, exenta_impuestos FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."'", $link);
-while($r2 = mysql_fetch_array($result2)){
+$result2 = sql("SELECT ID, pols, nombre, exenta_impuestos FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."'");
+while($r2 = r($result2)){
 	if ($r2['exenta_impuestos'] == 1) {
 		$patrimonio_libre_impuestos += $r2['pols'];
 		$sin_impuestos = ' - <em style="#AAA">'._('Sin impuestos').'</em>';
@@ -214,8 +219,8 @@ if (!ASAMBLEA) {
 <p><select name="partido"><option value="0">'._('Ninguno').'</option>';
 
 
-	$result2 = mysql_query("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."' ORDER BY siglas ASC", $link);
-	while($r2 = mysql_fetch_array($result2)){
+	$result2 = sql("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."' ORDER BY siglas ASC");
+	while($r2 = r($result2)){
 		$txt .= '<option value="'.$r2['ID'].'"'.($r2['ID']==$pol['partido']?' selected="selected"':'').'>' . $r2['siglas'] . '</option>';
 	}
 
@@ -285,19 +290,19 @@ $txt .= '
 
 
 // numero de votos emitidos
-$result2 = mysql_query("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'", $link);
-while ($r2 = mysql_fetch_array($result2)) { $num_votos = $r2['num']; }
+$result2 = sql("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'");
+while ($r2 = r($result2)) { $num_votos = $r2['num']; }
 
 $txt .= '<fieldset><legend>'._('Votos de confianza emitidos').' ('.$num_votos.' '._('de').' '.VOTO_CONFIANZA_MAX.')</legend><p>';
 
 $voto_anterior = '';
-$result2 = mysql_query("SELECT voto, time,
+$result2 = sql("SELECT voto, time,
 (SELECT nick FROM users WHERE ID = v.item_ID LIMIT 1) AS nick,
 (SELECT pais FROM users WHERE ID = v.item_ID LIMIT 1) AS pais
 FROM votos `v`
 WHERE tipo = 'confianza' AND emisor_ID = '".$user_ID."' AND voto != 0
-ORDER BY voto DESC, time ASC", $link);
-while($r2 = mysql_fetch_array($result2)) {
+ORDER BY voto DESC, time ASC");
+while($r2 = r($result2)) {
 	if ($voto_anterior != $r2['voto']) { $txt .= '<br /> ' . confianza($r2['voto']) . ' &middot; '; }
 	$voto_anterior = $r2['voto'];
 	$txt .= crear_link($r2['nick'], 'nick', null, $r2['pais']) . ' ';
@@ -314,8 +319,8 @@ $txt .= '</fieldset></div>';
 		if ($r['text']) { $txt .= '<fieldset><legend>'._('Biografía').'</legend><p>'.$r['text'].'</p></fieldset>'; }
 
 		if ($r['ref_num'] != 0) {
-			$result = mysql_query("SELECT IP, nick, pais, online FROM users WHERE ref = '" . $r['ID'] . "' ORDER BY fecha_last DESC", $link);
-			while($r2 = mysql_fetch_array($result)) {
+			$result = sql("SELECT IP, nick, pais, online FROM users WHERE ref = '" . $r['ID'] . "' ORDER BY fecha_last DESC");
+			while($r2 = r($result)) {
 				$refs .= crear_link($r2['nick']) . ' </b>('.duracion($r2['online']).')<b><br />' . "\n";
 			}
 		}
@@ -325,8 +330,8 @@ $txt .= '</fieldset></div>';
 		if (ECONOMIA) { 
 			// empresas y partidos
 			$empresas_num = 0;
-			$result = mysql_query("SELECT nombre, url, cat_ID, (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' ORDER BY time DESC", $link);
-			while($r2 = mysql_fetch_array($result)) {
+			$result = sql("SELECT nombre, url, cat_ID, (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' ORDER BY time DESC");
+			while($r2 = r($result)) {
 				$empresas_num++;
 				$empresas .= '<a href="/empresas/'.$r2['cat_url'].'/'.$r2['url'].'">'.$r2['nombre'].'</a><br />'."\n";
 			}
@@ -395,12 +400,12 @@ $txt .= '
 <table border="0" cellpadding="0" cellspacing="3">';
 
 
-$result2 = mysql_query("SELECT ID, user_ID, time, text
+$result2 = sql("SELECT ID, user_ID, time, text
 FROM ".SQL."foros_msg
 WHERE hilo_ID = '-1' AND user_ID = '" . $r['ID'] . "'
 ORDER BY time DESC
-LIMIT 5", $link);
-while($r2 = mysql_fetch_array($result2)){
+LIMIT 5");
+while($r2 = r($result2)){
 	$txt .= '<tr><td valign="top" class="amarillo">' . $avatar . $r2['text'] . '</td></tr>' . "\n";
 }
 $txt .= '</table>
@@ -410,8 +415,8 @@ $txt .= '</table>
 
 if ($r['grupos'] != '') {
 	$txt .= '<b>'._('Grupos').'</b>:<ul>';
-	$result2 = mysql_query("SELECT nombre FROM grupos WHERE grupo_ID IN (".str_replace(' ', ',', $r['grupos']).")");
-	while ($r2 = mysql_fetch_array($result2)) {
+	$result2 = sql("SELECT nombre FROM grupos WHERE grupo_ID IN (".str_replace(' ', ',', $r['grupos']).")");
+	while ($r2 = r($result2)) {
 	  $txt .= '<li><a href="/grupos">'.$r2['nombre'].'</a></li>';
 	}
 	$txt .= '</ul>';
@@ -421,10 +426,10 @@ if ($r['grupos'] != '') {
 
 
 
-$result2 = mysql_query("SELECT pais, titulo, url, fecha_creacion, fecha_last
+$result2 = sql("SELECT pais, titulo, url, fecha_creacion, fecha_last
 FROM chats WHERE user_ID = '".$r['ID']."' 
-ORDER BY fecha_creacion ASC", $link);
-while ($r2 = mysql_fetch_array($result2)) { 
+ORDER BY fecha_creacion ASC");
+while ($r2 = r($result2)) { 
 	$txt .= '<li>'.duracion(time() - strtotime($r2['fecha_creacion'])).' <a href="http://'.strtolower($r2['pais']).'.'.DOMAIN.'/chats/'.$r2['url'].'"><b>'.$r2['titulo'].'</b></a> ('._('hace').' '.duracion(time() - strtotime($r2['fecha_last'])).')</li>';
 }
 

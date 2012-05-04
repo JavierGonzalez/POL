@@ -26,6 +26,56 @@ OR (($pol['estado'] == 'extranjero') AND (in_array($_GET['a'], array('voto', 'me
 switch ($_GET['a']) { //############## BIG ACTION SWITCH ############
 //###################################################################
 
+
+case 'socios';
+	$es_socio = false;
+	$result = sql("SELECT ID, estado, socio_ID FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+	while($r = r($result)) { $es_socio = true; $socio_estado = $r['estado']; $socio_numero = PAIS.$r['socio_ID']; }
+
+	if (($_GET['b'] == 'inscribirse') AND (nucleo_acceso('ciudadanos')) AND ($es_socio == false) AND ($pol['config']['socios_estado'] == 'true')) {
+		$last_socio_ID = 0;
+		$result = sql("SELECT socio_ID FROM socios WHERE pais = '".PAIS."' ORDER BY socio_ID DESC LIMIT 1");
+		while($r = r($result)) { $last_socio_ID = $r['socio_ID']; }
+		
+		sql("INSERT INTO socios (time, time_last, pais, socio_ID, user_ID, nombre, NIF, pais_politico, localidad, cp, direccion, contacto_email, contacto_telefono) 
+VALUES ('".$date."', '".$date."', '".PAIS."', '".($last_socio_ID==0?10000:$last_socio_ID+1)."', '".$pol['user_ID']."', '".$_POST['nombre']."', '".$_POST['NIF']."', '".$_POST['pais_politico']."', '".$_POST['localidad']."', '".$_POST['cp']."', '".$_POST['direccion']."', '".$_POST['contacto_email']."', '".str_replace(' ', '', $_POST['contacto_telefono'])."')");
+
+	} elseif (($_GET['b'] == 'cancelar') AND ($es_socio)) {
+		sql("DELETE FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+		sql("UPDATE users SET socio = 'false' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+		if ($socio_estado == 'socio') {
+			cargo_del($pol['config']['socios_ID'], $pol['user_ID']);
+			sql("UPDATE users SET socio = 'false' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+		}
+
+	} elseif (($_GET['b'] == 'configurar') AND (nucleo_acceso($vp['acceso']['control_socios']))) {
+		foreach (array('socios_estado', 'socios_url', 'socios_ID', 'socios_descripcion', 'socios_responsable') AS $dato) {
+			sql("UPDATE config SET valor = '".strip_tags(trim($_POST[$dato]))."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
+		}
+		$refer_url = 'socios/configurar';
+
+	} elseif (($_GET['b'] == 'aprobar') AND (nucleo_acceso($vp['acceso']['control_socios'])) AND (is_numeric($_GET['ID']))) {
+		$result = sql("SELECT ID, user_ID FROM socios WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND estado != 'socio' LIMIT 1");
+		while($r = r($result)) {
+			sql("UPDATE socios SET estado = 'socio' WHERE ID = '".$_GET['ID']."' LIMIT 1");
+			sql("UPDATE users SET socio = 'true' WHERE ID = '".$r['user_ID']."' LIMIT 1");
+			cargo_add($pol['config']['socios_ID'], $r['user_ID']);
+		}
+		$refer_url = 'socios/inscritos';
+	
+	} elseif (($_GET['b'] == 'rescindir') AND (nucleo_acceso($vp['acceso']['control_socios'])) AND (is_numeric($_GET['ID']))) {
+		$result = sql("SELECT ID, user_ID FROM socios WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND estado = 'socio' LIMIT 1");
+		while($r = r($result)) {
+			sql("UPDATE socios SET estado = 'rescindido' WHERE ID = '".$_GET['ID']."' LIMIT 1");
+			sql("UPDATE users SET socio = 'false' WHERE ID = '".$r['user_ID']."' LIMIT 1");
+			cargo_del($pol['config']['socios_ID'], $r['user_ID']);
+		}
+		$refer_url = 'socios/asociados';
+	}
+	if (!$refer_url) { $refer_url = 'socios'; }
+	break;
+
+
 case 'grupos';
 	if (($_GET['b'] == 'crear') AND (nucleo_acceso($vp['acceso']['control_grupos']))) {
 		sql("INSERT INTO grupos (pais, nombre) VALUES ('".PAIS."', '".ucfirst($_POST['nombre'])."')");

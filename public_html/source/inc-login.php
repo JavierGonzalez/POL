@@ -51,7 +51,7 @@ if (isset($_COOKIE['teorizauser'])) {
 if (isset($pol['user_ID'])) {
 
 	// LOAD: $pol
-	$result = sql("SELECT lang, online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, cargos, examenes, fecha_legal, dnie, SC, IP, grupos
+	$result = sql("SELECT lang, online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, cargos, examenes, fecha_legal, dnie, SC, IP, grupos, socio
 FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	while($r = r($result)) {
 		$pol['pols'] = $r['pols'];
@@ -76,6 +76,7 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 		$_SESSION['pol']['nivel'] = $r['nivel'];
 		$_SESSION['pol']['pais'] = $r['pais'];
 		$_SESSION['pol']['estado'] = $r['estado'];
+		$_SESSION['pol']['socio'] = $r['socio'];
 		$_SESSION['pol']['dnie'] = $r['dnie'];
 		$_SESSION['pol']['SC'] = $r['SC'];
 		$_SESSION['pol']['partido_afiliado'] = $r['partido_afiliado'];

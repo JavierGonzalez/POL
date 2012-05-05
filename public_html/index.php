@@ -170,6 +170,14 @@ $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="4"></td></tr>
 '.(isset($pol['nick'])?'':'<p style="text-align:center;">'.boton('Crear ciuadano', REGISTRAR, false, 'large blue').'</p>');
 
 
+
+$result = sql("SELECT COUNT(*) AS num FROM plataformas WHERE estado = 'pendiente'");
+while($r = r($result)) { $plat_num = $r['num']; }
+
+if ($pol['user_ID'] == 1) {
+	$txt_tab['/crear-plataforma.php?a=admin'] = 'Plataformas pendientes ('.$plat_num.')';
+}
+
 $txt_header .= '<style type="text/css">td b { font-size:15px; }</style>';
 
 include('theme.php');

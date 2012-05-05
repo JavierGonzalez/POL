@@ -45,7 +45,7 @@ ORDER BY ID ASC", $link);
 (SELECT user_ID FROM partidos_listas WHERE pais = '".PAIS."' AND ID_partido = '" . $r['ID'] . "' AND user_ID = users.ID LIMIT 1) AS en_lista, 
 (SELECT user_ID FROM cargos_users WHERE cargo_ID = '6' AND user_ID = users.ID AND aprobado = 'ok' LIMIT 1) AS es_diputado
 FROM users 
-WHERE estado != 'validar' AND estado != 'desarrollador' AND partido_afiliado = '" . $r['ID'] . "' AND pais = '".PAIS."'
+WHERE estado != 'validar' AND partido_afiliado = '".$r['ID']."' AND pais = '".PAIS."'
 ORDER BY nick DESC", $link);
 			while($r2 = mysql_fetch_array($result2)){
 				if ((!$r2['en_lista']) AND ($r2['es_diputado'])) {

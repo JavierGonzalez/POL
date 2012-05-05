@@ -54,7 +54,7 @@ case 'panel':
 	$txt .= '</select>
 </td>
 <td valign="middle" align="right" valign="top">
-'.boton(_('Cambiar idioma'), 'submit', false, 'large blue').'
+'.boton(_('Cambiar'), 'submit', false, 'large blue').'
 </td></tr></table></form>
 
 
@@ -72,7 +72,7 @@ case 'panel':
 <td valign="middle" align="center" valign="top">'._('Nueva contraseña').':<br /><input type="password" name="pass1" value="" maxlength="30" /><br />
 <input type="password" name="pass2" value="" maxlength="30" /></td>
 <td valign="middle" align="right" valign="top">
-'.boton(_('Cambiar contraseña'), 'submit', false, 'large blue').'
+'.boton(_('Cambiar'), 'submit', false, 'large blue').'
 </td></tr></table></form>
 
 </fieldset>
@@ -86,7 +86,7 @@ case 'panel':
 <tr>
 <td valign="middle" align="center" valign="top">'._('Email').': <input type="text" size="30" name="email" value="'.$pol['email'].'" maxlength="100" /></td>
 <td valign="middle" align="right" valign="top">
-'.boton(_('Cambiar email'), 'submit', false, 'large blue').'
+'.boton(_('Cambiar'), 'submit', false, 'large blue').'
 </td></tr></table></form>
 
 </fieldset>
@@ -115,7 +115,7 @@ case 'panel':
 <td valign="middle" align="center" valign="top">'._('Nuevo nombre de usuario').':<br /><input type="text" name="newnick" value="" maxlength="30" /></td>
 <td valign="middle" align="right" valign="top">
 
-'.boton(_('Cambiar nick'), 'submit', '¿Estás seguro de querer cambiar el nick?\n\n! ! !\nSOLO PODRAS CAMBIARLO UNA VEZ AL AÑO.\n! ! !', 'red large').'
+'.boton(_('Cambiar'), 'submit', '¿Estás seguro de querer cambiar el nick?\n\n! ! !\nSOLO PODRAS CAMBIARLO UNA VEZ AL AÑO.\n! ! !', 'red large').'
 </td></tr></table></form>
 
 </fieldset>
@@ -128,7 +128,7 @@ case 'panel':
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td valign="middle" align="center" valign="top">
-'.boton(_('ELIMINAR usuario permanentemente'), 'submit', '¿Estas seguro de querer ELIMINAR PERMANENTEMENTE tu usuario y todos los datos asociados?\n\nEl proceso es automático y la eliminación se efectuará tras 10 días.', 'small pill red').'
+'.boton(_('ELIMINAR usuario permanentemente'), 'submit', '¿Estas seguro de querer ELIMINAR PERMANENTEMENTE tu usuario y todos los datos de caracter privado de forma definitiva?\n\nEl proceso es automático y la eliminación se efectuará tras 10 días.', 'small red').'
 </td></tr></table></form>
 
 </fieldset>

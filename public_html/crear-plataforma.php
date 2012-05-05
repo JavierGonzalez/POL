@@ -11,26 +11,222 @@ include('inc-login.php');
 
 
 
-
-
 if ($_GET['a'] == 'accion') {
 	// ACCIONES
 
 	if (($_GET['b'] == 'add') AND (entre(strlen($_POST['pais']), 2, 10)) AND (is_numeric($_POST['participacion'])) AND ($_POST['condiciones_extra']== 'true')) {
-
 		mysql_query("INSERT INTO plataformas (estado, pais, asamblea, economia, user_ID, time, descripcion, participacion) 
 VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".$_POST['asamblea']."', '".$_POST['economia']."', '".$pol['user_ID']."', '".$date."', '".strip_tags($_POST['descripcion'])."', '".$_POST['participacion']."')", $link);
 		$txt .= '<p>Solicitud enviada correctamente.</p>';
+
 	} else { redirect('http://'.HOST.'/?error='.base64_encode('Solicitud erronea.')); }
 
 
 } elseif (($_GET['a'] == 'admin') AND ($pol['user_ID'] == 1)) {
-	// ADMIN
+
+
+	if (($_GET['b'] == 'aprobar') AND (is_numeric($_GET['ID']))) {			
+		// *** CREAR NUEVA PLATAFORMA ***
+		
+		$result = sql("SELECT * FROM plataformas WHERE ID = '".$_GET['ID']."' LIMIT 1");
+		while($r = r($result)) { 
+			
+			sql("UPDATE plataformas SET estado = 'creada' WHERE ID = '".$r['ID']."' LIMIT 1");
+
+			$param = array(
+'PAIS'=>array('valor'=>$r['pais'], 'autoload'=>'si'),
+'pais_des'=>array('valor'=>'Descripci&oacute;n provisional', 'autoload'=>'si'),
+
+'ECONOMIA'=>array('valor'=>$r['economia'], 'autoload'=>'si'),
+'ASAMBLEA'=>array('valor'=>$r['asamblea'], 'autoload'=>'si'),
+
+'lang'=>array('valor'=>'es_ES', 'autoload'=>'si'),
+'bg'=>array('valor'=>'tapiz-lineas-verdes.jpg', 'autoload'=>'si'),
+'defcon'=>array('valor'=>'5', 'autoload'=>'si'),
+
+'info_documentos'=>array('valor'=>'0', 'autoload'=>'si'),
+'info_censo'=>array('valor'=>'0', 'autoload'=>'si'),
+'info_partidos'=>array('valor'=>'0', 'autoload'=>'si'),
+'info_consultas'=>array('valor'=>'0', 'autoload'=>'si'),
+
+'palabras'=>array('valor'=>'-1::;-1::;-1::;-1::;-1::;-1::;-1::;-1::;-1::;', 'autoload'=>'si'),
+'palabras_num'=>array('valor'=>'8', 'autoload'=>'no'),
+'palabra_gob'=>array('valor'=>'', 'autoload'=>'si'),
+
+// EXPIRACIONES
+'examen_repe'=>array('valor'=>'86400', 'autoload'=>'no'),
+'chat_diasexpira'=>array('valor'=>'16', 'autoload'=>'no'),
+'examenes_exp'=>array('valor'=>'7776000', 'autoload'=>'no'),
+
+// MODULO SOCIOS
+'socios_estado'=>array('valor'=>'false', 'autoload'=>'si'),
+'socios_url'=>array('valor'=>'', 'autoload'=>'no'),
+'socios_ID'=>array('valor'=>'', 'autoload'=>'no'),
+'socios_descripcion'=>array('valor'=>'', 'autoload'=>'no'),
+'socios_responsable'=>array('valor'=>'', 'autoload'=>'no'),
+			);
+
+			if ($r['ASAMBLEA'] == 'true') {
+				$param['acceso'] = array('valor'=>'votacion_borrador;ciudadanos:|sondeo;cargo:6|referendum;cargo:6|parlamento;cargo:6|kick;cargo:6 13|kick_quitar;cargo:6 13|foro_borrar;cargo:6 13|control_gobierno;cargo:6|control_sancion;:|control_grupos;cargo:6|control_cargos;cargo:6|examenes_decano;cargo:6|examenes_profesor;privado:|crear_partido;cargo:6|control_socios;cargo:6', 'autoload'=>'si');
+
+				sql("INSERT INTO cargos (pais, cargo_ID, asigna, nombre, nivel, elecciones, elecciones_electos, elecciones_cada, elecciones_durante, elecciones_votan) VALUES ('".$r['pais']."', '6', '0', 'Coordinador', '100', '".date('Y-m-d 20:00:00', time()+60*60*24*7)."', '7', '14', '2', 'ciudadanos')");
+				$cargo_primario = 6;
+			} else {
+				$param['acceso'] = array('valor'=>'votacion_borrador;ciudadanos:|sondeo;cargo:7|referendum;cargo:7|parlamento;cargo:7|kick;cargo:7 13|kick_quitar;cargo:7 13|foro_borrar;cargo:7 13|control_gobierno;cargo:7|control_sancion;:|control_grupos;cargo:7|control_cargos;cargo:7|examenes_decano;cargo:7|examenes_profesor;privado:|crear_partido;cargo:7|control_socios;cargo:7', 'autoload'=>'si');
+
+				sql("INSERT INTO cargos (pais, cargo_ID, asigna, nombre, nivel, elecciones, elecciones_electos, elecciones_cada, elecciones_durante, elecciones_votan) VALUES ('".$r['pais']."', '7', '0', 'Presidente', '100', '".date('Y-m-d 20:00:00', time()+60*60*24*7)."', '1', '14', '2', 'ciudadanos')");
+				$cargo_primario = 7;
+			}
+			
+			sql("INSERT INTO cargos (pais, cargo_ID, asigna, nombre, nivel) VALUES ('".$r['pais']."', '13', '".$cargo_primario."', 'Moderador', '50')");
+
+
+			// PARAMETROS PRINCIPALES
+			foreach ($param AS $dato => $valores) {
+				sql("INSERT INTO config (pais, dato, valor, autoload) VALUES ('".$r['pais']."', '".$dato."', '".$valores['valor']."', '".$valores['autoload']."')");
+			}
+
+
+			// PARAMETROS DE ECONOMIA
+			if ($r['ECONOMIA'] == 'true') {
+				
+				$param_economia = array(
+'pols_inem'=>array('valor'=>'0', 'autoload'=>'no'),
+'pols_frase'=>array('valor'=>'', 'autoload'=>'si'),
+'online_ref'=>array('valor'=>'0', 'autoload'=>'no'),
+'factor_propiedad'=>array('valor'=>'0', 'autoload'=>'no'),
+'impuestos_minimo'=>array('valor'=>'0', 'autoload'=>'no'),
+'impuestos'=>array('valor'=>'0', 'autoload'=>'no'),
+'arancel_entrada'=>array('valor'=>'', 'autoload'=>'no'),
+'arancel_salida'=>array('valor'=>'0', 'autoload'=>'no'),
+'impuestos_empresa'=>array('valor'=>'0', 'autoload'=>'no'),
+'pols_afiliacion'=>array('valor'=>'0', 'autoload'=>'no'),
+'pols_fraseedit'=>array('valor'=>'', 'autoload'=>'si'),
+'pols_empresa'=>array('valor'=>'0', 'autoload'=>'si'),
+'pols_cuentas'=>array('valor'=>'0', 'autoload'=>'si'),
+'pols_partido'=>array('valor'=>'1', 'autoload'=>'si'),
+'pols_solar'=>array('valor'=>'0', 'autoload'=>'no'),
+'pols_mensajetodos'=>array('valor'=>'300', 'autoload'=>'no'),
+'pols_examen'=>array('valor'=>'0', 'autoload'=>'no'),
+'pols_mensajeurgente'=>array('valor'=>'0', 'autoload'=>'no'),
+'pols_crearchat'=>array('valor'=>'0', 'autoload'=>'no'),
+				);
+				foreach ($param_economia AS $dato => $valores) {
+					sql("INSERT INTO config (pais, dato, valor, autoload) VALUES ('".$r['pais']."', '".$dato."', '".$valores['valor']."', '".$valores['autoload']."')");
+				}
+
+				// CUENTA BANCARIA DE GOBIERNO
+				sql("INSERT INTO cuentas (pais, nombre, nivel, time, gobierno) VALUES ('".$r['pais']."', 'Gobierno', '98', '".$date."', 'true')");
+			}
+			
+			// CREAR TABLAS DE FOROS (LAS UNICAS INDEPENDIENTES POR CADA PLATAFORMA)
+			sql("CREATE TABLE `".strtolower($r['pais'])."_foros` (
+  `ID` smallint(5) NOT NULL auto_increment,
+  `subforo_ID` smallint(6) unsigned default NULL,
+  `url` varchar(50) character set utf8 NOT NULL default '',
+  `title` varchar(50) character set utf8 NOT NULL default '',
+  `descripcion` varchar(255) character set utf8 NOT NULL default '',
+  `acceso` tinyint(3) unsigned NOT NULL default '1',
+  `time` smallint(3) NOT NULL default '1',
+  `estado` enum('ok','eliminado') character set utf8 NOT NULL default 'ok',
+  `acceso_msg` tinyint(3) unsigned NOT NULL default '1',
+  `acceso_leer` varchar(900) character set utf8 NOT NULL default 'anonimos',
+  `acceso_escribir` varchar(900) character set utf8 NOT NULL default 'ciudadanos',
+  `acceso_escribir_msg` varchar(900) NOT NULL default 'ciudadanos',
+  `acceso_cfg_leer` varchar(900) character set utf8 NOT NULL default '',
+  `acceso_cfg_escribir` varchar(900) character set utf8 NOT NULL default '',
+  `acceso_cfg_escribir_msg` varchar(900) NOT NULL default '',
+  `limite` tinyint(3) unsigned NOT NULL default '8',
+  PRIMARY KEY  (`ID`),
+  UNIQUE KEY `url` (`url`),
+  KEY `estado` (`estado`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1");
+
+sql("CREATE TABLE `".strtolower($r['pais'])."_foros_hilos` (
+  `ID` mediumint(8) NOT NULL auto_increment,
+  `sub_ID` smallint(5) NOT NULL default '0',
+  `url` varchar(80) NOT NULL default '',
+  `user_ID` mediumint(8) NOT NULL default '0',
+  `title` varchar(80) NOT NULL default '',
+  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `time_last` datetime NOT NULL default '0000-00-00 00:00:00',
+  `text` text NOT NULL,
+  `cargo` tinyint(3) NOT NULL default '0',
+  `num` smallint(5) NOT NULL default '0',
+  `estado` enum('ok','borrado') NOT NULL default 'ok',
+  `votos` smallint(6) NOT NULL default '0',
+  `votos_num` mediumint(9) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`ID`),
+  UNIQUE KEY `url` (`url`),
+  KEY `sub_ID` (`sub_ID`),
+  KEY `time_last` (`time_last`),
+  KEY `estado` (`estado`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1");
+
+sql("CREATE TABLE `".strtolower($r['pais'])."_foros_msg` (
+  `ID` int(10) unsigned NOT NULL auto_increment,
+  `hilo_ID` mediumint(8) NOT NULL default '0',
+  `user_ID` mediumint(8) unsigned NOT NULL default '0',
+  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `text` text NOT NULL,
+  `cargo` tinyint(3) unsigned NOT NULL default '1',
+  `estado` enum('ok','borrado') NOT NULL default 'ok',
+  `time2` datetime NOT NULL default '0000-00-00 00:00:00',
+  `votos` smallint(6) NOT NULL default '0',
+  `votos_num` mediumint(8) NOT NULL default '0',
+  PRIMARY KEY  (`ID`),
+  KEY `foro_ID` (`hilo_ID`),
+  KEY `time` (`time`),
+  KEY `estado` (`estado`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1");
+
+			// PREGUNTA DE EXAMEN GENERICA
+			sql("INSERT INTO examenes_preg (pais, examen_ID, user_ID, time, pregunta, respuestas, tiempo) VALUES ('".$r['pais']."', '0', '0', '".$date."', 'Quieres ser candidato de este cargo', 'SI|NO', '15')");
+			
+			// CHAT PRINCIPAL
+			sql("INSERT INTO chats (pais, estado, url, titulo, user_ID, fecha_creacion, fecha_last) VALUES ('".$r['pais']."', 'activo', '".strtolower($r['pais'])."', 'Plaza de ".$r['pais']."', '0', '".$date."', '".$date."')");
+
+			// ESTADISTICAS DEL DIA 0
+			sql("INSERT INTO stats (pais, time) VALUES ('".$r['pais']."', '".date('Y-m-d 20:00:00')."')");
+		}
+
+		redirect('/crear-plataforma.php?a=admin');
+		// *** CREAR NUEVA PLATAFORMA ***
+	}
+	
+	// PANEL ADMIN
+	$txt .= '<table>
+<tr>
+<th></th>
+<th>Hace</th>
+<th>Nick</th>
+<th>Estado</th>
+<th>Nombre</th>
+<th title="Participación">Part</th>
+<th>Asam</th>
+<th>Econ</th>
+<th>Descripción</th>
+</tr>';
+	$result = sql("SELECT *, (SELECT nick FROM users WHERE ID = plataformas.user_ID LIMIT 1) AS nick FROM plataformas ORDER BY estado DESC");
+	while($r = r($result)) { 
+		$txt .= '<tr>
+<td>'.($r['estado']=='pendiente'?boton('Crear', '/crear-plataforma.php?a=admin&b=aprobar&ID='.$r['ID'], '¿Estás seguro de crear esta plataforma?', 'red'):'').'</td>
+<td nowrap>'.timer($r['time']).'</td>
+<td>'.crear_link($r['nick']).'</td>
+<td><b>'.ucfirst($r['estado']).'</b></td>
+<td><b style="font-size:20px;">'.$r['pais'].'</b></td>
+<td align="right">'.$r['participacion'].'</td>
+<td>'.$r['asamblea'].'</td>
+<td>'.$r['economia'].'</td>
+<td>'.$r['descripcion'].'</td>
+</tr>';
+	}
+	$txt .= '</table>';
+
+
 
 
 } else { // FORMULARIO AÑADIR PLATAFORMA
-
-
 
 	$txt .= '
 

@@ -30,8 +30,9 @@ $txt .= '
 <option value="2008">2008</option>
 <option value="2009">2009</option>
 <option value="2010">2010</option>
-<option value="2011" selected="selected">2011</option>
-<option value="2012">2012</option>
+<option value="2011">2011</option>
+<option value="2012" selected="selected">2012</option>
+<option value="2013">2013</option>
 </select>/
 <select name="mes">
 <option value="01" selected="selected">01</option>
@@ -55,12 +56,14 @@ $txt .= '
 
 <select name="pais">
 <option value="VirtualPol">VirtualPol</option>
-<option value="Desarrollo">Desarrollo</option>
-<option value="15M">15M</option>
-<option value="VP">VP</option>
-<option value="POL">POL</option>
-<option value="Hispania">Hispania</option>
-<option value="Atlantis">Atlantis</option>
+<option value="Desarrollo">Desarrollo</option>';
+
+foreach ($vp['paises'] AS $pais) {
+	$txt .= '<option value="'.$pais.'">'.$pais.'</option>';
+}
+
+$txt .= '
+
 </select>
 
 <input value="A&ntilde;adir" type="submit">
@@ -78,16 +81,14 @@ $txt .= '<table border="0" cellspacing="0" cellpadding="1">
 <tr><td valign="top" style="color:#999;">'.explodear(' ', $date, 0).'</td><td valign="top"><em><b>Hoy</b>...</em></td><td valign="top"></td></tr>
 ';
 
-$sc = get_supervisores_del_censo();
-
 $result = mysql_query("SELECT *
 FROM hechos
 WHERE estado = 'ok'
 ORDER BY time DESC", $link);
 while($r = mysql_fetch_array($result)) {
 
-	if (($r['nick'] == $pol['nick']) OR (isset($sc[$pol['user_ID']])) OR ($pol['nivel'] >= 97)) {
-		$boton = boton('x', '/accion.php?a=historia&b=del&ID='.$r['ID'], false 'small');
+	if (($r['nick'] == $pol['nick']) OR (nucleo_acceso('supervisores_censo')) OR ($pol['nivel'] >= 97)) {
+		$boton = boton('x', '/accion.php?a=historia&b=del&ID='.$r['ID'], false, 'small');
 	} else { $boton = ''; }
 	// <td valign="top" style="font-size:14px;" align="right">'.$r['nick'].'</td>
 	$txt .= '<tr style="background:'.$vp['bg'][$r['pais']].';"><td valign="top" style="color:#999;" nowrap="nowrap">'.$r['time'].'</td><td valign="top">'.$r['texto'].'</td><td valign="top">'.$boton.'</td></tr>';

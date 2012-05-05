@@ -430,7 +430,6 @@ ORDER BY num DESC, IP ASC");
 	while($r = r($result)) {
 		$clones = array();
 		$nota_SC = '';
-		$desarrollador = false;
 		$clones_expulsados = true;
 		$confianza_total = 0;
 		$result2 = sql("SELECT ID, nick, estado, pais, partido_afiliado, nota_SC, 
@@ -443,7 +442,7 @@ ORDER BY fecha_registro DESC");
 			if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 			$clones[] = '<b>'.crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']).'</b>';
 		}
-		if ((!$desarrollador) AND (!$clones_expulsados)) {
+		if (!$clones_expulsados) {
 			$txt .= '<tr><td>' . $r['num'] . '</td><td><span style="float:right;">'.ocultar_IP($r['host'], 'host').'</span>'.implode(' & ', $clones).'</td><td>'.long2ip($r['IP']).'</td><td nowrap="nowrap">'.$nota_SC.'</td></tr>';
 		}
 	}
@@ -911,7 +910,6 @@ ORDER BY time ASC");
 ';
 
 $sel = '';
-$sel[$pol['config']['frontera']] = ' selected="selected"';
 
 	$txt .= '<tr><td colspan="2"></td></tr></table>
 </fieldset>

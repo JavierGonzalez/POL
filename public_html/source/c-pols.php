@@ -168,17 +168,9 @@ ORDER BY nivel DESC, pols DESC", $link);
 
 
 
-} elseif (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'desarrollador')) {
+} elseif (nucleo_acceso('ciudadanos')) {
 
-
-
-
-	if (PAIS != $pol['pais']) {
-		header('Location: http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/');
-		exit;
-	}
-
-
+	if (PAIS != $pol['pais']) { redirect('http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols'); }
 
 	if (($_GET['a']) AND ($_GET['b'])) { 
 		$pre_nick = $_GET['b']; 

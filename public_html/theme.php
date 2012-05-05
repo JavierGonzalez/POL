@@ -45,6 +45,7 @@ if (isset($_GET['bg'])) {
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '<?=IMG?>';
+_ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos segundos','En','Hace') AS $d) { echo '"'.$d.'":"'._($d).'",'; } ?>};
 p_scroll = false;
 </script>
 
@@ -104,7 +105,7 @@ echo '<p><b>'.num($li_online_num).' '._('ciudadanos').'</b> '._('online').':<br 
 <?php
 unset($txt_header);
 if (isset($pol['user_ID'])) {
-	echo '<span class="htxt"><b><a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst(_($pol['estado'])).'</b>)':'').' | <a href="'.REGISTRAR.'login.php?a=logout">'._('Salir').'</a></b></span>';
+	echo '<span class="htxt"><b><a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst(_($pol['estado'])).'</b>)':'').' | <a href="'.REGISTRAR.'login.php?a=panel">'._('Opciones').'</a> | <a href="'.REGISTRAR.'login.php?a=logout">'._('Salir').'</a></b></span>';
 } else {
 	echo boton(_('Crear ciudadano'), REGISTRAR.'?p='.PAIS, false, 'large blue').' '.boton(_('Entrar'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), false, 'large');
 }

@@ -57,7 +57,7 @@ VALUES ('".$date."', '".$date."', '".PAIS."', '".($last_socio_ID==0?10000:$last_
 	} elseif (($_GET['b'] == 'aprobar') AND (nucleo_acceso($vp['acceso']['control_socios'])) AND (is_numeric($_GET['ID']))) {
 		$result = sql("SELECT ID, user_ID FROM socios WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND estado != 'socio' LIMIT 1");
 		while($r = r($result)) {
-			sql("UPDATE socios SET estado = 'socio' WHERE ID = '".$_GET['ID']."' LIMIT 1");
+			sql("UPDATE socios SET estado = 'socio', validador_ID = '".$pol['user_ID']."' WHERE ID = '".$_GET['ID']."' LIMIT 1");
 			sql("UPDATE users SET socio = 'true' WHERE ID = '".$r['user_ID']."' LIMIT 1");
 			cargo_add($pol['config']['socios_ID'], $r['user_ID']);
 		}
@@ -66,7 +66,7 @@ VALUES ('".$date."', '".$date."', '".PAIS."', '".($last_socio_ID==0?10000:$last_
 	} elseif (($_GET['b'] == 'rescindir') AND (nucleo_acceso($vp['acceso']['control_socios'])) AND (is_numeric($_GET['ID']))) {
 		$result = sql("SELECT ID, user_ID FROM socios WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND estado = 'socio' LIMIT 1");
 		while($r = r($result)) {
-			sql("UPDATE socios SET estado = 'rescindido' WHERE ID = '".$_GET['ID']."' LIMIT 1");
+			sql("UPDATE socios SET estado = 'rescindido', validador_ID = '".$pol['user_ID']."' WHERE ID = '".$_GET['ID']."' LIMIT 1");
 			sql("UPDATE users SET socio = 'false' WHERE ID = '".$r['user_ID']."' LIMIT 1");
 			cargo_del($pol['config']['socios_ID'], $r['user_ID']);
 		}

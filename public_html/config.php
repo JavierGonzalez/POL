@@ -46,15 +46,16 @@ $vp['langs'] = array(
 );
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)
-$vp['paises'] = array('15M', 'Hispania', 'DRY', 'MIC'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
-$vp['paises_chat'] = array(''=>4, 'VP'=>4, '15M'=>5, 'Hispania'=>6, 'MIC'=>7, 'DRY'=>1);
-$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'MIC'=>'#FFD7D7', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'DRY' => '#FBDB03', 'www'=>'#eeeeee');
+$vp['paises'] = array('15M', 'Hispania', 'DRY', 'MIC', 'ETSIIT'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
+$vp['paises_chat'] = array(''=>4, 'VP'=>4, '15M'=>5, 'Hispania'=>6, 'MIC'=>7, 'DRY'=>1, 'ETSIIT'=>536);
+$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'MIC'=>'#FFD7D7', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'DRY' => '#FBDB03', 'ETSIIT'=>'#66ccff', 'www'=>'#eeeeee');
 
 switch ($pais) { 
 	case '15m': break;
 	case 'hispania': break;
 	case 'mic': break;
 	case 'dry': break;
+	case 'etsiit': break;
 
 	// PLATAFORMAS INACTIVAS
 	case 'pol':			define('PAIS', 'POL'); break;

@@ -689,6 +689,7 @@ case 'gobierno':
 'referendum'=>_('Aprobar referéndums'),
 'sondeo'=>_('Aprobar sondeos'),
 'votacion_borrador'=>_('Crear borradores de votación'),
+'control_socios'=>_('Gestión de socios'),
 );
 		
 		$txt .= '<p>'._('Los privilegios permiten realizar acciones especiales. Este panel muestra los privilegios y quien los ejerce actualmente').'.</p>
@@ -997,7 +998,13 @@ $(function() {
 	}
 	$txt .= '</select></td></tr>
 
-'.(ASAMBLEA?'<input type="hidden" name="defcon" value="5" /><input type="hidden" name="online_ref" value="0" />':'<tr><td align="right">DEFCON:</td><td>'.$defcon.'</td></tr><tr><td align="right">'._('Referencia').':</td><td><input style="text-align:right;" type="text" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '"'.$dis.' /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td></tr>');
+'.(!ECONOMIA?'<input type="hidden" name="defcon" value="5" /><input type="hidden" name="online_ref" value="0" />':'<tr><td align="right">DEFCON:</td>
+<td>'.$defcon.'</td></tr>
+
+<tr><td align="right">'._('Referencia').':</td>
+<td><input style="text-align:right;" type="text" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '"'.$dis.' /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td>
+
+</tr>');
 
 $palabra_gob = explode(':', $pol['config']['palabra_gob']);
 

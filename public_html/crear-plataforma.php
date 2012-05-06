@@ -60,7 +60,6 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
 
 // MODULO SOCIOS
 'socios_estado'=>array('valor'=>'false', 'autoload'=>'si'),
-'socios_url'=>array('valor'=>'', 'autoload'=>'no'),
 'socios_ID'=>array('valor'=>'', 'autoload'=>'no'),
 'socios_descripcion'=>array('valor'=>'', 'autoload'=>'no'),
 'socios_responsable'=>array('valor'=>'', 'autoload'=>'no'),

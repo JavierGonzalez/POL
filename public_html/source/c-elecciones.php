@@ -34,7 +34,7 @@ while($r = mysql_fetch_array($result)) {
 	$time_anterior = strtotime($r['elecciones'])-($r['elecciones_cada']*24*60*60);
 
 	$txt .= '<tr>
-<td align="right" width="320"><b style="font-size:16px;">'._('Elecciones a').' '.$r['nombre'].'</b></td>
+<td align="right" width="320" style="font-size:16px;" class="gris">'._('Elecciones a').' '.$r['nombre'].'</td>
 
 <td><a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /></a></td>
 
@@ -93,7 +93,7 @@ while($r = mysql_fetch_array($result)) {
 			$d = explode('.', $d);
 			if ($d[2] != 'B') {
 				$cnum++;
-				$txt .= '<tr'.($cnum<=$elecciones_electos?' style="font-weight:bold;"':'').'><td align="right">'.($d[2]&&$d[2]!='COORDINACION'?$d[2]:'').'</td><td>'.crear_link($d[0]).'</td><td align="right">'.$d[1].'</td></tr>';
+				$txt .= '<tr'.($cnum<=$elecciones_electos?' style="font-weight:bold;"':'').'><td align="right">'.($d[2]&&$d[2]!='COORDINACION'?$d[2]:'').'</td><td nowrap>'.($cnum<=$elecciones_electos?'<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /> ':'').''.crear_link($d[0]).'</td><td align="right">'.$d[1].'</td></tr>';
 				$escrutinio_d[] = $d[1];
 			}
 		}

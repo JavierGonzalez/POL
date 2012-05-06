@@ -68,7 +68,7 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 		$fecha_init = $r['fecha_init'];
 		$fecha_last = $r['fecha_last'];
 		
-		if (isset($r['lang'])) { $pol['config']['lang'] = $r['lang']; }
+		if ((isset($r['lang'])) AND ($_SERVER['REQUEST_URI'] != '/accion.php')) { $pol['config']['lang'] = $r['lang']; }
 
 		$_SESSION['pol']['cargo'] = $r['cargo'];
 		$_SESSION['pol']['cargos'] = $r['cargos'];
@@ -121,9 +121,10 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	if ($pol['estado'] == 'expulsado') {  session_unset(); session_destroy(); }
 }
 
-if ((isset($pol['config']['lang'])) AND ($pol['config']['lang'] != 'es_ES')) {
+$vp['lang'] = $pol['config']['lang'];
+if ((isset($vp['lang'])) AND ($vp['lang'] != 'es_ES')) {
 	// Carga internacionalización
-	$locale = $pol['config']['lang'];
+	$locale = $vp['lang'];
 	putenv("LC_ALL=$locale");
 	setlocale(LC_ALL, $locale);
 	bindtextdomain('messages', '../locale');

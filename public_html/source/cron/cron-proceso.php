@@ -406,8 +406,8 @@ if (date('N') == 7) { // SOLO DOMINGO
 
 	// Guardar historico de confianza (un dato por semana)
 	$result = mysql_query("SELECT ID, voto_confianza FROM users WHERE pais = '".PAIS."'", $link);
-	while ($r = mysql_fetch_array($result)) { 
-		mysql_query("UPDATE users SET confianza_historico = CONCAT(confianza_historico,'|".$r['voto_confianza']."') WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+	while ($r = mysql_fetch_array($result)) {
+		mysql_query("UPDATE users SET confianza_historico = CONCAT(confianza_historico,' ".$r['voto_confianza']."') WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 	}
 	
 	// Actualizar nuevos SC

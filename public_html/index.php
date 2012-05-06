@@ -10,9 +10,7 @@
 include('inc-login.php');
 
 
-$txt_description = 'La primera Red Social Democrática. Simulador Politico y social Español, democracia participativa, simulador, politica'; 
-
-
+$txt_description = _('La primera Red Social Democrática').'. Simulador Politico y social Español, democracia participativa, simulador, politica'; 
 
 /* Datos estadisticos
 Se contabilizan los siguientes datos antiguos conservadas en tablas antiguas.
@@ -34,10 +32,7 @@ while($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
 
 $txt_nav = array(_('Bienvenido a VirtualPol'));
 
-$txt .= '
-
-
-<table>
+$txt .= '<table>
 
 <tr><td valign="top">
 
@@ -71,8 +66,8 @@ $txt .= '
 
 <table border="0" cellpadding="2" cellspacing="0">
 <tr>
-<th colspan="2" align="left">Plataformas</th>
-<th colspan="2" align="left">Población</th>
+<th colspan="2" align="left">'._('Plataformas').'</th>
+<th colspan="2" align="left">'._('Población').'</th>
 </tr>';
 
 $result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE dnie = 'true'", $link);
@@ -125,7 +120,7 @@ foreach ($vp['paises'] AS $pais) {
 <td nowrap="nowrap"><a href="http://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
 
 <td align="right"><b style="font-size:22px;">'.num($pais_pob).'</b></td>
-<td nowrap="nowrap" align="right"><b>'.num($pais_dias).'</b> días</td>
+<td nowrap="nowrap" align="right"><b>'.num($pais_dias).'</b> '._('días').'</td>
 
 </tr>';
 
@@ -149,36 +144,25 @@ $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="4"></td></tr>
 <tr>
 <td colspan="2" rowspan="2" align="center" valign="top"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=190x90&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB&chf=bg,s,ffffff01|c,s,ffffff01&chco=FF9900|FFBE5E|FFD08A|FFDBA6" alt="Reparto del censo - Simulador Politico" title="Reparto de la poblaci&oacute;n entre plataformas." width="190" height="90" /></td>
 <td align="right" valign="top"><b style="font-size:20px;">'.num($poblacion_num).'</b></td>
-<td colspan="2" valign="middle"><b>Ciudadanos</b></td>
+<td colspan="2" valign="middle"><b>'._('Ciudadanos').'</b></td>
 </tr>
 
 <tr>
-<td align="right" valign="top" colspan="2"><b>'.num($autentificados).'</b> Autentificados</td>
+<td align="right" valign="top" colspan="2"><b>'.num($autentificados).'</b> '._('Autentificados').'</td>
 </tr>
 
-
 <tr>
-<td colspan="4" align="right">'.(nucleo_acceso('antiguedad', 2)?boton('Solicitar nueva plataforma', '/crear-plataforma.php', false, 'small pill'):'').'</td>
+<td colspan="4" align="right">'.(nucleo_acceso('antiguedad', 2)?boton(_('Solicitar nueva plataforma'), '/crear-plataforma.php', false, 'small pill'):'').'</td>
 </tr>
 
 </table>
 
-
-
-</td></tr></table>
-
-'.(isset($pol['nick'])?'':'<p style="text-align:center;">'.boton('Crear ciuadano', REGISTRAR, false, 'large blue').'</p>');
-
-
+</td></tr></table>';
 
 $result = sql("SELECT COUNT(*) AS num FROM plataformas WHERE estado = 'pendiente'");
 while($r = r($result)) { $plat_num = $r['num']; }
 
-if ($pol['user_ID'] == 1) {
-	$txt_tab['/crear-plataforma.php?a=admin'] = 'Plataformas pendientes ('.$plat_num.')';
-}
-
-$txt_header .= '<style type="text/css">td b { font-size:15px; }</style>';
+if ($pol['user_ID'] == 1) { $txt_tab['/crear-plataforma.php?a=admin'] = 'Plataformas pendientes ('.$plat_num.')'; }
 
 include('theme.php');
 ?>

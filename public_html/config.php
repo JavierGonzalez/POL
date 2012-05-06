@@ -37,18 +37,21 @@ while ($r = r($result)) {
 
 // LENGUAJES ACTIVADOS
 $vp['langs'] = array(
-'es_ES'=>'Español',
-'en_US'=>'English (30%)',
-'ca_ES'=>'Català (30%)',
+'es_ES'=>'Español (100%)',
+'en_US'=>'English (40%)',
+'ca_ES'=>'Català (40%)',
 'eu'=>'Euskera (30%)',
 'gl_ES'=>'Galego (30%)',
 'de_DE'=>'Deutsch (30%)',
+'eo'=>'Esperanto (20%)',
+'fr'=>'Français (20%)',
+'ja'=>'Japanese (10%)',
+'pt'=>'Português (10%)',
 );
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)
-$vp['paises'] = array('15M', 'Hispania', 'DRY', 'MIC', 'ETSIIT'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
-$vp['paises_chat'] = array(''=>4, 'VP'=>4, '15M'=>5, 'Hispania'=>6, 'MIC'=>7, 'DRY'=>1, 'ETSIIT'=>536);
-$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'MIC'=>'#FFD7D7', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'DRY' => '#FBDB03', 'ETSIIT'=>'#66ccff', 'www'=>'#eeeeee');
+$vp['paises'] = array('15M', 'Hispania', 'DRY', 'MIC', 'ETSIIT', 'Occupy'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
+$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'MIC'=>'#FFD7D7', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'DRY' => '#FBDB03', 'ETSIIT'=>'#9FE0FF', 'Occupy'=>'#bbffaa', 'www'=>'#eeeeee');
 
 switch ($pais) { 
 	case '15m': break;
@@ -56,6 +59,7 @@ switch ($pais) {
 	case 'mic': break;
 	case 'dry': break;
 	case 'etsiit': break;
+	case 'occupy': break;
 
 	// PLATAFORMAS INACTIVAS
 	case 'pol':			define('PAIS', 'POL'); break;

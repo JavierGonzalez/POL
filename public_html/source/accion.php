@@ -28,17 +28,18 @@ switch ($_GET['a']) { //############## BIG ACTION SWITCH ############
 
 
 case 'socios';
+	$refer_url = 'socios';
 	$es_socio = false;
 	$result = sql("SELECT ID, estado, socio_ID FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
 	while($r = r($result)) { $es_socio = true; $socio_estado = $r['estado']; $socio_numero = PAIS.$r['socio_ID']; }
 
-	if (($_GET['b'] == 'inscribirse') AND (nucleo_acceso('ciudadanos')) AND ($es_socio == false) AND ($pol['config']['socios_estado'] == 'true')) {
+	if (($_GET['b'] == 'inscribirse') AND (nucleo_acceso('ciudadanos')) AND ($es_socio == false) AND ($pol['config']['socios_estado'] == 'true') AND ($_POST['nombre']) AND ($_POST['NIF']) AND ($_POST['localidad']) AND ($_POST['cp']) AND ($_POST['contacto_email'])) {
 		$last_socio_ID = 0;
 		$result = sql("SELECT socio_ID FROM socios WHERE pais = '".PAIS."' ORDER BY socio_ID DESC LIMIT 1");
 		while($r = r($result)) { $last_socio_ID = $r['socio_ID']; }
 		
 		sql("INSERT INTO socios (time, time_last, pais, socio_ID, user_ID, nombre, NIF, pais_politico, localidad, cp, direccion, contacto_email, contacto_telefono) 
-VALUES ('".$date."', '".$date."', '".PAIS."', '".($last_socio_ID==0?10000:$last_socio_ID+1)."', '".$pol['user_ID']."', '".$_POST['nombre']."', '".$_POST['NIF']."', '".$_POST['pais_politico']."', '".$_POST['localidad']."', '".$_POST['cp']."', '".$_POST['direccion']."', '".$_POST['contacto_email']."', '".str_replace(' ', '', $_POST['contacto_telefono'])."')");
+VALUES ('".$date."', '".$date."', '".PAIS."', '".($last_socio_ID==0?10000:$last_socio_ID+1)."', '".$pol['user_ID']."', '".ucfirst(trim($_POST['nombre']))."', '".str_replace(' ', '', str_replace('-', '', strtoupper(trim($_POST['NIF']))))."', '".$_POST['pais_politico']."', '".ucfirst($_POST['localidad'])."', '".trim($_POST['cp'])."', '".ucfirst(trim($_POST['direccion']))."', '".strtolower(trim($_POST['contacto_email']))."', '".str_replace(' ', '', trim($_POST['contacto_telefono']))."')");
 
 	} elseif (($_GET['b'] == 'cancelar') AND ($es_socio)) {
 		sql("DELETE FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
@@ -49,8 +50,8 @@ VALUES ('".$date."', '".$date."', '".PAIS."', '".($last_socio_ID==0?10000:$last_
 		}
 
 	} elseif (($_GET['b'] == 'configurar') AND (nucleo_acceso($vp['acceso']['control_socios']))) {
-		foreach (array('socios_estado', 'socios_url', 'socios_ID', 'socios_descripcion', 'socios_responsable') AS $dato) {
-			sql("UPDATE config SET valor = '".strip_tags(trim($_POST[$dato]))."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
+		foreach (array('socios_estado', 'socios_ID', 'socios_descripcion', 'socios_responsable') AS $dato) {
+			sql("UPDATE config SET valor = '".nl2br(strip_tags(trim($_POST[$dato])))."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
 		}
 		$refer_url = 'socios/configurar';
 
@@ -64,15 +65,19 @@ VALUES ('".$date."', '".$date."', '".PAIS."', '".($last_socio_ID==0?10000:$last_
 		$refer_url = 'socios/inscritos';
 	
 	} elseif (($_GET['b'] == 'rescindir') AND (nucleo_acceso($vp['acceso']['control_socios'])) AND (is_numeric($_GET['ID']))) {
-		$result = sql("SELECT ID, user_ID FROM socios WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND estado = 'socio' LIMIT 1");
-		while($r = r($result)) {
-			sql("UPDATE socios SET estado = 'rescindido', validador_ID = '".$pol['user_ID']."' WHERE ID = '".$_GET['ID']."' LIMIT 1");
-			sql("UPDATE users SET socio = 'false' WHERE ID = '".$r['user_ID']."' LIMIT 1");
-			cargo_del($pol['config']['socios_ID'], $r['user_ID']);
-		}
 		$refer_url = 'socios/asociados';
+		$result = sql("SELECT ID, user_ID, estado FROM socios WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1");
+		while($r = r($result)) {
+			sql("UPDATE users SET socio = 'false' WHERE ID = '".$r['user_ID']."' LIMIT 1");
+			if ($r['estado'] == 'socio') {
+				sql("UPDATE socios SET estado = 'rescindido', validador_ID = '".$pol['user_ID']."' WHERE ID = '".$_GET['ID']."' LIMIT 1");
+				cargo_del($pol['config']['socios_ID'], $r['user_ID']);
+			} else { 
+				sql("DELETE FROM socios WHERE ID = '".$_GET['ID']."' LIMIT 1");
+				$refer_url = 'socios/inscritos'; 
+			}
+		}
 	}
-	if (!$refer_url) { $refer_url = 'socios'; }
 	break;
 
 
@@ -946,6 +951,7 @@ case 'gobierno':
 		$refer_url = 'control/gobierno/categorias';
 
 	} elseif (($_GET['b'] == 'privilegios') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
+		$_POST['control_socios'] = 'cargo';
 		$result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'acceso'");
 		while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 		$accesos = array();

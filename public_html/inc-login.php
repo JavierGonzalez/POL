@@ -59,10 +59,10 @@ if (isset($_COOKIE['teorizauser'])) {
 	}  
 }
 
-
-if ((isset($pol['config']['lang'])) AND ($pol['config']['lang'] != 'es_ES')) {
+$vp['lang'] = $pol['config']['lang'];
+if ((isset($vp['lang'])) AND ($vp['lang'] != 'es_ES')) {
 	// Carga internacionalización
-	$locale = $pol['config']['lang'];
+	$locale = $vp['lang'];
 	putenv("LC_ALL=$locale");
 	setlocale(LC_ALL, $locale);
 	bindtextdomain('messages', '/locale');

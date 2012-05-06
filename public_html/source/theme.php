@@ -30,7 +30,7 @@ if (isset($_GET['bg'])) {
 <head>
 <title><?=$txt_title?></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<meta name="language" content="<?=(isset($pol['config']['lang'])?$pol['config']['lang']:'es_ES')?>" />
+<meta name="language" content="<?=(isset($vp['lang'])?$vp['lang']:'es_ES')?>" />
 <meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS.' | VirtualPol')?>" />
 
 <link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css" media="all" />
@@ -114,6 +114,7 @@ _ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos s
 			<li><a href="/votacion"><b><?=_('Votaciones')?></b><span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
 			<li><a href="/cargos"><?=_('Cargos')?></a>
 				<ul>
+					<?=($pol['config']['socios_estado']=='true'?'<li><a href="/socios">'._('Socios').'</a></li>':'')?>
 					<li><a href="/grupos"><?=_('Grupos')?></a></li>
 					<li><a href="/examenes"><?=_('Exámenes')?></a></li>
 				</ul>
@@ -148,9 +149,15 @@ _ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos s
 
 	<div id="menu-next">
 
-<?php 
+<?php
 
-if (PAIS != 'DRY') { echo '<p style="color:#999;"><b>33%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="Expansión Internacional de VirtualPol.">Traducción VirtualPol</a></p>'; }
+if (($pol['config']['socios_estado']=='true') AND (nucleo_acceso('ciudadanos')) AND (!nucleo_acceso('socios'))) {
+	//echo '<p style="text-align:center;">'.boton(_('Inscríbete como socio'), '/socios', false, 'orange small').'</p>';
+}
+
+
+echo '<p style="color:#999;"><b>40%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="'._('VirtualPol está siendo traducido desde el Español original a muchos más idiomas. Puedes ayudar en la traducción. ¡Gracias!').'">'._('Traducción VirtualPol').'</a></p>';
+
 if (PAIS == '15M') { echo '<p style="color:#999;"><b>'.timer('2012-05-12 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="12 de Mayo: Movilización Global"><b>12M</b></a>.</p><p style="color:#999;"><b>'.timer('2012-05-15 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="15 de Mayo"><b>15M</b></a>.</p>'; }
 
 echo '<p id="palabras">';
@@ -244,7 +251,7 @@ if (!isset($pol['user_ID'])) {
 echo '<table border="0"><tr><td height="30" nowrap="nowrap"><b>'.PAIS.', '.$pol['config']['pais_des'].'</b></td>';
 
 if (ASAMBLEA) {
-	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-text="VirtualPol, la primera red social democrática" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="15M">Twittear</a>
+	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-text="VirtualPol, '._('la primera red social democrática').'" data-lang="'.($vp['lang']=='es_ES'?'es':'en').'" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="15M">'.($vp['lang']=='es_ES'?'Twittear':'Twitt').'</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>
 
 <td><g:plusone annotation="none"></g:plusone></td>
@@ -261,7 +268,7 @@ if (ASAMBLEA) {
 ';
 
 } else {
-	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-text="VirtualPol, la primera red social democrática" data-lang="es" data-size="large" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">Twittear</a>
+	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-text="VirtualPol, '._('la primera red social democrática').'" data-lang="'.($vp['lang']=='es_ES'?'es':'en').'" data-size="large" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">'.($vp['lang']=='es_ES'?'Twittear':'Twitt').'</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>
 
 <td><g:plusone annotation="none" href="http://'.HOST.'"></g:plusone></td>
@@ -275,7 +282,7 @@ if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != ':') AND ($po
 	echo '<div class="azul"><b><a href="http://'.explodear(':', $pol['config']['palabra_gob'], 1).'">'.explodear(':', $pol['config']['palabra_gob'], 0).'</a></b></div><br />';
 }
 
-if (!ASAMBLEA) {
+if ((ECONOMIA) AND (isset($pol['config']['pols_frase']))) {
 	echo '<div class="amarillo"><b>'.$pol['config']['pols_frase'].'</b></div>';
 	if ($pol['config']['pols_fraseedit'] == $pol['user_ID']) { echo ' <a href="/subasta/editar" class="gris">#</a>'; }
 }

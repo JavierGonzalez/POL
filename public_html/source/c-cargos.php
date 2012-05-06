@@ -70,6 +70,7 @@ ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
 		while($r2 = mysql_fetch_array($result2)){
 
 			if ($r['asigna'] > 0) { $asignador = nucleo_acceso('cargo', $r['asigna']); } else { $asignador = false; }
+			if ($r['nombre'] == 'Socio') { $asignador = false; }
 
 			if ($r2['nick_estado'] == 'ciudadano') {
 				if ($r2['cargo'] == 'true') {
@@ -171,6 +172,9 @@ LIMIT 1", $link);
 		$txt_tab['/cargos/editar/elecciones'] = _('Editar elecciones');
 		$txt_tab['/control/gobierno/privilegios'] = _('Privilegios');
 	}
+	if (($pol['config']['socios_estado']=='true') AND (nucleo_acceso('ciudadanos'))) {
+		$txt_tab['/socios'] = 'Socios';
+	}
 
 	if ($_GET['a'] == 'editar') { 
 		$editar = true; 
@@ -226,21 +230,28 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 			$txt_el_td .= '<td>';
 			
 			if ($pol['pais'] == PAIS) {
-				if ($r['cargo'] == 'true') {
-					$txt_el_td .= boton(_('Dimitir'), '/accion.php?a=cargo&b=dimitir&ID='.$r['cargo_ID'], '¿Estás seguro de querer DIMITIR?\n\n¡ES IRREVERSIBLE!', 'red');
-				} else if ($r['aprobado'] == 'ok') {
-					$txt_el_td .= boton(_('Repetir').' ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue').' '.boton(_('Retirar'), '/accion.php?a=examenes&b=retirar_examen&ID='.$r['cargo_ID'], false, 'red');
-				} else if ($r['aprobado'] == 'no') {
-					if (($r['autocargo'] == 'true') AND (nucleo_acceso('cargo', implode(' ', $cargos_automaticos)))) { // Tienes al menos un cargo automatico
-						$txt_el_td .= '<span class="gris">'._('Solo puedes ejercer un cargo automático').'.</span>';
-					} else {
-						$txt_el_td .= boton(($r['autocargo']=='true'?_('Ser miembro'):_('Ser candidato')).' ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue');
-					}
+				if (($r['nombre'] == 'Socio') AND ($pol['config']['socios_estado']=='true') AND (nucleo_acceso('ciudadanos'))) {
+					// Boton de socio
+					$txt_el_td .= boton(_('Ser socio'), '/socios', false, 'orange');
 				} else {
-					if (($r['autocargo'] == 'true') AND (nucleo_acceso('cargo', implode(' ', $cargos_automaticos)))) { // Tienes al menos un cargo automatico
-						$txt_el_td .= '<span class="gris">'._('Solo puedes ejercer un cargo automático').'.</span>';
+					if ($r['cargo'] == 'true') {
+						$txt_el_td .= boton(_('Dimitir'), '/accion.php?a=cargo&b=dimitir&ID='.$r['cargo_ID'], '¿Estás seguro de querer DIMITIR?\n\n¡ES IRREVERSIBLE!', 'red');
+					} else if ($r['aprobado'] == 'ok') {
+						$txt_el_td .= boton(_('Repetir').' ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue').' '.boton(_('Retirar'), '/accion.php?a=examenes&b=retirar_examen&ID='.$r['cargo_ID'], false, 'red');
+					} else if ($r['aprobado'] == 'no') {
+						if (($r['autocargo'] == 'true') AND (nucleo_acceso('cargo', implode(' ', $cargos_automaticos)))) { 
+							// Tienes al menos un cargo automatico
+							$txt_el_td .= '<span class="gris">'._('Solo puedes ejercer un cargo automático').'.</span>';
+						} else {
+							$txt_el_td .= boton(($r['autocargo']=='true'?_('Ser miembro'):_('Ser candidato')).' ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue');
+						}
 					} else {
-						$txt_el_td .= boton(($r['autocargo']=='true'?_('Ser miembro'):_('Ser candidato')), '/examenes/'.$r['examen_ID'], false, 'blue');
+						if (($r['autocargo'] == 'true') AND (nucleo_acceso('cargo', implode(' ', $cargos_automaticos)))) { 
+							// Tienes al menos un cargo automatico
+							$txt_el_td .= '<span class="gris">'._('Solo puedes ejercer un cargo automático').'.</span>';
+						} else {
+							$txt_el_td .= boton(($r['autocargo']=='true'?_('Ser miembro'):_('Ser candidato')), '/examenes/'.$r['examen_ID'], false, 'blue');
+						}
 					}
 				}
 			}

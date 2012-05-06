@@ -40,21 +40,15 @@ $txt .= '</select>
 </tr>
 
 <tr>
-<td align="right">Responsable de datos</td>
+<td align="right">Cesión y responsable de datos</td>
 <td><input type="text" name="socios_responsable" value="'.$pol['config']['socios_responsable'].'" size="40" maxlength="90" /></td>
 </tr>
 
-<tr>
-<td align="right">URL de condiciones/estatutos</td>
-<td><input type="text" name="socios_url" value="'.$pol['config']['socios_url'].'" size="60" maxlength="300" /></td>
-</tr>
-
-
 
 <tr>
-<td align="right" valign="top">Descripción extra</td>
-<td><textarea name="socios_descripcion" style="width:400px;height:150px;">
-'.$pol['config']['socios_descripcion'].'
+<td align="right" valign="top">Condiciones adicionales</td>
+<td><textarea name="socios_descripcion" style="width:500px;height:250px;">
+'.strip_tags($pol['config']['socios_descripcion']).'
 </textarea></td>
 </tr>
 
@@ -73,6 +67,18 @@ $txt .= '</select>
 
 } elseif ((($_GET['a'] == 'inscritos') OR ($_GET['a'] == 'asociados')) AND (nucleo_acceso('ciudadanos')) AND (nucleo_acceso($vp['acceso']['control_socios']))) {
 	// Lista de inscritos
+
+	function comprobar_nif($nif) {
+		$letras = explode(',','T,R,W,A,G,M,Y,F,P,D,X,B,N,J,Z,S,Q,V,H,L,C,K,E');
+		if (
+		(strlen($nif)!=9) ||
+		(!is_long($entero=intval(substr($nif,0,8)))) ||
+		(!in_array($letra=strtoupper(substr($nif,8,1)),$letras)) ||
+		($letra!=$letras[$entero%23])
+		){ return false; } else { return true; }
+	}
+
+
 	if ($_GET['a'] == 'asociados') { $socios = true; } else { $socios = false; }
 	$txt .= '<table>
 <tr>
@@ -91,17 +97,17 @@ $txt .= '</select>
 	$result = sql("SELECT *, (SELECT nick FROM users WHERE ID = socios.user_ID LIMIT 1) AS nick FROM socios WHERE pais = '".PAIS."'".($socios?" AND estado = 'socio'":" AND estado != 'socio'")." LIMIT 10");
 	while($r = r($result)) { 
 		$txt .= '<tr>
-<td>'.($socios?boton('Rescindir', '/accion.php?a=socios&b=rescindir&ID='.$r['ID'], '¿Estás seguro de querer EXPULSAR a este socio?', 'small red'):boton('Aprobar', '/accion.php?a=socios&b=aprobar&ID='.$r['ID'], false, 'small blue')).'</td>
+<td nowrap>'.($socios?boton('Rescindir', '/accion.php?a=socios&b=rescindir&ID='.$r['ID'], '¿Estás seguro de querer EXPULSAR a este socio?', 'small red'):boton('Rechazar', '/accion.php?a=socios&b=rescindir&ID='.$r['ID'], '¿Estás seguro de querer ELIMINAR esta inscripción?', 'small red').' '.boton('Aprobar', '/accion.php?a=socios&b=aprobar&ID='.$r['ID'], false, 'small blue')).'</td>
 <td>'.$r['pais'].$r['socio_ID'].'</td>
 <td>'.crear_link($r['nick']).'</td>
 <td nowrap>'.$r['nombre'].'</td>
-<td>'.$r['NIF'].'</td>
-<td>'.$r['contacto_email'].'</td>
-<td>'.$r['contacto_telefono'].'</td>
+<td'.(comprobar_nif($r['NIF'])?'':' style="color:red;"').'>'.$r['NIF'].'</td>
+<td>'.($r['contacto_email']?'<span title="'.$r['contacto_email'].'">Email</span>':'').'</td>
+<td>'.($r['contacto_telefono']?'<span title="'.$r['contacto_telefono'].'">T</span>':'').'</td>
 <td class="gris">'.$r['pais_politico'].'</td>
 <td class="gris">'.$r['cp'].'</td>
 <td class="gris">'.$r['localidad'].'</td>
-<td class="gris" nowrap>'.$r['direccion'].'</td>
+<td class="gris" nowrap>'.($r['direccion']?'<span title="'.$r['direccion'].'">D</span>':'').'</td>
 </tr>';
 	}
 	$txt .= '</table>';
@@ -138,7 +144,7 @@ $txt .= '</select>
 
 <tr>
 <td align="right">NIF</td>
-<td><input type="text" name="NIF" value="" size="10" maxlength="10" /></td>
+<td class="gris"><input type="text" name="NIF" value="" size="10" maxlength="10" /> Por ejemplo: 123456789X</td>
 </tr>
 </table>
 
@@ -189,13 +195,13 @@ $txt .= '</select>
 <blockquote>
 <p>
 * Serás socio tras un proceso de aprobación.<br />
-* Podrás dejar de ser socio y eliminar todos los datos asociados en cualquier momento.<br />
-* Los datos introducidos en este formulario serán cedidos a: <b>'.$pol['config']['socios_responsable'].'</b>.
+'.($pol['config']['socios_responsable']?'* Los datos introducidos en este formulario serán cedidos a: <b>'.$pol['config']['socios_responsable'].'</b>.<br />':'').'
+* Podrás dejar de ser socio y eliminar todos los datos asociados en cualquier momento.
 </p>
 
-<p>'.$pol['config']['socios_descripcion'].'</p>
+<p class="rich">'.$pol['config']['socios_descripcion'].'</p>
 
-<p><input type="checkbox" name="aprobado" value="true" /> <b>He leído y acepto las condiciones: <a href="'.$pol['config']['socios_url'].'" target="_blank">'.$pol['config']['socios_url'].'</a>.</b></p>
+<p><input type="checkbox" name="aprobado" value="true" /> <b>He leído y acepto las condiciones.</b></p>
 
 </blockquote>
 

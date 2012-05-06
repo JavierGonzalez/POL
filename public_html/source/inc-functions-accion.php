@@ -11,10 +11,11 @@ function indexar_i18n() {
 	// Funcion inutil, cuyo unico fin es indexar textos del sistema en el sistema gettext de i18n
 	
 	// tipos votacion
-	$null = _('sondeo')._('referendum')._('parlamento')._('cargo')._('elecciones');
+	$null = _('sondeo')._('referendum')._('parlamento')._('cargo')._('elecciones')._('votación');
+	$null = _('Sondeo')._('Referendum')._('Parlamento')._('Cargo')._('Elecciones')._('Votación');
 	
 	// Tipos nucleo acceso
-	$null = _('privado') . _('excluir')._('afiliado')._('confianza')._('cargo')._('grupos') . _('nivel')._('antiguedad')._('autentificacion')._('supervisores_censo')._('ciudadanos') . _('ciudadanos_global')._('anonimos');
+	$null = _('Privado') . _('Excluir')._('Afiliado')._('Confianza')._('Cargo')._('Grupos') . _('Nivel')._('Antiguedad')._('Autentificacion')._('Supervisores censo')._('Ciudadanos') . _('Ciudadanos global')._('Anonimos');
 	
 	// Estados votacion
 	$null = _('ok')._('end')._('del')._('borrador');
@@ -160,7 +161,10 @@ function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', 
 	global $pol, $link, $vp;
 	if (!$nick) { $nick = $pol['nick']; }
 	if (!$pais) { $pais = PAIS; }
-	$chat_ID = $vp['paises_chat'][$pais];
+	
+	$result = mysql_query("SELECT chat_ID FROM chats WHERE pais = '".$pais."' AND user_ID = '0' ORDER BY fecha_creacion ASC LIMIT 1", $link);
+	while($r = mysql_fetch_array($result)){ $chat_ID = $r['chat_ID']; }
+
 	mysql_query("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('".$chat_ID."', '".$nick."', '".$msg."', '0', '".$user_ID."', '".$tipo."')", $link);
 }
 

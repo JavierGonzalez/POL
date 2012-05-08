@@ -66,12 +66,12 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
 			);
 
 			if ($r['ASAMBLEA'] == 'true') {
-				$param['acceso'] = array('valor'=>'votacion_borrador;ciudadanos:|sondeo;cargo:6|referendum;cargo:6|parlamento;cargo:6|kick;cargo:6 13|kick_quitar;cargo:6 13|foro_borrar;cargo:6 13|control_gobierno;cargo:6|control_sancion;:|control_grupos;cargo:6|control_cargos;cargo:6|examenes_decano;cargo:6|examenes_profesor;privado:|crear_partido;cargo:6|control_socios;cargo:6', 'autoload'=>'si');
+				$param['acceso'] = array('valor'=>'votacion_borrador;ciudadanos:|sondeo;cargo:6|referendum;cargo:6|parlamento;cargo:6|kick;cargo:6 13|kick_quitar;cargo:6 13|foro_borrar;cargo:6 13|control_gobierno;cargo:6|control_sancion;:|control_grupos;cargo:6|control_cargos;cargo:6|examenes_decano;cargo:6|examenes_profesor;privado:|crear_partido;cargo:6|control_socios;cargo:6|api_borrador;ciudadanos:', 'autoload'=>'si');
 
 				sql("INSERT INTO cargos (pais, cargo_ID, asigna, nombre, nivel, elecciones, elecciones_electos, elecciones_cada, elecciones_durante, elecciones_votan) VALUES ('".$r['pais']."', '6', '0', 'Coordinador', '100', '".date('Y-m-d 20:00:00', time()+60*60*24*7)."', '7', '14', '2', 'ciudadanos')");
 				$cargo_primario = 6;
 			} else {
-				$param['acceso'] = array('valor'=>'votacion_borrador;ciudadanos:|sondeo;cargo:7|referendum;cargo:7|parlamento;cargo:7|kick;cargo:7 13|kick_quitar;cargo:7 13|foro_borrar;cargo:7 13|control_gobierno;cargo:7|control_sancion;:|control_grupos;cargo:7|control_cargos;cargo:7|examenes_decano;cargo:7|examenes_profesor;privado:|crear_partido;cargo:7|control_socios;cargo:7', 'autoload'=>'si');
+				$param['acceso'] = array('valor'=>'votacion_borrador;ciudadanos:|sondeo;cargo:7|referendum;cargo:7|parlamento;cargo:7|kick;cargo:7 13|kick_quitar;cargo:7 13|foro_borrar;cargo:7 13|control_gobierno;cargo:7|control_sancion;:|control_grupos;cargo:7|control_cargos;cargo:7|examenes_decano;cargo:7|examenes_profesor;privado:|crear_partido;cargo:7|control_socios;cargo:7|api_borrador;ciudadanos:', 'autoload'=>'si');
 
 				sql("INSERT INTO cargos (pais, cargo_ID, asigna, nombre, nivel, elecciones, elecciones_electos, elecciones_cada, elecciones_durante, elecciones_votan) VALUES ('".$r['pais']."', '7', '0', 'Presidente', '100', '".date('Y-m-d 20:00:00', time()+60*60*24*7)."', '1', '14', '2', 'ciudadanos')");
 				$cargo_primario = 7;

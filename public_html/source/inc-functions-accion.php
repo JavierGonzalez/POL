@@ -27,6 +27,49 @@ function indexar_i18n() {
 	$null = _('puntos')._('estandar')._('multiple')._('ninguno') . _('turista')._('extranjero')._('ciudadano')._('expulsado')._('validar')._('borrado')._('activo') . _('inactivo')._('cancelado')._('cancelar')._('En')._('Hace')._('min')._('seg');
 }
 
+
+
+function api_facebook($accion, $item_ID) {
+	/* DOCUMENTACION FB
+GRAPH API - https://developers.facebook.com/docs/reference/api/message/
+OBTENER TOKENS - http://www.damnsemicolon.com/php/auto-post-facebook-with-facebook-sdk
+*/
+	require_once('../img/lib/facebook-php/facebook.php');
+	global $date, $pol;
+
+	$facebook = new Facebook(array(
+		'appId'  => FB_APIKEY,
+		'secret' => FB_SECRET,
+		'cookie' => true,
+	));
+
+	$result = sql("SELECT *, 
+(SELECT item_ID FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS item_ID, 
+(SELECT clave FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS clave, 
+(SELECT acceso_escribir FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS acceso_escribir, 
+(SELECT acceso_cfg_escribir FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS acceso_cfg_escribir 
+FROM api_posts WHERE post_ID = '".$item_ID."' AND pais = '".PAIS."' LIMIT 1");
+	while ($r = r($result)) {
+		if ((isset($r['clave'])) AND (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']))) {
+			if (($accion == 'publicar') AND ($r['estado'] != 'publicado')) {
+				$res = $facebook->api('/'.$r['item_ID'].'/feed', 'POST', array('access_token'=>$r['clave'], 'message'=>$r['texto']));
+				if (is_array($res)) { 
+					sql("UPDATE api_posts SET estado = 'publicado', time = '".$date."', mensaje_ID = '".$res['id']."', publicado_user_ID = '".$pol['user_ID']."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
+					return true; 
+				} else { return false; }
+			} elseif (($accion == 'borrar') AND ($r['estado'] == 'publicado')) {
+				$res = $facebook->api('/'.$r['mensaje_ID'], 'DELETE', array('access_token'=>$r['clave']));
+				if ($res == 1) { 
+					sql("UPDATE api_posts SET estado = 'borrado', time = '".$date."', mensaje_ID = '".$res['id']."', borrado_user_ID = '".$pol['user_ID']."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
+					return true; 
+				} else { return false; }
+			}
+		}
+	}
+}
+
+
+
 function actualizar($accion, $user_ID=false) {
 	global $pol, $link;
 	if ($user_ID == false) { $user_ID = $pol['user_ID']; }

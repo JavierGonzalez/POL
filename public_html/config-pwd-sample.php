@@ -27,12 +27,8 @@ define('CLAVE_API_TRACTIS', '...');
 define('CLAVE_API_ETHERPAD', '...'); 
 
 
-$twitter_key = array(
-'consumer_key'    => '...',
-'consumer_secret' => '...',
-'user_token'      => '...',
-'user_secret'     => '...',
-);
+define('FB_APIKEY', '...');
+define('FB_SECRET', '...');
 
 
 define('DEV', '');

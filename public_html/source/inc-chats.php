@@ -71,7 +71,7 @@ if ($externo) {
 	if ($_SESSION['pol']['user_ID']) {
 		$txt .= '<span style="float:right;"><a href="http://www.'.DOMAIN.'">'._('Volver a VirtualPol').'</a></span>'.$titulo;
 	} else {
-		$txt .= '<span style="float:right;"><a href="'.REGISTRAR.'">'._('Crear ciudadano').'</a></span>'.$titulo;
+		$txt .= '<span style="float:right;"><a href="'.REGISTRAR.'?='.PAIS.'">'._('Crear ciudadano').'</a></span>'.$titulo;
 	}
 } else {
 	$txt .= '<span class="quitar"><span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones">'._('Opciones').'</a>] [<a href="/chats/'.$_GET['a'].'/log">'._('Log').'</a>]</span><a href="/chats/">'._('Chat').'</a>: '.$titulo.'</span>';
@@ -129,7 +129,7 @@ Chat de '.PAIS.': <b>'.$titulo.'</b><br />
 
 <td valign="middle">
 '.(isset($pol['user_ID'])?'
-<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%;" autofocus="autofocus" value="" />':boton(_('¡Crea tu ciudadano para participar!'), REGISTRAR.'?p='.PAIS, false, 'large blue')).'
+<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%;" autofocus="autofocus" value="" />':boton(_('¡Crea tu ciudadano para participar!'), REGISTRAR.'?p='.PAIS, false, 'green')).'
 </td>
 
 <td nowrap="nowrap" valign="middle" title="Marcar para ocultar eventos del chat">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">'._('Ocultar eventos').'</label></td>

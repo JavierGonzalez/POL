@@ -27,6 +27,30 @@ switch ($_GET['a']) { //############## BIG ACTION SWITCH ############
 //###################################################################
 
 
+case 'api':
+	$refer_url = 'api/';
+	if (($_GET['b'] == 'crear') AND (nucleo_acceso($vp['acceso']['api_borrador'])) AND (is_numeric($_POST['api_ID']))) {
+		$result = sql("SELECT * FROM api WHERE pais = '".PAIS."' AND api_ID = '".$_POST['api_ID']."' LIMIT 1");
+		while($r = r($result)) {
+			sql("INSERT INTO api_posts (pais, api_ID, estado, texto, pendiente_user_ID, time) 
+VALUES ('".PAIS."', '".$r['api_ID']."', 'pendiente', '".strip_tags(trim($_POST['texto']))."', '".$pol['user_ID']."', '".$date."')");
+			$refer_url = 'api/'.$r['api_ID'];
+		}
+	} elseif (($_GET['b'] == 'publicar') AND (is_numeric($_GET['ID']))) {
+		api_facebook('publicar', $_GET['ID']);
+	} elseif (($_GET['b'] == 'borrar') AND (is_numeric($_GET['ID']))) {
+		api_facebook('borrar', $_GET['ID']);
+	} elseif (($_GET['b'] == 'borrar_borador') AND (nucleo_acceso($vp['acceso']['api_borrador'])) AND (is_numeric($_GET['ID']))) {
+		sql("DELETE FROM api_posts WHERE post_ID = '".$_GET['ID']."' AND pais = '".PAIS."' AND estado != 'publicado' LIMIT 1");
+	}
+
+	if ($_GET['b'] != 'crear') {
+		$result = sql("SELECT api_ID FROM api_posts WHERE post_ID = '".$_GET['ID']."' LIMIT 1");
+		while($r = r($result)) { $refer_url = 'api/'.$r['api_ID']; }
+	}
+
+	break;
+
 case 'socios';
 	$refer_url = 'socios';
 	$es_socio = false;

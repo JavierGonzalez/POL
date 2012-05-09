@@ -15,7 +15,7 @@ if (is_numeric($_GET['a'])) {
 
 	$result = sql("SELECT * FROM api WHERE pais = '".PAIS."' AND api_ID = '".$_GET['a']."' LIMIT 1");
 	while($r = r($result)) {
-		$txt_nav = array('/api'=>'Api', '/api/'.$r['api_ID']=>$r['nombre']);
+		$txt_nav = array('/api'=>'API', '/api/'.$r['api_ID']=>$r['nombre']);
 		$txt .= '
 
 '.(nucleo_acceso($vp['acceso']['api_borrador'])?'
@@ -91,7 +91,7 @@ if (is_numeric($_GET['a'])) {
 
 	
 } else {
-	$txt_nav = array('/api'=>'Api');
+	$txt_nav = array('/api'=>'API');
 	$txt .= '<table>
 <tr>
 <th>Estado</th>

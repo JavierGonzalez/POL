@@ -18,7 +18,7 @@ while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 if (
 (nucleo_acceso('ciudadanos'))
 OR (($pol['estado'] == 'kickeado') AND (in_array($_GET['a'], array('rechazar-ciudadania', 'votacion'))))
-OR (($pol['estado'] == 'extranjero') AND (in_array($_GET['a'], array('voto', 'mercado', 'foro', 'votacion'))))
+OR (($pol['estado'] == 'extranjero') AND (in_array($_GET['a'], array('voto', 'mercado', 'foro', 'votacion', 'api'))))
 ) {
 
 

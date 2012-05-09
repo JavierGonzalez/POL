@@ -667,7 +667,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 '.($r['acceso_ver']=='anonimos'&&((!isset($pol['user_ID'])) || ($r['ha_votado']) || ($r['estado']=='end'))?'<center><table border="0">
 <tr>
-'.(!isset($pol['user_ID'])?'<td>'.boton(_('¡Crea tu ciudadano para votar!'), REGISTRAR.'?p='.PAIS, false, 'large blue').'</td>':'').'
+'.(!isset($pol['user_ID'])?'<td>'.boton(_('¡Crea tu ciudadano para votar!'), REGISTRAR.'?p='.PAIS, false, 'large green').'</td>':'').'
 <td width="20"></td>
 <td nowrap="nowrap"><b style="font-size:20px;color:#777;">¡'._('Difúnde').' '.($r['estado']=='end'?_('este resultado'):_('esta votación')).'!</b> &nbsp;</td>
 

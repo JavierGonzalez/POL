@@ -26,12 +26,13 @@ if (isset($_GET['bg'])) {
 
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?=(isset($vp['lang'])?$vp['lang']:'es_ES')?>" xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr' xmlns:fb='http://www.facebook.com/2008/fbml' xmlns:og='http://opengraphprotocol.org/schema/'>
 <head>
 <title><?=$txt_title?></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="language" content="<?=(isset($vp['lang'])?$vp['lang']:'es_ES')?>" />
 <meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS.' | VirtualPol')?>" />
+<meta property="og:image" content="<?=IMG?>banderas/<?=PAIS?>_60.gif" />
 
 <link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css" media="all" />
 <style type="text/css">
@@ -80,6 +81,8 @@ _ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos s
 					<li><a href="/info/seguir"><?=_('Seguir')?>...</a></li>
 				</ul>
 			</li>
+
+			<li><a href="/api"><?=_('API')?></a></li>
 		</ul>
 	</li>
 

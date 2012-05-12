@@ -97,6 +97,30 @@ function verbalizar_acceso($tipo, $valor='') {
 	return $t;
 }
 
+function sql_acceso($tipo, $valor='') {
+	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
+	switch ($tipo) {
+		case 'internet': case 'anonimos': $rt = "estado != 'expulsado'"; break;
+		case 'ciudadanos_global': $rt = "estado = 'ciudadano'"; break;
+		case 'ciudadanos': $valor .= ' '.PAIS; $a = explode(' ', trim($valor)); $rt = "estado = 'ciudadano' AND pais IN ('".implode("','", $a)."')"; break;
+		case 'excluir': $rt = "nick NOT IN ('".implode("','", explode(' ', trim($valor)))."')"; break;
+		case 'privado': $rt = "nick IN ('".implode("','", explode(' ', trim($valor)))."')"; break;
+		case 'afiliado': $rt = "pais = '".PAIS."' AND partido_afiliado = '".$valor."'"; break;
+		case 'confianza':  $rt = "voto_confianza >= '".$valor."'"; break;
+		case 'nivel': $rt = "pais = '".PAIS."' AND nivel >= '".$valor."'"; break;
+		case 'cargo': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', cargos, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".PAIS."' AND (".implode(' OR ',$a).")"; break;
+		case 'grupos': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', grupos, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".PAIS."' AND (".implode(' OR ',$a).")"; break;
+		case 'examenes': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', examenes, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".PAIS."' AND (".implode(' OR ',$a).")"; break;
+		case 'monedas': $rt = "pols >= '".$valor."'"; break;
+		case 'socios': $rt = "pais = '".PAIS."' AND socio = 'true'"; break;
+		case 'autentificados': $rt = "dnie = 'true'"; break;
+		case 'supervisores_censo': $rt = "estado = 'ciudadano' AND SC = 'true'"; break;
+		case 'antiguedad': $rt = "estado = 'ciudadano' AND fecha_registro < '".date('Y-m-d H:i:s', (time()-($valor*86400)))."'"; break;
+	}
+	return $rt;
+}
+
+
 
 function control_acceso($titulo=false, $name='', $acceso='', $cfg='', $quitar_array='') {
 	$html = ($titulo==false?'':'<fieldset><legend>'.$titulo.'</legend>').'<select name="'.$name.'">';

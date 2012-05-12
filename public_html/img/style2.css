@@ -43,6 +43,7 @@ body {
 	top:6px;
 	left:5px;
 }
+#header-logo img { border:1px solid #BBB; }
 #header-logo-p { position:absolute; top:15px; left:100px; white-space:nowrap; }
 #header-right {
 	position:absolute;

@@ -430,7 +430,7 @@ LIMIT 1");
 		$respuestas_desc = explode("][", $r['respuestas_desc']);
 		$respuestas_num = count($respuestas) - 1;
 		
-		$txt_title = _('Votación').': ' . strtoupper($r['tipo']) . ' | ' . $r['pregunta'];
+		$txt_title = _('Votación').': '.$r['pregunta'];
 		$txt_nav = array('/votacion'=>_('Votaciones'), '/votacion/'.$r['ID']=>strtoupper($r['tipo']));
 
 		if ($r['estado'] == 'ok') { 
@@ -620,6 +620,7 @@ $txt .= '
 <table border="0" style="font-family:\'Courier New\',Courier,monospace;" id="tabla_comprobantes">
 <tr>
 <th title="Conteo de los diferentes sentidos de votos">'._('Contador').'</th>
+'.($r['privacidad']=='false'?'<th>Votante</th>':'').'
 <th title="Sentido del voto emitido">'._('Sentido de voto').'</th>
 <th title="Voto de validez/nulidad, es una votación binaria paralela a la votación para determinar la validez de la misma.">'._('Validez').'</th>
 <th title="Código aleatorio relacionado a cada voto">'._('Comprobante').'</th>
@@ -638,6 +639,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 					if ($r2['user_ID'] != 0) { $txt_votantes[] = ($r2['nick']?'@'.$r2['nick']:'&dagger;'); }
 					$txt .= '<tr id="'.$r2['comprobante'].'">
 <td align="right">'.($r['tipo_voto']=='estandar'?++$contador[$r2['voto']]:++$contador).'.</td>
+'.($r['privacidad']=='false'?'<td class="rich">'.($r2['nick']?'@'.$r2['nick']:'&dagger;').'</td>':'').'
 <td nowrap>'.($r['tipo_voto']=='estandar'?'<b>'.$respuestas[$r2['voto']].'</b>':$r2['voto']).'</td>
 <td'.($r2['validez']=='true'?' class="tcb">'._('Válida'):' class="tcr">'._('Nula')).'</td>
 <td nowrap>'.$r['ID'].'-'.$r2['comprobante'].'</td>
@@ -649,7 +651,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>'._('Esta votación aún no ha finalizado. Cuando finalice se mostrará aquí la tabla de votos-comprobantes').'.</b></td></tr>';
 			}
 
-			$txt .= '</table><p class="rich"><b>'._('Votantes').'</b>:<br /> '.implode(' ', $txt_votantes).'.</p>';
+			$txt .= '</table>'.($r['privacidad']=='true'?'<p class="rich"><b>'._('Votantes').'</b>:<br /> '.implode(' ', $txt_votantes).'.</p>':'');
 
 		} else {
 
@@ -847,7 +849,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 				if ($r['tipo_voto'] == 'estandar') {
 
-					if (($r['privacidad'] == 'false') AND (!isset($r['ha_votado']))) { $txt .= '<p style="color:red;">'._('El voto es público en esta votación, por lo tanto NO será secreto').'.</p>'; }
+					if ($r['privacidad'] == 'false') { $txt .= '<p style="color:red;">'._('El voto es público en esta votación, por lo tanto NO será secreto').'.</p>'; }
 
 					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
 							$votos_array[] = '<option value="'.$i.'"'.($i==$r['que_ha_votado']?' selected="selected"':'').'>'.$respuestas[$i].'</option>'; 
@@ -896,11 +898,22 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 					if ($r['ha_votado']) { $txt .= _('Tus votos múltiples han sido recogidos <b>correctamente</b>').'. '; }
 
-					$txt .= '<table border="0">
+					$txt .= '
+<script type="text/javascript">
+
+function radio_check(value) {
+	$("#votacion_radio input").removeAttr("checked");
+	$("#votacion_radio input[value=\'" + value + "\']").attr("checked", "checked");
+}
+
+</script>
+
+
+<table border="0" id="votacion_radio">
 <tr>
-<th>'._('SI').'</th>
-<th>'._('NO').'</th>
-<th nowrap="nowrap"><em>'._('En Blanco').'</em></th>
+<th onclick="radio_check(1);" style="cursor:pointer;">'._('SI').'</th>
+<th onclick="radio_check(2);" style="cursor:pointer;">'._('NO').'</th>
+<th onclick="radio_check(0);" style="cursor:pointer;" nowrap="nowrap"><em>'._('En Blanco').'</em></th>
 <th></th>
 </tr>';				if ($r['ha_votado']) { $ha_votado_array = explode(' ', $r['que_ha_votado']); }
 					else { $ha_votado_array = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); }
@@ -934,7 +947,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 <input type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> '._('Votación nula (inválida, inapropiada o tendenciosa)').'.
 </p>
 
-<p>'._('Comentario (opcional, secreto y público al finalizar la votación)').'.<br />
+<p>'.($r['privacidad']=='true'?_('Comentario (opcional, secreto y público al finalizar la votación)'):_('Comentario (opcional y público al finalizar la votación)')).'.<br />
 <input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="60" maxlength="160" /></p>
 </form>
 

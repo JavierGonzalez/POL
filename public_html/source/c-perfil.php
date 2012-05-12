@@ -56,9 +56,14 @@ while($r = r($result)){
 			while ($r2 = r($result2)) { $socio_ID = PAIS.$r2['socio_ID']; }
 		}
 
+		if ($r['estado'] == 'expulsado') {
+			$razon = false;
+			$result2 = sql("SELECT razon FROM expulsiones WHERE user_ID = '".$r['ID']."' ORDER BY expire DESC LIMIT 1");
+			while ($r2 = r($result2)) { $razon = $r2['razon']; }
+		}
 		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="3" valign="top" align="center">'.($r['avatar']=='true'?'<img src="'.IMG.'a/'.$r['ID'].'.jpg" alt="'.$nick.'" />':'').($r['dnie']=='true'?'<br /><img src="'.IMG.'varios/autentificacion.png" border="0" style="margin-top:6px;" />':'').'</td><td nowrap="nowrap">
 <div class="amarillo">		
-<h1>'.$nick.' &nbsp; <span style="color:grey;"><span'.($r['estado']!='ciudadano'?' class="'.$r['estado'].'"':'').'>'.ucfirst($r['estado']).'</span> de '.$r['pais'].'</span></h1>'.(isset($socio_ID)&&nucleo_acceso('socios')?'<span class="gris" style="float:right;font-size:16px;">'._('Socio').': <b>'.$socio_ID.'</b></span>':'').(isset($r['nombre'])&&nucleo_acceso('ciudadanos')?'<span class="gris" style="font-size:16px;">'.$r['nombre'].'</span>':'').'
+<h1>'.$nick.' &nbsp; <span style="color:grey;"><span'.($r['estado']!='ciudadano'?' class="'.$r['estado'].'"':'').'>'.($r['estado']=='expulsado'&&$razon==false?'Auto-eliminado':ucfirst($r['estado'])).'</span> '.($r['estado']!='expulsado'?'de '.$r['pais']:'').'</span></h1>'.(isset($socio_ID)&&nucleo_acceso('socios')?'<span class="gris" style="float:right;font-size:16px;">'._('Socio').': <b>'.$socio_ID.'</b></span>':'').(isset($r['nombre'])&&nucleo_acceso('ciudadanos')?'<span class="gris" style="font-size:16px;">'.$r['nombre'].'</span>':'').'
 </div>
 </td><td nowrap="nowrap">';
 

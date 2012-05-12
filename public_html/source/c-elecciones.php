@@ -27,7 +27,7 @@ $txt .= '
 $result = mysql_query("SELECT * 
 FROM cargos
 WHERE pais = '".PAIS."' AND elecciones IS NOT NULL
-ORDER BY elecciones DESC
+ORDER BY elecciones ASC
 LIMIT 50", $link);
 while($r = mysql_fetch_array($result)) {
 	$time_start = strtotime($r['elecciones']);

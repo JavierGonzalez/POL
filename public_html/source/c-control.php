@@ -977,7 +977,7 @@ $(function() {
 
 
 	$txt .= '
-<form action="/accion.php?a=gobierno&b=config" method="post">
+<form action="/accion.php?a=gobierno&b=config" method="post" enctype="multipart/form-data">
 
 <table border="0" cellspacing="3" cellpadding="0"><tr><td valign="top">
 
@@ -1039,7 +1039,8 @@ $txt .= '
 
 <fieldset><legend>'._('Diseño').'</legend>
 <table>
-<tr><td align="right">'._('Imagen tapiz').' (1440x100):</td>
+<tr>
+<td align="right">'._('Tapiz').':</td>
 <td>
 <select id="fondos" name="bg">
 <option value="">'._('Por defecto').'</option>';
@@ -1048,22 +1049,38 @@ $sel2[$pol['config']['bg']] = ' selected="selected"';
 
 $directorio = opendir(RAIZ.'/img/bg/'); 
 while ($archivo = readdir($directorio)) {
-	if (($archivo != 'borrados') AND ($archivo != '.') AND ($archivo != '..') AND (substr($archivo,0,1) != '.') AND ($archivo != 'index.php')) {
+	if (preg_match("/.(gif|jpg|png)$/i", $archivo)) {
 		$txt .= '<option value="'.$archivo.'"'.$sel2[$archivo].' onclick="change_bg(\''.$archivo.'\')"  onmouseover="change_bg(\''.$archivo.'\')">'.$archivo.'</option>';
 	}
 }
 closedir($directorio); 
 
 $txt .= '</select>
+</td>
 </tr>
 
-</td></tr></table>
+
+<tr>
+<td align="right">Añadir tapiz:<br />(1440x100, jpg/png)</td>
+<td><input type="file" name="tapiz" accept="image/jpg,jpeg,png" disabled /></td>
+</tr>
+
+<tr>
+<td align="right">Color fondo:</td>
+<td><input type="text" name="bg_color" value="'.$pol['config']['bg_color'].'" style="background:'.$pol['config']['bg_color'].';" /></td>
+</tr>
+
+<tr>
+<td align="right">Logo (140x60): <img src="'.IMG.'banderas/'.PAIS.'_60.gif?'.rand(10000,99999).'" width="60" height="40" border="0" /></td>
+<td><input type="file" name="logo" accept="image/png" disabled /></td>
+</tr>
+
+</table>
 </fieldset>
 
+<p>'.boton(_('Guardar'), ($dis?false:'submit'), false, 'large red').'</p>
+
 </td></tr></table>
-
-
-<p style="text-align:center;">'.boton(_('Guardar'), ($dis?false:'submit'), false, 'large red').'</p>
 
 </form>';
 

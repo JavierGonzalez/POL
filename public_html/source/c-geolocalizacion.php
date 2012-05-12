@@ -9,9 +9,7 @@
 
 include('inc-login.php');
 
-$centro = '40.180,-3.669'; // Madrid
-
-
+$centro = '40.18,-3.66'; // Madrid
 
 
 // GEN
@@ -22,7 +20,7 @@ if (!isset($pol['user_ID'])) {
 } elseif ($_GET['a'] == 'vecinos') {
 	include_once('inc-functions-accion.php');
 
-	$user_y = '40.416'; $user_x = '-3.700'; // Madrid
+	$user_y = '40.41'; $user_x = '-3.70'; // Madrid
 	$result = mysql_query("SELECT x, y FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { $user_x = $r['x']; $user_y = $r['y']; $geo = true; }
 
@@ -33,10 +31,21 @@ if (!isset($pol['user_ID'])) {
 	}
 	
 	
-	$txt .= '<table border="0">';
-	$result = mysql_query("SELECT ID, nick, pais, avatar, x, y, POW(x-".$user_x.",2)+POW(y-".$user_y.",2) AS dist FROM users WHERE estado = 'ciudadano' AND ID != '".$pol['user_ID']."' AND x IS NOT NULL ORDER BY dist ASC LIMIT 50", $link);
+	$txt .= '<table border="0">
+<tr>
+<th colspan="2">'._('Ciudadano').'</th>
+<th>'._('Distancia').'</th>
+<th>'._('Último acceso').'</th>
+</tr>';
+	$result = mysql_query("SELECT ID, nick, pais, avatar, fecha_last, x, y, POW(x-".$user_x.",2)+POW(y-".$user_y.",2) AS dist FROM users WHERE estado = 'ciudadano' AND x IS NOT NULL ORDER BY dist ASC LIMIT 100", $link);
 	while ($r = mysql_fetch_array($result)) { 
-		$txt .= '<tr><td height="40">'.($r['avatar']=='true'?avatar($r['ID'], 40):'').'</td><td><b style="font-size:16px;">'.crear_link($r['nick']).'</b></td><td align="right">'.distancia($user_x, $user_y, $r['x'], $r['y'], 0).' km</td><td>'.boton(_('Enviar mensaje'), 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$r['nick']).'</td></tr>';
+		$txt .= '<tr>
+<td>'.($r['avatar']=='true'?avatar($r['ID'], 40):'').'</td>
+<td><b style="font-size:16px;">'.crear_link($r['nick']).'</b></td>
+<td align="right" style="font-size:16px;">'.distancia($user_x, $user_y, $r['x'], $r['y'], 0).' km</td>
+<td align="right" class="gris">'.timer($r['fecha_last']).'</td>
+<td>'.($r['ID']!=$pol['user_ID']?boton(_('Enviar mensaje'), '/msg/'.$r['nick'], false, 'blue'):'').'</td>
+</tr>';
 	}
 	$txt .= '</table>';
 
@@ -109,19 +118,19 @@ function initialize() {
 
 } else { // MAPA
 
-	$result = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND x IS NOT NULL", $link); //  AND pais = '".PAIS."'
+	$result = mysql_query("SELECT COUNT(*) AS num FROM users WHERE x IS NOT NULL AND ".($_GET['a']=='filtro'?sql_acceso($_GET['b'], $_GET['c']):sql_acceso('ciudadanos'))."", $link);
 	while ($r = mysql_fetch_array($result)) { $geo_num = $r['num']; }
 
 
 	$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { $geo = true; }
 
-	if ($geo != true) { $txt .= '<p>'._('No estás geolocalizado').' '.boton(_('Geolocalízate'), '/geolocalizacion/fijar', false, 'large red').'</p>'; }
+	if ($geo != true) { $txt .= '<p>'._('No estás geolocalizado').' '.boton(_('Geolocalízate'), '/geolocalizacion/fijar', false, 'red').'</p>'; }
 
 
 	$txt .='
 <script src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
-<script type="text/javascript" src="/ajax.php?a=geo&b='.PAIS.'"></script>
+<script type="text/javascript" src="/ajax.php?a=geo'.($_GET['a']=='filtro'?'&acceso='.$_GET['b'].'&acceso_cfg='.$_GET['c']:'').'"></script>
 <script type="text/javascript" src="'.IMG.'lib/markerclusterer_packed.js"></script>
 <script type="text/javascript">
 function initialize() {
@@ -133,12 +142,18 @@ var map = new google.maps.Map(document.getElementById("map"), {
   mapTypeId: google.maps.MapTypeId.ROADMAP
 });
 
+function aleatorio(inferior, superior) { 
+   	numPosibilidades = superior - inferior;
+   	aleat = Math.random() * numPosibilidades;
+   	aleat = Math.round(aleat);
+   	return parseInt(inferior) + aleat; 
+} 
 
 var markerImage = new google.maps.MarkerImage("'.IMG.'ico/marker.png", new google.maps.Size(20, 20));
 
 var markers = [];
 for (var i = 0; i < eventos.length; i++) {
-	var latlng = new google.maps.LatLng(eventos[i].x, eventos[i].y);
+	var latlng = new google.maps.LatLng(eventos[i].x + "" + aleatorio(10,99), eventos[i].y + "" + aleatorio(10,99));
 	var marker = new google.maps.Marker({"position": latlng, icon: markerImage, title: eventos[i].q});
 	var fn = markerClick(eventos[i].q);
 	google.maps.event.addListener(marker, "click", fn);

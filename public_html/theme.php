@@ -32,12 +32,14 @@ if (isset($_GET['bg'])) {
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="language" content="es_ES" />
 <meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS)?> | <?=_('La primera Red Social Democrática')?> | VirtualPol" />
-<link rel="shortcut icon" href="/favicon.ico" />
 
 <link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css" media="all" />
 <style type="text/css">
 #header { background:#FFF <?=$body_bg?> repeat scroll top left; }
 </style>
+
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="image_src" href="<?=IMG?>virtualpol-logo-cuadrado-original.gif" />
 
 <!--[if lt IE 9]><script src="<?=($_SERVER['HTTPS']?'https://':'http://')?>html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script type="text/javascript" src="<?=($_SERVER['HTTPS']?'https://':'http://')?>ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>

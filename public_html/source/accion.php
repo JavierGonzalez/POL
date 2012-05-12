@@ -32,8 +32,8 @@ case 'api':
 	if (($_GET['b'] == 'crear') AND (nucleo_acceso($vp['acceso']['api_borrador'])) AND (is_numeric($_POST['api_ID']))) {
 		$result = sql("SELECT * FROM api WHERE pais = '".PAIS."' AND api_ID = '".$_POST['api_ID']."' LIMIT 1");
 		while($r = r($result)) {
-			sql("INSERT INTO api_posts (pais, api_ID, estado, texto, pendiente_user_ID, time) 
-VALUES ('".PAIS."', '".$r['api_ID']."', 'pendiente', '".strip_tags(trim($_POST['texto']))."', '".$pol['user_ID']."', '".$date."')");
+			sql("INSERT INTO api_posts (pais, api_ID, estado, pendiente_user_ID, time, time_cron, message, picture, link, source) 
+VALUES ('".PAIS."', '".$r['api_ID']."', 'pendiente', '".$pol['user_ID']."', '".$date."', '".trim($_POST['time_cron'])."', '".strip_tags(trim($_POST['message']))."', '".strip_tags(trim($_POST['picture']))."', '".strip_tags(trim($_POST['link']))."', '".strip_tags(trim($_POST['source']))."')");
 			$refer_url = 'api/'.$r['api_ID'];
 		}
 	} elseif (($_GET['b'] == 'publicar') AND (is_numeric($_GET['ID']))) {
@@ -284,9 +284,9 @@ case 'historia':
 case 'geolocalizacion':
 	if (($_GET['b'] == 'add') AND (is_numeric($_POST['x'])) AND (is_numeric($_POST['y']))) {
 
-		// Por privacidad solo se guardan 2 digitos reales de latitud y longitud (esto supone una precisión de 1.112km a la redonda a nivel del mar). Se añade un digito más aleatorio para evitar efecto cuadrícula en el mapa.
-		$_POST['x'] = round($_POST['x'],2).mt_rand(0,9);
-		$_POST['y'] = round($_POST['y'],2).mt_rand(0,9);
+		// Por privacidad solo se guardan 2 digitos reales de latitud y longitud (esto supone una precisión de 1.112km a la redonda a nivel del mar).
+		$_POST['x'] = round($_POST['x'], 2);
+		$_POST['y'] = round($_POST['y'], 2);
 
 		$result = sql("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NULL LIMIT 1");
 		while($r = r($result)) {

@@ -206,17 +206,13 @@ LIMIT 1");
 UPDATE users SET fecha_last = '".$date."' WHERE ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1;
 UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMIT 1;
 ");
-
 		}
-
 
 		// print refresh
 		if (isset($_POST['n'])) { echo chat_refresh($chat_ID, $_POST['n']); }
-
 	} else { echo 'n 0 &nbsp; &nbsp; <b style="color:#FF0000;">No tienes permiso de escritura.</b>'."\n"; }
 
 } else if ($_GET['a'] == 'noti') {
-	
 	define('REGISTRAR', 'https://virtualpol.com/registrar/');
 	include_once('inc-login.php');
 ?>
@@ -235,32 +231,13 @@ $('ul.menu li').hover(function(){
 <?php
 	echo notificacion('print');
 
-
 } else if (($_GET['a'] == 'geo') AND (nucleo_acceso('ciudadanos_global'))) {
 	header('Content-Type: application/javascript');
 	if (!isset($_GET['acceso'])) { $_GET['acceso'] = 'ciudadanos'; }
 	echo 'var eventos = [';
-	$result = sql("SELECT nick, x, y FROM users WHERE x IS NOT NULL AND ".sql_acceso($_GET['acceso'], $_GET['acceso_cfg'])." LIMIT 5000"); 
+	$result = sql("SELECT nick, x, y FROM users WHERE x IS NOT NULL AND ".sql_acceso($_GET['acceso'], $_GET['acceso_cfg'])." ORDER BY voto_confianza DESC LIMIT 5000"); 
 	while ($r = r($result)) { echo '{"q":"'.$r['nick'].'","x":'.$r['y'].',"y":'.$r['x'].'},'; }
 	echo '];';
-
-} else if ($_GET['a'] == 'data_extra') {
-	header('Content-Type: application/javascript');
-	echo 'data_acceso = [';
-	foreach (nucleo_acceso('print') AS $acceso => $cfg) { echo '"'.$acceso.'",'; }
-	echo ']; data_cargo = {';
-	$result = sql("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC"); 
-	while ($r = r($result)) { echo $r['cargo_ID'].':"'.$r['nombre'].'",'; }
-	echo '}; data_examenes = {';
-	$result = sql("SELECT ID, titulo FROM examenes WHERE pais = '".PAIS."'"); 
-	while ($r = r($result)) { echo $r['ID'].':"'.$r['titulo'].'",'; }
-	echo '}; data_afiliado = {';
-	$result = sql("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."'"); 
-	while ($r = r($result)) { echo $r['ID'].':"'.$r['siglas'].'",'; }
-	echo '}; data_grupos = {';
-	$result = sql("SELECT grupo_ID, nombre FROM grupos WHERE pais = '".PAIS."' ORDER BY num DESC"); 
-	while ($r = r($result)) { echo $r['grupo_ID'].':"'.$r['nombre'].'",'; }
-	echo '};';
 
 } else if (($_POST['a'] == 'whois') AND (isset($_POST['nick']))) {
 

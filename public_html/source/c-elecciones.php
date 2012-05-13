@@ -42,7 +42,7 @@ while($r = mysql_fetch_array($result)) {
 
 <td>'._('En').' '.timer($r['elecciones']).'</td>
 
-<td colspan="4">'.gbarra(((time()-$time_anterior)*100)/($time_start-$time_anterior)).'</td>
+<td colspan="4">'.gbarra(((time()-$time_anterior)*100)/($time_start-$time_anterior), 80).'</td>
 
 </tr>';
 }
@@ -70,7 +70,7 @@ while($r = mysql_fetch_array($result)) {
 
 <td>'.($r['estado']=='ok'?_('Quedan').' '.timer($time_expire, true):_('Hace').' '.timer($time_expire, true)).'</td>
 
-<td>'.($r['estado']=='ok'?gbarra(((time()-$time)*100)/($time_expire-$time)):'').'</td>
+<td>'.($r['estado']=='ok'?gbarra(((time()-$time)*100)/($time_expire-$time), 80):'').'</td>
 
 
 <td align="right" title="Votos / Participación"'.($r['estado']=='ok'?' style="font-style:italic;"':'').'><b>'.num($r['num']).'</b> votos</td>

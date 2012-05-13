@@ -516,9 +516,9 @@ case 'avatar':
 		unlink($img_root.$pol['user_ID'].'_80.jpg');
 		$nom_file = $pol['user_ID'].'.jpg';
 		$img_name = $_FILES['avatar']['name'];
-	        $img_type = str_replace('image/', '', $_FILES['avatar']['type']);
+		$img_type = str_replace('image/', '', $_FILES['avatar']['type']);
 		$img_size = $_FILES['avatar']['size'];
-	        if ((($img_type == 'gif') || ($img_type == 'jpeg') || ($img_type == 'png')) && ($img_size < 1000000)) {
+		if ((($img_type == 'gif') || ($img_type == 'jpeg') || ($img_type == 'png')) && ($img_size < 1000000)) {
 			move_uploaded_file($_FILES['avatar']['tmp_name'], $img_root . $nom_file);
 		} 
 		if (file_exists($img_root . $nom_file)) {
@@ -526,7 +526,7 @@ case 'avatar':
 			imageCompression($img_root . $nom_file, 80, $img_root . $pol['user_ID'].'_80.jpg', $img_type);
 			imageCompression($img_root . $nom_file, 40, $img_root . $pol['user_ID'].'_40.jpg', $img_type);
 
-			sql("UPDATE users SET avatar_localdir = '".$_FILES['avatar']['name']."', avatar = 'true' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+			sql("UPDATE users SET avatar_localdir = '".escape($_FILES['avatar']['name'])."', avatar = 'true' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 		}
 	} elseif ($_GET['b'] == 'borrar') {
 		unlink($img_root.$pol['user_ID'].'.jpg');
@@ -865,7 +865,6 @@ case 'gobierno':
 'arancel_salida'=>'Arancel de salida',
 'bg'=>'Imagen de fondo',
 'pais_des'=>'Descripcion del Pais',
-'palabra_gob'=>'Mensaje Del Gobierno',
 'pols_crearchat'=>'Coste creacion chat',
 'chat_diasexpira'=>'Dias expiracion chat',
 );
@@ -874,32 +873,50 @@ case 'gobierno':
 ($_GET['b'] == 'config') AND 
 (nucleo_acceso($vp['acceso']['control_gobierno'])) AND  
 (entre($_POST['online_ref'], 0, 900000)) AND
-(strlen($_POST['palabra_gob0']) <= 200) AND
 ($_POST['chat_diasexpira'] >= 10)
 ) {
 
 		foreach ($_POST AS $dato => $valor) {
-			if ((substr($dato, 0, 8) != 'salario_') AND ($dato != 'palabra_gob1')) {
-
-				if ($dato == 'online_ref') {
-					$valor = round($_POST['online_ref']*60);
-					sql("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
-				} elseif ($dato == 'palabra_gob0') {
-					$dato = 'palabra_gob';
-					$valor = strip_tags($_POST['palabra_gob0']).":".strip_tags($_POST['palabra_gob1']);
-					sql("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
-				} else {
-					sql("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
+			if (substr($dato, 0, 8) != 'salario_') {
+				
+				$valor = strip_tags($valor);
+				
+				switch ($dato) {
+					case 'online_ref': $valor = round($_POST['online_ref']*60); break;
+					case 'palabra_gob': $valor = nl2br($valor); break;
 				}
 
-				if ($pol['config'][$dato] != $valor) { 
+				sql("UPDATE config SET valor = '".$valor."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
+
+				if (($pol['config'][$dato] != $valor) AND ($dato_array[$dato])) { 
 					if ($valor == '') { $valor = '<em>null</em>'; }
 					if ($dato == 'online_ref') {
 						$valor = intval($valor)/60; 
 						$pol['config'][$dato] = $pol['config'][$dato]/60;
 					}
-					evento_chat('<b>[GOBIERNO]</b> Configuraci&oacute;n ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/gobierno/">Gobierno</a>)'); 
+					evento_chat('<b>[GOBIERNO]</b> Configuración ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/gobierno/">Gobierno</a>)');
 				}
+			}
+		}
+
+		if ($_FILES['nuevo_tapiz']['name']) {
+			$nom_file = RAIZ.'/img/bg/tapiz-extra-'.strtolower(str_replace('_','-', gen_url(substr(explodear('.', $_FILES['nuevo_tapiz']['name'], 0), 0, 8)))).'_'.PAIS.'.jpg';
+			if (str_replace('image/', '', $_FILES['nuevo_tapiz']['type']) == 'jpeg') {
+				move_uploaded_file($_FILES['nuevo_tapiz']['tmp_name'], $nom_file);
+			}
+			if (file_exists($nom_file)) {
+				imageCompression($nom_file, null, $nom_file, 'jpeg', 1440, 100);
+			}
+		}
+		
+		if ($_FILES['nuevo_logo']['name']) {
+			$nom_file = RAIZ.'/img/banderas/'.PAIS.'.png';
+			copy($nom_file, RAIZ.'/img/banderas/'.PAIS.'_'.time().'.png');
+			if ((str_replace('image/', '', $_FILES['nuevo_logo']['type']) == 'png') AND ($_FILES['nuevo_logo']['size'] <= 50000)) {
+				move_uploaded_file($_FILES['nuevo_logo']['tmp_name'], $nom_file);
+			}
+			if (file_exists($nom_file)) {
+				evento_chat('<b>[GOBIERNO]</b> Configuración ('.crear_link($pol['nick']).'): nueva bandera <img src="'.IMG.'banderas/'.PAIS.'.png?'.rand(1000,9999).'" width="80" height="50" /> (<a href="/control/gobierno">Gobierno</a>)');
 			}
 		}
 
@@ -1390,7 +1407,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 			if (nucleo_acceso($vp['acceso'][$r['tipo']])) {
 				$r['time_expire'] = date('Y-m-d H:i:s', time() + $r['duracion']); 
 
-				$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano'".($r['acceso_voto']=='ciudadanos_global'?'':" AND pais = '".PAIS."'")." LIMIT 1");
+				$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])." LIMIT 1");
 				while($r2 = r($result2)){ $censo_num = $r2['num']; }
 
 				sql("UPDATE votacion SET estado = 'ok', user_ID = '".$pol['user_ID']."', time = '".$date."', time_expire = '".$r['time_expire']."', num_censo = '".$censo_num."' WHERE ID = '".$r['ID']."' LIMIT 1");
@@ -1458,15 +1475,11 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 		$result = sql("SELECT ID, user_ID, estado, tipo FROM votacion WHERE estado != 'end' AND ID = '".$_GET['ID']."' AND pais = '".PAIS."' LIMIT 1");
 		while($r = r($result)) {
 			if (($r['user_ID'] == $pol['user_ID']) OR (($r['estado'] == 'borrador') AND (nucleo_acceso($vp['acceso'][$r['tipo']])))) {
-				sql("DELETE FROM votacion WHERE ID = '".$r['ID']."' LIMIT 1");
+				sql("UPDATE votacion SET estado = 'borrador', num = '0' WHERE ID = '".$r['ID']."' LIMIT 1");
 				sql("DELETE FROM votacion_votos WHERE ref_ID = '".$r['ID']."'");
 			}
 		}
-		evento_log('Votación: eliminada <a href="/votacion/'.$_GET['ID'].'">#'.$_GET['ID'].'</a>');
-
-	} elseif (($_GET['b'] == 'concluir') AND (is_numeric($_GET['ID']))) { 
-		sql("UPDATE votacion SET time_expire = '".$date."' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' AND tipo != 'cargo' LIMIT 1");
-		evento_log('Votación: finalizada (antes de tiempo) <a href="/votacion/'.$_GET['ID'].'">#'.$_GET['ID'].'</a>');
+		evento_log('Votación: cancelada <a href="/votacion/'.$_GET['ID'].'">#'.$_GET['ID'].'</a>');
 
 	} elseif (($_GET['b'] == 'enviar_comprobante') AND ($_GET['comprobante'])) {
 		$votacion_ID = explodear('-', $_GET['comprobante'], 0);

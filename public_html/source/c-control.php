@@ -1012,23 +1012,26 @@ $sel_exp = '';
 $sel_exp[$pol['config']['examenes_exp']] = ' selected="selected"';
 
 $txt .= '
-<tr><td align="right" valign="top">'._('Mensaje global').':</td><td align="right">
-<input type="text" name="palabra_gob0" size="24" maxlength="200" value="' . $palabra_gob[0] . '"'.$dis.' /><br />
-http://<input type="text" name="palabra_gob1" size="19" maxlength="200" value="' . $palabra_gob[1] . '"'.$dis.' /></td></tr>
 
-<tr><td align="right"><acronym title="Tiempo de vigencia maxima de un examen">'._('Caducidad exámenes').'</acronym>:</td><td>
+<tr><td align="right">'._('Expiración candidaturas').':</td><td>
 <select name="examenes_exp"'.$dis.'>
 <option value="7776000"' . $sel_exp['7776000'] . '>3 '._('meses').'</option>
 <option value="5184000"' . $sel_exp['5184000'] . '>2 '._('meses').'</option>
 <option value="2592000"' . $sel_exp['2592000'] . '>30 '._('días').'</option>
 <option value="1296000"' . $sel_exp['1296000'] . '>15 '._('días').'</option>
-</select>';
-
-
-
-$txt .= '
+</select><td></tr>
 
 <tr><td align="right">'._('Expiración chats').':</td><td><input type="text" name="chat_diasexpira" size="2" maxlength="6" value="'.$pol['config']['chat_diasexpira'].'"'.$dis.' /> <acronym title="Dia inactivos">'._('días').'</acronym></td></tr>
+
+
+
+<tr><td valign="top" colspan="2">'._('Mensaje del Gobierno').':<br />
+<textarea name="palabra_gob" style="width:400px;height:100px;">'.strip_tags($pol['config']['palabra_gob']).'</textarea>
+</td></tr>
+
+
+
+
 </table>
 </fieldset>
 
@@ -1059,20 +1062,19 @@ $txt .= '</select>
 </td>
 </tr>
 
-
 <tr>
-<td align="right">Añadir tapiz:<br />(1440x100, jpg/png)</td>
-<td><input type="file" name="tapiz" accept="image/jpg,jpeg,png" disabled /></td>
+<td align="right">Añadir tapiz:</td>
+<td nowrap><input type="file" name="nuevo_tapiz" accept="image/jpg" /> (jpg, 1440x100)</td>
 </tr>
 
 <tr>
-<td align="right">Color fondo:</td>
+<td align="right" nowrap>Bandera: <img src="'.IMG.'banderas/'.PAIS.'.png?'.rand(10000,99999).'" width="80" height="50" border="0" /></td>
+<td nowrap><input type="file" name="nuevo_logo" accept="image/png" /> (png, 80x50, max 50kb)</td>
+</tr>
+
+<tr>
+<td align="right">Color de fondo:</td>
 <td><input type="text" name="bg_color" value="'.$pol['config']['bg_color'].'" style="background:'.$pol['config']['bg_color'].';" /></td>
-</tr>
-
-<tr>
-<td align="right">Logo (140x60): <img src="'.IMG.'banderas/'.PAIS.'_60.gif?'.rand(10000,99999).'" width="60" height="40" border="0" /></td>
-<td><input type="file" name="logo" accept="image/png" disabled /></td>
 </tr>
 
 </table>

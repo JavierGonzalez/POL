@@ -151,6 +151,8 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 
 '.(isset($edit['ID'])?'<input type="hidden" name="ref_ID" value="'.$_GET['b'].'" />':'').'
 
+'.(nucleo_acceso($vp['acceso']['votacion_borrador'])?'':'<p style="color:red;">No tienes acceso. Solo pueden: '.verbalizar_acceso($vp['acceso']['votacion_borrador']).'</p>').'
+
 <table border="0"><tr><td valign="top">
 
 
@@ -332,7 +334,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 		if ($respuesta != '') {
 			$respuestas_num++;
 			// &nbsp; Descripción: <input type="text" name="respuesta_desc'.$respuestas_num.'" size="28" maxlength="500" value="'.$respuestas_desc[$ID].'" /> (opcional)
-			$txt .= '<li><input type="text" name="respuesta'.$respuestas_num.'" size="80" maxlength="160" value="'.$respuesta.'" /></li>';
+			$txt .= '<li><input type="text" name="respuesta'.$respuestas_num.'" size="80" maxlength="250" value="'.$respuesta.'" /></li>';
 		}
 	}
 
@@ -342,7 +344,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 </fieldset>
 
 </div>
-<p>'.boton(_('Guardar borrador'), (nucleo_acceso($vp['acceso']['votacion_borrador'])?'submit':false), false, 'large blue').'</p>';
+<p>'.(nucleo_acceso($vp['acceso']['votacion_borrador'])?boton(_('Guardar borrador'), 'submit', false, 'large blue'):boton(_('Guardar borrador'), false, false, 'large red').' No tienes acceso. Solo pueden: '.verbalizar_acceso($vp['acceso']['votacion_borrador'])).'</p>';
 
 	$txt_header .= '<script type="text/javascript">
 campos_num = '.($respuestas_num+1).';
@@ -358,7 +360,7 @@ function cambiar_tipo_votacion(tipo) {
 }
 
 function opcion_nueva() {
-	$("#li_opciones").append(\'<li><input type="text" name="respuesta\' + campos_num + \'" size="80" maxlength="160" /></li>\');
+	$("#li_opciones").append(\'<li><input type="text" name="respuesta\' + campos_num + \'" size="80" maxlength="250" /></li>\');
 	if (campos_num >= campos_max) { $("#a_opciones").hide(); }
 	campos_num++;
 	return false;
@@ -1018,14 +1020,6 @@ LIMIT 500");
 		if ((!isset($pol['user_ID'])) OR ((!$r['ha_votado']) AND ($r['estado'] == 'ok') AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])))) { 
 			$votar = boton(_('Votar'), (isset($pol['user_ID'])?'/votacion/'.$r['ID']:REGISTRAR.'?p='.PAIS), false, 'small blue').' ';
 		} else { $votar = ''; }
-
-		$boton = '';
-		if ($r['user_ID'] == $pol['user_ID']) {
-			if ($r['estado'] == 'ok') {
-				if ($r['tipo'] != 'cargo') { $boton .= boton(_('Finalizar'), '/accion.php?a=votacion&b=concluir&ID='.$r['ID'], '¿Seguro que quieres FINALIZAR esta votacion?', 'small orange'); }
-				$boton .= boton('X', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Seguro que quieres ELIMINAR esta votacion?', 'small red');
-			}
-		}
 		
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 			$txt .= '<tr>
@@ -1033,8 +1027,8 @@ LIMIT 500");
 <td align="right"><b>'.num($r['num']).'</b></td>
 <td>'.$votar.'<a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').(!in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap" class="gris" align="right">'.timer($time_expire, true).'</td>
-<td nowrap="nowrap">'.$boton.'</td>
-<td>'.gbarra(((time()-$time)*100)/($time_expire-$time)).'</td>
+<td nowrap="nowrap">'.($r['user_ID']==$pol['user_ID']&&$r['estado']=='ok'?boton('Cancelar', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Seguro que quieres CANCELAR esta votacion y convertirla en un BORRADOR?', 'small red'):'').'</td>
+<td>'.gbarra(round((time()-$time)*100)/($time_expire-$time)).'</td>
 </tr>';
 		}
 	}
@@ -1071,7 +1065,7 @@ $txt .= '<fieldset><legend>'._('Finalizadas').'</legend>
 <table border="0" cellpadding="1" cellspacing="0">
 ';
 	$mostrar_separacion = true;
-	$result = sql("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver
+	$result = sql("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, num_censo, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver
 FROM votacion
 WHERE estado = 'end' AND pais = '".PAIS."'
 ORDER BY time_expire DESC
@@ -1085,7 +1079,6 @@ LIMIT 500");
 <td align="right"><b>'.num($r['num']).'</b></td>
 <td><a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').(!in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap" align="right" class="gris">'.timer($time_expire, true).'</td>
-<td></td>
 </tr>';
 		}
 	}

@@ -70,7 +70,7 @@ p_scroll = false;
 	<div id="menu-next">
 		<p><?=_('Plataformas')?>:<br /><b><?php foreach ($vp['paises'] AS $pais) { echo '<a href="http://'.strtolower($pais).'.'.DOMAIN.'/">'.$pais.'</a> &nbsp;'; } ?></b></p>
 
-		<p style="text-align:center;"><?=boton(_('Donaciones'), 'http://www.virtualpol.com/donaciones', false, 'small pill orange')?></p>
+		<?=(nucleo_acceso('ciudadanos_global')?'<p style="text-align:center;">'.boton(_('Donaciones'), 'http://www.virtualpol.com/donaciones', false, 'small pill orange').'</p>':'')?>
 
 
 <?php

@@ -27,7 +27,7 @@ while($r = r($result)) {
 	while($r2 = r($result2)) { $candidatos_nick[] = $r2['nick']; $candidatos_ID[] = $r2['user_ID']; }
 
 	// Obtener numero maximo de votantes (num_censo)
-	$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE pais = '".PAIS."' AND estado = 'ciudadano'");
+	$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso(explodear('|', $r['elecciones_votan'], 0), explodear('|', $r['elecciones_votan'], 1)));
 	while($r2 = r($result2)) { $votos_num = $r2['num']; }
 
 	$candidatos_num = count($candidatos_nick);

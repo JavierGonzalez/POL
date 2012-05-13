@@ -62,11 +62,9 @@ $txt .= '<table>
 
 </td><td valign="top">
 
-<br />
-
 <table border="0" cellpadding="2" cellspacing="0">
 <tr>
-<th colspan="2" align="left">'._('Plataformas').'</th>
+<th colspan="2" align="left">'._('Plataforma').'</th>
 <th colspan="2" align="left">'._('Población').'</th>
 </tr>';
 
@@ -115,7 +113,7 @@ foreach ($vp['paises'] AS $pais) {
 
 
 	$txt .= '<tr style="background:'.$vp['bg'][$pais].';">
-<td><a href="http://'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.'" width="60" height="40" /></a></td>
+<td><a href="http://'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" alt="'.$pais.'" /></a></td>
 
 <td nowrap="nowrap"><a href="http://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
 

@@ -176,6 +176,7 @@ case 'verificar': //URL EMAIL
 	while ($r = mysql_fetch_array($result)) { 
 
 		notificacion($r['ID'], 'Bienvenido!', '/doc/bienvenida');
+		notificacion($r['ID'], 'Sitúate en mapa de ciudadanos!', '/geolocalizacion');
 
 		if ($r['pais'] == 'ninguno') {
 			mysql_query("UPDATE users SET estado = 'turista' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
@@ -315,7 +316,7 @@ $txt .= '</blockquote>';
 		$n++;
 		$txt .= '
 <tr style="font-size:19px;">
-<td valign="middle"><img src="'.IMG.'banderas/'.$pais.'_60.gif" width="60" height="50" border="0" /></td>
+<td valign="middle"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" /></td>
 <td><input type="radio" name="pais" id="pr_'.$pais.'" value="'.$pais.'"'.($n==1?' checked="checked"':'').' /></td>
 <td valign="middle" nowrap="nowrap"><b>'.$pais.'</b>, '.$pais_des.'</td>
 <td valign="middle" align="right">'.num($ciudadanos_num).' ciudadanos</td>

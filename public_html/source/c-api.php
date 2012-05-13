@@ -13,7 +13,7 @@ $txt_title = _('Grupos');
 if (is_numeric($_GET['a'])) {
 	
 	// https://developers.facebook.com/docs/reference/api/post/
-	$result = sql("SELECT * FROM api WHERE pais = '".PAIS."' AND api_ID = '".$_GET['a']."' LIMIT 1");
+	$result = sql("SELECT * FROM api WHERE api_ID = '".$_GET['a']."' LIMIT 1");
 	while($r = r($result)) {
 		$txt_nav = array('/api'=>'API', '/api/'.$r['api_ID']=>$r['nombre']);
 		$txt .= '<h1><img src="'.IMG.'ico/'.($r['tipo']=='facebook'?2:1).'_32.png" width="32" width="32" alt="'.ucfirst($r['tipo']).'" /> <a href="'.$r['url'].'" target="_blank">'.$r['nombre'].'</a> <button onclick="$(\'#crear_borrador\').slideToggle(\'slow\');">Escribir borrador</button></h1>
@@ -36,7 +36,7 @@ if (is_numeric($_GET['a'])) {
 
 <tr>
 <td align="right">Publicación programada:</td>
-<td><input type="text" name="time_cron" value="'.$date.'" /> (No se publicará antes de esta fecha)</td>
+<td><input type="text" name="time_cron" value="'.$date.'" /> (Se publicará después de esta fecha)</td>
 </tr>
 
 <tr>
@@ -130,7 +130,7 @@ if (is_numeric($_GET['a'])) {
 	$txt .= '<table>
 <tr>
 <th>Plataforma</th>
-<th>Medio</th>
+<th></th>
 <th>Nombre</th>
 <th></th>
 <th>Quien publica</th>
@@ -140,8 +140,9 @@ if (is_numeric($_GET['a'])) {
 		$txt .= '<tr>
 <td>'.$r['pais'].'</td>
 <td><a href="'.$r['url'].'"><img src="'.IMG.'ico/'.($r['tipo']=='facebook'?2:1).'_32.png" width="32" width="32" alt="'.ucfirst($r['tipo']).'" /></a></td>
-<td><a href="/api/'.$r['api_ID'].'"><b>'.$r['nombre'].'</b></a></td>
-<td>'.(nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?boton('Publicar', '/api/'.$r['api_ID'], false, 'small blue').' ':'').ucfirst(verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])).'</td>
+<td style="font-size:18px;"><a href="/api/'.$r['api_ID'].'"><b>'.$r['nombre'].'</b></a></td>
+<td>'.(nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?boton('Publicar', '/api/'.$r['api_ID'], false, 'blue').' ':'').'</td>
+<td>'.ucfirst(verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])).'</td>
 </tr>';
 	}
 	$txt .= '</table>';

@@ -187,6 +187,8 @@ sql("CREATE TABLE `".strtolower($r['pais'])."_foros_msg` (
 
 			// ESTADISTICAS DEL DIA 0
 			sql("INSERT INTO stats (pais, time) VALUES ('".$r['pais']."', '".date('Y-m-d 20:00:00')."')");
+
+			copy(RAIZ.'/img/banderas/default.png', RAIZ.'/img/banderas/'.$r['pais'].'.png');
 		}
 
 		redirect('/crear-plataforma.php?a=admin');

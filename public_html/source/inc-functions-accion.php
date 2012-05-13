@@ -67,8 +67,8 @@ FROM api_posts WHERE post_ID = '".$item_ID."' AND pais = '".PAIS."' LIMIT 1");
 				} else { return false; }
 
 			} elseif ($accion == 'borrar') {
+				sql("UPDATE api_posts SET estado = 'borrado', time = '".$date."', borrado_user_ID = '".$user_ID."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
 				$pub = $facebook->api('/'.$r['mensaje_ID'], 'DELETE', array('access_token'=>$r['clave']));
-				sql("UPDATE api_posts SET estado = 'borrado', time = '".$date."', mensaje_ID = '".$pub['id']."', borrado_user_ID = '".$user_ID."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
 				return true; 
 			}
 		}
@@ -453,10 +453,15 @@ function gen_text($text, $type='') {
 	return $text;
 }
 
-function imageCompression($imgfile='',$thumbsize=0,$savePath=NULL,$format) {
+function imageCompression($imgfile='', $thumbsize=0, $savePath=NULL, $format='jpeg', $o_width=false, $o_height=false) {
 	list($width,$height) = getimagesize($imgfile);
 	$newwidth = $thumbsize;
 	$newheight = $thumbsize;
+
+	if ($o_width != false) {
+		$newwidth = $o_width;
+		$newheight = $o_height;
+	}
 
 	$thumb = imagecreatetruecolor($newwidth,$newheight);
 	if ($format == 'gif') {
@@ -470,9 +475,9 @@ function imageCompression($imgfile='',$thumbsize=0,$savePath=NULL,$format) {
 	}
 	imagecopyresampled($thumb,$source,0,0,0,0,$newwidth,$newheight,$width,$height);
 	if ($format == 'png') {
-		imagepng($thumb,$savePath,80);
+		imagepng($thumb,$savePath,85);
 	} else {
-		imagejpeg($thumb,$savePath,80);
+		imagejpeg($thumb,$savePath,85);
 	}
 }
 

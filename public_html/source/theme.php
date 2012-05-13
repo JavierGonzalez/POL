@@ -39,7 +39,7 @@ if (isset($_GET['bg'])) {
 </style>
 
 <link rel="shortcut icon" href="/favicon.ico" />
-<link rel="image_src" href="<?=IMG?>banderas/<?=PAIS?>_500.gif" />
+<link rel="image_src" href="<?=IMG?>banderas/<?=PAIS?>.png" />
 
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -160,7 +160,7 @@ if (($pol['config']['socios_estado']=='true') AND (nucleo_acceso('ciudadanos')) 
 
 echo '<p style="color:#999;"><b>40%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="'._('VirtualPol está siendo traducido desde el Español original a muchos más idiomas. Puedes ayudar en la traducción. ¡Gracias!').'">'._('Traducción VirtualPol').'</a></p>';
 
-if (PAIS == '15M') { echo '<p style="color:#999;"><b>'.timer('2012-05-12 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="12 de Mayo: Movilización Global"><b>12M</b></a>.</p><p style="color:#999;"><b>'.timer('2012-05-15 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="15 de Mayo"><b>15M</b></a>.</p>'; }
+if (PAIS == '15M') { echo '<p style="color:#999;"><b>'.timer('2012-05-15 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="15 de Mayo"><b>15M</b></a>.</p>'; }
 
 echo '<p id="palabras">';
 
@@ -190,7 +190,7 @@ if ((ECONOMIA) AND (substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa')) {
 	<div id="header">
 
 		<div id="header-logo">
-			<a href="/" title="Home"><img src="<?=IMG?>banderas/<?=PAIS?>_60.gif" width="70" border="0" /></a>
+			<a href="/" title="Home"><img src="<?=IMG?>banderas/<?=PAIS?>.png" width="80" height="50" border="0" /></a>
 			<span class="htxt" id="header-logo-p"><?=$pol['config']['pais_des'].', '.PAIS?></span>
 		</div>
 
@@ -279,14 +279,13 @@ if (ASAMBLEA) {
 
 echo '</tr></table>';
 
-
-if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != ':') AND ($pol['config']['palabra_gob'] != '')) {
-	echo '<div class="azul"><b><a href="http://'.explodear(':', $pol['config']['palabra_gob'], 1).'">'.explodear(':', $pol['config']['palabra_gob'], 0).'</a></b></div><br />';
-}
-
 if ((ECONOMIA) AND (isset($pol['config']['pols_frase']))) {
 	echo '<div class="amarillo"><b>'.$pol['config']['pols_frase'].'</b></div>';
 	if ($pol['config']['pols_fraseedit'] == $pol['user_ID']) { echo ' <a href="/subasta/editar" class="gris">#</a>'; }
+}
+
+if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != '')) {
+	echo '<fieldset class="rich">'.$pol['config']['palabra_gob'].'</fieldset>';
 }
 ?>	
 		</div>

@@ -153,9 +153,10 @@ var markerImage = new google.maps.MarkerImage("'.IMG.'ico/marker.png", new googl
 
 var markers = [];
 for (var i = 0; i < eventos.length; i++) {
-	var latlng = new google.maps.LatLng(eventos[i].x + "" + aleatorio(10,99), eventos[i].y + "" + aleatorio(10,99));
-	var marker = new google.maps.Marker({"position": latlng, icon: markerImage, title: eventos[i].q});
-	var fn = markerClick(eventos[i].q);
+	var ev = eventos[i].split(" ");
+	var latlng = new google.maps.LatLng(ev[1] + "" + aleatorio(10,99), ev[2] + "" + aleatorio(10,99));
+	var marker = new google.maps.Marker({"position": latlng, icon: markerImage, title: ev[0]});
+	var fn = markerClick(ev[0]);
 	google.maps.event.addListener(marker, "click", fn);
 	markers.push(marker);
 }

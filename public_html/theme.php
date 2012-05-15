@@ -10,7 +10,7 @@
 // Errores y redirecciones.
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN); }
 if (!isset($txt)) { header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">'._('ERROR').' 404: <b>'._('Página inexistente').'</b></h1>'; }
-if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<h1 style="font-weight:normal;color:red;">'._('ERROR').': <b>'.escape(base64_decode($_GET['error'])).'</b></h1>'; }
+//if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<h1 style="font-weight:normal;color:red;">'._('ERROR').': <b>'.escape(base64_decode($_GET['error'])).'</b></h1>'; }
 
 if (isset($txt_title)) { $txt_title .= ' | VirtualPol'; }
 else { $txt_title = 'VirtualPol - '._('La primera Red Social Democrática'); }

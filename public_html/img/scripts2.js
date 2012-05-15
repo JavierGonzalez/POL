@@ -479,9 +479,9 @@ function enriquecer(m, bbcode) {
 	m = m.replace(/:(tarta|roto2|palm|moneda):/gi,				' <img src="'+IMG+'smiley/$1.gif" alt=":$1:" border="0" title=":$1:" width="16" height="16" />');
 
 	// URLs
-	m = m.replace(/(\s|^)(\/[-A-Z0-9\/_]{3,})/ig, ' <a href="$2" target="_blank">$2</a>'); // /url
-	m = m.replace(/(\s|^)@([-A-Z0-9_]{2,20})/ig, ' <a href="/perfil/$2" class="nick">@<b>$2</b></a>'); // @nick
-	m = m.replace(/(\s|^)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, ' <a href="$2" target="_blank">$2</a>');
+	m = m.replace(/(\s|^|>)(\/[-A-Z0-9\/_]{3,})/ig, ' <a href="$2" target="_blank">$2</a>'); // /url
+	m = m.replace(/(\s|^|>)@([-A-Z0-9_]{2,20})/ig, ' <a href="/perfil/$2" class="nick">@<b>$2</b></a>'); // @nick
+	m = m.replace(/(\s|^|>)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, ' <a href="$2" target="_blank">$2</a>');
 
 	// BBCODE
 	if (bbcode) {

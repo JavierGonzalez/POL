@@ -236,7 +236,7 @@ $('ul.menu li').hover(function(){
 	if (!isset($_GET['acceso'])) { $_GET['acceso'] = 'ciudadanos'; }
 	echo 'var eventos = [';
 	$result = sql("SELECT nick, x, y FROM users WHERE x IS NOT NULL AND ".sql_acceso($_GET['acceso'], $_GET['acceso_cfg'])." ORDER BY voto_confianza DESC LIMIT 5000"); 
-	while ($r = r($result)) { echo '{"q":"'.$r['nick'].'","x":'.$r['y'].',"y":'.$r['x'].'},'; }
+	while ($r = r($result)) { echo '"'.$r['nick'].' '.$r['y'].' '.$r['x'].'",'; }
 	echo '];';
 
 } else if (($_POST['a'] == 'whois') AND (isset($_POST['nick']))) {

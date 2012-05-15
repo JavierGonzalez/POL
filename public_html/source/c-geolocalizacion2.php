@@ -81,13 +81,19 @@ function initialize() {
 		GEvent.addListener(map, "click", function (overlay,point){
 			if (point){
 				marker.setPoint(point);
-				$("#geo_x").attr("value", point.x);
-				$("#geo_y").attr("value", point.y);
+				$("#geo_x").attr("value", roundNumber(point.x, 2));
+				$("#geo_y").attr("value", roundNumber(point.y, 2));
 			}
 		});
 
 		map.addOverlay(marker);
 	}
+}
+
+
+function roundNumber(num, dec) {
+	var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+	return result;
 }
 </script>
 
@@ -128,36 +134,29 @@ function initialize() {
 
 <script src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
 
-<script type="text/javascript" src="/ajax.php?a=geo'.($_GET['a']=='filtro'?'&acceso='.$_GET['b'].'&acceso_cfg='.$_GET['c']:'').'"></script>
-
 <script type="text/javascript" src="'.IMG.'lib/markerclusterer_packed.js"></script>
-
 <script type="text/javascript">
-
 nicks = new Array();
+eventos = new Array();
 
-$("#header-breadcrumbs a:last").html(eventos.length + " ciudadanos");
 
-print_nick_list("add", [" "]);
+print_eventos("ciudadanos", "");
 
 function initialize() {
+	$("#header-breadcrumbs a:last").html(eventos.length + " ciudadanos");
+	$("#total-num").html(eventos.length);
+
 	var center = new google.maps.LatLng('.$centro.');
 
 	var map = new google.maps.Map(document.getElementById("map"), {
-	  zoom: 6,
-	  center: center,
-	  mapTypeId: google.maps.MapTypeId.ROADMAP
+		zoom: 6,
+		center: center,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 
-	function aleatorio(inferior, superior) { 
-		numPosibilidades = superior - inferior;
-		aleat = Math.random() * numPosibilidades;
-		aleat = Math.round(aleat);
-		return parseInt(inferior) + aleat; 
-	} 
 
 	var markerImage = new google.maps.MarkerImage("'.IMG.'ico/marker.png", new google.maps.Size(20, 20));
-
+	
 	var markers = [];
 	for (var i = 0; i < eventos.length; i++) {
 		var ev = eventos[i].split(" ");
@@ -214,6 +213,27 @@ function initialize() {
 	}); 
 }
 
+function aleatorio(inferior, superior) { 
+	numPosibilidades = superior - inferior;
+	aleat = Math.random() * numPosibilidades;
+	aleat = Math.round(aleat);
+	return parseInt(inferior) + aleat; 
+} 
+
+function filtro_change(n) {
+	var la_config = $(n).val();
+	var ab = la_config.split("|");
+	print_eventos(ab[0], ab[1]);
+}
+
+function print_eventos(acceso, acceso_cfg) {
+	eventos = new Array();
+	$.post("/ajax.php", { a: "geo2", acceso: acceso, acceso_cfg: acceso_cfg }, function(data){
+		eventos = data.split(",");
+		initialize();
+	});
+}
+
 function print_nick_list(accion, lnicks) {
 	var html = "";
 	var nicks_num = 0;
@@ -227,8 +247,8 @@ function print_nick_list(accion, lnicks) {
 		html = "<a href=\"/perfil/" + nicks[i] + "\" target=\"_blank\">" + nicks[i] + "</a><br />" + html;
 		nicks_num++;
 	}
-	html = "<button onclick=\"print_nick_list(\'reset\', \'\');\" class=\"small\">Limpiar " + nicks_num + "</button><br /><b>Ciudadanos:</b><br />" + html;
-	$("#user-list").html(html);
+	$("#nicks-num").text(nicks_num);
+	$("#user-list-c").html(html);
 }
 
 
@@ -240,15 +260,58 @@ function in_array(needle, haystack) {
     return false;
 }
 
-function markerClick(nick) { return function() { 
-	print_nick_list("add", [nick]);
-	// window.open("http://15m.virtualpol.com/perfil/" + nick); 
-} }
+function markerClick(nick) { return function() { print_nick_list("add", [nick]); } }
 
-google.maps.event.addDomListener(window, "load", initialize);
+//google.maps.event.addDomListener(window, "load", initialize);
 </script>
 
-<div id="user-list" style="position:absolute;right:10px;width:150px;height:500px;overflow-y:auto;">
+<div id="user-list" style="position:absolute;right:10px;width:150px;height:500px;">
+
+<p>Filtro: <b id="total-num"></b><br />
+<select onchange="filtro_change(this)" style="width:150px;">
+<option value="ciudadanos_global|" selected="selected">Todo VirtualPol</option>
+<option value="ciudadanos|" selected="selected">Ciudadanos '.PAIS.'</option>
+
+<optgroup label="Cargos">';
+
+$result = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
+while ($r = mysql_fetch_array($result)) { 
+	$txt .= '<option value="cargo|'.$r['cargo_ID'].'">'.$r['nombre'].'</option>';
+}
+
+
+$txt .= '</optgroup>
+
+<optgroup label="Voto confianza">
+<option value="confianza|5">+5</option>
+<option value="confianza|10">+10</option>
+<option value="confianza|20">+20</option>
+<option value="confianza|50">+50</option>
+
+</optgroup>
+
+<optgroup label="Antigüedad">
+<option value="antiguedad|90">+3 meses</option>
+<option value="antiguedad|365">+1 año</option>
+<option value="antiguedad|'.(365*2).'">+2 año</option>
+<option value="antiguedad|'.(365*3).'">+3 año</option>
+<option value="antiguedad|'.(365*4).'">+4 año</option>
+<!--<option value="antiguedad|'.(365*5).'">+5 año</option>-->
+</optgroup>
+
+<optgroup label="Otros filtros">
+<option value="autentificados|">Autentificados</option>
+<option value="supervisores_censo|">Superv. censo</option>
+<option value="socio|">Socios</option>
+</optgroup>
+
+</select></p>
+
+<p><button onclick="print_nick_list(\'reset\', \'\');" class="small" style="float:right;margin-top:-4px;">X</button>
+<b id="nicks-num">0</b> ciudadanos:</p>
+
+<div id="user-list-c" style="overflow-y:auto;height:400px;"></div>
+
 </div>
 
 <div style="margin:0 160px -5px -20px;">
@@ -264,7 +327,7 @@ $txt_title = _('Mapa de ciudadanos');
 $txt_nav = array('/geolocalizacion'=>_('Mapa'));
 if ($_GET['a'] == 'fijar') { $txt_nav[] = _('Geolocalízate'); } 
 elseif ($_GET['a'] == 'vecinos') { $txt_nav[] = _('Ciudadanos cercanos'); } 
-else { $txt_nav[] = ''; }
+else { $txt_nav[] = '&nbsp;'; }
 
 
 $txt_tab = array('/geolocalizacion'=>_('Mapa'), '/geolocalizacion/vecinos'=>_('Ciudadanos cercanos'), '/geolocalizacion/fijar'=>_('Geolocalízate'));

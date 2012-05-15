@@ -239,6 +239,12 @@ $('ul.menu li').hover(function(){
 	while ($r = r($result)) { echo '"'.$r['nick'].' '.$r['y'].' '.$r['x'].'",'; }
 	echo '];';
 
+} else if (($_POST['a'] == 'geo2') AND (nucleo_acceso('ciudadanos_global'))) {
+	if (!isset($_POST['acceso'])) { $_POST['acceso'] = 'ciudadanos'; }
+	$result = sql("SELECT nick, x, y FROM users WHERE x IS NOT NULL AND ".sql_acceso($_POST['acceso'], $_POST['acceso_cfg'])." LIMIT 5000"); // ORDER BY voto_confianza DESC
+	while ($r = r($result)) { $txt .= $r['nick'].' '.$r['y'].' '.$r['x'].','; }
+	echo substr($txt, 0, strlen($txt)-1);
+
 } else if (($_POST['a'] == 'whois') AND (isset($_POST['nick']))) {
 
 	$res = sql("SELECT ID, fecha_registro, partido_afiliado, fecha_last, nivel, online, nota, avatar, voto_confianza, estado, pais, cargo,

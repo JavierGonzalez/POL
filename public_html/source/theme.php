@@ -160,7 +160,7 @@ if (($pol['config']['socios_estado']=='true') AND (nucleo_acceso('ciudadanos')) 
 
 echo '<p style="color:#999;"><b>40%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="'._('VirtualPol está siendo traducido desde el Español original a muchos más idiomas. Puedes ayudar en la traducción. ¡Gracias!').'">'._('Traducción VirtualPol').'</a></p>';
 
-if (PAIS == '15M') { echo '<p style="color:#999;"><b>'.timer('2012-05-15 00:00:00').'</b> para el <a href="/doc/31-dias-para-el-12m" title="15 de Mayo"><b>15M</b></a>.</p>'; }
+if (PAIS == '15M') { echo '<p style="color:#999;">¡Feliz <b>15M</b>! (<a href="/foro/debates-15m/">Debate</a>)</p>'; }
 
 echo '<p id="palabras">';
 

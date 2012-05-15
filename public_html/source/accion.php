@@ -998,7 +998,7 @@ case 'gobierno':
 		$accesos = array();
 		foreach (explode('|', $pol['config']['acceso']) AS $el_acceso) {
 			$acceso = explodear(';', $el_acceso, 0);
-			if ($acceso == 'control_gobierno') { $accesos[] = $el_acceso; } else { $accesos[] = $acceso.';'.$_POST[$acceso].':'.$_POST[$acceso.'_cfg']; }
+			if ($acceso == 'control_gobierno') { $accesos[] = $el_acceso; } else { $accesos[] = $acceso.';'.$_POST[$acceso].':'.str_replace(':', '', str_replace(';', '', trim($_POST[$acceso.'_cfg']))); }
 		}
 		sql("UPDATE config SET valor = '".implode('|', $accesos)."' WHERE pais = '".PAIS."' AND dato = 'acceso' LIMIT 1");
 		evento_log('Gobierno configuración: privilegios');

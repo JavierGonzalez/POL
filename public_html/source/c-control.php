@@ -678,7 +678,7 @@ case 'gobierno':
 'control_gobierno'=>_('Configuración principal'),
 'control_cargos'=>_('Configurar cargos'),
 'control_grupos'=>_('Configurar grupos'),
-'control_sanciones'=>_('Imponer sanciones'),
+'control_sancion'=>_('Imponer sanciones'),
 'crear_partido'=>_('Crear partido'),
 'examenes_decano'=>_('Gestionar exámenes'),
 'examenes_profesor'=>_('Crear preguntas de examen'),
@@ -690,9 +690,12 @@ case 'gobierno':
 'sondeo'=>_('Aprobar sondeos'),
 'votacion_borrador'=>_('Crear borradores de votación'),
 'control_socios'=>_('Gestión de socios'),
+'api_borrador'=>_('Crear borradores en API'),
+'cargo'=>_('Control cargos'),
 );
-		
-		$txt .= '<p>'._('Los privilegios permiten realizar acciones especiales. Este panel muestra los privilegios y quien los ejerce actualmente').'.</p>
+
+
+	$txt .= '<p>'._('Los privilegios permiten realizar acciones especiales. Este panel muestra los privilegios y quien los ejerce actualmente').'.</p>
 <fieldset><legend>'._('Privilegios').'</legend><form action="/accion.php?a=gobierno&b=privilegios" method="POST"><table>
 <tr>
 <th></th>

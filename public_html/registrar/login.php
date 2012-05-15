@@ -425,7 +425,7 @@ body, a { color:#FFFFFF; }
 </html>';
 		} else { redirect($url); } 
 	} else { 
-		$result = mysql_query("SELECT estado FROM users WHERE nick = '".$nick."' LIMIT 1", $link);
+		$result = mysql_query("SELECT estado FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." LIMIT 1", $link);
 		while ($r = mysql_fetch_array($result)) { $nick_estado = $r['estado']; }
 
 		switch ($nick_estado) {
@@ -466,7 +466,9 @@ default:
 <script type="text/javascript">
 function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "123")) { objeto.value = ""; } }
 </script>
-
+<style>
+#content-right { background:url('.IMG.'bg/verde-cesped.gif); }
+</style>
 
 
 
@@ -480,16 +482,16 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 <tr>
 <td align="right">'._('Usuario o email').':</td>
-<td><input name="user" value="" size="14" maxlength="200" onfocus="vlgn(this)" type="text" style="font-size:20px;font-weight:bold;" /></td>
+<td><input name="user" value="" size="14" maxlength="200" onfocus="vlgn(this)" type="text" style="font-size:20px;font-weight:bold;" required /></td>
 </tr>
 
 <tr>
 <td align="right">'._('Contraseña').':</td>
-<td><input id="login_pass" name="pass" type="password" value="" size="14" maxlength="200" onfocus="vlgn(this)" style="font-size:20px;font-weight:bold;" /></td>
+<td><input id="login_pass" name="pass" type="password" value="" size="14" maxlength="200" onfocus="vlgn(this)" style="font-size:20px;font-weight:bold;" required /></td>
 </tr>
 
 <tr>
-<td align="center" colspan="2"><input type="checkbox" name="no_cerrar_sesion" value="true" /> '._('No cerrar sesión en 30 días').'.</td>
+<td align="center" colspan="2"><input type="checkbox" name="no_cerrar_sesion" value="true" id="no_cerrar_sesion" /> <label for="no_cerrar_sesion" class="inline">'._('No cerrar sesión en 30 días').'.</label></td>
 </tr>
 
 <tr>
@@ -497,13 +499,13 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 '.($_GET['error']?'<em style="color:red;">'.escape(base64_decode($_GET['error'])).'.</em><br /><br />':'').'
 
-<button onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" class="large blue">'._('Iniciar sesión').'</button>
+<button onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" class="large blue">'._('Iniciar sesión').'</button><br />
+<br />
+<a href="'.REGISTRAR.'login.php?a=recuperar-pass">'._('¿Has olvidado tu contraseña?').'</a>
 </table>
+
+<p><span style="color:#888;">'._('Contacto').': '.CONTACTO_EMAIL.'</span></p>
 </fieldset>
-
-
-<a href="'.REGISTRAR.'login.php?a=recuperar-pass">'._('¿Has olvidado tu contraseña?').'</a><br /><br />
-<span style="color:#888;">'._('Contacto').': '.CONTACTO_EMAIL.'</span>
 
 </form>';
 	}

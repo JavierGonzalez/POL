@@ -1074,7 +1074,7 @@ $txt .= '</select>
 
 <tr>
 <td align="right">Color de fondo:</td>
-<td><input type="text" name="bg_color" value="'.$pol['config']['bg_color'].'" style="background:'.$pol['config']['bg_color'].';" /></td>
+<td><input type="color" name="bg_color" value="'.strtolower($pol['config']['bg_color']).'" style="background:'.$pol['config']['bg_color'].';" /></td>
 </tr>
 
 </table>

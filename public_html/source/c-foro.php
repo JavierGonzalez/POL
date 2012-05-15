@@ -526,9 +526,16 @@ ORDER BY time ASC", $link);
 		if (nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) {
 
 			$txt_table .= '<tr class="amarillo">
-<td style="padding-right:4px;"><h2><a href="/foro/'.$r['url'].'" style="font-size:22px;margin-left:8px;"><b>'.$r['title'].'</b></a></h2></td>
-<td align="right"><b style="font-size:19px;">'.$r['num'].'</b></td>
-<td style="color:green;" colspan="2"><span style="float:right;color:grey;">'.$el_acceso.'</span><span style="font-size:18px;">'.$r['descripcion'].'</span></td>
+
+<td colspan="3"><h2><a href="/foro/'.$r['url'].'" style="font-size:22px;margin-left:8px;"><b>'.$r['title'].'</b></a></h2></td>
+
+
+<td><span style="float:right;">'.$el_acceso.'</span><span style="font-size:18px;color:green;">'.$r['descripcion'].'</span></td>
+
+
+
+
+
 <td align="right" width="10%">'.boton('Crear Hilo', (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?'/foro/'.$r['url'].'#enviar':false), false, 'large').'</td>
 </tr>';
 

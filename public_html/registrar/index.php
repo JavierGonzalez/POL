@@ -370,13 +370,13 @@ $(document).ready(function() {
 
 <ol>
 <li><b>Nick</b>: será tu identidad. Solo letras, numeros y "_". Sin espacios.<br />
-<input type="text" name="nick" value="' . $nick . '" size="10" maxlength="14" /><br /><br /></li>
+<input type="text" name="nick" value="'.$nick.'" size="10" maxlength="14" required /><br /><br /></li>
 
 <li><b>Email</b>: recibirás un email de verificación. No se enviará spam.<br />
-<input type="text" name="email" value="' . $email . '" size="30" maxlength="50" /><br /><br /></li>
+<input type="email" name="email" value="'.$email.'" size="30" maxlength="50" required /><br /><br /></li>
 
 <li><b>Contrase&ntilde;a</b>: Más de 5 caracteres.<br />
-<input id="pass1" class="password" type="password" autocomplete="off" name="pass1" value="" maxlength="40" />
+<input id="pass1" class="password" type="password" autocomplete="off" name="pass1" value="" maxlength="40" required />
 <div class="password-meter" style="float:right;margin-right:400px;color:#666;">
 	<div class="password-meter-message">&nbsp;</div>
 	<div class="password-meter-bg">
@@ -387,20 +387,20 @@ $(document).ready(function() {
 
 
 <br />
-<input id="pass2" type="password" autocomplete="off" name="pass2" value="" maxlength="40" style="margin-top:1px;" /> (introduce otra vez)<br /><br /></li>
+<input id="pass2" type="password" autocomplete="off" name="pass2" value="" maxlength="40" style="margin-top:1px;" required /> (introduce otra vez)<br /><br /></li>
 
 
 <li><b>&iquest;Qu&eacute; animal es?</b> Un nombre, sin espacios, nivel primaria. <a href="http://www.teoriza.com/captcha/example.php" target="_blank">Animal Captcha</a>.<br />
 <img src="animal-captcha.php" alt="Animal" id="animalcaptchaimg"  onclick="document.getElementById(\'animalcaptchaimg\').src=\'animal-captcha.php?\'+Math.random();" title="Visualizar otro animal" /><br />
-<input type="text" name="animal" value="" autocomplete="off" size="14" maxlength="20" /><br /><br /></li>
+<input type="text" name="animal" value="" autocomplete="off" size="14" maxlength="20" required /><br /><br /></li>
 
 
-<li><b>&iquest;Compartes conexi&oacute;n a Internet con otro usuario de VirtualPol?</b><br /> 
+<li><b>&iquest;Compartes conexión a Internet con otro usuario de VirtualPol?</b><br /> 
 En caso afirmativo indica el nick: <input type="text" name="nick_clon" value="" size="10" maxlength="14" /> (en caso negativo deja vac&iacute;o)<br /><br />
 </li>
 
 
-<li><input name="condiciones" value="ok" type="checkbox" /> <b>Aceptas las <a href="http://www'.'.'.DOMAIN.'/TOS" target="_blank">Condiciones de Uso de VirtualPol</a>.</b><br /><br /></li>
+<li><input name="condiciones" value="ok" type="checkbox" required /> <b>Aceptas las <a href="http://www'.'.'.DOMAIN.'/TOS" target="_blank">Condiciones de Uso de VirtualPol</a>.</b><br /><br /></li>
 
 <li>'.boton('Crear ciudadano', 'submit', false, 'large blue').'</li>
 </form>

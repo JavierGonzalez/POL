@@ -375,7 +375,7 @@ if ($time_registro <= $margen_90dias) {
 } else {
 	$tiempo_inactividad = 2592000; // tras 30 dias
 }
-$txt .= _('Expira').' '.($r['dnie']=='true'?'<b>'._('Nunca').'</b> ('._('Autentificado').')':'<b>'._('tras').' '.round($tiempo_inactividad / 60 / 60 / 24).' '._('días').'</b> '._('inactivo')).'
+$txt .= _('Expira').' '.($r['donacion']||$r['dnie']=='true'?'<b>'._('Nunca').'</b> ('.($r['donacion']?_('Donante'):_('Autentificado')).')':'<b>'._('tras').' '.round($tiempo_inactividad / 60 / 60 / 24).' '._('días').'</b> '._('inactivo')).'
 
 
 </p></td><td valign="top">

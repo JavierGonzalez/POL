@@ -231,15 +231,7 @@ $('ul.menu li').hover(function(){
 <?php
 	echo notificacion('print');
 
-} else if (($_GET['a'] == 'geo') AND (nucleo_acceso('ciudadanos_global'))) {
-	header('Content-Type: application/javascript');
-	if (!isset($_GET['acceso'])) { $_GET['acceso'] = 'ciudadanos'; }
-	echo 'var eventos = [';
-	$result = sql("SELECT nick, x, y FROM users WHERE x IS NOT NULL AND ".sql_acceso($_GET['acceso'], $_GET['acceso_cfg'])." ORDER BY voto_confianza DESC LIMIT 5000"); 
-	while ($r = r($result)) { echo '"'.$r['nick'].' '.$r['y'].' '.$r['x'].'",'; }
-	echo '];';
-
-} else if (($_POST['a'] == 'geo2') AND (nucleo_acceso('ciudadanos_global'))) {
+} else if (($_POST['a'] == 'geo') AND (nucleo_acceso('ciudadanos_global'))) {
 	if (!isset($_POST['acceso'])) { $_POST['acceso'] = 'ciudadanos'; }
 	$result = sql("SELECT nick, x, y FROM users WHERE x IS NOT NULL AND ".sql_acceso($_POST['acceso'], $_POST['acceso_cfg'])." LIMIT 5000"); // ORDER BY voto_confianza DESC
 	while ($r = r($result)) { $txt .= $r['nick'].' '.$r['y'].' '.$r['x'].','; }

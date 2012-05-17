@@ -34,7 +34,7 @@ while($r = mysql_fetch_array($result)) {
 	$time_anterior = strtotime($r['elecciones'])-($r['elecciones_cada']*24*60*60);
 
 	$txt .= '<tr>
-<td align="right" width="320" style="font-size:16px;" class="gris">'._('Elecciones a').' '.$r['nombre'].'</td>
+<td align="right" width="320" style="font-size:16px;'.($r['asigna']==0?'font-weight:bold;':'').'" class="gris">'._('Elecciones a').' '.$r['nombre'].'</td>
 
 <td><a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /></a></td>
 

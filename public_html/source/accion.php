@@ -1715,18 +1715,16 @@ case 'enviar-mensaje':
 			$envio_urgente = 0;
 
 			$mp_num = 1;
-			$enviar_nicks = '';
-			$nicks_array = explode(' ', $_POST['nick'].' ');
+			$enviar_nicks = array();
+			$nicks_array = explode(' ', $_POST['nick']);
 			foreach ($nicks_array AS $el_nick) {
-				if (($mp_num <= 9) AND ($el_nick)) { 
-					// Maximo 9 ciudadanos. Para no suplantar el "mensaje global".
-					if ($enviar_nicks != '') { $enviar_nicks .= ','; }
-					$enviar_nicks .= "'".$el_nick."'";
+				if (($el_nick) AND (($mp_num <= MP_MAX) OR (nucleo_acceso($vp['acceso']['control_gobierno'])))) {
+					$enviar_nicks[] = $el_nick;
 					$mp_num++;
 				}
 			}
 			
-			$result = sql("SELECT ID, pais FROM users WHERE nick IN (".$enviar_nicks.") AND estado != 'expulsado'");
+			$result = sql("SELECT ID, pais FROM users WHERE nick IN ('".implode("','", $enviar_nicks)."') AND estado != 'expulsado'");
 			while($r = r($result)){ 
 				sql("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$r['ID']."', '".$date."', '".$text."', '0', '".$_POST['calidad']."')");
 				

@@ -152,17 +152,15 @@ _ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos s
 	<div id="menu-next">
 
 <?php
-
+/*
 if (($pol['config']['socios_estado']=='true') AND (nucleo_acceso('ciudadanos')) AND (!nucleo_acceso('socios'))) {
-	//echo '<p style="text-align:center;">'.boton(_('Inscríbete como socio'), '/socios', false, 'orange small').'</p>';
+	echo '<p style="text-align:center;">'.boton(_('Inscríbete como socio'), '/socios', false, 'orange small').'</p>';
 }
+*/
 
+echo '<p style="color:#999;"><b>40%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="'._('VirtualPol está siendo traducido desde el Español original a muchos más idiomas. Puedes ayudar en la traducción. ¡Gracias!').'">'._('Traducción VirtualPol').'</a></p>
 
-echo '<p style="color:#999;"><b>40%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="'._('VirtualPol está siendo traducido desde el Español original a muchos más idiomas. Puedes ayudar en la traducción. ¡Gracias!').'">'._('Traducción VirtualPol').'</a></p>';
-
-if (PAIS == '15M') { echo '<p style="color:#999;">¡Feliz <b>15M</b>! (<a href="/foro/debates-15m/">Debate</a>)</p>'; }
-
-echo '<p id="palabras">';
+<p id="palabras">';
 
 foreach(explode(';', $pol['config']['palabras']) as $t) {
 	$t = explode(':', $t);
@@ -198,7 +196,7 @@ if ((ECONOMIA) AND (substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa')) {
 <?php
 unset($txt_header);
 if (isset($pol['user_ID'])) {
-	echo '<span class="htxt"><b><a href="/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').' | </b><a href="/msg">'._('Mensajes privados').'</a><b>'.(ECONOMIA&&$pol['estado']=='ciudadano'?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="/accion.php?a=logout">'._('Salir').'</a></b></span>';
+	echo '<span class="htxt">'.($pol['estado']=='extranjero'?'<span style="margin-left:-10px;">'.boton(_('Solicitar ciudadania'), REGISTRAR, false, 'small red').'</span>':'').' <a href="/perfil/'.$pol['nick'].'"><b>'.$pol['nick'].'</b>'.($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').' '.($pol['estado']=='extranjero'?'':'| <a href="/msg">'._('Mensajes privados').'</a> ').(ECONOMIA&&$pol['estado']=='ciudadano'?'| <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').'| <a href="/accion.php?a=logout"><b>'._('Salir').'</b></a></span>';
 } else {
 	echo boton(_('Crear ciudadano'), REGISTRAR.'?p='.PAIS, false, 'large green').' '.boton(_('Iniciar sesión'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), false, 'large blue');
 }

@@ -78,7 +78,8 @@ define('SQL', strtolower(PAIS).'_');
 define('CONTACTO_EMAIL', 'desarrollo@virtualpol.com');
 define('USERCOOKIE', '.'.DOMAIN);
 define('HOST', $_SERVER['HTTP_HOST']);
-define('VOTO_CONFIANZA_MAX', 50); // numero maximo de votos de confianza emitibles
+define('VOTO_CONFIANZA_MAX', 50); // Máximo de votos de confianza emitibles
+define('MP_MAX', 25); // Máximo de MP (mensajes privados) que puede enviar un ciudadano
 $datos_perfil = array('Blog', 'Twitter', 'Facebook', 'Google+', '', 'Menéame');
 $columnas = 14; $filas = 14; // Dimensiones mapa
 

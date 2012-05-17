@@ -184,6 +184,14 @@ LIMIT 1", $link);
 
 	if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) { $editar_examen = true; } else { $editar_examen = false; }
 
+
+	// Obtiene cargos automaticos (para imponer el limite de 1 automatico por usuario, con el fin de evitar "picar en todos los cargos")
+	$cargos_automaticos = array();
+	if (isset($pol['user_ID'])) {
+		$result = mysql_query("SELECT cargo_ID FROM cargos WHERE pais = '".PAIS."' AND autocargo = 'true'", $link);
+		while($r = mysql_fetch_array($result)){ $cargos_automaticos[] = $r['cargo_ID']; }
+	}
+
 	$cargo_ID_array = array();
 	$result = mysql_query("SELECT *, 
 (SELECT cargo FROM cargos_users WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS cargo,
@@ -232,9 +240,22 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 					} else if ($r['aprobado'] == 'ok') {
 						$txt_el_td .= boton(_('Repetir').' ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue').' '.boton(_('Retirar'), '/accion.php?a=examenes&b=retirar_examen&ID='.$r['cargo_ID'], false, 'red');
 					} else if ($r['aprobado'] == 'no') {
-						$txt_el_td .= boton(($r['autocargo']=='true'?_('Ser miembro'):_('Ser candidato')).' ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue');
+
+						if (($r['autocargo'] == 'true') AND (nucleo_acceso('cargo', implode(' ', $cargos_automaticos)))) { 
+							// Tienes al menos un cargo automatico
+							$txt_el_td .= '<span class="gris">'._('Solo puedes ejercer un cargo automático').'.</span>';
+						} else {
+							$txt_el_td .= boton(($r['autocargo']=='true'?_('Ser miembro'):_('Ser candidato')).' ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue');
+						}
+
 					} else {
-						$txt_el_td .= boton(($r['autocargo']=='true'?_('Ser miembro'):_('Ser candidato')), '/examenes/'.$r['examen_ID'], false, 'blue');
+
+						if (($r['autocargo'] == 'true') AND (nucleo_acceso('cargo', implode(' ', $cargos_automaticos)))) { 
+							// Tienes al menos un cargo automatico
+							$txt_el_td .= '<span class="gris">'._('Solo puedes ejercer un cargo automático').'.</span>';
+						} else {
+							$txt_el_td .= boton(($r['autocargo']=='true'?_('Ser miembro'):_('Ser candidato')), '/examenes/'.$r['examen_ID'], false, 'blue');
+						}
 					}
 				}
 			}

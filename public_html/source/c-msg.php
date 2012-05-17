@@ -68,6 +68,7 @@ LIMIT 50", $link);
 			$ocultar_formulario = 'style="display:none;"';
 		}
 	}
+	if (isset($_POST['ciudadanos'])) { $pre_nick = $_POST['ciudadanos']; }
 
 	$result = mysql_query("SELECT cargo_ID, nombre,
 (SELECT COUNT(*) FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'true' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS cargos_num
@@ -135,7 +136,7 @@ function click_form(tipo) {
 <p><b>'._('Destino').':</b><table border="0" style="margin-top:-15px;">
 <tr onclick="click_form(\'ciudadano\');">
 <td nowrap="nowrap"><input id="radio_ciudadano" type="radio" name="para" value="ciudadano"'.(!$pre_cargo?' checked="checked"':'').' />'._('Ciudadano').':</td>
-<td nowrap="nowrap"><input id="ciudadano" tabindex="1" type="text" name="nick" value="' . $pre_nick . '" style="font-size:17px;width:300px;" /> ('._('hasta').' 9 '._('ciudadanos separados por espacios').')</td>
+<td nowrap="nowrap"><input id="ciudadano" tabindex="1" type="text" name="nick" value="'.$pre_nick.'" style="font-size:17px;width:300px;" /> '.(nucleo_acceso($vp['acceso']['control_gobierno'])?'':'('._('hasta').' '.MP_MAX.' '._('ciudadanos separados por espacios').')').'</td>
 </tr>
 <tr onclick="click_form(\'cargos\');">
 <td nowrap="nowrap"><input id="radio_cargos" type="radio" name="para" value="cargo"'.($pre_cargo?' checked="checked"':'').' />'._('Cargos').':</td>

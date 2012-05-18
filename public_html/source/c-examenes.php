@@ -180,7 +180,7 @@ ORDER BY aprobado ASC, nota DESC", $link);
 		$txt .= '<tr><td>' . $sello . '</td><td align="right"><b style="color:grey;">' . $r['nota'] . '</b></td><td><a href="/examenes/' . $r['examen_ID'] . '"><b>' . $r['nombre_examen'] . '</b></a></td><td>' . $cargo . '</td><td align="right"><acronym title="' . $r['time'] . '">' . duracion(time() - strtotime($r['time'])) .  '</acronym></td><td><b>'. $caducar_examen .'</b></td></tr>';
 	}
 
-	$txt .= '</table><p style="color:red;">'._('Tiempo de expiración').': <b>'.duracion($pol['config']['examenes_exp']).'</b></p>';
+	$txt .= '</table>';
 
 
 } elseif (($_GET['a'] == 'crear') AND ($pol['estado'] == 'ciudadano')) { 	// CREAR NUEVA
@@ -435,7 +435,7 @@ ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 		} else { $aprobados = '0%'; }
 
 
-		if (($r['num_preguntas']+$num_generales) > 0) {
+		if ((($r['num_preguntas']+$num_generales) > 0) AND (substr($r['cargo_ID'], 0, 1) == '-')) {
 			$url = '<a href="/examenes/'.$r['ID'].'"><b>'.$r['titulo'].'</b></a>';
 		} else {
 			$url = '<b>'.$r['titulo'].'</b>';

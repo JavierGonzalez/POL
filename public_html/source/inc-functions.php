@@ -9,7 +9,7 @@
 
 
 // MySQL micro-framework v0.1
-function sql($q, $l=null) {global $link; return mysql_query($q, ($l==null?$link:$l));}
+function sql($q, $l=null) {global $link; return mysql_query($q, ($l==null?$link:$l)); }
 function r($q) {return mysql_fetch_assoc($q);}
 
 
@@ -51,7 +51,7 @@ function verbalizar_acceso($tipo, $valor='') {
 		case 'ciudadanos_global': $t = _('todos los ciudadanos de VirtualPol'); break;
 		case 'ciudadanos': $t = _('todos los ciudadanos de').' '.($valor==''?_('la plataforma').' '.PAIS:' '._('las plataformas').': <em>'.PAIS.' '.$valor.'</em>'); break;
 		case 'excluir': $t = _('todos los ciudadanos excepto').': <em>'.$valor.'</em>'; break;
-		case 'privado': $t = _('los ciudadanos').': '.$valor; break;
+		case 'privado': if ($valor == '') { $t = _('nadie'); } else { $t = _('los ciudadanos').': '.$valor; } break;
 		case 'confianza': $t = _('ciudadanos con confianza mayor o igual a').' '.confianza($valor).' (<a href="/censo/confianza">'._('Ver confianza').'</a>)'; break;
 		case 'nivel': $t = _('ciudadanos con nivel').' <em>'.$valor.'</em> '._('o mayor').' (<a href="/cargos">'._('Ver cargos').'</a>)'; break;
 		
@@ -66,6 +66,7 @@ function verbalizar_acceso($tipo, $valor='') {
 		case 'cargo':
 			global $link;
 			$val = array();
+			if ($valor == '') { $valor = 'null'; }
 			$result = sql("SELECT cargo_ID, nombre AS nom FROM cargos WHERE pais = '".PAIS."' AND cargo_ID IN (".implode(',', explode(' ', $valor)).") ORDER BY nivel DESC", $link);
 			while($r = r($result)) { $val[] = '<a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" title="'.$r['nom'].'" alt="'.$r['nom'].'" width="16" height="16" /></a>'; }
 			$t = _('ciudadanos con cargo').': '.implode(' ', $val).' (<a href="/cargos">'._('Ver cargos').'</a>)';
@@ -122,7 +123,7 @@ function sql_acceso($tipo, $valor='') {
 
 
 
-function control_acceso($titulo=false, $name='', $acceso='', $cfg='', $quitar_array='') {
+function control_acceso($titulo=false, $name='', $acceso='', $cfg='', $quitar_array='', $inline=false) {
 	$html = ($titulo==false?'':'<fieldset><legend>'.$titulo.'</legend>').'<select name="'.$name.'">';
 	$quitar_array = explode(' ', $quitar_array);
 	$array = nucleo_acceso('print');
@@ -130,7 +131,7 @@ function control_acceso($titulo=false, $name='', $acceso='', $cfg='', $quitar_ar
 	foreach ($array AS $at => $at_var) {
 		$html .= '<option value="'.$at.'"'.($at==$acceso?' selected="selected"':'').' />'.ucfirst(str_replace('_', ' ', $at)).'</option>';
 	}
-	$html .= '</select><br /><input type="text" name="'.$name.'_cfg" size="18" maxlength="900" id="'.$name.'_cfg_var" value="'.$cfg.'" /><br />'.($titulo==false?'':'</fieldset>');
+	$html .= '</select>'.($inline?' ':'<br />').'<input type="text" name="'.$name.'_cfg" size="18" maxlength="9000" id="'.$name.'_cfg_var" value="'.$cfg.'" />'.($titulo==false?'':'</fieldset>');
 	return $html;
 }
 

@@ -143,7 +143,7 @@ eventos = new Array();
 print_eventos("ciudadanos", "");
 
 function initialize() {
-	$("#header-breadcrumbs a:last").html(eventos.length + " ciudadanos");
+	$("#header-breadcrumbs a:last").html(eventos.length + " '._('ciudadanos').'");
 	$("#total-num").html(eventos.length);
 
 	var center = new google.maps.LatLng('.$centro.');
@@ -201,7 +201,7 @@ function initialize() {
 		var lnicks = new Array();
 		var el_cluster = cluster.getMarkers();
 		
-		if (('.(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false').') || (nicks.length >= '.MP_MAX.')) {
+		if (('.(nucleo_acceso($vp['acceso']['control_gobierno'])?'"false"':'"true"').' == "true") && (nicks.length >= '.MP_MAX.')) {
 			alert("Puedes enviar máximo '.MP_MAX.' a la vez.");
 		} else if (el_cluster.length <= 50) {
 			for (var i = 0; i < el_cluster.length; i++) {
@@ -241,7 +241,7 @@ function print_nick_list(accion, lnicks) {
 	var nicks_num = 0;
 	if (accion == "add") {
 		for (var i = 0; i < lnicks.length; i++) { 
-			if ((lnicks[i]) && (!in_array(lnicks[i], nicks)) && (nicks.length < '.MP_MAX.')) { 
+			if ((lnicks[i]) && (!in_array(lnicks[i], nicks)) && (('.(nucleo_acceso($vp['acceso']['control_gobierno'])?'"true"':'"false"').' == "true") || (nicks.length < '.MP_MAX.'))) { 
 				nicks.push(lnicks[i]); 
 			}
 		}
@@ -290,12 +290,12 @@ function redirect_POST(la_url) {
 
 <div id="user-list" style="position:absolute;right:10px;width:150px;height:500px;">
 
-<p>Filtro: <b id="total-num"></b><br />
+<p>'._('Total ciudadanos').': <b id="total-num"></b><br />
 <select onchange="filtro_change(this)" style="width:150px;">
-<option value="ciudadanos_global|" selected="selected">Todo VirtualPol</option>
-<option value="ciudadanos|" selected="selected">Ciudadanos '.PAIS.'</option>
+<option value="ciudadanos_global|" selected="selected">'._('Todo').' VirtualPol</option>
+<option value="ciudadanos|" selected="selected">'._('Ciudadanos').' '.PAIS.'</option>
 
-<optgroup label="Cargos">';
+<optgroup label="'._('Cargos').'">';
 
 $result = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 while ($r = mysql_fetch_array($result)) { 
@@ -305,38 +305,51 @@ while ($r = mysql_fetch_array($result)) {
 
 $txt .= '</optgroup>
 
-<optgroup label="Voto confianza">
+<optgroup label="'._('Grupos').'">';
+
+$result = mysql_query("SELECT grupo_ID, nombre FROM grupos WHERE pais = '".PAIS."' ORDER BY num DESC", $link);
+while ($r = mysql_fetch_array($result)) { 
+	$txt .= '<option value="grupos|'.$r['grupo_ID'].'">'.$r['nombre'].'</option>';
+}
+
+
+$txt .= '</optgroup>
+
+<optgroup label="'._('Confianza').'">
 <option value="confianza|5">+5</option>
 <option value="confianza|10">+10</option>
 <option value="confianza|20">+20</option>
 <option value="confianza|50">+50</option>
-
 </optgroup>
 
-<optgroup label="Antigüedad">
-<option value="antiguedad|90">+3 meses</option>
-<option value="antiguedad|365">+1 año</option>
-<option value="antiguedad|'.(365*2).'">+2 año</option>
-<option value="antiguedad|'.(365*3).'">+3 año</option>
-<option value="antiguedad|'.(365*4).'">+4 año</option>
-<!--<option value="antiguedad|'.(365*5).'">+5 año</option>-->
+<optgroup label="'._('Antigüedad').'">
+<option value="antiguedad|90">+3 '._('meses').'</option>
+<option value="antiguedad|365">+1 '._('año').'</option>
+<option value="antiguedad|'.(365*2).'">+2 '._('año').'</option>
+<option value="antiguedad|'.(365*3).'">+3 '._('año').'</option>
+<!--<option value="antiguedad|'.(365*4).'">+4 '._('año').'</option>-->
+<!--<option value="antiguedad|'.(365*5).'">+5 '._('año').'</option>-->
 </optgroup>
 
-<optgroup label="Otros filtros">
-<option value="autentificados|">Autentificados</option>
-<option value="supervisores_censo|">Superv. censo</option>
-<option value="socio|">Socios</option>
+<optgroup label="'._('Otros filtros').'">
+<option value="autentificados|">'._('Autentificados').'</option>
+<option value="supervisores_censo|">'._('Superv. censo').'</option>
+<option value="socio|">'._('Socios').'</option>
 </optgroup>
 
-</select></p>
+</select>
+</p>
 
 <p><button onclick="print_nick_list(\'reset\', \'\');" class="small" style="float:right;margin-top:-4px;">X</button>
-<b id="nicks-num">0</b> ciudadanos:</p>
+<b id="nicks-num">0</b> '._('ciudadanos').':</p>
 
-<div id="user-list-c" style="overflow-y:auto;height:345px;"></div>
+<div id="user-list-c" style="overflow-y:auto;height:345px;">
+<p class="gris">'._('Puedes crear una lista de ciudadanos haciendo clic en los puntos azules y enviarles un mensaje privado').'.</p>
 
-<p><button onclick="redirect_POST(\'/msg/enviar\');" class="small">Enviar mensaje privado</button>
-<!--<br /><button onclick="redirect_POST(\'/notificacion\');" class="small">Crear notificación</button>--></p>
+</div>
+
+<p><button onclick="redirect_POST(\'/msg/enviar\');" class="small">'._('Enviar mensaje privado').'</button>
+'.(nucleo_acceso($vp['acceso']['control_gobierno'])?'<br /><button onclick="redirect_POST(\'/control/gobierno/notificaciones\');" class="small">'._('Crear notificación').'</button>':'').'</p>
 </div>
 
 <div style="margin:0 160px -5px -20px;">

@@ -95,6 +95,7 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	// UPDATE
 	if ($pol['estado'] != 'expulsado') { // No esta expulsado
 		if (isset($session_new)) { // START SESSION
+
 			$update = ", visitas = visitas + 1, nav = '".$_SERVER['HTTP_USER_AGENT']."', fecha_init = '".$date."'";
 			if ($pol['IP'] != $IP) { 
 				$host = gethostbyaddr(long2ip($IP)); if ($host == '') { $host = long2ip($IP); }

@@ -65,7 +65,7 @@ _ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos s
 
 	<li id="menu-comu"<?=($txt_menu=='comu'?' class="menu-sel"':'')?>><a href="/"><?=_('Comunicación')?></a>
 		<ul>
-			<li><a href="/chats">Chats</a></li>
+			<li><a href="/chats"><?=_('Chats')?></a></li>
 			<li><a href="/foro"><b><?=_('Foros')?></b></a>
 				<ul>
 					<li><a href="/foro/ultima-actividad"><?=_('Última actividad')?></a>
@@ -73,7 +73,7 @@ _ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos s
 				</ul>
 			</li>
 			<li><a href="/msg"><?=_('Mensajes privados')?></a></li>
-			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@cryptious.net/Other/?version=1.2.0">'._('Voz').'</a><ul><li><a href="/info/voz">'._('Configurar').' <em>Mumble</em></a></li></ul></li>':'')?>
+			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@cryptious.net/Occupy%20Rooms/Europe/OccupySpain/?version=1.2.0">'._('Voz').'</a><ul><li><a href="/info/voz">'._('Configurar').' <em>Mumble</em></a></li></ul></li>':'')?>
 			<li><a href="#" style="cursor:default;"><?=_('Redes sociales')?></a>
 				<ul>
 					<li><a href="<?=(ASAMBLEA?'https://twitter.com/#!/AsambleaVirtuaI':'https://twitter.com/#!/VirtualPol')?>">Twitter</a></li>
@@ -158,7 +158,7 @@ if (($pol['config']['socios_estado']=='true') AND (nucleo_acceso('ciudadanos')) 
 }
 */
 
-echo '<p style="color:#999;"><b>40%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="'._('VirtualPol está siendo traducido desde el Español original a muchos más idiomas. Puedes ayudar en la traducción. ¡Gracias!').'">'._('Traducción VirtualPol').'</a></p>
+echo '<p style="color:#999;"><b>42%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="'._('VirtualPol está siendo traducido desde el Español original a muchos más idiomas. Puedes ayudar en la traducción. ¡Gracias!').'">'._('Traducción VirtualPol').'</a></p>
 
 <p id="palabras">';
 

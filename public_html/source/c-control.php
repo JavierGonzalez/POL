@@ -692,6 +692,7 @@ case 'gobierno':
 'control_socios'=>_('Gestión de socios'),
 'api_borrador'=>_('Crear borradores en API'),
 'cargo'=>_('Control cargos'),
+'control_docs'=>_('Control de los documentos'),
 );
 
 
@@ -705,8 +706,8 @@ case 'gobierno':
 		foreach ($vp['acceso'] AS $acceso => $cfg) {
 			$txt .= '<tr>
 <td align="right" nowrap="nowrap"><b>'.$privilegios_array[$acceso].'</b></td>
-<td>'.($acceso=='control_gobierno'?'':control_acceso(false, $acceso, $cfg[0], $cfg[1], 'anonimos ciudadanos_global')).'</td>
-<td>'.ucfirst(verbalizar_acceso($cfg[0],$cfg[1])).'</td>
+<td>'.($acceso=='control_gobierno'?'':control_acceso(false, $acceso, $cfg[0], $cfg[1], 'anonimos ciudadanos_global', true)).'</td>
+<td>'.ucfirst(verbalizar_acceso($cfg)).'</td>
 </tr>';
 		}
 		$txt .= '<tr><td colspan="3" align="center">'.boton(_('Guardar'), (nucleo_acceso($vp['acceso']['control_gobierno'])?'submit':false), '¿Estás seguro de querer MODIFICAR los privilegios?', 'large red').'</td></tr></table></form></fieldset>';
@@ -725,16 +726,21 @@ case 'gobierno':
 <td>'._('Texto').': </td>
 <td><input type="text" name="texto" value="" size="54" maxlength="50" /></td>
 </tr>
+
 <tr>
 <td>URL: </td>
 <td><input type="text" name="url" value="" size="64" maxlength="60" /> ('._('si no cabe usa un acortador').')</td>
 </tr>
 
 <tr>
+<td>Destino: </td>
+<td>'.control_acceso(false, 'acceso', ($_POST['ciudadanos']?'privado':'ciudadanos'), $_POST['ciudadanos'], 'anonimos ciudadanos_global excluir', true).'</td>
+</tr>
+
+<tr>
 <td></td>
 <td>
-'.boton(_('Crear notificación'), (nucleo_acceso($vp['acceso']['control_gobierno'])?'submit':false), false, 'red').'
- <span style="color:red;"><b>'._('Cuidado').'.</b> '._('Lo recibirán todos los ciudadanos de').' '.PAIS.'.</span></td>
+'.boton(_('Crear notificación'), (nucleo_acceso($vp['acceso']['control_gobierno'])?'submit':false), '¿Estás seguro de crear esta notificación?\n\n¡Cuidado! compruébalo inmediatamente, en caso de error puedes borrarlo.', 'red').'</td>
 </tr>
 </table>
 </fieldset>
@@ -762,8 +768,8 @@ case 'gobierno':
 			$txt .= '<tr>
 <td align="right">'.timer($r['time']).'</td>
 <td><a href="'.$r['url'].'">'.$r['texto'].'</a></td>
-<td align="right"><b>'.$r['num'].'</b></td>
-<td align="right">'.$leido.'</td>
+<td align="right"><b>'.num($r['num']).'</b></td>
+<td align="right">'.num($leido).'</td>
 <td align="right">'.num($leido*100/$r['num'], 2).'%</td>
 <td>'.(nucleo_acceso($vp['acceso']['control_gobierno'])?boton('X', '/accion.php?a=gobierno&b=notificaciones&c=borrar&noti_ID='.$r['noti_ID'], false, 'small'):boton('X', false, false, 'small')).'</td>
 </tr>';
@@ -990,7 +996,7 @@ $(function() {
 <table border="0" cellspacing="3" cellpadding="0">
 
 
-<tr><td align="right">'._('Descripción').':</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'"'.$dis.' /></td></tr>
+<tr><td align="right">'._('Descripción').':</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'" /></td></tr>
 
 <tr><td align="right">Idioma:</td><td><select name="lang">';
 	$result = sql("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'lang'");
@@ -1005,26 +1011,20 @@ $(function() {
 <td>'.$defcon.'</td></tr>
 
 <tr><td align="right">'._('Referencia').':</td>
-<td><input style="text-align:right;" type="text" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '"'.$dis.' /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td>
+<td><input style="text-align:right;" type="text" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '" /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td>
 
 </tr>');
 
 $palabra_gob = explode(':', $pol['config']['palabra_gob']);
 
-$sel_exp = '';
-$sel_exp[$pol['config']['examenes_exp']] = ' selected="selected"';
 
 $txt .= '
 
-<tr><td align="right">'._('Expiración candidaturas').':</td><td>
-<select name="examenes_exp"'.$dis.'>
-<option value="7776000"' . $sel_exp['7776000'] . '>3 '._('meses').'</option>
-<option value="5184000"' . $sel_exp['5184000'] . '>2 '._('meses').'</option>
-<option value="2592000"' . $sel_exp['2592000'] . '>30 '._('días').'</option>
-<option value="1296000"' . $sel_exp['1296000'] . '>15 '._('días').'</option>
-</select><td></tr>
+<tr><td align="right">'._('Expiración de candidatura tras').':</td>
+<td><input type="number" name="examenes_exp" value="'.$pol['config']['examenes_exp'].'" min="5" max="90" required /> '._('días').' '._('inactivo').'<td></tr>
 
-<tr><td align="right">'._('Expiración chats').':</td><td><input type="text" name="chat_diasexpira" size="2" maxlength="6" value="'.$pol['config']['chat_diasexpira'].'"'.$dis.' /> <acronym title="Dia inactivos">'._('días').'</acronym></td></tr>
+<tr><td align="right">'._('Expiración chats').':</td>
+<td><input type="number" name="chat_diasexpira" value="'.$pol['config']['chat_diasexpira'].'" min="10" max="90" required /> <acronym title="Dia inactivos">'._('días').'</acronym></td></tr>
 
 
 

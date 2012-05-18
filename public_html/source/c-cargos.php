@@ -29,7 +29,7 @@ if ($_GET['a'] == 'organigrama') { // ORGANIGRAMA
 	
 	$txt_title = _('Organigrama');
 	$txt_nav = array('/cargos'=>_('Cargos'), _('Organigrama'));
-	$txt_tab = array('/cargos/organigrama'=>_('Organigrama'), '/examenes'=>_('Exámenes'));
+	$txt_tab = array('/cargos'=>_('Cargos'), '/cargos/organigrama'=>_('Organigrama'), '/examenes'=>_('Exámenes'));
 
 	function cargo_bien($c){ return str_replace(' ', '_', $c); }
 

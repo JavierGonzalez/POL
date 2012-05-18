@@ -329,6 +329,7 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 .quote {
 	background: url('bg75.png') repeat;
 	border:1px solid #CCC;
+	font-size:15px;
 	border-right:none;
 	border-bottom:none;
 	border-radius: 12px; 

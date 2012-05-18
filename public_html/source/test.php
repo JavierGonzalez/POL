@@ -17,11 +17,9 @@ function crono($new='') {
 	 return '<h3>'.$the_ms.'ms '.$new.'</h3></hr>';
 }
 
-
-
-
-
-$txt .= '<span class="icon x-large gray" data-icon="!"></span><hr /><span class="icon x-large gray" data-icon="C"></span>';
+// load config full
+$result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
+while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 

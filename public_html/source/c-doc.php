@@ -18,7 +18,7 @@ if ($_GET['a']) {
 
 		include('inc-functions-accion.php');
 
-		if (($_GET['b'] == 'editar') AND ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_gobierno'])))) { 
+		if (($_GET['b'] == 'editar') AND ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_docs'])))) { 
 			// EDITAR!
 
 			foreach (nucleo_acceso('print') AS $at => $at_var) { 
@@ -96,7 +96,7 @@ if ($_GET['a']) {
 			} else { $txt .= '<b style="color:red;">'._('No tienes acceso de lectura').'.</b>'; }
 
 		} else { //doc/documento-de-test
-			if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) || (nucleo_acceso($vp['acceso']['control_gobierno']))) {
+			if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) || (nucleo_acceso($vp['acceso']['control_docs']))) {
 				$boton_editar = boton(_('Editar'), '/doc/'.$r['url'].'/editar');
 				$txt_tab['/doc/'.$r['url'].'/editar'] = _('Editar');
 			} else {
@@ -112,7 +112,7 @@ if ($_GET['a']) {
 <h1 style="font-size:28px;">'.$r['title'].'</h1>
 
 <div id="doc_pad" style="min-height:250px;">
-'.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])||nucleo_acceso($vp['acceso']['control_gobierno'])?$r['text']:'<b style="color:red;">'._('No tienes acceso de lectura').'.</b>').'
+'.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])||nucleo_acceso($vp['acceso']['control_docs'])?$r['text']:'<b style="color:red;">'._('No tienes acceso de lectura').'.</b>').'
 </div>
 
 </div>
@@ -124,7 +124,7 @@ if ($_GET['a']) {
 '._('Pueden editar').': '.verbalizar_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']).'.
 </fieldset>';
 			$txt_nav = array('/doc'=>'Documentos', $r['title']);
-			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])||nucleo_acceso($vp['acceso']['control_gobierno'])) { $txt_tab['/doc/'.$r['url'].'/editar'] = _('Editar'); }
+			if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])||nucleo_acceso($vp['acceso']['control_docs'])) { $txt_tab['/doc/'.$r['url'].'/editar'] = _('Editar'); }
 		}
 		$txt_title = $r['title'];
 	}
@@ -136,7 +136,7 @@ if ($_GET['a']) {
 	$txt_title = _('Documentos');
 	$txt_nav = array('/doc'=>_('Documentos'));
 	$txt_tab = array('/form/crear-documento'=>_('Crear documento'));
-	if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $txt_tab['/control/gobierno/categorias'] = _('Editar categorías'); }
+	if (nucleo_acceso($vp['acceso']['control_docs'])) { $txt_tab['/control/gobierno/categorias'] = _('Editar categorías'); }
 
 	$txt .= '<div id="docs">';
 
@@ -162,7 +162,7 @@ ORDER BY time_last DESC", $link);
 
 			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {
 				$txt .= '<tr>
-<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])||nucleo_acceso($vp['acceso']['control_gobierno'])?' '.boton(_('Editar'), '/doc/'.$r2['url'].'/editar', false, 'small').' ':'').'<a href="/doc/'.$r2['url'].'"><b>'.$r2['title'].'</b></a></td>
+<td>'.(nucleo_acceso($r2['acceso_escribir'], $r2['acceso_cfg_escribir'])||nucleo_acceso($vp['acceso']['control_docs'])?' '.boton(_('Editar'), '/doc/'.$r2['url'].'/editar', false, 'small').' ':'').'<a href="/doc/'.$r2['url'].'"><b>'.$r2['title'].'</b></a></td>
 
 <td width="80" align="right" nowrap="nowrap">'.timer($r2['time_last']).'</td>
 

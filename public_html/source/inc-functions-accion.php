@@ -354,7 +354,7 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais='') {
 		if ($receptor_ID > 0) {
 			mysql_query("UPDATE users SET pols = pols + " . $pols . " WHERE ID = '" . $receptor_ID . "' AND pais = '".$pais."' LIMIT 1", $link);
 		} else {
-			mysql_query("UPDATE ".$sql."cuentas SET pols = pols + " . $pols . " WHERE ".($receptor_ID==-1||$receptor_ID=='-1'?"pais = '".PAIS."' AND gobierno = 'true'":"ID = '".substr($receptor_ID, 1)."'")." LIMIT 1", $link);
+			mysql_query("UPDATE ".$sql."cuentas SET pols = pols + " . $pols . " WHERE ".($receptor_ID==-1?"pais = '".PAIS."' AND gobierno = 'true'":"ID = '".substr($receptor_ID, 1)."'")." LIMIT 1", $link);
 		}
 
 		mysql_query("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".$pais."', " . $pols . ", '" . $emisor_ID . "', '" . $receptor_ID . "', '" . $concepto . "', '" . date('Y-m-d H:i:s') . "')", $link);

@@ -42,18 +42,14 @@ $result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AN
 while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
-// EXPIRACION DE EXAMENES
-$examenes_exp_num = 0;
-$result = mysql_query("SELECT cargo_ID, time, cargo 
-FROM cargos_users 
-WHERE pais = '".PAIS."' AND cargo = 'false' AND time < '".date('Y-m-d 20:00:00', time() - $pol['config']['examenes_exp'])."'
-ORDER BY time DESC", $link);
-while($r = mysql_fetch_array($result)){
-	$examenes_exp_num++;
-	// QUITADO PROVISIONALMENTE. HAY POSIBILIDAD DE QUE ESTO CAUSE PROBLEMAS (BUG GRAVE).
-	//mysql_query("DELETE FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."'", $link);
+// EXPIRACION DE CANDIDATOS INACTIVOS
+$result = sql("SELECT user_ID, (SELECT fecha_last FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_last FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'false' GROUP BY user_ID");
+$txt .= mysql_error();
+while ($r = r($result)) { 
+	if ((!$r['fecha_last']) OR (strtotime($r['fecha_last']) < (time() - 60*60*24*$pol['config']['examenes_exp']))) {
+		sql("DELETE FROM cargos_users WHERE user_ID = '".$r['user_ID']."' AND cargo = 'false'");
+	}
 }
-//evento_chat('<b>[PROCESO]</b> Expirados <b>'.$examenes_exp_num.'</b> examenes.');
 
 
 if (ECONOMIA) {

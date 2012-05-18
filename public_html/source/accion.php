@@ -858,7 +858,7 @@ case 'gobierno':
 'factor_propiedad'=>'Factor propiedad',
 'pols_examen'=>'Coste hacer un examen',
 'pols_mensajeurgente'=>'Coste mensaje urgente',
-'examenes_exp'=>'Expiracion de examen',
+'examenes_exp'=>'Expiración de candidaturas',
 'impuestos'=>'Impuesto de patrimonio',
 'impuestos_minimo'=>'Minimo patrimonio imponible',
 'impuestos_empresa'=>'Impuesto de empresa',
@@ -1026,10 +1026,8 @@ case 'gobierno':
 		if (($_GET['c'] == 'add') AND ($_POST['texto']) AND ($_POST['url'])) {
 			$_POST['texto'] = ucfirst(substr(strip_tags($_POST['texto']), 0, 50));
 			$_POST['url'] = str_replace('http://'.strtolower(PAIS).'.'.DOMAIN, '', substr(strip_tags($_POST['url']), 0, 60));
-			$result = sql("SELECT ID FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."'");
-			while($r = r($result)){
-				notificacion($r['ID'], $_POST['texto'], $_POST['url'], PAIS);
-			}
+			$result = sql("SELECT ID FROM users WHERE pais = '".PAIS."' AND ".sql_acceso($_POST['acceso'], $_POST['acceso_cfg'])." ORDER BY voto_confianza DESC LIMIT 100000");
+			while($r = r($result)){ notificacion($r['ID'], $_POST['texto'], $_POST['url'], PAIS); }
 			evento_log('Gobierno configuración: notificación creada ('.$_POST['texto'].')');
 		} elseif (($_GET['c'] == 'borrar') AND (is_numeric($_GET['noti_ID']))) {
 			$result = sql("SELECT texto FROM notificaciones WHERE noti_ID = '".$_GET['noti_ID']."' LIMIT 1");
@@ -1973,7 +1971,7 @@ case 'eliminar-documento':
 	
 	$result = sql("SELECT ID, pad_ID, acceso_escribir, acceso_cfg_escribir, url FROM docs WHERE url = '".$_GET['url']."' AND pais = '".PAIS."' LIMIT 1");
 	while($r = r($result)){ 
-		if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
+		if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_docs']))) {
 			sql("UPDATE docs SET estado = 'del' WHERE ID = '".$r['ID']."' LIMIT 1");
 			evento_log('Documento eliminado <a href="/doc/'.$r['url'].'">#'.$r['ID'].'</a>');
 			pad('delete', $r['pad_ID']);
@@ -1997,7 +1995,7 @@ case 'editar-documento':
 			$text = str_replace("<script", "nojs", $text);
 			$text = str_replace("&lt;script", "nojs", $text);
 
-			if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
+			if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_docs']))) {
 				sql("UPDATE docs SET cat_ID = '".$_POST['cat']."', text = '".$text."', title = '".$_POST['titulo']."', time_last = '".$date."', acceso_leer = '".$_POST['acceso_leer']."', acceso_escribir = '".$_POST['acceso_escribir']."', acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."', version = version + 1 WHERE ID = '".$r['ID']."' LIMIT 1");
 			}
 			if (in_array($r['acceso_leer'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))) { evento_log('Documento editado: <a href="/doc/'.$r['url'].'">'.$r['title'].'</a>'); }

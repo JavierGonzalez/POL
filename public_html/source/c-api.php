@@ -44,15 +44,19 @@ if (is_numeric($_GET['a'])) {
 <td><input type="text" name="link" value="" size="50" /> (Opcional, debe empezar por: http://)</td>
 </tr>
 
+<!--
 <tr>
 <td align="right">Imagen incrustada:</td>
 <td><input type="text" name="picture" value="" size="50" /> (Opcional, debe empezar por: http://)</td>
 </tr>
+-->
 
+<!--
 <tr>
 <td align="right">Vídeo incrustado:</td>
 <td><input type="text" name="source" value="" size="50" /> (Opcional, debe empezar por: http://)</td>
 </tr>
+-->
 
 <tr>
 <td></td>
@@ -77,7 +81,7 @@ if (is_numeric($_GET['a'])) {
 <th>Cuando</th>
 <th>Quien</th>
 </tr>';
-		$result2 = sql("SELECT *, (SELECT nick FROM users WHERE ID = api_posts.publicado_user_ID LIMIT 1) AS nick_publicado FROM api_posts WHERE pais = '".PAIS."' AND api_ID = '".$r['api_ID']."' AND estado IN ('publicado', 'cron') ORDER BY time DESC");
+		$result2 = sql("SELECT *, (SELECT nick FROM users WHERE ID = api_posts.publicado_user_ID LIMIT 1) AS nick_publicado FROM api_posts WHERE api_ID = '".$r['api_ID']."' AND estado IN ('publicado', 'cron') ORDER BY time DESC");
 		while($r2 = r($result2)) { 
 			$txt .= '<tr>
 <td align="right">'.(nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?boton(($r2['estado']=='cron'?'Cancelar':'Despublicar'), '/accion.php?a=api&b=borrar&ID='.$r2['post_ID'], '¿Estás seguro de querer ELIMINAR de forma irreversible esta publicación?', 'small red'):'').'</td>
@@ -99,7 +103,7 @@ if (is_numeric($_GET['a'])) {
 <th>Cuando</th>
 <th>Quien</th>
 </tr>';
-		$result2 = sql("SELECT *, (SELECT nick FROM users WHERE ID = api_posts.pendiente_user_ID LIMIT 1) AS nick_pendiente, (SELECT nick FROM users WHERE ID = api_posts.borrado_user_ID LIMIT 1) AS nick_borrado FROM api_posts WHERE pais = '".PAIS."' AND api_ID = '".$r['api_ID']."' AND estado = 'pendiente' ORDER BY time DESC");
+		$result2 = sql("SELECT *, (SELECT nick FROM users WHERE ID = api_posts.pendiente_user_ID LIMIT 1) AS nick_pendiente, (SELECT nick FROM users WHERE ID = api_posts.borrado_user_ID LIMIT 1) AS nick_borrado FROM api_posts WHERE api_ID = '".$r['api_ID']."' AND estado = 'pendiente' ORDER BY time DESC");
 		while($r2 = r($result2)) { 
 			$txt .= '<tr>
 <td nowrap>'.(nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?boton('Publicar', '/accion.php?a=api&b=publicar&ID='.$r2['post_ID'], '¿Estás seguro de querer PUBLICAR esta publicación?', 'small blue'):'').' '.(nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?boton('X', '/accion.php?a=api&b=borrar_borrador&ID='.$r2['post_ID'], '¿Estás seguro de querer BORRAR este borrador de publicación?', 'small red'):'').'</td>

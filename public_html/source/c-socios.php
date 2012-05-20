@@ -139,12 +139,12 @@ $txt .= '</select>
 <table>
 <tr>
 <td align="right">Nombre completo</td>
-<td><input type="text" name="nombre" value="'.$nombre.'" size="30" maxlength="90" /></td>
+<td><input type="text" name="nombre" value="'.$nombre.'" size="30" maxlength="90" required /></td>
 </tr>
 
 <tr>
 <td align="right">NIF</td>
-<td class="gris"><input type="text" name="NIF" value="" size="10" maxlength="10" /> Por ejemplo: 123456789X</td>
+<td class="gris"><input type="text" name="NIF" value="" size="10" maxlength="10" required /> Por ejemplo: 123456789X</td>
 </tr>
 </table>
 
@@ -159,12 +159,12 @@ $txt .= '</select>
 
 <tr>
 <td align="right">Localidad</td>
-<td><input type="text" name="localidad" value="" size="15" maxlength="20" /></td>
+<td><input type="text" name="localidad" value="" size="15" maxlength="20" required /></td>
 </tr>
 
 <tr>
 <td align="right">Código postal</td>
-<td><input type="text" name="cp" value="" size="5" maxlength="8" /></td>
+<td><input type="text" name="cp" value="" size="5" maxlength="8" required /></td>
 </tr>
 
 <tr>
@@ -181,7 +181,7 @@ $txt .= '</select>
 <table>
 <tr>
 <td align="right">Dirección de email</td>
-<td><input type="text" name="contacto_email" value="'.$email.'" size="30" maxlength="90" /></td>
+<td><input type="email" name="contacto_email" value="'.$email.'" size="30" maxlength="90" required /></td>
 </tr>
 
 <tr>
@@ -201,7 +201,7 @@ $txt .= '</select>
 
 <p class="rich">'.$pol['config']['socios_descripcion'].'</p>
 
-<p><input type="checkbox" name="aprobado" value="true" /> <b>He leído y acepto las condiciones.</b></p>
+<p><input type="checkbox" name="aprobado" value="true" required /> <b>He leído y acepto las condiciones.</b></p>
 
 </blockquote>
 

@@ -101,7 +101,7 @@ LIMIT 1");
 		$msg = $_POST['msg'];
 		if (isset($borrar_msg)) { $msg = ''; }
 
-		$msg = str_replace("ส็็็็็็็็", "", str_replace("ส็็็็็็็็็็็็็็็็็็็็็็็็็", "", str_replace("'", "''", str_replace("\r", "", str_replace("\n", "", trim($msg))))));
+		$msg = str_replace(array("\n", "\r", "ส็็็็็็็็", "ส็็็็็็็็็็็็็็็็็็็็็็็็็"), "", str_replace("'", "''", trim($msg)));
 		
 		$target_ID = 0;
 		$tipo = 'c';

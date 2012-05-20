@@ -107,7 +107,7 @@ h3 { font-size:18px; }
 }
 
 .htxt {
-	padding:0 4px;
+	padding:0 4px 1px 4px;
 	color:#AAA;
 	font-size:18px;
 	white-space:nowrap;

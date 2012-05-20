@@ -140,7 +140,7 @@ nicks = new Array();
 eventos = new Array();
 
 
-print_eventos("ciudadanos", "");
+'.($_GET['a']=='filtro'?'print_eventos("'.$_GET['b'].'", "'.$_GET['c'].'");':'print_eventos("ciudadanos", "");').'
 
 function initialize() {
 	$("#header-breadcrumbs a:last").html(eventos.length + " '._('ciudadanos').'");

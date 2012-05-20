@@ -508,6 +508,12 @@ LIMIT 1");
 </tr>
 
 <tr>
+<td align="right">'._('Participación').':</td>
+<td><b>'.num(($r['num']*100)/$r['num_censo'],2).'%</b> ('.num($r['num']).' '._('votos de').' '.num($r['num_censo']).' '._('votantes').')</td>
+</tr>
+
+
+<tr>
 <td align="right" valign="top">'._('Duración').':</td>
 <td><b>'.round($r['duracion']/24/60/60).' días</b>'.($r['estado']=='ok'?gbarra(((time()-$time)*100)/($time_expire-$time)):'').'</td>
 </tr>
@@ -867,35 +873,36 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 					
 					//if ($r['ha_votado']) { $txt .= 'Tu voto preferencial ha sido recogido <b>correctamente</b>.<br /><br />'; }
 
-					$txt .= '<span style="color:red;">'._('Debes repartir <b>los puntos más altos a tus opciones preferidas</b>. Puntos no acumulables').'.</span>
-<table border="0">
-<tr>
-<th colspan="'.substr($r['tipo_voto'], 0, 1).'" align="center">'._('Puntos').'</th>
-<th></th>
-</tr>
-<tr>';
+					$txt .= '<span style="color:red;">'._('Debes repartir <b>los puntos más altos a tus opciones preferidas</b>. Puntos no acumulables').'.</span><table border="0"><tr><th colspan="'.substr($r['tipo_voto'], 0, 1).'" align="center">'._('Puntos').'</th><th></th></tr><tr>';
+
 					for ($e=1;$e<=$tipo_puntos;$e++) { $txt .= '<th align="center">'.$e.'</th>'; }
 					$txt .= '<th>'.($r['tipo']=='elecciones'?_('Candidatos'):_('Opciones')).'</th></tr>';		
 					
 					if ($r['ha_votado']) { $ha_votado_array = explode(' ', $r['que_ha_votado']); }
 					else { $ha_votado_array = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); }
 					for ($i=0;$i<$respuestas_num;$i++) { if ($respuestas[$i]) { 
-							$txt_print = '<tr>';
-							for ($e=1;$e<=$tipo_puntos;$e++) {
-								$txt_print .= '<td valign="top"><input type="radio" name="voto_'.$e.'" value="'.$i.'"'.($ha_votado_array[($e-1)]==$i?' checked="checked"':'').' /></td>';
-							}
-							$txt_print .= '<td nowrap="nowrap"'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'" class="punteado"':'').'>'.($respuestas[$i]==='En Blanco'?'<em title="Equivale a No sabe/No contesta. No computable.">'._('En Blanco').'</em>':($r['tipo']=='elecciones'?'<b>'.crear_link($respuestas[$i]).'</b>':$respuestas[$i])).'</td></tr>';
-							$votos_array[] = $txt_print;
+						$txt_print = '<tr>';
+						$orden_id = false;
+						for ($e=1;$e<=$tipo_puntos;$e++) {
+							$txt_print .= '<td valign="top"><input type="radio" name="voto_'.$e.'" value="'.$i.'"'.($ha_votado_array[($e-1)]==$i?' checked="checked"':'').' /></td>';
+							if ($ha_votado_array[($e-1)]==$i) { $orden_id = $e*-1; }
+						}
+						$txt_print .= '<td nowrap="nowrap"'.($respuestas_desc[$i]?' title="'.$respuestas_desc[$i].'" class="punteado"':'').'>'.($respuestas[$i]==='En Blanco'?'<em title="Equivale a No sabe/No contesta. No computable.">'._('En Blanco').'</em>':($r['tipo']=='elecciones'?'<b>'.crear_link($respuestas[$i]).'</b>':$respuestas[$i])).'</td></tr>';
+						if ($respuestas[$i]==='En Blanco') { $txt .= $txt_print; } else {
+							if ($orden_id != false) {
+								$votos_array[$orden_id] = $txt_print;
+							} else { $votos_array[] = $txt_print; }
+						}
 					} }
-					if ($r['aleatorio'] == 'true') { shuffle($votos_array); }
+					ksort($votos_array);
+					if (($r['aleatorio'] == 'true') AND (!$r['ha_votado'])) { shuffle($votos_array); }
+
 					$txt .= implode('', $votos_array).'<tr>';
 
 					for ($e=1;$e<=$tipo_puntos;$e++) { $txt .= '<th align="center">'.$e.'</th>'; }
 					
-					$txt .= '
-<th></th>
-</tr>
-</table>';
+					$txt .= '<th></th></tr></table>';
+
 				} elseif ($r['tipo_voto'] == 'multiple') { // VOTAR MULTIPLE
 
 					if ($r['ha_votado']) { $txt .= _('Tus votos múltiples han sido recogidos <b>correctamente</b>').'. '; }

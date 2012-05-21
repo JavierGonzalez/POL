@@ -295,24 +295,19 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 
 <div class="votar_form">
 <p><b>'._('Pregunta').'</b>: 
-<input type="text" name="pregunta" size="57" maxlength="70" value="'.$edit['pregunta'].'" /></p>
+<input type="text" name="pregunta" size="57" maxlength="70" value="'.$edit['pregunta'].'" required /></p>
 </div>
 
 <p><b>'._('Descripción').'</b>:<br />
-<textarea name="descripcion" style="width:600px;height:260px;">
-'.strip_tags($edit['descripcion']).'
-</textarea></p>
+<textarea name="descripcion" style="width:600px;height:260px;" required>'.strip_tags($edit['descripcion']).'</textarea></p>
 
 <p><b>'._('URL de debate').'</b>: ('._('opcional, debe empezar por').' http://...)<br />
-<input type="text" name="debate_url" size="57" maxlength="300" value="'.$edit['debate_url'].'" /></p>
+<input type="text" name="debate_url" size="57" maxlength="300" value="'.$edit['debate_url'].'" placeholder="http://" /></p>
 
 </fieldset>
 
 
-
-
 <div class="votar_form">
-
 
 <fieldset><legend>'._('Opciones de voto').'</legend>
 <p>
@@ -333,7 +328,6 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 	foreach ($respuestas AS $ID => $respuesta) {
 		if ($respuesta != '') {
 			$respuestas_num++;
-			// &nbsp; Descripción: <input type="text" name="respuesta_desc'.$respuestas_num.'" size="28" maxlength="500" value="'.$respuestas_desc[$ID].'" /> (opcional)
 			$txt .= '<li><input type="text" name="respuesta'.$respuestas_num.'" size="80" maxlength="250" value="'.$respuesta.'" /></li>';
 		}
 	}
@@ -952,12 +946,12 @@ function radio_check(value) {
 				$txt .= ' '.boton(($r['ha_votado']?_('Modificar voto'):_('Votar')), ($r['estado']!='borrador'&&$tiene_acceso_votar?'submit':false), false, 'large '.($tiene_acceso_votar?'blue':'red')).' <span style="white-space:nowrap;">'.($tiene_acceso_votar?($r['ha_votado']?'<span style="color:#2E64FE;">'._('Puedes modificar tu voto durante').' <span class="timer" value="'.$time_expire.'"></span>.</span>':'<span style="color:#2E64FE;">'._('Tienes').' <span class="timer" value="'.$time_expire.'"></span> '._('para votar').'.</span>'):'<span style="color:red;white-space:nowrap;">'.(!$pol['user_ID']?'<b>'._('Para votar debes').' <a href="'.REGISTRAR.'?p='.PAIS.'">'._('crear tu ciudadano').'</a>.</b>':_('No tienes acceso para votar, pueden votar').' '.verbalizar_acceso($r['acceso_votar'], $r['acceso_cfg_votar']).'.').'</span>').'</span></p>
 
 <p>
-<input type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> '._('Votación válida').'.<br />
-<input type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> '._('Votación nula (inválida, inapropiada o tendenciosa)').'.
+<input id="validez_true" type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> <label for="validez_true">'._('Votación válida').'.</label><br />
+<input id="validez_false" type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> <label for="validez_false">'._('Votación nula (inválida, inapropiada o tendenciosa)').'.</label>
 </p>
 
 <p>'.($r['privacidad']=='true'?_('Comentario (opcional, secreto y público al finalizar la votación)'):_('Comentario (opcional y público al finalizar la votación)')).'.<br />
-<input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="60" maxlength="160" /></p>
+<input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="60" maxlength="160" placeholder="'._('Puedes escribir aquí un comentario').'" /></p>
 </form>
 
 '.($r['ha_votado']?'<p style="margin-top:30px;">'._('Comprobante de voto').':<br />
@@ -999,12 +993,10 @@ ORDER BY siglas ASC");
 	$txt_title = _('Votaciones');
 	$txt_nav = array('/votacion'=>_('Votaciones'));
 	$txt_tab = array('/elecciones'=>_('Elecciones'), '/votacion/borradores'=>_('Borradores').' ('.$borradores_num.')', '/votacion/crear'=>_('Crear votación'));
-	
-	$txt .= '
-<span style="float:right;text-align:right;margin-top:-20px;">
-<b title="Promedio global de las ultimas 2 horas">'.$votos_por_hora.'</b> '._('votos/hora').'</span>
 
-<fieldset><legend>'._('En curso').'</legend>
+	$txt .= '
+
+<fieldset><legend>'._('En curso').' &nbsp; ('.$votos_por_hora.' '._('votos/hora').')</legend>
 <table border="0" cellpadding="1" cellspacing="0">
 <tr>
 <th></th>

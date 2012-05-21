@@ -1024,8 +1024,8 @@ case 'gobierno':
 	
 	} elseif (($_GET['b'] == 'notificaciones') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 		if (($_GET['c'] == 'add') AND ($_POST['texto']) AND ($_POST['url'])) {
-			$_POST['texto'] = ucfirst(substr(strip_tags($_POST['texto']), 0, 50));
-			$_POST['url'] = str_replace('http://'.strtolower(PAIS).'.'.DOMAIN, '', substr(strip_tags($_POST['url']), 0, 60));
+			$_POST['texto'] = ucfirst(substr(strip_tags($_POST['texto']), 0, 60));
+			$_POST['url'] = str_replace('http://'.strtolower(PAIS).'.'.DOMAIN, '', substr(strip_tags($_POST['url']), 0, 90));
 			$result = sql("SELECT ID FROM users WHERE pais = '".PAIS."' AND ".sql_acceso($_POST['acceso'], $_POST['acceso_cfg'])." ORDER BY voto_confianza DESC LIMIT 100000");
 			while($r = r($result)){ notificacion($r['ID'], $_POST['texto'], $_POST['url'], PAIS); }
 			evento_log('Gobierno configuración: notificación creada ('.$_POST['texto'].')');
@@ -1138,7 +1138,7 @@ ORDER BY pols DESC LIMIT 1");
 		$refer_url = 'subasta';
 	
 	} elseif (($_GET['b'] == 'editarfrase') AND (($pol['config']['pols_fraseedit'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['control_gobierno'])))) {
-		$_POST['url'] = str_replace("http://", "", $_POST['url']);
+		$_POST['url'] = str_replace(array('http://', 'https://', ':', ',', ' '), '', $_POST['url']);
 		$url = '<a href="http://'.strip_tags($_POST['url']).'">'.ucfirst(strip_tags($_POST['frase'])).'</a>';
 		sql("UPDATE config SET valor = '".$url."' WHERE pais = '".PAIS."' AND dato = 'pols_frase' LIMIT 1");
 		evento_log('Frase editada');
@@ -1153,13 +1153,10 @@ ORDER BY pols DESC LIMIT 1");
 		$refer_url = 'subasta/editar';
 		evento_log('Frase cedida a '.$r['nick']);
 
-	} elseif (($_GET['b'] == 'editarpalabra') AND (is_numeric($_GET['ID'])) AND (strlen($_POST['text']) <= 20)) {
+	} elseif (($_GET['b'] == 'editarpalabra') AND (is_numeric($_GET['ID'])) AND (strlen($_POST['text']) <= 25)) {
 		$_POST['text'] = ereg_replace("[^ A-Za-z0-9-]", "", $_POST['text']);
-		$_POST['text'] = str_replace(";", "", $_POST['text']);
-		$_POST['text'] = str_replace(":", "", $_POST['text']);
-		$_POST['url'] = str_replace("http://", "", $_POST['url']);
-		$_POST['url'] = str_replace(";", "", $_POST['url']);
-		$_POST['url'] = str_replace(":", "", $_POST['url']);
+		$_POST['text'] = str_replace(array('http://', 'https://', ':', ',', '|', ' '), '', $_POST['text']);
+		$_POST['url'] = str_replace(array('http://', 'https://', ':', ',', '|', ' '), '', $_POST['url']);
 		$dato = '';
 		foreach(explode(";", $pol['config']['palabras']) as $num => $t) {
 			$t = explode(":", $t);
@@ -1714,7 +1711,7 @@ case 'enviar-mensaje':
 
 			$mp_num = 1;
 			$enviar_nicks = array();
-			$nicks_array = explode(' ', $_POST['nick']);
+			$nicks_array = explode(' ', str_replace(',', '', $_POST['nick']));
 			foreach ($nicks_array AS $el_nick) {
 				if (($el_nick) AND (($mp_num <= MP_MAX) OR (nucleo_acceso($vp['acceso']['control_gobierno'])))) {
 					$enviar_nicks[] = $el_nick;

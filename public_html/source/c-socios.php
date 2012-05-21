@@ -144,7 +144,7 @@ $txt .= '</select>
 
 <tr>
 <td align="right">NIF</td>
-<td class="gris"><input type="text" name="NIF" value="" size="10" maxlength="10" required /> Por ejemplo: 123456789X</td>
+<td class="gris"><input type="text" name="NIF" value="" size="10" maxlength="10" required /> Por ejemplo: 123456789A</td>
 </tr>
 </table>
 
@@ -186,7 +186,7 @@ $txt .= '</select>
 
 <tr>
 <td align="right">Teléfono</td>
-<td><input type="text" name="contacto_telefono" value="" size="15" maxlength="10" /> (opcional)</td>
+<td><input type="tel" name="contacto_telefono" value="" size="15" maxlength="10" /> (opcional)</td>
 </tr>
 </table>
 

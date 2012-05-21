@@ -724,12 +724,12 @@ case 'gobierno':
 <table border="0">
 <tr>
 <td>'._('Texto').': </td>
-<td><input type="text" name="texto" value="" size="54" maxlength="50" /></td>
+<td><input type="text" name="texto" value="" size="52" maxlength="50" required /></td>
 </tr>
 
 <tr>
 <td>URL: </td>
-<td><input type="text" name="url" value="" size="64" maxlength="60" /> ('._('si no cabe usa un acortador').')</td>
+<td><input type="url" name="url" value="" size="64" maxlength="80" required placeholder="http://" /> ('._('si no cabe usa un acortador').')</td>
 </tr>
 
 <tr>
@@ -868,10 +868,6 @@ ORDER BY time ASC");
 </table>
 </form>
 </fieldset>';
-
-
-
-
 
 
 	} elseif ($_GET['b'] == 'economia') {
@@ -1265,7 +1261,7 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['c']."' LIMIT 1");
 <form action="/accion.php?a=kick" method="post">
 '.($_GET['c']?'<input type="hidden" name="chat_ID" value="'.$_GET['c'].'" />':'').'
 <ol>
-<li><b>'._('Nick').':</b> '._('el ciudadano').'.<br /><input type="text" value="' . $_GET['b'] . '" name="nick" size="20" maxlength="20" /><br /><br /></li>
+<li><b>'._('Nick').':</b> '._('el ciudadano').'.<br /><input type="text" value="' . $_GET['b'] . '" name="nick" size="20" maxlength="20" required /></li>
 
 <li><b>'._('Duración').':</b> '._('duración temporal de este kick').'.<br />
 <select name="expire">
@@ -1286,13 +1282,11 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['c']."' LIMIT 1");
 <option value="259200">3 días</option>
 <option value="518400">6 días</option>
 <option value="777600">9 días</option>
-</select><br /><br /></li>
+</select></li>
 
-<li><b>'._('Motivo breve').':</b> '._('frase con el motivo de este kick, se preciso').'.<br /><input type="text" name="razon" size="60" maxlength="255" /><br /><br /></li>
+<li><b>'._('Motivo breve').':</b> '._('frase con el motivo de este kick, se preciso').'.<br /><input type="text" name="razon" size="60" maxlength="255" required /></li>
 
-<li><b>'._('Pruebas').':</b> '._('puedes pegar aquí las pruebas sobre el kick').'.<br /><textarea name="motivo" cols="70" rows="6" style="color: green; font-weight: bold;"></textarea></p>
-
-<br /><br /></li>
+<li><b>'._('Pruebas').':</b> '._('puedes pegar aquí las pruebas sobre el kick').'.<br /><textarea name="motivo" cols="70" rows="6" style="color: green; font-weight: bold;" required></textarea></p></li>
 
 
 <li>'.boton(_('Kickear'), ($disabled==''?'submit':false), false, 'red').'</li></ol></form>

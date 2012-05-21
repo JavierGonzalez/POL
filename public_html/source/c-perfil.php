@@ -139,7 +139,7 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC");
 <fieldset><legend>'._('Tu nombre').'</legend>
 <form action="/accion.php?a=perfil&b=nombre" method="post">
 <p>Introduce tu nombre y apellidos. No es obligatorio, pero debe ser veráz. Será visible para los ciudadanos de '.PAIS.'.<br />
-<input type="text" name="nombre" value="'.$r['nombre'].'" size="40" maxlength="90"  />
+<input type="text" name="nombre" value="" size="40" maxlength="90" placeholder="'.$r['nombre'].'" required  />
  '.boton(_('Guardar'), 'submit', false, 'blue').'
 </form></p>
 </fieldset>';
@@ -245,7 +245,7 @@ $txt .= '
 
 <fieldset><legend>'._('Biografía').'</legend>
 <form action="/accion.php?a=avatar&b=desc" method="post">
-<p><textarea name="desc" id="desc_area" style="width:500px;height:150px;">'.strip_tags($r['text'], '<b>').'</textarea><br />
+<p><textarea name="desc" id="desc_area" style="width:500px;height:150px;" required>'.strip_tags($r['text'], '<b>').'</textarea><br />
 '.boton(_('Guardar'), 'submit', false, 'blue').' (<span id="desc_limit" style="color:blue;">'.$text_limit.'</span> '._('caracteres').')
 </form></p>
 </fieldset>
@@ -272,7 +272,7 @@ $txt .= '
 $datos = explode('][', $r['datos']);
 foreach ($datos_perfil AS $id => $dato) {
 	if ($dato != '') {
-		$txt .= '<tr><td align="right">'.$dato.'</td><td><img src="'.IMG.'ico/'.$id.'_32.png" width="32" width="32" alt="'.$datos.'" /></td><td><input type="text" name="'.$dato.'" value="'.$datos[$id].'" size="60" /></td></tr>';
+		$txt .= '<tr><td align="right">'.$dato.'</td><td><img src="'.IMG.'ico/'.$id.'_32.png" width="32" width="32" alt="'.$datos.'" /></td><td><input type="url" name="'.$dato.'" value="'.$datos[$id].'" size="60" placeholder="http://" /></td></tr>';
 	}
 }
 
@@ -285,7 +285,7 @@ $txt .= '
 
 <fieldset><legend>Avatar ('._('tu foto').')</legend>
 <form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">
-<p><input name="avatar" type="file" /> '.boton(_('Guardar'), 'submit', false, 'blue').' | ' . boton(_('Borrar avatar'), '/accion.php?a=avatar&b=borrar', false, 'red') . ' (jpg, max 1mb)</p>
+<p><input name="avatar" type="file" required /> '.boton(_('Guardar'), 'submit', false, 'blue').' | ' . boton(_('Borrar avatar'), '/accion.php?a=avatar&b=borrar', false, 'red') . ' (jpg, max 1mb)</p>
 </form>
 </fieldset>
 

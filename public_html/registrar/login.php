@@ -68,9 +68,9 @@ case 'panel':
 <form action="'.REGISTRAR.'login.php?a=changepass" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td valign="middle" align="center" valign="top">'._('Contraseña actual').':<br /><input type="password" name="oldpass" value="" maxlength="30" /></td>
-<td valign="middle" align="center" valign="top">'._('Nueva contraseña').':<br /><input type="password" name="pass1" value="" maxlength="30" /><br />
-<input type="password" name="pass2" value="" maxlength="30" /></td>
+<td valign="middle" align="center" valign="top">'._('Contraseña actual').':<br /><input type="password" name="oldpass" value="" maxlength="30" required /></td>
+<td valign="middle" align="center" valign="top">'._('Nueva contraseña').':<br /><input type="password" name="pass1" value="" maxlength="30" required /><br />
+<input type="password" name="pass2" value="" maxlength="30" required /></td>
 <td valign="middle" align="right" valign="top">
 '.boton(_('Cambiar'), 'submit', false, 'large blue').'
 </td></tr></table></form>
@@ -84,7 +84,7 @@ case 'panel':
 <form action="'.REGISTRAR.'login.php?a=changemail" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td valign="middle" align="center" valign="top">'._('Email').': <input type="text" size="30" name="email" value="'.$pol['email'].'" maxlength="100" /></td>
+<td valign="middle" align="center" valign="top">'._('Email').': <input type="email" size="30" name="email" value="" maxlength="100" placeholder="'.$pol['email'].'" required /></td>
 <td valign="middle" align="right" valign="top">
 '.boton(_('Cambiar'), 'submit', false, 'large blue').'
 </td></tr></table></form>
@@ -112,7 +112,7 @@ case 'panel':
 <form action="'.REGISTRAR.'login.php?a=changenick" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td valign="middle" align="center" valign="top">'._('Nuevo nombre de usuario').':<br /><input type="text" name="newnick" value="" maxlength="30" /></td>
+<td valign="middle" align="center" valign="top">'._('Nuevo nombre de usuario').':<br /><input type="text" name="newnick" value="" maxlength="30" pattern="[A-Za-z0-9_]{3,14}" placeholder="'.$pol['nick'].'" required /></td>
 <td valign="middle" align="right" valign="top">
 
 '.boton(_('Cambiar'), 'submit', '¿Estás seguro de querer cambiar el nick?\n\n! ! !\nSOLO PODRAS CAMBIARLO UNA VEZ AL AÑO.\n! ! !', 'red large').'

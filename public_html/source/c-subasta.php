@@ -13,11 +13,6 @@ include('inc-login.php');
 $result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
 while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
 
-/*
-pol_mercado	(ID, user_ID, title, descripcion, pols ,tipo, time, estado) 
-pol_pujas		(ID, mercado_ID, user_ID, pols, time)
-*/
-
  if ($_GET['a'] == 'editar') {
 
 	if ($pol['user_ID'] == $pol['config']['pols_fraseedit']) {
@@ -25,47 +20,48 @@ pol_pujas		(ID, mercado_ID, user_ID, pols, time)
 		$url = str_replace("http://", "", explodear("\"", $pol['config']['pols_frase'], 1));
 		$frase = explodear("<", explodear(">", $pol['config']['pols_frase'], 1), 0);
 
-		$txt .= '<div class="azul"><h2>"la frase"</h2>
+		$txt .= '<fieldset><legend>La frase</legend>
 <form action="/accion.php?a=mercado&b=editarfrase" method="post">
 <table border="0"><tr>
-<td align="right">Texto: <input value="' . $frase . '" type="text" name="frase" size="50" maxlength="70" /><br />
+<td align="right">Texto: <input value="' . $frase . '" type="text" name="frase" size="50" maxlength="70" required /><br />
 http://<input type="text" name="url" size="50" maxlength="150" value="' . $url . '" /></td><td>
 '.boton('Editar', 'submit', false, 'blue').'
 </form></b></td></tr>
 <tr><td align="right">
 <form action="/accion.php?a=mercado&b=cederfrase" method="post">
-Ceder al Ciudadano: <input type="text" name="nick" size="14" maxlength="20" value="" />
+Ceder al Ciudadano: <input type="text" name="nick" size="14" maxlength="20" value="" required />
 </td><td>
 '.boton('Ceder', 'submit', false, 'small pill').'
 </form>
 
 </td></tr></table>
-</div><br />';
+</fieldset>';
 
 	}
 
 	// ;ID:URL:TEXT;
 	foreach(explode(";", $pol['config']['palabras']) as $num => $t) {
 		$t = explode(":", $t);
+		if ($t[1]) { $t[1] = 'http://'.$t[1]; }
 		if (($t[0] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
-			$txt .= '<div class="azul"><h2>"Palabra '.($num + 1).'"</h2>
-<form action="/accion.php?a=mercado&b=editarpalabra&ID=' . $num . '" method="post">
+			$txt .= '<fieldset><legend>Palabra '.($num + 1).'</legend>
+<form action="/accion.php?a=mercado&b=editarpalabra&ID='.$num.'" method="post">
 
 <table border="0"><tr>
-<td>Texto: <input value="'.$t[2].'" type="text" name="text" size="20" maxlength="20" /><br />
-http://<input type="text" name="url" size="50" maxlength="150" value="' . $t[1] . '" /></td><td>
+<td>Texto: <input value="'.$t[2].'" type="text" name="text" size="20" maxlength="20" required /><br />
+<input type="url" name="url" size="50" maxlength="150" value="'.$t[1].'" placeholder="http://" /></td><td>
 '.boton('Editar', 'submit', false, 'blue').'
 </form></b></td></tr>
 
 <tr><td align="right">
 <form action="/accion.php?a=mercado&b=cederpalabra&ID='.$num.'" method="post">
-Ceder al Ciudadano: <input type="text" name="nick" size="14" maxlength="20" value="" />
+Ceder al Ciudadano: <input type="text" name="nick" size="14" maxlength="20" value="" required />
 </td><td>
 '.boton('Ceder', 'submit', false, 'small pill').'
 </form></td>
 
 </tr></table>
-</div><br />';
+</fieldset>';
 		}
 	}
 
@@ -99,12 +95,6 @@ ORDER BY time ASC LIMIT 500", $link);
 (SELECT nick FROM users WHERE ID = config.valor LIMIT 1) AS nick
 FROM config WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1", $link);
 	while($row = mysql_fetch_array($result)){ $nick = $row['nick']; }
-
-
-
-
-
-
 
 
 	$txt .= '<h1>Subastas (<a href="/subasta/">Actualizar</a>) <span class="gris">Proceso en <span class="timer" value="'.strtotime(date('Y-m-d 20:00:00')).'"></span></span></h1>

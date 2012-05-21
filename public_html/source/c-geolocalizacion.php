@@ -344,11 +344,11 @@ $txt .= '</optgroup>
 <b id="nicks-num">0</b> '._('ciudadanos').':</p>
 
 <div id="user-list-c" style="overflow-y:auto;height:345px;">
-<p class="gris">'._('Puedes crear una lista de ciudadanos haciendo clic en los puntos azules y enviarles un mensaje privado').'.</p>
+<p class="gris" style="margin-top:20px;font-size:12px;">'._('Puedes crear una lista de ciudadanos haciendo clic en los puntos azules y enviarles un mensaje privado').'.</p>
 
 </div>
 
-<p><button onclick="redirect_POST(\'/msg/enviar\');" class="small">'._('Enviar mensaje privado').'</button>
+<p><button onclick="redirect_POST(\'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/enviar\');" class="small">'._('Enviar mensaje privado').'</button>
 '.(nucleo_acceso($vp['acceso']['control_gobierno'])?'<br /><button onclick="redirect_POST(\'/control/gobierno/notificaciones\');" class="small">'._('Crear notificación').'</button>':'').'</p>
 </div>
 

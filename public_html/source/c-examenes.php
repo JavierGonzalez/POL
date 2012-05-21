@@ -275,7 +275,7 @@ ORDER BY examen_ID DESC, RAND() LIMIT " . $r['num_preguntas'], $link);
 
 				$examen_tiempo += $r2['tiempo'];
 				foreach($res2 as $ID => $respuesta) {
-					$respuestas .= '<input type="radio" name="respuesta' . $r2['ID'] . '" value="' . md5($respuesta) . '" />' . $respuesta . '<br />';
+					$respuestas .= '<input type="radio" name="respuesta'.$r2['ID'].'" value="'.md5($respuesta).'" id="respuesta'.$r2['ID'].'_'.md5($respuesta).'" /><label for="respuesta'.$r2['ID'].'_'.md5($respuesta).'">'.$respuesta.'</label><br />';
 				}
 				if ($pregs) { $pregs .= '|'; } $pregs .= $r2['ID'];
 				$txt .= '<li><b>&iquest;' . $r2['pregunta'] . '?</b><br />' . $respuestas . '</li>';

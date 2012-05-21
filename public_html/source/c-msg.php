@@ -136,7 +136,7 @@ function click_form(tipo) {
 <p><b>'._('Destino').':</b><table border="0" style="margin-top:-15px;">
 <tr onclick="click_form(\'ciudadano\');">
 <td nowrap="nowrap"><input id="radio_ciudadano" type="radio" name="para" value="ciudadano"'.(!$pre_cargo?' checked="checked"':'').' />'._('Ciudadano').':</td>
-<td nowrap="nowrap"><input id="ciudadano" tabindex="1" type="text" name="nick" value="'.$pre_nick.'" style="font-size:17px;width:300px;" /> '.(nucleo_acceso($vp['acceso']['control_gobierno'])?'':'('._('hasta').' '.MP_MAX.' '._('ciudadanos separados por espacios').')').'</td>
+<td nowrap="nowrap"><input id="ciudadano" tabindex="1" type="text" name="nick" value="'.$pre_nick.'" style="font-size:17px;width:300px;" /> '.(nucleo_acceso($vp['acceso']['control_gobierno'])?'':'('._('Hasta').' '.MP_MAX.', '._('nicks separados por espacios').')').'</td>
 </tr>
 <tr onclick="click_form(\'cargos\');">
 <td nowrap="nowrap"><input id="radio_cargos" type="radio" name="para" value="cargo"'.($pre_cargo?' checked="checked"':'').' />'._('Cargos').':</td>
@@ -163,7 +163,7 @@ function click_form(tipo) {
 </p>
 
 <p><b>'._('Mensaje').':</b><br />
-<textarea tabindex="2" name="text" style="width:550px;height:200px;"></textarea></p>
+<textarea tabindex="2" name="text" style="width:550px;height:200px;" required></textarea></p>
 
 <input type="hidden" name="calidad" value="0" />
 

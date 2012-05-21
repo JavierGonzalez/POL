@@ -25,7 +25,7 @@ function nucleo_acceso($tipo, $valor='') {
 		case 'excluir': if ((isset($_SESSION['pol']['nick'])) AND (!in_array(strtolower($_SESSION['pol']['nick']), explode(' ', strtolower($valor))))) { $rt = true; } break;
 		case 'privado': if ((isset($_SESSION['pol']['nick'])) AND (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', strtolower($valor))))) { $rt = true; } break;
 		case 'afiliado': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['partido_afiliado'] == $valor)) { $rt = true; } break;
-		case 'confianza': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['confianza'] >= $valor)) { $rt = true; } break;
+		case 'confianza': if (($_SESSION['pol']['confianza'] >= $valor)) { $rt = true; } break;
 		case 'nivel': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['nivel'] >= $valor)) { $rt = true; } break;
 		case 'cargo': if (($_SESSION['pol']['pais'] == PAIS) AND (count(array_intersect(explode(' ', $_SESSION['pol']['cargos']), explode(' ', $valor))) > 0)) { $rt = true; } break;
 		case 'grupos': if (($_SESSION['pol']['pais'] == PAIS) AND (count(array_intersect(explode(' ', $_SESSION['pol']['grupos']), explode(' ', $valor))) > 0)) { $rt = true; } break;
@@ -107,7 +107,7 @@ function sql_acceso($tipo, $valor='') {
 		case 'excluir': $rt = "nick NOT IN ('".implode("','", explode(' ', trim($valor)))."')"; break;
 		case 'privado': $rt = "nick IN ('".implode("','", explode(' ', trim($valor)))."')"; break;
 		case 'afiliado': $rt = "pais = '".PAIS."' AND partido_afiliado = '".$valor."'"; break;
-		case 'confianza':  $rt = "pais = '".PAIS."' AND voto_confianza >= '".$valor."'"; break;
+		case 'confianza':  $rt = "voto_confianza >= '".$valor."'"; break;
 		case 'nivel': $rt = "pais = '".PAIS."' AND nivel >= '".$valor."'"; break;
 		case 'cargo': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', cargos, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".PAIS."' AND (".implode(' OR ',$a).")"; break;
 		case 'grupos': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', grupos, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".PAIS."' AND (".implode(' OR ',$a).")"; break;

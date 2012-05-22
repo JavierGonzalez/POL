@@ -642,7 +642,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 					$txt .= '<tr id="'.$r2['comprobante'].'">
 <td align="right">'.($r['tipo_voto']=='estandar'?++$contador[$r2['voto']]:++$contador).'.</td>
 '.($r['privacidad']=='false'?'<td class="rich">'.($r2['nick']?'@'.$r2['nick']:'&dagger;').'</td>':'').'
-<td nowrap>'.($r['tipo_voto']=='estandar'?'<b>'.$respuestas[$r2['voto']].'</b>':$r2['voto']).'</td>
+<td nowrap>'.($r['tipo_voto']=='estandar'?'<b>'.substr($respuestas[$r2['voto']], 0, 25).(strlen($respuestas[$r2['voto']])>25?'...':'').'</b>':$r2['voto']).'</td>
 <td'.($r2['validez']=='true'?' class="tcb">'._('Válida'):' class="tcr">'._('Nula')).'</td>
 <td nowrap>'.$r['ID'].'-'.$r2['comprobante'].'</td>
 '.($r2['mensaje']?'<td title="'.$r2['mensaje'].'">'._('Comentario').'</td>':'').'
@@ -653,20 +653,17 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>'._('Esta votación aún no ha finalizado. Cuando finalice se mostrará aquí la tabla de votos-comprobantes').'.</b></td></tr>';
 			}
 
-			$txt .= '</table>'.($r['privacidad']=='true'?'<p class="rich"><b>'._('Votantes').'</b>:<br /> '.implode(' ', $txt_votantes).'.</p>':'');
+			$txt .= '</table>'.($r['privacidad']=='true'?'<fieldset class="rich"><legend>'._('Votantes').' ('._('excepto expirados').')</legend> '.implode(' ', $txt_votantes).'</fieldset>':'');
 
 		} else {
 
 			$txt_description = _('Votación').', '.ucfirst($r['tipo']).' '._('de').' '.PAIS.' - '.$r['pregunta'].' - VirtualPol, '._('la primera red social democrática');
 
 			$txt .= '
-<fieldset><legend>'._('Votación').'</legend>
-
-<div class="rich'.($r['estado']=='end'||isset($r['ha_votado'])?' votacion_desc_min':'').'">
-<h1>'.$r['pregunta'].'</h1>
-'.$r['descripcion'].'
-'.(substr($r['debate_url'], 0, 4)=='http'?'<hr /><p><b>'._('Debate sobre esta votación').': <a href="'.$r['debate_url'].'">'._('aquí').'</a>.</b></p>':'').'
-</div>
+<fieldset class="rich"><legend style="font-size:22px;font-weight:bold;">'.$r['pregunta'].'</legend>
+<p'.($r['estado']=='end'||isset($r['ha_votado'])?' class="votacion_desc_min"':'').'>
+'.$r['descripcion'].'</p>
+'.(substr($r['debate_url'], 0, 4)=='http'?'<p><b>'._('Debate').': <a href="'.$r['debate_url'].'">'._('aquí').'</a>.</b></p>':'').'
 </fieldset>
 
 '.($r['acceso_ver']=='anonimos'&&((!isset($pol['user_ID'])) || ($r['ha_votado']) || ($r['estado']=='end'))?'<center><table border="0">

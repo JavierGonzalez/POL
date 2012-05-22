@@ -217,7 +217,7 @@ function pass_key($t, $type='sha') {
 }
 
 function timer($t, $es_timestamp=false, $pre=null) {
-	if ($pre == true) { if (time() > strtotime($t)) { $pre = 'Hace '; } else { $pre = 'En '; } }
+	if ($pre == true) { if (time() > strtotime($t)) { $pre = _('Hace').' '; } else { $pre = _('En').' '; } }
 	return $pre.'<span class="timer" value="'.($es_timestamp==true?$t:strtotime($t)).'" title="'.$t.'"></span>'; 
 }
 

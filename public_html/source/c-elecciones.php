@@ -89,7 +89,7 @@ while($r = mysql_fetch_array($result)) {
 <td>'.($r['estado']=='ok'?gbarra(((time()-$time)*100)/($time_expire-$time), 80):'').'</td>
 
 
-<td align="right" title="Votos / Participación"'.($r['estado']=='ok'?' style="font-style:italic;"':'').'><b>'.num($r['num']).'</b> votos</td>
+<td align="right" title="Votos / Participación"'.($r['estado']=='ok'?' style="font-style:italic;"':'').'><b>'.num($r['num']).'</b> '._('votos').'</td>
 <td align="right">'.num(($r['num']*100)/$r['num_censo'], 2).'%</td>
 
 <td>'.($r['estado']=='end'?'<button class="small blue" onclick="$(\'#escrutinio_'.$r['ID'].'\').toggle(\'slow\');">'._('Ver resultado').'</button>':'').'</td>

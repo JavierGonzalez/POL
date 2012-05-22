@@ -246,7 +246,7 @@ if ($pol['estado'] == 'ciudadano') {
 	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
-	$txt_title = _('Rechazar ciudadania');
+	$txt_title = _('Rechazar ciudadanía');
 	$txt_nav = array(_('Ciudadanía'));
 
 	$txt .= '<p><b>'._('Actualmente eres ciudadano en la plataforma').' '.$pol['pais'].'</b>.</p>
@@ -269,7 +269,7 @@ if (strtotime($pol['rechazo_last']) < (time() - 21600)) { // 6 horas
 	$txt .= '
 <form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=rechazar-ciudadania" method="POST">
 <input type="hidden" name="pais" value="'.$pol['pais'].'" />
-<p>'.boton(_('Rechazar ciudadania de la plataforma').' '.$pol['pais'], 'submit', '¿Estás seguro de querer RECHAZAR ciudadanía?', 'pill red').'</p>
+<p>'.boton(_('Rechazar ciudadanía de la plataforma').' '.$pol['pais'], 'submit', '¿Estás seguro de querer RECHAZAR ciudadanía?', 'pill red').'</p>
 </form>';
 
 } else { $txt .= '<p style="color:red;"><b>Solo puedes rechazar tu ciudadanía una vez cada 6 horas...</b></p>'; }
@@ -282,7 +282,7 @@ $txt .= '</blockquote>';
 	$txt .= '<h1><span class="gris">1. Crear usuario |</span> 2. Solicitar Ciudadan&iacute;a <span class="gris">| 3. Ser Ciudadano</span></h1><hr /><p>Tu solicitud de ciudadanía en '.$pol['pais'].' está en proceso.</p>';
 
 } elseif (($pol['estado'] == 'turista') AND ($pol['pais'] == 'ninguno')) {
-	$txt_title = _('Solicitar Ciudadanía');
+	$txt_title = _('Solicitar ciudadanía');
 	$txt_nav = array(_('Solicitar ciudadanía'));
 	$atrack = '"/atrack/registro/solicitar.html"'; 
 

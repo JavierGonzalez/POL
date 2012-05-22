@@ -994,7 +994,7 @@ $(function() {
 
 <tr><td align="right">'._('Descripción').':</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'" /></td></tr>
 
-<tr><td align="right">Idioma:</td><td><select name="lang">';
+<tr><td align="right">'._('Idioma').':</td><td><select name="lang">';
 	$result = sql("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'lang'");
 	while ($r = r($result)) { $plataforma_lang = $r['valor']; }
 
@@ -1028,11 +1028,9 @@ $txt .= '
 <textarea name="palabra_gob" style="width:400px;height:100px;">'.strip_tags($pol['config']['palabra_gob']).'</textarea>
 </td></tr>
 
-
-
-
 </table>
 </fieldset>
+
 
 
 </td><td valign="top">
@@ -1062,17 +1060,17 @@ $txt .= '</select>
 </tr>
 
 <tr>
-<td align="right">Añadir tapiz:</td>
+<td align="right">'._('Añadir tapiz').':</td>
 <td nowrap><input type="file" name="nuevo_tapiz" accept="image/jpg" /> (jpg, 1440x100)</td>
 </tr>
 
 <tr>
-<td align="right" nowrap>Bandera: <img src="'.IMG.'banderas/'.PAIS.'.png?'.rand(10000,99999).'" width="80" height="50" border="0" /></td>
+<td align="right" nowrap>'._('Bandera').': <img src="'.IMG.'banderas/'.PAIS.'.png?'.rand(10000,99999).'" width="80" height="50" border="0" /></td>
 <td nowrap><input type="file" name="nuevo_logo" accept="image/png" /> (png, 80x50, max 50kb)</td>
 </tr>
 
 <tr>
-<td align="right">Color de fondo:</td>
+<td align="right">'._('Color de fondo').':</td>
 <td><input type="color" name="bg_color" value="'.strtolower($pol['config']['bg_color']).'" style="background:'.$pol['config']['bg_color'].';" /></td>
 </tr>
 

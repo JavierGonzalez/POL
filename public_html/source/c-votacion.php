@@ -121,6 +121,17 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 	$comprobante = explodear('-', $comprobante_full, 1);
 	redirect('/votacion/'.$ref_ID.'/verificacion#'.$comprobante);
 
+
+} elseif ($_GET['a'] == 'next') {
+	$url = '/votacion';
+	if (isset($pol['user_ID'])) {
+		$result = sql("SELECT ID, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, (SELECT user_ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' ORDER BY time_expire ASC");
+		while($r = r($result)) { 
+			if ((!$r['ha_votado']) AND (nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) { $url = '/votacion/'.$r['ID']; break; }
+		}
+	}
+	redirect($url);
+
 } elseif ($_GET['a'] == 'crear') {
 
 	unset($votaciones_tipo[4]); 
@@ -473,7 +484,7 @@ LIMIT 1");
 
 <tr>
 <td align="right">'._('Tipo de votación').':</td>
-<td><b>'.ucfirst($r['tipo']).'</b> '.($r['tipo']=='sondeo'?'('._('No vinculante, informativo').')':'('._('Vinculante').')').'</td>
+<td><b>'.ucfirst(_($r['tipo'])).'</b> '.($r['tipo']=='sondeo'?'('._('No vinculante, informativo').')':'('._('Vinculante').')').'</td>
 </tr>
 
 <tr>
@@ -503,13 +514,13 @@ LIMIT 1");
 
 <tr>
 <td align="right">'._('Participación').':</td>
-<td><b>'.num(($r['num']*100)/$r['num_censo'],2).'%</b> ('.num($r['num']).' '._('votos de').' '.num($r['num_censo']).' '._('votantes').')</td>
+<td><b>'.num(($r['num']*100)/$r['num_censo'],2).'%</b> ('.num($r['num']).' '._('votos').' '._('de').' '.num($r['num_censo']).' '._('votantes').')</td>
 </tr>
 
 
 <tr>
 <td align="right" valign="top">'._('Duración').':</td>
-<td><b>'.round($r['duracion']/24/60/60).' días</b>'.($r['estado']=='ok'?gbarra(((time()-$time)*100)/($time_expire-$time)):'').'</td>
+<td><b>'.round($r['duracion']/24/60/60).' '._('días').'</b>'.($r['estado']=='ok'?gbarra(((time()-$time)*100)/($time_expire-$time)):'').'</td>
 </tr>
 
 </table>
@@ -1019,7 +1030,7 @@ LIMIT 500");
 		
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 			$txt .= '<tr>
-<td width="100"'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
+<td width="100"'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?' style="font-weight:bold;"':'').'>'.ucfirst(_($r['tipo'])).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
 <td>'.$votar.'<a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').(!in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap" class="gris" align="right">'.timer($time_expire, true).'</td>
@@ -1071,7 +1082,7 @@ LIMIT 500");
 		
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 			$txt .= '<tr class="v_'.$r['tipo'].($r['acceso_ver']!='anonimos'?' v_privadas':'').'"'.(in_array($r['tipo'], array('referendum', 'parlamento', 'sondeo', 'elecciones'))&&in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'':' style="display:none;"').'>
-<td width="100"'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?' style="font-weight:bold;"':'').'>'.ucfirst($r['tipo']).'</td>
+<td width="100"'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?' style="font-weight:bold;"':'').'>'.ucfirst(_($r['tipo'])).'</td>
 <td align="right"><b>'.num($r['num']).'</b></td>
 <td><a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').(!in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap" align="right" class="gris">'.timer($time_expire, true).'</td>

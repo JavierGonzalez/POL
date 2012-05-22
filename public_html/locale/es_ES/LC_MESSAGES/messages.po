@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VirtualPol\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-21 23:50+0100\n"
-"PO-Revision-Date: 2012-05-21 23:50+0100\n"
+"POT-Creation-Date: 2012-05-22 05:27+0100\n"
+"PO-Revision-Date: 2012-05-22 05:28+0100\n"
 "Last-Translator: GONZO <gonzomail@gmail.com>\n"
 "Language-Team: VirtualPol <desarrollo@virtualpol.com>\n"
 "MIME-Version: 1.0\n"
@@ -139,6 +139,222 @@ msgstr "Época antigua en IRC"
 msgid "VirtualPol, la primera red social democrática"
 msgstr "VirtualPol, la primera red social democrática"
 
+#: D:\www\VirtualPol\public_html\./registrar/index.php:147
+#: D:\www\VirtualPol\public_html\./registrar/login.php:229
+msgid "Hola"
+msgstr "Hola"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:149
+msgid "Para terminar el registro debes validar tu usuario. Simplemente tienes que entrar en la siguiente dirección web"
+msgstr "Para terminar el registro debes validar tu usuario. Simplemente tienes que entrar en la siguiente dirección web"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:153
+msgid "¡Esto es todo!"
+msgstr "¡Esto es todo!"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:155
+msgid "Verificar nuevo usuario"
+msgstr "Verificar nuevo usuario"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:157
+msgid "¡Correcto!"
+msgstr "¡Correcto!"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:157
+msgid "Tu usuario ha sido creado exitosamente"
+msgstr "Tu usuario ha sido creado exitosamente"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:157
+msgid "Último paso. Ahora <b>debes revisar tu email</b>, te hemos enviado un email para validar tu usuario.</p><p>Esta medida es por seguridad. Por favor, rescata el email si lo encuentras en la carpeta de spam"
+msgstr "Último paso. Ahora <b>debes revisar tu email</b>, te hemos enviado un email para validar tu usuario.</p><p>Esta medida es por seguridad. Por favor, rescata el email si lo encuentras en la carpeta de spam"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:159
+#: D:\www\VirtualPol\public_html\./registrar/index.php:160
+#: D:\www\VirtualPol\public_html\./registrar/index.php:161
+#: D:\www\VirtualPol\public_html\./registrar/index.php:162
+#: D:\www\VirtualPol\public_html\./registrar/index.php:163
+#: D:\www\VirtualPol\public_html\./registrar/index.php:164
+#: D:\www\VirtualPol\public_html\./registrar/index.php:165
+#: D:\www\VirtualPol\public_html\./registrar/index.php:167
+#: D:\www\VirtualPol\public_html\./registrar/index.php:169
+#: D:\www\VirtualPol\public_html\./registrar/login.php:202
+msgid "Error"
+msgstr "Error"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:159
+msgid "El nick está ocupado, por favor elige otro"
+msgstr "El nick está ocupado, por favor elige otro"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:160
+msgid "El nick debe tener entre 3 y 14 caracteres"
+msgstr "El nick debe tener entre 3 y 14 caracteres"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:161
+msgid "Dirección de email en uso"
+msgstr "Dirección de email en uso"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:161
+msgid "recupera tu usuario"
+msgstr "recupera tu usuario"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:162
+msgid "El email no es valido"
+msgstr "El email no es valido"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:163
+msgid "Debes escribir la misma contraseña dos veces"
+msgstr "Debes escribir la misma contraseña dos veces"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:164
+msgid "El nick solo puede tener letras, numeros y el caracter: \"_\". La inicial nunca debe ser un numero"
+msgstr "El nick solo puede tener letras, numeros y el caracter: \"_\". La inicial nunca debe ser un numero"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:165
+msgid "No has acertado captcha"
+msgstr "No has acertado captcha"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:167
+msgid "Se ha activado un bloqueo a tu conexión. Si crees que puede ser un error contacta"
+msgstr "Se ha activado un bloqueo a tu conexión. Si crees que puede ser un error contacta"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:169
+msgid "Debes de aceptar las condiciones"
+msgstr "Debes de aceptar las condiciones"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:178
+msgid "Bienvenido!"
+msgstr "Bienvenido!"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:179
+msgid "Sitúate en mapa de ciudadanos!"
+msgstr "Sitúate en mapa de ciudadanos!"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:191
+#: D:\www\VirtualPol\public_html\./registrar/index.php:223
+msgid "Nuevo ciudadano"
+msgstr "Nuevo ciudadano"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:191
+#: D:\www\VirtualPol\public_html\./registrar/index.php:223
+#: D:\www\VirtualPol\public_html\./registrar/index.php:255
+msgid "de"
+msgstr "de"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:249
+msgid "Rechazar ciudadania"
+msgstr "Rechazar ciudadania"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:250
+msgid "Ciudadanía"
+msgstr "Ciudadanía"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:252
+msgid "Actualmente eres ciudadano en la plataforma"
+msgstr "Actualmente eres ciudadano en la plataforma"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:255
+msgid "Rechazar ciudadanía"
+msgstr "Rechazar ciudadanía"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:272
+msgid "Rechazar ciudadania de la plataforma"
+msgstr "Rechazar ciudadania de la plataforma"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:285
+msgid "Solicitar Ciudadanía"
+msgstr "Solicitar Ciudadanía"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:286
+#: D:\www\VirtualPol\public_html\./registrar/index.php:321
+msgid "Solicitar ciudadanía"
+msgstr "Solicitar ciudadanía"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:292
+msgid "Dentro de VirtualPol hay diversas plataformas democraticas que son 100% independientes. Elige en la que quieres participar"
+msgstr "Dentro de VirtualPol hay diversas plataformas democraticas que son 100% independientes. Elige en la que quieres participar"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:296
+msgid "Elige tu plataforma"
+msgstr "Elige tu plataforma"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:331
+msgid "Registrar usuario"
+msgstr "Registrar usuario"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:332
+msgid "Registro"
+msgstr "Registro"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:369
+msgid "Nick"
+msgstr "Nick"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:370
+msgid "nick"
+msgstr "nick"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:370
+msgid "Será tu identidad. Sin espacios. Solo letras, numeros y"
+msgstr "Será tu identidad. Sin espacios. Solo letras, numeros y"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:374
+#: D:\www\VirtualPol\public_html\./registrar/login.php:87
+msgid "Email"
+msgstr "Email"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:375
+msgid "tu_direccion@email.com"
+msgstr "tu_direccion@email.com"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:375
+msgid "Recibirás un email de verificación. No se enviará spam"
+msgstr "Recibirás un email de verificación. No se enviará spam"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:379
+#: D:\www\VirtualPol\public_html\./registrar/login.php:489
+msgid "Contraseña"
+msgstr "Contraseña"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:390
+msgid "Introduce otra vez"
+msgstr "Introduce otra vez"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:394
+msgid "¿Qué animal es?"
+msgstr "¿Qué animal es?"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:395
+msgid "Visualizar otro animal"
+msgstr "Visualizar otro animal"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:396
+msgid "Ejemplo: león"
+msgstr "Ejemplo: león"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:396
+msgid "Un nombre, sin espacios, nivel primaria"
+msgstr "Un nombre, sin espacios, nivel primaria"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:400
+msgid "¿Compartes conexión a Internet<br /> con otro usuario de VirtualPol?"
+msgstr "¿Compartes conexión a Internet<br /> con otro usuario de VirtualPol?"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:401
+msgid "En caso afirmativo indica el nick"
+msgstr "En caso afirmativo indica el nick"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:401
+msgid "En caso negativo dejar vacío"
+msgstr "En caso negativo dejar vacío"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:406
+msgid "Aceptas las"
+msgstr "Aceptas las"
+
+#: D:\www\VirtualPol\public_html\./registrar/index.php:406
+msgid "Condiciones de Uso de VirtualPol"
+msgstr "Condiciones de Uso de VirtualPol"
+
 #: D:\www\VirtualPol\public_html\./registrar/login.php:32
 msgid "Opciones de usuario"
 msgstr "Opciones de usuario"
@@ -178,10 +394,6 @@ msgstr "Nueva contraseña"
 #: D:\www\VirtualPol\public_html\./registrar/login.php:82
 msgid "Cambiar email"
 msgstr "Cambiar email"
-
-#: D:\www\VirtualPol\public_html\./registrar/login.php:87
-msgid "Email"
-msgstr "Email"
 
 #: D:\www\VirtualPol\public_html\./registrar/login.php:96
 msgid "Candidato a Supervisor del Censo"
@@ -279,14 +491,6 @@ msgstr "Escribe tu nueva contraseña para efectuar el cambio"
 msgid "introducir otra vez"
 msgstr "introducir otra vez"
 
-#: D:\www\VirtualPol\public_html\./registrar/login.php:202
-msgid "Error"
-msgstr "Error"
-
-#: D:\www\VirtualPol\public_html\./registrar/login.php:229
-msgid "Hola"
-msgstr "Hola"
-
 #: D:\www\VirtualPol\public_html\./registrar/login.php:230
 msgid "Has solicitado un reset de la contraseña, con la intención de efectuar una recuperación y posterior cambio de contraseña"
 msgstr "Has solicitado un reset de la contraseña, con la intención de efectuar una recuperación y posterior cambio de contraseña"
@@ -326,10 +530,6 @@ msgstr "Ya estás logueado correctamente como"
 #: D:\www\VirtualPol\public_html\./registrar/login.php:484
 msgid "Usuario o email"
 msgstr "Usuario o email"
-
-#: D:\www\VirtualPol\public_html\./registrar/login.php:489
-msgid "Contraseña"
-msgstr "Contraseña"
 
 #: D:\www\VirtualPol\public_html\./registrar/login.php:494
 msgid "No cerrar sesión en 30 días"
@@ -817,10 +1017,6 @@ msgstr "Supervisores del censo"
 msgid "Actividad de nuevos ciudadanos (últimos 60)"
 msgstr "Actividad de nuevos ciudadanos (últimos 60)"
 
-#: D:\www\VirtualPol\public_html\./source/c-control.php:70
-msgid "Registro"
-msgstr "Registro"
-
 #: D:\www\VirtualPol\public_html\./source/c-control.php:72
 msgid "Último"
 msgstr "Último"
@@ -1260,12 +1456,6 @@ msgstr "Por defecto"
 #: D:\www\VirtualPol\public_html\./source/c-control.php:1107
 msgid "Las expulsiones son efectuadas por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminación forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href=\"http://www.virtualpol.com/TOS\">Condiciones de Uso</a>"
 msgstr "Las expulsiones son efectuadas por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminación forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href=\"http://www.virtualpol.com/TOS\">Condiciones de Uso</a>"
-
-#: D:\www\VirtualPol\public_html\./source/c-control.php:1112
-#: D:\www\VirtualPol\public_html\./source/c-control.php:1264
-#: D:\www\VirtualPol\public_html\./source/c-control.php:1378
-msgid "Nick"
-msgstr "Nick"
 
 #: D:\www\VirtualPol\public_html\./source/c-control.php:1112
 msgid "el usuario a expulsar"
@@ -1862,11 +2052,6 @@ msgstr "Tienes"
 #: D:\www\VirtualPol\public_html\./source/c-examenes.php:305
 msgid "Terminar examen"
 msgstr "Terminar examen"
-
-#: D:\www\VirtualPol\public_html\./source/c-examenes.php:353
-#: D:\www\VirtualPol\public_html\./source/c-examenes.php:363
-msgid "de"
-msgstr "de"
 
 #: D:\www\VirtualPol\public_html\./source/c-examenes.php:363
 msgid "Nota mínima para aprobar"
@@ -2760,20 +2945,20 @@ msgstr "Borrador de votación"
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:129
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:368
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:430
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:993
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:994
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:990
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:991
 #: D:\www\VirtualPol\public_html\./source/theme.php:116
 msgid "Votaciones"
 msgstr "Votaciones"
 
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:129
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:995
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:992
 msgid "Borradores"
 msgstr "Borradores"
 
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:129
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:369
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:995
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:992
 msgid "Crear votación"
 msgstr "Crear votación"
 
@@ -2832,7 +3017,7 @@ msgstr "Finalizar con"
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:433
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:443
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:465
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:835
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:832
 msgid "votos"
 msgstr "votos"
 
@@ -2876,7 +3061,7 @@ msgid "puntos"
 msgstr "puntos"
 
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:237
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:964
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:961
 msgid "Voto"
 msgstr "Voto"
 
@@ -2901,9 +3086,9 @@ msgid "Accesos"
 msgstr "Accesos"
 
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:256
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:848
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:946
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1020
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:845
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:943
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1017
 msgid "Votar"
 msgstr "Votar"
 
@@ -2972,7 +3157,6 @@ msgstr "No puedes ver esta votación. Solo pueden verla"
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:434
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:444
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:660
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:663
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:15
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:159
 msgid "Votación"
@@ -3190,29 +3374,29 @@ msgid "El tipo de voto de esta votación es múltiple o preferencial. Por razone
 msgstr "El tipo de voto de esta votación es múltiple o preferencial. Por razones tecnicas -provisionalmente- se muestra el campo \"voto\" en bruto"
 
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:605
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:791
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:827
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:884
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:919
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:936
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:788
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:824
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:881
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:916
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:933
 msgid "En Blanco"
 msgstr "En Blanco"
 
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:605
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:777
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:810
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:917
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:934
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:774
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:807
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:914
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:931
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:102
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:107
 msgid "SI"
 msgstr "SI"
 
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:605
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:777
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:810
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:918
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:935
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:774
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:807
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:915
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:932
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:102
 #: D:\www\VirtualPol\public_html\./source/inc-chats.php:107
 msgid "NO"
@@ -3227,7 +3411,7 @@ msgid "Sentido de voto"
 msgstr "Sentido de voto"
 
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:627
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:836
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:833
 msgid "Validez"
 msgstr "Validez"
 
@@ -3264,164 +3448,168 @@ msgstr "Esta votación aún no ha finalizado. Cuando finalice se mostrará aquí
 msgid "Votantes"
 msgstr "Votantes"
 
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:656
+msgid "excepto expirados"
+msgstr "excepto expirados"
+
 #: D:\www\VirtualPol\public_html\./source/c-votacion.php:660
 #: D:\www\VirtualPol\public_html\./source/theme.php:254
 #: D:\www\VirtualPol\public_html\./source/theme.php:271
 msgid "la primera red social democrática"
 msgstr "la primera red social democrática"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:668
-msgid "Debate sobre esta votación"
-msgstr "Debate sobre esta votación"
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:666
+msgid "Debate"
+msgstr "Debate"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:668
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:666
 msgid "aquí"
 msgstr "aquí"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:674
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:671
 msgid "¡Crea tu ciudadano para votar!"
 msgstr "¡Crea tu ciudadano para votar!"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:676
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:673
 msgid "Difúnde"
 msgstr "Difúnde"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:676
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:673
 msgid "este resultado"
 msgstr "este resultado"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:676
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:673
 msgid "esta votación"
 msgstr "esta votación"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:679
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:676
 msgid "VOTACIÓN"
 msgstr "VOTACIÓN"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:679
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:676
 msgid "RESULTADO"
 msgstr "RESULTADO"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:758
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:755
 msgid "Resultado"
 msgstr "Resultado"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:813
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1003
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:810
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1000
 msgid "Votos"
 msgstr "Votos"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:835
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:832
 msgid "Legitimidad"
 msgstr "Legitimidad"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:835
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:832
 msgid "autentificados"
 msgstr "autentificados"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:836
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:833
 msgid "NULO"
 msgstr "NULO"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:854
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:851
 msgid "El voto es público en esta votación, por lo tanto NO será secreto"
 msgstr "El voto es público en esta votación, por lo tanto NO será secreto"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:870
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:867
 msgid "Debes repartir <b>los puntos más altos a tus opciones preferidas</b>. Puntos no acumulables"
 msgstr "Debes repartir <b>los puntos más altos a tus opciones preferidas</b>. Puntos no acumulables"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:902
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:899
 msgid "Tus votos múltiples han sido recogidos <b>correctamente</b>"
 msgstr "Tus votos múltiples han sido recogidos <b>correctamente</b>"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:946
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:943
 msgid "Modificar voto"
 msgstr "Modificar voto"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:946
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:943
 msgid "Puedes modificar tu voto durante"
 msgstr "Puedes modificar tu voto durante"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:946
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:943
 msgid "para votar"
 msgstr "para votar"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:946
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:943
 msgid "Para votar debes"
 msgstr "Para votar debes"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:946
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:943
 msgid "crear tu ciudadano"
 msgstr "crear tu ciudadano"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:946
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:943
 msgid "No tienes acceso para votar, pueden votar"
 msgstr "No tienes acceso para votar, pueden votar"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:949
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:946
 msgid "Votación válida"
 msgstr "Votación válida"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:950
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:947
 msgid "Votación nula (inválida, inapropiada o tendenciosa)"
 msgstr "Votación nula (inválida, inapropiada o tendenciosa)"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:953
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:950
 msgid "Comentario (opcional, secreto y público al finalizar la votación)"
 msgstr "Comentario (opcional, secreto y público al finalizar la votación)"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:953
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:950
 msgid "Comentario (opcional y público al finalizar la votación)"
 msgstr "Comentario (opcional y público al finalizar la votación)"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:954
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:951
 msgid "Puedes escribir aquí un comentario"
 msgstr "Puedes escribir aquí un comentario"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:957
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:954
 msgid "Comprobante de voto"
 msgstr "Comprobante de voto"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:958
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:955
 msgid "Enviar al email"
 msgstr "Enviar al email"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:964
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1056
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:961
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1053
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:15
 msgid "Parlamento"
 msgstr "Parlamento"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:964
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:961
 msgid "Coordinador"
 msgstr "Coordinador"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:964
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:961
 msgid "Diputado"
 msgstr "Diputado"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:999
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:996
 msgid "votos/hora"
 msgstr "votos/hora"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1005
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1002
 msgid "Finaliza en"
 msgstr "Finaliza en"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1052
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1049
 msgid "Finalizadas"
 msgstr "Finalizadas"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1055
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1052
 msgid "Referéndums"
 msgstr "Referéndums"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1057
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1054
 msgid "Sondeos"
 msgstr "Sondeos"
 
-#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1059
+#: D:\www\VirtualPol\public_html\./source/c-votacion.php:1056
 msgid "Privadas"
 msgstr "Privadas"
 
@@ -3774,6 +3962,9 @@ msgstr "Solicitar ciudadania"
 #: D:\www\VirtualPol\public_html\./source/theme.php:241
 msgid "Reportar problema"
 msgstr "Reportar problema"
+
+#~ msgid "Debate sobre esta votación"
+#~ msgstr "Debate sobre esta votación"
 
 #~ msgid "Tiempo de expiración"
 #~ msgstr "Tiempo de expiración"

@@ -203,7 +203,7 @@ function initialize() {
 		
 		if (('.(nucleo_acceso($vp['acceso']['control_gobierno'])?'"false"':'"true"').' == "true") && (nicks.length >= '.MP_MAX.')) {
 			alert("Puedes enviar máximo '.MP_MAX.' a la vez.");
-		} else if (el_cluster.length <= 50) {
+		} else if (el_cluster.length <= '.MP_MAX.') {
 			for (var i = 0; i < el_cluster.length; i++) {
 				lnicks.push(el_cluster[i].getTitle());
 			}

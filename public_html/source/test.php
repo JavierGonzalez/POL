@@ -22,6 +22,15 @@ $result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autolo
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
+$result = sql("SELECT user_ID, (SELECT fecha_last FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_last FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'false' GROUP BY user_ID");
+$txt .= mysql_error();
+while ($r = r($result)) { 
+	if ((!$r['fecha_last']) OR (strtotime($r['fecha_last']) < (time() - 60*60*24*$pol['config']['examenes_exp']))) {
+		sql("DELETE FROM cargos_users WHERE user_ID = '".$r['user_ID']."' AND cargo = 'false'");
+	}
+}
+
+
 
 $txt_title = 'Test';
 $txt_nav = array('Test');

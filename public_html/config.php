@@ -38,13 +38,13 @@ while ($r = r($result)) {
 // LENGUAJES ACTIVADOS
 $vp['langs'] = array(
 'es_ES'=>'Español (100%)',
-'en_US'=>'English (40%)',
-'ca_ES'=>'Català (40%)',
-'eu'=>'Euskera (30%)',
-'gl_ES'=>'Galego (30%)',
+'en_US'=>'English (70%)',
+'fr'=>'Français (70%)',
+'ca_ES'=>'Català (70%)',
+'gl_ES'=>'Galego (70%)',
+'eo'=>'Esperanto (40%)',
+'eu'=>'Euskera (20%)',
 'de_DE'=>'Deutsch (30%)',
-'eo'=>'Esperanto (20%)',
-'fr'=>'Français (20%)',
 'ja'=>'Japanese (10%)',
 'pt'=>'Português (10%)',
 );

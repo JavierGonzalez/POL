@@ -29,19 +29,31 @@ switch ($_GET['a']) { //############## BIG ACTION SWITCH ############
 
 case 'api':
 	$refer_url = 'api/';
-	if (($_GET['b'] == 'crear') AND (nucleo_acceso($vp['acceso']['api_borrador'])) AND (is_numeric($_POST['api_ID']))) {
-		$result = sql("SELECT * FROM api WHERE pais = '".PAIS."' AND api_ID = '".$_POST['api_ID']."' LIMIT 1");
+	if (($_GET['b'] == 'crear') AND (is_numeric($_POST['api_ID']))) {
+		$result = sql("SELECT * FROM api WHERE api_ID = '".$_POST['api_ID']."' LIMIT 1");
 		while($r = r($result)) {
-			sql("INSERT INTO api_posts (pais, api_ID, estado, pendiente_user_ID, time, time_cron, message, picture, link, source) 
+			if (nucleo_acceso($r['acceso_borrador'])) {
+				if (is_numeric($_POST['post_ID'])) {
+					sql("UPDATE api_posts SET time = '".$date."', time_cron = '".$_POST['time_cron']."', message = '".$_POST['message']."', picture = '".$_POST['picture']."', link = '".$_POST['link']."', source = '".$_POST['source']."' WHERE post_ID = '".$_POST['post_ID']."' AND estado != 'publicado' LIMIT 1");
+				} else {
+					sql("INSERT INTO api_posts (pais, api_ID, estado, pendiente_user_ID, time, time_cron, message, picture, link, source) 
 VALUES ('".PAIS."', '".$r['api_ID']."', 'pendiente', '".$pol['user_ID']."', '".$date."', '".trim($_POST['time_cron'])."', '".strip_tags(trim($_POST['message']))."', '".strip_tags(trim($_POST['picture']))."', '".strip_tags(trim($_POST['link']))."', '".strip_tags(trim($_POST['source']))."')");
-			$refer_url = 'api/'.$r['api_ID'];
+				}
+				$refer_url = 'api/'.$r['api_ID'];
+			}
 		}
 	} elseif (($_GET['b'] == 'publicar') AND (is_numeric($_GET['ID']))) {
 		api_facebook('publicar', $_GET['ID']);
 	} elseif (($_GET['b'] == 'borrar') AND (is_numeric($_GET['ID']))) {
 		api_facebook('borrar', $_GET['ID']);
-	} elseif (($_GET['b'] == 'borrar_borador') AND (nucleo_acceso($vp['acceso']['api_borrador'])) AND (is_numeric($_GET['ID']))) {
-		sql("DELETE FROM api_posts WHERE post_ID = '".$_GET['ID']."' AND pais = '".PAIS."' AND estado != 'publicado' LIMIT 1");
+	} elseif (($_GET['b'] == 'borrar_borrador') AND (is_numeric($_GET['ID']))) {
+		$result = sql("SELECT api_ID, (SELECT acceso_escribir FROM api WHERE api_ID = api_posts.api_ID LIMIT 1) AS acceso_escribir FROM api_posts WHERE post_ID = '".$_GET['ID']."' LIMIT 1");
+		while($r = r($result)) {
+			if (nucleo_acceso($r['acceso_escribir'])) {
+				sql("DELETE FROM api_posts WHERE post_ID = '".$_GET['ID']."' AND estado != 'publicado' LIMIT 1");
+			}
+			$refer_url = 'api/'.$r['api_ID'];
+		}
 	}
 
 	if ($_GET['b'] != 'crear') {

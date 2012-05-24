@@ -26,8 +26,8 @@ while($r = r($result)) {
 	$result2 = sql("SELECT user_ID, (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND aprobado = 'ok' LIMIT 100");
 	while($r2 = r($result2)) { $candidatos_nick[] = $r2['nick']; $candidatos_ID[] = $r2['user_ID']; }
 
-	// Obtener numero maximo de votantes (num_censo)
-	$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso(explodear('|', $r['elecciones_votan'], 0), explodear('|', $r['elecciones_votan'], 1)));
+	// Obtener numero máximo de votantes (num_censo)
+	$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso(explodear('|', $r['elecciones_votan'], 0), explodear('|', $r['elecciones_votan'], 1), PAIS));
 	while($r2 = r($result2)) { $votos_num = $r2['num']; }
 
 	$candidatos_num = count($candidatos_nick);

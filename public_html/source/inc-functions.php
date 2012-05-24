@@ -9,29 +9,31 @@
 
 
 // MySQL micro-framework v0.1
-function sql($q, $l=null) {global $link; return mysql_query($q, ($l==null?$link:$l)); }
+function sql($q,$l=null) {global $link; return mysql_query($q,($l==null?$link:$l));}
 function r($q) {return mysql_fetch_assoc($q);}
 
 
-// ### NUCLEO ACCESO 3.0
-function nucleo_acceso($tipo, $valor='') {
+// ### NUCLEO ACCESO 3.1
+function nucleo_acceso($tipo, $valor='', $pais=false) {
 	global $_SESSION;
 	$rt = false;
+	if ($pais == false) { $pais = PAIS; }
 	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
+	elseif (stristr($tipo, '|')) { $valor = explodear('|', $tipo, 1); $tipo = explodear('|', $tipo, 0); }
 	switch ($tipo) {
 		case 'internet': case 'anonimos': $rt = true; break;
 		case 'ciudadanos_global': if ((isset($_SESSION['pol']['user_ID'])) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $rt = true; } break;
-		case 'ciudadanos': if (($_SESSION['pol']['estado'] == 'ciudadano') && (($_SESSION['pol']['pais'] == PAIS) || (in_array(strtolower($_SESSION['pol']['pais']), explode(' ', strtolower($valor)))))) { $rt = true; } break;
+		case 'ciudadanos': if (($_SESSION['pol']['estado'] == 'ciudadano') && (($_SESSION['pol']['pais'] == $pais) || (in_array(strtolower($_SESSION['pol']['pais']), explode(' ', strtolower($valor)))))) { $rt = true; } break;
 		case 'excluir': if ((isset($_SESSION['pol']['nick'])) AND (!in_array(strtolower($_SESSION['pol']['nick']), explode(' ', strtolower($valor))))) { $rt = true; } break;
 		case 'privado': if ((isset($_SESSION['pol']['nick'])) AND (in_array(strtolower($_SESSION['pol']['nick']), explode(' ', strtolower($valor))))) { $rt = true; } break;
-		case 'afiliado': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['partido_afiliado'] == $valor)) { $rt = true; } break;
+		case 'afiliado': if (($_SESSION['pol']['pais'] == $pais) AND ($_SESSION['pol']['partido_afiliado'] == $valor)) { $rt = true; } break;
 		case 'confianza': if (($_SESSION['pol']['confianza'] >= $valor)) { $rt = true; } break;
-		case 'nivel': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['nivel'] >= $valor)) { $rt = true; } break;
-		case 'cargo': if (($_SESSION['pol']['pais'] == PAIS) AND (count(array_intersect(explode(' ', $_SESSION['pol']['cargos']), explode(' ', $valor))) > 0)) { $rt = true; } break;
-		case 'grupos': if (($_SESSION['pol']['pais'] == PAIS) AND (count(array_intersect(explode(' ', $_SESSION['pol']['grupos']), explode(' ', $valor))) > 0)) { $rt = true; } break;
-		case 'examenes': if (($_SESSION['pol']['pais'] == PAIS) AND (count(array_intersect(explode(' ', $_SESSION['pol']['examenes']), explode(' ', $valor))) > 0)) { $rt = true; } break;
+		case 'nivel': if (($_SESSION['pol']['pais'] == $pais) AND ($_SESSION['pol']['nivel'] >= $valor)) { $rt = true; } break;
+		case 'cargo': if (($_SESSION['pol']['pais'] == $pais) AND (count(array_intersect(explode(' ', $_SESSION['pol']['cargos']), explode(' ', $valor))) > 0)) { $rt = true; } break;
+		case 'grupos': if (($_SESSION['pol']['pais'] == $pais) AND (count(array_intersect(explode(' ', $_SESSION['pol']['grupos']), explode(' ', $valor))) > 0)) { $rt = true; } break;
+		case 'examenes': if (($_SESSION['pol']['pais'] == $pais) AND (count(array_intersect(explode(' ', $_SESSION['pol']['examenes']), explode(' ', $valor))) > 0)) { $rt = true; } break;
 		case 'monedas': if ($_SESSION['pol']['pols'] >= $valor) { $rt = true; } break;
-		case 'socios': if (($_SESSION['pol']['pais'] == PAIS) AND ($_SESSION['pol']['socio'] == 'true')) { $rt = true; } break;
+		case 'socios': if (($_SESSION['pol']['pais'] == $pais) AND ($_SESSION['pol']['socio'] == 'true')) { $rt = true; } break;
 		case 'autentificados': if ($_SESSION['pol']['dnie'] == 'true') { $rt = true; } break;
 		case 'supervisores_censo': if ($_SESSION['pol']['SC'] == 'true') { $rt = true; } break;
 		case 'antiguedad': if ((isset($_SESSION['pol']['fecha_registro'])) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($valor*86400)))) { $rt = true; } break;
@@ -46,6 +48,7 @@ function nucleo_acceso($tipo, $valor='') {
 
 function verbalizar_acceso($tipo, $valor='') {
 	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
+	elseif (stristr($tipo, '|')) { $valor = explodear('|', $tipo, 1); $tipo = explodear('|', $tipo, 0); }
 	switch ($tipo) { // ¿Quien tiene acceso?
 		case 'internet': case 'anonimos': $t = _('todo el mundo (Internet)'); break;
 		case 'ciudadanos_global': $t = _('todos los ciudadanos de VirtualPol'); break;
@@ -93,30 +96,33 @@ function verbalizar_acceso($tipo, $valor='') {
 		case 'autentificados': $t = _('ciudadanos autentificados'); break;
 		case 'supervisores_censo': $t = _('Supervisores del Censo'); break;
 		case 'antiguedad': $t = _('ciudadanos con al menos').' <em>'.$valor.'</em> '._('días de antigüedad');  break;
-		case 'nadie': $t = _('nadie'); break;
+		default: $t = _('nadie'); break;
 	}
 	return $t;
 }
 
-function sql_acceso($tipo, $valor='') {
+function sql_acceso($tipo, $valor='', $pais=false) {
+	if ($pais == false) { $pais = PAIS; }
 	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
+	elseif (stristr($tipo, '|')) { $valor = explodear('|', $tipo, 1); $tipo = explodear('|', $tipo, 0); }
 	switch ($tipo) {
-		case 'internet': case 'anonimos': $rt = "estado != 'expulsado'"; break;
+		case 'internet': case 'anonimos': $rt = "'true' = 'true'"; break;
 		case 'ciudadanos_global': $rt = "estado = 'ciudadano'"; break;
-		case 'ciudadanos': $valor .= ' '.PAIS; $a = explode(' ', trim($valor)); $rt = "estado = 'ciudadano' AND pais IN ('".implode("','", $a)."')"; break;
+		case 'ciudadanos': $valor .= ' '.$pais; $a = explode(' ', trim($valor)); $rt = "estado = 'ciudadano' AND pais IN ('".implode("','", $a)."')"; break;
 		case 'excluir': $rt = "nick NOT IN ('".implode("','", explode(' ', trim($valor)))."')"; break;
 		case 'privado': $rt = "nick IN ('".implode("','", explode(' ', trim($valor)))."')"; break;
-		case 'afiliado': $rt = "pais = '".PAIS."' AND partido_afiliado = '".$valor."'"; break;
+		case 'afiliado': $rt = "pais = '".$pais."' AND partido_afiliado = '".$valor."'"; break;
 		case 'confianza':  $rt = "voto_confianza >= '".$valor."'"; break;
-		case 'nivel': $rt = "pais = '".PAIS."' AND nivel >= '".$valor."'"; break;
-		case 'cargo': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', cargos, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".PAIS."' AND (".implode(' OR ',$a).")"; break;
-		case 'grupos': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', grupos, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".PAIS."' AND (".implode(' OR ',$a).")"; break;
-		case 'examenes': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', examenes, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".PAIS."' AND (".implode(' OR ',$a).")"; break;
+		case 'nivel': $rt = "pais = '".$pais."' AND nivel >= '".$valor."'"; break;
+		case 'cargo': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', cargos, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".$pais."' AND (".implode(' OR ',$a).")"; break;
+		case 'grupos': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', grupos, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".$pais."' AND (".implode(' OR ',$a).")"; break;
+		case 'examenes': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', examenes, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".$pais."' AND (".implode(' OR ',$a).")"; break;
 		case 'monedas': $rt = "pols >= '".$valor."'"; break;
-		case 'socios': $rt = "pais = '".PAIS."' AND socio = 'true'"; break;
+		case 'socios': $rt = "pais = '".$pais."' AND socio = 'true'"; break;
 		case 'autentificados': $rt = "dnie = 'true'"; break;
 		case 'supervisores_censo': $rt = "estado = 'ciudadano' AND SC = 'true'"; break;
 		case 'antiguedad': $rt = "estado = 'ciudadano' AND fecha_registro < '".date('Y-m-d H:i:s', (time()-($valor*86400)))."'"; break;
+		default: $rt = "'true' = 'false'";
 	}
 	return $rt;
 }

@@ -46,12 +46,11 @@ OBTENER TOKENS - http://www.damnsemicolon.com/php/auto-post-facebook-with-facebo
 	$result = sql("SELECT *, 
 (SELECT item_ID FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS item_ID, 
 (SELECT clave FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS clave, 
-(SELECT acceso_escribir FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS acceso_escribir, 
-(SELECT acceso_cfg_escribir FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS acceso_cfg_escribir 
-FROM api_posts WHERE post_ID = '".$item_ID."' AND pais = '".PAIS."' LIMIT 1");
+(SELECT acceso_escribir FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS acceso_escribir
+FROM api_posts WHERE post_ID = '".$item_ID."' LIMIT 1");
 	while ($r = r($result)) {
-		$user_ID = ($sistema?0:$pol['user_ID']);
-		if ((isset($r['clave'])) AND ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR ($sistema))) {
+		$user_ID = ($sistema?$r['publicado_user_ID']:$pol['user_ID']);
+		if ((isset($r['clave'])) AND ((nucleo_acceso($r['acceso_escribir'])) OR ($sistema))) {
 			if (($accion == 'publicar') AND ($r['estado'] != 'publicado')) {
 				if (strtotime($date) >= strtotime($r['time_cron'])) {
 					$content_array = array('access_token'=>$r['clave'], 'message'=>$r['message']);
@@ -67,7 +66,7 @@ FROM api_posts WHERE post_ID = '".$item_ID."' AND pais = '".PAIS."' LIMIT 1");
 				} else { return false; }
 
 			} elseif ($accion == 'borrar') {
-				sql("UPDATE api_posts SET estado = 'borrado', time = '".$date."', borrado_user_ID = '".$user_ID."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
+				sql("UPDATE api_posts SET estado = 'pendiente', time = '".$date."', borrado_user_ID = '".$user_ID."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
 				$pub = $facebook->api('/'.$r['mensaje_ID'], 'DELETE', array('access_token'=>$r['clave']));
 				return true; 
 			}

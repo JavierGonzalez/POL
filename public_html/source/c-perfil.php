@@ -127,7 +127,7 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC");
 			$text_limit = 1600 - strlen(strip_tags($r['text']));
 			
 			
-			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;" class="pill">'._('Editar perfil').'</button> '.boton(_('Opciones de usuario'), REGISTRAR.'login.php?a=panel').' '.boton(_('Autentificación'), SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton(_('Rechazar Ciudadanía'), REGISTRAR, false, 'red').' ':'').'
+			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;" class="pill">'._('Editar perfil').'</button> '.boton(_('Opciones de usuario'), REGISTRAR.'login.php?a=panel').' '.boton(_('Autentificación'), SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton(_('Rechazar ciudadanía'), REGISTRAR, false, 'red').' ':'').'
 
 
 

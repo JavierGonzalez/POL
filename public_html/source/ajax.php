@@ -73,7 +73,7 @@ if ((!isset($_POST['a'])) AND (is_numeric($_POST['chat_ID'])) AND (is_numeric($_
 
 	// KICKEADO?
 	$result = sql("SELECT HIGH_PRIORITY expire FROM kicks 
-WHERE pais = '".PAIS."' AND estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = inet_aton('".$_SERVER['REMOTE_ADDR']."'))) 
+WHERE estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = inet_aton('".$_SERVER['REMOTE_ADDR']."'))) 
 LIMIT 1");
 	while($r = r($result)){ 
 		if ($r['expire'] < $date) { // QUITAR KICK
@@ -213,20 +213,11 @@ UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMI
 	} else { echo 'n 0 &nbsp; &nbsp; <b style="color:#FF0000;">No tienes permiso de escritura.</b>'."\n"; }
 
 } else if ($_GET['a'] == 'noti') {
-	define('REGISTRAR', 'https://virtualpol.com/registrar/');
 	include_once('inc-login.php');
 ?>
 <script type="text/javascript">
-$('ul.menu').each(function(){
-	$(this).find('li').has('ul').addClass('has-menu').append('<span class="arrow">&nbsp;</span>');
-});
-$('ul.menu li').hover(function(){
-	$(this).find('ul:first').stop(true, true).show();
-	$(this).addClass('hover');
-}, function(){
-	$(this).find('ul').stop(true, true).hide();
-	$(this).removeClass('hover');
-});
+$('ul.menu').each(function(){ $(this).find('li').has('ul').addClass('has-menu').append('<span class="arrow">&nbsp;</span>'); });
+$('ul.menu li').hover(function(){ $(this).find('ul:first').stop(true, true).show(); $(this).addClass('hover'); }, function(){ $(this).find('ul').stop(true, true).hide(); $(this).removeClass('hover'); });
 </script>
 <?php
 	echo notificacion('print');

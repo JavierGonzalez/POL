@@ -60,10 +60,11 @@ if (!isset($pol['user_ID'])) {
 	}
 
 	$txt .= '
-<script type="text/javascript" src="http://maps.google.com/maps?file=api&v=2&key='.$google_maps_api.'"></script>
+<script type="text/javascript" src="http://maps.google.com/maps?file=api&v=2&key="></script>
 <script type="text/javascript">
 
-window.onload = function(){ initialize(); }
+$(document).ready(function(){ initialize(); });
+
 function initialize() {
 	if (GBrowserIsCompatible()) {
 		var map = new GMap2(document.getElementById("map"));
@@ -131,16 +132,15 @@ function roundNumber(num, dec) {
 	}
 
 	$txt .='
-
-<script src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
-
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
 <script type="text/javascript" src="'.IMG.'lib/markerclusterer_packed.js"></script>
 <script type="text/javascript">
 nicks = new Array();
 eventos = new Array();
 
-
-'.($_GET['a']=='filtro'?'print_eventos("'.$_GET['b'].'", "'.$_GET['c'].'");':'print_eventos("ciudadanos", "");').'
+$(document).ready(function(){ 
+	'.($_GET['a']=='filtro'?'print_eventos("'.$_GET['b'].'", "'.$_GET['c'].'");':'print_eventos("ciudadanos", "");').'
+});
 
 function initialize() {
 	$("#header-breadcrumbs a:last").html(eventos.length + " '._('ciudadanos').'");
@@ -290,7 +290,7 @@ function redirect_POST(la_url) {
 
 <div id="user-list" style="position:absolute;right:10px;width:150px;height:500px;">
 
-<p>'._('Total ciudadanos').': <b id="total-num"></b><br />
+<p>'._('Total ciudadanos').' <b id="total-num"></b><br />
 <select onchange="filtro_change(this)" style="width:150px;">
 <option value="ciudadanos_global|" selected="selected">'._('Todo').' VirtualPol</option>
 <option value="ciudadanos|" selected="selected">'._('Ciudadanos').' '.PAIS.'</option>

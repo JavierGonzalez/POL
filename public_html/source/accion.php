@@ -861,7 +861,6 @@ case 'gobierno':
 'pols_mensajetodos'=>'Coste mensaje Global',
 'pols_solar'=>'Coste solar del mapa',
 'defcon'=>'DEFCON',
-'lang'=>'Idioma',
 'pols_inem'=>'INEM',
 'pols_afiliacion'=>'Pago por afiliado',
 'pols_empresa'=>'Coste creacion empresa',
@@ -876,9 +875,12 @@ case 'gobierno':
 'impuestos_empresa'=>'Impuesto de empresa',
 'arancel_salida'=>'Arancel de salida',
 'bg'=>'Imagen de fondo',
-'pais_des'=>'Descripcion del Pais',
+'pais_des'=>'Nombre de plataforma',
 'pols_crearchat'=>'Coste creacion chat',
-'chat_diasexpira'=>'Dias expiracion chat',
+'chat_diasexpira'=>'Días expiracion chat',
+'lang'=>'Idioma',
+'tipo'=>'Tipo de plataforma',
+'timezone'=>'Zona horaria',
 );
 
 	if (

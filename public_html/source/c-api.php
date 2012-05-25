@@ -54,7 +54,7 @@ if (is_numeric($_GET['a'])) {
 
 <fieldset id="crear_borrador"'.($_GET['b']=='escribir'?'':' style="display:none;"').'><legend>Crear borrador de publicación</legend>
 
-<form action="http://'.strtolower(PAIS).'.'.DOMAIN.'/accion.php?a=api&b=crear" method="post">
+<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=api&b=crear" method="post">
 
 <input type="hidden" name="api_ID" value="'.$r['api_ID'].'" />
 '.(is_array($edit)?'<input type="hidden" name="post_ID" value="'.$edit['post_ID'].'" />':'').'
@@ -152,8 +152,8 @@ if (is_numeric($_GET['a'])) {
 } else {
 	
 	$txt .= '
-<p>La API sirve para conectar VirtualPol con servicios externos (como Facebook, Twitter, Wordpress..). Actualmente permite controlar la publicación de fanpages de Facebook desde VirtualPol. Esta solución permite democratizar fanpages, gestionarlas de forma abierta y facilitar la custodia.</p>
-	
+<fieldset>La API sirve para conectar VirtualPol con servicios externos (como Facebook, Twitter, Wordpress..). Actualmente permite controlar la publicación de fanpages de Facebook desde VirtualPol. Esta solución permite democratizar fanpages, gestionarlas de forma abierta y facilitar la custodia.</fieldset>
+
 <table>
 <tr>
 <th></th>

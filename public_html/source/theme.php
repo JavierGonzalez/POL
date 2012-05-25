@@ -14,7 +14,7 @@ if (!isset($txt)) { $txt_nav = array('Error'); header('HTTP/1.1 404 Not Found');
 if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<h1 style="font-weight:normal;color:red;">ERROR: <b>'.escape(base64_decode($_GET['error'])).'</b></h1>'; }
 if (!isset($pol['config']['pais_des'])) { $pol['config']['pais_des'] = _('Plataforma cerrada'); }
 if (isset($txt_title)) { $txt_title .= ' | '.PAIS.' | VirtualPol'; }
-else { $txt_title = (isset($pol['config']['pais_des'])?$pol['config']['pais_des'].' '._('de').' '.PAIS.' '.$kw.'| VirtualPol':PAIS.' '.$kw.'| VirtualPol'); }
+else { $txt_title = (isset($pol['config']['pais_des'])?$pol['config']['pais_des'].', '.PAIS.' '.$kw.'| VirtualPol':PAIS.' '.$kw.'| VirtualPol'); }
 
 
 // Tapiz de fondo (1400x100)
@@ -26,11 +26,10 @@ if (isset($_GET['bg'])) {
 
 ?>
 <!DOCTYPE html>
-<html lang="<?=(isset($vp['lang'])?$vp['lang']:'es_ES')?>">
+<html lang="<?=(isset($vp['lang'])?substr($vp['lang'],0,2):'es')?>">
 <head>
 <title><?=$txt_title?></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<meta name="language" content="<?=(isset($vp['lang'])?$vp['lang']:'es_ES')?>" />
 <meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS.' | VirtualPol')?>" />
 
 <link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css" media="all" />
@@ -38,8 +37,6 @@ if (isset($_GET['bg'])) {
 #header { background:#FFF <?=$body_bg?> repeat scroll top left; }
 </style>
 
-<link rel="shortcut icon" href="/favicon.ico" />
-<link rel="image_src" href="<?=IMG?>banderas/<?=PAIS?>.png" />
 
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -50,6 +47,10 @@ IMG = '<?=IMG?>';
 p_scroll = false;
 _ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos segundos','En','Hace') AS $d) { echo '"'.$d.'":"'._($d).'",'; } ?>};
 </script>
+
+
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="image_src" href="<?=IMG?>banderas/<?=PAIS?>.png" />
 
 <?=$txt_header?>
 </head>
@@ -79,9 +80,9 @@ _ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos s
 					<li><a href="<?=(ASAMBLEA?'https://twitter.com/#!/AsambleaVirtuaI':'https://twitter.com/#!/VirtualPol')?>">Twitter</a></li>
 					<?=(ASAMBLEA?'<li><a href="https://www.facebook.com/AsambleaVirtual">Facebook</a></li><li><a href="https://plus.google.com/108444972669760594358/posts?hl=es">Google+</a></li>':'')?>
 					<li><a href="/info/seguir"><?=_('Seguir')?>...</a></li>
-					<li><a href="/api">API</a></li>
 				</ul>
 			</li>
+			<li><a href="/api">API</a></li>
 		</ul>
 	</li>
 
@@ -93,7 +94,7 @@ _ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos s
 			<li><a href="#" style="cursor:default;"><?=_('Estadísticas')?></a>
 				<ul>
 					<li><a href="/estadisticas"><?=_('Estadísticas')?></a></li>
-					<li><a href="http://chartbeat.com/dashboard/?url=virtualpol.com&k=ecc15496e00f415838f6912422024d06" target="_blank"><?=_('Estadísticas online')?></a></li>
+					<li><a href="http://chartbeat.com/dashboard/?url=virtualpol.com&amp;k=ecc15496e00f415838f6912422024d06" target="_blank"><?=_('Estadísticas online')?></a></li>
 					<li><a href="/log"><?=_('Log de acciones')?></a></li>
 				</ul>
 			</li>
@@ -188,15 +189,15 @@ if ((ECONOMIA) AND (substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa')) {
 	<div id="header">
 
 		<div id="header-logo">
-			<a href="/" title="Home"><img src="<?=IMG?>banderas/<?=PAIS?>.png" width="80" height="50" border="0" /></a>
-			<span class="htxt" id="header-logo-p"><?=$pol['config']['pais_des'].', '.PAIS?></span>
+			<a href="/" title="Home"><img src="<?=IMG?>banderas/<?=PAIS?>.png" width="80" height="50" alt="logo" /></a>
+			<span class="htxt" id="header-logo-p"><?=$pol['config']['pais_des']?></span>
 		</div>
 
 		<div id="header-right">
 <?php
 unset($txt_header);
 if (isset($pol['user_ID'])) {
-	echo '<span class="htxt">'.($pol['estado']=='extranjero'||$pol['estado']=='turista'?'<span style="margin-left:-10px;">'.boton(_('Solicitar ciudadanía'), REGISTRAR, false, 'small red').'</span>':'').' <a href="/perfil/'.$pol['nick'].'"><b>'.$pol['nick'].'</b>'.($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').' '.($pol['estado']=='extranjero'?'':'| <a href="/msg">'._('Mensajes privados').'</a> ').(ECONOMIA&&$pol['estado']=='ciudadano'?'| <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').'| <a href="/accion.php?a=logout"><b>'._('Salir').'</b></a></span>';
+	echo '<span class="htxt">'.($pol['estado']=='extranjero'||$pol['estado']=='turista'?'<span style="margin-left:-10px;">'.boton(_('Solicitar ciudadanía'), REGISTRAR, false, 'small red').'</span>':'').' <a href="/perfil/'.$pol['nick'].'"><b>'.$pol['nick'].'</b>'.($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" width="16" height="16" alt="cargo" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').' '.($pol['estado']=='extranjero'?'':'| <a href="/msg">'._('Mensajes privados').'</a> ').(ECONOMIA&&$pol['estado']=='ciudadano'?'| <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').'| <a href="/accion.php?a=logout"><b>'._('Salir').'</b></a></span>';
 } else {
 	echo boton(_('Crear ciudadano'), REGISTRAR.'?p='.PAIS, false, 'large green').' '.boton(_('Iniciar sesión'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), false, 'large blue');
 }
@@ -212,7 +213,10 @@ if (isset($pol['user_ID'])) {
 
 		<div id="header-tab">
 			<ul class="ttabs right">
-				<?php foreach ($txt_tab AS $u => $a) { echo '<li'.(!is_numeric($u)&&$_SERVER['REQUEST_URI']==$u?' class="current"':'').'><a href="'.(!is_numeric($u)?$u:'#').'">'.$a.'</a></li>'; } ?>
+			<?php 
+			foreach ($txt_tab AS $u => $a) { echo '<li'.(!is_numeric($u)&&$_SERVER['REQUEST_URI']==$u?' class="current"':'').'><a href="'.(!is_numeric($u)?$u:'#').'">'.$a.'</a></li>'; }
+			//if (isset($txt_help)) { echo '<li onclick="$(\'#txt_help\').slideToggle(\'fast\');"><a href="#"><img src="'.IMG.'varios/help.gif" alt="ayuda" width="22" height="22" style="margin:-5px -9px;" /></a></li>'; }
+			?>
 			</ul>
 		</div>
 
@@ -221,7 +225,10 @@ if (isset($pol['user_ID'])) {
 
 
 	<div id="content">
-		<?=$txt?>
+	<?php
+	//if (isset($txt_help)) { echo '<fieldset id="txt_help" style="display:none;"><legend>'._('Ayuda').'</legend>'.$txt_help.'</fieldset>'; }
+	echo $txt; unset($txt);
+	?>
 	</div>
 
 
@@ -233,22 +240,21 @@ if (isset($pol['user_ID'])) {
 			
 			<p><a target="_blank" href="http://www.virtualpol.com/video"><?=_('Vídeo')?></a> | <a target="_blank" href="http://www.virtualpol.com/documentacion"><?=_('Ayuda / Documentación')?></a><br />
 			<a target="_blank" href="http://www.virtualpol.com/desarrollo"><?=_('Desarrollo / Código fuente')?></a> | <a target="_blank" href="http://www.virtualpol.com/TOS" title="Condiciones de Uso">TOS</a><br />
-<?php
-unset($txt);
-if (!isset($pol['user_ID'])) { 
-	echo '<a target="_blank" href="http://gonzo.teoriza.com" title="GONZO">Javier González</a> (<a target="_blank" href="http://www.teoriza.com" title="Blogs">Teoriza</a>, <a target="_blank" href="http://www.eventuis.com" title="Eventos">eventuis</a>, <a target="_blank" href="http://www.perfectcine.com" title="Cine">PerfectCine</a>)<br />'; 
-} else { 
-	echo boton(_('Reportar problema'), 'https://github.com/JavierGonzalez/VirtualPol/issues/new', '¿Estás seguro de hacer un reporte a desarrollo?\n\nSolo reportar problemas tecnicos o del sistema.\nSé conciso y no olvides aportar datos.\n\n¡Gracias!', 'small pill grey').' &nbsp;'; 
-	if ($pol['user_ID'] == 1) { echo num((microtime(true)-TIME_START)*1000).'ms '.num(memory_get_usage()/1000).'kb |'; } 
-}
-?>
-				 <span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2012
+			<?php
+			if (!isset($pol['user_ID'])) { 
+				echo '<a target="_blank" href="http://gonzo.teoriza.com" title="GONZO">Javier González</a> (<a target="_blank" href="http://www.teoriza.com" title="Blogs">Teoriza</a>, <a target="_blank" href="http://www.eventuis.com" title="Eventos">eventuis</a>, <a target="_blank" href="http://www.perfectcine.com" title="Cine">PerfectCine</a>)<br />'; 
+			} else { 
+				echo boton(_('Reportar problema'), 'https://github.com/JavierGonzalez/VirtualPol/issues/new', '¿Estás seguro de hacer un reporte a desarrollo?\n\nSolo reportar problemas tecnicos o del sistema.\nSé conciso y no olvides aportar datos.\n\n¡Gracias!', 'small pill grey').' &nbsp;'; 
+				if ($pol['user_ID'] == 1) { echo num((microtime(true)-TIME_START)*1000).'ms '.num(memory_get_usage()/1000).'kb |'; } 
+			}
+			?>
+			<span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2012
 			</p>
 		</div>
 		
 		<div id="footer-left">
 <?php
-echo '<table border="0"><tr><td height="30" nowrap="nowrap"><b>'.PAIS.', '.$pol['config']['pais_des'].'</b></td>';
+echo '<table><tr><td height="30" nowrap="nowrap"><b>'.$pol['config']['pais_des'].'</b></td>';
 
 if (ASAMBLEA) {
 	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-text="VirtualPol, '._('la primera red social democrática').'" data-lang="'.($vp['lang']=='es_ES'?'es':'en').'" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="15M">'.($vp['lang']=='es_ES'?'Twittear':'Twitt').'</a>
@@ -290,7 +296,7 @@ if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != '')) {
 	</div>
 </div>
 
-<div id="pnick" class="azul" style="display:none;"></div>
+<fieldset id="pnick" style="display:none;"></fieldset>
 
 
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js">

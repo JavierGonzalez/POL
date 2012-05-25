@@ -57,7 +57,7 @@ while ($r = mysql_fetch_array($result)) {
 
 // Muestra control de kicks.
 if ((nucleo_acceso($vp['acceso']['kick'])) AND ($pol['pais'] == PAIS)) {
-	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"'.IMG.'varios/kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a> ';
+	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"'.IMG.'varios/kick.gif\" title=\"Kickear\" alt=\"Kickear\" /></a> ';
 } else { $js_kick = ''; }
 
 
@@ -92,7 +92,7 @@ $txt .= '</h1>
 <div id="vpc">
 <ul id="vpc_ul">
 <li style="margin-top:600px;color:#666;">
-<img src="'.IMG.'logo/vp2.png" alt="VirtualPol" border="0" width="200" height="60" /><br />
+<img src="'.IMG.'logo/vp2.png" alt="VirtualPol" width="200" height="60" /><br />
 <span style="float:right;">'.date('Y-m-d H:i').' &nbsp;</span>
 Chat de '.PAIS.': <b>'.$titulo.'</b><br />
 
@@ -120,9 +120,9 @@ Chat de '.PAIS.': <b>'.$titulo.'</b><br />
 </div>
 
 <div id="chatform">
-<form action="" method="POST" onSubmit="return enviarmsg();">
+<form method="POST" onSubmit="return enviarmsg();">
 
-<table border="0" width="100%">
+<table width="100%">
 <tr>
 
 <td width="46" align="right" valign="middle"><img id="vpc_actividad" onclick="actualizar_ahora();" src="'.IMG.'ico/punto_gris.png" width="16" height="16" title="Actualizar chat" style="margin-top:4px;" /></td>

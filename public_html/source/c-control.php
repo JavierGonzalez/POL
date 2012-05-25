@@ -696,7 +696,7 @@ case 'gobierno':
 );
 
 
-	$txt .= '<p>'._('Los privilegios permiten realizar acciones especiales. Este panel muestra los privilegios y quien los ejerce actualmente').'.</p>
+	$txt .= '<fieldset>'._('Los privilegios sirven para gestionar permisos especiales del sistema. Este panel muestra los privilegios y quien los ostenta actualmente').'.</fieldset>
 <fieldset><legend>'._('Privilegios').'</legend><form action="/accion.php?a=gobierno&b=privilegios" method="POST"><table>
 <tr>
 <th></th>
@@ -717,7 +717,9 @@ case 'gobierno':
 		
 		$txt_nav[] = _('Notificaciones');
 		
-		$txt .= '<form action="/accion.php?a=gobierno&b=notificaciones&c=add" method="post">
+		$txt .= '<fieldset>'._('Las notificaciones son mensajes eventuales enviados a cada usuario que aparecen de forma resaltada en el menú de notificaciones. Este panel permite crear notificaciones personalizadas.').'</fieldset>
+		
+<form action="/accion.php?a=gobierno&b=notificaciones&c=add" method="post">
 
 <fieldset><legend>'._('Crear notificación (para todos los ciudadanos)').'</legend>
 
@@ -950,21 +952,11 @@ ORDER BY salario DESC");
 	} else {
 
 
-
-	$defcon = '<select name="defcon"'.$dis.' style="font-size:25px;color:grey;">';
-	for ($i=5;$i>=1;$i--) {
-		if ($i == $pol['config']['defcon']) { $sel = ' selected="selected"'; } else { $sel = ''; }
-		$defcon .= '<option value="' . $i . '" style="background:' . $defcon_bg[$i] . ';"' . $sel . '>' . $i . '</option>';
-	}
-	$defcon .= '</select>';
-
-
 $txt_header .= '
 <script type="text/javascript">
 function change_bg(img) {
 	$("#header").css("background","#FFFFFF url(\''.IMG.'bg/"+img+"\') repeat top left");
 }
-
 $(function() {
 	$("#fondos").hover(
 		function(e){
@@ -974,12 +966,14 @@ $(function() {
 		}
 	);
 });
-
 </script>';
 
-
-
-
+	$defcon = '<select name="defcon"'.$dis.' style="font-size:25px;color:grey;">';
+	for ($i=5;$i>=1;$i--) {
+		if ($i == $pol['config']['defcon']) { $sel = ' selected="selected"'; } else { $sel = ''; }
+		$defcon .= '<option value="' . $i . '" style="background:' . $defcon_bg[$i] . ';"' . $sel . '>' . $i . '</option>';
+	}
+	$defcon .= '</select>';
 
 	$txt .= '
 <form action="/accion.php?a=gobierno&b=config" method="post" enctype="multipart/form-data">
@@ -987,12 +981,34 @@ $(function() {
 <table border="0" cellspacing="3" cellpadding="0"><tr><td valign="top">
 
 
-<fieldset><legend>'._('Configuración de Gobierno').'</legend>
+<fieldset><legend>'._('Configuración principal').'</legend>
 
 <table border="0" cellspacing="3" cellpadding="0">
 
 
-<tr><td align="right">'._('Descripción').':</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'" /></td></tr>
+<tr><td align="right">'._('Siglas').':</td><td><b>'.PAIS.'</b></td></tr>
+
+<tr><td align="right">'._('Nombre').':</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'" /></td></tr>
+
+
+
+<tr><td align="right">'._('Tipo de plataforma').':</td><td>
+<select name="tipo">';
+foreach (array('plataforma', 'asamblea', 'simulador') AS $tipo) {
+	$txt .= '<option value="'.$tipo.'"'.($tipo==$pol['config']['tipo']?' selected="selected"':'').'>'.ucfirst($tipo).'</option>';
+}
+$txt .= '
+</select></td></tr>
+
+
+<tr><td align="right">'._('Zona horaria').':</td><td>
+<select name="timezone">';
+foreach (array('Europe/Madrid', 'America/New_York', 'Chile/Continental') AS $tipo) {
+	$txt .= '<option value="'.$tipo.'"'.($tipo==$pol['config']['timezone']?' selected="selected"':'').'>'.ucfirst($tipo).'</option>';
+}
+$txt .= '
+</select></td></tr>
+
 
 <tr><td align="right">'._('Idioma').':</td><td><select name="lang">';
 	$result = sql("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'lang'");
@@ -1007,7 +1023,7 @@ $(function() {
 <td>'.$defcon.'</td></tr>
 
 <tr><td align="right">'._('Referencia').':</td>
-<td><input style="text-align:right;" type="text" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '" /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td>
+<td><input type="number" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '" min="5" max="90" required /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td>
 
 </tr>');
 
@@ -1065,7 +1081,7 @@ $txt .= '</select>
 </tr>
 
 <tr>
-<td align="right" nowrap>'._('Bandera').': <img src="'.IMG.'banderas/'.PAIS.'.png?'.rand(10000,99999).'" width="80" height="50" border="0" /></td>
+<td align="right" nowrap>'._('Bandera').':<br /><img src="'.IMG.'banderas/'.PAIS.'.png?'.rand(10000,99999).'" width="80" height="50" border="0" /></td>
 <td nowrap><input type="file" name="nuevo_logo" accept="image/png" /> (png, 80x50, max 50kb)</td>
 </tr>
 

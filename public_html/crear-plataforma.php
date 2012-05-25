@@ -36,6 +36,9 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
 			$param = array(
 'PAIS'=>array('valor'=>$r['pais'], 'autoload'=>'si'),
 'pais_des'=>array('valor'=>'Descripci&oacute;n provisional', 'autoload'=>'si'),
+'tipo'=>array('valor'=>'plataforma', 'autoload'=>'no'),
+'timezone'=>array('valor'=>'Europe/Madrid', 'autoload'=>'si'),
+'bg_color'=>array('valor'=>'#eeeeee', 'autoload'=>'si'),
 
 'ECONOMIA'=>array('valor'=>$r['economia'], 'autoload'=>'si'),
 'ASAMBLEA'=>array('valor'=>$r['asamblea'], 'autoload'=>'si'),

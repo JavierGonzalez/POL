@@ -23,7 +23,7 @@ if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['
 $result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
 while ($r = mysql_fetch_array($result)) { 
 	
-	$txt_nav = array('/chats'=>_('Chats'), '/chats/'.$r['url']=>$r['titulo']);
+	$txt_nav = array('/chats'=>_('Chats'), $r['titulo']);
 	$txt_tab = array('/chats/'.$r['url'].'/log'=>_('Log'), '/chats/'.$r['url'].'/opciones'=>_('Opciones'));
 
 	if ($r['pais'] != PAIS) { redirect('http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'.$_GET['b']); }

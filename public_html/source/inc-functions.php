@@ -235,8 +235,8 @@ function ocultar_IP($IP, $tipo='IP') {
 	} elseif ($tipo == 'host') {
 		$host = '';
 		$hosts = explode('.', $IP);
-		if (strlen($hosts[count($hosts)-3]) > 3) { 
-			$host = $hosts[count($hosts)-3].'.'.$hosts[count($hosts)-2].'.'.$hosts[count($hosts)-1]; 
+		if (strlen($hosts[count($hosts)-3]) > 4) { 
+			$host = $hosts[count($hosts)-4].'.'.$hosts[count($hosts)-3].'.'.$hosts[count($hosts)-2].'.'.$hosts[count($hosts)-1]; 
 		}
 		return '*.'.$host;
 	}

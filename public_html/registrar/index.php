@@ -48,9 +48,9 @@ function onlynumbers($string) {
 
 
 foreach ($vp['paises'] AS $pais) {
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$pais."'", $link);
-	while($r = mysql_fetch_array($result)) {
-		mysql_query("UPDATE config SET valor = '" . $r['num'] . "' WHERE pais = '".strtolower($pais)."' AND dato = 'info_censo' LIMIT 1", $link);
+	$result = sql("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$pais."'");
+	while($r = r($result)) {
+		sql("UPDATE config SET valor = '" . $r['num'] . "' WHERE pais = '".strtolower($pais)."' AND dato = 'info_censo' LIMIT 1");
 	}
 }
 
@@ -100,17 +100,17 @@ case 'registrar': //CHECK
 				if (($pass1) && ($pass1 === $pass2)) {
 					if (comprobar_email($email) == true) {
 
-						$result = mysql_query("SELECT ID FROM users WHERE email = '$email' LIMIT 1", $link);
-						while ($r = mysql_fetch_array($result)) { $email_existe = $r['ID'];}
+						$result = sql("SELECT ID FROM users WHERE email = '$email' LIMIT 1");
+						while ($r = r($result)) { $email_existe = $r['ID'];}
 
 						if (!$email_existe) { //el email esta libre
 							if ((strlen($nick) >= 3) AND (strlen($nick) <= 14)) {
 
-								$result = mysql_query("SELECT ID FROM users WHERE nick = '".$nick."' LIMIT 1", $link);
-								while ($r = mysql_fetch_array($result)) { $nick_existe = $r['ID'];}
+								$result = sql("SELECT ID FROM users WHERE nick = '".$nick."' LIMIT 1");
+								while ($r = r($result)) { $nick_existe = $r['ID'];}
 
-								$result = mysql_query("SELECT tiempo FROM expulsiones WHERE tiempo = '".$nick."' AND estado = 'expulsado' LIMIT 1", $link);
-								while ($r = mysql_fetch_array($result)) { $nick_expulsado_existe = $r['tiempo']; }
+								$result = sql("SELECT tiempo FROM expulsiones WHERE tiempo = '".$nick."' AND estado = 'expulsado' LIMIT 1");
+								while ($r = r($result)) { $nick_expulsado_existe = $r['tiempo']; }
 
 								if ((!$nick_existe) AND (!$nick_expulsado_existe)) { //si el nick esta libre
 									$longip = ip2long($_SERVER['REMOTE_ADDR']);
@@ -118,8 +118,8 @@ case 'registrar': //CHECK
 
 									//Si existe referencia IP
 									$afiliacion = 0;
-									$result = mysql_query("SELECT ID, user_ID, (SELECT nick FROM users WHERE ID = referencias.user_ID LIMIT 1) AS nick FROM referencias WHERE IP = '".$longip."' LIMIT 1", $link);
-									while($r = mysql_fetch_array($result)){ 
+									$result = sql("SELECT ID, user_ID, (SELECT nick FROM users WHERE ID = referencias.user_ID LIMIT 1) AS nick FROM referencias WHERE IP = '".$longip."' LIMIT 1");
+									while($r = r($result)){ 
 										$afiliacion = $r['user_ID'];
 										$ref = ' (ref: ' . crear_link($r['nick']) . ')';
 									}
@@ -133,16 +133,18 @@ case 'registrar': //CHECK
 										$pass_sha = pass_key($pass1);
 									}
 									
-									mysql_query("INSERT INTO users 
+									sql("INSERT INTO users 
 (nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, pais, pass, pass2, host, IP_proxy, dnie_check, bando, nota_SC, fecha_legal) 
-VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '".(in_array($_GET['p'], $vp['paises'])?$_GET['p']:'ninguno')."', '".$pass_md5."', '".$pass_sha."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')", $link);
+VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '".(in_array($_GET['p'], $vp['paises'])?$_GET['p']:'ninguno')."', '".$pass_md5."', '".$pass_sha."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')");
+
+									$result = sql("SELECT ID FROM users WHERE nick = '".$nick."' LIMIT 1");
+									while($r = r($result)){ $new_ID = $r['ID']; }
+
+									users_con($new_ID, '', 'login');
+
 									if ($ref) {
-										$result = mysql_query("SELECT ID FROM users WHERE nick = '" . $nick . "' LIMIT 1", $link);
-										while($r = mysql_fetch_array($result)){ $new_ID = $r['ID']; }
-										mysql_query("UPDATE referencias SET new_user_ID = '" . $new_ID . "' WHERE IP = '" . $longip . "' LIMIT 1", $link);
+										sql("UPDATE referencias SET new_user_ID = '" . $new_ID . "' WHERE IP = '" . $longip . "' LIMIT 1");
 									}
-
-
 
 									$mensaje = '<p>'._('Hola').' '.$nick.':</p>
 
@@ -172,21 +174,21 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . str
 
 
 case 'verificar': //URL EMAIL
-	$result = mysql_query("SELECT ID, nick, pass, pais FROM users WHERE estado = 'validar' AND nick = '".$_GET['nick']."' AND api_pass = '".$_GET['code']."' LIMIT 1", $link);
-	while ($r = mysql_fetch_array($result)) { 
+	$result = sql("SELECT ID, nick, pass, pais FROM users WHERE estado = 'validar' AND nick = '".$_GET['nick']."' AND api_pass = '".$_GET['code']."' LIMIT 1");
+	while ($r = r($result)) { 
 
 		notificacion($r['ID'], _('Bienvenido!'), '/doc/bienvenida');
 		notificacion($r['ID'], _('Sitúate en mapa de ciudadanos!'), '/geolocalizacion');
 
 		if ($r['pais'] == 'ninguno') {
-			mysql_query("UPDATE users SET estado = 'turista' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+			sql("UPDATE users SET estado = 'turista' WHERE ID = '".$r['ID']."' LIMIT 1");
 			redirect(REGISTRAR.'login.php?a=login&user='.$r['nick'].'&pass_md5='.$r['pass'].'&url_http='.REGISTRAR);
 		} else {
-			mysql_query("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+			sql("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$r['ID']."' LIMIT 1");
 
 			
-			$result2 = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$r['pais']."'", $link);
-			while ($r2 = mysql_fetch_array($result2)) { $ciudadanos_num = $r2['num']; }
+			$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$r['pais']."'");
+			while ($r2 = r($result2)) { $ciudadanos_num = $r2['num']; }
 
 			evento_chat('<b>[#] '._('Nuevo ciudadano').'</b> '._('de').' <b>'.$r['pais'].'</b> <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> '._('ciudadanos').', <b><a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'" class="nick">'.$r['nick'].'</a></b>)</span>', 0, 0, true, 'e', $r['pais'], $r['nick']);
 
@@ -204,21 +206,21 @@ case 'solicitar-ciudadania':
 	
 
 	// tiene kick?
-	$result = mysql_query("SELECT ID FROM ".strtolower($_POST['pais'])."_ban WHERE estado = 'activo' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-	while ($r = mysql_fetch_array($result)) { $tiene_kick = true; }
+	$result = sql("SELECT ID FROM ".strtolower($_POST['pais'])."_ban WHERE estado = 'activo' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1");
+	while ($r = r($result)) { $tiene_kick = true; }
 
-	$result = mysql_query("SELECT pais FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-	while ($r = mysql_fetch_array($result)) { $user_pais = $r['pais']; }
+	$result = sql("SELECT pais FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1");
+	while ($r = r($result)) { $user_pais = $r['pais']; }
 
 	$pais_existe = false;
-	$result = mysql_query("SELECT pais FROM config WHERE pais = '".$_POST['pais']."' AND dato = 'PAIS' LIMIT 1", $link);
-	while ($r = mysql_fetch_array($result)) { $pais_existe = $r['pais']; }
+	$result = sql("SELECT pais FROM config WHERE pais = '".$_POST['pais']."' AND dato = 'PAIS' LIMIT 1");
+	while ($r = r($result)) { $pais_existe = $r['pais']; }
 
 	if (($pol['user_ID']) AND ($tiene_kick != true) AND ($user_pais == 'ninguno') AND ($pol['estado'] == 'turista') AND ($pais_existe != false)) {
-		mysql_query("UPDATE users SET estado = 'ciudadano', pais = '".$pais_existe."' WHERE estado = 'turista' AND pais = 'ninguno' AND ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		sql("UPDATE users SET estado = 'ciudadano', pais = '".$pais_existe."' WHERE estado = 'turista' AND pais = 'ninguno' AND ID = '".$pol['user_ID']."' LIMIT 1");
 	
-		$result2 = mysql_query("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$_POST['pais']."'", $link);
-		while ($r2 = mysql_fetch_array($result2)) { $ciudadanos_num = $r2['num']; }
+		$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$_POST['pais']."'");
+		while ($r2 = r($result2)) { $ciudadanos_num = $r2['num']; }
 
 		evento_chat('<b>[#] '._('Nuevo ciudadano').'</b> '._('de').' <b>'.$_POST['pais'].'</b> <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> '._('ciudadanos').', <b><a href="http://'.strtolower($_POST['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'" class="nick">'.$pol['nick'].'</a></b>)</span>', 0, 0, false, 'e', $_POST['pais'], $r['nick']);
 
@@ -242,8 +244,8 @@ if ($pol['estado'] == 'ciudadano') {
 
 
 	// load config full
-	$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".strtolower($pol['pais'])."' AND autoload = 'no'", $link);
-	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
+	$result = sql("SELECT valor, dato FROM config WHERE pais = '".strtolower($pol['pais'])."' AND autoload = 'no'");
+	while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 	$txt_title = _('Rechazar ciudadanía');
@@ -299,12 +301,12 @@ $txt .= '</blockquote>';
 	$n = 0;
 	foreach ($vp['paises'] as $pais) {
 		// ciudadanos
-		$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE pais = '".$pais."'", $link);
-		while($r = mysql_fetch_array($result)) { $ciudadanos_num = $r['num']; }
+		$result = sql("SELECT COUNT(ID) AS num FROM users WHERE pais = '".$pais."'");
+		while($r = r($result)) { $ciudadanos_num = $r['num']; }
 
 		// pais_des
-		$result = mysql_query("SELECT valor FROM config WHERE pais = '".$pais."' AND dato = 'pais_des' LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)) { $pais_des = $r['valor']; }
+		$result = sql("SELECT valor FROM config WHERE pais = '".$pais."' AND dato = 'pais_des' LIMIT 1");
+		while($r = r($result)) { $pais_des = $r['valor']; }
 		$n++;
 		$txt .= '
 <tr style="font-size:19px;">

@@ -26,8 +26,8 @@ case 'panel':
 
 		
 
-		$result = mysql_query("SELECT ser_SC FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)) { $ser_SC = $r['ser_SC']; }
+		$result = sql("SELECT ser_SC FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+		while($r = r($result)) { $ser_SC = $r['ser_SC']; }
 
 		$txt .= '<h1>'._('Opciones de usuario').' ('.$pol['nick'].'):</h1>
 
@@ -181,8 +181,8 @@ case 'recuperar-pass':
 
 case 'reset-pass':
 
-	$result = mysql_query("SELECT ID, nick FROM users WHERE ID = '".$_GET['user_ID']."' AND api_pass = '".$_GET['check']."' AND reset_last >= '".$date."' LIMIT 1", $link);
-	while ($r = mysql_fetch_array($result)) { 
+	$result = sql("SELECT ID, nick FROM users WHERE ID = '".$_GET['user_ID']."' AND api_pass = '".$_GET['check']."' AND reset_last >= '".$date."' LIMIT 1");
+	while ($r = r($result)) { 
 		$check = true;
 		
 		$txt .= '<h2>'._('Cambio de contraseña').':</h2>
@@ -213,18 +213,18 @@ case 'reset-pass':
 
 case 'reset-pass-change':	
 	if ($_POST['pass_new'] === $_POST['pass_new2']) {
-		mysql_query("UPDATE users SET pass = '".pass_key($_POST['pass_new'], 'md5')."', pass2 = '".pass_key($_POST['pass_new'])."', api_pass = '".rand(1000000,9999999)."', reset_last = '".$date."' WHERE ID = '".$_POST['user_ID']."' AND api_pass = '".$_POST['check']."' AND reset_last >= '".$date."' LIMIT 1", $link);
+		sql("UPDATE users SET pass = '".pass_key($_POST['pass_new'], 'md5')."', pass2 = '".pass_key($_POST['pass_new'])."', api_pass = '".rand(1000000,9999999)."', reset_last = '".$date."' WHERE ID = '".$_POST['user_ID']."' AND api_pass = '".$_POST['check']."' AND reset_last >= '".$date."' LIMIT 1");
 	}
 	redirect('http://www.'.DOMAIN);
 	break;
 
 case 'start-reset-pass':
 	$enviado = false;
-	$result = mysql_query("SELECT ID, nick, api_pass, email FROM users WHERE email = '".$_POST['email']."' AND reset_last < '".$date."' LIMIT 1", $link);
-	while ($r = mysql_fetch_array($result)) { 
+	$result = sql("SELECT ID, nick, api_pass, email FROM users WHERE email = '".$_POST['email']."' AND reset_last < '".$date."' LIMIT 1");
+	while ($r = r($result)) { 
 		$enviado = true;
 		$reset_pass = rand(1000000000, 9999999999);
-		mysql_query("UPDATE users SET api_pass = '".$reset_pass."', reset_last = '".date('Y-m-d H:00:00', time() + (86400*1))."' WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+		sql("UPDATE users SET api_pass = '".$reset_pass."', reset_last = '".date('Y-m-d H:00:00', time() + (86400*1))."' WHERE ID = '".$r['ID']."' LIMIT 1");
 
 		$texto_email = "<p>"._("Hola")." ".$r['nick']."!</p>
 <p>"._("Has solicitado un reset de la contraseña, con la intención de efectuar una recuperación y posterior cambio de contraseña").".</p>
@@ -244,8 +244,8 @@ VirtualPol</p>";
 
 	if ($enviado == false) {
 		$nick_existe = false;
-		$result = mysql_query("SELECT ID FROM users WHERE email = '".$_POST['email']."' LIMIT 1", $link);
-		while ($r = mysql_fetch_array($result)) { $nick_existe = true; }
+		$result = sql("SELECT ID FROM users WHERE email = '".$_POST['email']."' LIMIT 1");
+		while ($r = r($result)) { $nick_existe = true; }
 		
 		if ($nick_existe) {
 			redirect(REGISTRAR.'login.php?a=recuperar-pass&b=no-24h');
@@ -266,11 +266,11 @@ case 'changepass':
 	$pre_login = true;
 	
 	if ($pol['user_ID']) {
-		$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND pass = '".$oldpass."' LIMIT 1", $link);
-		while ($r = mysql_fetch_array($result)) { $userID = $r['ID']; }
+		$result = sql("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND pass = '".$oldpass."' LIMIT 1");
+		while ($r = r($result)) { $userID = $r['ID']; }
 		if (($pol['user_ID'] == $userID) AND ($newpass === $newpass2)) {
 			if (strlen($newpass) != 32) { $newpass = pass_key($newpass, 'md5'); }
-			mysql_query("UPDATE users SET pass = '".$newpass."', pass2 = '".pass_key($_POST['pass1'])."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+			sql("UPDATE users SET pass = '".$newpass."', pass2 = '".pass_key($_POST['pass1'])."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 		}
 	}
 
@@ -290,18 +290,18 @@ case 'changenick':
 			}
 
 			$dentro_del_margen = false;
-			$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND nickchange_last < '".date('Y-m-d 20:00:00', time() - (86400*365))."' LIMIT 1", $link);
-			while ($r = mysql_fetch_array($result)) { $dentro_del_margen = true; }
+			$result = sql("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND nickchange_last < '".date('Y-m-d 20:00:00', time() - (86400*365))."' LIMIT 1");
+			while ($r = r($result)) { $dentro_del_margen = true; }
 			
 			$nick_existe = false;
-			$result = mysql_query("SELECT ID FROM users WHERE nick = '".$nick_new."' LIMIT 1", $link);
-			while ($r = mysql_fetch_array($result)) { $nick_existe = true; }
+			$result = sql("SELECT ID FROM users WHERE nick = '".$nick_new."' LIMIT 1");
+			while ($r = r($result)) { $nick_existe = true; }
 
 
 			if ((nick_check($nick_new)) AND (strlen($nick_new) >= 3) AND (strlen($nick_new) <= 12) AND ($dentro_del_margen) AND (!$nick_existe)) {
 
 				// EJECUTAR CAMBIO DE NICK
-				mysql_query("UPDATE users SET nick = '".$nick_new."', nickchange_last = now() WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+				sql("UPDATE users SET nick = '".$nick_new."', nickchange_last = now() WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 				
 				evento_chat('<b>[#] El ciudadano '.$pol['nick'].'</b> se ha cambiado de nombre a <b>'.crear_link($nick_new).'</b>.', 0, 0, true, 'e', $pol['pais']);
 				
@@ -322,7 +322,7 @@ case 'changemail':
 	$email = trim($_POST['email']);
 	$pre_login = true;
 	if ($pol['user_ID']) {
-		mysql_query("UPDATE users SET email = '".$email."' WHERE ID = '".$pol['user_ID']."' AND fecha_registro < '".date('Y-m-d 20:00:00', time() - 864000)."' LIMIT 1", $link);
+		sql("UPDATE users SET email = '".$email."' WHERE ID = '".$pol['user_ID']."' AND fecha_registro < '".date('Y-m-d 20:00:00', time() - 864000)."' LIMIT 1");
 	}
 	redirect(REGISTRAR.'login.php?a=panel');
 	break;
@@ -330,7 +330,7 @@ case 'changemail':
 case 'changelang':
 	$pre_login = true;
 	if ($pol['user_ID']) {
-		mysql_query("UPDATE users SET lang = ".($_POST['lang']?"'".$_POST['lang']."'":"NULL")." WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		sql("UPDATE users SET lang = ".($_POST['lang']?"'".$_POST['lang']."'":"NULL")." WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	}
 	redirect(REGISTRAR.'login.php?a=panel');
 	break;
@@ -338,19 +338,19 @@ case 'changelang':
 case 'borrar-usuario':
 	if ($_POST['nick'] == $pol['nick']) { 
 		evento_log('Eliminación de usuario permanente y voluntaria.');
-		mysql_query("UPDATE users SET estado = 'expulsado' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link); 
+		sql("UPDATE users SET estado = 'expulsado' WHERE ID = '".$pol['user_ID']."' LIMIT 1"); 
 	}
 	redirect('http://www.'.DOMAIN.'/');
 	break;
 
 case 'traza':
 	if (($_GET['user_ID']) AND ($_GET['traza']) AND ($_GET['pass'])) {
-		$result = mysql_query("SELECT ID AS user_ID, traza FROM users WHERE ID = '".$_GET['user_ID']."' AND pass = '".$_GET['pass']."' LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)) {
+		$result = sql("SELECT ID AS user_ID, traza FROM users WHERE ID = '".$_GET['user_ID']."' AND pass = '".$_GET['pass']."' LIMIT 1");
+		while($r = r($result)) {
 			if ($r['traza'] == '') { $r['traza'] = ' '; }
 			$traza_m = explode(' ', $r['traza']);
 			if (!in_array($_GET['traza'], $traza_m)) {
-				mysql_query("UPDATE users SET traza = '".$r['traza']." ".$_GET['traza']."' WHERE ID = '".$r['user_ID']."' LIMIT 1", $link);
+				sql("UPDATE users SET traza = '".$r['traza']." ".$_GET['traza']."' WHERE ID = '".$r['user_ID']."' LIMIT 1");
 			}
 		}
 	}
@@ -360,7 +360,7 @@ case 'traza':
 
 
 case 'ser_SC':
-	mysql_query("UPDATE users SET ser_SC = '".($_POST['ser_SC']=='true'?'true':'false')."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+	sql("UPDATE users SET ser_SC = '".($_POST['ser_SC']=='true'?'true':'false')."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	redirect(REGISTRAR."login.php?a=panel");
 	break;
 
@@ -382,8 +382,13 @@ case 'login':
 	$user_ID = false;
 
 	if (strlen($pass) != 32) { $pass = md5($pass); }
-	$result = mysql_query("SELECT ID, nick FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." AND pass = '".$pass."' LIMIT 1", $link);
-	while ($r = mysql_fetch_array($result)) { $user_ID = $r['ID']; $nick = $r['nick']; }
+	$result = sql("SELECT ID, nick FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." AND pass = '".$pass."' LIMIT 1");
+	while ($r = r($result)) { 
+		$user_ID = $r['ID']; 
+		$nick = $r['nick']; 
+
+		users_con($user_ID, $_REQUEST['extra'], 'login');
+	}
 
 	if (is_numeric($user_ID)) {
 		
@@ -425,8 +430,8 @@ body, a { color:#FFFFFF; }
 </html>';
 		} else { redirect($url); } 
 	} else { 
-		$result = mysql_query("SELECT estado FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." LIMIT 1", $link);
-		while ($r = mysql_fetch_array($result)) { $nick_estado = $r['estado']; }
+		$result = sql("SELECT estado FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." LIMIT 1");
+		while ($r = r($result)) { $nick_estado = $r['estado']; }
 
 		switch ($nick_estado) {
 			case 'turista': case 'ciudadano': $msg_error = _('Contraseña incorrecta'); break;
@@ -464,7 +469,13 @@ default:
 		$txt .= '
 <script type="text/javascript" src="'.IMG.'lib/md5.js"></script>
 <script type="text/javascript">
-function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "123")) { objeto.value = ""; } }
+timestamp_start = Math.round(+new Date()/1000);
+function login_start() {
+	timestamp_end = Math.round(+new Date()/1000);
+	$("#input_extra").val(screen.width + "x" + screen.height + "|" + screen.availWidth + "x" + screen.availHeight + "|" + Math.round(timestamp_end - timestamp_start) + "|" + screen.colorDepth + "|");
+	$("#login_pass").val(hex_md5($("#login_pass").val()));
+	$("#login_pass").attr("name", "pass_md5");
+}
 </script>
 <style>
 #content-right { background:url('.IMG.'bg/verde-cesped.gif); }
@@ -474,7 +485,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 <form action="'.REGISTRAR.'login.php?a=login" method="post">
 <input name="url" value="'.($_GET['r']?$_GET['r']:base64_encode('http://www.'.DOMAIN.'/')).'" type="hidden" />
-
+<input type="hidden" name="extra" value="" id="input_extra" />
 
 <fieldset><legend>'._('Iniciar sesión').'</legend>
 
@@ -482,12 +493,12 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 <tr>
 <td align="right">'._('Usuario o email').':</td>
-<td><input name="user" value="" size="14" maxlength="200" onfocus="vlgn(this)" type="text" style="font-size:20px;font-weight:bold;" required /></td>
+<td><input name="user" value="" size="14" maxlength="200" type="text" style="font-size:20px;font-weight:bold;" autofocus required /></td>
 </tr>
 
 <tr>
 <td align="right">'._('Contraseña').':</td>
-<td><input id="login_pass" name="pass" type="password" value="" size="14" maxlength="200" onfocus="vlgn(this)" style="font-size:20px;font-weight:bold;" required /></td>
+<td><input id="login_pass" name="pass" type="password" value="" size="14" maxlength="200" style="font-size:20px;font-weight:bold;" required /></td>
 </tr>
 
 <tr>
@@ -499,7 +510,7 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 '.($_GET['error']?'<em style="color:red;">'.escape(base64_decode($_GET['error'])).'.</em><br /><br />':'').'
 
-<button onclick="$(\'#login_pass\').val(hex_md5($(\'#login_pass\').val()));$(\'#login_pass\').attr(\'name\', \'pass_md5\');" class="large blue">'._('Iniciar sesión').'</button><br />
+<button onclick="login_start();" class="large blue" id="boton_iniciar_sesion">'._('Iniciar sesión').'</button><br />
 <br />
 <a href="'.REGISTRAR.'login.php?a=recuperar-pass">'._('¿Has olvidado tu contraseña?').'</a>
 </table>
@@ -512,11 +523,10 @@ function vlgn (objeto) { if ((objeto.value == "Usuario") || (objeto.value == "12
 
 	$txt .= '</div>';
 
-	$txt_title = _('Entrar');
-	$txt_nav = array(_('Entrar'));
+	$txt_title = _('Iniciar sesión');
+	$txt_nav = array(_('Iniciar sesión'));
 	include('../theme.php');
-	break;
-
+	exit;
 }
  
 

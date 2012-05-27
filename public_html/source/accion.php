@@ -440,7 +440,7 @@ case 'expulsar':
 				else if ($r2['tipo_voto'] == '5puntos') { $voto_en_blanco = '0 0 0 0 0'; }
 				else if ($r2['tipo_voto'] == '8puntos') { $voto_en_blanco = '0 0 0 0 0 0 0 0'; }
 				else { $voto_en_blanco = '0'; }
-				sql("UPDATE votacion_votos SET voto = '".$voto_en_blanco."', validez = 'true' WHERE ref_ID = ".$r2['ID']." AND user_ID = ".$r['ID']." LIMIT 1");
+				sql("UPDATE votacion_votos SET voto = '".$voto_en_blanco."', validez = 'true', mensaje = '' WHERE ref_ID = ".$r2['ID']." AND user_ID = ".$r['ID']." LIMIT 1");
 			}
 			
 			sql("INSERT INTO expulsiones (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')");

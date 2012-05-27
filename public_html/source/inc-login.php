@@ -95,7 +95,6 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	// UPDATE
 	if ($pol['estado'] != 'expulsado') { // No esta expulsado
 		if (isset($session_new)) { // START SESSION
-
 			$update = ", visitas = visitas + 1, nav = '".$_SERVER['HTTP_USER_AGENT']."', fecha_init = '".$date."'";
 			if ($pol['IP'] != $IP) { 
 				$host = gethostbyaddr(long2ip($IP)); if ($host == '') { $host = long2ip($IP); }
@@ -103,6 +102,8 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 				if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { $update .= ", IP_proxy = '".$_SERVER['HTTP_X_FORWARDED_FOR']."'"; }
 			}
 			if ($fecha_init != '0000-00-00 00:00:00') { $update .= ", online = online + ".(strtotime($fecha_last)-strtotime($fecha_init)); }
+			include_once('inc-functions-accion.php');
+			users_con($pol['user_ID']);
 		}
 		sql("UPDATE LOW_PRIORITY users SET paginas = paginas + 1, fecha_last = '".$date."'".$update." WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	} else { unset($pol); session_unset(); session_destroy(); } // impide el acceso a expulsados

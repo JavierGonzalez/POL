@@ -22,9 +22,12 @@ $result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autolo
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
-$txt .= $_REQUEST['offset'];
 
+$test = 'asdasda.qweq.asd.google.es';
 
+$test2 = explode('.', $test);
+
+$txt .= $test2[count($test2)-2].'.'.$test2[count($test2)-1];
 
 $txt_title = 'Test';
 $txt_nav = array('Test');

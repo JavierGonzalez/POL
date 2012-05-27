@@ -564,4 +564,22 @@ ORDER BY orden ASC", $link);
 	return $f;
 }
 
+function users_con($user_ID, $extra='', $tipo='session') {
+	$IP = direccion_IP('longip');
+	$host = gethostbyaddr(long2ip($IP)); if ($host == '') { $host = long2ip($IP); }
+	$extra_array = explode('|', $extra); // res1|res2|login_seg|bitdepth
+	$nav_check = sha1($_SERVER['HTTP_USER_AGENT']. '|' .$_SERVER['HTTP_ACCEPT_LANGUAGE']. '|' .$extra_array[0]. '|' .$extra_array[1]. '|' .$extra_array[3]);
+	if (!is_numeric(substr($host, -1, 1))) {
+		$hoste = explode('.', $host);
+		$ISP = "'".ucfirst($hoste[count($hoste)-(in_array($hoste[count($hoste)-2], array('com', 'net', 'org'))?3:2)]).(!in_array($hoste[count($hoste)-1], array('com', 'net'))?' '.strtoupper($hoste[count($hoste)-1]):'')."'";
+	} else { $ISP = "NULL"; }
+
+	$result = sql("SELECT visitas, paginas, traza FROM users WHERE ID = '".$user_ID."' LIMIT 1");
+	while($r = r($result)){ $v = $r['visitas']; $pv = $r['paginas']; $traza = $r['traza']; }
+
+	sql("INSERT INTO users_con (user_ID, time, IP, host, proxy, nav, nav_lang, login_ms, login_seg, nav_resolucion, nav_check, nav_bit, ISP, v, pv, traza, tipo) 
+VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".$_SERVER['HTTP_X_FORWARDED_FOR']."', '".$_SERVER['HTTP_USER_AGENT']."', '".$_SERVER['HTTP_ACCEPT_LANGUAGE']."', '".round((microtime(true)-TIME_START)*1000)."', '".$extra_array[2]."', '".$extra_array[0]."', '".$nav_check."', '".$extra_array[3]."', ".$ISP.", '".$v."', '".$pv."', '".$traza."', '".$tipo."')");
+	return true;
+}
+
 ?>

@@ -519,9 +519,9 @@ WHERE pass = '" . $r['pass'] . "'");
 
 	$txt .= '<fieldset><legend>4. '._('Ocultación (proxys, TOR...)').' ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
 	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%proxy%');
-	$sql_anon = '';
-	foreach ($array_searchtor AS $filtro) { if ($sql_anon != '') { $sql_anon .= ' OR ';  } $sql_anon .= "hosts LIKE '".$filtro."'"; }
-	$result = sql("SELECT nick, estado, host, IP, nav, nota_SC FROM users WHERE ".$sql_anon." ORDER BY fecha_registro DESC");
+	$sql_anon = array();
+	foreach ($array_searchtor AS $filtro) { $sql_anon[] = "hosts LIKE '".$filtro."' OR host LIKE '".$filtro."'"; }
+	$result = sql("SELECT nick, estado, host, IP, nav, nota_SC FROM users WHERE ".implode(" OR ", $sql_anon)." ORDER BY fecha_registro DESC");
 	while($r = r($result)) {
 		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td nowrap="nowrap"><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td><td nowrap="nowrap">'.print_nota_SC($r['nota_SC'], $r['ID']).'</td></tr>';
 	}
@@ -1213,6 +1213,7 @@ WHERE ID = '".$_GET['c']."' LIMIT 1");
 (SELECT estado FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_estado,
 (SELECT nick FROM users WHERE ID = expulsiones.autor LIMIT 1) AS nick_autor
 FROM expulsiones
+WHERE estado != 'indultado'
 ORDER BY expire DESC");
 	while($r = r($result)){
 		
@@ -1232,7 +1233,7 @@ ORDER BY expire DESC");
 </tr>' . "\n";
 
 		}
-		$txt .= '</table>';
+		$txt .= '</table><p>Indultados de forma excepcional todos las expulsiones anteriores al 1 de Enero del 2012.</p>';
 	}
 	break;
 

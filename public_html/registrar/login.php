@@ -343,18 +343,14 @@ case 'borrar-usuario':
 	redirect('http://www.'.DOMAIN.'/');
 	break;
 
-case 'traza':
-	if (($_GET['user_ID']) AND ($_GET['traza']) AND ($_GET['pass'])) {
-		$result = sql("SELECT ID AS user_ID, traza FROM users WHERE ID = '".$_GET['user_ID']."' AND pass = '".$_GET['pass']."' LIMIT 1");
+case 'trz':
+	if (($_GET['x']) AND ($_GET['y']) AND ($_GET['z'])) {
+		$result = sql("SELECT ID FROM users WHERE ID = '".$_GET['y']."' AND api_pass = '".$_GET['z']."' LIMIT 1");
 		while($r = r($result)) {
-			if ($r['traza'] == '') { $r['traza'] = ' '; }
-			$traza_m = explode(' ', $r['traza']);
-			if (!in_array($_GET['traza'], $traza_m)) {
-				sql("UPDATE users SET traza = '".$r['traza']." ".$_GET['traza']."' WHERE ID = '".$r['user_ID']."' LIMIT 1");
-			}
+			sql("UPDATE users_con SET dispositivo = '".$_GET['x']."' WHERE tipo = 'login' AND user_ID = '".$r['ID']."' ORDER BY time DESC LIMIT 1");
 		}
 	}
-	redirect($_GET['url']);
+	redirect($_GET['u']);
 	break;
 
 
@@ -382,10 +378,11 @@ case 'login':
 	$user_ID = false;
 
 	if (strlen($pass) != 32) { $pass = md5($pass); }
-	$result = sql("SELECT ID, nick FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." AND pass = '".$pass."' LIMIT 1");
+	$result = sql("SELECT ID, nick, api_pass FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." AND pass = '".$pass."' AND estado != 'expulsado' LIMIT 1");
 	while ($r = r($result)) { 
 		$user_ID = $r['ID']; 
 		$nick = $r['nick']; 
+		$api_pass = $r['api_pass'];
 
 		users_con($user_ID, $_REQUEST['extra'], 'login');
 	}
@@ -397,34 +394,32 @@ case 'login':
 		setcookie('teorizapass', md5(CLAVE.$pass), $expire, '/', USERCOOKIE);
 
 		if (true) {
-			$traza_name = 'vpid1';
+			$traza_nom = '86731242'; // OLD: vpid1
 			echo '<html>
 <header>
 <title></title>
-<meta http-equiv="refresh" content="7;url=http://www.'.DOMAIN.'/">
+<meta http-equiv="refresh" id="redirect" content="9;url='.$url.'">
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="'.IMG.'lib/evercookie/swfobject-2.2.min.js"></script>
 <script type="text/javascript" src="'.IMG.'lib/evercookie/evercookie.js"></script>
 <script type="text/javascript">
 var ec = new evercookie();
-ec_url = "'.$url.'";
-ec.get("'.$traza_name.'", function(value) { 
+ec.get("'.$traza_nom.'", function(value) { 
 	if (value === undefined) {
-		ec.set("'.$traza_name.'", "'.$user_ID.'");
-	} else if (value == '.$user_ID.') {
-	} else {
-		ec_url = "'.REGISTRAR.'login.php?a=traza&traza=" + value + "&user_ID='.$user_ID.'&pass='.$pass.'&url=" + ec_url; 
-		ec.set("'.$traza_name.'", "'.$user_ID.'");
-	}
-	window.location.href = ec_url;
+		var get_ms = new Date().getTime();
+		everc_value = get_ms + Math.floor(Math.random()*1001);
+		$("#redirect").attr("content", "9;url='.REGISTRAR.'login.php?a=trz&x=" + everc_value + "&y='.$user_ID.'&z='.$api_pass.'&u='.$url.'");
+		ec.set("'.$traza_nom.'", everc_value);
+	} else { everc_value = value; }
+	window.location.href = "'.REGISTRAR.'login.php?a=trz&x=" + everc_value + "&y='.$user_ID.'&z='.$api_pass.'&u='.$url.'";
 });
 </script>
 <style type="text/css">
-body, a { color:#FFFFFF; }
-*, body { display:none; }
+body, a { color:#FFFFFF; cursor:progress; }
+*, body { display:none; cursor:progress; }
 </style>
 </header>
-<body>
+<body style="cursor:progress;">
 &nbsp;
 </body>
 </html>';
@@ -470,7 +465,9 @@ default:
 <script type="text/javascript" src="'.IMG.'lib/md5.js"></script>
 <script type="text/javascript">
 timestamp_start = Math.round(+new Date()/1000);
+everc_value = "";
 function login_start() {
+	$("#boton_iniciar_sesion").html("'._('Iniciando sesión...').'");
 	timestamp_end = Math.round(+new Date()/1000);
 	$("#input_extra").val(screen.width + "x" + screen.height + "|" + screen.availWidth + "x" + screen.availHeight + "|" + Math.round(timestamp_end - timestamp_start) + "|" + screen.colorDepth + "|");
 	$("#login_pass").val(hex_md5($("#login_pass").val()));
@@ -493,7 +490,7 @@ function login_start() {
 
 <tr>
 <td align="right">'._('Usuario o email').':</td>
-<td><input name="user" value="" size="14" maxlength="200" type="text" style="font-size:20px;font-weight:bold;" autofocus required /></td>
+<td><input name="user" value="" size="14" maxlength="200" type="text" style="font-size:20px;font-weight:bold;" autocomplete="off" autofocus required /></td>
 </tr>
 
 <tr>

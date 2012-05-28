@@ -518,7 +518,7 @@ WHERE pass = '" . $r['pass'] . "'");
 
 
 	$txt .= '<fieldset><legend>4. '._('Ocultación (proxys, TOR...)').' ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
-	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%proxy%');
+	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%vpn%', '%proxy%');
 	$sql_anon = array();
 	foreach ($array_searchtor AS $filtro) { $sql_anon[] = "hosts LIKE '".$filtro."' OR host LIKE '".$filtro."'"; }
 	$result = sql("SELECT nick, estado, host, IP, nav, nota_SC FROM users WHERE ".implode(" OR ", $sql_anon)." ORDER BY fecha_registro DESC");
@@ -1111,11 +1111,21 @@ case 'expulsiones':
 
 if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 
-	$txt_title = 'Control: '._('Expulsiones').' | '._('Expulsar');
+	$txt_title = 'Expulsar: '.$_GET['c'];
 	$txt_nav = array('/control'=>_('Control'), '/control/expulsiones'=>_('Expulsiones'), _('Expulsar'));
 
 
 	if (isset($sc[$pol['user_ID']])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
+
+
+	if (is_numeric(str_replace('-', '', $_GET['c']))) {
+		$nicks = array();
+		$result = sql("SELECT nick FROM users WHERE ID IN ('".implode("','", explode('-', $_GET['c']))."') AND estado != 'expulsado'");
+		while ($r = r($result)) { $nicks[] = $r['nick']; }
+		$_GET['c'] = implode('-', $nicks);
+	}
+
+
 	$txt .= '
 
 <p>'._('Las expulsiones son efectuadas por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminación forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.virtualpol.com/TOS">Condiciones de Uso</a>').'.</p>
@@ -1123,8 +1133,8 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 <form action="/accion.php?a=expulsar" method="post">
 
 <ol>
-<li><b>'._('Nick').':</b> '._('el usuario a expulsar').'.<br />
-<input type="text" value="'.$_GET['c'].'" name="nick" size="20" maxlength="20" style="font-weight:bold;" />
+<li><b>'._('Nick').':</b> '._('usuarios a expulsar').'.<br />
+<input type="text" value="'.str_replace('-', ' ', $_GET['c']).'" name="nick" size="50" maxlength="900" style="font-weight:bold;" required />
 <br /><br /></li>
 
 <li>'._('<b>Motivo de expulsión:</b> si son varios elegir el mas claro').'.<br />

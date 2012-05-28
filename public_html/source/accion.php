@@ -417,16 +417,15 @@ case 'expulsar':
 			evento_log('Expulsión a '.$r['tiempo'].' cancelada');
 		}
 
-	} elseif ((isset($sc[$pol['user_ID']])) AND ($_POST['razon']) AND ($_POST['nick']) AND (!in_array($_POST['nick'], $sc))) { 
+	} elseif ((nucleo_acceso('supervisores_censo')) AND ($_POST['razon']) AND ($_POST['nick']) AND (!in_array($_POST['nick'], $sc))) { 
 
 		if ($_POST['caso']) { $_POST['razon'] .= ' caso '.ucfirst($_POST['caso']); }
 
-		$_POST['motivo'] = ereg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
+		$_POST['motivo'] = strip_tags($_POST['motivo']);
 
-		$result = sql("SELECT nick, ID FROM users WHERE nick = '".$_POST['nick']."' AND estado != 'expulsado' LIMIT 1");
+		$result = sql("SELECT nick, ID FROM users WHERE nick IN ('".implode("','", explode(' ', $_POST['nick']))."') AND estado != 'expulsado' LIMIT 8");
 		while ($r = r($result)) {
 			sql("UPDATE users SET estado = 'expulsado' WHERE ID = '".$r['ID']."' LIMIT 1");
-
 			sql("DELETE FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$r['ID']."'");
 
 			// Cambia a "En Blanco" los votos. Es equivalente a anular el voto.

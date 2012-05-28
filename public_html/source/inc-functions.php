@@ -59,34 +59,30 @@ function verbalizar_acceso($tipo, $valor='') {
 		case 'nivel': $t = _('ciudadanos con nivel').' <em>'.$valor.'</em> '._('o mayor').' (<a href="/cargos">'._('Ver cargos').'</a>)'; break;
 		
 		case 'examenes':
-			global $link;
 			$val = array();
-			$result = sql("SELECT titulo AS nom FROM examenes WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")", $link);
+			$result = sql("SELECT titulo AS nom FROM examenes WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")");
 			while($r = r($result)) { $val[] = $r['nom']; }
 			$t = _('ciudadanos con los exámenes aprobados').': <a href="/examenes">'.implode(', ', $val).'</a>';
 			break;
 
 		case 'cargo':
-			global $link;
 			$val = array();
 			if ($valor == '') { $valor = 'null'; }
-			$result = sql("SELECT cargo_ID, nombre AS nom FROM cargos WHERE pais = '".PAIS."' AND cargo_ID IN (".implode(',', explode(' ', $valor)).") ORDER BY nivel DESC", $link);
+			$result = sql("SELECT cargo_ID, nombre AS nom FROM cargos WHERE pais = '".PAIS."' AND cargo_ID IN (".implode(',', explode(' ', $valor)).") ORDER BY nivel DESC");
 			while($r = r($result)) { $val[] = '<a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" title="'.$r['nom'].'" alt="'.$r['nom'].'" width="16" height="16" /></a>'; }
 			$t = _('ciudadanos con cargo').': '.implode(' ', $val).' (<a href="/cargos">'._('Ver cargos').'</a>)';
 			break;
 
 		case 'afiliado':
-			global $link;
 			$val = array();
-			$result = sql("SELECT siglas AS nom FROM partidos WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")", $link);
+			$result = sql("SELECT siglas AS nom FROM partidos WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")");
 			while($r = r($result)) { $val[] = $r['nom']; }
 			$t = _('ciudadanos afiliados al partido').' <a href="/partidos">'.implode('', $val).'</a>';
 			break;
 
 		case 'grupos':
-			global $link;
 			$val = array();
-			$result = sql("SELECT nombre AS nom FROM grupos WHERE pais = '".PAIS."' AND grupo_ID IN (".implode(',', explode(' ', $valor)).")", $link);
+			$result = sql("SELECT nombre AS nom FROM grupos WHERE pais = '".PAIS."' AND grupo_ID IN (".implode(',', explode(' ', $valor)).")");
 			while($r = r($result)) { $val[] = $r['nom']; }
 			$t = _('ciudadanos afiliados al grupo:').' <a href="/grupos">'.implode(', ', $val).'</a>';
 			break;
@@ -144,7 +140,7 @@ function control_acceso($titulo=false, $name='', $acceso='', $cfg='', $quitar_ar
 
 
 function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
-	global $pol, $link;
+	global $pol;
 	switch ($user_ID) {
 
 		case 'print':
@@ -156,7 +152,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 				$result = sql("SELECT v.ID, pais, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
 				FROM votacion `v`
 				LEFT OUTER JOIN votacion_votos `vv` ON v.ID = vv.ref_ID AND vv.user_ID = '".$pol['user_ID']."'
-				WHERE v.estado = 'ok' AND (v.pais = '".PAIS."' OR acceso_votar IN ('supervisores_censo', 'privado')) AND vv.ID IS null", $link);
+				WHERE v.estado = 'ok' AND (v.pais = '".PAIS."' OR acceso_votar IN ('supervisores_censo', 'privado')) AND vv.ID IS null");
 				while($r = r($result)) {
 					if ((nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) { 
 						$pol['config']['info_consultas']++;
@@ -167,7 +163,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 				}
 
 				// NOTIFICACIONES
-				$result = sql("SELECT noti_ID, visto, texto, url, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 7", $link);
+				$result = sql("SELECT noti_ID, visto, texto, url, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 7");
 				while($r = r($result)) {
 					$total_num += $r['num'];
 					if ($r['visto'] == 'false') { $nuevos_num += $r['num']; }
@@ -180,17 +176,17 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 
 
 		case 'visto': 
-			$result = sql("SELECT noti_ID, visto, texto, url FROM notificaciones WHERE noti_ID = '".$texto."' LIMIT 1", $link);
+			$result = sql("SELECT noti_ID, visto, texto, url FROM notificaciones WHERE noti_ID = '".$texto."' LIMIT 1");
 			while($r = r($result)) {
 				if ($r['visto'] == 'false') {
-					sql("UPDATE notificaciones SET visto = 'true' WHERE visto = 'false' AND user_ID = '".$pol['user_ID']."' AND texto = '".$r['texto']."'", $link); 
+					sql("UPDATE notificaciones SET visto = 'true' WHERE visto = 'false' AND user_ID = '".$pol['user_ID']."' AND texto = '".$r['texto']."'"); 
 				}
 				redirect($r['url']);
 			}
 			break;
 
 		default: 
-			sql("INSERT INTO notificaciones (user_ID, texto, url, emisor) VALUES ('".$user_ID."', '".$texto."', '".$url."', '".$emisor."')", $link);
+			sql("INSERT INTO notificaciones (user_ID, texto, url, emisor) VALUES ('".$user_ID."', '".$texto."', '".$url."', '".$emisor."')");
 			return true;
 	}
 }
@@ -243,16 +239,14 @@ function ocultar_IP($IP, $tipo='IP') {
 }
 
 function redirect($url, $r301=true) {
-	global $link;
 	if ($r301 == true) { header('HTTP/1.1 301 Moved Permanently'); } 
 	header('Location: '.$url); 
-	mysql_close($link);
+	mysql_close();
 	exit;
 }
 
 function get_supervisores_del_censo() {
-	global $link;
-	$result = sql("SELECT ID, nick FROM users WHERE SC = 'true'", $link);
+	$result = sql("SELECT ID, nick FROM users WHERE SC = 'true' AND estado = 'ciudadano'");
 	while($r = r($result)){ $sc[$r['ID']] = $r['nick']; }
 	return $sc; // Devuelve un array con los Supervisores del Censo activos. Formato: $array[user_ID] = nick;
 }
@@ -311,15 +305,15 @@ function boton($texto, $url=false, $confirm=false, $size=false, $pols='', $html_
 
 // FUNCION MALA. REEMPLAZAR URGENTE.
 function paginacion($type, $url, $ID, $num_ahora=null, $num_total=null, $num='10') {
-	global $link, $p_limit, $p_paginas, $p_init;
+	global $p_limit, $p_paginas, $p_init;
 	if (!$num_total) {
 		switch ($type) {
 			case 'subforo': 
-				$result = mysql_fetch_row(sql("SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE ID = '".$ID."'", $link));
+				$result = mysql_fetch_row(sql("SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE ID = '".$ID."'"));
 				$num_total = $result[0];
 				break;
 			case 'eventos': 
-				$result = mysql_fetch_row(sql("SELECT COUNT(ID) FROM log WHERE pais = '".PAIS."'", $link));
+				$result = mysql_fetch_row(sql("SELECT COUNT(ID) FROM log WHERE pais = '".PAIS."'"));
 				$num_total = $result[0];
 				break;
 		}

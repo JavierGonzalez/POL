@@ -23,11 +23,27 @@ while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 
-$test = 'asdasda.qweq.asd.google.es';
 
-$test2 = explode('.', $test);
+$result = sql("SELECT ID, host FROM users_con");
+while ($r = r($result)) { 
+	$host = $r['host'];
+	if (!is_numeric(substr($host, -1, 1))) {
+		$hoste = explode('.', $host);
+		$ISP = ucfirst($hoste[count($hoste)-(in_array($hoste[count($hoste)-2], array('com', 'net', 'org'))?3:2)]).(!in_array($hoste[count($hoste)-1], array('com', 'net'))?' '.strtoupper($hoste[count($hoste)-1]):'');
+		if ((stristr($host, 'static')) OR (stristr($host, 'client'))) { $ISP .= ' (static)'; }
+		elseif (stristr($host, 'dyn')) { $ISP .= ' (dynamic)'; }
+		elseif ((stristr($host, 'proxy')) OR (stristr($host, 'cache'))) { $ISP .= ' (proxy)'; }
+		if ((stristr($host, 'vpn')) OR (stristr($host, 'vps'))) { $ISP = 'Ocultado (VPN)'; } 
+		if ((stristr($host, 'tor')) OR (stristr($host, 'anon'))) { $ISP = 'Ocultado (TOR)'; }
+		$ISP = "'".$ISP."'";
+	} else { $ISP = "NULL"; }
+	sql("UPDATE users_con SET ISP = ".$ISP." WHERE ID = '".$r['ID']."' LIMIT 1");
+}
 
-$txt .= $test2[count($test2)-2].'.'.$test2[count($test2)-1];
+
+
+
+
 
 $txt_title = 'Test';
 $txt_nav = array('Test');

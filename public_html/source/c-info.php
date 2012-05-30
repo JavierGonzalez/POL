@@ -260,7 +260,7 @@ $txt .= '
 </tr>';
 
 	switch ($_GET['b']) {
-		case 'busqueda': $order_by = 'WHERE (text LIKE \'%'.$_GET['c'].'%\' OR nombre LIKE \'%'.$_GET['c'].'%\' OR nick LIKE \'%'.$_GET['c'].'%\' OR datos LIKE \'%'.$_GET['c'].'%\') AND pais = \''.PAIS.'\' ORDER BY fecha_last DESC'; break;
+		case 'busqueda': $order_by = 'WHERE (text LIKE \'%'.$_GET['c'].'%\' OR nombre LIKE \'%'.$_GET['c'].'%\' OR nick LIKE \'%'.$_GET['c'].'%\' OR datos LIKE \'%'.$_GET['c'].'%\') ORDER BY fecha_last DESC'; break;
 		case 'nivel': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' AND ID != \'1\' ORDER BY nivel DESC'; break;
 		case 'nombre': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY nick ASC'; break;
 		case 'nuevos': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY fecha_registro DESC'; break;

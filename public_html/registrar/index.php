@@ -305,22 +305,21 @@ $txt .= '</blockquote>';
 		while($r = r($result)) { $ciudadanos_num = $r['num']; }
 
 		// pais_des
-		$result = sql("SELECT valor FROM config WHERE pais = '".$pais."' AND dato = 'pais_des' LIMIT 1");
-		while($r = r($result)) { $pais_des = $r['valor']; }
+		$result = sql("SELECT dato, valor FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo')");
+		while($r = r($result)) { $pais_array[$r['dato']] = $r['valor']; }
 		$n++;
 		$txt .= '
 <tr style="font-size:19px;">
 <td valign="middle"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" /></td>
 <td><input type="radio" name="pais" id="pr_'.$pais.'" value="'.$pais.'"'.($n==1?' checked="checked"':'').' /></td>
-<td valign="middle" nowrap="nowrap"><label for="pr_'.$pais.'" style="cursor:pointer;"><b>'.$pais.'</b> &nbsp; '.$pais_des.'</label></td>
-<td valign="middle" align="right">'.num($ciudadanos_num).' '._('ciudadanos').'</td>
+<td valign="middle" nowrap="nowrap"><label for="pr_'.$pais.'" style="cursor:pointer;"><b>'.$pais_array['pais_des'].'</b><br /><span class="gris"><b>'.num($ciudadanos_num).'</b> '._('ciudadanos').', '.ucfirst($pais_array['tipo']).'.</span></label></td>
 </tr>';
 	}
 
 	$txt .= '
 <tr>
 <td colspan="2"></td>
-<td colspan="2">'.boton(_('Solicitar ciudadanía'), 'submit', false, 'large blue').'</td>
+<td>'.boton(_('Solicitar ciudadanía'), 'submit', false, 'large blue').'</td>
 </tr>
 
 </table>

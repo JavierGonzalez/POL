@@ -23,25 +23,38 @@ while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 
-
-$result = sql("SELECT ID, host FROM users_con");
+$result = sql("SELECT ID, nav FROM users_con WHERE nav_so IS NULL");
 while ($r = r($result)) { 
-	$host = $r['host'];
-	if (!is_numeric(substr($host, -1, 1))) {
-		$hoste = explode('.', $host);
-		$ISP = ucfirst($hoste[count($hoste)-(in_array($hoste[count($hoste)-2], array('com', 'net', 'org'))?3:2)]).(!in_array($hoste[count($hoste)-1], array('com', 'net'))?' '.strtoupper($hoste[count($hoste)-1]):'');
-		if ((stristr($host, 'static')) OR (stristr($host, 'client'))) { $ISP .= ' (static)'; }
-		elseif (stristr($host, 'dyn')) { $ISP .= ' (dynamic)'; }
-		elseif ((stristr($host, 'proxy')) OR (stristr($host, 'cache'))) { $ISP .= ' (proxy)'; }
-		if ((stristr($host, 'vpn')) OR (stristr($host, 'vps'))) { $ISP = 'Ocultado (VPN)'; } 
-		if ((stristr($host, 'tor')) OR (stristr($host, 'anon'))) { $ISP = 'Ocultado (TOR)'; }
-		$ISP = "'".$ISP."'";
-	} else { $ISP = "NULL"; }
-	sql("UPDATE users_con SET ISP = ".$ISP." WHERE ID = '".$r['ID']."' LIMIT 1");
+	//$i = get_browser($r['nav'], true);
+	//sql("UPDATE users_con SET nav_so = '".$i['platform']." ".$i['parent']."' WHERE ID = '".$r['ID']."' LIMIT 1");
 }
+$txt .= 'OK';
 
 
+/*
+$txt .= '<table>';
+$result = sql("SELECT ID, nick, IP_proxy, host FROM users WHERE IP_proxy != '' ORDER BY IP_proxy ASC");
+while ($r = r($result)) { 
+	$txt .= '<tr>
+<td>'.crear_link($r['nick']).'</td>
+<td align="right">'.$r['host'].'</td>
+<td align="right">'.(filter_var($r['IP_proxy'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)?'OK':'<b>ERROR</b>').'</td>
+<td>'.$r['IP_proxy'].'</td>
+<td>'.gethostbyaddr($r['IP_proxy']).'</td>
+</tr>';
 
+	//sql("UPDATE users SET IP_proxy = '".(filter_var($r['IP_proxy'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)&&substr($r['IP_proxy'], 0, 3)!='127'?$r['IP_proxy']:'')."' WHERE ID = '".$r['ID']."' LIMIT 1");
+}
+$txt .= '</table>';
+*/
+
+// 127.0.0.1
+
+/*
+if (filter_var('62.87.94.250', FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+	$txt .= 'OK';
+} else { $txt .= 'ERROR'; }
+*/
 
 
 

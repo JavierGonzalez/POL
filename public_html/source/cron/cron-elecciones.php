@@ -40,7 +40,7 @@ while($r = r($result)) {
 VALUES (
 '".PAIS."', 
 '".$elecciones_num."&ordf; Elecciones a ".$r['nombre']."', 
-'Elecciones periódicas y automáticas para el cargo <b>".$r['nombre']."</b>.<br /><br />
+'Elecciones periódicas y automáticas para el cargo <a href=\"/cargos/".$r['cargo_ID']."\"><img src=\"".IMG."cargos/".$r['cargo_ID'].".gif\" alt=\"".$r['nombre']."\" /> <b>".$r['nombre']."</b></a>.<br /><br />
 Realizadas cada <b>".$r['elecciones_cada']." días</b>, durante <b>".$r['elecciones_durante']." días</b>. ".($r['elecciones_electos']==1?"Será electo el candidato más votado":"Serán electos los <b>".$r['elecciones_electos']." candidatos más votados</b>").", de entre <b>".count($candidatos_nick)." candidatos</b>.', 
 'En Blanco|".implode('|',$candidatos_nick)."|', 
 '',

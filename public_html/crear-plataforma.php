@@ -182,6 +182,10 @@ sql("CREATE TABLE `".strtolower($r['pais'])."_foros_msg` (
   KEY `estado` (`estado`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1");
 
+
+			// Subforo General
+			sql("INSERT INTO ".strtolower($r['pais'])."_foros (url, title, descripcion, acceso, time, estado, acceso_msg, acceso_leer, acceso_escribir, acceso_escribir_msg, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_msg, limite) VALUES ('general', 'General', '', '1', '1', 'ok', '0', 'anonimos', 'ciudadanos', 'ciudadanos_global', '', '', '', '10')");
+
 			// PREGUNTA DE EXAMEN GENERICA
 			sql("INSERT INTO examenes_preg (pais, examen_ID, user_ID, time, pregunta, respuestas, tiempo) VALUES ('".$r['pais']."', '0', '0', '".$date."', 'Quieres ser candidato de este cargo', 'SI|NO', '15')");
 			
@@ -216,7 +220,7 @@ sql("CREATE TABLE `".strtolower($r['pais'])."_foros_msg` (
 		$txt .= '<tr>
 <td>'.($r['estado']=='pendiente'?boton('Crear', '/crear-plataforma.php?a=admin&b=aprobar&ID='.$r['ID'], '¿Estás seguro de crear esta plataforma?', 'red'):'').'</td>
 <td nowrap>'.timer($r['time']).'</td>
-<td>'.crear_link($r['nick']).'</td>
+<td><a href="http://15m.virtualpol.com/perfil/'.$r['nick'].'">'.$r['nick'].'</a></td>
 <td><b>'.ucfirst($r['estado']).'</b></td>
 <td><b style="font-size:20px;">'.$r['pais'].'</b></td>
 <td align="right">'.$r['participacion'].'</td>
@@ -247,9 +251,10 @@ sql("CREATE TABLE `".strtolower($r['pais'])."_foros_msg` (
 <tr><td colspan="3">&nbsp;</td></tr>
 
 <tr>
-<td colspan="3"><input type="checkbox" name="condiciones_extra" value="true" /> <b>He leído y acepto las siguientes condiciones adicionales</b>:<br />
+<td colspan="3">
 <ul>
-<li>No se aprobarán nuevas plataformas que supongan una duplicación de otras ya existentes, excepto que sea necesario.</li>
+<li><u style="color:red;"><b>No</b> se aprobarán nuevas plataformas que supongan <b>una duplicación de otras ya existentes</b></u>. Debes saber que cada plataforma de VirtualPol puede albergar centenares de miles de participantes (creando multiples salas de chat, foros, documentos, votaciones... publicas y privadas). Esta condición es necesaria para concentrar la participación masiva, en lugar de dar pié a la atomización y fragmentación de la participación. Para que una plataforma funcione correctamente debe tener al menos 100 participantes activos para que compitan por los cargos y todo adquiera sentido.</li>
+<li>Solo se creará una plataforma a grupos de personas preexistentes. Si estás solo y quieres iniciar un grupo puedes comenzar a crearlo dentro de cualquiera de las plataformas existentes.</li>
 <li>Cada plataforma es gratuita pero consume recursos, por lo tanto debe existir una justificación para que sea creada, más allá del interés personal de una o pocas personas.</li>
 <li>Cualquier plataforma podrá ser eliminada por inactividad si tiene menos de 30 usuarios activos.</li>
 <li>Las plataformas serán ordenadas y priorizadas en función de su numero de ciudadanos inscritos.</li>
@@ -257,6 +262,7 @@ sql("CREATE TABLE `".strtolower($r['pais'])."_foros_msg` (
 <li><b>Cada plataforma es soberana</b> (es un principio de VirtualPol, ver principios en el <a href="/tos" target="_blank">TOS</a>, segundo apartado) y por lo tanto decide su propia gestión. Sin embargo la primera "legislatura" ostentará el poder el usuario que solicita la plataforma. Después el poder dependerá de unas elecciones automáticas y que -de ningún modo- se podrán detener u obstaculizar. Esto significa -explicitamente- que <b>el fundador inicial de la plataforma puede perder totalmente su control</b>, mediante principios democráticos.</li>
 <li>Si -del modo que fuera- en una plataforma se rompe el principio "Democracia", cosa que tecnicamente es imposible, tendrá que ser intervenida por VirtualPol para restaurar de nuevo la democracia automática, de la forma menos intrusiva posible.</li>
 </ul>
+<input type="checkbox" name="condiciones_extra" value="true" /> <b>He leído y aceptado estas condiciones adicionales</b>.<br /><br /><br />
 </td>
 </tr>
 
@@ -269,12 +275,12 @@ sql("CREATE TABLE `".strtolower($r['pais'])."_foros_msg` (
 <tr><td colspan="3">&nbsp;</td></tr>
 
 <tr>
-<td align="right" valign="top"><b>Esquema de Poder</b></td>
+<td align="right" valign="top"><b>Cargo primario</b></td>
 <td colspan="2">
 <input type="radio" name="asamblea" value="false" checked="checked" /> <b>Presidencial: Un presidente electo.</b><br />
 Organización muy estable y operativa.<br />
 <br />
-<input type="radio" name="asamblea" value="true" /> <b>Parlamentario: Nueve coordinadores electos (iguales entre sí).</b><br />
+<input type="radio" name="asamblea" value="true" /> <b>Parlamentario: Coordinadores electos (iguales entre sí).</b><br />
 Organización menos estable y operativa, pero más representativo.<br />
 <br />
 <em>* El sistema permite establecer jerarquias completas de cargos y responsabilidades. Un organigrama completo y escalable. Incluso elecciones independientes para cada cargo. Sin embargo debe existir un cargo "primario" y electo, del que parte toda la responsabilidad. En cualquier caso siempre estará disponible una votación de tipo "ejecutiva" que -con el apoyo de la mayoría- el sistema puede destituir y reemplazar cualquier cargo.</em>
@@ -299,7 +305,7 @@ Organización menos estable y operativa, pero más representativo.<br />
 <tr>
 <td align="right" nowrap="nowrap"><b>Previsión de participación</b></td>
 <td><input type="text" name="participacion" value="50" style="text-align:right;" size="5" maxlength="5" /></td>
-<td><b>Número de ciudadanos activos previstos tras 30 días</b>: Es importante que haya un potencial considerable. Una plataforma con solo 25 usuarios carece de sentido y no suele funcionar al tener poca competencia para los cargos relevantes.</td>
+<td><b>Número de ciudadanos activos previstos tras 30 días</b>: Es importante que haya un potencial considerable. Una plataforma con solo 25 usuarios carece de sentido y es imposible que funcione, al no haber competencia para los cargos.</td>
 </tr>
 
 <tr><td colspan="3">&nbsp;</td></tr>

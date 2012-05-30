@@ -1480,6 +1480,15 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 			redirect('http://'.strtolower($pais).'.'.DOMAIN.'/votacion/'.$_POST['ref_ID']);
 
 	} elseif (($_GET['b'] == 'eliminar') AND (is_numeric($_GET['ID']))) { 
+		$result = sql("SELECT ID, user_ID, estado, tipo FROM votacion WHERE estado = 'borrador' AND ID = '".$_GET['ID']."' AND pais = '".PAIS."' LIMIT 1");
+		while($r = r($result)) {
+			if (($r['user_ID'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso'][$r['tipo']]))) {
+				sql("DELETE FROM votacion WHERE ID = '".$r['ID']."' LIMIT 1");
+				sql("DELETE FROM votacion_votos WHERE ref_ID = '".$r['ID']."'");
+			}
+		}
+
+	} elseif (($_GET['b'] == 'finalizar') AND (is_numeric($_GET['ID']))) { 
 		$result = sql("SELECT ID, user_ID, estado, tipo FROM votacion WHERE estado != 'end' AND ID = '".$_GET['ID']."' AND pais = '".PAIS."' LIMIT 1");
 		while($r = r($result)) {
 			if (($r['user_ID'] == $pol['user_ID']) OR (($r['estado'] == 'borrador') AND (nucleo_acceso($vp['acceso'][$r['tipo']])))) {

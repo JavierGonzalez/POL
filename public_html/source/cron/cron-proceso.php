@@ -43,11 +43,10 @@ while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 // EXPIRACION DE CANDIDATOS INACTIVOS
-$result = sql("SELECT user_ID, (SELECT fecha_last FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_last FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'false' GROUP BY user_ID");
-$txt .= mysql_error();
+$result = sql("SELECT user_ID, (SELECT fecha_last FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_last FROM cargos_users WHERE pais = '".PAIS."' AND aprobado = 'si' GROUP BY user_ID");
 while ($r = r($result)) { 
-	if ((!$r['fecha_last']) OR (strtotime($r['fecha_last']) < (time() - 60*60*24*$pol['config']['examenes_exp']))) {
-		sql("DELETE FROM cargos_users WHERE user_ID = '".$r['user_ID']."' AND cargo = 'false'");
+	if (($r['fecha_last']) AND (strtotime($r['fecha_last']) < (time() - 60*60*24*$pol['config']['examenes_exp']))) {
+		sql("UPDATE cargos_users SET aprobado = 'no' WHERE user_ID = '".$r['user_ID']."'");
 	}
 }
 

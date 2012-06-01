@@ -26,7 +26,6 @@ define('CLAVE_DNIE', '...');
 define('CLAVE_API_TRACTIS', '...'); 
 define('CLAVE_API_ETHERPAD', '...'); 
 
-
 define('FB_APIKEY', '...');
 define('FB_SECRET', '...');
 

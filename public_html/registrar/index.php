@@ -136,11 +136,15 @@ case 'registrar': //CHECK
 									sql("INSERT INTO users 
 (nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, pais, pass, pass2, host, IP_proxy, dnie_check, bando, nota_SC, fecha_legal) 
 VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '".(in_array($_GET['p'], $vp['paises'])?$_GET['p']:'ninguno')."', '".$pass_md5."', '".$pass_sha."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')");
-
 									$result = sql("SELECT ID FROM users WHERE nick = '".$nick."' LIMIT 1");
 									while($r = r($result)){ $new_ID = $r['ID']; }
+									
+									if (!$_COOKIE['trz']) {
+										$_COOKIE['trz'] = round(microtime(true)*10000);
+										setcookie('trz', $_COOKIE['trz'], (time()+(86400*365)), '/', USERCOOKIE);
+									}
 
-									users_con($new_ID, '', 'login');
+									users_con($new_ID, $_REQUEST['extra'], 'login');
 
 									if ($ref) {
 										sql("UPDATE referencias SET new_user_ID = '" . $new_ID . "' WHERE IP = '" . $longip . "' LIMIT 1");
@@ -353,6 +357,7 @@ $(document).ready(function() {
 
 	$txt .= '<form action="?a=registrar'.($_GET['p']?'&p='.$_GET['p']:'').($_GET['r']?'&r='.$_GET['r']:'').'" method="POST" id="form_crear_ciudadano">
 
+<input type="hidden" name="extra" value="" id="input_extra" />
 <input type="hidden" name="repid" value="' . $rn . '" />
 <input type="hidden" name="crono" value="' . time() . '" />
 '.($_GET['p']?'<input type="hidden" name="p" value="'.$_GET['p'].'" />':'').'
@@ -409,7 +414,7 @@ $(document).ready(function() {
 
 <tr>
 <td></td>
-<td>'.boton(_('Crear ciudadano'), 'submit', false, 'large blue').'</td>
+<td><button onclick="login_start();" class="large blue">'._('Crear ciudadano').'</button></td>
 </tr>
 
 </table>
@@ -418,7 +423,14 @@ $(document).ready(function() {
 
 </form>
 
-<script type="text/javascript" src="'.IMG.'lib/md5.js"></script>';
+<script type="text/javascript" src="'.IMG.'lib/md5.js"></script>
+<script type="text/javascript">
+timestamp_start = Math.round(+new Date()/1000);
+function login_start() {
+	timestamp_end = Math.round(+new Date()/1000);
+	$("#input_extra").val(screen.width + "x" + screen.height + "|" + screen.availWidth + "x" + screen.availHeight + "|" + Math.round(timestamp_end - timestamp_start) + "|" + screen.colorDepth + "|");
+}
+</script>';
 
 }
 

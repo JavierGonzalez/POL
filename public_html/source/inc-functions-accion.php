@@ -7,28 +7,6 @@
 ** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
 */
 
-function indexar_i18n() {
-	// Funcion inutil, cuyo unico fin es indexar textos del sistema en el sistema gettext de i18n
-	
-	// tipos votacion
-	$null = _('sondeo')._('referendum')._('parlamento')._('cargo')._('elecciones')._('votación');
-	$null = _('Sondeo')._('Referendum')._('Parlamento')._('Cargo')._('Elecciones')._('Votación');
-	
-	// Tipos nucleo acceso
-	$null = _('Privado') . _('Excluir')._('Afiliado')._('Confianza')._('Cargo')._('Grupos') . _('Nivel')._('Antiguedad')._('Autentificacion')._('Supervisores censo')._('Ciudadanos') . _('Ciudadanos global')._('Anonimos');
-	
-	// Estados votacion
-	$null = _('ok')._('end')._('del')._('borrador');
-	
-	// Tiempos
-	$null = _('años')._('meses')._('semanas')._('días')._('horas')._('minutos')._('segundos')._('Pocos segundos');
-
-	// Otros
-	$null = _('puntos')._('estandar')._('multiple')._('ninguno') . _('turista')._('extranjero')._('ciudadano')._('expulsado')._('validar')._('borrado')._('activo') . _('inactivo')._('cancelado')._('cancelar')._('En')._('Hace')._('min')._('seg');
-}
-
-
-
 function api_facebook($accion, $item_ID, $sistema=false) {
 	/* DOCUMENTACION FB
 GRAPH API - https://developers.facebook.com/docs/reference/api/message/
@@ -584,12 +562,23 @@ function users_con($user_ID, $extra='', $tipo='session') {
 		$ISP = "'".$ISP."'";
 	} else { $ISP = "NULL"; }
 
+
+	$la_IP = explode('.', long2ip($IP));
+	$result = sql("SELECT IP_pais FROM users_con WHERE IP_rango = '".$la_IP[0].".".$la_IP[1]."' LIMIT 1");
+	while($r = r($result)){ $el_pais = "'".$r['IP_pais']."'"; }
+	if (!$el_pais) { 
+		$res = file_get_contents('http://api.ipinfodb.com/v3/ip-city/?key='.CLAVE_API_ipinfodb.'&ip='.$la_IP[0].'.'.$la_IP[1].'.'.rand(1,254).'.'.rand(1,254));
+		$res = strtoupper(explodear(';', $res, 3));
+		if (strlen($res) != 2) { $res = '??'; }
+		$el_pais = "'".$res."'";
+	}
+
 	$_SERVER['HTTP_X_FORWARDED_FOR'] = (filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)&&substr($_SERVER['HTTP_X_FORWARDED_FOR'], 0, 3)!='127'?$_SERVER['HTTP_X_FORWARDED_FOR']:'');
 	
 	$i = get_browser(null, true);
 
-	sql("INSERT INTO users_con (user_ID, time, IP, host, proxy, nav, login_ms, login_seg, nav_resolucion, ISP, tipo, nav_so) 
-VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".$_SERVER['HTTP_X_FORWARDED_FOR']."', '".$_SERVER['HTTP_USER_AGENT']." | ".$_SERVER['HTTP_ACCEPT_LANGUAGE']."', '".round((microtime(true)-TIME_START)*1000)."', '".$extra_array[2]."', ".($extra_array[0]?"'".$extra_array[0]." ".$extra_array[3]."'":"NULL").", ".$ISP.", '".$tipo."', '".str_replace('Android Android', 'Android', $i['platform']." ".$i['parent'])."')");
+	sql("INSERT INTO users_con (user_ID, time, IP, host, proxy, nav, login_ms, login_seg, nav_resolucion, ISP, tipo, nav_so, IP_pais, IP_rango, dispositivo) 
+VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".$_SERVER['HTTP_X_FORWARDED_FOR']."', '".$_SERVER['HTTP_USER_AGENT']." | ".$_SERVER['HTTP_ACCEPT_LANGUAGE']."', '".round((microtime(true)-TIME_START)*1000)."', '".$extra_array[2]."', ".($extra_array[0]?"'".$extra_array[0]." ".$extra_array[3]."'":"NULL").", ".$ISP.", '".$tipo."', '".str_replace('Android Android', 'Android', $i['platform']." ".$i['parent'])."', ".$el_pais.", '".$la_IP[0].'.'.$la_IP[1]."', ".($_COOKIE['trz']?"'".$_COOKIE['trz']."'":"NULL").")");
 
 	sql("UPDATE users SET host = '".$host."' WHERE ID = '".$user_ID."' LIMIT 1");
 

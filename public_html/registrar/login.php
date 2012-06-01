@@ -343,17 +343,6 @@ case 'borrar-usuario':
 	redirect('http://www.'.DOMAIN.'/');
 	break;
 
-case 'trz':
-	if (($_GET['x']) AND ($_GET['y']) AND ($_GET['z'])) {
-		$result = sql("SELECT ID FROM users WHERE ID = '".$_GET['y']."' AND api_pass = '".$_GET['z']."' LIMIT 1");
-		while($r = r($result)) {
-			sql("UPDATE users_con SET dispositivo = '".$_GET['x']."' WHERE tipo = 'login' AND user_ID = '".$r['ID']."' ORDER BY time DESC LIMIT 1");
-		}
-	}
-	redirect($_GET['u']);
-	break;
-
-
 
 case 'ser_SC':
 	sql("UPDATE users SET ser_SC = '".($_POST['ser_SC']=='true'?'true':'false')."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
@@ -362,6 +351,16 @@ case 'ser_SC':
 
 
 
+case 'trz':
+	if (($_GET['x']) AND ($_GET['y']) AND ($_GET['z'])) {
+		$result = sql("SELECT ID FROM users WHERE ID = '".$_GET['y']."' AND api_pass = '".$_GET['z']."' LIMIT 1");
+		while($r = r($result)) {
+			setcookie('trz', $_GET['x'], (time()+(86400*365)), '/', USERCOOKIE);
+			sql("UPDATE users_con SET dispositivo = '".$_GET['x']."' WHERE tipo = 'login' AND user_ID = '".$r['ID']."' ORDER BY time DESC LIMIT 1");
+		}
+	}
+	redirect($_GET['u']);
+	break;
 
 case 'login':
 	$nick = strtolower(trim($_REQUEST['user']));
@@ -407,7 +406,7 @@ var ec = new evercookie();
 ec.get("'.$traza_nom.'", function(value) { 
 	if (value === undefined) {
 		var get_ms = new Date().getTime();
-		everc_value = get_ms + Math.floor(Math.random()*1001);
+		everc_value = '.(isset($_COOKIE['trz'])?'"'.$_COOKIE['trz'].'"':'get_ms + Math.floor(Math.random()*1001)').';
 		$("#redirect").attr("content", "9;url='.REGISTRAR.'login.php?a=trz&x=" + everc_value + "&y='.$user_ID.'&z='.$api_pass.'&u='.$url.'");
 		ec.set("'.$traza_nom.'", everc_value);
 	} else { everc_value = value; }

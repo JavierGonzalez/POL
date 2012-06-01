@@ -22,12 +22,10 @@ $result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autolo
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
+$txt .= round(microtime(true)*10000);
 
-$result = sql("SELECT ID, nav FROM users_con WHERE nav_so IS NULL");
-while ($r = r($result)) { 
-	//$i = get_browser($r['nav'], true);
-	//sql("UPDATE users_con SET nav_so = '".$i['platform']." ".$i['parent']."' WHERE ID = '".$r['ID']."' LIMIT 1");
-}
+
+
 $txt .= 'OK';
 
 

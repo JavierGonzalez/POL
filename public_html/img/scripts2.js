@@ -476,8 +476,8 @@ function enriquecer(m, bbcode) {
 	m = m.replace(/(\s|^):\*/gi,			' <img src="'+IMG+'smiley/muacks.gif" alt=":*" border="0" title=":*" width="15" height="15" />');
 	m = m.replace(/(\s|^);\)/gi,			' <img src="'+IMG+'smiley/guino.gif" alt=";)" border="0" title=";)" width="15" height="15" />');
 	m = m.replace(/(\s|^):O/gi,				' <img src="'+IMG+'smiley/bocaabierta.gif" alt=":O" border="0" title=":O" width="15" height="15" />');
-	m = m.replace(/(\s|^)(:troll:|:P)/gi,				' <img src="'+IMG+'smiley/troll.gif" alt=":P" border="0" title=":P" width="15" height="15" />');
-	m = m.replace(/:(tarta|roto2|palm|moneda):/gi,				' <img src="'+IMG+'smiley/$1.gif" alt=":$1:" border="0" title=":$1:" width="16" height="16" />');
+	m = m.replace(/:(tarta|roto2|palm|moneda):/gi,	' <img src="'+IMG+'smiley/$1.gif" alt=":$1:" border="0" title=":$1:" width="16" height="16" />');
+	m = m.replace(/(\s|^)(:troll:)/gi,			' <img src="'+IMG+'smiley/troll.gif" alt=":troll:" border="0" title=":troll:" width="15" height="15" />');
 
 	// URLs
 	m = m.replace(/(\s|^|>)(\/[-A-Z0-9\/_]{3,})/ig, ' <a href="$2" target="_blank">$2</a>'); // /url

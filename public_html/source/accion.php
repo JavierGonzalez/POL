@@ -174,7 +174,7 @@ case 'donacion':
 case 'SC':
 	if (($_GET['b'] == 'nota') AND (nucleo_acceso('supervisores_censo')) AND ($_GET['ID'])) {
 		sql("UPDATE users SET nota_SC = '".strip_tags($_POST['nota_SC'])."' WHERE ID = '".$_GET['ID']."' LIMIT 1");
-		$refer_url = 'control/supervisor-censo';
+		$refer_url = 'sc/filtro/user_ID/'.$_GET['ID'];
 	}
 	break;
 
@@ -411,7 +411,7 @@ case 'expulsar':
 	if ((isset($sc[$pol['user_ID']])) AND ($_GET['b'] == 'desexpulsar') AND ($_GET['ID'])) {
 		$result = sql("SELECT ID, user_ID, tiempo  FROM expulsiones WHERE ID = '".$_GET['ID']."' LIMIT 1");
 		while ($r = r($result)) {
-			sql("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$r['user_ID']."' LIMIT 1");
+			sql("UPDATE users SET estado = 'ciudadano', fecha_last = '".$date."' WHERE ID = '".$r['user_ID']."' LIMIT 1");
 			sql("UPDATE expulsiones SET estado = 'cancelado' WHERE ID = '".$_GET['ID']."' LIMIT 1");
 			//evento_chat('<span class="expulsado"><img src="'.IMG.'varios/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
 			evento_log('Expulsión a '.$r['tiempo'].' cancelada');

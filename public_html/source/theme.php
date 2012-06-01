@@ -45,7 +45,7 @@ if (isset($_GET['bg'])) {
 var _sf_startpt=(new Date()).getTime();
 IMG = '<?=IMG?>';
 p_scroll = false;
-_ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos segundos','En','Hace') AS $d) { echo '"'.$d.'":"'._($d).'",'; } ?>};
+_ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos segundos','Segundos','En','Hace') AS $d) { echo '"'.$d.'":"'._($d).'",'; } ?>};
 </script>
 
 

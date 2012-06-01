@@ -136,8 +136,8 @@ LIMIT 60");
 
 } else if ($_GET['b'] == 'bloqueos') {
 
-	$txt_title = _('Control').': SC | '._('bloqueos');
-	$txt_nav = array('/control'=>_('Control'), '/control/supervisor-censo'=>'SC', _('Bloqueos'));
+	$txt_title = 'SC | '._('bloqueos');
+	$txt_nav['/sc/bloqueos'] = _('Bloqueos');
 
 	$result = sql("SELECT valor, dato FROM config WHERE PAIS IS NULL");
 	while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }

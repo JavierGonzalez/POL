@@ -166,9 +166,9 @@ LIMIT 1");
 				case 'ayuda': 
 					$tipo = 'm';
 					if (PAIS == '15M') {
-						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="http://www.virtualpol.com/video" target="_blank"><b>Bienvenida</b> (video)</a> - <a href="http://15m.'.DOMAIN.'/doc/faq---consultas-a-la-ciudadania/" target="_blank"><b>Ayuda y FAQ</b> (Preguntas frecuentes)</a> - <a href="http://15m.'.DOMAIN.'/doc/la-declaracion-2-0">La Declaraci&oacute;n</a>.</a>';
+						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="/hacer" target="_blank">¿<b>Qué hacer</b>?</a> - <a href="http://www.virtualpol.com/video" target="_blank"><b>Bienvenida</b> (video)</a> - <a href="http://15m.'.DOMAIN.'/doc/faq---consultas-a-la-ciudadania/" target="_blank"><b>Ayuda y FAQ</b> (Preguntas frecuentes)</a> - <a href="http://15m.'.DOMAIN.'/doc/la-declaracion-2-0">La Declaración</a>.</a>';
 					} else {
-						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="http://www.virtualpol.com/video" target="_blank"><b>Bienvenida (video)</b></a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentaci&oacute;n</a>.</a>';
+						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="/hacer" target="_blank">¿<b>Qué hacer</b>?</a> - <a href="http://www.virtualpol.com/video" target="_blank"><b>Bienvenida (video)</b></a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentación</a>.</a>';
 					}
 					break;
 

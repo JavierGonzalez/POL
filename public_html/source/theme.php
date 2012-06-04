@@ -154,6 +154,10 @@ _ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos s
 
 <?php
 
+if (nucleo_acceso('ciudadanos')) {
+	echo '<p style="font-size:18px;margin-left:30px;"><a href="/hacer">¿<b>Qué hacer</b>?</a></p>';
+}
+
 if (($pol['config']['socios_estado']=='true') AND (nucleo_acceso('ciudadanos')) AND (!nucleo_acceso('socios'))) {
 	echo '<p style="text-align:center;">'.boton(_('Inscríbete como socio'), '/socios', false, 'orange small').'</p>';
 }
@@ -289,7 +293,7 @@ if ((ECONOMIA) AND (isset($pol['config']['pols_frase']))) {
 }
 
 if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != '')) {
-	echo '<fieldset class="rich">'.$pol['config']['palabra_gob'].'</fieldset>';
+	echo '<fieldset class="rich">'.(nucleo_acceso($vp['accesos']['control_gobierno'])?'<span style="float:right;"><a href="/control/gobierno">Editar</a></span>':'').$pol['config']['palabra_gob'].'</fieldset>';
 }
 ?>	
 		</div>

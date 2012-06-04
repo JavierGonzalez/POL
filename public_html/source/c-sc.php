@@ -18,7 +18,7 @@ if ((!nucleo_acceso('supervisores_censo')) OR (!isset($pol['user_ID']))) { redir
 $txt_nav['/sc'] = 'Supervisión del Censo';
 
 $txt_tab['/sc'] = 'Principal';
-$txt_tab['/sc/bloqueos'] = _('Bloqueos');
+$txt_tab['/sc/bloqueos'] = 'Backlist';
 $txt_tab['/control/expulsiones'] = 'Expulsiones';
 $txt_tab['/control/supervisor-censo'] = 'Principal (antiguo)';
 $txt_tab['/control/supervisor-censo/factores-secundarios'] = 'Extra (antiguo)';
@@ -126,10 +126,14 @@ if ($_GET['a'] != 'bloqueos') {
 <optgroup label="Filtros">
 <option'.$filtro_sel['/sc/filtro/nuevos'].' value="/sc/filtro/nuevos">Nuevos ciudadanos</option>
 <option'.$filtro_sel['/sc/filtro/actividad'].' value="/sc/filtro/actividad">Última actividad</option>
+</optgroup>
+<optgroup label="Filtros extra">
 <option'.$filtro_sel['/sc/filtro/expulsados'].' value="/sc/filtro/expulsados">Expulsados</option>
 <option'.$filtro_sel['/sc/filtro/SC'].' value="/sc/filtro/SC">Supervisores del Censo</option>
 <option'.$filtro_sel['/sc/filtro/confianza'].' value="/sc/filtro/confianza">Top confianza</option>
+<option'.$filtro_sel['/sc/filtro/desconfianza'].' value="/sc/filtro/desconfianza">Top desconfianza</option>
 <option'.$filtro_sel['/sc/filtro/paises-raros'].' value="/sc/filtro/paises-raros">Paises raros</option>
+<option'.$filtro_sel['/sc/filtro/mas-de-un-pais'].' value="/sc/filtro/mas-de-un-pais">Más de un país</option>
 </optgroup>
 </select> &nbsp; 
 
@@ -249,12 +253,24 @@ case 'filtro':
 			$sql_where = "'true' = 'true' GROUP BY user_ID";
 			$sql_order = "voto_confianza DESC"; 
 			break;
+		
+		case 'desconfianza':  
+			$sql_where = "'true' = 'true' GROUP BY user_ID";
+			$sql_order = "voto_confianza ASC"; 
+			break;
 
 		case 'paises-raros':
 			$paises_habituales = 'ES AR CO MX US UK FR PE DE EC DO';
 			$sql_where = "IP_pais NOT IN ('".implode("','", explode(' ', $paises_habituales))."') GROUP BY user_ID";
 			$sql_order = "IP_pais ASC"; 
 			break;
+
+		case 'mas-de-un-pais':
+			$sql_select = ", COUNT(DISTINCT IP_pais) AS num";
+			$sql_where = "IP_pais != '??' GROUP BY user_ID HAVING num > 1";
+			$sql_order = "num DESC"; 
+			break;
+
 
 		case 'actividad':
 		default: 
@@ -280,7 +296,7 @@ FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
 WHERE ".$sql_where."
-ORDER BY ".$sql_order." LIMIT 100");
+ORDER BY ".$sql_order." LIMIT 50");
 	$txt .= mysql_error();
 	while ($r = r($result)) { $txt .= print_td($r); }
 	$txt .= '</table></fieldset>';
@@ -303,12 +319,26 @@ default:
 <th>Pantalla</th>
 <th></th>
 </tr>';
+
+
+
+
+$IP_publicas = array(
+'85.62.233.162', // Orange movil
+'85.62.234.162', // Orange movil
+'85.62.233.161', // Orange movil
+'93.186.23.83', // Blackberry
+);
+foreach ($IP_publicas AS $IPs) { $longIP_publicas[] = ip2long($IPs); }
+
+
 	$clones_array_full = array();
 	$result = sql("SELECT COUNT(DISTINCT user_ID) AS num, IP 
 FROM users_con
-GROUP BY IP
-HAVING num > 1
+WHERE IP NOT IN ('".implode("','", $longIP_publicas)."')
+GROUP BY IP HAVING num > 1
 ORDER BY num DESC, IP ASC");
+$txt .= mysql_error();
 	while ($r = r($result)) { 
 		$clones_array = array();
 		$clones_nick_array = array();
@@ -513,12 +543,14 @@ function unico($ID, $es='', $print=false, $ajustar=false) {
 function print_td($r, $count=false) {
 	global $pass_simple, $vp, $pol;
 	return '<tr>
-<td nowrap colspan="2"><a href="/sc/filtro/user_ID/'.$r['user_ID'].'" class="button blue small">&nbsp;</a> <a href="/control/expulsiones/expulsar/'.$r['nick'].'" class="button red small">&nbsp;</a></td>
+<td nowrap><a href="/sc/filtro/user_ID/'.$r['user_ID'].'" class="button blue small">&nbsp;</a> <a href="/control/expulsiones/expulsar/'.$r['nick'].'" class="button red small">&nbsp;</a></td>
 
 '.($count!==false?'<td align="right"><b>'.$count.'.</b></td>':'').'
 
-<td nowrap style="background:'.$vp['bg'][$r['pais']].';"><span class="gris" style="float:right;"><span'.($r['tipo']=='login'?' style="font-weight:bold;"':'').'>'.timer($r['time']).'</span> <span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span> '.($pol['user_ID']&&$r['user_ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['user_ID'].'" class="votar" type="confianza" name="'.$r['user_ID'].'" value="'.$r['has_votado'].'"></span>':'').'</span>
+<td nowrap style="background:'.$vp['bg'][$r['pais']].';"><span class="gris" style="float:right;"><span'.($r['tipo']=='login'?' style="font-weight:bold;"':'').'>'.timer($r['time']).'</span></span>
 <b style="font-size:16px;">'.crear_link($r['nick'], 'nick', $r['estado'], $r['pais']).'</b></td>
+
+<td nowrap align="right" style="background:'.$vp['bg'][$r['pais']].';"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span> '.($pol['user_ID']&&$r['user_ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['user_ID'].'" class="votar" type="confianza" name="'.$r['user_ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
 
 <td nowrap colspan="2" title="'.$r['host'].'"><span style="float:right;">'.unico($r['ISP'], 'ISP', true).unico($r['IP_rango'].'.*', 'IP_rango', true).unico($r['IP_pais'], 'IP_pais', true).unico($r['IP'], 'IP', false, true).'</span>'.unico($r['dispositivo'], 'Dispositivo').'</td>
 <td nowrap>'.unico($r['pass'], 'Clave', (in_array($r['pass'], $pass_simple)?'Clave simple':'Clave')).'</td>

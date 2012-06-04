@@ -9,8 +9,8 @@
 
 // Errores y redirecciones.
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('http://www.'.DOMAIN); }
-if (!isset($txt)) { header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">ERROR 404: <b>'._('Página inexistente').'</b></h1>'; }
-if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<h1 style="font-weight:normal;color:red;">ERROR: <b>'.escape(base64_decode($_GET['error'])).'</b></h1>'; }
+if (!isset($txt)) { header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">'._('ERROR').' 404: <b>'._('Página inexistente').'</b></h1>'; }
+//if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<h1 style="font-weight:normal;color:red;">'._('ERROR').': <b>'.escape(base64_decode($_GET['error'])).'</b></h1>'; }
 
 if (isset($txt_title)) { $txt_title .= ' | VirtualPol'; }
 else { $txt_title = 'VirtualPol - '._('La primera Red Social Democrática'); }
@@ -32,12 +32,14 @@ if (isset($_GET['bg'])) {
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="language" content="es_ES" />
 <meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS)?> | <?=_('La primera Red Social Democrática')?> | VirtualPol" />
-<link rel="shortcut icon" href="/favicon.ico" />
 
 <link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css" media="all" />
 <style type="text/css">
 #header { background:#FFF <?=$body_bg?> repeat scroll top left; }
 </style>
+
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="image_src" href="<?=IMG?>virtualpol-logo-cuadrado-original.gif" />
 
 <!--[if lt IE 9]><script src="<?=($_SERVER['HTTPS']?'https://':'http://')?>html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script type="text/javascript" src="<?=($_SERVER['HTTPS']?'https://':'http://')?>ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -45,6 +47,7 @@ if (isset($_GET['bg'])) {
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '<?=IMG?>';
+_ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos segundos','En','Hace') AS $d) { echo '"'.$d.'":"'._($d).'",'; } ?>};
 p_scroll = false;
 </script>
 
@@ -65,9 +68,9 @@ p_scroll = false;
 	</ul>
 
 	<div id="menu-next">
-		<p>Plataformas:<br /><b><?php foreach ($vp['paises'] AS $pais) { echo '<a href="http://'.strtolower($pais).'.'.DOMAIN.'/">'.$pais.'</a> &nbsp;'; } ?></b></p>
+		<p><?=_('Plataformas')?>:<br /><b><?php foreach ($vp['paises'] AS $pais) { echo '<a href="http://'.strtolower($pais).'.'.DOMAIN.'/">'.$pais.'</a> &nbsp;'; } ?></b></p>
 
-		<p style="text-align:center;"><?=boton(_('Donaciones'), 'http://www.virtualpol.com/donaciones', false, 'small pill orange')?></p>
+		<?=(nucleo_acceso('ciudadanos_global')?'<p style="text-align:center;">'.boton(_('Donaciones'), 'http://www.virtualpol.com/donaciones', false, 'small pill orange').'</p>':'')?>
 
 
 <?php
@@ -104,9 +107,9 @@ echo '<p><b>'.num($li_online_num).' '._('ciudadanos').'</b> '._('online').':<br 
 <?php
 unset($txt_header);
 if (isset($pol['user_ID'])) {
-	echo '<span class="htxt"><b><a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst(_($pol['estado'])).'</b>)':'').' | <a href="'.REGISTRAR.'login.php?a=logout">'._('Salir').'</a></b></span>';
+	echo '<span class="htxt"><b><a href="http://'.strtolower($pol['pais']).'.virtualpol.com/perfil/'.$pol['nick'].'">'.$pol['nick'].($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" width="16" height="16" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst(_($pol['estado'])).'</b>)':'').' | <a href="'.REGISTRAR.'login.php?a=panel">'._('Opciones').'</a> | <a href="'.REGISTRAR.'login.php?a=logout">'._('Salir').'</a></b></span>';
 } else {
-	echo boton(_('Crear ciudadano'), REGISTRAR.'?p='.PAIS, false, 'large blue').' &nbsp; '.boton(_('Entrar'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
+	echo boton(_('Crear ciudadano'), REGISTRAR.'?p='.PAIS, false, 'large green').' '.boton(_('Iniciar sesión'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), false, 'large blue');
 }
 ?>
 		</div>

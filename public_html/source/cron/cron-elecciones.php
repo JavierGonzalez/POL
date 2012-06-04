@@ -26,8 +26,8 @@ while($r = r($result)) {
 	$result2 = sql("SELECT user_ID, (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND aprobado = 'ok' LIMIT 100");
 	while($r2 = r($result2)) { $candidatos_nick[] = $r2['nick']; $candidatos_ID[] = $r2['user_ID']; }
 
-	// Obtener numero maximo de votantes (num_censo)
-	$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE pais = '".PAIS."' AND estado = 'ciudadano'");
+	// Obtener numero máximo de votantes (num_censo)
+	$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso(explodear('|', $r['elecciones_votan'], 0), explodear('|', $r['elecciones_votan'], 1), PAIS));
 	while($r2 = r($result2)) { $votos_num = $r2['num']; }
 
 	$candidatos_num = count($candidatos_nick);
@@ -40,7 +40,7 @@ while($r = r($result)) {
 VALUES (
 '".PAIS."', 
 '".$elecciones_num."&ordf; Elecciones a ".$r['nombre']."', 
-'Elecciones periódicas y automáticas para el cargo <b>".$r['nombre']."</b>.<br /><br />
+'Elecciones periódicas y automáticas para el cargo <a href=\"/cargos/".$r['cargo_ID']."\"><img src=\"".IMG."cargos/".$r['cargo_ID'].".gif\" alt=\"".$r['nombre']."\" /> <b>".$r['nombre']."</b></a>.<br /><br />
 Realizadas cada <b>".$r['elecciones_cada']." días</b>, durante <b>".$r['elecciones_durante']." días</b>. ".($r['elecciones_electos']==1?"Será electo el candidato más votado":"Serán electos los <b>".$r['elecciones_electos']." candidatos más votados</b>").", de entre <b>".count($candidatos_nick)." candidatos</b>.', 
 'En Blanco|".implode('|',$candidatos_nick)."|', 
 '',

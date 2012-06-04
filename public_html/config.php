@@ -37,24 +37,31 @@ while ($r = r($result)) {
 
 // LENGUAJES ACTIVADOS
 $vp['langs'] = array(
-'es_ES'=>'Español',
-'en_US'=>'English (30%)',
-'ca_ES'=>'Català (30%)',
-'eu'=>'Euskera (30%)',
-'gl_ES'=>'Galego (30%)',
+'es_ES'=>'Español (100%)',
+'en_US'=>'English (70%)',
+'fr'=>'Français (70%)',
+'ca_ES'=>'Català (70%)',
+'gl_ES'=>'Galego (70%)',
+'eo'=>'Esperanto (40%)',
+'eu'=>'Euskera (20%)',
 'de_DE'=>'Deutsch (30%)',
+'ja'=>'Japanese (10%)',
+'pt'=>'Português (10%)',
 );
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)
-$vp['paises'] = array('15M', 'Hispania', 'DRY', 'MIC'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
-$vp['paises_chat'] = array(''=>4, 'VP'=>4, '15M'=>5, 'Hispania'=>6, 'MIC'=>7, 'DRY'=>1);
-$vp['bg'] = array('POL'=>'#E1EDFF', 'Hispania'=>'#FFFF4F', 'MIC'=>'#FFD7D7', 'Atlantis'=>'#B9B9B9', 'VP'=>'#CAF0FF', '15M' => '#FFFFB0', 'DRY' => '#FBDB03', 'www'=>'#eeeeee');
+$vp['paises'] = array('15M', 'DRY', 'Hispania', 'MIC', 'JRO', 'ETSIIT', 'Occupy', 'MCxVBC'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
+$vp['bg'] = array('Hispania'=>'#FFFF4F', 'MIC'=>'#FFD7D7', '15M' => '#FFFFB0', 'DRY' => '#FBDB03', 'ETSIIT'=>'#9FE0FF', 'Occupy'=>'#bbffaa', 'JRO'=>'#a8ffff', 'MCxVBC'=>'#ffffcc', 'www'=>'#eeeeee');
 
 switch ($pais) { 
 	case '15m': break;
 	case 'hispania': break;
 	case 'mic': break;
 	case 'dry': break;
+	case 'etsiit': break;
+	case 'occupy': break;
+	case 'jro': break;
+	case 'mcxvbc': break;
 
 	// PLATAFORMAS INACTIVAS
 	case 'pol':			define('PAIS', 'POL'); break;
@@ -73,7 +80,8 @@ define('SQL', strtolower(PAIS).'_');
 define('CONTACTO_EMAIL', 'desarrollo@virtualpol.com');
 define('USERCOOKIE', '.'.DOMAIN);
 define('HOST', $_SERVER['HTTP_HOST']);
-define('VOTO_CONFIANZA_MAX', 50); // numero maximo de votos de confianza emitibles
+define('VOTO_CONFIANZA_MAX', 50); // Máximo de votos de confianza emitibles
+define('MP_MAX', 25); // Máximo de MP (mensajes privados) que puede enviar un ciudadano
 $datos_perfil = array('Blog', 'Twitter', 'Facebook', 'Google+', '', 'Menéame');
 $columnas = 14; $filas = 14; // Dimensiones mapa
 

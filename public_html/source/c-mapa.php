@@ -1,6 +1,6 @@
 <?php
 /* The source code packaged with this file is Free Software, Copyright (C) 2008 by
-** Javier Gonz�lez Gonz�lez <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
 ** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
 ** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
 ** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
@@ -40,23 +40,21 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['b']."' AND estado = 'v'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
-		$txt_title = 'Mapa: Comprar propiedad';
-		$txt_nav = array('/mapa'=>'Mapa', 'Comprar propiedad '.$_GET['b']);
+		$txt_title = _('Mapa').': '._('Comprar propiedad');
+		$txt_nav = array('/mapa'=>_('Mapa'), _('Comprar propiedad').' '.$_GET['b']);
 
-		$txt .= '<h1 class="quitar"><a href="/mapa/">Mapa</a>: Comprar propiedad ' . $_GET['b'] . '</h1>
+		$txt .= '<ol>
 
-<ol>
+<li>'._('Propiedad').': <b>' . $r['ID'] . '</b><br />
+'._('Posición').': <b>' . $r['pos_x'] . '-' . $r['pos_y'] . '</b><br />
+'._('Tamaño').': <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * $r['size_y']) . '</b><br />
+'._('Coste').': <b>'.pols(round($r['pols'] / ($r['size_x'] * $r['size_y']))).'</b> <img src="'.IMG.'varios/m.gif" alt="monedas" /> '._('por cuadrado').'<br /><br /></li>
 
-<li>Propiedad: <b>' . $r['ID'] . '</b><br />
-Posici&oacute;n: <b>' . $r['pos_x'] . '-' . $r['pos_y'] . '</b><br />
-Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * $r['size_y']) . '</b><br />
-Coste: <b>'.pols(round($r['pols'] / ($r['size_x'] * $r['size_y']))).'</b> <img src="'.IMG.'varios/m.gif" alt="monedas" /> por cuadrado<br /><br /></li>
-
-<li>' . boton('COMPRAR', '/accion.php?a=mapa&b=compraventa&ID=' . $r['ID'], false, false, $r['pols']) . '<br /><br /></li>
+<li>' . boton(_('Comprar'), '/accion.php?a=mapa&b=compraventa&ID=' . $r['ID'], false, false, $r['pols']) . '<br /><br /></li>
 
 </ol>
 
-<p><a href="/mapa/propiedades/"><b>Ver tus propiedades</b></a></p>';
+<p><a href="/mapa/propiedades"><b>'._('Ver tus propiedades').'</b></a></p>';
 	}
 
 } elseif (($_GET['a'] == 'vender') AND ($_GET['b'])) { // VENDER
@@ -67,34 +65,33 @@ WHERE pais = '".PAIS."' AND ID = '" . $_GET['b'] . "'
 LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
 
-		$txt_title = 'Mapa: Vender propiedad';
-		$txt_nav = array('/mapa'=>'Mapa', 'Vender propiedad '.$_GET['b']);
-		$txt .= '<h1 class="quitar"><a href="/mapa/">Mapa</a>: Vender propiedad ' . $_GET['b'] . '</h1>
-
+		$txt_title = _('Mapa').': '._('Vender propiedad');
+		$txt_nav = array('/mapa'=>_('Mapa'), _('Vender propiedad').' '.$_GET['b']);
+		$txt .= '
 
 <form action="/accion.php?a=mapa&b=vender&ID=' . $_GET['b'] . '" method="post">
 
 <ol>
 
-<li>Propiedad: <b>' . $r['ID'] . '</b><br />
-Posici&oacute;n: <b>' . $r['pos_x'] . '-' . $r['pos_y'] . '</b><br />
-Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * $r['size_y']) . '</b><br /><br /></li>
+<li>'._('Propiedad').': <b>' . $r['ID'] . '</b><br />
+'._('Posición').': <b>' . $r['pos_x'] . '-' . $r['pos_y'] . '</b><br />
+'._('Tamaño').': <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * $r['size_y']) . '</b><br /><br /></li>
 
-<li>Precio de venta: <b><input type="text" style="text-align:right;" name="pols" size="5" maxlength="4" value="' . $r['pols'] . '" /> '.MONEDA.'</b><br /><br /></li>
+<li>'._('Precio').': <b><input type="text" style="text-align:right;" name="pols" size="5" maxlength="4" value="' . $r['pols'] . '" /> '.MONEDA.'</b><br /><br /></li>
 
-<li><input type="submit" value="Poner en venta" /><br /><br /></li>
+<li><input type="submit" value="'._('Poner en venta').'" /><br /><br /></li>
 
 </ol>
 
 </form>
 
-<p><a href="/mapa/propiedades/"><b>Ver tus propiedades</b></a></p>';
+<p><a href="/mapa/propiedades"><b>'._('Ver tus propiedades').'</b></a></p>';
 
 	}
 
 } elseif (($_GET['a'] == 'editar') AND ($_GET['b'])) { // EDITAR
-	$txt_title = 'Mapa: Editar propiedad';
-	$txt_nav = array('/mapa'=>'Mapa', 'Editar propiedad');
+	$txt_title = _('Mapa').': '._('Editar propiedad');
+	$txt_nav = array('/mapa'=>_('Mapa'), _('Editar propiedad'));
 
 	$result = mysql_query("SELECT *
 FROM mapa
@@ -108,35 +105,35 @@ LIMIT 1", $link);
 			$colores .= '<option value="' . $color . '" style="background:#' . $color . ';width:60px;">' . $color . '</option>';
 		}
 		
-		$tama�o = ($r['size_x'] * $r['size_y']);
-		$txt .= '<h1><a href="/mapa/">Mapa</a>: Editar propiedad: ' . $_GET['b'] . '</h1>
+		$tamaño = ($r['size_x'] * $r['size_y']);
+		$txt .= '<h1><a href="/mapa">'._('Mapa').'</a>: '._('Editar propiedad').': ' . $_GET['b'] . '</h1>
 
 <form action="/accion.php?a=mapa&b=editar&ID=' . $_GET['b'] . '" method="post">
 
 <ol>
 
-<li>Propiedad: <b>' . $r['ID'] . '</b><br />
-Posici&oacute;n: <b>' . $r['pos_x'] . '-' . $r['pos_y'] . '</b><br />
-Tama&ntilde;o: <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * $r['size_y']) . '</b><br /><br /></li>
+<li>'._('Propiedad').': <b>' . $r['ID'] . '</b><br />
+'._('Posición').': <b>' . $r['pos_x'] . '-' . $r['pos_y'] . '</b><br />
+'._('Tamaño').': <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * $r['size_y']) . '</b><br /><br /></li>
 
-<li><b>Direcci&oacute;n web</b> o <b>frase</b>:<br />
+<li><b>'._('Dirección web').'</b> o <b>'._('frase').'</b>:<br />
 <input type="text" name="link" size="50" maxlength="70" value="' . $r['link'] . '" /><br /><br /></li>
 
-<li><b>Color:</b> 
+<li><b>'._('Color').':</b> 
 <select name="color">
 <option value="' . $r['color'] . '" style="background:#' . $r['color'] . ';">' . $r['color'] . '</option>
 ' . $colores . '
 </select> <span style="background:#' . $r['color'] . ';height:15px;width:40px;"></span> (<a href="/mapa/editar/' . $_GET['b'] . '/">Generar m&aacute;s</a> o especificar: <input type="text" size="2" maxlength="3" name="color2" value="" />)<br /><br /></li>
 
-<!--<li><b>Letras:</b> <input type="text" name="text" size="8" maxlength="' . $tama�o . '" value="' . $r['text'] . '" /> (opcional, letras: <b>' . $tama�o . '</b>)<br /><br /></li>-->
+<!--<li><b>Letras:</b> <input type="text" name="text" size="8" maxlength="' . $tamaño . '" value="' . $r['text'] . '" /> (opcional, letras: <b>' . $tamaño . '</b>)<br /><br /></li>-->
 
-<li><input type="submit" value="Guardar" /><br /><br /></li>
+<li><input type="submit" value="'._('Guardar').'" /><br /><br /></li>
 
 </ol>
 
 </form>
 
-<p><a href="/mapa/"><b>Ver mapa</b></a> &nbsp; <a href="/mapa/propiedades/"><b>Ver tus propiedades</b></a></p>';
+<p><a href="/mapa"><b>Ver mapa</b></a> &nbsp; <a href="/mapa/propiedades"><b>Ver tus propiedades</b></a></p>';
 	}
 
 
@@ -381,7 +378,7 @@ ORDER BY estado ASC, time ASC", $link);
 	$mapa_full = true;
 	include('inc-mapa.php');
 
-	$txt .= '<p><button onclick="window.location=\'/mapa\';">Actualizar</button> <button onclick="colorear(\'toggle\');" class="orange">Modo</button> &nbsp; (<a href="/doc/mapa-de-vp/">Ayuda</a>)</p>
+	$txt .= '<p><button onclick="window.location=\'/mapa\';">'._('Actualizar').'</button> <button onclick="colorear(\'toggle\');" class="orange">'._('Modo').'</button> &nbsp; (<a href="/doc/mapa-de-vp">'._('Ayuda').'</a>)</p>
 
 <table><tr><td rowspan="2" valign="top">
 '.$txt_mapa.'
@@ -403,15 +400,15 @@ ORDER BY time ASC LIMIT 500", $link);
 
 
 $txt .= '
-<h1 style="display:inline-block;">Info</h1>
-<span><acronym title="Superficie ocupada" style="color:blue;"><b>' . round(($sup_total * 100) / $superficie_total, 1) . '%</b> ocupado</acronym> 
-<acronym title="Superficie en venta" style="color:red;"><b>' . round(($venta_total * 100) / $superficie_total, 1) . '%</b> en venta </acronym>	
+<h1 style="display:inline-block;">'._('Info').'</h1>
+<span><acronym title="Superficie ocupada" style="color:blue;"><b>' . round(($sup_total * 100) / $superficie_total, 1) . '%</b> '._('ocupado').'</acronym> 
+<acronym title="Superficie en venta" style="color:red;"><b>' . round(($venta_total * 100) / $superficie_total, 1) . '%</b> '._('en venta').' </acronym>	
 </span><br />
 <img style="margin:0 0 4px 0;" src="http://chart.apis.google.com/chart?cht=lc&chs=450x110&chxt=y&chxl=0:|0|' . round($dgrafico_max / 2) . '|' . $dgrafico_max . '&chd=s:' . chart_data($dgrafico) . '&chco=0066FF&chm=B,FFFFDD,0,0,0&chf=bg,s,ffffff01|c,s,ffffff01" width="450" height="110" />
 </td></tr>
 <tr><td valign="top">
-<h1>Terratenientes</h1>
-<p class="gris">Con m&aacute;s propiedades</p><ol>';
+<h1>'._('Terratenientes').'</h1>
+<p class="gris">'._('Con más propiedades').'</p><ol>';
 
 $n = 0;
 $result = mysql_query("SELECT SUM(superficie) AS superficie, COUNT(*) AS num,
@@ -434,8 +431,8 @@ while ($row = mysql_fetch_array($result)) {
 
 
 	$txt .= '</ol></td><td valign="top">
-<h1>Grandes propiedades</h1>
-<p class="gris">Las propiedades m&aacute;s extensas</p><ol>';
+<h1>'._('Grandes propiedades').'</h1>
+<p class="gris">'._('Las propiedades más extensas').'</p><ol>';
 
 $n = 0;
 $result = mysql_query("SELECT size_x, size_y, superficie,
@@ -460,7 +457,7 @@ while ($row = mysql_fetch_array($result)) {
 
 
 //THEME
-if (!$txt_title) { $txt_title = 'Mapa'; $txt_nav = array('/mapa'=>'Mapa'); }
+if (!$txt_title) { $txt_title = _('Mapa'); $txt_nav = array('/mapa'=>_('Mapa')); }
 $txt_menu = 'econ';
 include('theme.php');
 ?>

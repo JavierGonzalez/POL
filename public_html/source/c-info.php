@@ -234,8 +234,8 @@ case 'censo':
 
 $txt .= '
 <div style="float:right;">
-<input name="qcmq" size="10" value="'.$busqueda.'" type="text" id="cmq">
-<input value="'._('Buscador de perfiles').'" type="submit" onclick="var cmq = $(\'#cmq\').attr(\'value\'); window.location.href=\'/info/censo/busqueda/\'+cmq+\'/\'; return false;">
+<input name="qcmq" size="14" value="'.$busqueda.'" type="text" id="cmq" />
+<button onclick="var cmq = $(\'#cmq\').attr(\'value\'); window.location.href=\'/info/censo/busqueda/\'+cmq+\'/\'; return false;" class="small">'._('Buscar ciudadano').'</button>
 </div>
 
 <p>'.$p_paginas.'</p>
@@ -260,7 +260,7 @@ $txt .= '
 </tr>';
 
 	switch ($_GET['b']) {
-		case 'busqueda': $order_by = 'WHERE (text LIKE \'%'.$_GET['c'].'%\' OR nick LIKE \'%'.$_GET['c'].'%\' OR datos LIKE \'%'.$_GET['c'].'%\') AND pais = \''.PAIS.'\' ORDER BY fecha_last DESC'; break;
+		case 'busqueda': $order_by = 'WHERE (text LIKE \'%'.$_GET['c'].'%\' OR nombre LIKE \'%'.$_GET['c'].'%\' OR nick LIKE \'%'.$_GET['c'].'%\' OR datos LIKE \'%'.$_GET['c'].'%\') ORDER BY fecha_last DESC'; break;
 		case 'nivel': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' AND ID != \'1\' ORDER BY nivel DESC'; break;
 		case 'nombre': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY nick ASC'; break;
 		case 'nuevos': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY fecha_registro DESC'; break;

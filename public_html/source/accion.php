@@ -18,13 +18,104 @@ while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 if (
 (nucleo_acceso('ciudadanos'))
 OR (($pol['estado'] == 'kickeado') AND (in_array($_GET['a'], array('rechazar-ciudadania', 'votacion'))))
-OR (($pol['estado'] == 'extranjero') AND (in_array($_GET['a'], array('voto', 'mercado', 'foro', 'votacion'))))
+OR (($pol['estado'] == 'extranjero') AND (in_array($_GET['a'], array('voto', 'mercado', 'foro', 'votacion', 'api'))))
 ) {
 
 
 //###################################################################
 switch ($_GET['a']) { //############## BIG ACTION SWITCH ############
 //###################################################################
+
+
+case 'api':
+	$refer_url = 'api/';
+	if (($_GET['b'] == 'crear') AND (is_numeric($_POST['api_ID']))) {
+		$result = sql("SELECT * FROM api WHERE api_ID = '".$_POST['api_ID']."' LIMIT 1");
+		while($r = r($result)) {
+			if (nucleo_acceso($r['acceso_borrador'])) {
+				if (is_numeric($_POST['post_ID'])) {
+					sql("UPDATE api_posts SET time = '".$date."', time_cron = '".$_POST['time_cron']."', message = '".$_POST['message']."', picture = '".$_POST['picture']."', link = '".$_POST['link']."', source = '".$_POST['source']."' WHERE post_ID = '".$_POST['post_ID']."' AND estado != 'publicado' LIMIT 1");
+				} else {
+					sql("INSERT INTO api_posts (pais, api_ID, estado, pendiente_user_ID, time, time_cron, message, picture, link, source) 
+VALUES ('".PAIS."', '".$r['api_ID']."', 'pendiente', '".$pol['user_ID']."', '".$date."', '".trim($_POST['time_cron'])."', '".strip_tags(trim($_POST['message']))."', '".strip_tags(trim($_POST['picture']))."', '".strip_tags(trim($_POST['link']))."', '".strip_tags(trim($_POST['source']))."')");
+				}
+				$refer_url = 'api/'.$r['api_ID'];
+			}
+		}
+	} elseif (($_GET['b'] == 'publicar') AND (is_numeric($_GET['ID']))) {
+		api_facebook('publicar', $_GET['ID']);
+	} elseif (($_GET['b'] == 'borrar') AND (is_numeric($_GET['ID']))) {
+		api_facebook('borrar', $_GET['ID']);
+	} elseif (($_GET['b'] == 'borrar_borrador') AND (is_numeric($_GET['ID']))) {
+		$result = sql("SELECT api_ID, (SELECT acceso_escribir FROM api WHERE api_ID = api_posts.api_ID LIMIT 1) AS acceso_escribir FROM api_posts WHERE post_ID = '".$_GET['ID']."' LIMIT 1");
+		while($r = r($result)) {
+			if (nucleo_acceso($r['acceso_escribir'])) {
+				sql("DELETE FROM api_posts WHERE post_ID = '".$_GET['ID']."' AND estado != 'publicado' LIMIT 1");
+			}
+			$refer_url = 'api/'.$r['api_ID'];
+		}
+	}
+
+	if ($_GET['b'] != 'crear') {
+		$result = sql("SELECT api_ID FROM api_posts WHERE post_ID = '".$_GET['ID']."' LIMIT 1");
+		while($r = r($result)) { $refer_url = 'api/'.$r['api_ID']; }
+	}
+
+	break;
+
+case 'socios';
+	$refer_url = 'socios';
+	$es_socio = false;
+	$result = sql("SELECT ID, estado, socio_ID FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+	while($r = r($result)) { $es_socio = true; $socio_estado = $r['estado']; $socio_numero = PAIS.$r['socio_ID']; }
+
+	if (($_GET['b'] == 'inscribirse') AND (nucleo_acceso('ciudadanos')) AND ($es_socio == false) AND ($pol['config']['socios_estado'] == 'true') AND ($_POST['nombre']) AND ($_POST['NIF']) AND ($_POST['localidad']) AND ($_POST['cp']) AND ($_POST['contacto_email'])) {
+		$last_socio_ID = 0;
+		$result = sql("SELECT socio_ID FROM socios WHERE pais = '".PAIS."' ORDER BY socio_ID DESC LIMIT 1");
+		while($r = r($result)) { $last_socio_ID = $r['socio_ID']; }
+		
+		sql("INSERT INTO socios (time, time_last, pais, socio_ID, user_ID, nombre, NIF, pais_politico, localidad, cp, direccion, contacto_email, contacto_telefono) 
+VALUES ('".$date."', '".$date."', '".PAIS."', '".($last_socio_ID==0?10000:$last_socio_ID+1)."', '".$pol['user_ID']."', '".ucfirst(trim($_POST['nombre']))."', '".str_replace(' ', '', str_replace('-', '', strtoupper(trim($_POST['NIF']))))."', '".$_POST['pais_politico']."', '".ucfirst($_POST['localidad'])."', '".trim($_POST['cp'])."', '".ucfirst(trim($_POST['direccion']))."', '".strtolower(trim($_POST['contacto_email']))."', '".str_replace(' ', '', trim($_POST['contacto_telefono']))."')");
+
+	} elseif (($_GET['b'] == 'cancelar') AND ($es_socio)) {
+		sql("DELETE FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+		sql("UPDATE users SET socio = 'false' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+		if ($socio_estado == 'socio') {
+			cargo_del($pol['config']['socios_ID'], $pol['user_ID']);
+			sql("UPDATE users SET socio = 'false' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+		}
+
+	} elseif (($_GET['b'] == 'configurar') AND (nucleo_acceso($vp['acceso']['control_socios']))) {
+		foreach (array('socios_estado', 'socios_ID', 'socios_descripcion', 'socios_responsable') AS $dato) {
+			sql("UPDATE config SET valor = '".nl2br(strip_tags(trim($_POST[$dato])))."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
+		}
+		$refer_url = 'socios/configurar';
+
+	} elseif (($_GET['b'] == 'aprobar') AND (nucleo_acceso($vp['acceso']['control_socios'])) AND (is_numeric($_GET['ID']))) {
+		$result = sql("SELECT ID, user_ID FROM socios WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND estado != 'socio' LIMIT 1");
+		while($r = r($result)) {
+			sql("UPDATE socios SET estado = 'socio', validador_ID = '".$pol['user_ID']."' WHERE ID = '".$_GET['ID']."' LIMIT 1");
+			sql("UPDATE users SET socio = 'true' WHERE ID = '".$r['user_ID']."' LIMIT 1");
+			cargo_add($pol['config']['socios_ID'], $r['user_ID']);
+		}
+		$refer_url = 'socios/inscritos';
+	
+	} elseif (($_GET['b'] == 'rescindir') AND (nucleo_acceso($vp['acceso']['control_socios'])) AND (is_numeric($_GET['ID']))) {
+		$refer_url = 'socios/asociados';
+		$result = sql("SELECT ID, user_ID, estado FROM socios WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1");
+		while($r = r($result)) {
+			sql("UPDATE users SET socio = 'false' WHERE ID = '".$r['user_ID']."' LIMIT 1");
+			if ($r['estado'] == 'socio') {
+				sql("UPDATE socios SET estado = 'rescindido', validador_ID = '".$pol['user_ID']."' WHERE ID = '".$_GET['ID']."' LIMIT 1");
+				cargo_del($pol['config']['socios_ID'], $r['user_ID']);
+			} else { 
+				sql("DELETE FROM socios WHERE ID = '".$_GET['ID']."' LIMIT 1");
+				$refer_url = 'socios/inscritos'; 
+			}
+		}
+	}
+	break;
+
 
 case 'grupos';
 	if (($_GET['b'] == 'crear') AND (nucleo_acceso($vp['acceso']['control_grupos']))) {
@@ -61,7 +152,7 @@ case 'perfil':
 	} elseif ($_GET['b'] == 'nombre') {
 		sql("UPDATE users SET nombre = '".strip_tags($_POST['nombre'])."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	}
-	$refer_url = 'perfil/'.$pol['nick'];
+	$refer_url = 'perfil/editar';
 	break;
 
 case 'aceptar-condiciones':
@@ -83,7 +174,7 @@ case 'donacion':
 case 'SC':
 	if (($_GET['b'] == 'nota') AND (nucleo_acceso('supervisores_censo')) AND ($_GET['ID'])) {
 		sql("UPDATE users SET nota_SC = '".strip_tags($_POST['nota_SC'])."' WHERE ID = '".$_GET['ID']."' LIMIT 1");
-		$refer_url = 'control/supervisor-censo';
+		$refer_url = 'sc/filtro/user_ID/'.$_GET['ID'];
 	}
 	break;
 
@@ -205,9 +296,9 @@ case 'historia':
 case 'geolocalizacion':
 	if (($_GET['b'] == 'add') AND (is_numeric($_POST['x'])) AND (is_numeric($_POST['y']))) {
 
-		// Por privacidad solo se guardan 2 digitos reales de latitud y longitud (esto supone una precisión de 1.112km a la redonda a nivel del mar). Se añade un digito más aleatorio para evitar efecto cuadrícula en el mapa.
-		$_POST['x'] = round($_POST['x'],2).mt_rand(0,9);
-		$_POST['y'] = round($_POST['y'],2).mt_rand(0,9);
+		// Por privacidad solo se guardan 2 digitos reales de latitud y longitud (esto supone una precisión de 1.112km a la redonda a nivel del mar).
+		$_POST['x'] = round($_POST['x'], 2);
+		$_POST['y'] = round($_POST['y'], 2);
 
 		$result = sql("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NULL LIMIT 1");
 		while($r = r($result)) {
@@ -320,22 +411,21 @@ case 'expulsar':
 	if ((isset($sc[$pol['user_ID']])) AND ($_GET['b'] == 'desexpulsar') AND ($_GET['ID'])) {
 		$result = sql("SELECT ID, user_ID, tiempo  FROM expulsiones WHERE ID = '".$_GET['ID']."' LIMIT 1");
 		while ($r = r($result)) {
-			sql("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$r['user_ID']."' LIMIT 1");
+			sql("UPDATE users SET estado = 'ciudadano', fecha_last = '".$date."' WHERE ID = '".$r['user_ID']."' LIMIT 1");
 			sql("UPDATE expulsiones SET estado = 'cancelado' WHERE ID = '".$_GET['ID']."' LIMIT 1");
 			//evento_chat('<span class="expulsado"><img src="'.IMG.'varios/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
 			evento_log('Expulsión a '.$r['tiempo'].' cancelada');
 		}
 
-	} elseif ((isset($sc[$pol['user_ID']])) AND ($_POST['razon']) AND ($_POST['nick']) AND (!in_array($_POST['nick'], $sc))) { 
+	} elseif ((nucleo_acceso('supervisores_censo')) AND ($_POST['razon']) AND ($_POST['nick']) AND (!in_array($_POST['nick'], $sc))) { 
 
 		if ($_POST['caso']) { $_POST['razon'] .= ' caso '.ucfirst($_POST['caso']); }
 
-		$_POST['motivo'] = ereg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
+		$_POST['motivo'] = strip_tags($_POST['motivo']);
 
-		$result = sql("SELECT nick, ID FROM users WHERE nick = '".$_POST['nick']."' AND estado != 'expulsado' LIMIT 1");
+		$result = sql("SELECT nick, ID FROM users WHERE nick IN ('".implode("','", explode(' ', $_POST['nick']))."') AND estado != 'expulsado' LIMIT 8");
 		while ($r = r($result)) {
 			sql("UPDATE users SET estado = 'expulsado' WHERE ID = '".$r['ID']."' LIMIT 1");
-
 			sql("DELETE FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$r['ID']."'");
 
 			// Cambia a "En Blanco" los votos. Es equivalente a anular el voto.
@@ -349,7 +439,7 @@ case 'expulsar':
 				else if ($r2['tipo_voto'] == '5puntos') { $voto_en_blanco = '0 0 0 0 0'; }
 				else if ($r2['tipo_voto'] == '8puntos') { $voto_en_blanco = '0 0 0 0 0 0 0 0'; }
 				else { $voto_en_blanco = '0'; }
-				sql("UPDATE votacion_votos SET voto = '".$voto_en_blanco."', validez = 'true' WHERE ref_ID = ".$r2['ID']." AND user_ID = ".$r['ID']." LIMIT 1");
+				sql("UPDATE votacion_votos SET voto = '".$voto_en_blanco."', validez = 'true', mensaje = '' WHERE ref_ID = ".$r2['ID']." AND user_ID = ".$r['ID']." LIMIT 1");
 			}
 			
 			sql("INSERT INTO expulsiones (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')");
@@ -437,9 +527,9 @@ case 'avatar':
 		unlink($img_root.$pol['user_ID'].'_80.jpg');
 		$nom_file = $pol['user_ID'].'.jpg';
 		$img_name = $_FILES['avatar']['name'];
-	        $img_type = str_replace('image/', '', $_FILES['avatar']['type']);
+		$img_type = str_replace('image/', '', $_FILES['avatar']['type']);
 		$img_size = $_FILES['avatar']['size'];
-	        if ((($img_type == 'gif') || ($img_type == 'jpeg') || ($img_type == 'png')) && ($img_size < 1000000)) {
+		if ((($img_type == 'gif') || ($img_type == 'jpeg') || ($img_type == 'png')) && ($img_size < 1000000)) {
 			move_uploaded_file($_FILES['avatar']['tmp_name'], $img_root . $nom_file);
 		} 
 		if (file_exists($img_root . $nom_file)) {
@@ -447,19 +537,19 @@ case 'avatar':
 			imageCompression($img_root . $nom_file, 80, $img_root . $pol['user_ID'].'_80.jpg', $img_type);
 			imageCompression($img_root . $nom_file, 40, $img_root . $pol['user_ID'].'_40.jpg', $img_type);
 
-			sql("UPDATE users SET avatar_localdir = '".$_FILES['avatar']['name']."', avatar = 'true' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+			sql("UPDATE users SET avatar_localdir = '".escape($_FILES['avatar']['name'])."', avatar = 'true' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 		}
 	} elseif ($_GET['b'] == 'borrar') {
 		unlink($img_root.$pol['user_ID'].'.jpg');
 		unlink($img_root.$pol['user_ID'].'_40.jpg');
 		unlink($img_root.$pol['user_ID'].'_80.jpg');
 		sql("UPDATE users SET avatar = 'false' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
-		$refer_url = 'perfil/'.strtolower($pol['nick']).'/';
+		$refer_url = 'perfil/editar';
 	} elseif (($_GET['b'] == 'desc') AND (strlen($_POST['desc']) <= 2000)) {
 		$_POST['desc'] = gen_text($_POST['desc'], 'plain');
 		sql("UPDATE users SET text = '".$_POST['desc']."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	}
-	$refer_url = 'perfil/'.strtolower($pol['nick']);
+	$refer_url = 'perfil/editar';
 	break;
 
 
@@ -770,7 +860,6 @@ case 'gobierno':
 'pols_mensajetodos'=>'Coste mensaje Global',
 'pols_solar'=>'Coste solar del mapa',
 'defcon'=>'DEFCON',
-'lang'=>'Idioma',
 'pols_inem'=>'INEM',
 'pols_afiliacion'=>'Pago por afiliado',
 'pols_empresa'=>'Coste creacion empresa',
@@ -779,48 +868,68 @@ case 'gobierno':
 'factor_propiedad'=>'Factor propiedad',
 'pols_examen'=>'Coste hacer un examen',
 'pols_mensajeurgente'=>'Coste mensaje urgente',
-'examenes_exp'=>'Expiracion de examen',
+'examenes_exp'=>'Expiración de candidaturas',
 'impuestos'=>'Impuesto de patrimonio',
 'impuestos_minimo'=>'Minimo patrimonio imponible',
 'impuestos_empresa'=>'Impuesto de empresa',
 'arancel_salida'=>'Arancel de salida',
 'bg'=>'Imagen de fondo',
-'pais_des'=>'Descripcion del Pais',
-'palabra_gob'=>'Mensaje Del Gobierno',
+'pais_des'=>'Nombre de plataforma',
 'pols_crearchat'=>'Coste creacion chat',
-'chat_diasexpira'=>'Dias expiracion chat',
+'chat_diasexpira'=>'Días expiracion chat',
+'lang'=>'Idioma',
+'tipo'=>'Tipo de plataforma',
+'timezone'=>'Zona horaria',
 );
 
 	if (
 ($_GET['b'] == 'config') AND 
 (nucleo_acceso($vp['acceso']['control_gobierno'])) AND  
 (entre($_POST['online_ref'], 0, 900000)) AND
-(strlen($_POST['palabra_gob0']) <= 200) AND
 ($_POST['chat_diasexpira'] >= 10)
 ) {
 
 		foreach ($_POST AS $dato => $valor) {
-			if ((substr($dato, 0, 8) != 'salario_') AND ($dato != 'palabra_gob1')) {
-
-				if ($dato == 'online_ref') {
-					$valor = round($_POST['online_ref']*60);
-					sql("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
-				} elseif ($dato == 'palabra_gob0') {
-					$dato = 'palabra_gob';
-					$valor = strip_tags($_POST['palabra_gob0']).":".strip_tags($_POST['palabra_gob1']);
-					sql("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
-				} else {
-					sql("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
+			if (substr($dato, 0, 8) != 'salario_') {
+				
+				$valor = strip_tags($valor);
+				
+				switch ($dato) {
+					case 'online_ref': $valor = round($_POST['online_ref']*60); break;
+					case 'palabra_gob': $valor = nl2br($valor); break;
 				}
 
-				if ($pol['config'][$dato] != $valor) { 
+				sql("UPDATE config SET valor = '".$valor."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
+
+				if (($pol['config'][$dato] != $valor) AND ($dato_array[$dato])) { 
 					if ($valor == '') { $valor = '<em>null</em>'; }
 					if ($dato == 'online_ref') {
 						$valor = intval($valor)/60; 
 						$pol['config'][$dato] = $pol['config'][$dato]/60;
 					}
-					evento_chat('<b>[GOBIERNO]</b> Configuraci&oacute;n ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/gobierno/">Gobierno</a>)'); 
+					evento_chat('<b>[GOBIERNO]</b> Configuración ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/gobierno/">Gobierno</a>)');
 				}
+			}
+		}
+
+		if ($_FILES['nuevo_tapiz']['name']) {
+			$nom_file = RAIZ.'/img/bg/tapiz-extra-'.strtolower(str_replace('_','-', gen_url(substr(explodear('.', $_FILES['nuevo_tapiz']['name'], 0), 0, 8)))).'_'.PAIS.'.jpg';
+			if (str_replace('image/', '', $_FILES['nuevo_tapiz']['type']) == 'jpeg') {
+				move_uploaded_file($_FILES['nuevo_tapiz']['tmp_name'], $nom_file);
+			}
+			if (file_exists($nom_file)) {
+				imageCompression($nom_file, null, $nom_file, 'jpeg', 1440, 100);
+			}
+		}
+		
+		if ($_FILES['nuevo_logo']['name']) {
+			$nom_file = RAIZ.'/img/banderas/'.PAIS.'.png';
+			copy($nom_file, RAIZ.'/img/banderas/'.PAIS.'_'.time().'.png');
+			if ((str_replace('image/', '', $_FILES['nuevo_logo']['type']) == 'png') AND ($_FILES['nuevo_logo']['size'] <= 50000)) {
+				move_uploaded_file($_FILES['nuevo_logo']['tmp_name'], $nom_file);
+			}
+			if (file_exists($nom_file)) {
+				evento_chat('<b>[GOBIERNO]</b> Configuración ('.crear_link($pol['nick']).'): nueva bandera <img src="'.IMG.'banderas/'.PAIS.'.png?'.rand(1000,9999).'" width="80" height="50" /> (<a href="/control/gobierno">Gobierno</a>)');
 			}
 		}
 
@@ -896,12 +1005,13 @@ case 'gobierno':
 		$refer_url = 'control/gobierno/categorias';
 
 	} elseif (($_GET['b'] == 'privilegios') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
+		$_POST['control_socios'] = 'cargo';
 		$result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'acceso'");
 		while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 		$accesos = array();
 		foreach (explode('|', $pol['config']['acceso']) AS $el_acceso) {
 			$acceso = explodear(';', $el_acceso, 0);
-			if ($acceso == 'control_gobierno') { $accesos[] = $el_acceso; } else { $accesos[] = $acceso.';'.$_POST[$acceso].':'.$_POST[$acceso.'_cfg']; }
+			if ($acceso == 'control_gobierno') { $accesos[] = $el_acceso; } else { $accesos[] = $acceso.';'.$_POST[$acceso].':'.str_replace(':', '', str_replace(';', '', trim($_POST[$acceso.'_cfg']))); }
 		}
 		sql("UPDATE config SET valor = '".implode('|', $accesos)."' WHERE pais = '".PAIS."' AND dato = 'acceso' LIMIT 1");
 		evento_log('Gobierno configuración: privilegios');
@@ -927,12 +1037,10 @@ case 'gobierno':
 	
 	} elseif (($_GET['b'] == 'notificaciones') AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 		if (($_GET['c'] == 'add') AND ($_POST['texto']) AND ($_POST['url'])) {
-			$_POST['texto'] = ucfirst(substr(strip_tags($_POST['texto']), 0, 50));
-			$_POST['url'] = str_replace('http://'.strtolower(PAIS).'.'.DOMAIN, '', substr(strip_tags($_POST['url']), 0, 60));
-			$result = sql("SELECT ID FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."'");
-			while($r = r($result)){
-				notificacion($r['ID'], $_POST['texto'], $_POST['url'], PAIS);
-			}
+			$_POST['texto'] = ucfirst(substr(strip_tags($_POST['texto']), 0, 60));
+			$_POST['url'] = str_replace('http://'.strtolower(PAIS).'.'.DOMAIN, '', substr(strip_tags($_POST['url']), 0, 90));
+			$result = sql("SELECT ID FROM users WHERE pais = '".PAIS."' AND ".sql_acceso($_POST['acceso'], $_POST['acceso_cfg'])." ORDER BY voto_confianza DESC LIMIT 100000");
+			while($r = r($result)){ notificacion($r['ID'], $_POST['texto'], $_POST['url'], PAIS); }
 			evento_log('Gobierno configuración: notificación creada ('.$_POST['texto'].')');
 		} elseif (($_GET['c'] == 'borrar') AND (is_numeric($_GET['noti_ID']))) {
 			$result = sql("SELECT texto FROM notificaciones WHERE noti_ID = '".$_GET['noti_ID']."' LIMIT 1");
@@ -950,7 +1058,7 @@ case 'api':
 	exit; // CANCELADO HASTA RE ACTIVACION
 	if (($pol['user_ID']) AND ($_GET['b'] == 'gen_pass')) {
 		sql("UPDATE users SET api_pass = '".substr(md5(mt_rand(1000000000,9999999999)), 0, 12)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
-		$refer_url = 'perfil/'.strtolower($pol['nick']);
+		$refer_url = 'perfil/editar';
 	}
 	break;
 
@@ -1043,7 +1151,7 @@ ORDER BY pols DESC LIMIT 1");
 		$refer_url = 'subasta';
 	
 	} elseif (($_GET['b'] == 'editarfrase') AND (($pol['config']['pols_fraseedit'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['control_gobierno'])))) {
-		$_POST['url'] = str_replace("http://", "", $_POST['url']);
+		$_POST['url'] = str_replace(array('http://', 'https://', ':', ',', ' '), '', $_POST['url']);
 		$url = '<a href="http://'.strip_tags($_POST['url']).'">'.ucfirst(strip_tags($_POST['frase'])).'</a>';
 		sql("UPDATE config SET valor = '".$url."' WHERE pais = '".PAIS."' AND dato = 'pols_frase' LIMIT 1");
 		evento_log('Frase editada');
@@ -1058,13 +1166,10 @@ ORDER BY pols DESC LIMIT 1");
 		$refer_url = 'subasta/editar';
 		evento_log('Frase cedida a '.$r['nick']);
 
-	} elseif (($_GET['b'] == 'editarpalabra') AND (is_numeric($_GET['ID'])) AND (strlen($_POST['text']) <= 20)) {
+	} elseif (($_GET['b'] == 'editarpalabra') AND (is_numeric($_GET['ID'])) AND (strlen($_POST['text']) <= 25)) {
 		$_POST['text'] = ereg_replace("[^ A-Za-z0-9-]", "", $_POST['text']);
-		$_POST['text'] = str_replace(";", "", $_POST['text']);
-		$_POST['text'] = str_replace(":", "", $_POST['text']);
-		$_POST['url'] = str_replace("http://", "", $_POST['url']);
-		$_POST['url'] = str_replace(";", "", $_POST['url']);
-		$_POST['url'] = str_replace(":", "", $_POST['url']);
+		$_POST['text'] = str_replace(array('http://', 'https://', ':', ',', '|', ' '), '', $_POST['text']);
+		$_POST['url'] = str_replace(array('http://', 'https://', ':', ',', '|', ' '), '', $_POST['url']);
 		$dato = '';
 		foreach(explode(";", $pol['config']['palabras']) as $num => $t) {
 			$t = explode(":", $t);
@@ -1310,7 +1415,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 			if (nucleo_acceso($vp['acceso'][$r['tipo']])) {
 				$r['time_expire'] = date('Y-m-d H:i:s', time() + $r['duracion']); 
 
-				$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano'".($r['acceso_voto']=='ciudadanos_global'?'':" AND pais = '".PAIS."'")." LIMIT 1");
+				$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])." LIMIT 1");
 				while($r2 = r($result2)){ $censo_num = $r2['num']; }
 
 				sql("UPDATE votacion SET estado = 'ok', user_ID = '".$pol['user_ID']."', time = '".$date."', time_expire = '".$r['time_expire']."', num_censo = '".$censo_num."' WHERE ID = '".$r['ID']."' LIMIT 1");
@@ -1375,18 +1480,23 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 			redirect('http://'.strtolower($pais).'.'.DOMAIN.'/votacion/'.$_POST['ref_ID']);
 
 	} elseif (($_GET['b'] == 'eliminar') AND (is_numeric($_GET['ID']))) { 
-		$result = sql("SELECT ID, user_ID, estado, tipo FROM votacion WHERE estado != 'end' AND ID = '".$_GET['ID']."' AND pais = '".PAIS."' LIMIT 1");
+		$result = sql("SELECT ID, user_ID, estado, tipo FROM votacion WHERE estado = 'borrador' AND ID = '".$_GET['ID']."' AND pais = '".PAIS."' LIMIT 1");
 		while($r = r($result)) {
-			if (($r['user_ID'] == $pol['user_ID']) OR (($r['estado'] == 'borrador') AND (nucleo_acceso($vp['acceso'][$r['tipo']])))) {
+			if (($r['user_ID'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso'][$r['tipo']]))) {
 				sql("DELETE FROM votacion WHERE ID = '".$r['ID']."' LIMIT 1");
 				sql("DELETE FROM votacion_votos WHERE ref_ID = '".$r['ID']."'");
 			}
 		}
-		evento_log('Votación: eliminada <a href="/votacion/'.$_GET['ID'].'">#'.$_GET['ID'].'</a>');
 
-	} elseif (($_GET['b'] == 'concluir') AND (is_numeric($_GET['ID']))) { 
-		sql("UPDATE votacion SET time_expire = '".$date."' WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND pais = '".PAIS."' AND tipo != 'cargo' LIMIT 1");
-		evento_log('Votación: finalizada (antes de tiempo) <a href="/votacion/'.$_GET['ID'].'">#'.$_GET['ID'].'</a>');
+	} elseif (($_GET['b'] == 'finalizar') AND (is_numeric($_GET['ID']))) { 
+		$result = sql("SELECT ID, user_ID, estado, tipo FROM votacion WHERE estado != 'end' AND ID = '".$_GET['ID']."' AND pais = '".PAIS."' LIMIT 1");
+		while($r = r($result)) {
+			if (($r['user_ID'] == $pol['user_ID']) OR (($r['estado'] == 'borrador') AND (nucleo_acceso($vp['acceso'][$r['tipo']])))) {
+				sql("UPDATE votacion SET estado = 'borrador', num = '0' WHERE ID = '".$r['ID']."' LIMIT 1");
+				sql("DELETE FROM votacion_votos WHERE ref_ID = '".$r['ID']."'");
+			}
+		}
+		evento_log('Votación: cancelada <a href="/votacion/'.$_GET['ID'].'">#'.$_GET['ID'].'</a>');
 
 	} elseif (($_GET['b'] == 'enviar_comprobante') AND ($_GET['comprobante'])) {
 		$votacion_ID = explodear('-', $_GET['comprobante'], 0);
@@ -1622,18 +1732,16 @@ case 'enviar-mensaje':
 			$envio_urgente = 0;
 
 			$mp_num = 1;
-			$enviar_nicks = '';
-			$nicks_array = explode(' ', $_POST['nick'].' ');
+			$enviar_nicks = array();
+			$nicks_array = explode(' ', str_replace(',', '', $_POST['nick']));
 			foreach ($nicks_array AS $el_nick) {
-				if (($mp_num <= 9) AND ($el_nick)) { 
-					// Maximo 9 ciudadanos. Para no suplantar el "mensaje global".
-					if ($enviar_nicks != '') { $enviar_nicks .= ','; }
-					$enviar_nicks .= "'".$el_nick."'";
+				if (($el_nick) AND (($mp_num <= MP_MAX) OR (nucleo_acceso($vp['acceso']['control_gobierno'])))) {
+					$enviar_nicks[] = $el_nick;
 					$mp_num++;
 				}
 			}
 			
-			$result = sql("SELECT ID, pais FROM users WHERE nick IN (".$enviar_nicks.") AND estado != 'expulsado'");
+			$result = sql("SELECT ID, pais FROM users WHERE nick IN ('".implode("','", $enviar_nicks)."') AND estado != 'expulsado'");
 			while($r = r($result)){ 
 				sql("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('".$pol['user_ID']."', '".$r['ID']."', '".$date."', '".$text."', '0', '".$_POST['calidad']."')");
 				
@@ -1882,7 +1990,7 @@ case 'eliminar-documento':
 	
 	$result = sql("SELECT ID, pad_ID, acceso_escribir, acceso_cfg_escribir, url FROM docs WHERE url = '".$_GET['url']."' AND pais = '".PAIS."' LIMIT 1");
 	while($r = r($result)){ 
-		if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
+		if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_docs']))) {
 			sql("UPDATE docs SET estado = 'del' WHERE ID = '".$r['ID']."' LIMIT 1");
 			evento_log('Documento eliminado <a href="/doc/'.$r['url'].'">#'.$r['ID'].'</a>');
 			pad('delete', $r['pad_ID']);
@@ -1906,7 +2014,7 @@ case 'editar-documento':
 			$text = str_replace("<script", "nojs", $text);
 			$text = str_replace("&lt;script", "nojs", $text);
 
-			if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
+			if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_docs']))) {
 				sql("UPDATE docs SET cat_ID = '".$_POST['cat']."', text = '".$text."', title = '".$_POST['titulo']."', time_last = '".$date."', acceso_leer = '".$_POST['acceso_leer']."', acceso_escribir = '".$_POST['acceso_escribir']."', acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."', version = version + 1 WHERE ID = '".$r['ID']."' LIMIT 1");
 			}
 			if (in_array($r['acceso_leer'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))) { evento_log('Documento editado: <a href="/doc/'.$r['url'].'">'.$r['title'].'</a>'); }
@@ -1943,7 +2051,7 @@ case 'afiliarse':
 		sql("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."'");
 		evento_log('Afiliado a #'.$_POST['partido']);
 	}
-	$refer_url = 'perfil/'.$pol['nick'];
+	$refer_url = 'perfil/editar';
 	break;
 
 case 'crear-partido':

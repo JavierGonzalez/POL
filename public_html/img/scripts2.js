@@ -117,7 +117,8 @@ function print_whois(whois, wnick) {
 	if (w[6] == 1) { var wa = "<img src=\"" + IMG + "a/" + w[0] + ".jpg\" style=\"float:right;margin:0 -6px 0 0;\" />"; } else { var wa = ""; }
 	if (w[11] != 0) { var wc = "<img src=\"" + IMG + "cargos/" + w[11] + ".gif\" width=\"16\" /> "; } else { var wc = ""; }
 	if (w[9] == "expulsado") { var exp = "<br /><b style=\"color:red;\">" + w[12] + "</b>"; } else { var exp = ""; }
-		$("#pnick").html(print_votonum(w[13]) + " " + wc + "<b style=\"color:grey;\"><span style=\"color:#555;\">" + wnick + "</span> (<span class=\"" + w[9] + "\">" + w[9].substr(0,1).toUpperCase() + w[9].substr(1,w[9].length) + "</span> de " + w[10] + ")</b>" + exp + "<br />" + wa + "Afil: <b>" + w[7] + "</b><br />Foro: <b>" + w[8] + "</b><br /><br />Online: <b>" + w[5] + "</b><br />Ultimo acceso: <b>" + w[2] + "</b><br />Registrado: <b>" + w[1] + "</b>").css("display","inline");
+		
+		$("#pnick").html("<legend>" + wc + "<b style=\"color:grey;\"><span style=\"color:#555;\">" + wnick + "</span> (<span class=\"" + w[9] + "\">" + w[9].substr(0,1).toUpperCase() + w[9].substr(1,w[9].length) + "</span> de " + w[10] + ")</b>" + exp + "</legend>" + wa + "Confianza: " + print_votonum(w[13]) + "<br /><!--Afil: <b>" + w[7] + "</b><br />-->Foro: <b>" + w[8] + "</b><br /><br />Online: <b>" + w[5] + "</b><br />Ultimo acceso: <b>" + w[2] + "</b><br />Registrado: <b>" + w[1] + "</b>").css("display","inline");
 	}
 }
 
@@ -475,13 +476,13 @@ function enriquecer(m, bbcode) {
 	m = m.replace(/(\s|^):\*/gi,			' <img src="'+IMG+'smiley/muacks.gif" alt=":*" border="0" title=":*" width="15" height="15" />');
 	m = m.replace(/(\s|^);\)/gi,			' <img src="'+IMG+'smiley/guino.gif" alt=";)" border="0" title=";)" width="15" height="15" />');
 	m = m.replace(/(\s|^):O/gi,				' <img src="'+IMG+'smiley/bocaabierta.gif" alt=":O" border="0" title=":O" width="15" height="15" />');
-	m = m.replace(/:troll:/gi,				' <img src="'+IMG+'smiley/troll.gif" alt=":troll:" border="0" title=":troll:" width="15" height="15" />');
-	m = m.replace(/:(tarta|roto2|palm|moneda):/gi,				' <img src="'+IMG+'smiley/$1.gif" alt=":$1:" border="0" title=":$1:" width="16" height="16" />');
+	m = m.replace(/:(tarta|roto2|palm|moneda):/gi,	' <img src="'+IMG+'smiley/$1.gif" alt=":$1:" border="0" title=":$1:" width="16" height="16" />');
+	m = m.replace(/(\s|^)(:troll:)/gi,			' <img src="'+IMG+'smiley/troll.gif" alt=":troll:" border="0" title=":troll:" width="15" height="15" />');
 
 	// URLs
-	m = m.replace(/(\s|^)(\/[-A-Z0-9\/_]{3,})/ig, ' <a href="$2" target="_blank">$2</a>'); // /url
-	m = m.replace(/(\s|^)@([-A-Z0-9_]{2,20})/ig, ' <a href="/perfil/$2" class="nick">@<b>$2</b></a>'); // @nick
-	m = m.replace(/(\s|^)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, ' <a href="$2" target="_blank">$2</a>');
+	m = m.replace(/(\s|^|>)(\/[-A-Z0-9\/_]{3,})/ig, ' <a href="$2" target="_blank">$2</a>'); // /url
+	m = m.replace(/(\s|^|>)@([-A-Z0-9_]{2,20})/ig, ' <a href="/perfil/$2" class="nick">@<b>$2</b></a>'); // @nick
+	m = m.replace(/(\s|^|>)(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, ' <a href="$2" target="_blank">$2</a>');
 
 	// BBCODE
 	if (bbcode) {

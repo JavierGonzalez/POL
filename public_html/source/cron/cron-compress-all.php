@@ -67,7 +67,7 @@ $txt_css .= compress_file('lib/kickstart/css/kickstart-menus.css', 'css');
 $txt_css .= compress_file('lib/kickstart/css/jquery.fancybox-1.3.4.css', 'css');
 $txt_css .= compress_file('lib/kickstart/css/prettify.css', 'css');
 $txt_css .= compress_file('lib/kickstart/css/chosen.css', 'css');
-//$txt_css .= compress_file('lib/kickstart/css/tiptip.css', 'css');
+$txt_css .= compress_file('lib/kickstart/css/tiptip.css', 'css');
 $txt_css .= compress_file('style2.css', 'css');
 file_put_contents($root_dir.'img/style_all.css', $txt_css);
 echo '</table>';
@@ -80,5 +80,36 @@ $txt_js .= compress_file('lib/kickstart/js/kickstart.js', 'js');
 $txt_js .= compress_file('scripts2.js', 'js');
 file_put_contents($root_dir.'img/scripts_all.js', $txt_js);
 echo '</table>';
+
+
+
+
+
+
+// Funcion ubicada aqui porque no estorba. En algun sitio tiene que estar. Es solo para indexar en gettext.
+function indexar_i18n() {
+	// Funcion inutil, cuyo unico fin es indexar textos del sistema en el sistema gettext de i18n
+	
+	// tipos votacion
+	$null = _('sondeo')._('referendum')._('parlamento')._('cargo')._('elecciones')._('votación');
+	$null = _('Sondeo')._('Referendum')._('Parlamento')._('Cargo')._('Elecciones')._('Votación');
+	
+	// Tipos nucleo acceso
+	$null = _('Privado') . _('Excluir')._('Afiliado')._('Confianza')._('Cargo')._('Grupos') . _('Nivel')._('Antiguedad')._('Autentificacion')._('Supervisores censo')._('Ciudadanos') . _('Ciudadanos global')._('Anonimos');
+	
+	// Estados votacion
+	$null = _('ok')._('end')._('del')._('borrador');
+	
+	// Tiempos
+	$null = _('años')._('meses')._('semanas')._('días')._('horas')._('minutos')._('segundos')._('Pocos segundos')._('Segundos');
+
+	// Otros
+	$null = _('puntos')._('estandar')._('multiple')._('ninguno') . _('turista')._('extranjero')._('ciudadano')._('expulsado')._('validar')._('borrado')._('activo') . _('inactivo')._('cancelado')._('cancelar')._('En')._('Hace')._('min')._('seg');
+}
+
+
+
+
+
 
 ?>

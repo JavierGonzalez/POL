@@ -23,7 +23,7 @@ if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['
 $result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
 while ($r = mysql_fetch_array($result)) { 
 	
-	$txt_nav = array('/chats'=>_('Chats'), '/chats/'.$r['url']=>$r['titulo']);
+	$txt_nav = array('/chats'=>_('Chats'), $r['titulo']);
 	$txt_tab = array('/chats/'.$r['url'].'/log'=>_('Log'), '/chats/'.$r['url'].'/opciones'=>_('Opciones'));
 
 	if ($r['pais'] != PAIS) { redirect('http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'.$_GET['b']); }
@@ -57,7 +57,7 @@ while ($r = mysql_fetch_array($result)) {
 
 // Muestra control de kicks.
 if ((nucleo_acceso($vp['acceso']['kick'])) AND ($pol['pais'] == PAIS)) {
-	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"'.IMG.'varios/kick.gif\" title=\"Kickear\" alt=\"Kickear\" border=\"0\" /></a> ';
+	$js_kick = '<a href=\"/control/kick/" + kick_nick  + "/" + chat_ID  + "/\" target=\"_blank\"><img src=\"'.IMG.'varios/kick.gif\" title=\"Kickear\" alt=\"Kickear\" /></a> ';
 } else { $js_kick = ''; }
 
 
@@ -71,7 +71,7 @@ if ($externo) {
 	if ($_SESSION['pol']['user_ID']) {
 		$txt .= '<span style="float:right;"><a href="http://www.'.DOMAIN.'">'._('Volver a VirtualPol').'</a></span>'.$titulo;
 	} else {
-		$txt .= '<span style="float:right;"><a href="'.REGISTRAR.'">'._('Crear ciudadano').'</a></span>'.$titulo;
+		$txt .= '<span style="float:right;"><a href="'.REGISTRAR.'?='.PAIS.'">'._('Crear ciudadano').'</a></span>'.$titulo;
 	}
 } else {
 	$txt .= '<span class="quitar"><span style="float:right;">[<a href="/chats/'.$_GET['a'].'/opciones">'._('Opciones').'</a>] [<a href="/chats/'.$_GET['a'].'/log">'._('Log').'</a>]</span><a href="/chats/">'._('Chat').'</a>: '.$titulo.'</span>';
@@ -92,7 +92,7 @@ $txt .= '</h1>
 <div id="vpc">
 <ul id="vpc_ul">
 <li style="margin-top:600px;color:#666;">
-<img src="'.IMG.'logo/vp2.png" alt="VirtualPol" border="0" width="200" height="60" /><br />
+<img src="'.IMG.'logo/vp2.png" alt="VirtualPol" width="200" height="60" /><br />
 <span style="float:right;">'.date('Y-m-d H:i').' &nbsp;</span>
 Chat de '.PAIS.': <b>'.$titulo.'</b><br />
 
@@ -120,16 +120,16 @@ Chat de '.PAIS.': <b>'.$titulo.'</b><br />
 </div>
 
 <div id="chatform">
-<form action="" method="POST" onSubmit="return enviarmsg();">
+<form method="POST" onSubmit="return enviarmsg();">
 
-<table border="0" width="100%">
+<table width="100%">
 <tr>
 
 <td width="46" align="right" valign="middle"><img id="vpc_actividad" onclick="actualizar_ahora();" src="'.IMG.'ico/punto_gris.png" width="16" height="16" title="Actualizar chat" style="margin-top:4px;" /></td>
 
 <td valign="middle">
 '.(isset($pol['user_ID'])?'
-<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%;" autofocus="autofocus" value="" />':boton(_('¡Crea tu ciudadano para participar!'), REGISTRAR.'?p='.PAIS, false, 'large blue')).'
+<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%;" autofocus="autofocus" value="" required />':boton(_('¡Crea tu ciudadano para participar!'), REGISTRAR.'?p='.PAIS, false, 'green')).'
 </td>
 
 <td nowrap="nowrap" valign="middle" title="Marcar para ocultar eventos del chat">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">'._('Ocultar eventos').'</label></td>

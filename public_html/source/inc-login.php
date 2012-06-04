@@ -51,7 +51,7 @@ if (isset($_COOKIE['teorizauser'])) {
 if (isset($pol['user_ID'])) {
 
 	// LOAD: $pol
-	$result = sql("SELECT lang, online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, cargos, examenes, fecha_legal, dnie, SC, IP, grupos
+	$result = sql("SELECT lang, online, estado, pais, pols, partido_afiliado, bando, fecha_last, fecha_registro, nivel, fecha_init, cargo, cargos, examenes, fecha_legal, dnie, SC, IP, grupos, socio
 FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	while($r = r($result)) {
 		$pol['pols'] = $r['pols'];
@@ -68,7 +68,7 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 		$fecha_init = $r['fecha_init'];
 		$fecha_last = $r['fecha_last'];
 		
-		if (isset($r['lang'])) { $pol['config']['lang'] = $r['lang']; }
+		if ((isset($r['lang'])) AND ($_SERVER['REQUEST_URI'] != '/accion.php')) { $pol['config']['lang'] = $r['lang']; }
 
 		$_SESSION['pol']['cargo'] = $r['cargo'];
 		$_SESSION['pol']['cargos'] = $r['cargos'];
@@ -76,6 +76,7 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 		$_SESSION['pol']['nivel'] = $r['nivel'];
 		$_SESSION['pol']['pais'] = $r['pais'];
 		$_SESSION['pol']['estado'] = $r['estado'];
+		$_SESSION['pol']['socio'] = $r['socio'];
 		$_SESSION['pol']['dnie'] = $r['dnie'];
 		$_SESSION['pol']['SC'] = $r['SC'];
 		$_SESSION['pol']['partido_afiliado'] = $r['partido_afiliado'];
@@ -95,12 +96,9 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	if ($pol['estado'] != 'expulsado') { // No esta expulsado
 		if (isset($session_new)) { // START SESSION
 			$update = ", visitas = visitas + 1, nav = '".$_SERVER['HTTP_USER_AGENT']."', fecha_init = '".$date."'";
-			if ($pol['IP'] != $IP) { 
-				$host = gethostbyaddr(long2ip($IP)); if ($host == '') { $host = long2ip($IP); }
-				$update .= ", IP = '".$IP."', host = '".$host."', hosts = CONCAT(hosts,'|".$host."')";
-				if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { $update .= ", IP_proxy = '".$_SERVER['HTTP_X_FORWARDED_FOR']."'"; }
-			}
 			if ($fecha_init != '0000-00-00 00:00:00') { $update .= ", online = online + ".(strtotime($fecha_last)-strtotime($fecha_init)); }
+			include_once('inc-functions-accion.php');
+			users_con($pol['user_ID']);
 		}
 		sql("UPDATE LOW_PRIORITY users SET paginas = paginas + 1, fecha_last = '".$date."'".$update." WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	} else { unset($pol); session_unset(); session_destroy(); } // impide el acceso a expulsados
@@ -120,9 +118,10 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	if ($pol['estado'] == 'expulsado') {  session_unset(); session_destroy(); }
 }
 
-if ((isset($pol['config']['lang'])) AND ($pol['config']['lang'] != 'es_ES')) {
+$vp['lang'] = $pol['config']['lang'];
+if ((isset($vp['lang'])) AND ($vp['lang'] != 'es_ES')) {
 	// Carga internacionalización
-	$locale = $pol['config']['lang'];
+	$locale = $vp['lang'];
 	putenv("LC_ALL=$locale");
 	setlocale(LC_ALL, $locale);
 	bindtextdomain('messages', '../locale');

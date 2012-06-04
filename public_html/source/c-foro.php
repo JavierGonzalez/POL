@@ -105,10 +105,10 @@ ORDER BY nivel DESC", $link);
 			}
 			$html .= '
 <p>Título:<br />
-<input name="title" size="60" maxlength="80" type="text" value="'.str_replace('"', '&#34;', $edit_title).'" /></p>
+<input name="title" size="60" maxlength="80" type="text" value="'.str_replace('"', '&#34;', $edit_title).'" required /></p>
 
 <p'.($edit&&$edit_user_ID!=$pol['user_ID']?' style="display:none;"':'').'>Mensaje:<br />
-<textarea name="text" style="width:600px;height:260px;">' . $edit_text . '</textarea><br />
+<textarea name="text" style="width:600px;height:260px;" required>'.$edit_text.'</textarea><br />
 <span style="color:grey;font-size:12px;">Etiquetas: [b]...[/b] [em]...[/em] [quote]...[/quote] [img]url[/img] [youtube]url-youtube[/youtube], auto-enlaces.</span></p>
 
 <p>'.boton('Enviar', 'submit', false, 'large blue').' En calidad de: <select name="encalidad">' . $select_cargos . '
@@ -133,7 +133,7 @@ ORDER BY nivel DESC", $link);
 
 <fieldset><legend>Mensaje en este hilo</legend>
 <p>
-<textarea name="text" style="width:570px;height:250px;">' . $edit_text . '</textarea><br />
+<textarea name="text" style="width:570px;height:250px;" required>'.$edit_text.'</textarea><br />
 <span style="color:grey;font-size:12px;">Etiquetas: [b]...[/b] [em]...[/em] [quote]...[/quote] [img]url[/img] [youtube]url-youtube[/youtube], auto-enlaces.</span></p>
 
 <p>'.boton('Enviar', 'submit', false, 'blue large').' En calidad de: <select name="encalidad">' . $select_cargos . '
@@ -526,9 +526,16 @@ ORDER BY time ASC", $link);
 		if (nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) {
 
 			$txt_table .= '<tr class="amarillo">
-<td style="padding-right:4px;"><h2><a href="/foro/'.$r['url'].'" style="font-size:22px;margin-left:8px;"><b>'.$r['title'].'</b></a></h2></td>
-<td align="right"><b style="font-size:19px;">'.$r['num'].'</b></td>
-<td style="color:green;" colspan="2"><span style="float:right;color:grey;">'.$el_acceso.'</span><span style="font-size:18px;">'.$r['descripcion'].'</span></td>
+
+<td colspan="3"><h2><a href="/foro/'.$r['url'].'" style="font-size:22px;margin-left:8px;"><b>'.$r['title'].'</b></a></h2></td>
+
+
+<td><span style="float:right;">'.$el_acceso.'</span><span style="font-size:18px;color:green;">'.$r['descripcion'].'</span></td>
+
+
+
+
+
 <td align="right" width="10%">'.boton('Crear Hilo', (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?'/foro/'.$r['url'].'#enviar':false), false, 'large').'</td>
 </tr>';
 

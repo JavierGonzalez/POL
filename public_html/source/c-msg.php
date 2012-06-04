@@ -38,7 +38,7 @@ LIMIT 50", $link);
 	while($r = mysql_fetch_array($result)){
 
 
-		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>'.crear_link($r['nick_envia']).'</b><br /><b>'.str_replace(' ', '&nbsp;', $r['cargo']).'</b><acronym title="'.$r['time'].'" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top" class="rich">'.$r['text'].'</td><td valign="top">'.boton(_('Responder'), '/msg/'.strtolower($r['nick_envia'])).'</td><td valign="top"></td></tr>'."\n";
+		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>'.crear_link($r['nick_envia']).'</b><br /><b>'.str_replace(' ', '&nbsp;', $r['cargo']).'</b><acronym title="'.$r['time'].'" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top" class="rich">'.$r['text'].'</td><td valign="top">'.boton(_('Responder'), '/msg/'.$r['nick_envia']).'</td><td valign="top"></td></tr>'."\n";
 	}
 
 	$txt .= '</table><p><b>(*)</b> <em>Esta página está en versión ALPHA, el motivo es que cabe la "extraña" posibilidad de que falten algunos mensajes. Esto suceder&aacute; cuando el RECEPTOR elimine tu mensaje enviado (ya que el mensaje se borra de la base de datos). Puede resultar incoherente la ausencia de algun mensaje enviado.</em></p>';
@@ -63,11 +63,12 @@ LIMIT 50", $link);
 	if ($_GET['a'] == 'cargos') {
 		$pre_cargo = $_GET['b'];
 	} else if ($_GET['a'] != 'enviar') { 
-		$pre_nick = strtolower($_GET['a']); 
+		$pre_nick = $_GET['a']; 
 		if ($pre_nick=='') {
 			$ocultar_formulario = 'style="display:none;"';
 		}
 	}
+	if (isset($_POST['ciudadanos'])) { $pre_nick = $_POST['ciudadanos']; }
 
 	$result = mysql_query("SELECT cargo_ID, nombre,
 (SELECT COUNT(*) FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'true' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS cargos_num
@@ -135,7 +136,7 @@ function click_form(tipo) {
 <p><b>'._('Destino').':</b><table border="0" style="margin-top:-15px;">
 <tr onclick="click_form(\'ciudadano\');">
 <td nowrap="nowrap"><input id="radio_ciudadano" type="radio" name="para" value="ciudadano"'.(!$pre_cargo?' checked="checked"':'').' />'._('Ciudadano').':</td>
-<td nowrap="nowrap"><input id="ciudadano" tabindex="1" type="text" name="nick" value="' . $pre_nick . '" style="font-size:17px;width:300px;" /> ('._('hasta').' 9 '._('ciudadanos separados por espacios').')</td>
+<td nowrap="nowrap"><input id="ciudadano" tabindex="1" type="text" name="nick" value="'.str_replace('-', ' ', $pre_nick).'" style="font-size:17px;width:300px;" /> '.(nucleo_acceso($vp['acceso']['control_gobierno'])?'':'('._('Hasta').' '.MP_MAX.', '._('nicks separados por espacios').')').'</td>
 </tr>
 <tr onclick="click_form(\'cargos\');">
 <td nowrap="nowrap"><input id="radio_cargos" type="radio" name="para" value="cargo"'.($pre_cargo?' checked="checked"':'').' />'._('Cargos').':</td>
@@ -162,7 +163,7 @@ function click_form(tipo) {
 </p>
 
 <p><b>'._('Mensaje').':</b><br />
-<textarea tabindex="2" name="text" style="width:550px;height:200px;"></textarea></p>
+<textarea tabindex="2" name="text" style="width:550px;height:200px;" required></textarea></p>
 
 <input type="hidden" name="calidad" value="0" />
 

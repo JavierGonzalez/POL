@@ -43,6 +43,7 @@ body {
 	top:6px;
 	left:5px;
 }
+#header-logo img { border:1px solid #BBB; }
 #header-logo-p { position:absolute; top:15px; left:100px; white-space:nowrap; }
 #header-right {
 	position:absolute;
@@ -75,7 +76,7 @@ body {
 }
 #footer-left {
 	margin-right:300px;
-	max-width:850px;
+	max-width:600px;
 }
 #footer-right {
 	position:absolute;
@@ -106,7 +107,7 @@ h3 { font-size:18px; }
 }
 
 .htxt {
-	padding:0 4px;
+	padding:0 4px 1px 4px;
 	color:#AAA;
 	font-size:18px;
 	white-space:nowrap;
@@ -328,6 +329,7 @@ ul.breadcrumbs.alt1 li a { border-bottom:1px solid #CCC; }
 .quote {
 	background: url('bg75.png') repeat;
 	border:1px solid #CCC;
+	font-size:15px;
 	border-right:none;
 	border-bottom:none;
 	border-radius: 12px; 

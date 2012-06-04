@@ -136,8 +136,8 @@ LIMIT 60");
 
 } else if ($_GET['b'] == 'bloqueos') {
 
-	$txt_title = _('Control').': SC | '._('bloqueos');
-	$txt_nav = array('/control'=>_('Control'), '/control/supervisor-censo'=>'SC', _('Bloqueos'));
+	$txt_title = 'SC | '._('bloqueos');
+	$txt_nav['/sc/bloqueos'] = _('Bloqueos');
 
 	$result = sql("SELECT valor, dato FROM config WHERE PAIS IS NULL");
 	while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
@@ -430,7 +430,6 @@ ORDER BY num DESC, IP ASC");
 	while($r = r($result)) {
 		$clones = array();
 		$nota_SC = '';
-		$desarrollador = false;
 		$clones_expulsados = true;
 		$confianza_total = 0;
 		$result2 = sql("SELECT ID, nick, estado, pais, partido_afiliado, nota_SC, 
@@ -443,7 +442,7 @@ ORDER BY fecha_registro DESC");
 			if ($r2['estado'] != 'expulsado') { $clones_expulsados = false; } 
 			$clones[] = '<b>'.crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']).'</b>';
 		}
-		if ((!$desarrollador) AND (!$clones_expulsados)) {
+		if (!$clones_expulsados) {
 			$txt .= '<tr><td>' . $r['num'] . '</td><td><span style="float:right;">'.ocultar_IP($r['host'], 'host').'</span>'.implode(' & ', $clones).'</td><td>'.long2ip($r['IP']).'</td><td nowrap="nowrap">'.$nota_SC.'</td></tr>';
 		}
 	}
@@ -519,10 +518,10 @@ WHERE pass = '" . $r['pass'] . "'");
 
 
 	$txt .= '<fieldset><legend>4. '._('Ocultación (proxys, TOR...)').' ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
-	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%proxy%');
-	$sql_anon = '';
-	foreach ($array_searchtor AS $filtro) { if ($sql_anon != '') { $sql_anon .= ' OR ';  } $sql_anon .= "hosts LIKE '".$filtro."'"; }
-	$result = sql("SELECT nick, estado, host, IP, nav, nota_SC FROM users WHERE ".$sql_anon." ORDER BY fecha_registro DESC");
+	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%vpn%', '%proxy%');
+	$sql_anon = array();
+	foreach ($array_searchtor AS $filtro) { $sql_anon[] = "hosts LIKE '".$filtro."' OR host LIKE '".$filtro."'"; }
+	$result = sql("SELECT nick, estado, host, IP, nav, nota_SC FROM users WHERE ".implode(" OR ", $sql_anon)." ORDER BY fecha_registro DESC");
 	while($r = r($result)) {
 		$txt .= '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td nowrap="nowrap"><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td><td nowrap="nowrap">'.print_nota_SC($r['nota_SC'], $r['ID']).'</td></tr>';
 	}
@@ -679,7 +678,7 @@ case 'gobierno':
 'control_gobierno'=>_('Configuración principal'),
 'control_cargos'=>_('Configurar cargos'),
 'control_grupos'=>_('Configurar grupos'),
-'control_sanciones'=>_('Imponer sanciones'),
+'control_sancion'=>_('Imponer sanciones'),
 'crear_partido'=>_('Crear partido'),
 'examenes_decano'=>_('Gestionar exámenes'),
 'examenes_profesor'=>_('Crear preguntas de examen'),
@@ -690,9 +689,14 @@ case 'gobierno':
 'referendum'=>_('Aprobar referéndums'),
 'sondeo'=>_('Aprobar sondeos'),
 'votacion_borrador'=>_('Crear borradores de votación'),
+'control_socios'=>_('Gestión de socios'),
+'api_borrador'=>_('Crear borradores en API'),
+'cargo'=>_('Control cargos'),
+'control_docs'=>_('Control de los documentos'),
 );
-		
-		$txt .= '<p>'._('Los privilegios permiten realizar acciones especiales. Este panel muestra los privilegios y quien los ejerce actualmente').'.</p>
+
+
+	$txt .= '<fieldset>'._('Los privilegios sirven para gestionar permisos especiales del sistema. Este panel muestra los privilegios y quien los ostenta actualmente').'.</fieldset>
 <fieldset><legend>'._('Privilegios').'</legend><form action="/accion.php?a=gobierno&b=privilegios" method="POST"><table>
 <tr>
 <th></th>
@@ -702,8 +706,8 @@ case 'gobierno':
 		foreach ($vp['acceso'] AS $acceso => $cfg) {
 			$txt .= '<tr>
 <td align="right" nowrap="nowrap"><b>'.$privilegios_array[$acceso].'</b></td>
-<td>'.($acceso=='control_gobierno'?'':control_acceso(false, $acceso, $cfg[0], $cfg[1], 'anonimos ciudadanos_global')).'</td>
-<td>'.ucfirst(verbalizar_acceso($cfg[0],$cfg[1])).'</td>
+<td>'.($acceso=='control_gobierno'?'':control_acceso(false, $acceso, $cfg[0], $cfg[1], 'anonimos ciudadanos_global', true)).'</td>
+<td>'.ucfirst(verbalizar_acceso($cfg)).'</td>
 </tr>';
 		}
 		$txt .= '<tr><td colspan="3" align="center">'.boton(_('Guardar'), (nucleo_acceso($vp['acceso']['control_gobierno'])?'submit':false), '¿Estás seguro de querer MODIFICAR los privilegios?', 'large red').'</td></tr></table></form></fieldset>';
@@ -713,25 +717,32 @@ case 'gobierno':
 		
 		$txt_nav[] = _('Notificaciones');
 		
-		$txt .= '<form action="/accion.php?a=gobierno&b=notificaciones&c=add" method="post">
+		$txt .= '<fieldset>'._('Las notificaciones son mensajes eventuales enviados a cada usuario que aparecen de forma resaltada en el menú de notificaciones. Este panel permite crear notificaciones personalizadas.').'</fieldset>
+		
+<form action="/accion.php?a=gobierno&b=notificaciones&c=add" method="post">
 
 <fieldset><legend>'._('Crear notificación (para todos los ciudadanos)').'</legend>
 
 <table border="0">
 <tr>
 <td>'._('Texto').': </td>
-<td><input type="text" name="texto" value="" size="54" maxlength="50" /></td>
+<td><input type="text" name="texto" value="" size="52" maxlength="50" required /></td>
 </tr>
+
 <tr>
 <td>URL: </td>
-<td><input type="text" name="url" value="" size="64" maxlength="60" /> ('._('si no cabe usa un acortador').')</td>
+<td><input type="url" name="url" value="" size="64" maxlength="80" required placeholder="http://" /> ('._('si no cabe usa un acortador').')</td>
+</tr>
+
+<tr>
+<td>Destino: </td>
+<td>'.control_acceso(false, 'acceso', ($_POST['ciudadanos']?'privado':'ciudadanos'), $_POST['ciudadanos'], 'anonimos ciudadanos_global excluir', true).'</td>
 </tr>
 
 <tr>
 <td></td>
 <td>
-'.boton(_('Crear notificación'), (nucleo_acceso($vp['acceso']['control_gobierno'])?'submit':false), false, 'red').'
- <span style="color:red;"><b>'._('Cuidado').'.</b> '._('Lo recibirán todos los ciudadanos de').' '.PAIS.'.</span></td>
+'.boton(_('Crear notificación'), (nucleo_acceso($vp['acceso']['control_gobierno'])?'submit':false), '¿Estás seguro de crear esta notificación?\n\n¡Cuidado! compruébalo inmediatamente, en caso de error puedes borrarlo.', 'red').'</td>
 </tr>
 </table>
 </fieldset>
@@ -759,8 +770,8 @@ case 'gobierno':
 			$txt .= '<tr>
 <td align="right">'.timer($r['time']).'</td>
 <td><a href="'.$r['url'].'">'.$r['texto'].'</a></td>
-<td align="right"><b>'.$r['num'].'</b></td>
-<td align="right">'.$leido.'</td>
+<td align="right"><b>'.num($r['num']).'</b></td>
+<td align="right">'.num($leido).'</td>
 <td align="right">'.num($leido*100/$r['num'], 2).'%</td>
 <td>'.(nucleo_acceso($vp['acceso']['control_gobierno'])?boton('X', '/accion.php?a=gobierno&b=notificaciones&c=borrar&noti_ID='.$r['noti_ID'], false, 'small'):boton('X', false, false, 'small')).'</td>
 </tr>';
@@ -861,10 +872,6 @@ ORDER BY time ASC");
 </fieldset>';
 
 
-
-
-
-
 	} elseif ($_GET['b'] == 'economia') {
 
 
@@ -911,7 +918,6 @@ ORDER BY time ASC");
 ';
 
 $sel = '';
-$sel[$pol['config']['frontera']] = ' selected="selected"';
 
 	$txt .= '<tr><td colspan="2"></td></tr></table>
 </fieldset>
@@ -946,21 +952,11 @@ ORDER BY salario DESC");
 	} else {
 
 
-
-	$defcon = '<select name="defcon"'.$dis.' style="font-size:25px;color:grey;">';
-	for ($i=5;$i>=1;$i--) {
-		if ($i == $pol['config']['defcon']) { $sel = ' selected="selected"'; } else { $sel = ''; }
-		$defcon .= '<option value="' . $i . '" style="background:' . $defcon_bg[$i] . ';"' . $sel . '>' . $i . '</option>';
-	}
-	$defcon .= '</select>';
-
-
 $txt_header .= '
 <script type="text/javascript">
 function change_bg(img) {
 	$("#header").css("background","#FFFFFF url(\''.IMG.'bg/"+img+"\') repeat top left");
 }
-
 $(function() {
 	$("#fondos").hover(
 		function(e){
@@ -970,27 +966,51 @@ $(function() {
 		}
 	);
 });
-
 </script>';
 
-
-
-
+	$defcon = '<select name="defcon"'.$dis.' style="font-size:25px;color:grey;">';
+	for ($i=5;$i>=1;$i--) {
+		if ($i == $pol['config']['defcon']) { $sel = ' selected="selected"'; } else { $sel = ''; }
+		$defcon .= '<option value="' . $i . '" style="background:' . $defcon_bg[$i] . ';"' . $sel . '>' . $i . '</option>';
+	}
+	$defcon .= '</select>';
 
 	$txt .= '
-<form action="/accion.php?a=gobierno&b=config" method="post">
+<form action="/accion.php?a=gobierno&b=config" method="post" enctype="multipart/form-data">
 
 <table border="0" cellspacing="3" cellpadding="0"><tr><td valign="top">
 
 
-<fieldset><legend>'._('Configuración de Gobierno').'</legend>
+<fieldset><legend>'._('Configuración principal').'</legend>
 
 <table border="0" cellspacing="3" cellpadding="0">
 
 
-<tr><td align="right">'._('Descripción').':</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'"'.$dis.' /></td></tr>
+<tr><td align="right">'._('Siglas').':</td><td><b>'.PAIS.'</b></td></tr>
 
-<tr><td align="right">Idioma:</td><td><select name="lang">';
+<tr><td align="right">'._('Nombre').':</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'" /></td></tr>
+
+
+
+<tr><td align="right">'._('Tipo de plataforma').':</td><td>
+<select name="tipo">';
+foreach (array('plataforma', 'asamblea', 'simulador') AS $tipo) {
+	$txt .= '<option value="'.$tipo.'"'.($tipo==$pol['config']['tipo']?' selected="selected"':'').'>'.ucfirst($tipo).'</option>';
+}
+$txt .= '
+</select></td></tr>
+
+
+<tr><td align="right">'._('Zona horaria').':</td><td>
+<select name="timezone">';
+foreach (array('Europe/Madrid', 'America/New_York', 'Chile/Continental') AS $tipo) {
+	$txt .= '<option value="'.$tipo.'"'.($tipo==$pol['config']['timezone']?' selected="selected"':'').'>'.ucfirst($tipo).'</option>';
+}
+$txt .= '
+</select></td></tr>
+
+
+<tr><td align="right">'._('Idioma').':</td><td><select name="lang">';
 	$result = sql("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'lang'");
 	while ($r = r($result)) { $plataforma_lang = $r['valor']; }
 
@@ -999,33 +1019,34 @@ $(function() {
 	}
 	$txt .= '</select></td></tr>
 
-'.(ASAMBLEA?'<input type="hidden" name="defcon" value="5" /><input type="hidden" name="online_ref" value="0" />':'<tr><td align="right">DEFCON:</td><td>'.$defcon.'</td></tr><tr><td align="right">'._('Referencia').':</td><td><input style="text-align:right;" type="text" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '"'.$dis.' /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td></tr>');
+'.(!ECONOMIA?'<input type="hidden" name="defcon" value="5" /><input type="hidden" name="online_ref" value="0" />':'<tr><td align="right">DEFCON:</td>
+<td>'.$defcon.'</td></tr>
+
+<tr><td align="right">'._('Referencia').':</td>
+<td><input type="number" name="online_ref" size="3" maxlength="10" value="' . round($pol['config']['online_ref']/60) . '" min="5" max="90" required /> min online (' . duracion($pol['config']['online_ref'] + 1) . ')</td>
+
+</tr>');
 
 $palabra_gob = explode(':', $pol['config']['palabra_gob']);
 
-$sel_exp = '';
-$sel_exp[$pol['config']['examenes_exp']] = ' selected="selected"';
-
-$txt .= '
-<tr><td align="right" valign="top">'._('Mensaje global').':</td><td align="right">
-<input type="text" name="palabra_gob0" size="24" maxlength="200" value="' . $palabra_gob[0] . '"'.$dis.' /><br />
-http://<input type="text" name="palabra_gob1" size="19" maxlength="200" value="' . $palabra_gob[1] . '"'.$dis.' /></td></tr>
-
-<tr><td align="right"><acronym title="Tiempo de vigencia maxima de un examen">'._('Caducidad exámenes').'</acronym>:</td><td>
-<select name="examenes_exp"'.$dis.'>
-<option value="7776000"' . $sel_exp['7776000'] . '>3 '._('meses').'</option>
-<option value="5184000"' . $sel_exp['5184000'] . '>2 '._('meses').'</option>
-<option value="2592000"' . $sel_exp['2592000'] . '>30 '._('días').'</option>
-<option value="1296000"' . $sel_exp['1296000'] . '>15 '._('días').'</option>
-</select>';
-
-
 
 $txt .= '
 
-<tr><td align="right">'._('Expiración chats').':</td><td><input type="text" name="chat_diasexpira" size="2" maxlength="6" value="'.$pol['config']['chat_diasexpira'].'"'.$dis.' /> <acronym title="Dia inactivos">'._('días').'</acronym></td></tr>
+<tr><td align="right">'._('Expiración de candidatura tras').':</td>
+<td><input type="number" name="examenes_exp" value="'.$pol['config']['examenes_exp'].'" min="5" max="90" required /> '._('días').' '._('inactivo').'<td></tr>
+
+<tr><td align="right">'._('Expiración chats').':</td>
+<td><input type="number" name="chat_diasexpira" value="'.$pol['config']['chat_diasexpira'].'" min="10" max="90" required /> <acronym title="Dia inactivos">'._('días').'</acronym></td></tr>
+
+
+
+<tr><td valign="top" colspan="2">'._('Mensaje del Gobierno').':<br />
+<textarea name="palabra_gob" style="width:400px;height:100px;">'.strip_tags($pol['config']['palabra_gob']).'</textarea>
+</td></tr>
+
 </table>
 </fieldset>
+
 
 
 </td><td valign="top">
@@ -1034,7 +1055,8 @@ $txt .= '
 
 <fieldset><legend>'._('Diseño').'</legend>
 <table>
-<tr><td align="right">'._('Imagen tapiz').' (1440x100):</td>
+<tr>
+<td align="right">'._('Tapiz').':</td>
 <td>
 <select id="fondos" name="bg">
 <option value="">'._('Por defecto').'</option>';
@@ -1043,22 +1065,37 @@ $sel2[$pol['config']['bg']] = ' selected="selected"';
 
 $directorio = opendir(RAIZ.'/img/bg/'); 
 while ($archivo = readdir($directorio)) {
-	if (($archivo != 'borrados') AND ($archivo != '.') AND ($archivo != '..') AND (substr($archivo,0,1) != '.') AND ($archivo != 'index.php')) {
+	if (preg_match("/.(gif|jpg|png)$/i", $archivo)) {
 		$txt .= '<option value="'.$archivo.'"'.$sel2[$archivo].' onclick="change_bg(\''.$archivo.'\')"  onmouseover="change_bg(\''.$archivo.'\')">'.$archivo.'</option>';
 	}
 }
 closedir($directorio); 
 
 $txt .= '</select>
+</td>
 </tr>
 
-</td></tr></table>
+<tr>
+<td align="right">'._('Añadir tapiz').':</td>
+<td nowrap><input type="file" name="nuevo_tapiz" accept="image/jpg" /> (jpg, 1440x100)</td>
+</tr>
+
+<tr>
+<td align="right" nowrap>'._('Bandera').':<br /><img src="'.IMG.'banderas/'.PAIS.'.png?'.rand(10000,99999).'" width="80" height="50" border="0" /></td>
+<td nowrap><input type="file" name="nuevo_logo" accept="image/png" /> (png, 80x50, max 50kb)</td>
+</tr>
+
+<tr>
+<td align="right">'._('Color de fondo').':</td>
+<td><input type="color" name="bg_color" value="'.strtolower($pol['config']['bg_color']).'" style="background:'.$pol['config']['bg_color'].';" /></td>
+</tr>
+
+</table>
 </fieldset>
 
+<p>'.boton(_('Guardar'), ($dis?false:'submit'), false, 'large red').'</p>
+
 </td></tr></table>
-
-
-<p style="text-align:center;">'.boton(_('Guardar'), ($dis?false:'submit'), false, 'large red').'</p>
 
 </form>';
 
@@ -1074,11 +1111,21 @@ case 'expulsiones':
 
 if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 
-	$txt_title = 'Control: '._('Expulsiones').' | '._('Expulsar');
+	$txt_title = 'Expulsar: '.$_GET['c'];
 	$txt_nav = array('/control'=>_('Control'), '/control/expulsiones'=>_('Expulsiones'), _('Expulsar'));
 
 
 	if (isset($sc[$pol['user_ID']])) { $disabled = ''; } else { $disabled = ' disabled="disabled"'; }
+
+
+	if (is_numeric(str_replace('-', '', $_GET['c']))) {
+		$nicks = array();
+		$result = sql("SELECT nick FROM users WHERE ID IN ('".implode("','", explode('-', $_GET['c']))."') AND estado != 'expulsado'");
+		while ($r = r($result)) { $nicks[] = $r['nick']; }
+		$_GET['c'] = implode('-', $nicks);
+	}
+
+
 	$txt .= '
 
 <p>'._('Las expulsiones son efectuadas por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminación forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.virtualpol.com/TOS">Condiciones de Uso</a>').'.</p>
@@ -1086,8 +1133,8 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 <form action="/accion.php?a=expulsar" method="post">
 
 <ol>
-<li><b>'._('Nick').':</b> '._('el usuario a expulsar').'.<br />
-<input type="text" value="'.$_GET['c'].'" name="nick" size="20" maxlength="20" style="font-weight:bold;" />
+<li><b>'._('Nick').':</b> '._('usuarios a expulsar').'.<br />
+<input type="text" value="'.str_replace('-', ' ', $_GET['c']).'" name="nick" size="50" maxlength="900" style="font-weight:bold;" required />
 <br /><br /></li>
 
 <li>'._('<b>Motivo de expulsión:</b> si son varios elegir el mas claro').'.<br />
@@ -1176,6 +1223,7 @@ WHERE ID = '".$_GET['c']."' LIMIT 1");
 (SELECT estado FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_estado,
 (SELECT nick FROM users WHERE ID = expulsiones.autor LIMIT 1) AS nick_autor
 FROM expulsiones
+WHERE estado != 'indultado'
 ORDER BY expire DESC");
 	while($r = r($result)){
 		
@@ -1195,7 +1243,7 @@ ORDER BY expire DESC");
 </tr>' . "\n";
 
 		}
-		$txt .= '</table>';
+		$txt .= '</table><p>Indultados de forma excepcional todos las expulsiones anteriores al 1 de Enero del 2012.</p>';
 	}
 	break;
 
@@ -1238,7 +1286,7 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['c']."' LIMIT 1");
 <form action="/accion.php?a=kick" method="post">
 '.($_GET['c']?'<input type="hidden" name="chat_ID" value="'.$_GET['c'].'" />':'').'
 <ol>
-<li><b>'._('Nick').':</b> '._('el ciudadano').'.<br /><input type="text" value="' . $_GET['b'] . '" name="nick" size="20" maxlength="20" /><br /><br /></li>
+<li><b>'._('Nick').':</b> '._('el ciudadano').'.<br /><input type="text" value="' . $_GET['b'] . '" name="nick" size="20" maxlength="20" required /></li>
 
 <li><b>'._('Duración').':</b> '._('duración temporal de este kick').'.<br />
 <select name="expire">
@@ -1259,13 +1307,11 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['c']."' LIMIT 1");
 <option value="259200">3 días</option>
 <option value="518400">6 días</option>
 <option value="777600">9 días</option>
-</select><br /><br /></li>
+</select></li>
 
-<li><b>'._('Motivo breve').':</b> '._('frase con el motivo de este kick, se preciso').'.<br /><input type="text" name="razon" size="60" maxlength="255" /><br /><br /></li>
+<li><b>'._('Motivo breve').':</b> '._('frase con el motivo de este kick, se preciso').'.<br /><input type="text" name="razon" size="60" maxlength="255" required /></li>
 
-<li><b>'._('Pruebas').':</b> '._('puedes pegar aquí las pruebas sobre el kick').'.<br /><textarea name="motivo" cols="70" rows="6" style="color: green; font-weight: bold;"></textarea></p>
-
-<br /><br /></li>
+<li><b>'._('Pruebas').':</b> '._('puedes pegar aquí las pruebas sobre el kick').'.<br /><textarea name="motivo" cols="70" rows="6" style="color: green; font-weight: bold;" required></textarea></p></li>
 
 
 <li>'.boton(_('Kickear'), ($disabled==''?'submit':false), false, 'red').'</li></ol></form>

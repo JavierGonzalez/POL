@@ -10,9 +10,7 @@
 include('inc-login.php');
 
 
-$txt_description = 'La primera Red Social Democrática. Simulador Politico y social Español, democracia participativa, simulador, politica'; 
-
-
+$txt_description = _('La primera Red Social Democrática').'. Simulador Politico y social Español, democracia participativa, simulador, politica'; 
 
 /* Datos estadisticos
 Se contabilizan los siguientes datos antiguos conservadas en tablas antiguas.
@@ -23,21 +21,18 @@ Hispania 1079 15546
 Vulcan 161 954
 VP 369 11341
 */
-$result = mysql_query("SELECT COUNT(*) AS num FROM votacion", $link);
-while($r = mysql_fetch_array($result)) { $num_votaciones = $r['num']+2784; }
+$result = sql("SELECT COUNT(*) AS num FROM votacion");
+while($r = r($result)) { $num_votaciones = $r['num']+2784; }
 
-$result = mysql_query("SELECT COUNT(*) AS num FROM votacion_votos", $link);
-while($r = mysql_fetch_array($result)) { $num_votaciones_votos = $r['num']+46133; }
+$result = sql("SELECT COUNT(*) AS num FROM votacion_votos");
+while($r = r($result)) { $num_votaciones_votos = $r['num']+46133; }
 
-$result = mysql_query("SELECT COUNT(*) AS num FROM votos", $link);
-while($r = mysql_fetch_array($result)) { $num_votos = $r['num']; }
+$result = sql("SELECT COUNT(*) AS num FROM votos");
+while($r = r($result)) { $num_votos = $r['num']; }
 
 $txt_nav = array(_('Bienvenido a VirtualPol'));
 
-$txt .= '
-
-
-<table>
+$txt .= '<table>
 
 <tr><td valign="top">
 
@@ -67,41 +62,39 @@ $txt .= '
 
 </td><td valign="top">
 
-<br />
-
-<table border="0" cellpadding="2" cellspacing="0">
+<table border="0" cellpadding="2" cellspacing="0" width="430">
 <tr>
-<th colspan="2" align="left">Plataformas</th>
-<th colspan="2" align="left">Población</th>
+<th colspan="2" align="left">'._('Plataformas').'</th>
+<th align="left">'._('Población').'</th>
 </tr>';
 
-$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE dnie = 'true'", $link);
-while($r = mysql_fetch_array($result)) { $autentificados = $r['num']; }
+$result = sql("SELECT COUNT(ID) AS num FROM users WHERE dnie = 'true'");
+while($r = r($result)) { $autentificados = $r['num']; }
 
 foreach ($vp['paises'] AS $pais) {
 	$pais_low = strtolower($pais);
 	
 	// ciudadanos
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE pais = '".$pais."' AND estado = 'ciudadano'", $link);
-	while($r = mysql_fetch_array($result)) { $pais_pob = $r['num']; $pais_pob_num[$pais] = $r['num']; }
+	$result = sql("SELECT COUNT(ID) AS num FROM users WHERE pais = '".$pais."' AND estado = 'ciudadano'");
+	while($r = r($result)) { $pais_pob = $r['num']; $pais_pob_num[$pais] = $r['num']; }
 
 	// dias de existencia
-	$result = mysql_query("SELECT COUNT(stats_ID) AS num FROM stats WHERE pais = '".$pais."'", $link);
-	while($r = mysql_fetch_array($result)) { $pais_dias = $r['num']; }
+	$result = sql("SELECT COUNT(stats_ID) AS num FROM stats WHERE pais = '".$pais."'");
+	while($r = r($result)) { $pais_dias = $r['num']; }
 
 
 	// Presidente
 	$pais_presidente = '';
-	$result = mysql_query("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '7'", $link);
-	while($r = mysql_fetch_array($result)) { $pais_presidente = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'" class="nick"><b style="font-size:18px;">'.$r['nick'].'</b></a>'; }
+	$result = sql("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '7'");
+	while($r = r($result)) { $pais_presidente = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'" class="nick"><b style="font-size:18px;">'.$r['nick'].'</b></a>'; }
 
 	$pais_vice = '';
-	$result = mysql_query("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '19'", $link);
-	while($r = mysql_fetch_array($result)) { $pais_vice = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'" class="nick" style="font-size:18px;">' . $r['nick'] . '</a>'; }
+	$result = sql("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '19'");
+	while($r = r($result)) { $pais_vice = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'" class="nick" style="font-size:18px;">' . $r['nick'] . '</a>'; }
 
-	// DEFCON
-	$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".$pais_low."' AND dato = 'pais_des'", $link);
-	while($r = mysql_fetch_array($result)) { $pais_config[$r['dato']] = $r['valor']; }
+
+	$result = sql("SELECT valor, dato FROM config WHERE pais = '".$pais_low."' AND dato IN ('pais_des', 'tipo')");
+	while($r = r($result)) { $pais_config[$r['dato']] = $r['valor']; }
 
 
 	// GEN GRAFICO CIRCULAR
@@ -120,57 +113,47 @@ foreach ($vp['paises'] AS $pais) {
 
 
 	$txt .= '<tr style="background:'.$vp['bg'][$pais].';">
-<td><a href="http://'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'_60.gif" border="0" alt="'.$pais.'" width="60" height="40" /></a></td>
+<td><a href="http://'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" alt="'.$pais.'" /></a></td>
 
-<td nowrap="nowrap"><a href="http://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:24px;">'.$pais.'</b></a><br /><em style="color:#777;">'.$pais_config['pais_des'].'</em></td>
+<td><a href="http://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:18px;">'.$pais_config['pais_des'].'</b></a><br />
+<em style="color:#777;">'.ucfirst($pais_config['tipo']).'</em></td>
 
 <td align="right"><b style="font-size:22px;">'.num($pais_pob).'</b></td>
-<td nowrap="nowrap" align="right"><b>'.num($pais_dias).'</b> días</td>
 
 </tr>';
 
 }
 
-$result = mysql_query("SELECT COUNT(ID) AS num FROM users WHERE pais = 'ninguno' AND estado != 'expulsado'", $link);
-while($r = mysql_fetch_array($result)){ 
+$result = sql("SELECT COUNT(ID) AS num FROM users WHERE pais = 'ninguno' AND estado != 'expulsado'");
+while($r = r($result)){ 
 	$poblacion_num += $r['num'];
 
 	if ($gf['censo_num']) { $gf['censo_num'] .= ','; }
 	$gf['censo_num'] .= $r['num'];
 	$pob_ninguno = $r['num'];
 
-	if ($gf['paises']) { $gf['paises'] .= '|'; }
-	$gf['paises'] .= 'Turistas';	
+	
 }
 
 
 $txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="4"></td></tr>
 
 <tr>
-<td colspan="2" rowspan="2" align="center" valign="top"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=190x90&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB&chf=bg,s,ffffff01|c,s,ffffff01&chco=FF9900|FFBE5E|FFD08A|FFDBA6" alt="Reparto del censo - Simulador Politico" title="Reparto de la poblaci&oacute;n entre plataformas." width="190" height="90" /></td>
+<td colspan="2" align="center" valign="top"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=190x90&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB&chf=bg,s,ffffff01|c,s,ffffff01&chco=FF9900|FFBE5E|FFD08A|FFDBA6" alt="Plataforma" title="Plataformas" width="190" height="90" /><br/>
+'.(nucleo_acceso('antiguedad', 2)?boton(_('Solicitar nueva plataforma'), '/crear-plataforma.php', false, 'small pill'):'').'</td>
+
 <td align="right" valign="top"><b style="font-size:20px;">'.num($poblacion_num).'</b></td>
-<td colspan="2" valign="middle"><b>Ciudadanos</b></td>
-</tr>
 
-<tr>
-<td align="right" valign="top" colspan="2"><b>'.num($autentificados).'</b> Autentificados</td>
-</tr>
-
-
-<tr>
-<td colspan="4" align="right">'.(nucleo_acceso('antiguedad', 2)?boton('Solicitar nueva plataforma', '/crear-plataforma.php', false, 'small pill'):'').'</td>
 </tr>
 
 </table>
 
+</td></tr></table>';
 
+$result = sql("SELECT COUNT(*) AS num FROM plataformas WHERE estado = 'pendiente'");
+while($r = r($result)) { $plat_num = $r['num']; }
 
-</td></tr></table>
-
-'.(isset($pol['nick'])?'':'<p style="text-align:center;">'.boton('Crear ciuadano', REGISTRAR, false, 'large blue').'</p>');
-
-
-$txt_header .= '<style type="text/css">td b { font-size:15px; }</style>';
+if ($pol['user_ID'] == 1) { $txt_tab['/crear-plataforma.php?a=admin'] = 'Plataformas pendientes ('.$plat_num.')'; }
 
 include('theme.php');
 ?>

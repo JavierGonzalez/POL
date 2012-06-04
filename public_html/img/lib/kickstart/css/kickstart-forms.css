@@ -7,8 +7,9 @@ margin:0;
 }
 
 fieldset {
-margin:20px 0 15px 0;
-padding:5px 15px 15px 15px;
+margin:8px 2px 15px 0;
+padding:8px 10px;
+box-shadow: 4px 4px 6px #DDD;
 border:1px solid #ccc;
 background:#f5f5f5;
 -moz-border-radius:5px;
@@ -88,13 +89,13 @@ border:1px solid #ccc;
 font-size:1em;
 padding:5px 0;
 text-indent: 5px;
--moz-border-radius:5px;
+/*-moz-border-radius:5px;
 -webkit-border-radius:5px;
-border-radius:5px;
+border-radius:5px;*/
 background:#fff;
--moz-box-shadow:inset 0px 0px 6px #ccc;
+/*-moz-box-shadow:inset 0px 0px 6px #ccc;
 -webkit-box-shadow:inset 0px 1px 6px #ccc;
-box-shadow:inset 0px 1px 6px #ccc;
+box-shadow:inset 0px 1px 6px #ccc;*/
 -moz-box-sizing: border-box;
 -webkit-box-sizing: border-box;
 -ms-box-sizing: border-box;
@@ -205,12 +206,12 @@ padding:5px;
 vertical-align: middle;
 font-family:inherit;
 font-size:0.9em;
--moz-border-radius:5px;
+/*-moz-border-radius:5px;
 -webkit-border-radius:5px;
-border-radius:5px;
--moz-box-shadow:inset 0px 0px 6px #ccc;
+border-radius:5px;*/
+/*-moz-box-shadow:inset 0px 0px 6px #ccc;
 -webkit-box-shadow:inset 0px 1px 6px #ccc;
-box-shadow:inset 0px 1px 6px #ccc;
+box-shadow:inset 0px 1px 6px #ccc;*/
 -moz-box-sizing: border-box;
 -webkit-box-sizing: border-box;
 -ms-box-sizing: border-box;

@@ -12,6 +12,22 @@ include('inc-login.php');
 
 $txt .= '
 <table border="0" cellpadding="1" cellspacing="0">
+
+<tr><td colspan="8" align="center">
+
+<table><tr>';
+
+	$result = sql("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND elecciones IS NOT NULL ORDER BY nivel DESC");
+	while($r = r($result)) {
+		$txt .= '<td align="center" title="'._('Elecciones a').' '.$r['nombre'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /><br /><input type="checkbox" onclick="$(\'.cargo_'.$r['cargo_ID'].'\').toggle();" checked="checked" /></td>';
+	}
+
+// <input type="checkbox" onclick="$(\'.futuro\').toggle();" />
+$txt .= '</tr></table>
+
+
+</td></tr>
+
 <tr>
 <th></th>
 <th></th>
@@ -27,14 +43,14 @@ $txt .= '
 $result = mysql_query("SELECT * 
 FROM cargos
 WHERE pais = '".PAIS."' AND elecciones IS NOT NULL
-ORDER BY elecciones DESC
+ORDER BY elecciones ASC
 LIMIT 50", $link);
 while($r = mysql_fetch_array($result)) {
 	$time_start = strtotime($r['elecciones']);
 	$time_anterior = strtotime($r['elecciones'])-($r['elecciones_cada']*24*60*60);
 
-	$txt .= '<tr>
-<td align="right" width="320"><b style="font-size:16px;">'._('Elecciones a').' '.$r['nombre'].'</b></td>
+	$txt .= '<tr class="futuro cargo_'.$r['cargo_ID'].'">
+<td align="right" width="320" style="font-size:16px;'.($r['asigna']==0?'font-weight:bold;':'').'" class="gris">'._('Elecciones a').' '.$r['nombre'].'</td>
 
 <td><a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /></a></td>
 
@@ -42,7 +58,7 @@ while($r = mysql_fetch_array($result)) {
 
 <td>'._('En').' '.timer($r['elecciones']).'</td>
 
-<td colspan="4">'.gbarra(((time()-$time_anterior)*100)/($time_start-$time_anterior)).'</td>
+<td colspan="4">'.gbarra(((time()-$time_anterior)*100)/($time_start-$time_anterior), 80).'</td>
 
 </tr>';
 }
@@ -61,7 +77,7 @@ while($r = mysql_fetch_array($result)) {
 	$time_expire = strtotime($r['time_expire']);
 	$time = strtotime($r['time']);
 	if ($r['estado'] == 'end') { $n++; }
-	$txt .= '<tr>
+	$txt .= '<tr class="cargo_'.$r['cargo_ID'].'">
 <td align="right" nowrap="nowrap"><b style="font-size:16px;">'.($time>=strtotime('2012-04-05')?'<a href="/votacion/'.$r['ID'].'">'.$r['pregunta'].'</a>':$r['pregunta']).'</b></td>
 
 <td><a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /></a></td>
@@ -70,10 +86,10 @@ while($r = mysql_fetch_array($result)) {
 
 <td>'.($r['estado']=='ok'?_('Quedan').' '.timer($time_expire, true):_('Hace').' '.timer($time_expire, true)).'</td>
 
-<td>'.($r['estado']=='ok'?gbarra(((time()-$time)*100)/($time_expire-$time)):'').'</td>
+<td>'.($r['estado']=='ok'?gbarra(((time()-$time)*100)/($time_expire-$time), 80):'').'</td>
 
 
-<td align="right" title="Votos / Participación"'.($r['estado']=='ok'?' style="font-style:italic;"':'').'><b>'.num($r['num']).'</b> votos</td>
+<td align="right" title="Votos / Participación"'.($r['estado']=='ok'?' style="font-style:italic;"':'').'><b>'.num($r['num']).'</b> '._('votos').'</td>
 <td align="right">'.num(($r['num']*100)/$r['num_censo'], 2).'%</td>
 
 <td>'.($r['estado']=='end'?'<button class="small blue" onclick="$(\'#escrutinio_'.$r['ID'].'\').toggle(\'slow\');">'._('Ver resultado').'</button>':'').'</td>
@@ -93,7 +109,7 @@ while($r = mysql_fetch_array($result)) {
 			$d = explode('.', $d);
 			if ($d[2] != 'B') {
 				$cnum++;
-				$txt .= '<tr'.($cnum<=$elecciones_electos?' style="font-weight:bold;"':'').'><td align="right">'.($d[2]&&$d[2]!='COORDINACION'?$d[2]:'').'</td><td>'.crear_link($d[0]).'</td><td align="right">'.$d[1].'</td></tr>';
+				$txt .= '<tr><td align="right">'.($d[2]&&$d[2]!='COORDINACION'?$d[2]:'').'</td><td nowrap'.($cnum<=$elecciones_electos?' style="font-weight:bold;"':'').'>'.($cnum<=$elecciones_electos?'<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" style="margin-top:-5px;" /> ':'').''.crear_link($d[0]).'</td><td align="right"><b>'.$d[1].'</b></td></tr>';
 				$escrutinio_d[] = $d[1];
 			}
 		}

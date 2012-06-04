@@ -26,7 +26,8 @@ case 'donaciones':
 	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 752 LIMIT 1", $link); // doc_ID 752 = Donaciones
 	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
 
-/*
+
+	$text = str_replace(':botones_donar:', '
 <table border="0" width="100%" style="margin-bottom:-25px;">
 <tr>
 	<td align="center" valign="top">
@@ -40,14 +41,12 @@ case 'donaciones':
 	</td>
 	<td align="center" valign="top">
 		<span class="gris">Transferencia bancaria:</span><br />
-		0049 3968 91 2114060824<br /> 
-		Banco Santander, Javier González
+		3174 5899 90 2025993516<br /> 
+		<em>Caixa Vinaros, Javier González</em>
 	</td>
 </tr>
 </table>
-*/
-
-	$text = str_replace(':botones_donar:', '', $text);
+', $text);
 
 
 	$txt .= '
@@ -55,9 +54,6 @@ case 'donaciones':
 <h1 style="text-align:center;font-size:28px;">'.$title.'</h1>
 
 <div id="doc_pad">
-
-<div style="float:right;margin-left:10px;"><iframe frameborder="0" width="250px" height="480px" src="http://www.goteo.org/widget/project/expansion-de-virtualpol" scrolling="no"></iframe></div>
-
 '.$text.'
 </div>
 

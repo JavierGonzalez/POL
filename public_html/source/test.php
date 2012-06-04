@@ -22,11 +22,10 @@ $result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autolo
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
-$txt .= round(microtime(true)*10000);
-
-
-
-$txt .= 'OK';
+$result = sql("SELECT emisor_ID, item_ID, voto FROM votos WHERE tipo = 'confianza' AND voto IN (1) LIMIT 1000");
+while ($r = r($result)) { 
+	$txt .= $r['emisor_ID'].' -> '.$r['item_ID'].'<br />'; 
+}
 
 
 /*

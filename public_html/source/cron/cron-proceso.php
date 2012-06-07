@@ -345,44 +345,51 @@ sql("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '".$marge
 sql("DELETE FROM notificaciones WHERE time < '".$margen_10dias."'");
 
 
-/* Tramos de expiración:
-0d	< 30d	- 15 dias (CANCELADO)
-30d < 90d	- 30 dias 
-90d >		- 60 dias
-Autentificados NO expiran.
+
+
+/* Expiraciones:
+Tras 60 dias inactivo
+
+Excepciones:
+* Autentificados
+* Socios
+* Donantes
+* Veteranos (más de 2 años de antiguedad)
+
+Emails de aviso de expiración:
+1. Tras 30 días inactivo
+2. Tras 55 días inactivo
 */
 $st['eliminados'] = 0;
-$result = sql("SELECT ID, estado FROM users
-WHERE dnie = 'false' AND socio = 'false' AND donacion IS NULL AND 
-(pais IN ('ninguno', '".PAIS."') AND fecha_registro <= '".$margen_90dias."' AND fecha_last <= '".$margen_60dias."') OR
-(pais IN ('ninguno', '".PAIS."') AND fecha_registro > '".$margen_90dias."' AND fecha_registro <= '".$margen_30dias."' AND fecha_last <= '".$margen_30dias."')
-");
+$result = sql("SELECT ID, estado, nick FROM users
+WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registro > '".tiempo(365*2)."' AND 
+(pais IN ('ninguno', '".PAIS."') AND fecha_last <= '".tiempo(60)."')) OR 
+(estado IN ('validar', 'expulsado') AND fecha_last <= '".tiempo(10)."') 
+LIMIT 80");
 while($r = r($result)) {
 	if ($r['estado'] == 'ciudadano') { $st['eliminados']++; }
 	eliminar_ciudadano($r['ID']);
 }
 
-$result = sql("SELECT ID, estado FROM users
-WHERE estado IN ('validar', 'expulsado') AND fecha_last <= '".$margen_10dias."'");
+// Emails de aviso de expiración
+$result = sql("SELECT ID, pais, nick, email FROM users
+WHERE estado IN ('ciudadano', 'turista') AND dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registro > '".tiempo(365*2)."' AND 
+(pais = '".PAIS."' AND 
+((fecha_last >= '".tiempo(30, '00:00:00')."' AND fecha_last <= '".tiempo(30, '23:59:59')."') OR 
+(fecha_last >= '".tiempo(55, '00:00:00')."' AND fecha_last <= '".tiempo(55, '23:59:59')."')))
+LIMIT 1000");
 while($r = r($result)) {
-	if ($r['estado'] == 'ciudadano') { $st['eliminados']++; }
-	eliminar_ciudadano($r['ID']);
-}
+	$mensaje = '<p>Hola ciudadano '.$r['nick'].':</p>
 
+<p>En VirtualPol nos esmeramos en tener un censo seguro y fiel a la realidad, en lugar de tener cientos de miles de usuarios sin actividad. Por ello los usuarios que no entran en 90 días son borrados por inactividad.</p>
 
+<p>Tu usuario "'.$r['nick'].'" está a punto de expirar por inactividad. Debes entrar lo antes posible en VirtualPol. Si entras con tu usuario es suficiente para reiniciar el contador de inactividad.</p>
 
+<p><a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'"><b style="font-size:20px;">Regresa a '.$r['pais'].' y participa!</b></a></p>
 
-// Avisos por email 48h antes de la eliminación
-function retrasar_t($t) { return date('Y-m-d 20:00:00', (strtotime($t)+(86400*2))); }
-$result = sql("SELECT ID, nick, email FROM users
-WHERE dnie = 'false' AND socio = 'false' AND donacion IS NULL AND estado != 'expulsado' AND 
-((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro <= '".retrasar_t($margen_90dias)."' AND fecha_last <= '".retrasar_t($margen_60dias)."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_90dias)."' AND fecha_registro <= '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_30dias)."') OR
-((pais = 'ninguno' OR pais = '".PAIS."') AND fecha_registro > '".retrasar_t($margen_30dias)."' AND fecha_last <= '".retrasar_t($margen_15dias)."') OR
-(estado = 'validar' AND fecha_last <= '".retrasar_t($margen_15dias)."')
-");
-while($r = r($result)) {
-	mail($r['email'], '[VirtualPol] Tu usuario '.$r['nick'].' está a punto de expirar por inactividad', "Hola ciudadano ".$r['nick'].",\n\nEl sistema VirtualPol se esmera en tener un censo limpio y fiel a la realidad, en lugar de tener decenas de miles de usuarios sin actividad. Por ello se eliminan usuarios en tramos desde 30 dias hasta 60 dias de inactividad.\n\nDebes entrar lo antes posible en VirtualPol o tu usuario expirará. Con entrar una vez es suficiente.\n\n\nVirtualPol\nhttp://www.".DOMAIN."", "FROM: VirtualPol <".CONTACTO_EMAIL."> \nReturn-Path: ".CONTACTO_EMAIL." \nX-Sender: ".CONTACTO_EMAIL." \nMIME-Version: 1.0\n"); 
+<p><b>VirtualPol</b> - La primera Red Social Democrática.<br />
+http://www.'.DOMAIN.'</p>';
+	enviar_email(null, 'Tu usuario '.$r['nick'].' está a punto de expirar por inactividad', $mensaje, $r['email']);
 }
 
 

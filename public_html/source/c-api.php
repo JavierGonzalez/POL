@@ -19,7 +19,7 @@ $txt_nav = array('/api'=>'API');
 scope=manage_pages,offline_access,publish_stream
 
 2. https://graph.facebook.com/oauth/access_token?client_id=358872204161898&redirect_uri=http://www.virtualpol.com/&
-client_secret=ad204c3d9dda93085072b6c61ffbccbb&code=CODIGO_ANTERIOR
+client_secret=API&code=CODIGO_ANTERIOR
 
 3. https://graph.facebook.com/me/accounts?access_token=CODIGO_ANTERIOR
 */
@@ -63,7 +63,7 @@ if (is_numeric($_GET['a'])) {
 
 <tr>
 <td align="right">Texto:</td>
-<td><textarea name="message" style="width:450px;height:60px;" required>'.$edit['message'].'</textarea></td>
+<td><textarea name="message" style="width:500px;height:150px;" required>'.$edit['message'].'</textarea></td>
 </tr>
 
 <tr>
@@ -101,6 +101,16 @@ if (is_numeric($_GET['a'])) {
 
 
 
+<style type="text/css">
+.apic { 
+	width:200px;
+	max-height:70px;
+	overflow-y:auto;
+	font-size:13px;
+}
+</style>
+
+
 <table><tr><td valign="top">
 
 
@@ -116,7 +126,7 @@ if (is_numeric($_GET['a'])) {
 		while($r2 = r($result2)) { 
 			$txt .= '<tr>
 <td align="right">'.(nucleo_acceso($r['acceso_escribir'])?boton(($r2['estado']=='cron'?'Cancelar':'Despublicar'), '/accion.php?a=api&b=borrar&ID='.$r2['post_ID'], '¿Estás seguro de querer ELIMINAR de forma irreversible esta publicación?', 'small red'):'').'</td>
-<td width="200">'.($r2['estado']=='cron'?substr($r2['message'], 0, 150):'<a href="https://www.facebook.com/permalink.php?story_fbid='.explodear('_', $r2['mensaje_ID'], 1).'&id='.$r['item_ID'].'" target="_blank" style="font-size:10px;">'.substr($r2['message'], 0, 150).'</a>').'</td>
+<td width="200"><div class="apic">'.($r2['estado']=='cron'?$r2['message']:'<a href="https://www.facebook.com/permalink.php?story_fbid='.explodear('_', $r2['mensaje_ID'], 1).'&id='.$r['item_ID'].'" target="_blank" style="font-size:10px;">'.$r2['message'].'</a>').'</div></td>
 <td align="right" nowrap>'.timer(($r2['estado']=='cron'?$r2['time_cron']:$r2['time']), false, true).'</td>
 <td>'.crear_link($r2['nick_publicado']).'</td>
 </tr>';
@@ -138,7 +148,7 @@ if (is_numeric($_GET['a'])) {
 		while($r2 = r($result2)) { 
 			$txt .= '<tr>
 <td nowrap>'.(nucleo_acceso($r['acceso_escribir'])?boton('Publicar', '/accion.php?a=api&b=publicar&ID='.$r2['post_ID'], '¿Estás seguro de querer PUBLICAR esta publicación?', 'small blue').' '.boton('Editar', '/api/'.$r['api_ID'].'/escribir/'.$r2['post_ID'], false, 'small orange'):'').' '.(nucleo_acceso($r['acceso_escribir'])?boton('X', '/accion.php?a=api&b=borrar_borrador&ID='.$r2['post_ID'], '¿Estás seguro de querer BORRAR este borrador de publicación?', 'small red'):'').'</td>
-<td width="200">'.$r2['message'].'</td>
+<td width="200"><div class="apic">'.$r2['message'].'</div></td>
 <td align="right" nowrap>'.timer($r2['time']).'</td>
 <td>'.($r2['estado']=='pendiente'?crear_link($r2['nick_pendiente']):crear_link($r2['nick_borrado'])).'</td>
 </tr>';

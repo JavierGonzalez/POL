@@ -11,47 +11,44 @@ include('inc-login.php');
 include('inc-functions-accion.php');
 if ($pol['user_ID'] != 1) { exit; }
 function crono($new='') {
-	 global $crono;
-	 $the_ms = num((microtime(true)-$crono)*1000);
-	 $crono = microtime(true);
-	 return '<h3>'.$the_ms.'ms '.$new.'</h3></hr>';
+	global $crono;
+	$the_ms = num((microtime(true)-$crono)*1000);
+	$crono = microtime(true);
+	return '<h3>'.$the_ms.'ms '.$new.'</h3></hr>';
 }
-
-// load config full
 $result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
-$result = sql("SELECT emisor_ID, item_ID, voto FROM votos WHERE tipo = 'confianza' AND voto IN (1) LIMIT 1000");
-while ($r = r($result)) { 
-	$txt .= $r['emisor_ID'].' -> '.$r['item_ID'].'<br />'; 
+
+$txt .= '<hr /><h2>Eliminar:</h2><div class="rich">';
+
+
+/* Expiraciones:
+Tras 60 dias inactivo
+
+Excepciones:
+* Autentificados
+* Socios
+* Donantes
+* Veteranos (más de 2 años de antiguedad)
+
+Emails de aviso de expiración:
+1. Tras 30 días inactivo
+2. Tras 55 días inactivo
+*/
+$st['eliminados'] = 0;
+$result = sql("SELECT ID, IP FROM users_con");
+while($r = r($result)) {
+	$la_IP = explode('.', long2ip($r['IP']));
+	sql("UPDATE users_con SET IP_rango3 = '".$la_IP[0].".".$la_IP[1].".".$la_IP[2]."' WHERE ID = '".$r['ID']."' LIMIT 1");
 }
 
+$txt .= '<hr />Eliminados: '.$st['eliminados'].'<hr /><h2>Avisos emails:</h2> ';
 
-/*
-$txt .= '<table>';
-$result = sql("SELECT ID, nick, IP_proxy, host FROM users WHERE IP_proxy != '' ORDER BY IP_proxy ASC");
-while ($r = r($result)) { 
-	$txt .= '<tr>
-<td>'.crear_link($r['nick']).'</td>
-<td align="right">'.$r['host'].'</td>
-<td align="right">'.(filter_var($r['IP_proxy'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)?'OK':'<b>ERROR</b>').'</td>
-<td>'.$r['IP_proxy'].'</td>
-<td>'.gethostbyaddr($r['IP_proxy']).'</td>
-</tr>';
 
-	//sql("UPDATE users SET IP_proxy = '".(filter_var($r['IP_proxy'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)&&substr($r['IP_proxy'], 0, 3)!='127'?$r['IP_proxy']:'')."' WHERE ID = '".$r['ID']."' LIMIT 1");
-}
-$txt .= '</table>';
-*/
+$txt .= '</div>';
 
-// 127.0.0.1
-
-/*
-if (filter_var('62.87.94.250', FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-	$txt .= 'OK';
-} else { $txt .= 'ERROR'; }
-*/
 
 
 

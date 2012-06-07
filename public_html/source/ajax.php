@@ -166,7 +166,7 @@ LIMIT 1");
 				case 'ayuda': 
 					$tipo = 'm';
 					if (PAIS == '15M') {
-						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="/hacer" target="_blank">¿<b>Qué hacer</b>?</a> - <a href="http://www.virtualpol.com/video" target="_blank"><b>Bienvenida</b> (video)</a> - <a href="http://15m.'.DOMAIN.'/doc/faq---consultas-a-la-ciudadania/" target="_blank"><b>Ayuda y FAQ</b> (Preguntas frecuentes)</a> - <a href="http://15m.'.DOMAIN.'/doc/la-declaracion-2-0">La Declaración</a>.</a>';
+						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="/hacer" target="_blank">¿<b>Qué hacer</b>?</a> - <a href="http://www.virtualpol.com/video" target="_blank"><b>Bienvenida</b> (video)</a> - <a href="http://15m.'.DOMAIN.'/doc/creacion-de-sondeos-y-referendums" target="_blank"><b>Ayuda y FAQ</b> (Preguntas frecuentes)</a> - <a href="http://15m.'.DOMAIN.'/doc/la-declaracion-2-0">La Declaración</a>.</a>';
 					} else {
 						$elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="/hacer" target="_blank">¿<b>Qué hacer</b>?</a> - <a href="http://www.virtualpol.com/video" target="_blank"><b>Bienvenida (video)</b></a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentación</a>.</a>';
 					}
@@ -237,7 +237,7 @@ $('ul.menu li').hover(function(){ $(this).find('ul:first').stop(true, true).show
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
 FROM users WHERE nick = '".str_replace('@', '', $_POST['nick'])."' LIMIT 1");
 	while ($r = r($res)) { 
-		include('inc-functions.php');
+		include_once('inc-functions.php');
 		if ($r['avatar'] == 'true') { $r['avatar'] = 1; } else { $r['avatar'] = 0; }
 		if (!isset($r['partido'])) { $r['partido'] = '-'; }
 

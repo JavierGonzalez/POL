@@ -24,22 +24,28 @@ OBTENER TOKENS - http://www.damnsemicolon.com/php/auto-post-facebook-with-facebo
 	$result = sql("SELECT *, 
 (SELECT item_ID FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS item_ID, 
 (SELECT clave FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS clave, 
-(SELECT acceso_escribir FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS acceso_escribir
+(SELECT acceso_escribir FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS acceso_escribir,
+(SELECT pais FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS api_pais,
+(SELECT nombre FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS nombre
 FROM api_posts WHERE post_ID = '".$item_ID."' LIMIT 1");
 	while ($r = r($result)) {
 		$user_ID = ($sistema?$r['publicado_user_ID']:$pol['user_ID']);
 		if ((isset($r['clave'])) AND ((nucleo_acceso($r['acceso_escribir'])) OR ($sistema))) {
 			if (($accion == 'publicar') AND ($r['estado'] != 'publicado')) {
 				if (strtotime($date) >= strtotime($r['time_cron'])) {
-					$content_array = array('access_token'=>$r['clave'], 'message'=>$r['message']);
+					$content_array = array('access_token'=>$r['clave'], 'message'=>trim(strip_tags($r['message'])));
 					foreach(array('picture', 'link', 'name', 'caption', 'source') AS $cont) { if ($r[$cont]) {	$content_array[$cont] = $r[$cont]; } }
-					$pub = $facebook->api('/'.$r['item_ID'].'/feed', 'POST', $content_array);
+					$pub = $facebook->api('/'.$r['item_ID'].'/'.($r['link']==''?'feed':'links'), 'POST', $content_array);
+					if (!stristr($pub['id'], '_')) { $pub['id'] = $r['item_ID'].'_'.$pub['id']; }
 				} else {
 					sql("UPDATE api_posts SET estado = 'cron', time = '".$date."', publicado_user_ID = '".$user_ID."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
 					return true;
 				}
 				if ($pub != false) {
 					sql("UPDATE api_posts SET estado = 'publicado', time = '".$date."', mensaje_ID = '".$pub['id']."', publicado_user_ID = '".$user_ID."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
+					if ($r['api_pais'] == PAIS) {
+						evento_chat('<b>[API]</b> Publicación de contenido en <a href="/api/'.$r['item_ID'].'">'.$r['nombre'].'</a> <span class="gris">('.$pol['nick'].', <a href="https://www.facebook.com/permalink.php?story_fbid='.explodear('_', $pub['id'], 1).'&id='.$r['item_ID'].'">ver contenido</a>, Facebook)</span>');
+					}
 					return true;
 				} else { return false; }
 
@@ -551,7 +557,8 @@ function users_con($user_ID, $extra='', $tipo='session') {
 	if (!is_numeric(substr($host, -1, 1))) {
 		$hoste = explode('.', $host);
 		$ISP = ucfirst($hoste[count($hoste)-(in_array($hoste[count($hoste)-2], array('com', 'net', 'org'))?3:2)]).(!in_array($hoste[count($hoste)-1], array('com', 'net'))?' '.strtoupper($hoste[count($hoste)-1]):'');
-		if ((stristr($host, 'proxy')) OR (stristr($host, 'cache')) OR (stristr($host, 'server'))) { $ISP .= ' (proxy)'; }
+		if (substr(long2ip($IP), 0, 10) == '80.58.205.') { $ISP = 'CanguroNet (proxy)'; }
+		elseif ((stristr($host, 'proxy')) OR (stristr($host, 'cache')) OR (stristr($host, 'server'))) { $ISP .= ' (proxy)'; }
 		elseif ((stristr($host, 'dyn')) OR stristr($host, 'pool')) { $ISP .= ' (dynamic)'; }
 		elseif ((stristr($host, 'static')) OR (stristr($host, 'client'))) { $ISP .= ' (static)'; }
 		elseif (stristr($host, 'cable')) { $ISP .= ' (cable)'; }
@@ -566,7 +573,8 @@ function users_con($user_ID, $extra='', $tipo='session') {
 	$la_IP = explode('.', long2ip($IP));
 	$result = sql("SELECT IP_pais FROM users_con WHERE IP_rango = '".$la_IP[0].".".$la_IP[1]."' LIMIT 1");
 	while($r = r($result)){ $el_pais = "'".$r['IP_pais']."'"; }
-	if (!$el_pais) { 
+	if (strlen($hoste[count($hoste)-1]) == 2) { $el_pais = "'".strtoupper($hoste[count($hoste)-1])."'"; }
+	if ((!$el_pais) AND (CLAVE_API_ipinfodb != '...')) { 
 		$res = file_get_contents('http://api.ipinfodb.com/v3/ip-city/?key='.CLAVE_API_ipinfodb.'&ip='.$la_IP[0].'.'.$la_IP[1].'.'.rand(1,254).'.'.rand(1,254));
 		$res = strtoupper(explodear(';', $res, 3));
 		if (strlen($res) != 2) { $res = '??'; }
@@ -574,11 +582,12 @@ function users_con($user_ID, $extra='', $tipo='session') {
 	}
 
 	$_SERVER['HTTP_X_FORWARDED_FOR'] = (filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)&&substr($_SERVER['HTTP_X_FORWARDED_FOR'], 0, 3)!='127'?$_SERVER['HTTP_X_FORWARDED_FOR']:'');
-	
+	if (($_SERVER['HTTP_X_FORWARDED_FOR'] != '') AND (substr(long2ip($IP), 0, 10) == '80.58.205.')) { $IP = ip2long($_SERVER['HTTP_X_FORWARDED_FOR']); }
+
 	$i = get_browser(null, true);
 
-	sql("INSERT INTO users_con (user_ID, time, IP, host, proxy, nav, login_ms, login_seg, nav_resolucion, ISP, tipo, nav_so, IP_pais, IP_rango, dispositivo) 
-VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".$_SERVER['HTTP_X_FORWARDED_FOR']."', '".$_SERVER['HTTP_USER_AGENT']." | ".$_SERVER['HTTP_ACCEPT_LANGUAGE']."', '".round((microtime(true)-TIME_START)*1000)."', '".$extra_array[2]."', ".($extra_array[0]?"'".$extra_array[0]." ".$extra_array[3]."'":"NULL").", ".$ISP.", '".$tipo."', '".str_replace('Android Android', 'Android', $i['platform']." ".$i['parent'])."', ".$el_pais.", '".$la_IP[0].'.'.$la_IP[1]."', ".($_COOKIE['trz']?"'".$_COOKIE['trz']."'":"NULL").")");
+	sql("INSERT INTO users_con (user_ID, time, IP, host, proxy, nav, login_ms, login_seg, nav_resolucion, ISP, tipo, nav_so, IP_pais, IP_rango, IP_rango3, dispositivo) 
+VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".$_SERVER['HTTP_X_FORWARDED_FOR']."', '".$_SERVER['HTTP_USER_AGENT']." | ".$_SERVER['HTTP_ACCEPT_LANGUAGE']."', '".round((microtime(true)-TIME_START)*1000)."', '".$extra_array[2]."', ".($extra_array[0]?"'".$extra_array[0]." ".$extra_array[3]."'":"NULL").", ".$ISP.", '".$tipo."', '".str_replace('Android Android', 'Android', $i['platform']." ".$i['parent'])."', ".$el_pais.", '".$la_IP[0].".".$la_IP[1]."', '".$la_IP[0].".".$la_IP[1].".".$la_IP[2]."', ".($_COOKIE['trz']?"'".$_COOKIE['trz']."'":"NULL").")");
 
 	sql("UPDATE users SET host = '".$host."' WHERE ID = '".$user_ID."' LIMIT 1");
 

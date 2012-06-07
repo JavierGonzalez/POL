@@ -45,6 +45,33 @@ $pass_simple = array(
 'b0baee9d279d34fa1dfd71aadb908c3f', // 11111
 '96e79218965eb72c92a549dd5a330112', // 111111
 '7fa8282ad93047a4d6fe6111c93b308a', // 1111111
+'3d2172418ce305c7d16d4b05597c6a59', // 22222
+'e3ceb5881a0a1fdaad01296d7554868d', // 222222
+'79d886010186eb60e3611cd4a5d0bcae', // 2222222
+'b7bc2a2f5bb6d521e64c8974c143e9a0', // 33333
+'1a100d2c0dab19c4430e7d73762b3423', // 333333
+'074fd28eff0f5adea071694061739e55', // 3333333
+'79b7cdcd14db14e9cb498f1793817d69', // 44444
+'73882ab1fa529d7273da0db6b49cc4f3', // 444444
+'dcb64c94e1b81cd1cd3eb4a73ad27d99', // 4444444
+'c5fe25896e49ddfe996db7508cf00534', // 55555
+'5b1b68a9abf4d2cd155c81a9225fd158', // 555555
+'992e63080ee1e47b99f42b8d64ede953', // 5555555
+'ae8b5aa26a3ae31612eec1d1f6ffbce9', // 66666
+'f379eaf3c831b04de153469d1bec345e', // 666666
+'d5ee2eedfcf7adc285db4967bd86910d', // 6666666
+'22a4d9b04fe95c9893b41e2fde83a427', // 77777
+'f63f4fbc9f8c85d409f2f59f2b9e12d5', // 777777
+'dc0fa7df3d07904a09288bd2d2bb5f40', // 7777777
+'1c395a8dce135849bd73c6dba3b54809', // 88888
+'21218cca77804d2ba1922c33e0151105', // 888888
+'388ec3e3fa4983032b4f3e7d8fcb65ad', // 8888888
+'d3eb9a9233e52948740d7eb8c3062d14', // 99999
+'52c69e3a57331081823331c4e69d3f2e', // 999999
+'283f42764da6dba2522412916b031080', // 9999999
+'dcddb75469b4b4875094e14561e573d8', // 00000
+'670b14728ad9902aecba32e22fa4f6bd', // 000000
+'29c3eea3f305d6b823f562ac4be35217', // 0000000
 'ab56b4d92b40713acc5af89985d4b786', // abcde
 'e80b5017098950fc58aad83c8c14978e', // abcdef
 '7ac66c0f148de9519b8bd264312c4d64', // abcdefg
@@ -86,6 +113,33 @@ if (false) {
 11111
 111111
 1111111
+22222
+222222
+2222222
+33333
+333333
+3333333
+44444
+444444
+4444444
+55555
+555555
+5555555
+66666
+666666
+6666666
+77777
+777777
+7777777
+88888
+888888
+8888888
+99999
+999999
+9999999
+00000
+000000
+0000000
 abcde
 abcdef
 abcdefg
@@ -133,7 +187,10 @@ if ($_GET['a'] != 'bloqueos') {
 <option'.$filtro_sel['/sc/filtro/confianza'].' value="/sc/filtro/confianza">Top confianza</option>
 <option'.$filtro_sel['/sc/filtro/desconfianza'].' value="/sc/filtro/desconfianza">Top desconfianza</option>
 <option'.$filtro_sel['/sc/filtro/paises-raros'].' value="/sc/filtro/paises-raros">Paises raros</option>
-<option'.$filtro_sel['/sc/filtro/mas-de-un-pais'].' value="/sc/filtro/mas-de-un-pais">Más de un país</option>
+<option'.$filtro_sel['/sc/filtro/mas-de-un-pais'].' value="/sc/filtro/mas-de-un-pais">Más de un país diferente</option>
+<option'.$filtro_sel['/sc/filtro/mas-de-un-ISP'].' value="/sc/filtro/mas-de-un-ISP">Más de un ISPs diferente</option>
+<option'.$filtro_sel['/sc/filtro/mas-de-un-nav'].' value="/sc/filtro/mas-de-un-nav">Más de un SO diferente</option>
+<option'.$filtro_sel['/sc/filtro/conexion-oculta'].' value="/sc/filtro/conexion-oculta">Ocultación de conexión</option>
 </optgroup>
 </select> &nbsp; 
 
@@ -260,7 +317,7 @@ case 'filtro':
 			break;
 
 		case 'paises-raros':
-			$paises_habituales = 'ES AR CO MX US UK FR PE DE EC DO';
+			$paises_habituales = '?? ES AR CO MX US UK FR PE DE EC DO';
 			$sql_where = "IP_pais NOT IN ('".implode("','", explode(' ', $paises_habituales))."') GROUP BY user_ID";
 			$sql_order = "IP_pais ASC"; 
 			break;
@@ -271,6 +328,23 @@ case 'filtro':
 			$sql_order = "num DESC"; 
 			break;
 
+		case 'mas-de-un-ISP':
+			$sql_select = ", COUNT(DISTINCT ISP) AS num";
+			$sql_where = "ISP != '' GROUP BY user_ID HAVING num > 1";
+			$sql_order = "num DESC"; 
+			break;
+
+			
+		case 'mas-de-un-nav':
+			$sql_select = ", COUNT(DISTINCT nav_so) AS num";
+			$sql_where = "'true' = 'true' GROUP BY user_ID HAVING num > 1";
+			$sql_order = "num DESC"; 
+			break;
+
+		case 'conexion-oculta':
+			$sql_select .= ", MAX(uc.time) AS time"; 
+			$sql_where = "ISP LIKE 'Ocultado%' GROUP BY user_ID";
+			break;
 
 		case 'actividad':
 		default: 
@@ -284,10 +358,10 @@ case 'filtro':
 <tr>
 <th colspan="3"></th>
 <th>Dispositivo</th>
-<th>ISP / Rango / País / IP</th>
+<th nowrap>ISP / Rango / País / IP</th>
 <th>Clave</th>
 <th>Email</th>
-<th>SO / Navegador</th>
+<th nowrap>SO / Navegador</th>
 <th>Pantalla</th>
 <th></th>
 </tr>';
@@ -297,7 +371,6 @@ LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
 WHERE ".$sql_where."
 ORDER BY ".$sql_order." LIMIT 50");
-	$txt .= mysql_error();
 	while ($r = r($result)) { $txt .= print_td($r); }
 	$txt .= '</table></fieldset>';
 	break;
@@ -321,21 +394,22 @@ default:
 </tr>';
 
 
-
-
+// IPs publicas de algunos ISPs que sacan a sus clientes compartiendo la misma. Esto es util para identificar estas coincidencias y evitar falsos positivos.
 $IP_publicas = array(
-'85.62.233.162', // Orange movil
-'85.62.234.162', // Orange movil
-'85.62.233.161', // Orange movil
+'85.62.234', // Orange movil
+'85.62.233', // Orange movil
+'81.45.7', // Movistar movil
+'80.58.205', // Movistar CanguroNet
+
 '93.186.23.83', // Blackberry
+'195.235.76', // Movistar movil
 );
+
 foreach ($IP_publicas AS $IPs) { $longIP_publicas[] = ip2long($IPs); }
-
-
 	$clones_array_full = array();
 	$result = sql("SELECT COUNT(DISTINCT user_ID) AS num, IP 
 FROM users_con
-WHERE IP NOT IN ('".implode("','", $longIP_publicas)."')
+WHERE IP NOT IN ('".implode("','", $longIP_publicas)."') AND IP_rango NOT IN ('".implode("','", $IP_publicas)."') AND IP_rango3 NOT IN ('".implode("','", $IP_publicas)."')
 GROUP BY IP HAVING num > 1
 ORDER BY num DESC, IP ASC");
 $txt .= mysql_error();

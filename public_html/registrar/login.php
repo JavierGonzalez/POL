@@ -35,6 +35,16 @@ case 'panel':
 
 
 
+<fieldset><legend>'._('Acciones').'</legend>
+
+<p style="text-align:center;">
+'.(nucleo_acceso('autentificados')?'':boton(_('Autentificación'), SSL_URL.'dnie.php')).' 
+'.($pol['pais']!='ninguno'?boton(_('Cambiar de plataforma'), REGISTRAR, false, 'red').' ':'').'
+</p>
+
+</fieldset>
+
+
 
 <fieldset><legend>'._('Cambiar idioma').'</legend>
 
@@ -429,7 +439,11 @@ body, a { color:#FFFFFF; cursor:progress; }
 
 		switch ($nick_estado) {
 			case 'turista': case 'ciudadano': $msg_error = _('Contraseña incorrecta'); break;
-			case 'expulsado': $msg_error = _('Estás expulsado de VirtualPol por infracción del').' <a href="/TOS">TOS</a>'; break;
+			case 'expulsado': 
+				$result = sql("SELECT razon FROM expulsiones WHERE tiempo = '".$nick."' ORDER BY expire DESC LIMIT 1");
+				while ($r = r($result)) { $razon = $r['razon']; }
+				$msg_error = ($razon?'Expulsado por incumplimiento del TOS. Infracción: <em>'.$razon.'</em>':'Auto-eliminado'); 
+				break;
 			case 'validar': $msg_error = _('Usuario no validado, revisa tu email'); break;
 			default: $msg_error = _('Usuario inexistente, probablemente expirado por inactividad'); break;
 		}
@@ -455,7 +469,7 @@ case 'logout':
 
 default:
 
-	$txt .= '<div style="width:350px;margin:0 auto;">';
+	$txt .= '<div style="width:380px;margin:0 auto;">';
 
 	if (isset($pol['user_ID'])) {
 		$txt .= '<p>'._('Ya estás logueado correctamente como').' <b>'.$pol['nick'].'</b>.</p>';
@@ -485,16 +499,16 @@ function login_start() {
 
 <fieldset><legend>'._('Iniciar sesión').'</legend>
 
-<table border="0" style="margin:20px auto;">
+<table border="0" style="margin:10px auto;">
 
 <tr>
 <td align="right">'._('Usuario o email').':</td>
-<td><input name="user" value="" size="14" maxlength="200" type="text" style="font-size:20px;font-weight:bold;" autocomplete="off" autofocus required /></td>
+<td><input name="user" value="" size="16" maxlength="200" type="text" style="font-size:20px;font-weight:bold;" autocomplete="off" autofocus required /></td>
 </tr>
 
 <tr>
 <td align="right">'._('Contraseña').':</td>
-<td><input id="login_pass" name="pass" type="password" value="" size="14" maxlength="200" style="font-size:20px;font-weight:bold;" required /></td>
+<td><input id="login_pass" name="pass" type="password" value="" size="16" maxlength="200" style="font-size:20px;font-weight:bold;" required /></td>
 </tr>
 
 <tr>
@@ -504,14 +518,14 @@ function login_start() {
 <tr>
 <td colspan="2" align="center">
 
-'.($_GET['error']?'<em style="color:red;">'.escape(base64_decode($_GET['error'])).'.</em><br /><br />':'').'
+'.($_GET['error']?'<p style="color:red;"><b>'.escape(base64_decode($_GET['error'])).'</b></p>':'').'
 
 <button onclick="login_start();" class="large blue" id="boton_iniciar_sesion">'._('Iniciar sesión').'</button><br />
 <br />
 <a href="'.REGISTRAR.'login.php?a=recuperar-pass">'._('¿Has olvidado tu contraseña?').'</a>
 </table>
 
-<p><span style="color:#888;">'._('Contacto').': '.CONTACTO_EMAIL.'</span></p>
+<p style="color:#888;text-align:center;">'._('Contacto').': <a href="mailto:'.CONTACTO_EMAIL.'" style="color:#888;" target="_blank">'.CONTACTO_EMAIL.'</a></p>
 </fieldset>
 
 </form>';

@@ -597,7 +597,7 @@ LIMIT 1");
 			$result2 = sql("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
 			while($r2 = r($result2)) { $comentarios_num = $r2['num']; }
 
-			$txt .= '<fieldset><legend>'._('Comentarios adjuntos al voto').' ('.($r['estado']=='end'?$comentarios_num.' '._('comentarios').' &nbsp; '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
+			$txt .= '<fieldset style="font-size:13px;"><legend>'._('Comentarios adjuntos al voto').' ('.($r['estado']=='end'?$comentarios_num.' '._('comentarios').' &nbsp; '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
 			if (nucleo_acceso('ciudadanos_global')) {
 				if ($r['estado'] == 'end') { 
 					$result2 = sql("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
@@ -630,7 +630,7 @@ $txt .= '
 #tabla_comprobantes .tcr { color:red; }
 </style>
 
-<table border="0" style="font-family:\'Courier New\',Courier,monospace;" id="tabla_comprobantes">
+<table border="0" style="font-family:\'Courier New\',Courier,monospace;font-size:12px;" id="tabla_comprobantes">
 <tr>
 <th title="Conteo de los diferentes sentidos de votos">'._('Contador').'</th>
 '.($r['privacidad']=='false'?'<th>Votante</th>':'').'
@@ -664,7 +664,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>'._('Esta votación aún no ha finalizado. Cuando finalice se mostrará aquí la tabla de votos-comprobantes').'.</b></td></tr>';
 			}
 
-			$txt .= '</table>'.($r['privacidad']=='true'?'<fieldset class="rich"><legend>'._('Votantes').' ('._('excepto expirados').')</legend> '.implode(' ', $txt_votantes).'</fieldset>':'');
+			$txt .= '</table>'.($r['privacidad']=='true'?'<fieldset class="rich" style="font-size:12px;"><legend>'._('Votantes').' ('._('excepto expirados').')</legend> '.implode(' ', $txt_votantes).'</fieldset>':'');
 
 		} else {
 
@@ -828,7 +828,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 						foreach ($escrutinio['votos'] AS $voto => $num) { 
 							if ($respuestas[$voto]) {
 								if ($respuestas[$voto] != 'En Blanco') {
-									$txt .= '<tr><td nowrap="nowrap"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'" class="punteado"':'').'>'.($r['tipo']=='elecciones'?crear_link($respuestas[$voto]):$respuestas[$voto]).'</td><td align="right" title="'.num(($num*100)/$puntos_total, 1).'%"><b>'.num($num).'</b></td><td align="right">'.num(($num*100)/$puntos_total_sin_en_blanco, 1).'%</td></tr>';
+									$txt .= '<tr><td>'.($r['tipo']=='elecciones'?crear_link($respuestas[$voto]):$respuestas[$voto]).'</td><td align="right" title="'.num(($num*100)/$puntos_total, 1).'%"><b>'.num($num).'</b></td><td align="right">'.num(($num*100)/$puntos_total_sin_en_blanco, 1).'%</td></tr>';
 								} else { $votos_en_blanco = $num; }
 							} else { unset($escrutinio['votos'][$voto]);  }
 						}
@@ -839,7 +839,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 				// Imprime datos de legitimidad y validez
 				$txt .= '</td>
-<td valign="top" style="color:#888;"><br />
+<td valign="top" style="color:#888;">
 '._('Legitimidad').': <span style="color:#555;"><b>'.num($votos_total).'</b>&nbsp;'._('votos').'</span>, <b>'.$escrutinio['votos_autentificados'].'</b>&nbsp;'._('autentificados').'.<br />
 '._('Validez').': '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>'._('NULO').'</b>&nbsp;'.$porcentaje_validez.'%</span>').'<br />
 <img width="200" height="120" title="Votos de validez: OK: '.num($escrutinio['validez']['true']).', NULO: '.$escrutinio['validez']['false'].'" src="http://chart.apis.google.com/chart?cht=p&chp=4.71&chd=t:'.$escrutinio['validez']['true'].','.$escrutinio['validez']['false'].'&chs=200x120&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>
@@ -958,12 +958,12 @@ function radio_check(value) {
 <input id="validez_false" type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> <label for="validez_false">'._('Votación nula (inválida, inapropiada o tendenciosa)').'.</label>
 </p>
 
-<p>'.($r['privacidad']=='true'?_('Comentario (opcional, secreto y público al finalizar la votación)'):_('Comentario (opcional y público al finalizar la votación)')).'.<br />
-<input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="60" maxlength="160" placeholder="'._('Puedes escribir aquí un comentario').'" /></p>
+<p><input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="80" maxlength="160" placeholder="'._('Puedes escribir aquí un comentario').' ('.($r['privacidad']=='true'?_('opcional, secreto y público al finalizar la votación'):_('opcional y público al finalizar la votación')).')" /></p>
+
 </form>
 
-'.($r['ha_votado']?'<p style="margin-top:30px;">'._('Comprobante de voto').':<br />
-<input type="text" value="'.$r['ID'].'-'.$r['comprobante'].'" size="60" readonly="readonly" style="color:#AAA;" /> '.boton(_('Enviar al email'), '/accion.php?a=votacion&b=enviar_comprobante&comprobante='.$r['ID'].'-'.$r['comprobante'], false, 'pill').'</p>':'').'</fieldset>';
+'.($r['ha_votado']?'<p style="margin-top:30px;text-align:right;">'._('Comprobante de voto').':<br />
+'.boton(_('Enviar al email'), '/accion.php?a=votacion&b=enviar_comprobante&comprobante='.$r['ID'].'-'.$r['comprobante'], false, 'pill small').' <input type="text" value="'.$r['ID'].'-'.$r['comprobante'].'" size="48" readonly="readonly" style="color:#AAA;" /></p>':'').'</fieldset>';
 
 			}
 

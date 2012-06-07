@@ -28,7 +28,4 @@ define('CLAVE_API_ETHERPAD', '...');
 
 define('FB_APIKEY', '...');
 define('FB_SECRET', '...');
-
-
-define('DEV', '');
 ?>

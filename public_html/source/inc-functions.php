@@ -285,6 +285,7 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 	}
 }
 
+
 function error($txt='Acción no permitida o erronea') { redirect('http://'.HOST.'/?error='.base64_encode($txt)); }
 function num($num, $dec=0) { return number_format(round($num, $dec), $dec, ',', '.'); }
 function explodear($pat, $str, $num) { $exp = explode($pat, $str); return $exp[$num]; }
@@ -293,6 +294,9 @@ function entre($num, $min, $max) { if ((is_numeric($num)) AND ($num >= $min) AND
 function direccion_IP($tipo='ip') { return ($tipo=='longip'?ip2long($_SERVER['REMOTE_ADDR']):$_SERVER['REMOTE_ADDR']); }
 function avatar($user_ID, $size='') { return '<img src="'.IMG.'a/'.$user_ID.($size?'_'.$size:'').'.jpg" alt="'.$user_ID.'"'.($size!=''?' width="'.$size.'" height="'.$size.'" class="redondeado"':'').' />'; }
 function pols($pols) { return '<span class="'.($pols<0?'pn':'pp').'">'.number_format($pols, 0, ',', '.').'</span>'; }
+function tiempo($dias=0, $hora='H:i:s', $tipo='pasado') { 
+	return date('Y-m-d '.$hora, ($tipo=='pasado'?time()-(86400*round($dias)):time()+(86400*round($dias)))); 
+}
 
 function boton($texto, $url=false, $confirm=false, $size=false, $pols='', $html_extra=false) {
 	if (($pols=='') OR (ECONOMIA == false)) {

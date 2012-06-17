@@ -19,7 +19,7 @@ $txt .= '
 
 	$result = sql("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND elecciones IS NOT NULL ORDER BY nivel DESC");
 	while($r = r($result)) {
-		$txt .= '<td align="center" title="'._('Elecciones a').' '.$r['nombre'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /><br /><input type="checkbox" onclick="$(\'.cargo_'.$r['cargo_ID'].'\').toggle();" checked="checked" /></td>';
+		$txt .= '<td align="center" title="'._('Elecciones a').' '.$r['nombre'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /><br /><input type="checkbox" onclick="$(\'.cargo_'.$r['cargo_ID'].'\').toggle();$(\'.cargo_'.$r['cargo_ID'].'_info\').hide();" checked="checked" /></td>';
 	}
 
 // <input type="checkbox" onclick="$(\'.futuro\').toggle();" />
@@ -95,7 +95,7 @@ while($r = mysql_fetch_array($result)) {
 <td>'.($r['estado']=='end'?'<button class="small blue" onclick="$(\'#escrutinio_'.$r['ID'].'\').toggle(\'slow\');">'._('Ver resultado').'</button>':'').'</td>
 
 </tr>
-<tr id="escrutinio_'.$r['ID'].'"'.($n==1?'':' style="display:none;"').'>
+<tr id="escrutinio_'.$r['ID'].'" class="cargo_'.$r['cargo_ID'].'_info"'.($n==1?'':' style="display:none;"').'>
 <td colspan="7">';
 
 	if ($r['estado'] == 'end') {

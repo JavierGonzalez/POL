@@ -15,11 +15,9 @@ $txt_nav = array('/api'=>'API');
 
 /* PASOS PARA CONSEGUIR PRIVILEGIO
 
-1. https://www.facebook.com/dialog/oauth?client_id=358872204161898&redirect_uri=http://www.virtualpol.com/&
-scope=manage_pages,offline_access,publish_stream
+1. https://www.facebook.com/dialog/oauth?client_id=__APP_ID__&redirect_uri=http://www.virtualpol.com/&scope=manage_pages,offline_access,publish_stream
 
-2. https://graph.facebook.com/oauth/access_token?client_id=358872204161898&redirect_uri=http://www.virtualpol.com/&
-client_secret=API&code=CODIGO_ANTERIOR
+2. https://graph.facebook.com/oauth/access_token?client_id=__APP_ID__&redirect_uri=http://www.virtualpol.com/&client_secret=__APP_KEY__&code=CODIGO_ANTERIOR
 
 3. https://graph.facebook.com/me/accounts?access_token=CODIGO_ANTERIOR
 */
@@ -29,7 +27,7 @@ client_secret=API&code=CODIGO_ANTERIOR
 $result = sql("SELECT post_ID FROM api_posts WHERE estado = 'cron' AND time_cron <= '".$date."' LIMIT 1");
 while($r = r($result)) {
 	include_once('inc-functions-accion.php');
-	api_facebook('publicar', $r['post_ID'], true);
+	//api_facebook('publicar', $r['post_ID'], true);
 }
 
 
@@ -76,12 +74,12 @@ if (is_numeric($_GET['a'])) {
 <td><input type="text" name="time_cron" value="'.($edit['time_cron']?$edit['time_cron']:$date).'" /> (Se publicará después de esta fecha)</td>
 </tr>
 
-<!--
+
 <tr>
 <td align="right">Imagen incrustada:</td>
 <td><input type="url" name="picture" value="'.$edit['picture'].'" size="50" placeholder="http://" /> (Opcional)</td>
 </tr>
--->
+
 
 <!--
 <tr>

@@ -188,7 +188,7 @@ function siControlPulsado(event, nick){
 }
 
 function toggle_ignorados(nick) {
-	var idx = array_ignorados.indexOf(nick);
+	var idx = $.inArray(nick, array_ignorados);
 	if (idx != -1) {
 		array_ignorados.splice(idx, 1);
 		$("."+nick).show();
@@ -346,7 +346,7 @@ function print_msg(data) {
 					if ((al_cargo[m_nick] == "0") || (!al_cargo[m_nick])) { al_cargo[m_nick] = m_tipo; }
 				}
 
-				var idx = array_ignorados.indexOf(m_nick);
+				var idx = $.inArray(m_nick, array_ignorados);
 				if (idx != -1) { escondidos.push(m_ID); } else { chat_sin_leer++; }
 			}
 		}
@@ -376,7 +376,7 @@ function merge_list() {
 			if (cargo_ID.substr(0,3) == "98_") { var kick_nick  = "ip-" + cargo_ID.substr(3); } 
 			else { var kick_nick  = elnick; }
 
-			var idx = array_ignorados.indexOf(elnick);
+			var idx = $.inArray(elnick, array_ignorados);
 			if (idx != -1) { nick_tachado = "<strike>" + elnick + "</strike>"; } else { nick_tachado = elnick; }
 			
 			if (array_list[cargo_ID] === undefined) { array_list[cargo_ID] = ""; }

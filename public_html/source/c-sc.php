@@ -194,13 +194,16 @@ if ($_GET['a'] != 'bloqueos') {
 </optgroup>
 </select> &nbsp; 
 
-Profundidad: <select onchange="filtro_change(this)" disabled>
-<option value="/5">5 días</option>
-<option value="/15" selected="selected">15 días</option>
-<option value="/30">30 días</option>
-<option value="/30">60 días</option>
-<option value="/full">Máximo</option>
+'.(is_numeric($_GET['a'])||!$_GET['a']?'
+Profundidad: <select onchange="filtro_change(this)">
+<option value="/sc/2"'.($_GET['a']==2?' selected="selected"':'').'>2 días</option>
+<option value="/sc/5"'.($_GET['a']==5?' selected="selected"':'').'>5 días</option>
+<option value="/sc/15"'.(!$_GET['a']||$_GET['a']==15?' selected="selected"':'').'>15 días</option>
+<option value="/sc/30"'.($_GET['a']==30?' selected="selected"':'').'>30 días</option>
+<option value="/sc/60"'.($_GET['a']==60?' selected="selected"':'').'>60 días</option>
+<option value="/sc/10000"'.($_GET['a']==10000?' selected="selected"':'').'>Máximo</option>
 </select> &nbsp; 
+':'').'
 
 Plataforma: <select onchange="filtro_change(this)" disabled>
 <option value="all">Todo VirtualPol</option>';
@@ -381,83 +384,17 @@ ORDER BY ".$sql_order." LIMIT 50");
 
 default:
 
-	$txt .= '<fieldset><legend>Coincidencia de IP</legend><table>
-<tr>
-<th colspan="4"></th>
-<th title="Hardware">Dispositivo</th>
-<th title="Proveedor de Internet / Pais (98% precision) / Dirección IP y host">ISP / Rango / País / IP</th>
-<th title="Coincidencia de contraseña">Clave</th>
-<th title="Proveedor de email">Email</th>
-<th>SO / Navegador</th>
-<th>Pantalla</th>
-<th></th>
-</tr>';
+	if (!$_GET['a']) { $_GET['a'] = 15; }
 
-
-// IPs publicas de algunos ISPs que sacan a sus clientes compartiendo la misma. Esto es util para identificar estas coincidencias y evitar falsos positivos.
-$IP_publicas = array(
-'85.62.234', // Orange movil
-'85.62.233', // Orange movil
-'81.45.7', // Movistar movil
-'80.58.205', // Movistar CanguroNet
-
-'93.186.23.83', // Blackberry
-'195.235.76', // Movistar movil
-);
-
-foreach ($IP_publicas AS $IPs) { $longIP_publicas[] = ip2long($IPs); }
-	$clones_array_full = array();
-	$result = sql("SELECT COUNT(DISTINCT user_ID) AS num, IP 
-FROM users_con
-WHERE IP NOT IN ('".implode("','", $longIP_publicas)."') AND IP_rango NOT IN ('".implode("','", $IP_publicas)."') AND IP_rango3 NOT IN ('".implode("','", $IP_publicas)."')
-GROUP BY IP HAVING num > 1
-ORDER BY num DESC, IP ASC");
-$txt .= mysql_error();
-	while ($r = r($result)) { 
-		$clones_array = array();
-		$clones_nick_array = array();
-		$txt_tr = '';
-		$clon_count = 0;
-		$clon_confianza = 0;
-		$mostrar = false;
-		$result2 = sql("SELECT user_ID, MAX(dispositivo) AS dispositivo, MAX(nav_resolucion) AS nav_resolucion, MAX(uc.time) AS time, ISP, nick, u.estado, u.pais, pass, nota_SC, email, uc.tipo, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, v.voto AS has_votado, u.voto_confianza
-FROM users_con `uc`
-LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
-LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
-WHERE uc.IP = '".$r['IP']."'
-GROUP BY user_ID
-ORDER BY uc.time DESC");
-		while ($r2 = r($result2)) {
-			$txt_tr .= print_td($r2, ++$clon_count);
-			if ((!in_array($r2['user_ID'], $clones_array_full)) AND ($r2['estado'] != 'expulsado')) { $mostrar = true; $clones_array_full[] = $r2['user_ID']; }
-			$clones_array[] = $r2['user_ID'];
-			$clones_nick_array[] = $r2['nick'];
-			if ($r2['estado'] == 'expulsado') {
-				$razon = false;
-				$result3 = sql("SELECT razon FROM expulsiones WHERE user_ID = '".$r2['user_ID']."' AND estado = 'expulsado' LIMIT 1");
-				while ($r3 = r($result3)) { $razon = $r3['razon']; }
-				if (($razon == false) OR ($razon == 'Registro erroneo.')) { $clon_count--; }
-			}
-			if (($r2['has_votado'] == 1) OR ($r2['user_ID'] == $pol['user_ID'])) { $clon_confianza++; }
-		}
-		$IDS = array();
-		if (($mostrar) AND ($clon_count > 1) AND ($clon_count > $clon_confianza)) {
-			$clones_list = implode('-', $clones_array);
-			$txt .= '<tr class="tdhead">
-<td colspan="8" nowrap><a href="/sc/filtro/user_ID/'.$clones_list.'" class="button blue small">&nbsp;</a> <a href="/control/expulsiones/expulsar/'.implode('-', $clones_nick_array).'" class="button red small">Expulsar '.$clon_count.'</a> <a href="/msg/'.implode('-', $clones_nick_array).'" class="button blue small">MP</a></td>
-<td colspan="10"></td>
-</tr>'.$txt_tr;
-		}
-	}
-	$txt .= '</table></fieldset>';
+	$sql_con = "uc.time > '".tiempo($_GET['a'])."' AND ";
 
 
 
-	$txt .= '<fieldset><legend>Coincidencia de Dispositivo</legend><table>';
+	$txt .= '<fieldset><legend>Dispositivo</legend><table>';
 	$clones_array_full = array();
 	$result = sql("SELECT COUNT(DISTINCT user_ID) AS num, dispositivo
-FROM users_con
-WHERE dispositivo IS NOT NULL AND dispositivo != ''
+FROM users_con `uc`
+WHERE ".$sql_con."dispositivo IS NOT NULL AND dispositivo != ''
 GROUP BY dispositivo
 HAVING num > 1
 ORDER BY num DESC, time DESC");
@@ -503,8 +440,79 @@ ORDER BY MAX(uc.time) DESC");
 
 
 
+	$txt .= '<fieldset><legend>IP</legend><table>
+<tr>
+<th colspan="4"></th>
+<th title="Hardware">Dispositivo</th>
+<th title="Proveedor de Internet / Pais (98% precision) / Dirección IP y host">ISP / Rango / País / IP</th>
+<th title="Coincidencia de contraseña">Clave</th>
+<th title="Proveedor de email">Email</th>
+<th>SO / Navegador</th>
+<th>Pantalla</th>
+<th></th>
+</tr>';
 
-	$txt .= '<fieldset><legend>Coincidencia de clave</legend><table>';
+// IPs publicas de algunos ISPs que sacan a sus clientes compartiendo la misma. Esto es util para identificar estas coincidencias y evitar falsos positivos.
+$IP_publicas = array(
+'85.62.234', // Orange movil
+'85.62.233', // Orange movil
+'81.45.7', // Movistar movil
+'80.58.205', // Movistar CanguroNet
+
+'93.186.23.83', // Blackberry
+'195.235.76', // Movistar movil
+);
+
+foreach ($IP_publicas AS $IPs) { $longIP_publicas[] = ip2long($IPs); }
+	$clones_array_full = array();
+	$result = sql("SELECT COUNT(DISTINCT user_ID) AS num, IP 
+FROM users_con `uc`
+WHERE ".$sql_con."IP NOT IN ('".implode("','", $longIP_publicas)."') AND IP_rango NOT IN ('".implode("','", $IP_publicas)."') AND IP_rango3 NOT IN ('".implode("','", $IP_publicas)."')
+GROUP BY IP HAVING num > 1
+ORDER BY num DESC, IP ASC");
+	while ($r = r($result)) { 
+		$clones_array = array();
+		$clones_nick_array = array();
+		$txt_tr = '';
+		$clon_count = 0;
+		$clon_confianza = 0;
+		$mostrar = false;
+		$result2 = sql("SELECT user_ID, MAX(dispositivo) AS dispositivo, MAX(nav_resolucion) AS nav_resolucion, MAX(uc.time) AS time, ISP, nick, u.estado, u.pais, pass, nota_SC, email, uc.tipo, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, v.voto AS has_votado, u.voto_confianza
+FROM users_con `uc`
+LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
+LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
+WHERE uc.IP = '".$r['IP']."'
+GROUP BY user_ID
+ORDER BY uc.time DESC");
+		while ($r2 = r($result2)) {
+			$txt_tr .= print_td($r2, ++$clon_count);
+			if ((!in_array($r2['user_ID'], $clones_array_full)) AND ($r2['estado'] != 'expulsado')) { $mostrar = true; $clones_array_full[] = $r2['user_ID']; }
+			$clones_array[] = $r2['user_ID'];
+			$clones_nick_array[] = $r2['nick'];
+			if ($r2['estado'] == 'expulsado') {
+				$razon = false;
+				$result3 = sql("SELECT razon FROM expulsiones WHERE user_ID = '".$r2['user_ID']."' AND estado = 'expulsado' LIMIT 1");
+				while ($r3 = r($result3)) { $razon = $r3['razon']; }
+				if (($razon == false) OR ($razon == 'Registro erroneo.')) { $clon_count--; }
+			}
+			if (($r2['has_votado'] == 1) OR ($r2['user_ID'] == $pol['user_ID'])) { $clon_confianza++; }
+		}
+		$IDS = array();
+		if (($mostrar) AND ($clon_count > 1) AND ($clon_count > $clon_confianza)) {
+			$clones_list = implode('-', $clones_array);
+			$txt .= '<tr class="tdhead">
+<td colspan="8" nowrap><a href="/sc/filtro/user_ID/'.$clones_list.'" class="button blue small">&nbsp;</a> <a href="/control/expulsiones/expulsar/'.implode('-', $clones_nick_array).'" class="button red small">Expulsar '.$clon_count.'</a> <a href="/msg/'.implode('-', $clones_nick_array).'" class="button blue small">MP</a></td>
+<td colspan="10"></td>
+</tr>'.$txt_tr;
+		}
+	}
+	$txt .= '</table></fieldset>';
+
+
+
+
+
+	$txt .= '<fieldset><legend>Clave</legend><table>';
 	$clones_array_full = array();
 	$result = sql("SELECT COUNT(*) AS num, pass 
 FROM users
@@ -524,7 +532,7 @@ ORDER BY num DESC, fecha_last DESC");
 FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
-WHERE u.pass = '".$r['pass']."'
+WHERE ".$sql_con."u.pass = '".$r['pass']."'
 GROUP BY user_ID
 ORDER BY dispositivo DESC, MAX(uc.time) DESC");
 		while ($r2 = r($result2)) {
@@ -563,7 +571,7 @@ ORDER BY dispositivo DESC, MAX(uc.time) DESC");
 FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
-WHERE ISP LIKE 'Ocultado%' AND estado != 'expulsado'
+WHERE ".$sql_con."ISP LIKE 'Ocultado%' AND estado != 'expulsado'
 GROUP BY user_ID
 ORDER BY MAX(uc.time) DESC, uc.time DESC");
 	while ($r2 = r($result2)) {

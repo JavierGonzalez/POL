@@ -163,7 +163,7 @@ if (($pol['config']['socios_estado']=='true') AND (nucleo_acceso('ciudadanos')) 
 }
 
 
-echo '<p style="color:#999;"><b>53%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="'._('VirtualPol está siendo traducido desde el Español original a muchos más idiomas. Puedes ayudar en la traducción. ¡Gracias!').'">'._('Traducción VirtualPol').'</a></p>
+echo '<p style="color:#999;"><b>83%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="'._('VirtualPol está siendo traducido desde el Español original a muchos más idiomas. Puedes ayudar en la traducción. ¡Gracias!').'">'._('Traducción VirtualPol').'</a></p>
 
 <p id="palabras">';
 

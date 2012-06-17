@@ -229,6 +229,9 @@ $('ul.menu li').hover(function(){ $(this).find('ul:first').stop(true, true).show
 	while ($r = r($result)) { $txt .= $r['nick'].' '.$r['y'].' '.$r['x'].','; }
 	echo substr($txt, 0, strlen($txt)-1);
 
+} else if ($_GET['a'] == 'ip') {
+	echo ip2long($_SERVER['REMOTE_ADDR']);
+
 } else if (($_POST['a'] == 'whois') AND (isset($_POST['nick']))) {
 
 	$res = sql("SELECT ID, fecha_registro, partido_afiliado, fecha_last, nivel, online, nota, avatar, voto_confianza, estado, pais, cargo,
@@ -246,7 +249,7 @@ FROM users WHERE nick = '".str_replace('@', '', $_POST['nick'])."' LIMIT 1");
 			while ($r2 = r($res2)) { $expulsion = str_replace(':', '', $r2['razon']); }
 		}
 
-		echo $r['ID'] . ':' . round((time() - strtotime($r['fecha_registro'])) / 60 / 60 / 24) . ' dias:' . duracion(time() - strtotime($r['fecha_last'])) . ':' . $r['nivel'] . ':' . $r['nota'] . ':' . duracion($r['online']) . ':' . $r['avatar'] . ':' . $r['partido'] . ':' . $r['num_hilos'] . '+' . $r['num_msg'] . ':' . $r['estado'] . ':' . $r['pais'] . ':' . $r['cargo'] . ':'.$expulsion.':'.$r['voto_confianza'].':';
+		echo $r['ID'] . ':' . duracion(time() - strtotime($r['fecha_registro'])) . ':' . duracion(time() - strtotime($r['fecha_last'])) . ':' . $r['nivel'] . ':' . $r['nota'] . ':' . duracion($r['online']) . ':' . $r['avatar'] . ':' . $r['partido'] . ':' . $r['num_hilos'] . '+' . $r['num_msg'] . ':' . $r['estado'] . ':' . $r['pais'] . ':' . $r['cargo'] . ':'.$expulsion.':'.$r['voto_confianza'].':';
 	}
 
 }

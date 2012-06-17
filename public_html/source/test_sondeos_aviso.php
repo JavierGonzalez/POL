@@ -17,7 +17,7 @@ if (false) {
 	evento_chat('<b>[#] Comienzo de envio de emails</b> de aviso de votaciones.');
 	
 	$emails_enviados = 0;
-	$result = sql("SELECT ID, nick, email FROM users WHERE estado = 'ciudadano' AND email != '' ORDER BY fecha_registro ASC LIMIT 1000000");
+	$result = sql("SELECT ID, nick, email FROM users WHERE estado = 'ciudadano' AND email != '' AND pais ='15M' ORDER BY fecha_registro ASC LIMIT 1000000");
 	while($r = r($result)) {
 
 		$txt_votaciones = '';
@@ -44,11 +44,7 @@ ORDER BY num DESC");
 '.$txt_votaciones.'
 </ol>
 
-<p>Tu voto cuenta. También participamos en nuestra <a href="http://15m.virtualpol.com">sala de chat</a>.</p>
-
-<p>Difundenos, también estamos en <a href="https://www.facebook.com/AsambleaVirtual">nuestro Facebook</a></p>
-
-<p>¡Por un 15M fuerte!</p>
+<p>Tu voto cuenta. Mantente informado también en nuestra <a href="https://www.facebook.com/AsambleaVirtual">Fanpage de Facebook</a></p>
 
 <p>_____<br />
 <a href="http://15m.virtualpol.com">Asamblea Virtual 15M</a><br />

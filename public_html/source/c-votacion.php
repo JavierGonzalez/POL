@@ -1014,7 +1014,7 @@ ORDER BY siglas ASC");
 </tr>';
 	$mostrar_separacion = true;
 	
-	$result = sql("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver,
+	$result = sql("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, num_censo, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, cargo_ID,
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS ha_votado
 FROM votacion
 WHERE estado = 'ok' AND pais = '".PAIS."'
@@ -1027,13 +1027,13 @@ LIMIT 500");
 		if ((!isset($pol['user_ID'])) OR ((!$r['ha_votado']) AND ($r['estado'] == 'ok') AND (nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar'])))) { 
 			$votar = '<a href="'.(isset($pol['user_ID'])?'/votacion/'.$r['ID']:REGISTRAR.'?p='.PAIS).'" class="button small blue">'._('Votar').'</a> ';
 		} else { $votar = ''; }
-		
+
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 			$txt .= '<tr>
 <td width="100"'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?' style="font-weight:bold;"':'').'>'.ucfirst(_($r['tipo'])).'</td>
-<td align="right"><b>'.num($r['num']).'</b></td>
-<td>'.$votar.'<a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').(!in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
-<td nowrap="nowrap" class="gris" align="right">'.timer($time_expire, true).'</td>
+<td align="right" title="'._('Participación').': '.($r['num_censo']==0?0:num($r['num']*100/$r['num_censo'], 2)).'% ('.num($r['num_censo']).')"><b>'.num($r['num']).'</b></td>
+<td>'.$votar.($r['cargo_ID']?'<a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /></a> ':'').'<a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').(!in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
+<td nowrap="nowrap" class="gris" align="right">'.timer($r['time_expire']).'</td>
 <td nowrap="nowrap">'.($r['user_ID']==$pol['user_ID']&&$r['estado']=='ok'?boton('Cancelar', '/accion.php?a=votacion&b=finalizar&ID='.$r['ID'], '¿Seguro que quieres CANCELAR esta votacion y convertirla en un BORRADOR?', 'small red'):'').'</td>
 <td>'.gbarra(round((time()-$time)*100)/($time_expire-$time)).'</td>
 </tr>';
@@ -1059,11 +1059,13 @@ function ver_votacion(tipo) {
 
 $txt .= '<fieldset><legend>'._('Finalizadas').'</legend>
 
-<span style="color:#666;padding:3px 4px;border:1px solid #999;border-bottom:none;margin-left:100px;" class="redondeado"><b>
+<span style="color:#666;padding:3px 4px;border:1px solid #999;border-bottom:none;margin-left:100px;" class="redondeado">
+<b>
+<input type="checkbox" onclick="ver_votacion(\'elecciones\');" id="c_elecciones" checked="checked" /> '._('Elecciones').' &nbsp; 
 <input type="checkbox" onclick="ver_votacion(\'referendum\');" id="c_referendum" checked="checked" /> '._('Referéndums').' &nbsp; 
+</b>
+<input type="checkbox" onclick="ver_votacion(\'sondeo\');" id="c_sondeo" checked="checked" /> '._('Sondeos').' &nbsp; 
 <input type="checkbox" onclick="ver_votacion(\'parlamento\');" id="c_parlamento" checked="checked" /> '._('Parlamento').' &nbsp;  
-<input type="checkbox" onclick="ver_votacion(\'sondeo\');" id="c_sondeo" checked="checked" /> '._('Sondeos').'</b> &nbsp; 
-<input type="checkbox" onclick="ver_votacion(\'cargo\');" id="c_cargo" /> '._('Cargos').' &nbsp; 
 <input type="checkbox" onclick="ver_votacion(\'privadas\');" id="c_privadas" /> <span style="color:red;">'._('Privadas').'</span> &nbsp; 
 </span>
 
@@ -1072,20 +1074,18 @@ $txt .= '<fieldset><legend>'._('Finalizadas').'</legend>
 <table border="0" cellpadding="1" cellspacing="0">
 ';
 	$mostrar_separacion = true;
-	$result = sql("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, num_censo, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver
+	$result = sql("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, num_censo, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, cargo_ID
 FROM votacion
 WHERE estado = 'end' AND pais = '".PAIS."'
 ORDER BY time_expire DESC
 LIMIT 500");
 	while($r = r($result)) {
-		$time_expire = strtotime($r['time_expire']);
-		
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 			$txt .= '<tr class="v_'.$r['tipo'].($r['acceso_ver']!='anonimos'?' v_privadas':'').'"'.(in_array($r['tipo'], array('referendum', 'parlamento', 'sondeo', 'elecciones'))&&in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'':' style="display:none;"').'>
 <td width="100"'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?' style="font-weight:bold;"':'').'>'.ucfirst(_($r['tipo'])).'</td>
-<td align="right"><b>'.num($r['num']).'</b></td>
-<td><a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').(!in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
-<td nowrap="nowrap" align="right" class="gris">'.timer($time_expire, true).'</td>
+<td align="right" title="'._('Participación').': '.($r['num_censo']==0?0:num($r['num']*100/$r['num_censo'], 2)).'% ('.num($r['num_censo']).')"><b>'.num($r['num']).'</b></td>
+<td>'.($r['cargo_ID']?'<a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /></a> ':'').'<a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').(!in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
+<td nowrap="nowrap" align="right" class="gris">'.timer($r['time_expire']).'</td>
 </tr>';
 		}
 	}

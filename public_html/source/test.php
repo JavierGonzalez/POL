@@ -21,33 +21,9 @@ while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 
-$txt .= '<hr /><h2>Eliminar:</h2><div class="rich">';
 
 
-/* Expiraciones:
-Tras 60 dias inactivo
-
-Excepciones:
-* Autentificados
-* Socios
-* Donantes
-* Veteranos (más de 2 años de antiguedad)
-
-Emails de aviso de expiración:
-1. Tras 30 días inactivo
-2. Tras 55 días inactivo
-*/
-$st['eliminados'] = 0;
-$result = sql("SELECT ID, IP FROM users_con");
-while($r = r($result)) {
-	$la_IP = explode('.', long2ip($r['IP']));
-	sql("UPDATE users_con SET IP_rango3 = '".$la_IP[0].".".$la_IP[1].".".$la_IP[2]."' WHERE ID = '".$r['ID']."' LIMIT 1");
-}
-
-$txt .= '<hr />Eliminados: '.$st['eliminados'].'<hr /><h2>Avisos emails:</h2> ';
-
-
-$txt .= '</div>';
+//pols_transferir(1, $r['user_ID'], '-1', 'Test de desarrollo 1.');
 
 
 

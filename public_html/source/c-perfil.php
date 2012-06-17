@@ -347,18 +347,17 @@ $txt .= '</fieldset></div>';
 '.($r['donacion']&&$pol['user_ID']?'<p>'._('Donación').': <b>'.pols($r['donacion']).' euros</b></p>':'').'
 '.(ASAMBLEA?'':'<p>'._('Nivel').': <b>' . $r['nivel'] . '</b></p>').'
 <p>'._('Nota media').': <b><span class="gris">' . $nota . '</span></b></p>
-<p>'._('Tiempo online').': <b><acronym title="' . $r['online'] . '">' . duracion($r['online']) . '</acronym></b></p>
+<p>'._('Tiempo online').': <b><acronym title="'.num($r['visitas']).' visitas, '.num($r['paginas']).' páginas vistas, '.num($r['paginas']/$r['visitas'], 2).' pv/v">' . duracion($r['online']) . '</acronym></b></p>
 <p>'._('Elecciones').': <b>' . $r['num_elec'] . '</b></p>
 
 '.(ECONOMIA?'<p>'._('Empresas').': <b>' . $empresas_num . '</b><br /><b>' . $empresas . '</b></p>':'').'
 
 <p>'._('Foro').': <a href="/foro/mis-respuestas/'.$r['nick'].'" title="hilos+mensajes" style="font-weight:bold;">'.$r['num_hilos'].'+'.$r['num_msg'].'</a></p>
-'.(ASAMBLEA?'':'<p>'._('Afiliado a').': <b>' . crear_link($r['partido'], 'partido') . '</b></p>').'
-<p>'._('Último acceso').': <acronym title="' . $r['fecha_last'] . '"><b>' . duracion(time() - strtotime($r['fecha_last'])) . '</b></acronym><br />';
+'.(ASAMBLEA?'':'<p>'._('Afiliado a').': <b>'.crear_link($r['partido'], 'partido').'</b></p>').'
+<p>'._('Último acceso').': <acronym title="'.$r['fecha_last'].'"><b>'.timer($r['fecha_last']).'</b></acronym><br />';
 
 
-$txt .= _('Registrado hace').': <b><acronym title="' . $r['fecha_registro'] . '">'.round((time() - strtotime($r['fecha_registro'])) / 60 / 60 / 24).' '._('días').'</acronym></b><br />
-';
+$txt .= _('Registrado hace').': <b><acronym title="'.$r['fecha_registro'].'">'.timer($r['fecha_registro']).'</acronym></b><br />';
 
 
 /* Tramos de expiraci?n

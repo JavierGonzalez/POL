@@ -330,14 +330,14 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais='') {
 			sql("UPDATE users SET pols = pols - " . $pols . " WHERE ID = '" . $emisor_ID . "' AND pais = '".$pais."' LIMIT 1");
 		} else {
 			if ($pol['nick']) { $concepto = '<b>'.$pol['nick'].'&rsaquo;</b> '.$concepto; }
-			sql("UPDATE ".$sql."cuentas SET pols = pols - " . $pols . " WHERE ID = '" . substr($emisor_ID, 1) . "' LIMIT 1");
+			sql("UPDATE cuentas SET pols = pols - " . $pols . " WHERE ID = '" . substr($emisor_ID, 1) . "' LIMIT 1");
 		}
 
 		//ingresar
 		if ($receptor_ID > 0) {
 			sql("UPDATE users SET pols = pols + " . $pols . " WHERE ID = '" . $receptor_ID . "' AND pais = '".$pais."' LIMIT 1");
 		} else {
-			sql("UPDATE ".$sql."cuentas SET pols = pols + " . $pols . " WHERE ".($receptor_ID==-1?"pais = '".PAIS."' AND gobierno = 'true'":"ID = '".substr($receptor_ID, 1)."'")." LIMIT 1");
+			sql("UPDATE cuentas SET pols = pols + " . $pols . " WHERE ".($receptor_ID==-1?"pais = '".PAIS."' AND gobierno = 'true'":"ID = '".substr($receptor_ID, 1)."'")." LIMIT 1");
 		}
 
 		sql("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".$pais."', " . $pols . ", '" . $emisor_ID . "', '" . $receptor_ID . "', '" . $concepto . "', '" . date('Y-m-d H:i:s') . "')");

@@ -131,7 +131,7 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC");
 
 
 
-<div id="editarperfil"'.($_GET['b']=='editar'?'':' style="display:none;"').'>
+<div id="editarperfil"'.($_GET['b']=='editar'?' ':' style="display:none;"').'>
 
 <fieldset><legend>'._('Editar perfil').'</legend>
 
@@ -213,7 +213,7 @@ $txt .= '
 
 } // fin ECONOMIA
 
-// <p>Clave API: <input class="api_box" type="text" size="12" value="' . $r['api_pass'] . '" readonly="readonly" /> ' . boton('Generar clave', '/accion.php?a=api&b=gen_pass', '&iquest;Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua no funcionar&aacute;.') . ' (Equivale a tu contrase&ntilde;a, mantenla en secreto. M&aacute;s info: <a href="'.SSL_URL.'api.php">API</a>)</p>
+$txt .= '<p>Clave API: <input class="api_box" type="text" size="12" value="' . $r['api_pass'] . '" readonly="readonly" /> ' . boton('Generar clave', '/accion.php?a=api&b=gen_pass', '&iquest;Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua no funcionar&aacute;.') . ' (Equivale a tu contrase&ntilde;a, mantenla en secreto. M&aacute;s info: <a href="'.SSL_URL.'api-vp.php">API</a>)</p>';
 
 
 if (!ASAMBLEA) {

@@ -71,7 +71,7 @@ VALUES ('".PAIS."', '".$r['api_ID']."', 'pendiente', '".$pol['user_ID']."', '".$
 case 'api':
 	if (($pol['user_ID']) AND ($_GET['b'] == 'gen_pass')) {
 		mysql_query("UPDATE users SET api_pass = '".substr(md5(mt_rand(1000000000,9999999999)), 0, 12)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
-		$refer_url = 'perfil/'.strtolower($pol['nick']).'/editar/';
+		$refer_url = 'perfil/editar/';
 	}
 	break;
 	
@@ -1064,16 +1064,6 @@ case 'gobierno':
 		$refer_url = 'control/gobierno/notificaciones';
 	}
 	break;
-
-
-case 'api':
-	exit; // CANCELADO HASTA RE ACTIVACION
-	if (($pol['user_ID']) AND ($_GET['b'] == 'gen_pass')) {
-		sql("UPDATE users SET api_pass = '".substr(md5(mt_rand(1000000000,9999999999)), 0, 12)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
-		$refer_url = 'perfil/editar';
-	}
-	break;
-
 
 case 'empresa':
 	if (($_GET['b'] == 'crear') AND ($pol['pols'] >= $pol['config']['pols_empresa']) AND (ctype_digit($_POST['cat'])) AND ($_POST['nombre'])) {

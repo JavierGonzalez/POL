@@ -131,7 +131,7 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC");
 
 
 
-<div id="editarperfil"'.($_GET['b']=='editar'?' style="display:block;"':' style="display:none;"').'>
+<div id="editarperfil"'.($_GET['b']=='editar'?' ':' style="display:none;"').'>
 
 <fieldset><legend>'._('Editar perfil').'</legend>
 

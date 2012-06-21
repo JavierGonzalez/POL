@@ -105,7 +105,7 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 
 
 	// EXPULSADO?
-	$result = sql("SELECT expire FROM kicks WHERE pais = '".PAIS."' AND estado = 'activo' AND (user_ID = '".$pol['user_ID']."' OR (IP != '0' AND IP = '".$IP."')) LIMIT 1");
+	$result = sql("SELECT HIGH_PRIORITY k.expire, k.pais FROM kicks k, users u WHERE k.user_ID = u.ID AND k.estado = 'activo' AND ((k.pais = u.pais) OR (k.pais='".PAIS."')) AND (k.user_ID = '".$_SESSION['pol']['user_ID']."' OR (k.IP != '0' AND k.IP != '' AND k.IP = inet_aton('".$_SERVER['REMOTE_ADDR']."'))) LIMIT 1");
 	while($r = r($result)){ 
 		if ($r['expire'] < $date) { // DESBANEAR!
 			sql("UPDATE LOW_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'"); 

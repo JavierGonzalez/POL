@@ -72,9 +72,8 @@ if ((!isset($_POST['a'])) AND (is_numeric($_POST['chat_ID'])) AND (is_numeric($_
 	}
 
 	// KICKEADO?
-	$result = sql("SELECT HIGH_PRIORITY expire FROM kicks 
-WHERE pais='".PAIS."' AND estado = 'activo' AND (user_ID = '".$_SESSION['pol']['user_ID']."' OR (IP != '0' AND IP != '' AND IP = inet_aton('".$_SERVER['REMOTE_ADDR']."'))) 
-LIMIT 1");
+	$result = sql("SELECT HIGH_PRIORITY k.expire, k.pais FROM kicks k, users u WHERE k.user_ID = u.ID AND k.estado = 'activo' AND ((k.pais = u.pais) OR (k.pais='".PAIS."')) AND (k.user_ID = '".$_SESSION['pol']['user_ID']."' OR (k.IP != '0' AND k.IP != '' AND k.IP = inet_aton('".$_SERVER['REMOTE_ADDR']."'))) LIMIT 1");
+	
 	while($r = r($result)){ 
 		if ($r['expire'] < $date) { // QUITAR KICK
 			sql("UPDATE HIGH_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'"); 

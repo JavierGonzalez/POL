@@ -50,8 +50,8 @@ $vp['langs'] = array(
 );
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)
-$vp['paises'] = array('15M', 'DRY', 'Hispania', 'MIC', 'JRO', 'MCxVBC', 'ETSIIT', 'Occupy'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
-$vp['bg'] = array('Hispania'=>'#FFFF4F', 'MIC'=>'#FFD7D7', '15M' => '#FFFFB0', 'DRY' => '#FBDB03', 'ETSIIT'=>'#9FE0FF', 'Occupy'=>'#bbffaa', 'JRO'=>'#a8ffff', 'MCxVBC'=>'#ffffcc', 'www'=>'#eeeeee');
+$vp['paises'] = array('15M', 'DRY', 'Hispania', 'MIC', 'JRO', 'MCxVBC', 'ETSIIT', 'Occupy', 'PS'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
+$vp['bg'] = array('Hispania'=>'#FFFF4F', 'MIC'=>'#FFD7D7', '15M' => '#FFFFB0', 'DRY' => '#FBDB03', 'ETSIIT'=>'#9FE0FF', 'Occupy'=>'#bbffaa', 'JRO'=>'#a8ffff', 'MCxVBC'=>'#ffffcc', 'PS'=>'#ffff99', 'www'=>'#eeeeee'); // DESMANTELAR EN BREVES
 
 switch ($pais) { 
 	case '15m': break;
@@ -62,6 +62,7 @@ switch ($pais) {
 	case 'occupy': break;
 	case 'jro': break;
 	case 'mcxvbc': break;
+	case 'ps': break;
 
 	// PLATAFORMAS INACTIVAS
 	case 'pol':			define('PAIS', 'POL'); break;

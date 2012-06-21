@@ -23,8 +23,6 @@ while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 
-//pols_transferir(1, $r['user_ID'], '-1', 'Test de desarrollo 1.');
-
 
 
 

@@ -193,7 +193,7 @@ if ((ECONOMIA) AND (substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa')) {
 	<div id="header">
 
 		<div id="header-logo">
-			<a href="/" title="Home"><img src="<?=IMG?>banderas/<?=PAIS?>.png" width="80" height="50" alt="logo" /></a>
+			<a href="/"><img src="<?=IMG?>banderas/<?=PAIS?>.png" width="80" height="50" alt="logo" /></a>
 			<span class="htxt" id="header-logo-p"><?=$pol['config']['pais_des']?></span>
 		</div>
 

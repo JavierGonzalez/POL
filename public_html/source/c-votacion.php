@@ -125,7 +125,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 } elseif ($_GET['a'] == 'next') {
 	$url = '/votacion';
 	if (isset($pol['user_ID'])) {
-		$result = sql("SELECT ID, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, (SELECT user_ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' ORDER BY time_expire ASC");
+		$result = sql("SELECT ID, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, (SELECT user_ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' ORDER BY num DESC");
 		while($r = r($result)) { 
 			if ((!$r['ha_votado']) AND (nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) { $url = '/votacion/'.$r['ID']; break; }
 		}
@@ -852,9 +852,11 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 				$tiene_acceso_votar = nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']);
 
-
-				$txt .= '<fieldset><legend>'._('Votar').'</legend><form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=votacion&b=votar" method="post">
-<input type="hidden" name="ref_ID" value="'.$r['ID'].'"  /><p>';
+				$txt .= '<fieldset><legend>'._('Votar').'</legend>
+'.($pol['config']['info_consultas']>0&&$r['ha_votado']?'<p>'.boton(_('Siguiente votación').'</p>', '/votacion/next', false, 'orange large').'</p>':'').'
+<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=votacion&b=votar" method="post">
+<input type="hidden" name="ref_ID" value="'.$r['ID'].'"  />
+<p>';
 
 
 				if ($r['tipo_voto'] == 'estandar') {

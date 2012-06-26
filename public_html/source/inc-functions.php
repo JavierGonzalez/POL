@@ -149,7 +149,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 
 				// NOTIFICACION VOTACIONES
 				$pol['config']['info_consultas'] = 0;
-				$result = sql("SELECT v.ID, pais, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
+				$result = sql("SELECT v.ID, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
 				FROM votacion `v`
 				LEFT OUTER JOIN votacion_votos `vv` ON v.ID = vv.ref_ID AND vv.user_ID = '".$pol['user_ID']."'
 				WHERE v.estado = 'ok' AND (v.pais = '".PAIS."' OR acceso_votar IN ('supervisores_censo', 'privado')) AND vv.ID IS null");
@@ -158,7 +158,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 						$pol['config']['info_consultas']++;
 						$nuevos_num++;
 						$total_num++;
-						$t .= '<li><a href="http://'.$r['pais'].'.'.DOMAIN.'/votacion/'.$r['ID'].'" class="noti-nuevo">'._('Votación').': '.$r['pregunta'].'</a></li>';
+						$t .= '<li><a href="/votacion/'.$r['ID'].'" class="noti-nuevo">'._('Votación').': '.$r['pregunta'].'</a></li>';
 					}
 				}
 

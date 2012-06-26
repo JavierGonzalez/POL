@@ -34,10 +34,122 @@ function gen_datos($datos, $cero=false, $datos2=false) {
 
 $txt_title = _('Estadísticas');
 $txt_nav = array(_('Estadísticas'));
-$txt_tab = array('/estadisticas'=>'VirtualPol');
 
 
-if ($_GET['a'] == 'full-tab') {
+
+
+
+if ($_GET['a'] == 'macro') {
+
+$txt .= '
+
+<p>Sala de situación de VirtualPol. Estadísticas globales (macro).</p>
+
+<fieldset><legend>Plataformas</legend>
+
+<table>
+<tr>
+<th colspan="2"></th>
+<th colspan="4" style="border-left:1px dotted #999;">Ciudadanos</th>
+
+<th colspan="3" style="border-left:1px dotted #999;">Activos</th>
+
+<th colspan="3" style="border-left:1px dotted #999;">Votaciones</th>
+
+
+
+<th colspan="3" style="border-left:1px dotted #999;"></th>
+</tr>
+
+<tr>
+<th>Tipo</th>
+<th>Plataforma</th>
+
+<th title="Ciudadanos en total">Total</th>
+<th title="Balance de ciudadanos en el último tramo de 24h">1d</th>
+<th title="Balance de ciudadanos en el último tramo de 7 días">7d</th>
+<th title="Balance de ciudadanos en el último tramo de 30 días">30d</th>
+
+<th title="Ciudadanos -no nuevos- que entraron en las últimas 24h">1d</th>
+<th title="Ciudadanos -no nuevos- que entraron en los últimos 7 días">7d</th>
+<th title="Ciudadanos -no nuevos- que entraron en los últimos 30 días">30d</th>
+
+<th title="Numero de votos de la mayor votación de los últimos 30 días">Votantes</th>
+<th title="Numero de votos emitidos en los últimos 30 días">Votos</th>
+<th title="Votaciones En Curso">E.C.</th>
+
+<th title="Ciudadanos geolocalizados">Geo.</th>
+<th title="Supervisores del Censo">SC</th>
+<th title="Kicks (bloqueos por moderación) en los últimos 30 días">Kicks</th>
+
+</tr>';
+
+$result = sql("SELECT pais, valor AS num,
+(SELECT COUNT(*) FROM votacion WHERE pais = config.pais AND estado = 'ok') AS v_encurso,
+(SELECT MAX(num) FROM votacion WHERE pais = config.pais AND time_expire > '".tiempo(30)."') AS v_votantes,
+(SELECT SUM(num) FROM votacion WHERE pais = config.pais AND time_expire > '".tiempo(30)."') AS v_votos,
+(SELECT COUNT(*) FROM users WHERE pais = config.pais AND estado = 'ciudadano' AND fecha_last > '".tiempo(1)."' AND fecha_registro < '".tiempo(1)."') AS a_1d,
+(SELECT COUNT(*) FROM users WHERE pais = config.pais AND estado = 'ciudadano' AND fecha_last > '".tiempo(7)."' AND fecha_registro < '".tiempo(7)."') AS a_7d,
+(SELECT COUNT(*) FROM users WHERE pais = config.pais AND estado = 'ciudadano' AND fecha_last > '".tiempo(30)."' AND fecha_registro < '".tiempo(30)."') AS a_30d,
+(SELECT COUNT(*) FROM users WHERE pais = config.pais AND estado = 'ciudadano' AND x IS NOT NULL) AS geo,
+(SELECT COUNT(*) FROM users WHERE pais = config.pais AND SC = 'true') AS SC_num,
+(SELECT COUNT(*) FROM kicks WHERE pais = config.pais AND expire > '".tiempo(30)."') AS kicks_num
+FROM config WHERE dato = 'info_censo' ORDER BY ABS(valor) DESC LIMIT 25");
+while($r = r($result)) {
+
+	$pais = $r['pais'];
+	
+	$d = array();
+	$result2 = sql("SELECT ciudadanos, 24h FROM stats WHERE pais = '".$pais."' ORDER BY time DESC LIMIT 31");
+	while($r2 = r($result2)) { 
+		$d['ciudadanos'][]	= $r2['ciudadanos'];
+		$d['24h'][]			= $r2['24h'];
+	}
+
+	$result2 = sql("SELECT valor, dato FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo', 'bg_color')");
+	while($r2 = r($result2)) { $pais_config[$r2['dato']] = $r2['valor']; }
+
+	$txt .= '<tr style="background:'.$pais_config['bg_color'].';">
+
+<td><em style="color:#777;font-size:12px;">'.ucfirst($pais_config['tipo']).'</em></td>
+
+<td title="'.$pais_config['pais_des'].'"><a href="http://'.strtolower($pais).'.'.DOMAIN.'"><b style="font-size:18px;">'.$pais.'</b></a></td>
+
+<td align="right"><b>'.num($r['num']).'</b></td>
+
+
+
+<td align="right">'.confianza($d['ciudadanos'][0]-$d['ciudadanos'][1]).'</td>
+<td align="right">'.confianza($d['ciudadanos'][0]-$d['ciudadanos'][7]).'</td>
+<td align="right">'.confianza($d['ciudadanos'][0]-$d['ciudadanos'][30]).'</td>
+
+<td align="right">'.num($r['a_1d']).'</td>
+<td align="right"><b>'.num($r['a_7d']).'</b></td>
+<td align="right">'.num($r['a_30d']).'</td>
+
+<td align="right">'.num($r['v_votantes']).'</td>
+<td align="right">'.num($r['v_votos']).'</td>
+<td align="right"><b>'.num($r['v_encurso']).'</b></td>
+
+<td align="right">'.num($r['geo']).'</td>
+<td align="right">'.num($r['SC_num']).'</td>
+<td align="right">'.num($r['kicks_num']).'</td>
+
+</tr>';
+	
+	$poblacion_num += $r['num'];
+}
+
+$txt .= '</table>
+
+</fieldset>';
+
+$txt_title = 'Macro';
+$txt_nav[] = 'Macro';
+
+
+
+} elseif ($_GET['a'] == 'full-tab') {
 
 	header('Content-Type: text/plain');
 
@@ -50,7 +162,7 @@ if ($_GET['a'] == 'full-tab') {
 	exit;
 
 } else if ($_GET['a'] == 'full') {
-
+	$txt_tab = array('/estadisticas'=>'VirtualPol');
 
 $txt .= '
 <table width="100%">
@@ -107,7 +219,7 @@ $txt .= '</table>';
 
 
 } else {
-
+	$txt_tab = array('/estadisticas'=>'VirtualPol');
 
 $i = 0;
 $result = mysql_query("SELECT 

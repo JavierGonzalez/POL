@@ -65,85 +65,34 @@ $txt .= '<table>
 <table border="0" cellpadding="2" cellspacing="0" width="430">
 <tr>
 <th colspan="2" align="left">'._('Plataformas').'</th>
-<th align="left">'._('Población').'</th>
 </tr>';
 
-$result = sql("SELECT COUNT(ID) AS num FROM users WHERE dnie = 'true'");
-while($r = r($result)) { $autentificados = $r['num']; }
 
-foreach ($vp['paises'] AS $pais) {
+$result = sql("SELECT pais, valor AS num FROM config WHERE dato = 'info_censo' AND ABS(valor) >= 10 ORDER BY ABS(valor) DESC LIMIT 25");
+while($r = r($result)) {
+
+	$pais = $r['pais'];
 	$pais_low = strtolower($pais);
-	
-	// ciudadanos
-	$result = sql("SELECT COUNT(ID) AS num FROM users WHERE pais = '".$pais."' AND estado = 'ciudadano'");
-	while($r = r($result)) { $pais_pob = $r['num']; $pais_pob_num[$pais] = $r['num']; }
 
-	// dias de existencia
-	$result = sql("SELECT COUNT(stats_ID) AS num FROM stats WHERE pais = '".$pais."'");
-	while($r = r($result)) { $pais_dias = $r['num']; }
+	$result2 = sql("SELECT valor, dato FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo', 'bg_color')");
+	while($r2 = r($result2)) { $pais_config[$r2['dato']] = $r2['valor']; }
 
-
-	// Presidente
-	$pais_presidente = '';
-	$result = sql("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '7'");
-	while($r = r($result)) { $pais_presidente = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'" class="nick"><b style="font-size:18px;">'.$r['nick'].'</b></a>'; }
-
-	$pais_vice = '';
-	$result = sql("SELECT nick FROM users WHERE pais = '".$pais."' AND cargo = '19'");
-	while($r = r($result)) { $pais_vice = '<a href="http://'.$pais_low.'.'.DOMAIN.'/perfil/'.strtolower($r['nick']).'" class="nick" style="font-size:18px;">' . $r['nick'] . '</a>'; }
-
-
-	$result = sql("SELECT valor, dato FROM config WHERE pais = '".$pais_low."' AND dato IN ('pais_des', 'tipo')");
-	while($r = r($result)) { $pais_config[$r['dato']] = $r['valor']; }
-
-
-	// GEN GRAFICO CIRCULAR
-	if ($gf['censo_num']) { $gf['censo_num'] .= ','; }
-	$gf['censo_num'] .= $pais_pob;
-
-	$poblacion_num += $pais_pob;
-
-	if ($gf['bg_color']) { $gf['bg_color'] .= ','; }
-	$gf['bg_color'] .= substr($vp['bg'][$pais],1);
-
-	if ($gf['paises']) { $gf['paises'] .= '|'; }
-	$gf['paises'] .= $pais;
-
-	$moneda = 'Monedas';
-
-
-	$txt .= '<tr style="background:'.$vp['bg'][$pais].';">
+	$txt .= '<tr style="background:'.$pais_config['bg_color'].';">
 <td><a href="http://'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" alt="'.$pais.'" /></a></td>
 
-<td><a href="http://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:18px;">'.$pais_config['pais_des'].'</b></a><br />
+<td><span style="float:right;font-size:22px;"><b>'.num($r['num']).'</b></span><a href="http://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:18px;">'.$pais_config['pais_des'].'</b></a><br />
 <em style="color:#777;">'.ucfirst($pais_config['tipo']).'</em></td>
 
-<td align="right"><b style="font-size:22px;">'.num($pais_pob).'</b></td>
-
 </tr>';
-
-}
-
-$result = sql("SELECT COUNT(ID) AS num FROM users WHERE pais = 'ninguno' AND estado != 'expulsado'");
-while($r = r($result)){ 
-	$poblacion_num += $r['num'];
-
-	if ($gf['censo_num']) { $gf['censo_num'] .= ','; }
-	$gf['censo_num'] .= $r['num'];
-	$pob_ninguno = $r['num'];
-
 	
+	$poblacion_num += $r['num'];
 }
 
 
-$txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="4"></td></tr>
+$txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="2"></td></tr>
 
 <tr>
-<td colspan="2" align="center" valign="top"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.$gf['censo_num'].'&chds=a&chs=190x90&chl='.$gf['paises'].'&chco='.$gf['bg_color'].',BBBBBB&chf=bg,s,ffffff01|c,s,ffffff01&chco=FF9900|FFBE5E|FFD08A|FFDBA6" alt="Plataforma" title="Plataformas" width="190" height="90" /><br/>
-'.(nucleo_acceso('antiguedad', 2)?boton(_('Solicitar nueva plataforma'), '/crear-plataforma.php', false, 'small pill'):'').'</td>
-
-<td align="right" valign="top"><b style="font-size:20px;">'.num($poblacion_num).'</b></td>
-
+<td colspan="2"><span style="float:right;font-size:20px;"><b>'.num($poblacion_num).'</b></span>'.(nucleo_acceso('antiguedad', 2)?boton(_('Solicitar nueva plataforma'), '/crear-plataforma.php', false, 'small pill'):'').'</td>
 </tr>
 
 </table>

@@ -303,14 +303,16 @@ $txt .= '</blockquote>';
 
 <table border="0" cellspacing="4">';
 	$n = 0;
-	foreach ($vp['paises'] as $pais) {
-		// ciudadanos
-		$result = sql("SELECT COUNT(ID) AS num FROM users WHERE pais = '".$pais."'");
-		while($r = r($result)) { $ciudadanos_num = $r['num']; }
+	
+	$result = sql("SELECT pais, valor AS num FROM config WHERE dato = 'info_censo' ORDER BY ABS(valor) DESC LIMIT 25");
+	while($r = r($result)) {
+
+		$pais = $r['pais'];
+		$ciudadanos_num = $r['num'];
 
 		// pais_des
-		$result = sql("SELECT dato, valor FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo')");
-		while($r = r($result)) { $pais_array[$r['dato']] = $r['valor']; }
+		$result2 = sql("SELECT dato, valor FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo')");
+		while($r2 = r($result2)) { $pais_array[$r2['dato']] = $r2['valor']; }
 		$n++;
 		$txt .= '
 <tr style="font-size:19px;">

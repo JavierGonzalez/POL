@@ -21,7 +21,15 @@ while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 
-
+$txt .= '
+<h6>Sample Icons</h6>
+<span class="icon social x-large blue" data-icon="F"></span>
+<span class="icon social x-large" style="color:orange;" data-icon="5"></span>
+<span class="icon social x-large darkgray" data-icon="1"></span>
+<span class="icon social x-large black" data-icon="w"></span>
+<span class="icon x-large pink" data-icon="*"></span>
+<span class="icon social x-large green" data-icon="v"></span>
+';
 
 
 

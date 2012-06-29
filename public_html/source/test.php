@@ -9,27 +9,20 @@
 
 include('inc-login.php');
 include('inc-functions-accion.php');
-if ($pol['user_ID'] != 1) { exit; }
-function crono($new='') {
-	global $crono;
-	$the_ms = num((microtime(true)-$crono)*1000);
-	$crono = microtime(true);
-	return '<h3>'.$the_ms.'ms '.$new.'</h3></hr>';
-}
+//if ($pol['user_ID'] != 1) { exit; }
+function crono($new='') { global $crono; $the_ms = num((microtime(true)-$crono)*1000); $crono = microtime(true); return '<h3>'.$the_ms.'ms '.$new.'</h3></hr>'; }
 $result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
+$txt .= ' ';
+/***************************************************************************/
 
 
 
-$txt .= '
-<h6>Sample Icons</h6>
-<span class="icon social x-large blue" data-icon="F"></span>
-<span class="icon social x-large" style="color:orange;" data-icon="5"></span>
-<span class="icon social x-large darkgray" data-icon="1"></span>
-<span class="icon social x-large black" data-icon="w"></span>
-<span class="icon x-large pink" data-icon="*"></span>
-<span class="icon social x-large green" data-icon="v"></span>
-';
+
+$txt .= '<img src="http://www.virtualpol.com/img/smiley/sonrie.gif" border="0" alt=":falso:" title=":falso:" width="15" height="15" onMouseOver="$(this).attr(\'src\', \'http://www.virtualpol.com/img/smiley/troll.gif\');" />';
+
+
+
 
 
 

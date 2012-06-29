@@ -86,11 +86,13 @@ define('MP_MAX', 25); // Máximo de MP (mensajes privados) que puede enviar un c
 $datos_perfil = array('Blog', 'Twitter', 'Facebook', 'Google+', '', 'Menéame');
 $columnas = 14; $filas = 14; // Dimensiones mapa
 
+
 // URLS (SSL, IMG, REGISTRAR)
-define('REGISTRAR', 'https://'.DOMAIN.'/registrar/');
-define('SSL_URL', 'https://'.DOMAIN.'/'); // SSL_URL | http://www.virtualpol.com/ = https://virtualpol.com/
+define('REGISTRAR', 'https://www.'.DOMAIN.'/registrar/');
+define('SSL_URL', 'https://www.'.DOMAIN.'/'); // SSL_URL | http://www.virtualpol.com/ = https://www.virtualpol.com/
+
 if ($_SERVER['HTTPS']) {
-	define('IMG', 'https://'.DOMAIN.'/img/');
+	define('IMG', 'https://www.'.DOMAIN.'/img/');
 } else {
 	define('IMG', 'http://www.'.DOMAIN.'/img/');;
 }

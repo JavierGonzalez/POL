@@ -50,7 +50,7 @@ $txt .= '
 <table>
 <tr>
 <th colspan="2"></th>
-<th colspan="4" style="border-left:1px dotted #999;">Ciudadanos</th>
+<th colspan="5" style="border-left:1px dotted #999;">Ciudadanos</th>
 
 <th colspan="3" style="border-left:1px dotted #999;">Activos</th>
 
@@ -66,6 +66,7 @@ $txt .= '
 <th>Plataforma</th>
 
 <th title="Ciudadanos en total">Total</th>
+<th title="Balance de ciudadanos desde las 20:00 hasta ahora">Hoy</th>
 <th title="Balance de ciudadanos en el último tramo de 24h">1d</th>
 <th title="Balance de ciudadanos en el último tramo de 7 días">7d</th>
 <th title="Balance de ciudadanos en el último tramo de 30 días">30d</th>
@@ -118,7 +119,7 @@ while($r = r($result)) {
 <td align="right"><b>'.num($r['num']).'</b></td>
 
 
-
+<td align="right">'.confianza($r['num']-$d['ciudadanos'][0]).'</td>
 <td align="right">'.confianza($d['ciudadanos'][0]-$d['ciudadanos'][1]).'</td>
 <td align="right">'.confianza($d['ciudadanos'][0]-$d['ciudadanos'][7]).'</td>
 <td align="right">'.confianza($d['ciudadanos'][0]-$d['ciudadanos'][30]).'</td>

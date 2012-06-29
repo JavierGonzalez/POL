@@ -61,7 +61,8 @@ WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick,
 (SELECT estado FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick_estado,
 (SELECT fecha_last FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_last,
-(SELECT voto_confianza FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS voto_confianza
+(SELECT voto_confianza FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS voto_confianza,
+(SELECT confianza_historico FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS confianza_historico
 FROM cargos_users
 WHERE pais = '".PAIS."' 
 AND cargo_ID = '".$r['cargo_ID']."'
@@ -90,6 +91,7 @@ ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
 <td>'.($r2['cargo']=='true'?'<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" style="margin-bottom:-3px;" />':'<img src="'.IMG.'cargos/0.gif" alt="icono" width="16" height="16" border="0" style="margin-bottom:-3px;" />').' '.crear_link($r2['nick']).'</td>
 <td align="right" class="gris">'.timer($r2['fecha_last']).'</td>
 <td align="right">'.confianza($r2['voto_confianza']).'</td>
+<td><img src="https://chart.googleapis.com/chart?cht=ls&chs=90x22&chd=t:'.implode(',', explode(' ', trim($r2['confianza_historico']))).'&chco=EA9800&chds=a&chbh=a" width="90" height="22" alt="Confianza" title="Confianza semanal" /></td>
 <td align="right">'.num($r2['nota'],1).'</td>
 </tr>';
 			}
@@ -152,7 +154,7 @@ LIMIT 1", $link);
 <th></th>
 <th></th>
 <th style="font-weight:normal;">'._('Último acceso').'</th>
-<th style="font-weight:normal;">'._('Confianza').'</th>
+<th style="font-weight:normal;" colspan="2">'._('Confianza').'</th>
 <th style="font-weight:normal;">'._('Nota').'</th>
 </tr>
 '.implode('', $candidatos).'

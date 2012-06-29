@@ -36,14 +36,13 @@ body {
 #header {
 	height:99px;
 	border-bottom:1px solid #CCC;
-	box-shadow:inset -6px -6px 15px #F5F5F5;
+	/*box-shadow:inset -6px -6px 15px #F5F5F5;*/
 }
 #header-logo {
 	position:absolute;
 	top:6px;
 	left:5px;
 }
-#header-logo img { border:1px solid #BBB; }
 #header-logo-p { position:absolute; top:15px; left:100px; white-space:nowrap; }
 #header-right {
 	position:absolute;

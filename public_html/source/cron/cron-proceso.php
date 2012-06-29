@@ -43,7 +43,7 @@ while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 // EXPIRACION DE CANDIDATOS INACTIVOS
-$result = sql("SELECT user_ID, (SELECT fecha_last FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_last FROM cargos_users WHERE pais = '".PAIS."' AND aprobado = 'si' GROUP BY user_ID");
+$result = sql("SELECT user_ID, (SELECT fecha_last FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_last FROM cargos_users WHERE pais = '".PAIS."' AND aprobado = 'ok' GROUP BY user_ID");
 while ($r = r($result)) { 
 	if (($r['fecha_last']) AND (strtotime($r['fecha_last']) < (time() - 60*60*24*$pol['config']['examenes_exp']))) {
 		sql("UPDATE cargos_users SET aprobado = 'no' WHERE user_ID = '".$r['user_ID']."'");
@@ -584,7 +584,7 @@ ORDER BY time_expire DESC LIMIT 5");
 			//$txt .= $votar_num.' '.$r['nick'].'<br />'.$txt_email;
 		}
 	}
-	evento_chat('<b>[#] Terminado el envio de emails</b> de aviso <span style="color:grey;">('.num($emails_enviados).' emails enviados, '.num((microtime(true)-TIME_START)*1000000).' seg)</span>.');
+	evento_chat('<b>[#] Terminado el envio de emails</b> de aviso <span style="color:grey;">('.num($emails_enviados).' emails enviados)</span>.');
 
 }
 

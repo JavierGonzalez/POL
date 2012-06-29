@@ -46,7 +46,7 @@ if (nucleo_acceso('supervisores_censo')) {
 	}
 
 	// nomenclatura
-	foreach ($vp['paises'] AS $pais) { $paises .= ' <span style="background:'.$vp['bg'][$pais].';" class="redondeado">'.$pais.'</span>'; }
+	foreach ($vp['paises'] AS $pais) { $paises .= ' <span class="redondeado">'.$pais.'</span>'; }
 	$nomenclatura = '<fieldset><legend>'._('Plataformas').'</legend>'.$paises.' | '._('Estados').': <b class="ciudadano">'._('Ciudadano').'</b> <b class="turista">'._('Turista').'</b> <b class="validar">'._('Validar').'</b> <b class="expulsado">'._('Expulsado').'</b></fieldset>';
 
 	// siglas partidos
@@ -112,7 +112,7 @@ LIMIT 60");
 		$txt .= '<tr'.$td_bg.'>
 <td><a href="/control/expulsiones/expulsar/'.$r['nick'].'" target="_blank" style="color:yellow;"><b>'._('Expulsar').'</b></a></td>
 <td align="right"><b>'.$dia_registro.'</b></td>
-<td style="background:'.$vp['bg'][$r['pais']].';"><b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
+<td><b>' . crear_link($r['nick'], 'nick', $r['estado']) . '</b></td>
 <td align="right" nowrap="nowrap">'.timer($r['fecha_registro']).'</td>
 <td align="right" nowrap="nowrap">'.$online.'</td>
 <td align="right" nowrap="nowrap">'.timer($r['fecha_last']) . '</td>

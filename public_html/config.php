@@ -9,12 +9,11 @@
 
 
 // INICIALIZACION
-date_default_timezone_set('Europe/Madrid');
 define('RAIZ', dirname(__FILE__).'/');
 include(RAIZ.'config-pwd.php');						// Passwords y claves
 include(RAIZ.'source/inc-functions.php');			// Funciones basicas
 $link = conectar();									// Conecta MySQL
-$pais = explodear('.', $_SERVER['HTTP_HOST'], 0);
+$pais = explodear('.', $_SERVER['HTTP_HOST'], 0);	// Obtiene "PAIS" de "PAIS.dominio.com"
 
 
 // LOAD CONFIG
@@ -27,13 +26,17 @@ while ($r = r($result)) {
 		case 'acceso': 
 			foreach(explode('|', $r['valor']) AS $item) {
 				$elem = explode(';', $item);
-				$vp['acceso'][$elem[0]] = array(explodear(':', $elem[1], 0), explodear(':', $elem[1], 1));
+				$elem1 = explode(':', $elem[1]);
+				$vp['acceso'][$elem[0]] = array($elem1[0], $elem1[1]);
 			}
 			break;
 
-		default: $pol['config'][$r['dato']] = $r['valor']; 
+		default: $pol['config'][$r['dato']] = $r['valor'];
 	} 
 }
+
+// TIMEZONE
+date_default_timezone_set((isset($pol['config']['timezone'])?$pol['config']['timezone']:'Europe/Madrid'));
 
 // LENGUAJES ACTIVADOS
 $vp['langs'] = array(
@@ -50,28 +53,13 @@ $vp['langs'] = array(
 );
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)
-$vp['paises'] = array('15M', 'DRY', 'Hispania', 'MIC', 'JRO', 'MCxVBC', 'ETSIIT', 'Occupy', 'PS'); // PLATAFORMAS ACTIVAS (TAMBIEN LLAMADOS: PAISES)
-$vp['bg'] = array('Hispania'=>'#FFFF4F', 'MIC'=>'#FFD7D7', '15M' => '#FFFFB0', 'DRY' => '#FBDB03', 'ETSIIT'=>'#9FE0FF', 'Occupy'=>'#bbffaa', 'JRO'=>'#a8ffff', 'MCxVBC'=>'#ffffcc', 'PS'=>'#ffff99', 'www'=>'#eeeeee'); // DESMANTELAR EN BREVES
+$vp['paises'] = array('15M', 'DRY', 'Hispania', 'MIC', 'JRO', 'MCxVBC', 'ETSIIT', 'Occupy', 'PS', 'PCP');
 
-switch ($pais) { 
-	case '15m': break;
-	case 'hispania': break;
-	case 'mic': break;
-	case 'dry': break;
-	case 'etsiit': break;
-	case 'occupy': break;
-	case 'jro': break;
-	case 'mcxvbc': break;
-	case 'ps': break;
 
-	// PLATAFORMAS INACTIVAS
-	case 'pol':			define('PAIS', 'POL'); break;
-	case 'vulcan':		define('PAIS', 'Vulcan'); break;
-	case 'atlantis':	define('PAIS', 'Atlantis'); break;
-	case 'vp':			define('PAIS', 'VP'); break;
-	
-	case 'www': case '': case 'virtualpol': define('PAIS', 'Ninguno'); break; 
-	default: header('HTTP/1.1 301 Moved Permanently'); header('Location: http://www.virtualpol.com'); exit;
+if ($pais == 'www') {
+	define('PAIS', 'Ninguno');
+} elseif (!defined('PAIS')) {
+	redirect('http://www.virtualpol.com');
 }
 
 
@@ -97,5 +85,5 @@ if ($_SERVER['HTTPS']) {
 	define('IMG', 'http://www.'.DOMAIN.'/img/');;
 }
 
-define('MONEDA', '<img src="'.IMG.'varios/m.gif" border="0" />');
+define('MONEDA', '<img src="'.IMG.'varios/m.gif" />');
 ?>

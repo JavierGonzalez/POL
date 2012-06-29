@@ -202,7 +202,6 @@ if ($_GET['a'] == 'solicitar-chat') { // Crear chat
 FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creacion ASC");
 	while ($r = r($result)) { 
 		
-		//  style="background:'.$vp['bg'][$r['pais']].';"
 		$txt .= '<tr>
 <td valign="top" align="right">'.($r['estado']=='activo'?'':'<b style="color:#888;">#</b>').'</td>
 <td valign="top" align="right"><b>'.$r['online'].'</b></td>

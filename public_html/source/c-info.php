@@ -339,6 +339,9 @@ case 'economia':
 	$txt_nav = array('/info/economia'=>_('Economía global'));
 	$txt_menu = 'econ';
 
+	// Obtiene colores de background de paises
+	$result = sql("SELECT valor, pais FROM config WHERE dato = 'bg_color'");
+	while ($r = r($result)) { $vp['bg'][$r['pais']] = $r['valor']; }
 
 
 // #CUADRAR

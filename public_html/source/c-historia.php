@@ -91,7 +91,7 @@ while($r = mysql_fetch_array($result)) {
 		$boton = boton('x', '/accion.php?a=historia&b=del&ID='.$r['ID'], false, 'small');
 	} else { $boton = ''; }
 	// <td valign="top" style="font-size:14px;" align="right">'.$r['nick'].'</td>
-	$txt .= '<tr style="background:'.$vp['bg'][$r['pais']].';"><td valign="top" style="color:#999;" nowrap="nowrap">'.$r['time'].'</td><td valign="top">'.$r['texto'].'</td><td valign="top">'.$boton.'</td></tr>';
+	$txt .= '<tr><td valign="top" style="color:#999;" nowrap="nowrap">'.$r['time'].'</td><td valign="top">'.$r['texto'].'</td><td valign="top">'.$boton.'</td></tr>';
 }
 
 $txt .= '</table>';

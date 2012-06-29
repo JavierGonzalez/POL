@@ -14,6 +14,9 @@ include('inc-login.php');
 // Proteccion. Zona privada para SC.
 if ((!nucleo_acceso('supervisores_censo')) OR (!isset($pol['user_ID']))) { redirect('http://www.'.DOMAIN); }
 
+// Obtiene colores de background de paises
+$result = sql("SELECT valor, pais FROM config WHERE dato = 'bg_color'");
+while ($r = r($result)) { $vp['bg'][$r['pais']] = $r['valor']; }
 
 $txt_nav['/sc'] = 'Supervisión del Censo';
 

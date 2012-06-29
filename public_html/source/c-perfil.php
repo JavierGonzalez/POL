@@ -20,114 +20,59 @@ FROM users
 WHERE nick = '".$_GET['a']."'
 LIMIT 1");
 while($r = r($result)){
-
+	$nick = $r['nick'];
 	$user_ID = $r['ID'];
+
 	if ((PAIS != $r['pais']) AND ($r['estado'] == 'ciudadano') AND ($r['pais'] != 'ninguno')) {
-		redirect('http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick']);
-	} elseif ($user_ID) { //nick existe
+		redirect(vp_url('/perfil/'.$nick, $r['pais']));
+	} elseif ($user_ID) { // usuario ok
 
-		$nick = $r['nick'];
-		if ($r['avatar'] == 'true') { $p_avatar = '<span width="120" height="120"><img src="'.IMG.'a/'.$r['ID'].'.jpg" alt="'.$nick.'" /></span>'; }
-
-		$extras = '';
-		if (nucleo_acceso('supervisores_censo')) {
-	
-			$extras = '
-<tr>
-<td colspan="2"><div style="float:right;">'.boton('&nbsp;', '/sc/filtro/user_ID/'.$r['ID'], false, 'blue small').' '.boton('&nbsp;', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/control/expulsiones/expulsar/'.$r['nick'], false, 'red small').'</div>('.$r['ID'].', <span title="'.$r['avatar_localdir'].'" style="font-size:12px;">'.$r['email'].'</span>, '.num($r['visitas']).' v, '.num($r['paginas']).' pv,  <a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-30,30)).'">'.ocultar_IP($r['host'], 'host').'</a>)<br /><span style="font-size:9px;color:#666;">'.$r['nav'].'</span></td></tr>
-<tr><td colspan="3" align="right">
-
-<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post">
-'._('Anotación').': <input type="text" name="nota_SC" size="35" maxlength="255" value="'.$r['nota_SC'].'" />
-'.boton(_('OK'), 'submit', false, 'pill small').'
-</form>
-
-</td>
-
-<td valign="top" align="right"><div style="font-size:12px;width:180px;max-height:100px;overflow:auto;">';
-			
-			foreach (explode('|', $r['hosts']) AS $el_host) { if ($el_host != '') { $extras .= ocultar_IP($el_host, 'host').'<br />'; } }
-			
-			$extras .= '</div></td></tr>';
-		} else { $extras = ''; }
 		
-		if (($r['socio'] == 'true') AND (nucleo_acceso('socios'))) {
-			$result2 = sql("SELECT socio_ID, PAIS FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' LIMIT 1");
-			while ($r2 = r($result2)) { $socio_ID = PAIS.$r2['socio_ID']; }
-		}
 
-		if ($r['estado'] == 'expulsado') {
-			$razon = false;
-			$result2 = sql("SELECT razon FROM expulsiones WHERE user_ID = '".$r['ID']."' ORDER BY expire DESC LIMIT 1");
-			while ($r2 = r($result2)) { $razon = $r2['razon']; }
-		}
-		$txt .= '<table border="0" cellspacing="4"><tr><td rowspan="3" valign="top" align="center">'.($r['avatar']=='true'?'<img src="'.IMG.'a/'.$r['ID'].'.jpg" alt="'.$nick.'" />':'').($r['dnie']=='true'?'<br /><img src="'.IMG.'varios/autentificacion.png" border="0" style="margin-top:6px;" />':'').'</td><td nowrap="nowrap">
-<div class="amarillo">		
-<h1>'.$nick.' &nbsp; <span style="color:grey;"><span'.($r['estado']!='ciudadano'?' class="'.$r['estado'].'"':'').'>'.($r['estado']=='expulsado'&&$razon==false?'Auto-eliminado':ucfirst($r['estado'])).'</span> '.($r['estado']!='expulsado'?'de '.$r['pais']:'').'</span></h1>'.(isset($socio_ID)&&nucleo_acceso('socios')?'<span class="gris" style="float:right;font-size:16px;">'._('Socio').': <b>'.$socio_ID.'</b></span>':'').(isset($r['nombre'])&&nucleo_acceso('ciudadanos')?'<span class="gris" style="font-size:16px;">'.$r['nombre'].'</span>':'').'
+	if (($r['socio'] == 'true') AND (nucleo_acceso('socios'))) {
+		$result2 = sql("SELECT socio_ID, PAIS FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' LIMIT 1");
+		while ($r2 = r($result2)) { $socio_ID = PAIS.$r2['socio_ID']; }
+	}
+
+	if ($r['estado'] == 'expulsado') {
+		$razon = false;
+		$result2 = sql("SELECT razon FROM expulsiones WHERE user_ID = '".$r['ID']."' ORDER BY expire DESC LIMIT 1");
+		while ($r2 = r($result2)) { $razon = $r2['razon']; }
+	}
+
+
+
+		$txt .= '<div style="width:750px;"><table width="100%">';
+
+		if (nucleo_acceso('supervisores_censo')) { // INFO PARA SC
+			$txt .= '<tr><td>
+<div style="float:right;">
+<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post">
+<input type="text" name="nota_SC" size="25" maxlength="255" value="'.$r['nota_SC'].'" />
+'.boton(_('OK'), 'submit', false, 'pill small').'
+'.boton('&nbsp;', '/sc/filtro/user_ID/'.$r['ID'], false, 'blue small').' 
+'.boton('&nbsp;', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/control/expulsiones/expulsar/'.$r['nick'], false, 'red small').'
+</form>
 </div>
-</td><td nowrap="nowrap">';
-
-
-		// CONFIANZA
-		if ((($user_ID != $pol['user_ID']) AND ($pol['user_ID']) AND ($pol['estado'] != 'expulsado'))) {
-
-			// numero de votos emitidos
-			$result2 = sql("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'");
-			while ($r2 = r($result2)) { $num_votos = $r2['num']; }
-
-			$result2 = sql("SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = '".$user_ID."' LIMIT 1");
-			while ($r2 = r($result2)) { $hay_v_c = $r2['voto']; }
-			if (!$hay_v_c) { $hay_v_c = '0'; }
-
-			$txt .= _('Confianza').': '.confianza($r['voto_confianza']).' 
-<span id="data_confianza'.$user_ID.'" class="votar" type="confianza" name="'.$user_ID.'" value="'.$hay_v_c.'"></span><br />
-Votos emitidos: <b'.($num_votos <= VOTO_CONFIANZA_MAX?'':' style="color:red;"').'>'.$num_votos.'</b> de '.VOTO_CONFIANZA_MAX.'.';
-		} else { $txt .= _('Confianza').': ' . confianza($r['voto_confianza']); }
-
-
-		$txt .= '</td></tr>'.$extras.'</table><div id="info">';
-
-		$cargos_num = 0;
-		$los_cargos_num = 0;
-		$result2 = sql("SELECT cargo_ID, cargo, nota, aprobado, time,
-(SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre,
-(SELECT titulo FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_nombre
-FROM cargos_users
-WHERE pais = '".PAIS."' AND user_ID = '" . $user_ID . "'
-ORDER BY cargo DESC, aprobado ASC, nota DESC");
-		while($r2 = r($result2)) {
-			if ($r2['cargo'] == 'true') { 
-				$dimitir = ' <span class="gris"> ('._('Cargo Ejercido').')</span>';
-			}
-			$los_cargos_num++;
-			if ($r2['aprobado'] == 'ok') { 
-				$sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" /> '; 
-			} else { $sello = ''; }
-
-			if ($r2['cargo_ID'] > 0) { $cargo_img = '<img src="'.IMG.'cargos/'.$r2['cargo_ID'].'.gif" border="0" />'; } else { $cargo_img = ''; }
-			$los_cargos .= '<tr>
-<td>'.$sello.'</td>
-<td align="right" class="gris">'.$r2['nota'].'</td>
-<td>'.$cargo_img.'</td>
-<td><b><a href="/cargos/'.$r2['cargo_ID'].'">'.($r2['nombre']?$r2['nombre']:$r2['examen_nombre']).'</a></b></td>
-<td style="color:#999;" align="right"><acronym title="'.$r2['time'].'">'.duracion(time()-strtotime($r2['time'])).'</acronym></td>
-<td nowrap="nowrap"><b>' . $dimitir . '</b></td>
-</tr>';
-
-			$dimitir = '';
+'.$r['ID'].' <span title="'.$r['avatar_localdir'].'" style="font-size:11px;">'.$r['email'].'</span> <span style="font-size:12px;" title="'.$r['nav'].'">'.num($r['visitas']).'v '.num($r['paginas']).'pv<br /><a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-30,30)).'">'.ocultar_IP($r['host'], 'host').'</a></span>
+</td></tr>';
 		}
 
-		$los_cargos = '<table border="0" cellpadding="0" cellspacing="4">'.$los_cargos.'</table>';
 
-		if ($user_ID == $pol['user_ID']) { //es USER
 
-			$result2 = sql("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'pols_afiliacion' LIMIT 1");
-			while($r2 = r($result2)){ if ($r2['pols'] >= $pols) { $pols_afiliacion = $r2['valor']; } }
 
-			$text_limit = 1600 - strlen(strip_tags($r['text']));
-			
-			
-			$txt .= '<button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;" class="pill">'._('Editar perfil').'</button> '.boton(_('Opciones de usuario'), REGISTRAR.'login.php?a=panel').' '.boton(_('Autentificación'), SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton(_('Rechazar ciudadanía'), REGISTRAR, false, 'red').' ':'').'
+
+// ***************
+// START ZONA EDIT
+if ($user_ID == $pol['user_ID']) { //es USER
+
+	$result2 = sql("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'pols_afiliacion' LIMIT 1");
+	while($r2 = r($result2)){ if ($r2['pols'] >= $pols) { $pols_afiliacion = $r2['valor']; } }
+
+	$text_limit = 1600 - strlen(strip_tags($r['text']));
+	
+	
+	$txt .= '<tr><td align="center"><button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;" class="pill">'._('Editar perfil').'</button> '.boton(_('Opciones de usuario'), REGISTRAR.'login.php?a=panel').' '.boton(_('Autentificación'), SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton(_('Rechazar ciudadanía'), REGISTRAR, false, 'red').' ':'').'
 
 
 
@@ -144,14 +89,14 @@ ORDER BY cargo DESC, aprobado ASC, nota DESC");
 </form></p>
 </fieldset>';
 
-if (ECONOMIA) {
+	if (ECONOMIA) {
 			
-$result2 = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'impuestos' OR dato = 'impuestos_minimo'");
-while($r2 = r($result2)){ $pol['config'][$r2['dato']] = $r2['valor']; }
+	$result2 = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'impuestos' OR dato = 'impuestos_minimo'");
+	while($r2 = r($result2)){ $pol['config'][$r2['dato']] = $r2['valor']; }
 
-$patrimonio = $r['pols'];
-$patrimonio_libre_impuestos = 0;
-$txt .= '
+	$patrimonio = $r['pols'];
+	$patrimonio_libre_impuestos = 0;
+	$txt .= '
 
 
 <fieldset><legend>'._('Tu economía').'</legend>
@@ -165,34 +110,34 @@ $txt .= '
 </tr>';
 
 
-$result2 = sql("SELECT ID, pols, nombre, exenta_impuestos FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."'");
-while($r2 = r($result2)){
-	if ($r2['exenta_impuestos'] == 1) {
-		$patrimonio_libre_impuestos += $r2['pols'];
-		$sin_impuestos = ' - <em style="#AAA">'._('Sin impuestos').'</em>';
-	}
-	else {
-		$sin_impuestos = '';
-	}
-	$patrimonio += $r2['pols'];
-	$txt .= '
+	$result2 = sql("SELECT ID, pols, nombre, exenta_impuestos FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."'");
+	while($r2 = r($result2)){
+		if ($r2['exenta_impuestos'] == 1) {
+			$patrimonio_libre_impuestos += $r2['pols'];
+			$sin_impuestos = ' - <em style="#AAA">'._('Sin impuestos').'</em>';
+		}
+		else {
+			$sin_impuestos = '';
+		}
+		$patrimonio += $r2['pols'];
+		$txt .= '
 <tr>
 <td align="right">'._('Cuenta').'</td>
 <td align="right">'.pols($r2['pols']).' '.MONEDA.'</td>
 <td><a href="/pols/cuentas/'.$r2['ID'].'"><em>'.$r2['nombre'].'</em></a>'.$sin_impuestos.'</td>
 </tr>';
-}
+	}
 
-$patrimonio_con_impuestos = $patrimonio - $patrimonio_libre_impuestos;
-if ($patrimonio_con_impuestos >= $pol['config']['impuestos_minimo']) {
-	if ($pol['config']['impuestos_minimo'] < 0) { $patrimonio_con_impuestos -= $pol['config']['impuestos_minimo']; }
-	$impuesto = ceil( ( $patrimonio_con_impuestos * $pol['config']['impuestos']) / 100);
-	$impuestos = '<em>'._('Impuestos al día').': '.pols(-$impuesto).' '.MONEDA.'</em>';
-} else {
-	$impuestos = '<em style="#AAA">'._('Sin impuestos').'.</em>';
-}
+	$patrimonio_con_impuestos = $patrimonio - $patrimonio_libre_impuestos;
+	if ($patrimonio_con_impuestos >= $pol['config']['impuestos_minimo']) {
+		if ($pol['config']['impuestos_minimo'] < 0) { $patrimonio_con_impuestos -= $pol['config']['impuestos_minimo']; }
+		$impuesto = ceil( ( $patrimonio_con_impuestos * $pol['config']['impuestos']) / 100);
+		$impuestos = '<em>'._('Impuestos al día').': '.pols(-$impuesto).' '.MONEDA.'</em>';
+	} else {
+		$impuestos = '<em style="#AAA">'._('Sin impuestos').'.</em>';
+	}
 
-$txt .= '
+	$txt .= '
 <tr><td></td><td><hr style="border:1px solid #AAA; margin:-3px; padding:0;" /></td><td></td></tr>
 
 <tr>
@@ -211,38 +156,12 @@ $txt .= '
 
 </fieldset>';
 
-} // fin ECONOMIA
+	} // fin ECONOMIA
 
-$txt .= '<p>Clave API: <input class="api_box" type="text" size="12" value="' . $r['api_pass'] . '" readonly="readonly" /> ' . boton('Generar clave', '/accion.php?a=api&b=gen_pass', '&iquest;Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua no funcionar&aacute;.') . ' (Equivale a tu contrase&ntilde;a, mantenla en secreto. M&aacute;s info: <a href="'.SSL_URL.'api-vp.php">API</a>)</p>';
+	$txt .= '<fieldset><legend>Clave API</legend><input class="api_box" type="text" size="12" value="'.$r['api_pass'].'" readonly="readonly" /> '.boton('Generar clave', '/accion.php?a=api&b=gen_pass', '¿Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua dejará de funcionar.', 'blue').' (Equivale a tu contraseña, mantenla en secreto. Más info: <a href="'.SSL_URL.'api.php">API</a>)</fieldset>';
 
-
-if (!ASAMBLEA) {
-	$txt .= '<form action="/accion.php?a=afiliarse" method="post">
-
-<fieldset><legend>'._('Afiliación').'</legend>
-
-<p><select name="partido"><option value="0">'._('Ninguno').'</option>';
-
-
-	$result2 = sql("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."' ORDER BY siglas ASC");
-	while($r2 = r($result2)){
-		$txt .= '<option value="'.$r2['ID'].'"'.($r2['ID']==$pol['partido']?' selected="selected"':'').'>' . $r2['siglas'] . '</option>';
-	}
 
 	$txt .= '
-</select>
-
-<input value="'._('Afiliarse').'" type="submit"'.($pol['config']['elecciones_estado']=='elecciones'?' disabled="disabled"':'').'>
-</form>
-</p></fieldset>';
-
-}
-
-$txt .= '
-
-
-
-
 <fieldset><legend>'._('Biografía').'</legend>
 <form action="/accion.php?a=avatar&b=desc" method="post">
 <p><textarea name="desc" id="desc_area" style="width:500px;height:150px;" required>'.strip_tags($r['text'], '<b>').'</textarea><br />
@@ -267,16 +186,15 @@ $txt .= '
 </tr>';
 
 
-
-// DATOS DE PERFIL
-$datos = explode('][', $r['datos']);
-foreach ($datos_perfil AS $id => $dato) {
-	if ($dato != '') {
-		$txt .= '<tr><td align="right">'.$dato.'</td><td><img src="'.IMG.'ico/'.$id.'_32.png" width="32" width="32" alt="'.$datos.'" /></td><td><input type="url" name="'.$dato.'" value="'.$datos[$id].'" size="60" placeholder="http://" /></td></tr>';
+	// DATOS DE PERFIL
+	$datos = explode('][', $r['datos']);
+	foreach ($datos_perfil AS $id => $dato) {
+		if ($dato != '') {
+			$txt .= '<tr><td align="right">'.$dato.'</td><td><img src="'.IMG.'ico/'.$id.'_32.png" width="32" width="32" alt="'.$datos.'" /></td><td><input type="url" name="'.$dato.'" value="'.$datos[$id].'" size="60" placeholder="http://" /></td></tr>';
+		}
 	}
-}
 
-$txt .= '
+	$txt .= '
 <tr><td colspan="2"></td><td>'.boton(_('Guardar'), 'submit', false, 'blue').'</td></tr>
 </table>
 </form>
@@ -287,41 +205,241 @@ $txt .= '
 <form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">
 <p><input name="avatar" type="file" required /> '.boton(_('Guardar'), 'submit', false, 'blue').' | ' . boton(_('Borrar avatar'), '/accion.php?a=avatar&b=borrar', false, 'red') . ' (jpg, max 1mb)</p>
 </form>
-</fieldset>
+</fieldset>';
 
 
+	// numero de votos emitidos
+	$result2 = sql("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'");
+	while ($r2 = r($result2)) { $num_votos = $r2['num']; }
 
-';
+	$txt .= '<fieldset><legend>'._('Votos de confianza emitidos').' ('.$num_votos.' '._('de').' '.VOTO_CONFIANZA_MAX.')</legend><p>';
 
-
-// numero de votos emitidos
-$result2 = sql("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'");
-while ($r2 = r($result2)) { $num_votos = $r2['num']; }
-
-$txt .= '<fieldset><legend>'._('Votos de confianza emitidos').' ('.$num_votos.' '._('de').' '.VOTO_CONFIANZA_MAX.')</legend><p>';
-
-$voto_anterior = '';
-$result2 = sql("SELECT voto, time,
+	$voto_anterior = '';
+	$result2 = sql("SELECT voto, time,
 (SELECT nick FROM users WHERE ID = v.item_ID LIMIT 1) AS nick,
 (SELECT pais FROM users WHERE ID = v.item_ID LIMIT 1) AS pais
 FROM votos `v`
 WHERE tipo = 'confianza' AND emisor_ID = '".$user_ID."' AND voto != 0
 ORDER BY voto DESC, time ASC");
-while($r2 = r($result2)) {
-	if ($voto_anterior != $r2['voto']) { $txt .= '<br /> ' . confianza($r2['voto']) . ' &middot; '; }
-	$voto_anterior = $r2['voto'];
-	$txt .= crear_link($r2['nick'], 'nick', null, $r2['pais']) . ' ';
+	while($r2 = r($result2)) {
+		if ($voto_anterior != $r2['voto']) { $txt .= '<br /> ' . confianza($r2['voto']) . ' &middot; '; }
+		$voto_anterior = $r2['voto'];
+		$txt .= crear_link($r2['nick'], 'nick', null, $r2['pais']) . ' ';
+	}
+
+	$txt .= '</p></fieldset>';
+
+
+	if (!ASAMBLEA) {
+		$txt .= '<form action="/accion.php?a=afiliarse" method="post">
+
+	<fieldset><legend>'._('Afiliación').'</legend>
+
+	<p><select name="partido"><option value="0">'._('Ninguno').'</option>';
+
+
+		$result2 = sql("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."' ORDER BY siglas ASC");
+		while($r2 = r($result2)){
+			$txt .= '<option value="'.$r2['ID'].'"'.($r2['ID']==$pol['partido']?' selected="selected"':'').'>' . $r2['siglas'] . '</option>';
+		}
+
+		$txt .= '
+	</select>
+
+	<input value="'._('Afiliarse').'" type="submit"'.($pol['config']['elecciones_estado']=='elecciones'?' disabled="disabled"':'').'>
+	</form>
+	</p></fieldset>';
+
+	}
+	$txt .= '</fieldset></div>';
+	$txt .= '</td></tr>';
 }
-
-$txt .= '</p></fieldset>';
-
-
-$txt .= '</fieldset></div>';
+// FIN ZONA EDIT
+// *************
 
 
-		} 
 
-		if ($r['text']) { $txt .= '<fieldset><legend>'._('Biografía').'</legend><p>'.$r['text'].'</p></fieldset>'; }
+
+
+
+
+
+$txt .= '
+<tr>
+<td align="center"><h1>'.$nick.''.($r['dnie']=='true'?' <span class="icon medium" style="color:#339900;" data-icon="l" title="Autentificado"></span>':'').(isset($r['nombre'])&&nucleo_acceso('ciudadanos')?' <span style="color:#BBB;font-size:18px;">'.$r['nombre'].'</span>':'').'</h1>
+
+<span style="color:grey;font-size:22px;"><b><span'.($r['estado']!='ciudadano'?' class="'.$r['estado'].'"':'').'>'.($r['estado']=='expulsado'&&$razon==false?'Auto-eliminado':ucfirst($r['estado'])).'</span> '.($r['estado']!='expulsado'?'de '.$pol['config']['pais_des']:'').'</b></span>
+</td>
+</tr>
+
+
+<tr>
+<td align="center" nowrap>
+
+'.($r['avatar']=='true'?'<img src="'.IMG.'a/'.$r['ID'].'.jpg" alt="'.$nick.'" title="Avatar" width="120" height="120" style="border:1px solid #AAA;" />':'').'
+
+'.(nucleo_acceso('ciudadanos_global')&&is_numeric($r['x'])?'<a href="http://maps.google.es/maps?q='.$r['y'].','.$r['x'].'&hl=es&t=m" target="_blank"><img width="250" height="120" class="static_map" style="border:1px solid #AAA;" src="http://maps.google.com/maps/api/staticmap?
+center='.$r['y'].','.$r['x'].'&amp;zoom=11&amp;size=250x120&amp;maptype=roadmap&amp;sensor=false&amp;markers=icon:'.IMG.'ico/marker.png|'.$r['y'].','.$r['x'].'" alt="Geo" title="Geolocalización" /></a>':'').'
+
+'.(str_replace(array('0', ' '), '', $r['confianza_historico'])!=''?'
+<img src="https://chart.googleapis.com/chart
+?chs=250x120
+&chf=bg,s,F4F4F4
+&chm=B,FFFFFF,0,0,0
+&cht=lc
+&chco=EA9800
+&chls=5|1
+&chma=10,10
+&chds=a
+&chd=t:'.implode(',', explode(' ', trim($r['confianza_historico']))).'
+&chxt=x
+&chxl=0:|'.implode('|', explode(' ', trim($r['confianza_historico']))).'
+" width="250" height="120" alt="Confianza historico" title="Confianza semanal" style="border:1px solid #AAA;" />':'').'
+</td>
+</tr>
+
+</table>
+
+
+<table width="100%" class="gris">
+
+<tr>
+<td align="right">Confianza:</td>
+<td>';
+
+
+// CONFIANZA
+if ((($user_ID != $pol['user_ID']) AND ($pol['user_ID']) AND ($pol['estado'] != 'expulsado'))) {
+	// numero de votos emitidos
+	$result2 = sql("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'");
+	while ($r2 = r($result2)) { $num_votos = $r2['num']; }
+
+	$result2 = sql("SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = '".$user_ID."' LIMIT 1");
+	while ($r2 = r($result2)) { $hay_v_c = $r2['voto']; }
+	if (!$hay_v_c) { $hay_v_c = '0'; }
+
+	$txt .= confianza($r['voto_confianza']).' 
+<span id="data_confianza'.$user_ID.'" class="votar" type="confianza" name="'.$user_ID.'" value="'.$hay_v_c.'"></span><br />
+<span style="font-size:12px;">Emitidos <b'.($num_votos <= VOTO_CONFIANZA_MAX?'':' style="color:red;"').'>'.$num_votos.'</b> de '.VOTO_CONFIANZA_MAX.'</span>';
+} else { $txt .= confianza($r['voto_confianza']); }
+
+$txt .= '</td>
+
+<td align="right" nowrap>Redes sociales:</td>
+<td>';
+$datos_n = 0;
+$datos = explode('][', $r['datos']);
+foreach ($datos_perfil AS $id => $dato) {
+	if ($datos[$id] != '') { $datos_n++; $txt .= '<a href="'.$datos[$id].'" target="_blank"><img src="'.IMG.'ico/'.$id.'_32.png" width="32" height="32" alt="'.$datos.'" /></a> '; }
+}
+if ($datos_n == 0) { $txt .= '<b>Ninguna</b>'; }
+$txt .= '</td>
+</tr>
+
+
+
+<tr>
+<td align="right">Último acceso:</td>
+<td><b>'.timer($r['fecha_last']).'</b></td>
+
+<td align="right" title="Elecciones en las que ha participado: '.$r['num_elec'].'">Cargos:</td>
+<td><b>';
+$result2 = sql("SELECT cargo_ID, cargo, nota,
+(SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre,
+(SELECT nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nivel
+FROM cargos_users
+WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."' AND (cargo = 'true' OR aprobado = 'ok')
+ORDER BY nivel DESC");
+while($r2 = r($result2)) {
+	if ($r2['cargo'] == 'true') {
+		$txt_cargos[] = '<a href="/cargos/'.$r2['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r2['cargo_ID'].'.gif" width="16" height="16" alt="'.$r2['nombre'].'" title="'.$r2['nombre'].' ('.$r2['nota'].')" /></a>';
+	} else {
+		$txt_cand[] = '<a href="/cargos/'.$r2['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r2['cargo_ID'].'.gif" width="16" height="16" alt="'.$r2['nombre'].'" title="'.$r2['nombre'].' ('.$r2['nota'].')" /></a>';
+	}
+}
+$txt .= (count($txt_cargos)>0?implode(' ', $txt_cargos):'Ninguno').'</b></td>
+</tr>
+
+
+<tr>
+<td align="right">Tiempo online:</td>
+<td><b>'.timer(time()-$r['online'], true).'</b> <span title="'.num($r['paginas']).' páginas vistas">('.num($r['visitas']).' visitas)</span></td>
+
+<td align="right" title="Nota media: '.$r['nota'].'">Candidaturas:</td>
+<td><b>'.(count($txt_cand)>0?implode(' ', $txt_cand):'Ninguna').'</b></td>
+</tr>
+
+
+
+<tr>
+<td align="right">Registrado hace:</td>
+<td><b>'.timer($r['fecha_registro']).'</b></td>
+
+<td align="right" title="Expiración por inactividad">Expiración:</td>
+<td><b>';
+
+
+
+/* Expiraciones:
+Tras 60 dias inactivo
+
+Excepciones:
+* Autentificados
+* Socios
+* Donantes
+* Veteranos (más de 2 años de antiguedad)
+*/
+
+if ($r['fecha_registro'] < tiempo(365*2)) {  $txt .= 'Vitalicio (veterano)'; } 
+elseif ($r['dnie'] == 'true') { $txt .= 'Vitalicio (autentificado)'; }
+elseif ($r['socio'] == 'true') { $txt .= 'Vitalicio (asociado)'; }
+elseif ($r['donacion'] > 0) { $txt .= 'Vitalicio (donante)'; }
+else { $txt .= 'En 60 días'; }
+
+
+
+
+$txt .= '</b></td>
+</tr>
+
+
+
+<tr>
+<td align="right">Foro:</td>
+<td><a href="/foro/mis-respuestas/'.$r['nick'].'"><b>'.num($r['num_hilos']).' hilos / '.num($r['num_msg']).' mensajes</b></a></td>
+
+<td align="right">'._('Grupos').':</td>
+<td><b>';
+$txt_grupos = array();
+if ($r['grupos']) {
+	$result2 = sql("SELECT nombre FROM grupos WHERE grupo_ID IN (".str_replace(' ', ',', $r['grupos']).")");
+	while ($r2 = r($result2)) { $txt_grupos[] = '<a href="/grupos">'.$r2['nombre'].'</a>'; }
+}
+$txt .= (count($txt_grupos)>0?implode(' ', $txt_grupos):'Ninguno').'</b></td>
+</tr>
+
+<tr>
+<td colspan="2" width="50%"></td>
+<td colspan="2" width="50%"></td>
+</tr>
+
+
+</table>
+
+'.(isset($r['text'])?'<fieldset><legend>'._('Biografía').'</legend><p>'.$r['text'].'</p></fieldset>':'').'
+
+
+
+</div>';
+
+
+
+
+
+/*
+
+'.(isset($socio_ID)&&nucleo_acceso('socios')?'<span class="gris" style="float:right;font-size:16px;">'._('Socio').': <b>'.$socio_ID.'</b></span>':'').(isset($r['nombre'])&&nucleo_acceso('ciudadanos')?'<span class="gris" style="font-size:16px;">'.$r['nombre'].'</span>':'').'
+
 
 		if ($r['ref_num'] != 0) {
 			$result = sql("SELECT IP, nick, pais, online FROM users WHERE ref = '" . $r['ID'] . "' ORDER BY fecha_last DESC");
@@ -329,9 +447,6 @@ $txt .= '</fieldset></div>';
 				$refs .= crear_link($r2['nick']) . ' </b>('.duracion($r2['online']).')<b><br />' . "\n";
 			}
 		}
-
-		$nota = $r['nota'];
-
 		if (ECONOMIA) { 
 			// empresas y partidos
 			$empresas_num = 0;
@@ -341,109 +456,8 @@ $txt .= '</fieldset></div>';
 				$empresas .= '<a href="/empresas/'.$r2['cat_url'].'/'.$r2['url'].'">'.$r2['nombre'].'</a><br />'."\n";
 			}
 		}
-
-
-		$txt .= '<table border="0" cellspacing="8"><tr><td valign="top" width="220">
-'.($r['donacion']&&$pol['user_ID']?'<p>'._('Donación').': <b>'.pols($r['donacion']).' euros</b></p>':'').'
-'.(ASAMBLEA?'':'<p>'._('Nivel').': <b>' . $r['nivel'] . '</b></p>').'
-<p>'._('Nota media').': <b><span class="gris">' . $nota . '</span></b></p>
-<p>'._('Tiempo online').': <b><acronym title="'.num($r['visitas']).' visitas, '.num($r['paginas']).' páginas vistas, '.num($r['paginas']/$r['visitas'], 2).' pv/v">' . duracion($r['online']) . '</acronym></b></p>
-<p>'._('Elecciones').': <b>' . $r['num_elec'] . '</b></p>
-
-'.(ECONOMIA?'<p>'._('Empresas').': <b>' . $empresas_num . '</b><br /><b>' . $empresas . '</b></p>':'').'
-
-<p>'._('Foro').': <a href="/foro/mis-respuestas/'.$r['nick'].'" title="hilos+mensajes" style="font-weight:bold;">'.$r['num_hilos'].'+'.$r['num_msg'].'</a></p>
-'.(ASAMBLEA?'':'<p>'._('Afiliado a').': <b>'.crear_link($r['partido'], 'partido').'</b></p>').'
-<p>'._('Último acceso').': <acronym title="'.$r['fecha_last'].'"><b>'.timer($r['fecha_last']).'</b></acronym><br />';
-
-
-$txt .= _('Registrado hace').': <b><acronym title="'.$r['fecha_registro'].'">'.timer($r['fecha_registro']).'</acronym></b><br />';
-
-
-/* Tramos de expiraci?n
-	< 30d	- 15 dias CANCELADO
-30d < 90d	- 30 dias 
-90d >		- 60 dias
 */
-$date			= date('Y-m-d 20:00:00'); 					// ahora
-$margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); // 30 dias
-$margen_90dias	= date('Y-m-d 20:00:00', time() - 7776000); // 90 dias
-$time_registro = $r['fecha_registro'];
-if ($time_registro <= $margen_90dias) {
-	$tiempo_inactividad = 5184000; // tras 60 dias
-} else {
-	$tiempo_inactividad = 2592000; // tras 30 dias
-}
-$txt .= _('Expira').' '.($r['donacion']||$r['dnie']=='true'?'<b>'._('Nunca').'</b> ('.($r['donacion']?_('Donante'):_('Autentificado')).')':'<b>'._('tras').' '.round($tiempo_inactividad / 60 / 60 / 24).' '._('días').'</b> '._('inactivo')).'
 
-
-</p></td><td valign="top">
-
-
-
-'.(nucleo_acceso('ciudadanos_global')&&is_numeric($r['x'])?'<a href="http://maps.google.es/maps?q='.round($r['y'],2).','.round($r['x'],2).'&hl=es&t=m" target="_blank"><img width="300" height="160" class="static_map" style="border:1px solid #AAA;" src="http://maps.google.com/maps/api/staticmap?
-center='.$r['y'].','.$r['x'].'&amp;zoom=13&amp;size=300x160&amp;maptype=roadmap&amp;sensor=false&amp;markers=icon:'.IMG.'ico/marker.png|'.$r['y'].','.$r['x'].'" alt="Geoposición" /></a>':'').'
-
-
-
-
-<p>';
-$datos = explode('][', $r['datos']);
-foreach ($datos_perfil AS $id => $dato) {
-	if ($datos[$id] != '') {
-		$txt .= '<a href="'.$datos[$id].'" target="_blank"><img src="'.IMG.'ico/'.$id.'_32.png" width="32" width="32" alt="'.$datos.'" /></a>';
-	}
-}
-$txt .= '
-
-(<a href="/info/seguir">'._('Seguir desde redes sociales').'</a>)</p>
-
-
-<b>'._('Últimas notas').':</b>
-
-<table border="0" cellpadding="0" cellspacing="3">';
-
-
-$result2 = sql("SELECT ID, user_ID, time, text
-FROM ".SQL."foros_msg
-WHERE hilo_ID = '-1' AND user_ID = '" . $r['ID'] . "'
-ORDER BY time DESC
-LIMIT 5");
-while($r2 = r($result2)){
-	$txt .= '<tr><td valign="top" class="amarillo">' . $avatar . $r2['text'] . '</td></tr>' . "\n";
-}
-$txt .= '</table>
-
-<p style="margin-bottom:0px;">'._('Cargos y exámenes').': <b>' . $los_cargos_num . '</b> (<a href="/examenes">'._('Ver exámenes').'</a>)</p>
-'.$los_cargos.'<br />';
-
-if ($r['grupos'] != '') {
-	$txt .= '<b>'._('Grupos').'</b>:<ul>';
-	$result2 = sql("SELECT nombre FROM grupos WHERE grupo_ID IN (".str_replace(' ', ',', $r['grupos']).")");
-	while ($r2 = r($result2)) {
-	  $txt .= '<li><a href="/grupos">'.$r2['nombre'].'</a></li>';
-	}
-	$txt .= '</ul>';
-}
-
-
-
-
-
-$result2 = sql("SELECT pais, titulo, url, fecha_creacion, fecha_last
-FROM chats WHERE user_ID = '".$r['ID']."' 
-ORDER BY fecha_creacion ASC");
-while ($r2 = r($result2)) { 
-	$txt .= '<li>'.duracion(time() - strtotime($r2['fecha_creacion'])).' <a href="http://'.strtolower($r2['pais']).'.'.DOMAIN.'/chats/'.$r2['url'].'"><b>'.$r2['titulo'].'</b></a> ('._('hace').' '.duracion(time() - strtotime($r2['fecha_last'])).')</li>';
-}
-
-
-$txt .= '</ul>
-
-</td></tr></table>
-
-
-</div>';
 
 		$txt_title = $nick.' - '.ucfirst($r['estado']) . ' '._('de').' '.$r['pais'];
 		$txt_nav = array('/info/censo'=>_('Censo'), '/perfil/'.$nick=>$nick);
@@ -451,18 +465,15 @@ $txt .= '</ul>
 		if ($user_ID != $pol['user_ID']) {
 			$txt_tab['http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$nick.'/'] = _('Enviar mensaje');
 			if (ECONOMIA) { $txt_tab['http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/'.strtolower($nick) . '/'] = _('Transferir'); }
-		} else {
-			
 		}
 
-		$txt_description = $txt_title . ' ' . str_replace("\"", "", strip_tags($r['text']));
 
-	} else { header("HTTP/1.0 404 Not Found"); exit; }
+	} else { header("HTTP/1.0 404 Not Found"); mysql_close($link); exit; }
 }
 
 
 $txt_header .= '<style type="text/css">
-#info b { color:green; }
+#content { color:#333; }
 .api_box { border: 1px solid grey; text-align:center; background:#FFFFDD; color:#FFFFDD; }
 .api_box:hover { color:green; }
 </style>

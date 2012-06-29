@@ -267,8 +267,8 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 			} else if ($a) { 
 				$bg = '';
 				if ($pais) {
-					global $vp;
-					$bg = ' style="background:'.$vp['bg'][$pais].';"';
+					//global $vp;
+					//$bg = ' style="background:'.$vp['bg'][$pais].';"';
 					$add_class .= ' redondeado';
 				}
 				if (($estado) && ($estado != 'ciudadano')) { 

@@ -89,7 +89,7 @@ while($r = r($result)) {
 }
 
 
-$txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="2"><a href="#" onclick="$(\'.p-inactiva\').slideToggle(\'slow\');">'._('Ver todas las plataformas').'</a></td></tr>
+$txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="2"><a href="#" onclick="$(\'tr .p-inactiva\').slideToggle(\'slow\');">'._('Ver todas las plataformas').'</a></td></tr>
 
 <tr>
 <td colspan="2"><span style="float:right;font-size:20px;"><b>'.num($poblacion_num).'</b></span>'.(nucleo_acceso('antiguedad', 2)?boton(_('Solicitar nueva plataforma'), '/crear-plataforma.php', false, 'small pill'):'').'</td>

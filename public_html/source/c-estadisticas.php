@@ -52,7 +52,7 @@ $txt .= '
 <th colspan="2"></th>
 <th colspan="5" style="border-left:1px dotted #999;">Ciudadanos</th>
 
-<th colspan="3" style="border-left:1px dotted #999;">Activos</th>
+<th colspan="3" style="border-left:1px dotted #999;">Actividad</th>
 
 <th colspan="3" style="border-left:1px dotted #999;">Votaciones</th>
 

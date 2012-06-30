@@ -138,7 +138,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 
 	$txt_title = _('Borrador de votación');
 	$txt_nav = array('/votacion'=>_('Votaciones'), '/votacion/borradores'=>_('Borradores'), _('Crear votación'));
-	$txt_tab = array('/votacion/borradores'=>_('Ver borradores'), '/votacion/'.$_GET['b']=>_('Previsualizar'), '/votacion/crear/'.$_GET['b']=>_('Editar borrador'));
+	$txt_tab = array('/votacion/borradores'=>_('Ver borradores'), '/votacion/'.$_GET['b']=>_('Previsualizar'), '/votacion/crear/'.$_GET['b']=>_('Editar borrador'), '/votacion/'.$_GET['b'].'/argumentos'=>_('Argumentos'));
 
 	// EDITAR
 	if (is_numeric($_GET['b'])) {
@@ -417,7 +417,8 @@ LIMIT 500");
 (SELECT voto FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado,
 (SELECT validez FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado_validez,
 (SELECT mensaje FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_mensaje,
-(SELECT comprobante FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS comprobante
+(SELECT comprobante FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS comprobante,
+(SELECT COUNT(*) FROM votacion_argumentos WHERE ref_ID = votacion.ID AND votos >= 0) AS argumentos_num
 FROM votacion
 WHERE ID = '".$_GET['a']."' AND pais = '".PAIS."'
 LIMIT 1");
@@ -442,23 +443,109 @@ LIMIT 1");
 
 		if ($r['estado'] == 'ok') { 
 			$txt_nav['/votacion/'.$r['ID']] = _('En curso').': '.num($votos_total).' '._('votos');
-			$txt_tab = array('/votacion/'.$r['ID']=>_('Votación'), '/votacion/'.$r['ID'].'/info'=>_('Más información'));
+			$txt_tab = array('/votacion/'.$r['ID']=>_('Votación'), '/votacion/'.$r['ID'].'/argumentos'=>_('Argumentos').' ('.$r['argumentos_num'].')', '/votacion/'.$r['ID'].'/info'=>_('Más información'));
 
 			$tiempo_queda =  '<span style="color:blue;">'._('Quedan').' '.timer($time_expire, true).'.</span>'; 
 		} elseif ($r['estado'] == 'borrador') {
 			$txt_nav[] = _('Borrador');
-			$txt_tab = array('/votacion/borradores'=>_('Ver borradores'), '/votacion/'.$r['ID']=>_('Previsualizar'), '/votacion/crear/'.$r['ID']=>_('Editar borrador'));
+			$txt_tab = array('/votacion/borradores'=>_('Ver borradores'), '/votacion/'.$r['ID']=>_('Previsualizar'), '/votacion/crear/'.$r['ID']=>_('Editar borrador'), '/votacion/'.$r['ID'].'/argumentos'=>_('Argumentos').' ('.$r['argumentos_num'].')');
 
 			$tiempo_queda =  '<span style="color:red;">'._('Borrador').' <span style="font-weight:normal;">('._('Previsualización de votación').')</span></span> ';
 		} else { 
 			$txt_nav['/votacion/'.$r['ID']] = _('Finalizado').': '.num($votos_total).' '._('votos');
-			$txt_tab = array('/votacion/'.$r['ID']=>_('Votación'), '/votacion/'.$r['ID'].'/info'=>_('Más información'));
+			$txt_tab = array('/votacion/'.$r['ID']=>_('Votación'), '/votacion/'.$r['ID'].'/argumentos'=>_('Argumentos').' ('.$r['argumentos_num'].')', '/votacion/'.$r['ID'].'/info'=>_('Más información'));
 			if (isset($pol['user_ID'])) { $txt_tab['/votacion/'.$r['ID'].'/verificacion'] = _('Verificación'); }
 			$tiempo_queda =  '<span style="color:grey;">'._('Finalizado').'</span>'; 
 		}
 
 
-		if ($_GET['b'] == 'info') {
+
+
+
+		if (($_GET['b'] == 'argumentos') AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
+
+			$txt .= '
+<fieldset class="rich votacion_desc_min"><legend style="font-size:22px;font-weight:bold;">'.$r['pregunta'].'</legend>
+<p>'.$r['descripcion'].'</p>
+'.(substr($r['debate_url'], 0, 4)=='http'?'<p><b>'._('Debate').': <a href="'.$r['debate_url'].'">'._('aquí').'</a>.</b></p>':'').'
+</fieldset>';
+			
+			if ($r['argumentos_num'] > 0) {
+				$txt .= '<fieldset><legend>'._('Argumentos').'</legend><table>';
+
+				$votos_mosotrar = 0;
+				$argumentos_ocultos = 0;
+				$result2 = sql("SELECT va.ID, va.user_ID, va.ref_ID, va.sentido, va.texto, va.time, va.votos, va.votos_num, v.voto
+FROM votacion_argumentos `va`
+LEFT JOIN votos `v` ON (tipo = 'argumentos' AND item_ID = va.ID AND emisor_ID = '".$pol['user_ID']."')
+WHERE va.ref_ID = '".$r['ID']."'
+ORDER BY va.votos DESC, va.time DESC
+LIMIT 250");
+				while($r2 = r($result2)) {
+					$txt .= '
+<tr'.($r2['votos']<$votos_mosotrar?' style="display:none;" class="negativizados"':'').'>
+<td id="argumentos'.$r2['ID'].'">'.confianza($r2['votos'], $r2['votos_num']).'</td>
+<td>'.(nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])&&$r2['user_ID']!=$pol['user_ID']?'<span id="data_argumentos'.$r2['ID'].'" class="votar" type="argumentos" name="'.$r2['ID'].'" value="'.$r2['voto'].'"></span>':'').'</td>
+<td align="right" class="gris">'.$r2['sentido'].'</td>
+<td class="rich"'.($r2['votos']>=0?' style="font-weight:bold;"':'').'>'.$r2['texto'].'</td>
+<td align="right" class="gris">'.timer($r2['time']).'</td>
+<td>'.($r2['user_ID']==$pol['user_ID']?boton('X', '/accion.php?a=votacion&b=argumento-eliminar&ID='.$r2['ID'].'&ref_ID='.$r2['ref_ID'], '¿Seguro que quieres ELIMINAR tu argumento?', 'red small'):'').'</td>
+</tr>';
+					if ($r2['votos'] < $votos_mosotrar) { $argumentos_ocultos++; }
+				}
+				$txt .= '</table>'.($argumentos_ocultos>0?'<a href="#" onclick="$(\'.negativizados\').slideToggle(\'slow\');">'._('Mostrar argumentos negativos ('.$argumentos_ocultos.')').'</a>':'').'</fieldset>';
+			}
+			
+			$txt .= '
+'.($r['estado']!='end'&&nucleo_acceso('confianza', 0)&&nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])?'
+<fieldset><legend>Añadir argumento</legend>
+<blockquote>Reglas de uso:
+<ul>
+<li>Correcta escritura.</li>
+<li>No duplicar argumentos.</li>
+<li>Una sola cuestión por argumento (puedes crear varios).</li>
+<li>Argumentos breves y concisos.</li>
+<li>Los argumentos solo podrán ser eliminados por su autor o al tener un balance de votos negativo.</li>
+<li>Los argumentos son públicos y anónimos.</li>
+</ul>
+</blockquote>
+
+<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=votacion&b=argumento" method="POST">
+<input type="hidden" name="ref_ID" value="'.$r['ID'].'"  />
+
+<p>Tipo de argumento: 
+<select name="sentido">
+<option value="" selected></option>
+
+<optgroup label="Sobre las opciones de votación:">
+<option value="A favor">A favor</option>
+<option value="En contra">En contra</option>
+<option value="En blanco">En blanco</option>
+</optgroup>
+
+<optgroup label="Sobre la votación:">
+<option value="Impugnación">Impugnación</option>
+<option value="Matiz">Matiz</option>
+<option value="Información">Información</option>
+<option value="Corrección">Corrección</option>
+</optgroup>
+
+</select> (opcional)</p>
+
+<p>Argumento:<br/>
+<input type="text" name="texto" value="" size="80" maxlength="160" placeholder="Escribe aquí tu argumento..." required /> (160 caracteres máximo)</p>
+
+
+'.boton(_('Añadir argumento'), 'submit', '¿Estás seguro de cumplir las reglas de uso?', 'blue').'
+
+</form>
+
+
+</fieldset>
+':'');
+
+
+		} elseif ($_GET['b'] == 'info') {
 			$time_expire = strtotime($r['time_expire']);
 			$time = strtotime($r['time']);
 			

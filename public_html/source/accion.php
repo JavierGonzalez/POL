@@ -438,7 +438,7 @@ case 'expulsar':
 		$result = sql("SELECT nick, ID FROM users WHERE nick IN ('".implode("','", explode(' ', $_POST['nick']))."') AND estado != 'expulsado' LIMIT 8");
 		while ($r = r($result)) {
 			sql("UPDATE users SET estado = 'expulsado' WHERE ID = '".$r['ID']."' LIMIT 1");
-			sql("DELETE FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$r['ID']."'");
+			sql("DELETE FROM votos WHERE emisor_ID = '".$r['ID']."'");
 
 			// Cambia a "En Blanco" los votos. Es equivalente a anular el voto.
 			$result2 = sql("SELECT ID, tipo_voto, respuestas FROM votacion WHERE estado = 'ok'");
@@ -469,7 +469,7 @@ case 'voto':
 	$tipo = $_GET['tipo'];	
 	$item_ID = $_GET['item_ID'];
 	$voto = $_GET['voto'];
-	$tipos_posibles = array('confianza', 'hilos', 'msg');
+	$tipos_posibles = array('confianza', 'hilos', 'msg', 'argumentos');
 	$votos_posibles = array('1', '0', '-1');
 	$voto_result = "false";
 	if ((in_array($tipo, $tipos_posibles)) AND (in_array($voto, $votos_posibles))) {
@@ -497,6 +497,10 @@ case 'voto':
 				$voto_result = "limite";
 			}
 
+		} elseif ($tipo == 'argumentos') {
+			$pais = PAIS;
+			$result = sql("SELECT ID FROM votacion_argumentos WHERE ID = '".$item_ID."' LIMIT 1");
+			while ($r = r($result)) { $check = true; }
 		} else {
 			$pais = PAIS;
 			$result = sql("SELECT ID FROM ".SQL."foros_".$tipo." WHERE ID = '".$item_ID."' AND user_ID != '".$pol['user_ID']."' LIMIT 1");
@@ -522,6 +526,12 @@ case 'voto':
 				while ($r = r($result)) { 
 					$voto_result = $r['num'];
 					sql("UPDATE ".SQL."foros_".$tipo." SET votos = '".$r['num']."', votos_num = '".$r['votos_num']."' WHERE ID = '".$item_ID."' LIMIT 1");
+				}
+			} elseif ($tipo == 'argumentos') {
+				$result = sql("SELECT SUM(voto) AS num, COUNT(*) AS votos_num FROM votos WHERE tipo = '".$tipo."' AND item_ID = '".$item_ID."' AND (voto = 1 OR voto = -1)");
+				while ($r = r($result)) { 
+					$voto_result = $r['num'];
+					sql("UPDATE votacion_argumentos SET votos = '".$r['num']."', votos_num = '".$r['votos_num']."' WHERE ID = '".$item_ID."' LIMIT 1");
 				}
 			}
 		}
@@ -1506,6 +1516,21 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 		$mensaje = 'Hola Ciudadano,<br /><br />Este email es para guardar tu comprobante de voto. Te permitirá comprobar el sentido de tu voto cuando la votacion finaliza y así aportar verificabilidad a la votación.<br /><br /><blockquote>Comprobante: <b>'.$_GET['comprobante'].'</b><br />Comprobar: http://'.HOST.'/votacion/'.$votacion_ID.'/verificacion#'.$_GET['comprobante'].'<br />Votación: http://'.HOST.'/votacion/'.$votacion_ID.'</blockquote><br /><br />No debes entregar a nadie esta información, de lo contrario podrían saber qué has votado.<br /><br />Atentamente.<br /><br /><br />VirtualPol - http://'.HOST;
 		enviar_email($pol['user_ID'], $asunto, $mensaje); 
 		redirect('/votacion/'.$votacion_ID);
+
+	} elseif (($_GET['b'] == 'argumento') AND (is_numeric($_POST['ref_ID']))) {
+		$result = sql("SELECT * FROM votacion WHERE estado != 'end' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' LIMIT 1");
+		while($r = r($result)) {
+			if (nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) {
+				sql("INSERT INTO votacion_argumentos (ref_ID, user_ID, time, sentido, texto) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".tiempo()."', '".substr(strip_tags($_POST['sentido']), 0, 40)."', '".ucfirst(substr(strip_tags($_POST['texto']), 0, 180))."')");
+				if (in_array($r['acceso_ver'], array('anonimos', 'ciudadanos_global', 'ciudadanos'))) {
+					evento_chat('<b>[#]</b> <a href="/votacion/'.$_POST['ref_ID'].'/argumentos">Argumento añadido en votación</a>', '0', '', false, 'e'); 
+				}
+			}
+			redirect('/votacion/'.$r['ID'].'/argumentos');
+		}
+	} elseif (($_GET['b'] == 'argumento-eliminar') AND (is_numeric($_GET['ID']))) {
+		sql("DELETE FROM votacion_argumentos WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+		redirect('/votacion/'.$_GET['ref_ID'].'/argumentos');
 	}
 
 	// actualizar info en theme

@@ -471,7 +471,11 @@ LIMIT 1");
 </fieldset>';
 			
 			if ($r['argumentos_num'] > 0) {
-				$txt .= '<fieldset><legend>'._('Argumentos').'</legend><table>';
+				$txt .= '<fieldset><legend>'._('Argumentos').'</legend>
+
+'.($r['estado']!='end'?'<p style="color:red;"><em>Si un argumento <b>no te gusta pero es correcto</b> debes marcarlo como <u>correcto</u>.</em></p>':'').'
+
+<table>';
 
 				$votos_mosotrar = 0;
 				$argumentos_ocultos = 0;
@@ -484,16 +488,25 @@ LIMIT 250");
 				while($r2 = r($result2)) {
 					$txt .= '
 <tr'.($r2['votos']<$votos_mosotrar?' style="display:none;" class="negativizados"':'').'>
-<td id="argumentos'.$r2['ID'].'">'.confianza($r2['votos'], $r2['votos_num']).'</td>
-<td>'.(nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])&&$r2['user_ID']!=$pol['user_ID']?'<span id="data_argumentos'.$r2['ID'].'" class="votar" type="argumentos" name="'.$r2['ID'].'" value="'.$r2['voto'].'"></span>':'').'</td>
-<td align="right" class="gris">'.$r2['sentido'].'</td>
+<td align="right" id="argumentos'.$r2['ID'].'">'.confianza($r2['votos'], $r2['votos_num']).'</td>
+<td class="gris" nowrap>'.(nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])&&$r2['user_ID']!=$pol['user_ID']&&$r['estado']!='end'?'
+
+<span id="data_argumentos'.$r2['ID'].'" type="argumentos" name="'.$r2['ID'].'" value="'.$r2['voto'].'">
+
+<input type="radio" id="rac'.$r2['ID'].'" class="radio_argumentos'.$r2['ID'].'" name="radio_argumentos'.$r2['ID'].'" onclick="votar(1, \'argumentos\', \''.$r2['ID'].'\');"'.($r2['voto']==1?' checked="checked"':'').'> <label for="rac'.$r2['ID'].'">Correcto</label><br />
+<input type="radio" id="rai'.$r2['ID'].'" class="radio_argumentos'.$r2['ID'].'" name="radio_argumentos'.$r2['ID'].'" onclick="votar(-1, \'argumentos\', \''.$r2['ID'].'\');"'.($r2['voto']==-1?' checked="checked"':'').'> <label for="rai'.$r2['ID'].'">Incorrecto</label>
+
+</span>
+
+':'').'</td>
 <td class="rich"'.($r2['votos']>=0?' style="font-weight:bold;"':'').'>'.$r2['texto'].'</td>
-<td align="right" class="gris">'.timer($r2['time']).'</td>
+<td nowrap class="gris">'.$r2['sentido'].'</td>
+<td nowrap align="right" class="gris">'.timer($r2['time']).'</td>
 <td>'.($r2['user_ID']==$pol['user_ID']?boton('X', '/accion.php?a=votacion&b=argumento-eliminar&ID='.$r2['ID'].'&ref_ID='.$r2['ref_ID'], '¿Seguro que quieres ELIMINAR tu argumento?', 'red small'):'').'</td>
 </tr>';
 					if ($r2['votos'] < $votos_mosotrar) { $argumentos_ocultos++; }
 				}
-				$txt .= '</table>'.($argumentos_ocultos>0?'<a href="#" onclick="$(\'.negativizados\').slideToggle(\'slow\');">'._('Mostrar argumentos negativos ('.$argumentos_ocultos.')').'</a>':'').'</fieldset>';
+				$txt .= '</table>'.($argumentos_ocultos>0&&nucleo_acceso('ciudadanos_global')?'<a href="#" onclick="$(\'.negativizados\').toggle();return false;">'._('Mostrar argumentos negativos ('.$argumentos_ocultos.')').'</a>':'').'</fieldset>';
 			}
 			
 			$txt .= '
@@ -503,9 +516,9 @@ LIMIT 250");
 <ul>
 <li>Correcta escritura.</li>
 <li>No duplicar argumentos.</li>
+<li>Solo argumentos e información. No preguntas.</li>
 <li>Una sola cuestión por argumento (puedes crear varios).</li>
-<li>Argumentos breves y concisos.</li>
-<li>Los argumentos solo podrán ser eliminados por su autor o al tener un balance de votos negativo.</li>
+<li>Los argumentos solo podrán ser eliminados por su autor. Será ocultado si tiene un balance de votos negativo.</li>
 <li>Los argumentos son públicos y anónimos.</li>
 </ul>
 </blockquote>
@@ -532,8 +545,7 @@ LIMIT 250");
 
 </select> (opcional)</p>
 
-<p>Argumento:<br/>
-<input type="text" name="texto" value="" size="80" maxlength="160" placeholder="Escribe aquí tu argumento..." required /> (160 caracteres máximo)</p>
+<p><input type="text" name="texto" value="" size="80" maxlength="160" placeholder="Escribe aquí tu argumento..." required /> (160 caracteres máximo)</p>
 
 
 '.boton(_('Añadir argumento'), 'submit', '¿Estás seguro de cumplir las reglas de uso?', 'blue').'
@@ -767,7 +779,6 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 '.($r['acceso_ver']=='anonimos'&&((!isset($pol['user_ID'])) || ($r['ha_votado']) || ($r['estado']=='end'))?'<center><table border="0">
 <tr>
 '.(!isset($pol['user_ID'])?'<td>'.boton(_('¡Crea tu ciudadano para votar!'), REGISTRAR.'?p='.PAIS, false, 'large green').'</td>':'').'
-<td width="20"></td>
 <td nowrap="nowrap"><b style="font-size:20px;color:#777;">¡'._('Difúnde').' '.($r['estado']=='end'?_('este resultado'):_('esta votación')).'!</b> &nbsp;</td>
 
 <td width="140" height="35">
@@ -778,17 +789,9 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 <td width="50"><g:plusone annotation="none" href="http://'.HOST.'/votacion/'.$r['ID'].'"></g:plusone></td>
 
-<td><!--'.boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange').'--></td>
+<!--<td>'.boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange').'</td>-->
 
-<td><div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, \'script\', \'facebook-jssdk\'));</script>
-<div style="display:inline;" class="fb-like" data-href="http://'.HOST.'/votacion/'.$r['ID'].'" data-send="true" data-layout="button_count" data-width="300" data-show-faces="false" data-action="recommend" data-font="verdana"></div></td>
+<td><a name="fb_share">'._('Compartir').'</a></td>
 </tr></table></center>':'').'
 ';
 
@@ -1099,12 +1102,13 @@ ORDER BY siglas ASC");
 <th></th>
 <th>'._('Votos').'</th>
 <th></th>
-<th colspan="3">'._('Finaliza en').'...</th>
+<th colspan="4" align="left"><span style="float:right;">Argumentos</span>'._('Finaliza en').'...</th>
 </tr>';
 	$mostrar_separacion = true;
 	
 	$result = sql("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, num_censo, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, cargo_ID,
-(SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS ha_votado
+(SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS ha_votado,
+(SELECT COUNT(*) FROM votacion_argumentos WHERE ref_ID = votacion.ID AND votos >= 0) AS argumentos_num
 FROM votacion
 WHERE estado = 'ok' AND pais = '".PAIS."'
 ORDER BY time_expire ASC
@@ -1125,6 +1129,7 @@ LIMIT 500");
 <td nowrap="nowrap" class="gris" align="right">'.timer($r['time_expire']).'</td>
 <td nowrap="nowrap">'.($r['user_ID']==$pol['user_ID']&&$r['estado']=='ok'?boton('Cancelar', '/accion.php?a=votacion&b=finalizar&ID='.$r['ID'], '¿Seguro que quieres CANCELAR esta votacion y convertirla en un BORRADOR?', 'small red'):'').'</td>
 <td>'.gbarra(round((time()-$time)*100)/($time_expire-$time)).'</td>
+<td align="right">'.($r['argumentos_num']>0?'<a href="/votacion/'.$r['ID'].'/argumentos"><b>'.num($r['argumentos_num']).'</b></a>':'').'</td>
 </tr>';
 		}
 	}

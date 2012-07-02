@@ -9,7 +9,7 @@
 
 include('inc-login.php');
 include('inc-functions-accion.php');
-//if ($pol['user_ID'] != 1) { exit; }
+if ($pol['user_ID'] != 1) { redirect('http://www.virtualpol.com'); }
 function crono($new='') { global $crono; $the_ms = num((microtime(true)-$crono)*1000); $crono = microtime(true); return '<h3>'.$the_ms.'ms '.$new.'</h3></hr>'; }
 $result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
@@ -19,14 +19,13 @@ $txt .= ' ';
 
 
 
-$txt .= '<img src="http://www.virtualpol.com/img/smiley/sonrie.gif" border="0" alt=":falso:" title=":falso:" width="15" height="15" onMouseOver="$(this).attr(\'src\', \'http://www.virtualpol.com/img/smiley/troll.gif\');" />';
+$txt .= '';
 
 
 
 
-
-
-
+//**************************************************************************/
+$txt .= mysql_error();
 $txt_title = 'Test';
 $txt_nav = array('Test');
 include('theme.php');

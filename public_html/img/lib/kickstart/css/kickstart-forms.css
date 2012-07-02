@@ -40,6 +40,7 @@ left:0;
 .msie legend{position:absolute;top:-0.7em;left:10px;}
 
 label{
+cursor:pointer;
 display:inline-block;
 *display:inline;
 vertical-align: middle;

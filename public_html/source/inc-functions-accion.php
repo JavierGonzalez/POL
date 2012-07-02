@@ -203,7 +203,7 @@ function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', 
 	$result = sql("SELECT chat_ID FROM chats WHERE pais = '".$pais."' AND user_ID = '0' ORDER BY fecha_creacion ASC LIMIT 1");
 	while($r = r($result)){ $chat_ID = $r['chat_ID']; }
 
-	sql("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('".$chat_ID."', '".$nick."', '".$msg."', '0', '".$user_ID."', '".$tipo."')");
+	sql("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('".$chat_ID."', '".($secret==false?$nick:'')."', '".$msg."', '0', '".$user_ID."', '".$tipo."')");
 }
 
 
@@ -512,6 +512,10 @@ function barajar_votos($votacion_ID) { // FUNCION CRITICA. Especialmente comenta
 		}
 		sql("UPDATE votacion_votos SET ".implode(', ', $sql_set)." WHERE ID = '".$voto_ID."' LIMIT 1");
 	}
+	
+	// Elimina relación usuario-voto también en los argumentos de votacion
+	sql("UPDATE votacion_argumentos SET user_ID = 0 WHERE ref_ID = '".$votacion_ID."'");
+	
 	return true;
 }
 

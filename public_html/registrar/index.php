@@ -11,6 +11,9 @@ include('../inc-login.php');
 include('../source/inc-functions-accion.php');
 
 
+// Configuración de registro
+define('CAPTCHA_REGISTRO', false);
+
 
 $result = sql("SELECT valor, dato FROM config WHERE PAIS IS NULL");
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
@@ -90,7 +93,7 @@ case 'registrar': //CHECK
 		if ($bloquear_registro === false) {
 
 
-		if (animal_captcha_check($_POST['animal']) == true) {
+		if ((CAPTCHA_REGISTRO == false) OR (animal_captcha_check($_POST['animal']) == true)) {
 
 			//CONTROL: solo letras y numeros en nick
 			if ((onlynumbers($nick) == true) AND (!in_array($nick, $nicks_prohibidos))) { 
@@ -160,7 +163,7 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . str
 
 									enviar_email(null, _('Verificar nuevo usuario').': '.$nick, $mensaje, $email);
 
-									$registro_txt .= '<p><span style="color:green;"><b>'._('¡Correcto!').'</b></span>. '._('Tu usuario ha sido creado exitosamente').'.</p><p>'._('Último paso. Ahora <b>debes revisar tu email</b>, te hemos enviado un email para validar tu usuario.</p><p>Esta medida es por seguridad. Por favor, rescata el email si lo encuentras en la carpeta de spam').'.</p>';
+									$registro_txt .= '<p><span style="color:green;"><b>'._('¡Correcto!').'</b></span>. '._('Tu usuario ha sido creado exitosamente').'.</p><p>'._('Último paso. Ahora <b>debes revisar tu email</b>, te hemos enviado un email para validar tu usuario').'.</p><p><em>* '._('Por favor, rescata el email si lo encuentras en la carpeta de spam. Esta medida es por seguridad').'</em>.</p>';
 
 								} else {$nick = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick está ocupado, por favor elige otro').'</p>';}
 							} else {$nick = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick debe tener entre 3 y 14 caracteres').'</p>';}
@@ -194,7 +197,7 @@ case 'verificar': //URL EMAIL
 			$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$r['pais']."'");
 			while ($r2 = r($result2)) { $ciudadanos_num = $r2['num']; }
 
-			evento_chat('<b>[#] '._('Nuevo ciudadano').'</b> '._('de').' <b>'.$r['pais'].'</b> <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> '._('ciudadanos').', <b><a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'" class="nick">'.$r['nick'].'</a></b>)</span>', 0, 0, true, 'e', $r['pais'], $r['nick']);
+			evento_chat('<b>[#] '._('Nuevo ciudadano').'</b> '._('de').' <b>'.$r['pais'].'</b> <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> '._('ciudadanos').', <b><a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'" class="nick">'.$r['nick'].'</a></b>)</span>', 0, 0, false, 'e', $r['pais'], $r['nick']);
 
 			unset($_SESSION);
 			session_unset(); session_destroy();
@@ -398,20 +401,21 @@ $(document).ready(function() {
 <input id="pass2" type="password" autocomplete="off" name="pass2" value="" maxlength="40" style="margin-top:1px;" required /> '._('Introduce otra vez').'.</td>
 </tr>
 
-<tr>
+'.(CAPTCHA_REGISTRO?'<tr>
 <td align="right" valign="top"><b>'._('¿Qué animal es?').'</b>:</td>
 <td><img src="animal-captcha.php" alt="Animal" id="animalcaptchaimg"  onclick="document.getElementById(\'animalcaptchaimg\').src=\'animal-captcha.php?\'+Math.random();" title="'._('Visualizar otro animal').'" /><br />
 <input type="text" name="animal" value="" autocomplete="off" size="14" maxlength="20" placeholder="'._('Ejemplo: león').'" pattern="[A-Za-záéíóúÁÉÍÓÚñÑüÜ]{2,20}" required /> '._('Un nombre, sin espacios, nivel primaria').' (<a href="http://www.teoriza.com/captcha/example.php" target="_blank">Animal Captcha</a>)</td>
-</tr>
+</tr>':'').'
 
 <tr>
-<td align="right"><b>'._('¿Compartes conexión a Internet<br /> con otro usuario de VirtualPol?').'</b></td>
-<td>'._('En caso afirmativo indica el nick').': <input type="text" name="nick_clon" value="" size="10" maxlength="14" pattern="[A-Za-z0-9_]{0,14}" /> '._('En caso negativo dejar vacío').'.</td>
+<td></td>
+<td><b>'._('¿Compartes conexión a Internet con otro usuario de VirtualPol?').'</b><br />
+'._('En caso afirmativo indica el nick').': <input type="text" name="nick_clon" value="" size="10" maxlength="14" pattern="[A-Za-z0-9_]{0,14}" /> '._('En caso negativo dejar vacío').'.</td>
 </tr>
 
 <tr>
 <td></td>
-<td><input name="condiciones" value="ok" type="checkbox" required /> <b>'._('Aceptas las').' <a href="http://www'.'.'.DOMAIN.'/TOS" target="_blank">'._('Condiciones de Uso de VirtualPol').'</a>.</b></td>
+<td><input type="checkbox" name="condiciones" value="ok" id="checkcondiciones" required /> <label for="checkcondiciones"><b>'._('Aceptas las').' <a href="http://www'.'.'.DOMAIN.'/TOS" target="_blank">'._('Condiciones de Uso de VirtualPol').'</a>.</b></label></td>
 </tr>
 
 <tr>

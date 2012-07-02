@@ -457,13 +457,14 @@ ORDER BY MAX(uc.time) DESC");
 
 // IPs publicas de algunos ISPs que sacan a sus clientes compartiendo la misma. Esto es util para identificar estas coincidencias y evitar falsos positivos.
 $IP_publicas = array(
-'85.62.234', // Orange movil
-'85.62.233', // Orange movil
-'81.45.7', // Movistar movil
-'80.58.205', // Movistar CanguroNet
-
-'93.186.23.83', // Blackberry
-'195.235.76', // Movistar movil
+'85.62.234',	// Orange movil
+'85.62.233',	// Orange movil
+'81.45.7',		// Movistar movil
+'195.235.76',	// Movistar movil
+'80.58.205',	// Movistar CanguroNet
+'93.186.23',	// Blackberry
+'93.186.31',	// Blackberry
+'77.209.224',	// Airtel movil
 );
 
 foreach ($IP_publicas AS $IPs) { $longIP_publicas[] = ip2long($IPs); }

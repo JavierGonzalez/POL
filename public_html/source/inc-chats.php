@@ -129,7 +129,7 @@ Chat de '.PAIS.': <b>'.$titulo.'</b><br />
 
 <td valign="middle">
 '.(isset($pol['user_ID'])?'
-<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%;" autofocus="autofocus" value="" required />':boton(_('¡Crea tu ciudadano para participar!'), REGISTRAR.'?p='.PAIS, false, 'green')).'
+<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%;" autofocus="autofocus" value="" required />':boton(_('¡Regístrate para participar!'), REGISTRAR.'?p='.PAIS, false, 'green')).'
 </td>
 
 <td nowrap="nowrap" valign="middle" title="Marcar para ocultar eventos del chat">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">'._('Ocultar eventos').'</label></td>

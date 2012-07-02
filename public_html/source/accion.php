@@ -1517,13 +1517,14 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 		enviar_email($pol['user_ID'], $asunto, $mensaje); 
 		redirect('/votacion/'.$votacion_ID);
 
-	} elseif (($_GET['b'] == 'argumento') AND (is_numeric($_POST['ref_ID']))) {
+	} elseif (($_GET['b'] == 'argumento') AND (is_numeric($_POST['ref_ID'])) AND (strlen($_POST['texto']) > 1)) {
 		$result = sql("SELECT * FROM votacion WHERE estado != 'end' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' LIMIT 1");
 		while($r = r($result)) {
+			$_POST['sentido'] = substr(strip_tags($_POST['sentido']), 0, 40);
 			if (nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) {
-				sql("INSERT INTO votacion_argumentos (ref_ID, user_ID, time, sentido, texto) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".tiempo()."', '".substr(strip_tags($_POST['sentido']), 0, 40)."', '".ucfirst(substr(strip_tags($_POST['texto']), 0, 180))."')");
+				sql("INSERT INTO votacion_argumentos (ref_ID, user_ID, time, sentido, texto) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".tiempo()."', '".$_POST['sentido']."', '".ucfirst(trim(substr(strip_tags($_POST['texto']), 0, 180)))."')");
 				if (in_array($r['acceso_ver'], array('anonimos', 'ciudadanos_global', 'ciudadanos'))) {
-					evento_chat('<b>[#]</b> <a href="/votacion/'.$_POST['ref_ID'].'/argumentos">Argumento añadido en votación</a>', '0', '', false, 'e'); 
+					evento_chat('<b>[#]</b> <a href="/votacion/'.$_POST['ref_ID'].'/argumentos">Argumento añadido en votación</a>'.($_POST['sentido']?' <span class="gris">('.$_POST['sentido'].')</span>':''), '0', '', true, 'e'); 
 				}
 			}
 			redirect('/votacion/'.$r['ID'].'/argumentos');

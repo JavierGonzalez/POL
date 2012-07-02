@@ -13,8 +13,8 @@ if (isset($_GET['noti'])) { notificacion('visto', $_GET['noti']); }
 if (!isset($txt)) { $txt_nav = array('Error'); header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">ERROR 404: <b>'._('Página inexistente').'</b></h1>'; }
 if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<h1 style="font-weight:normal;color:red;">ERROR: <b>'.escape(base64_decode($_GET['error'])).'</b></h1>'; }
 if (!isset($pol['config']['pais_des'])) { $pol['config']['pais_des'] = _('Plataforma cerrada'); }
-if (isset($txt_title)) { $txt_title .= ' | '.PAIS.' | VirtualPol'; }
-else { $txt_title = (isset($pol['config']['pais_des'])?$pol['config']['pais_des'].', '.PAIS.' '.$kw.'| VirtualPol':PAIS.' '.$kw.'| VirtualPol'); }
+if (isset($txt_title)) { $txt_title .= ' - '.$pol['config']['pais_des'].' (VirtualPol)'; }
+else { $txt_title = $pol['config']['pais_des'].' (VirtualPol)'; }
 
 
 // Tapiz de fondo (1400x100)
@@ -30,7 +30,7 @@ if (isset($_GET['bg'])) {
 <head>
 <title><?=$txt_title?></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS.' | VirtualPol')?>" />
+<meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw)?>" />
 
 <link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css?v=16" media="all" />
 <style type="text/css">
@@ -164,9 +164,10 @@ if (($pol['config']['socios_estado']=='true') AND (nucleo_acceso('ciudadanos')) 
 }
 
 
-echo '<p style="color:#999;"><b>83%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="'._('VirtualPol está siendo traducido desde el Español original a muchos más idiomas. Puedes ayudar en la traducción. ¡Gracias!').'">'._('Traducción VirtualPol').'</a></p>
+// echo '<p style="color:#999;"><b>83%</b> <a href="https://www.transifex.net/projects/p/virtualpol/resource/virtualpol/" target="_blank" title="'._('VirtualPol está siendo traducido desde el Español original a muchos más idiomas. Puedes ayudar en la traducción. ¡Gracias!').'">'._('Traducción VirtualPol').'</a></p>';
 
-<p id="palabras">';
+
+echo '<p id="palabras">';
 
 foreach(explode(';', $pol['config']['palabras']) as $t) {
 	$t = explode(':', $t);
@@ -263,30 +264,21 @@ echo '<table><tr><td height="30" nowrap="nowrap"><b>'.$pol['config']['pais_des']
 
 if (ASAMBLEA) {
 	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-text="VirtualPol, '._('la primera red social democrática').'" data-lang="'.($vp['lang']=='es_ES'?'es':'en').'" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="15M">'.($vp['lang']=='es_ES'?'Twittear':'Twitt').'</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>';
+} else {
+	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-text="VirtualPol, '._('la primera red social democrática').'" data-lang="'.($vp['lang']=='es_ES'?'es':'en').'" data-size="large" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">'.($vp['lang']=='es_ES'?'Twittear':'Twitt').'</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>';
+}
+
+echo '
 
 <td><g:plusone annotation="none"></g:plusone></td>
 
-<td><div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, \'script\', \'facebook-jssdk\'));</script>
-<div class="fb-like" data-href="http://'.$_SERVER['HTTP_HOST'].'" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div></td>
-';
+<td valign="middle"><a name="fb_share">'._('Compartir').'</a></td>
 
-} else {
-	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-text="VirtualPol, '._('la primera red social democrática').'" data-lang="'.($vp['lang']=='es_ES'?'es':'en').'" data-size="large" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">'.($vp['lang']=='es_ES'?'Twittear':'Twitt').'</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>
+<td><a href="http://www.tuenti.com/share" class="tuenti-share-button"></a></td>
 
-<td><g:plusone annotation="none" href="http://'.HOST.'"></g:plusone></td>
-';
-}
-
-echo '</tr></table>';
+</tr></table>';
 
 if ((ECONOMIA) AND (isset($pol['config']['pols_frase']))) {
 	echo '<div class="amarillo"><b>'.$pol['config']['pols_frase'].'</b></div>';
@@ -307,6 +299,8 @@ if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != '')) {
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js">
 {lang: 'es'}
 </script>
+<script type="text/javascript" src="http://static.ak.fbcdn.net/connect.php/js/FB.Share"></script>
+<script type="text/javascript" src="http://widgets.tuenti.com/widgets.js"></script>
 
 <script type="text/javascript">
 /* GA */

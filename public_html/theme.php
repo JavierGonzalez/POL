@@ -33,7 +33,7 @@ if (isset($_GET['bg'])) {
 <meta name="language" content="es_ES" />
 <meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS)?> | <?=_('La primera Red Social Democrática')?> | VirtualPol" />
 
-<link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css" media="all" />
+<link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css?v=<?=VER?>" media="all" />
 <style type="text/css">
 #header { background:#FFF <?=$body_bg?> repeat scroll top left; }
 </style>
@@ -43,11 +43,10 @@ if (isset($_GET['bg'])) {
 
 <!--[if lt IE 9]><script src="<?=($_SERVER['HTTPS']?'https://':'http://')?>html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script type="text/javascript" src="<?=($_SERVER['HTTPS']?'https://':'http://')?>ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="<?=IMG?>scripts_all.js?v=10"></script>
+<script type="text/javascript" src="<?=IMG?>scripts_all.js?v=<?=VER?>"></script>
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '<?=IMG?>';
-_ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos segundos','En','Hace') AS $d) { echo '"'.$d.'":"'._($d).'",'; } ?>};
 p_scroll = false;
 </script>
 

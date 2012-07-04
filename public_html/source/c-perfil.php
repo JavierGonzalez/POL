@@ -426,7 +426,7 @@ $txt .= (count($txt_grupos)>0?implode(' ', $txt_grupos):'Ninguno').'</b></td>
 
 </table>
 
-'.(isset($r['text'])?'<fieldset><legend>'._('Biografía').'</legend><p>'.$r['text'].'</p></fieldset>':'').'
+'.($r['text']!=''?'<fieldset><legend>'._('Biografía').'</legend><p>'.$r['text'].'</p></fieldset>':'').'
 
 
 

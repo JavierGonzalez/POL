@@ -32,7 +32,7 @@ if (isset($_GET['bg'])) {
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw)?>" />
 
-<link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css?v=16" media="all" />
+<link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css?v=<?=VER?>" media="all" />
 <style type="text/css">
 #header { background:#FFF <?=$body_bg?> repeat scroll top left; }
 </style>
@@ -40,12 +40,11 @@ if (isset($_GET['bg'])) {
 
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="<?=IMG?>scripts_all.js?v=16"></script>
+<script type="text/javascript" src="<?=IMG?>scripts_all.js?v=<?=VER?>"></script>
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '<?=IMG?>';
 p_scroll = false;
-_ = {<?php foreach (array('meses','días','horas','minutos','min','seg','Pocos segundos','Segundos','En','Hace') AS $d) { echo '"'.$d.'":"'._($d).'",'; } ?>};
 </script>
 
 

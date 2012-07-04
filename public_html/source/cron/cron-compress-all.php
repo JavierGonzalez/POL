@@ -75,9 +75,20 @@ echo '</table>';
 echo '<h2>Minify JS</h2>
 
 <table>';
+
+
 $txt_js .= compress_file('lib/kickstart/js/prettify.js', 'js');
 $txt_js .= compress_file('lib/kickstart/js/kickstart.js', 'js');
 $txt_js .= compress_file('scripts2.js', 'js');
+
+
+// Variable JS para internacionalización
+$txt_js .= '_ = {';
+foreach (array('meses','días','horas','minutos','min','seg','Pocos segundos','Segundos','En','Hace') AS $d) { 
+	$txt_js .= '"'.$d.'":"'._($d).'",'; 
+}
+$txt_js .= '};';
+
 file_put_contents($root_dir.'img/scripts_all.js', $txt_js);
 echo '</table>';
 

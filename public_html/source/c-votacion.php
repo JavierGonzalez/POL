@@ -499,7 +499,7 @@ LIMIT 250");
 </span>
 
 ':'').'</td>
-<td class="rich"'.($r2['votos']>=0?' style="font-weight:bold;"':'').'>'.$r2['texto'].'</td>
+<td class="rich"'.($r2['votos']>=0?' style="color:#000;"':'').'>'.$r2['texto'].'</td>
 <td nowrap class="gris">'.$r2['sentido'].'</td>
 <td nowrap align="right" class="gris">'.timer($r2['time']).'</td>
 <td>'.($r2['user_ID']==$pol['user_ID']?boton('X', '/accion.php?a=votacion&b=argumento-eliminar&ID='.$r2['ID'].'&ref_ID='.$r2['ref_ID'], '¿Seguro que quieres ELIMINAR tu argumento?', 'red small'):'').'</td>
@@ -516,10 +516,8 @@ LIMIT 250");
 <ul>
 <li>Correcta escritura.</li>
 <li>No duplicar argumentos.</li>
-<li>Solo argumentos e información. No preguntas.</li>
-<li>Una sola cuestión por argumento (puedes crear varios).</li>
-<li>Los argumentos solo podrán ser eliminados por su autor. Será ocultado si tiene un balance de votos negativo.</li>
-<li>Los argumentos son públicos y anónimos.</li>
+<li>No preguntas.</li>
+<li>Una sola cuestión por argumento.</li>
 </ul>
 </blockquote>
 
@@ -547,8 +545,10 @@ LIMIT 250");
 
 <p><input type="text" name="texto" value="" size="80" maxlength="160" placeholder="Escribe aquí tu argumento..." required /> (160 caracteres máximo)</p>
 
+<p>* Los argumentos solo podrán ser eliminados por su autor. Se ocultarán automáticamente si tiene un balance de votos negativo.<br />
+* Los argumentos son públicos y anónimos.</p>
 
-'.boton(_('Añadir argumento'), 'submit', '¿Estás seguro de cumplir las reglas de uso?', 'blue').'
+<p>'.boton(_('Añadir argumento'), 'submit', '¿Estás seguro de cumplir las reglas de uso?', 'blue').'</p>
 
 </form>
 

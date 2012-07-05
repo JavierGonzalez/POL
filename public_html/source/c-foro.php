@@ -27,9 +27,6 @@ function print_lateral($nick, $cargo_ID=false, $time, $siglas='', $user_ID='', $
 function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 	global $pol, $link, $return_url, $vp;
 
-	$referer = explode('/', $_SERVER['HTTP_REFERER'], 4); 
-	$referer = '/'.$referer[3];
-
 	if (($pol['estado'] == 'ciudadano') OR ($pol['estado'] == 'extranjero')) {
 		if ($edit) { //editar
 			$return_url = 'foro/';
@@ -82,8 +79,6 @@ ORDER BY nivel DESC", $link);
 		if (!$hilo) { 
 			if ($edit) { $get = 'editar'; } else { $get = 'hilo'; } 
 
-// <input type="hidden" name="return_url" value="' . $return_url . '"  />
-
 			$html .= '<div id="enviar" class="redondeado">
 
 <hr />
@@ -91,7 +86,7 @@ ORDER BY nivel DESC", $link);
 
 <fieldset><legend>Nuevo hilo</legend>
 
-<form action="/accion.php?a=foro&b=' . $get . '" method="post">
+<form action="'.accion_url().'a=foro&b=' . $get . '" method="post">
 <input type="hidden" name="subforo" value="' . $subforo . '"  />
 <input type="hidden" name="return_url" value="' . $return_url . '"  />';
 
@@ -118,13 +113,13 @@ ORDER BY nivel DESC", $link);
 </fieldset>
 
 
-'.($edit?'<hr /><p style="text-align:right;">'.boton('Eliminar hilo', '/accion.php?a=foro&b=eliminarhilo&ID='.$edit_ID, '¿Estás seguro de querer ELIMINAR este HILO DE FORMA IRREVOCABLE?').'</p>':'').'
+'.($edit?'<hr /><p style="text-align:right;">'.boton('Eliminar hilo', accion_url().'a=foro&b=eliminarhilo&ID='.$edit_ID, '¿Estás seguro de querer ELIMINAR este HILO DE FORMA IRREVOCABLE?').'</p>':'').'
 
 </div>';
 		} else {
 			if ($edit) { $get = 'editar'; } else { $get = 'reply'; } 
 			$html .= '<div id="enviar" class="redondeado">
-<form action="/accion.php?a=foro&b=' . $get . '" method="post">
+<form action="'.accion_url().'a=foro&b=' . $get . '" method="post">
 <input type="hidden" name="subforo" value="' . $subforo . '"  />
 <input type="hidden" name="hilo" value="' . $hilo . '"  />
 <input type="hidden" name="return_url" value="' . $return_url . '"  />
@@ -345,7 +340,7 @@ LIMIT 1", $link);
 				// es tu post
 				$editar = '<span style="float:right;">'.boton('Editar', '/foro/editar/'.$r['ID'], false, 'small').'</span>'; 
 			} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
-				$editar = '<span style="float:right;">'.boton('Mover', '/foro/editar/'.$r['ID'], false, 'small').' '.boton('Papelera', '/accion.php?a=foro&b=borrar&c=hilo&ID='.$r['ID'], '¿Quieres enviar a la PAPELERA este HILO y TODOS sus MENSAJES?', 'small red').'</span>'; 
+				$editar = '<span style="float:right;">'.boton('Mover', '/foro/editar/'.$r['ID'], false, 'small').' '.boton('Papelera', accion_url().'a=foro&b=borrar&c=hilo&ID='.$r['ID'], '¿Quieres enviar a la PAPELERA este HILO y TODOS sus MENSAJES?', 'small red').'</span>'; 
 			} else { $editar = ''; }
 
 			$txt .= '<tr>
@@ -371,10 +366,10 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysql
 			while($r2 = mysql_fetch_array($result2)) {
 
 				if (($pol['user_ID'] == $r2['user_ID']) AND ($subforo != 'notaria') AND (strtotime($r2['time']) > (time() - 3600))) { 
-					$editar = boton('Editar', '/foro/editar/'.$r2['hilo_ID'].'/'.$r2['ID'], false, 'small').boton('X', '/accion.php?a=foro&b=eliminarreply&ID='.$r2['ID'].'&hilo_ID='.$r2['hilo_ID'], '¿Estás seguro de querer ELIMINAR tu MENSAJE?', 'small red').' '; 
+					$editar = boton('Editar', '/foro/editar/'.$r2['hilo_ID'].'/'.$r2['ID'], false, 'small').boton('X', accion_url().'a=foro&b=eliminarreply&ID='.$r2['ID'].'&hilo_ID='.$r2['hilo_ID'], '¿Estás seguro de querer ELIMINAR tu MENSAJE?', 'small red').' '; 
 				} elseif (nucleo_acceso($vp['acceso']['foro_borrar'])) { 
 					// policia borra
-					$editar = boton('Papelera', '/accion.php?a=foro&b=borrar&c=mensaje&ID=' . $r2['ID'] . '/', '¿Quieres enviar a la PAPELERA este MENSAJE?', 'small') . ' '; 
+					$editar = boton('Papelera', accion_url().'a=foro&b=borrar&c=mensaje&ID=' . $r2['ID'] . '/', '¿Quieres enviar a la PAPELERA este MENSAJE?', 'small') . ' '; 
 				} else { $editar = ''; }
 
 				if (($citar) AND ($pol['user_ID'] != $r2['user_ID'])) {
@@ -418,7 +413,7 @@ FROM ".SQL."foros_hilos
 WHERE estado = 'borrado'
 ORDER BY time_last DESC", $link);
 	while($r = mysql_fetch_array($result)) {
-		if (nucleo_acceso($vp['acceso']['foro_borrar'])) { $boton = boton('Restaurar', '/accion.php?a=foro&b=restaurar&c=hilo&ID=' . $r['ID'], '¿Quieres RESTAURAR este HILO y sus MENSAJES?'); } else { $boton = boton('Restaurar'); }
+		if (nucleo_acceso($vp['acceso']['foro_borrar'])) { $boton = boton('Restaurar', accion_url().'a=foro&b=restaurar&c=hilo&ID=' . $r['ID'], '¿Quieres RESTAURAR este HILO y sus MENSAJES?'); } else { $boton = boton('Restaurar'); }
 
 		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['votos_num'], false, 'hilos') . '</td><td valign="top"><p class="pforo"><b style="color:blue;">' . $r['title'] . '</b><br />' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time_last'] . '"><span class="timer" value="'.strtotime($r['time_last']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
 	}
@@ -441,7 +436,7 @@ FROM ".SQL."foros_msg
 WHERE estado = 'borrado'
 ORDER BY time2 DESC", $link);
 	while($r = mysql_fetch_array($result)) {
-		if (nucleo_acceso($vp['acceso']['foro_borrar'])) { $boton = boton('Restaurar', '/accion.php?a=foro&b=restaurar&c=mensaje&ID=' . $r['ID'], '¿Quieres RESTAURAR este MENSAJE?'); } else { $boton = boton('Restaurar'); }
+		if (nucleo_acceso($vp['acceso']['foro_borrar'])) { $boton = boton('Restaurar', accion_url().'a=foro&b=restaurar&c=mensaje&ID=' . $r['ID'], '¿Quieres RESTAURAR este MENSAJE?'); } else { $boton = boton('Restaurar'); }
 
 		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['votos_num'], false) . '</td><td valign="top"><p class="pforo">' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time2'] . '"><span class="timer" value="'.strtotime($r['time2']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
 	}
@@ -496,7 +491,7 @@ LIMIT 200", $link);
 					if (strtotime($r2['time']) > (time() - 86400)) { $titulo = $titulo . ' <sup style="font-size:9px;color:red;">Nuevo!</sup>'; }
 
 					if (($pol['user_ID'] == $r2['user_ID']) AND (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']))) { 
-						$editar = ' '.boton('X', '/accion.php?a=foro&b=eliminarhilo&ID='.$r2['ID'], '¿Estás seguro de querer ELIMINAR este HILO?', 'small red'); 
+						$editar = ' '.boton('X', accion_url().'a=foro&b=eliminarhilo&ID='.$r2['ID'], '¿Estás seguro de querer ELIMINAR este HILO?', 'small red'); 
 					} else { $editar = ''; }
 
 					$txt .= '<tr>

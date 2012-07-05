@@ -32,7 +32,7 @@ if ($_GET['a']) {
 			pad('create', $pad_ID, $r['text']);
 
 			$txt .= '
-<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=editar-documento&ID='.$r['ID'].'" method="POST">
+<form action="'.accion_url($pol['pais']).'a=editar-documento&ID='.$r['ID'].'" method="POST">
 <input type="hidden" name="url" value="'.$r['url'].'"  />
 <input type="hidden" name="doc_ID" value="'.$r['ID'].'"  />
 
@@ -62,8 +62,8 @@ if ($_GET['a']) {
 <tr><td colspan="2" valign="top">
 
 <span style="float:right;">
-'.boton(_('Eliminar documento'), '/accion.php?a=eliminar-documento&url='.$r['url'], '¿Estas convencido de que quieres ELIMINAR para siempre este Documento?', 'small red').'<br />
-'.boton(_('Restaurar última publicación'), '/accion.php?a=restaurar-documento&ID='.$r['ID'], '¿Estas seguro de RESTAURAR este documento?\n\nATENCION: SE PERDERA EL FORMATO, ADEMAS DE LOS CAMBIOS DESDE LA ULTIMA PUBLICACION.', 'small red').'
+'.boton(_('Eliminar documento'), accion_url().'a=eliminar-documento&url='.$r['url'], '¿Estas convencido de que quieres ELIMINAR para siempre este Documento?', 'small red').'<br />
+'.boton(_('Restaurar última publicación'), accion_url().'a=restaurar-documento&ID='.$r['ID'], '¿Estas seguro de RESTAURAR este documento?\n\nATENCION: SE PERDERA EL FORMATO, ADEMAS DE LOS CAMBIOS DESDE LA ULTIMA PUBLICACION.', 'small red').'
 </span>
 
 * '._('El texto del editor se guarda automáticamente como borrador en tiempo real. Para guardar estas opciones y hacer públicos los cambios hay que dar al botón "Publicar"').'.<br />

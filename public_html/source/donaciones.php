@@ -21,7 +21,7 @@ if ($pol['user_ID']) {
 	while ($r = r($result)) { $donacion = $r['donacion']; }
 
 	$txt .= '
-<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=donacion" method="post">
+<form action="'.accion_url($pol['pais']).'a=donacion" method="post">
 Por favor indica la cantidad exacta que has donado a VirtualPol: <input style="text-align:right;font-weight:bold;" type="text" name="donacion" size="1" maxlength="4" value="'.($donacion?$donacion:0).'" /> euros '.boton('Guardar', 'submit', false, 'blue small').'
 </form>
 

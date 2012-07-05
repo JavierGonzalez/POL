@@ -42,7 +42,7 @@ if (nucleo_acceso('supervisores_censo')) {
 
 	function print_nota_SC($nota_SC, $user_ID) {
 		global $pol;
-		return ($nota_SC!=''?'<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=SC&b=nota&ID='.$user_ID.'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$nota_SC.'"'.(substr($nota_SC, 0, 7)=='Cuidado'?' style="color:red;"':'').(substr($nota_SC, 0, 12)=='Comparte con'?' style="color:green;"':'').(substr($nota_SC, 0, 3)=='OK '?' style="color:blue;"':'').' /> '.boton('OK', 'submit', false, 'small pill').'</form>':'');
+		return ($nota_SC!=''?'<form action="'.accion_url($pol['pais']).'a=SC&b=nota&ID='.$user_ID.'" method="post"><input type="text" name="nota_SC" size="25" maxlength="255" value="'.$nota_SC.'"'.(substr($nota_SC, 0, 7)=='Cuidado'?' style="color:red;"':'').(substr($nota_SC, 0, 12)=='Comparte con'?' style="color:green;"':'').(substr($nota_SC, 0, 3)=='OK '?' style="color:blue;"':'').' /> '.boton('OK', 'submit', false, 'small pill').'</form>':'');
 	}
 
 	// nomenclatura
@@ -144,7 +144,7 @@ LIMIT 60");
 
 	$backlists = array('backlist_IP'=>400, 'backlist_emails'=>180, 'backlist_nicks'=>120);
 
-	$txt .= '<form action="/accion.php?a=bloqueos" method="post">
+	$txt .= '<form action="'.accion_url().'a=bloqueos" method="post">
 
 <p>'._('Listas negras para bloquear masivamente con filtros. Un elemento por linea. Elementos de al menos 5 caracteres (para minimizar el riesgo de filtros masivos). Precaución, hay riesgo de producir bloqueos masivos').'.</p>
 <table>
@@ -607,7 +607,7 @@ case 'gobierno':
 
 		if (nucleo_acceso($vp['acceso']['control_gobierno'])) { $dis = ''; } else { $dis = ' disabled="disabled"'; }
 
-		$txt .= '<form action="/accion.php?a=gobierno&b=categorias&c=editar" method="post">
+		$txt .= '<form action="'.accion_url().'a=gobierno&b=categorias&c=editar" method="post">
 
 <table border="0" cellspacing="0" cellpadding="4">
 
@@ -641,7 +641,7 @@ case 'gobierno':
 
 <td align="right" style="color:#999;" nowrap="nowrap"><b>'.$num.'</b></td>
 
-<td>'.($num==0?boton('Eliminar', '/accion.php?a=gobierno&b=categorias&c=eliminar&ID='.$r['ID'], false, 'small red'):'').'</td>
+<td>'.($num==0?boton('Eliminar', accion_url().'a=gobierno&b=categorias&c=eliminar&ID='.$r['ID'], false, 'small red'):'').'</td>
 </tr>'."\n";
 	}
 
@@ -654,7 +654,7 @@ case 'gobierno':
 
 
 <fieldset><legend>'._('Crear categoría').'</legend>
-<form action="/accion.php?a=gobierno&b=categorias&c=crear" method="post">
+<form action="'.accion_url().'a=gobierno&b=categorias&c=crear" method="post">
 <table border="0" cellspacing="3" cellpadding="0">
 <tr>
 <td>'._('Nombre').':</td>
@@ -697,7 +697,7 @@ case 'gobierno':
 
 
 	$txt .= '<fieldset>'._('Los privilegios sirven para gestionar permisos especiales del sistema. Este panel muestra los privilegios y quien los ostenta actualmente').'.</fieldset>
-<fieldset><legend>'._('Privilegios').'</legend><form action="/accion.php?a=gobierno&b=privilegios" method="POST"><table>
+<fieldset><legend>'._('Privilegios').'</legend><form action="'.accion_url().'a=gobierno&b=privilegios" method="POST"><table>
 <tr>
 <th></th>
 <th>'._('Configuración').'</th>
@@ -719,7 +719,7 @@ case 'gobierno':
 		
 		$txt .= '<fieldset>'._('Las notificaciones son mensajes eventuales enviados a cada usuario que aparecen de forma resaltada en el menú de notificaciones. Este panel permite crear notificaciones personalizadas.').'</fieldset>
 		
-<form action="/accion.php?a=gobierno&b=notificaciones&c=add" method="post">
+<form action="'.accion_url().'a=gobierno&b=notificaciones&c=add" method="post">
 
 <fieldset><legend>'._('Crear notificación (para todos los ciudadanos)').'</legend>
 
@@ -773,7 +773,7 @@ case 'gobierno':
 <td align="right"><b>'.num($r['num']).'</b></td>
 <td align="right">'.num($leido).'</td>
 <td align="right">'.num($leido*100/$r['num'], 2).'%</td>
-<td>'.(nucleo_acceso($vp['acceso']['control_gobierno'])?boton('X', '/accion.php?a=gobierno&b=notificaciones&c=borrar&noti_ID='.$r['noti_ID'], false, 'small'):boton('X', false, false, 'small')).'</td>
+<td>'.(nucleo_acceso($vp['acceso']['control_gobierno'])?boton('X', accion_url().'a=gobierno&b=notificaciones&c=borrar&noti_ID='.$r['noti_ID'], false, 'small'):boton('X', false, false, 'small')).'</td>
 </tr>';
 		}
 
@@ -783,7 +783,7 @@ case 'gobierno':
 		
 		$txt_nav[] = _('Configuración foro');
 
-		$txt .= '<form action="/accion.php?a=gobierno&b=subforo" method="post">
+		$txt .= '<form action="'.accion_url().'a=gobierno&b=subforo" method="post">
 
 <table border="0" cellspacing="0" cellpadding="4">
 
@@ -844,7 +844,7 @@ ORDER BY time ASC");
 
 <td align="right" style="color:#999;" nowrap="nowrap">'.number_format($r['num_hilos'], 0, ',', '.').' '._('hilos').'<br />
 '.number_format($r['num_msg'], 0, ',', '.').' '._('mensajes').'</td>
-<td>'.($r['num_hilos']==0?boton('Eliminar', '/accion.php?a=gobierno&b=eliminarsubforo&ID='.$r['ID'], false, 'small red'):'').'</td>
+<td>'.($r['num_hilos']==0?boton('Eliminar', accion_url().'a=gobierno&b=eliminarsubforo&ID='.$r['ID'], false, 'small red'):'').'</td>
 </tr>'."\n";
 
 		if ($subforos) { $subforos .= '.'; }
@@ -860,7 +860,7 @@ ORDER BY time ASC");
 </form>
 
 <fieldset><legend>'._('Crear nuevo foro').'</legend>
-<form action="/accion.php?a=gobierno&b=crearsubforo" method="post">
+<form action="'.accion_url().'a=gobierno&b=crearsubforo" method="post">
 <table border="0" cellspacing="3" cellpadding="0">
 <tr>
 <td>'._('Nombre').':</td>
@@ -876,7 +876,7 @@ ORDER BY time ASC");
 
 
 	$txt .= '
-<form action="/accion.php?a=gobierno&b=economia" method="post">
+<form action="'.accion_url().'a=gobierno&b=economia" method="post">
 
 <table border="0" cellspacing="3" cellpadding="0"><tr><td valign="top">
 
@@ -976,7 +976,7 @@ $(function() {
 	$defcon .= '</select>';
 
 	$txt .= '
-<form action="/accion.php?a=gobierno&b=config" method="post" enctype="multipart/form-data">
+<form action="'.accion_url().'a=gobierno&b=config" method="post" enctype="multipart/form-data">
 
 <table border="0" cellspacing="3" cellpadding="0"><tr><td valign="top">
 
@@ -1130,7 +1130,7 @@ if ($_GET['b'] == 'expulsar') { // /control/expulsiones/expulsar
 
 <p>'._('Las expulsiones son efectuadas por los Supervisores del Censo (SC), consiste en un bloqueo definitivo a un usuario y su puesta en proceso de eliminación forzada tras 5 dias, durante este periodo es reversible. Las expulsiones se aplican por incumplimiento las <a href="http://www.virtualpol.com/TOS">Condiciones de Uso</a>').'.</p>
 
-<form action="/accion.php?a=expulsar" method="post">
+<form action="'.accion_url().'a=expulsar" method="post">
 
 <ol>
 <li><b>'._('Nick').':</b> '._('usuarios a expulsar').'.<br />
@@ -1228,7 +1228,7 @@ ORDER BY expire DESC");
 	while($r = r($result)){
 		
 		if ((isset($sc[$pol['user_ID']])) AND ($r['expulsado_pais']) AND ($r['estado'] == 'expulsado')) { 
-			$expulsar = boton(_('Cancelar'), '/accion.php?a=expulsar&b=desexpulsar&ID='.$r['ID'], '&iquest;Seguro que quieres CANCELAR la EXPULSION del usuario: '.$r['tiempo'].'?', 'small red'); 
+			$expulsar = boton(_('Cancelar'), accion_url().'a=expulsar&b=desexpulsar&ID='.$r['ID'], '&iquest;Seguro que quieres CANCELAR la EXPULSION del usuario: '.$r['tiempo'].'?', 'small red'); 
 		} elseif ($r['estado'] == 'cancelado') { $expulsar = '<b style="font-weight:bold;">'._('Cancelado').'</b>'; } else { $expulsar = ''; }
 
 		if (!$r['expulsado_estado']) { $r['expulsado_estado'] = 'expulsado'; }
@@ -1283,7 +1283,7 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['c']."' LIMIT 1");
 		$txt .= '
 <p>'._('Esta acción privilegiada bloquea totalmente las acciones de un Ciudadano y los que comparten su IP').'.</p>
 
-<form action="/accion.php?a=kick" method="post">
+<form action="'.accion_url().'a=kick" method="post">
 '.($_GET['c']?'<input type="hidden" name="chat_ID" value="'.$_GET['c'].'" />':'').'
 <ol>
 <li><b>'._('Nick').':</b> '._('el ciudadano').'.<br /><input type="text" value="' . $_GET['b'] . '" name="nick" size="20" maxlength="20" required /></li>
@@ -1340,7 +1340,7 @@ FROM kicks
 WHERE pais = '".PAIS."' AND expire > '" . $margen_30dias . "' AND estado != 'expulsado'
 ORDER BY expire DESC");
 	while($r = r($result)){
-		if ((($r['autor'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['kick_quitar']))) AND ($r['estado'] == 'activo')) { $expulsar = boton('X', '/accion.php?a=kick&b=quitar&ID='.$r['ID'], '&iquest;Seguro que quieres hacer INACTIVO este kick?'); } else { $expulsar = ''; }
+		if ((($r['autor'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['kick_quitar']))) AND ($r['estado'] == 'activo')) { $expulsar = boton('X', accion_url().'a=kick&b=quitar&ID='.$r['ID'], '&iquest;Seguro que quieres hacer INACTIVO este kick?'); } else { $expulsar = ''; }
 
 		$duracion = '<acronym title="'.$r['expire'].'">' . duracion((time() + $r['tiempo']) - strtotime($r['expire'])).'</acronym>';
 
@@ -1397,7 +1397,7 @@ if ($pol['cargo'] != 9) { $disabled = ' disabled="disabled"'; }
 
 $txt .= '</table><br />
 
-<form action="/accion.php?a=sancion" method="post">
+<form action="'.accion_url().'a=sancion" method="post">
 
 <ol>
 <li><b>'._('Nick').':</b>.<br /><input type="text" value="" name="nick" size="20" maxlength="20" /><br /><br /></li>

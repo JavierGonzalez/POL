@@ -234,7 +234,7 @@ case 'bloqueos':
 
 	$backlists = array('backlist_IP'=>400, 'backlist_emails'=>180, 'backlist_nicks'=>120);
 
-	$txt .= '<form action="/accion.php?a=bloqueos" method="post">
+	$txt .= '<form action="'.accion_url().'a=bloqueos" method="post">
 
 <p>'._('Listas negras para bloquear masivamente con filtros. Un elemento por linea. Elementos de al menos 5 caracteres (para minimizar el riesgo de filtros masivos). Precaución, hay riesgo de producir bloqueos masivos').'.</p>
 <table>
@@ -648,7 +648,7 @@ function print_td($r, $count=false) {
 
 function print_nota_SC($nota_SC, $user_ID) {
 	global $pol;
-	return ($nota_SC!=''?'<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=SC&b=nota&ID='.$user_ID.'" method="post"><input type="text" name="nota_SC" size="15" maxlength="255" value="'.$nota_SC.'" style="margin:-4px 0;'.(substr($nota_SC, 0, 7)=='Cuidado'?'color:red;':'').(substr($nota_SC, 0, 12)=='Comparte con'?'color:green;':'').(substr($nota_SC, 0, 3)=='OK '?'color:blue;':'').'" /> '.boton('OK', 'submit', false, 'small pill').'</form>':'');
+	return ($nota_SC!=''?'<form action="'.accion_url($pol['pais']).'a=SC&b=nota&ID='.$user_ID.'" method="post"><input type="text" name="nota_SC" size="15" maxlength="255" value="'.$nota_SC.'" style="margin:-4px 0;'.(substr($nota_SC, 0, 7)=='Cuidado'?'color:red;':'').(substr($nota_SC, 0, 12)=='Comparte con'?'color:green;':'').(substr($nota_SC, 0, 3)=='OK '?'color:blue;':'').'" /> '.boton('OK', 'submit', false, 'small pill').'</form>':'');
 }
 
 //THEME

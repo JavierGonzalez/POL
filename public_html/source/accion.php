@@ -7,6 +7,8 @@
 ** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
 */
 
+if (isset($_GET['http_host'])) { $_SERVER['HTTP_HOST'] = $_GET['http_host']; }
+
 include('inc-login.php');
 include('inc-functions-accion.php');
 
@@ -67,6 +69,17 @@ VALUES ('".PAIS."', '".$r['api_ID']."', 'pendiente', '".$pol['user_ID']."', '".$
 
 	break;
 */ 
+
+
+case 'test': // Test de desarrollo - eliminar pronto
+	echo PAIS.' - '.$pol['pais'].'<hr />';
+	echo $pol['nick'].' - '.$pol['user_ID'].' - '.$pol['estado'].' - '.$pol['nivel'].' - '.$pol['fecha_registro'].'<hr />';
+	echo $_SESSION['pol']['nick'].' - '.$_SESSION['pol']['user_ID'].' - '.$_SESSION['pol']['estado'].' - '.$_SESSION['pol']['nivel'].'<hr />';
+	echo (nucleo_acceso('ciudadanos')?'true':'false').'<hr />';
+	echo $_SERVER['HTTP_HOST'].' - '.HOST.'<hr />';
+	echo IMG.'<hr />';
+	exit;
+	break;
 	
 case 'api':
 	if (($pol['user_ID']) AND ($_GET['b'] == 'gen_pass')) {
@@ -1418,7 +1431,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 			while($r = r($result)){ $ref_ID = $r['ID']; }
 			evento_log('Votación: borrador creado <a href="/votacion/'.$ref_ID.'">#'.$ref_ID.'</a>');
 		}
-		redirect('/votacion/borradores');
+		redirect(vp_url('/votacion/borradores'));
 
 	} elseif (($_GET['b'] == 'iniciar') AND (is_numeric($_GET['ref_ID']))) {
 		
@@ -1489,7 +1502,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 				}
 				unset($_POST['voto'], $_POST['mensaje'], $_POST['validez']);
 			}
-			redirect('http://'.strtolower($pais).'.'.DOMAIN.'/votacion/'.$_POST['ref_ID']);
+			redirect(vp_url('/votacion/'.$_POST['ref_ID'], $pais));
 
 	} elseif (($_GET['b'] == 'eliminar') AND (is_numeric($_GET['ID']))) { 
 		$result = sql("SELECT ID, user_ID, estado, tipo FROM votacion WHERE estado = 'borrador' AND ID = '".$_GET['ID']."' AND pais = '".PAIS."' LIMIT 1");
@@ -1515,7 +1528,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 		$asunto = 'Comprobante de voto: votación '.$votacion_ID;
 		$mensaje = 'Hola Ciudadano,<br /><br />Este email es para guardar tu comprobante de voto. Te permitirá comprobar el sentido de tu voto cuando la votacion finaliza y así aportar verificabilidad a la votación.<br /><br /><blockquote>Comprobante: <b>'.$_GET['comprobante'].'</b><br />Comprobar: http://'.HOST.'/votacion/'.$votacion_ID.'/verificacion#'.$_GET['comprobante'].'<br />Votación: http://'.HOST.'/votacion/'.$votacion_ID.'</blockquote><br /><br />No debes entregar a nadie esta información, de lo contrario podrían saber qué has votado.<br /><br />Atentamente.<br /><br /><br />VirtualPol - http://'.HOST;
 		enviar_email($pol['user_ID'], $asunto, $mensaje); 
-		redirect('/votacion/'.$votacion_ID);
+		redirect(vp_url('/votacion/'.$votacion_ID));
 
 	} elseif (($_GET['b'] == 'argumento') AND (is_numeric($_POST['ref_ID'])) AND (strlen($_POST['texto']) > 1)) {
 		$result = sql("SELECT * FROM votacion WHERE estado != 'end' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' LIMIT 1");
@@ -1527,11 +1540,11 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 					evento_chat('<b>[#]</b> <a href="/votacion/'.$_POST['ref_ID'].'/argumentos">Argumento añadido en votación</a>'.($_POST['sentido']?' <span class="gris">('.$_POST['sentido'].')</span>':''), '0', '', true, 'e'); 
 				}
 			}
-			redirect('/votacion/'.$r['ID'].'/argumentos');
+			redirect(vp_url('/votacion/'.$r['ID'].'/argumentos'));
 		}
 	} elseif (($_GET['b'] == 'argumento-eliminar') AND (is_numeric($_GET['ID']))) {
 		sql("DELETE FROM votacion_argumentos WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
-		redirect('/votacion/'.$_GET['ref_ID'].'/argumentos');
+		redirect(vp_url('/votacion/'.$_GET['ref_ID'].'/argumentos'));
 	}
 
 	// actualizar info en theme
@@ -2046,7 +2059,7 @@ case 'editar-documento':
 				sql("UPDATE docs SET cat_ID = '".$_POST['cat']."', text = '".$text."', title = '".$_POST['titulo']."', time_last = '".$date."', acceso_leer = '".$_POST['acceso_leer']."', acceso_escribir = '".$_POST['acceso_escribir']."', acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."', version = version + 1 WHERE ID = '".$r['ID']."' LIMIT 1");
 			}
 			if (in_array($r['acceso_leer'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))) { evento_log('Documento editado: <a href="/doc/'.$r['url'].'">'.$r['title'].'</a>'); }
-			redirect('http://'.strtolower($r['pais']).'.'.DOMAIN.'/doc/'.$r['url'].'/editar');
+			redirect(vp_url('/doc/'.$r['url'].'/editar', $r['pais']));
 		}
 	}
 	break;

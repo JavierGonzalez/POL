@@ -78,7 +78,7 @@ ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
 					$activos_nick[] = $r2['nick'];
 					$activos_last[$r2['nick']] = $r2['fecha_last'];
 					$activos[] = '<tr>
-<td>'.($asignador?'<form action="/accion.php?a=cargo&b=del&ID='.$r['cargo_ID'].'" method="post">
+<td>'.($asignador?'<form action="'.accion_url().'a=cargo&b=del&ID='.$r['cargo_ID'].'" method="post">
 <input type="hidden" name="user_ID" value="'.$r2['user_ID'].'"  />'.boton('X', 'submit', '¿Seguro que quieres QUITAR el cargo a '.strtoupper($r2['nick']).'?', 'small red').'</form>':'').'</td>
 <td align="right">'.++$activos_num.'.</td>
 <td><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" style="margin-bottom:-3px;" /> <b>'.crear_link($r2['nick']).'</b></td>
@@ -86,7 +86,7 @@ ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
 </tr>';
 				}
 				$candidatos[] = '<tr>
-<td>'.($asignador&&$r2['cargo']!='true'?'<form action="/accion.php?a=cargo&b=add&ID='.$r['cargo_ID'].'" method="POST">
+<td>'.($asignador&&$r2['cargo']!='true'?'<form action="'.accion_url().'a=cargo&b=add&ID='.$r['cargo_ID'].'" method="POST">
 <input type="hidden" name="user_ID" value="'.$r2['user_ID'].'"  />'.boton(_('Asignar'), 'submit', false, 'small blue').'</form>':'').'</td>
 <td>'.($r2['cargo']=='true'?'<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" style="margin-bottom:-3px;" />':'<img src="'.IMG.'cargos/0.gif" alt="icono" width="16" height="16" border="0" style="margin-bottom:-3px;" />').' '.crear_link($r2['nick']).'</td>
 <td align="right" class="gris">'.timer($r2['fecha_last']).'</td>
@@ -181,7 +181,7 @@ LIMIT 1", $link);
 	if ($_GET['a'] == 'editar') { 
 		$editar = true; 
 		if (nucleo_acceso($vp['acceso']['control_cargos'])) { $txt_nav[] = _('Editar cargos'); }
-		$txt .= '<form action="/accion.php?a=cargo&b=editar" method="POST">'.($_GET['b']=='elecciones'?'<input type="hidden" name="editar_elecciones" value="true" />':'');
+		$txt .= '<form action="'.accion_url().'a=cargo&b=editar" method="POST">'.($_GET['b']=='elecciones'?'<input type="hidden" name="editar_elecciones" value="true" />':'');
 	} else { $editar = false; }
 
 	if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) { $editar_examen = true; } else { $editar_examen = false; }
@@ -221,7 +221,7 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 '<a href="/cargos/'.$r['cargo_ID'].'"'.($r['nombre_extra']?' title="'.$r['nombre_extra'].'"':'').'><b style="font-size:20px;">'.$r['nombre'].'</b></a></span>'.($r['nombre_extra']!=''?'<br /><span style="font-size:12px;color:grey;margin-left:22px;">'.$r['nombre_extra'].'</span>':'').(count($cargos_nick)>0||$r['nombre_extra']?'<br /><span style="font-size:11px;margin-left:22px;">'.implode(', ', $cargos_nick).(count($cargos_nick)==10?'...':'.'):'')).'</span></td>';
 
 		if ($cargo_editar) {
-			$txt_el_td .= '<td align="right">'.($r['asigna']>0&&$r['cargo_num']==0?boton('X', '/accion.php?a=cargo&b=eliminar&cargo_ID='.$r['cargo_ID'], '¿Estás seguro de querer ELIMINAR este cargo?', 'small red').' ':'').'<select name="asigna_'.$r['cargo_ID'].'">';
+			$txt_el_td .= '<td align="right">'.($r['asigna']>0&&$r['cargo_num']==0?boton('X', accion_url().'a=cargo&b=eliminar&cargo_ID='.$r['cargo_ID'], '¿Estás seguro de querer ELIMINAR este cargo?', 'small red').' ':'').'<select name="asigna_'.$r['cargo_ID'].'">';
 			$result2 = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID != '".$r['cargo_ID']."' ORDER BY nivel DESC", $link);
 			while($r2 = mysql_fetch_array($result2)){
 				$txt_el_td .= '<option value="'.$r2['cargo_ID'].'"'.($r['asigna']==$r2['cargo_ID']?' selected="selected"':'').'>'.$r2['nombre'].'</option>';
@@ -238,9 +238,9 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 					$txt_el_td .= boton(_('Ser socio'), '/socios', false, 'orange');
 				} else {
 					if ($r['cargo'] == 'true') {
-						$txt_el_td .= boton(_('Dimitir'), '/accion.php?a=cargo&b=dimitir&ID='.$r['cargo_ID'], '¿Estás seguro de querer DIMITIR?\n\n¡ES IRREVERSIBLE!', 'red');
+						$txt_el_td .= boton(_('Dimitir'), accion_url().'a=cargo&b=dimitir&ID='.$r['cargo_ID'], '¿Estás seguro de querer DIMITIR?\n\n¡ES IRREVERSIBLE!', 'red');
 					} else if ($r['aprobado'] == 'ok') {
-						$txt_el_td .= boton(_('Repetir').' ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue').' '.boton(_('Retirar'), '/accion.php?a=examenes&b=retirar_examen&ID='.$r['cargo_ID'], false, 'red');
+						$txt_el_td .= boton(_('Repetir').' ('.$r['nota'].')', '/examenes/'.$r['examen_ID'], false, 'blue').' '.boton(_('Retirar'), accion_url().'a=examenes&b=retirar_examen&ID='.$r['cargo_ID'], false, 'red');
 					} else if ($r['aprobado'] == 'no') {
 
 						if (($r['autocargo'] == 'true') AND (nucleo_acceso('cargo', implode(' ', $cargos_automaticos)))) { 
@@ -332,7 +332,7 @@ días
 	$txt .= '</table>';
 
 	if ($editar) {
-		$txt .= '<form action="/accion.php?a=cargo&b=crear" method="POST">
+		$txt .= '<form action="'.accion_url().'a=cargo&b=crear" method="POST">
 
 <fieldset><legend>'._('Crear cargo').'</legend>
 

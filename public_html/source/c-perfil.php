@@ -47,7 +47,7 @@ while($r = r($result)){
 		if (nucleo_acceso('supervisores_censo')) { // INFO PARA SC
 			$txt .= '<tr><td>
 <div style="float:right;">
-<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=SC&b=nota&ID='.$r['ID'].'" method="post">
+<form action="'.accion_url($pol['pais']).'a=SC&b=nota&ID='.$r['ID'].'" method="post">
 <input type="text" name="nota_SC" size="25" maxlength="255" value="'.$r['nota_SC'].'" />
 '.boton(_('OK'), 'submit', false, 'pill small').'
 '.boton('&nbsp;', '/sc/filtro/user_ID/'.$r['ID'], false, 'blue small').' 
@@ -82,7 +82,7 @@ if ($user_ID == $pol['user_ID']) { //es USER
 
 
 <fieldset><legend>'._('Tu nombre').'</legend>
-<form action="/accion.php?a=perfil&b=nombre" method="post">
+<form action="'.accion_url().'a=perfil&b=nombre" method="post">
 <p>Introduce tu nombre y apellidos. No es obligatorio, pero debe ser veráz. Será visible para los ciudadanos de '.PAIS.'.<br />
 <input type="text" name="nombre" value="" size="40" maxlength="90" placeholder="'.$r['nombre'].'" required  />
  '.boton(_('Guardar'), 'submit', false, 'blue').'
@@ -158,12 +158,12 @@ if ($user_ID == $pol['user_ID']) { //es USER
 
 	} // fin ECONOMIA
 
-	$txt .= '<fieldset><legend>Clave API</legend><input class="api_box" type="text" size="12" value="'.$r['api_pass'].'" readonly="readonly" /> '.boton('Generar clave', '/accion.php?a=api&b=gen_pass', '¿Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua dejará de funcionar.', 'blue').' (Equivale a tu contraseña, mantenla en secreto. Más info: <a href="'.SSL_URL.'api.php">API</a>)</fieldset>';
+	$txt .= '<fieldset><legend>Clave API</legend><input class="api_box" type="text" size="12" value="'.$r['api_pass'].'" readonly="readonly" /> '.boton('Generar clave', accion_url().'a=api&b=gen_pass', '¿Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua dejará de funcionar.', 'blue').' (Equivale a tu contraseña, mantenla en secreto. Más info: <a href="'.SSL_URL.'api.php">API</a>)</fieldset>';
 
 
 	$txt .= '
 <fieldset><legend>'._('Biografía').'</legend>
-<form action="/accion.php?a=avatar&b=desc" method="post">
+<form action="'.accion_url().'a=avatar&b=desc" method="post">
 <p><textarea name="desc" id="desc_area" style="width:500px;height:150px;" required>'.strip_tags($r['text'], '<b>').'</textarea><br />
 '.boton(_('Guardar'), 'submit', false, 'blue').' (<span id="desc_limit" style="color:blue;">'.$text_limit.'</span> '._('caracteres').')
 </form></p>
@@ -178,7 +178,7 @@ if ($user_ID == $pol['user_ID']) { //es USER
 
 
 <fieldset><legend>'._('Tus perfiles en otras redes sociales').'</legend>
-<form action="/accion.php?a=perfil&b=datos" method="POST">
+<form action="'.accion_url().'a=perfil&b=datos" method="POST">
 <table border="0">
 <tr>
 <td colspan="2"><b>'._('Perfiles').'</b></td>
@@ -202,8 +202,8 @@ if ($user_ID == $pol['user_ID']) { //es USER
 
 
 <fieldset><legend>Avatar ('._('tu foto').')</legend>
-<form action="/accion.php?a=avatar&b=upload" method="post" enctype="multipart/form-data">
-<p><input name="avatar" type="file" required /> '.boton(_('Guardar'), 'submit', false, 'blue').' | ' . boton(_('Borrar avatar'), '/accion.php?a=avatar&b=borrar', false, 'red') . ' (jpg, max 1mb)</p>
+<form action="'.accion_url().'a=avatar&b=upload" method="post" enctype="multipart/form-data">
+<p><input name="avatar" type="file" required /> '.boton(_('Guardar'), 'submit', false, 'blue').' | ' . boton(_('Borrar avatar'), accion_url().'a=avatar&b=borrar', false, 'red') . ' (jpg, max 1mb)</p>
 </form>
 </fieldset>';
 
@@ -231,7 +231,7 @@ ORDER BY voto DESC, time ASC");
 
 
 	if (!ASAMBLEA) {
-		$txt .= '<form action="/accion.php?a=afiliarse" method="post">
+		$txt .= '<form action="'.accion_url().'a=afiliarse" method="post">
 
 	<fieldset><legend>'._('Afiliación').'</legend>
 
@@ -268,7 +268,7 @@ $txt .= '
 <tr>
 <td align="center"><h1>'.$nick.''.($r['dnie']=='true'?' <span class="icon medium" style="color:#339900;" data-icon="l" title="Autentificado"></span>':'').(isset($r['nombre'])&&nucleo_acceso('ciudadanos')?' <span style="color:#BBB;font-size:18px;">'.$r['nombre'].'</span>':'').'</h1>
 
-<span style="color:grey;font-size:22px;"><b><span'.($r['estado']!='ciudadano'?' class="'.$r['estado'].'"':'').'>'.($r['estado']=='expulsado'&&$razon==false?'Auto-eliminado':ucfirst($r['estado'])).'</span> '.($r['estado']!='expulsado'?'de '.$pol['config']['pais_des']:'').'</b></span>
+<span style="color:grey;font-size:22px;"><b><span'.($r['estado']!='ciudadano'?' class="'.$r['estado'].'"':'').'>'.($r['estado']=='expulsado'&&$razon==false?_('Auto-eliminado'):ucfirst($r['estado'])).'</span> '.($r['estado']!='expulsado'?''._('de').' '.$pol['config']['pais_des']:'').'</b></span>
 </td>
 </tr>
 
@@ -304,7 +304,7 @@ center='.$r['y'].','.$r['x'].'&amp;zoom=11&amp;size=250x120&amp;maptype=roadmap&
 <table width="100%" class="gris">
 
 <tr>
-<td align="right">Confianza:</td>
+<td align="right">'._('Confianza').':</td>
 <td>';
 
 
@@ -320,29 +320,29 @@ if ((($user_ID != $pol['user_ID']) AND ($pol['user_ID']) AND ($pol['estado'] != 
 
 	$txt .= confianza($r['voto_confianza']).' 
 <span id="data_confianza'.$user_ID.'" class="votar" type="confianza" name="'.$user_ID.'" value="'.$hay_v_c.'"></span><br />
-<span style="font-size:12px;">Emitidos <b'.($num_votos <= VOTO_CONFIANZA_MAX?'':' style="color:red;"').'>'.$num_votos.'</b> de '.VOTO_CONFIANZA_MAX.'</span>';
+<span style="font-size:12px;">'._('Emitidos').' <b'.($num_votos <= VOTO_CONFIANZA_MAX?'':' style="color:red;"').'>'.$num_votos.'</b> '._('de').' '.VOTO_CONFIANZA_MAX.'</span>';
 } else { $txt .= confianza($r['voto_confianza']); }
 
 $txt .= '</td>
 
-<td align="right" nowrap>Redes sociales:</td>
+<td align="right" nowrap>'._('Redes sociales').':</td>
 <td>';
 $datos_n = 0;
 $datos = explode('][', $r['datos']);
 foreach ($datos_perfil AS $id => $dato) {
 	if ($datos[$id] != '') { $datos_n++; $txt .= '<a href="'.$datos[$id].'" target="_blank"><img src="'.IMG.'ico/'.$id.'_32.png" width="32" height="32" alt="'.$datos.'" /></a> '; }
 }
-if ($datos_n == 0) { $txt .= '<b>Ninguna</b>'; }
+if ($datos_n == 0) { $txt .= '<b>'._('Ninguna').'</b>'; }
 $txt .= '</td>
 </tr>
 
 
 
 <tr>
-<td align="right">Último acceso:</td>
+<td align="right">'._('Último acceso').':</td>
 <td><b>'.timer($r['fecha_last']).'</b></td>
 
-<td align="right" title="Elecciones en las que ha participado: '.$r['num_elec'].'">Cargos:</td>
+<td align="right" title="Elecciones en las que ha participado: '.$r['num_elec'].'">'._('Cargos').':</td>
 <td><b>';
 $result2 = sql("SELECT cargo_ID, cargo, nota,
 (SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre,
@@ -357,25 +357,25 @@ while($r2 = r($result2)) {
 		$txt_cand[] = '<a href="/cargos/'.$r2['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r2['cargo_ID'].'.gif" width="16" height="16" alt="'.$r2['nombre'].'" title="'.$r2['nombre'].' ('.$r2['nota'].')" /></a>';
 	}
 }
-$txt .= (count($txt_cargos)>0?implode(' ', $txt_cargos):'Ninguno').'</b></td>
+$txt .= (count($txt_cargos)>0?implode(' ', $txt_cargos):_('Ninguno')).'</b></td>
 </tr>
 
 
 <tr>
-<td align="right">Tiempo online:</td>
-<td><b>'.timer(time()-$r['online'], true).'</b> <span title="'.num($r['paginas']).' páginas vistas">('.num($r['visitas']).' visitas)</span></td>
+<td align="right">'._('Tiempo online').':</td>
+<td><b>'.timer(time()-$r['online'], true).'</b> <span title="'.num($r['paginas']).' páginas vistas">('.num($r['visitas']).' '._('visitas').')</span></td>
 
-<td align="right" title="Nota media: '.$r['nota'].'">Candidaturas:</td>
-<td><b>'.(count($txt_cand)>0?implode(' ', $txt_cand):'Ninguna').'</b></td>
+<td align="right" title="Nota media: '.$r['nota'].'">'._('Candidaturas').':</td>
+<td><b>'.(count($txt_cand)>0?implode(' ', $txt_cand):_('Ninguna')).'</b></td>
 </tr>
 
 
 
 <tr>
-<td align="right">Registrado hace:</td>
+<td align="right">'._('Registrado').' '._('hace').':</td>
 <td><b>'.timer($r['fecha_registro']).'</b></td>
 
-<td align="right" title="Expiración por inactividad">Expiración:</td>
+<td align="right" title="Expiración por inactividad">'._('Expiración').':</td>
 <td><b>';
 
 
@@ -390,11 +390,11 @@ Excepciones:
 * Veteranos (más de 2 años de antiguedad)
 */
 
-if ($r['fecha_registro'] < tiempo(365*2)) {  $txt .= 'Vitalicio (veterano)'; } 
-elseif ($r['dnie'] == 'true') { $txt .= 'Vitalicio (autentificado)'; }
-elseif ($r['socio'] == 'true') { $txt .= 'Vitalicio (asociado)'; }
-elseif ($r['donacion'] > 0) { $txt .= 'Vitalicio (donante)'; }
-else { $txt .= 'En 60 días'; }
+if ($r['fecha_registro'] < tiempo(365*2)) {  $txt .= _('Vitalicio').' ('._('veterano').')'; } 
+elseif ($r['dnie'] == 'true') { $txt .= _('Vitalicio').' ('._('autentificado').')'; }
+elseif ($r['socio'] == 'true') { $txt .= _('Vitalicio').' ('._('asociado').')'; }
+elseif ($r['donacion'] > 0) { $txt .= _('Vitalicio').' ('._('donante').')'; }
+else { $txt .= _('En').' '.num(60-((time()-strtotime($r['fecha_last']))/60/60/24)).' '._('días'); }
 
 
 
@@ -405,8 +405,8 @@ $txt .= '</b></td>
 
 
 <tr>
-<td align="right">Foro:</td>
-<td><a href="/foro/mis-respuestas/'.$r['nick'].'"><b>'.num($r['num_hilos']).' hilos / '.num($r['num_msg']).' mensajes</b></a></td>
+<td align="right">'._('Foro').':</td>
+<td><a href="/foro/mis-respuestas/'.$r['nick'].'"><b>'.num($r['num_hilos']).' '._('hilos').' / '.num($r['num_msg']).' '._('mensajes').'</b></a></td>
 
 <td align="right">'._('Grupos').':</td>
 <td><b>';
@@ -415,7 +415,7 @@ if ($r['grupos']) {
 	$result2 = sql("SELECT nombre FROM grupos WHERE grupo_ID IN (".str_replace(' ', ',', $r['grupos']).")");
 	while ($r2 = r($result2)) { $txt_grupos[] = '<a href="/grupos">'.$r2['nombre'].'</a>'; }
 }
-$txt .= (count($txt_grupos)>0?implode(' ', $txt_grupos):'Ninguno').'</b></td>
+$txt .= (count($txt_grupos)>0?implode(' ', $txt_grupos):_('Ninguno')).'</b></td>
 </tr>
 
 <tr>
@@ -426,7 +426,7 @@ $txt .= (count($txt_grupos)>0?implode(' ', $txt_grupos):'Ninguno').'</b></td>
 
 </table>
 
-'.($r['text']!=''?'<fieldset><legend>'._('Biografía').'</legend><p>'.$r['text'].'</p></fieldset>':'').'
+'.($r['text']!=''&&nucleo_acceso('ciudadanos_global')?'<fieldset><legend>'._('Biografía').'</legend><p>'.$r['text'].'</p></fieldset>':'').'
 
 
 

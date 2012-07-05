@@ -59,32 +59,35 @@ $vp['paises'] = array('15M', 'Hispania', 'MIC', 'JRO', 'MCxVBC', 'ETSIIT', 'Occu
 if ($pais == 'www') {
 	define('PAIS', 'Ninguno');
 } elseif (!defined('PAIS')) {
-	redirect('http://www.virtualpol.com');
+	//redirect('http://www.virtualpol.com');
 }
 
 
 // CONFIG
+define('PROYECTO', 'VirtualPol');
+define('PROYECTO_ESLOGAN', 'La primera red social democrática');
 define('DOMAIN', 'virtualpol.com');
-define('SQL', strtolower(PAIS).'_');
 define('CONTACTO_EMAIL', 'desarrollo@virtualpol.com');
+
+define('SQL', strtolower(PAIS).'_');
 define('USERCOOKIE', '.'.DOMAIN);
 define('HOST', $_SERVER['HTTP_HOST']);
 define('VOTO_CONFIANZA_MAX', 50); // Máximo de votos de confianza emitibles
 define('MP_MAX', 25); // Máximo de MP (mensajes privados) que puede enviar un ciudadano
-define('VER', 7); // Version de archivos estaticos. Util para forzar el refresco de js y css. Incrementar.
+define('VER', 10); // Version de archivos estaticos. Util para forzar el refresco de js y css. Incrementar.
 $datos_perfil = array('Blog', 'Twitter', 'Facebook', 'Google+', '', 'Menéame');
 $columnas = 14; $filas = 14; // Dimensiones mapa
 
 
-// URLS (SSL, IMG, REGISTRAR)
-define('REGISTRAR', 'https://www.'.DOMAIN.'/registrar/');
+// URLS
+define('REGISTRAR', 'https://www.'.DOMAIN.'/registrar/'); // Zona de registro y opciones de usuario
 define('SSL_URL', 'https://www.'.DOMAIN.'/'); // SSL_URL | http://www.virtualpol.com/ = https://www.virtualpol.com/
 
 if ($_SERVER['HTTPS']) {
-	define('IMG', 'https://www.'.DOMAIN.'/img/');
+	define('IMG', 'https://www.'.DOMAIN.'/img/'); // Archivos estaticos bajo https
 } else {
-	define('IMG', 'http://www.'.DOMAIN.'/img/');;
+	define('IMG', 'http://www.'.DOMAIN.'/img/'); // Archivos estaticos
 }
 
-define('MONEDA', '<img src="'.IMG.'varios/m.gif" />');
+define('MONEDA', '<img src="'.IMG.'varios/m.gif" />'); 
 ?>

@@ -1,6 +1,6 @@
 <?php
 /* The source code packaged with this file is Free Software, Copyright (C) 2008 by
-** Javier Gonz�lez Gonz�lez <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
+** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
 ** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
 ** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
 ** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
@@ -8,7 +8,7 @@
 */
 
 
-/* Este script unifica y comprime (minified) archivos js y css por optimizaci�n. */
+/* Este script unifica y comprime (minified) archivos js y css por optimización. */
 
 $root_dir = str_replace('source/cron', '', dirname(__FILE__));
 include_once($root_dir.'source/inc-functions.php');
@@ -82,12 +82,13 @@ $txt_js .= compress_file('lib/kickstart/js/kickstart.js', 'js');
 $txt_js .= compress_file('scripts2.js', 'js');
 
 
-// Variable JS para internacionalizaci�n
+// Variable JS para internacionalización
 $txt_js .= '_ = {';
-foreach (array('meses','d�as','horas','minutos','min','seg','Pocos segundos','Segundos','En','Hace') AS $d) { 
-	$txt_js .= '"'.$d.'":"'._($d).'",'; 
+foreach (array('Ahora', 'ahora', 'años', 'meses','días','horas','minutos','min','seg','Pocos segundos','Segundos','En','Hace') AS $d) { 
+	$txt_js .= '"'.$d.'":"'._($d).'",';
 }
 $txt_js .= '};';
+$txt_js .= 'ACCION_URL = "'.accion_url().'";';
 
 file_put_contents($root_dir.'img/scripts_all.js', $txt_js);
 echo '</table>';
@@ -102,8 +103,8 @@ function indexar_i18n() {
 	// Funcion inutil, cuyo unico fin es indexar textos del sistema en el sistema gettext de i18n
 	
 	// tipos votacion
-	$null = _('sondeo')._('referendum')._('parlamento')._('cargo')._('elecciones')._('votaci�n');
-	$null = _('Sondeo')._('Referendum')._('Parlamento')._('Cargo')._('Elecciones')._('Votaci�n');
+	$null = _('sondeo')._('referendum')._('parlamento')._('cargo')._('elecciones')._('votación');
+	$null = _('Sondeo')._('Referendum')._('Parlamento')._('Cargo')._('Elecciones')._('Votación');
 	
 	// Tipos nucleo acceso
 	$null = _('Privado') . _('Excluir')._('Afiliado')._('Confianza')._('Cargo')._('Grupos') . _('Nivel')._('Antiguedad')._('Autentificacion')._('Supervisores censo')._('Ciudadanos') . _('Ciudadanos global')._('Anonimos');
@@ -112,7 +113,7 @@ function indexar_i18n() {
 	$null = _('ok')._('end')._('del')._('borrador');
 	
 	// Tiempos
-	$null = _('a�os')._('meses')._('semanas')._('d�as')._('horas')._('minutos')._('segundos')._('Pocos segundos')._('Segundos');
+	$null = _('años')._('meses')._('semanas')._('días')._('horas')._('minutos')._('segundos')._('Pocos segundos')._('Segundos');
 
 	// Otros
 	$null = _('puntos')._('estandar')._('multiple')._('ninguno') . _('turista')._('extranjero')._('ciudadano')._('expulsado')._('validar')._('borrado')._('activo') . _('inactivo')._('cancelado')._('cancelar')._('En')._('Hace')._('min')._('seg');

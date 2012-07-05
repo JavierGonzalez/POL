@@ -285,6 +285,7 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 	}
 }
 
+function accion_url($pais=false) { return SSL_URL.'source/accion.php?http_host='.($pais==false?HOST:strtolower($pais).'.'.DOMAIN).'&'; }
 function vp_url($path='/', $pais=PAIS) { return 'http://'.strtolower($pais).'.'.DOMAIN.$path; }
 function error($txt='Acción no permitida o erronea') { redirect('http://'.HOST.'/?error='.base64_encode($txt)); }
 function num($num, $dec=0) { return number_format(round($num, $dec), $dec, ',', '.'); }

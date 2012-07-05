@@ -16,7 +16,7 @@ while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 if (($_GET['a'] == 'configurar') AND (nucleo_acceso($vp['acceso']['control_socios']))) {
 	// Configuracion del panel de socios
 
-	$txt .= '<form action="/accion.php?a=socios&b=configurar" method="POST">
+	$txt .= '<form action="'.accion_url().'a=socios&b=configurar" method="POST">
 
 <fieldset><legend>Configurar</legend>
 
@@ -97,7 +97,7 @@ $txt .= '</select>
 	$result = sql("SELECT *, (SELECT nick FROM users WHERE ID = socios.user_ID LIMIT 1) AS nick FROM socios WHERE pais = '".PAIS."'".($socios?" AND estado = 'socio'":" AND estado != 'socio'")." LIMIT 10");
 	while($r = r($result)) { 
 		$txt .= '<tr>
-<td nowrap>'.($socios?boton('Rescindir', '/accion.php?a=socios&b=rescindir&ID='.$r['ID'], '¿Estás seguro de querer EXPULSAR a este socio?', 'small red'):boton('Rechazar', '/accion.php?a=socios&b=rescindir&ID='.$r['ID'], '¿Estás seguro de querer ELIMINAR esta inscripción?', 'small red').' '.boton('Aprobar', '/accion.php?a=socios&b=aprobar&ID='.$r['ID'], false, 'small blue')).'</td>
+<td nowrap>'.($socios?boton('Rescindir', accion_url().'a=socios&b=rescindir&ID='.$r['ID'], '¿Estás seguro de querer EXPULSAR a este socio?', 'small red'):boton('Rechazar', accion_url().'a=socios&b=rescindir&ID='.$r['ID'], '¿Estás seguro de querer ELIMINAR esta inscripción?', 'small red').' '.boton('Aprobar', accion_url().'a=socios&b=aprobar&ID='.$r['ID'], false, 'small blue')).'</td>
 <td>'.$r['pais'].$r['socio_ID'].'</td>
 <td>'.crear_link($r['nick']).'</td>
 <td nowrap>'.$r['nombre'].'</td>
@@ -120,19 +120,19 @@ $txt .= '</select>
 	if (nucleo_acceso('socios')) {
 		// Eres socio correctamente. Info basica. Botones para eliminar.
 		
-		$txt .= '<p>Eres socio. Tu numero de asociado es: <b>'.$socio_numero.'</b></p><hr /><p>'.boton('Darse de baja de socio y eliminar datos asociados', '/accion.php?a=socios&b=cancelar', '¿Estás seguro de querer DARTE DE BAJA como socio?', 'red').'</p>';
+		$txt .= '<p>Eres socio. Tu numero de asociado es: <b>'.$socio_numero.'</b></p><hr /><p>'.boton('Darse de baja de socio y eliminar datos asociados', accion_url().'a=socios&b=cancelar', '¿Estás seguro de querer DARTE DE BAJA como socio?', 'red').'</p>';
 
 	} elseif (nucleo_acceso('ciudadanos')) {
 		// Formulario para ser socio
 
 		if ($es_socio) {
-			$txt .= '<p>¡Correcto! Tu inscripción de socio está en cola de aprobación.</p><hr /><p>'.boton('Cancelar inscripción y eliminar datos asociados', '/accion.php?a=socios&b=cancelar', false, 'red').'</p>';
+			$txt .= '<p>¡Correcto! Tu inscripción de socio está en cola de aprobación.</p><hr /><p>'.boton('Cancelar inscripción y eliminar datos asociados', accion_url().'a=socios&b=cancelar', false, 'red').'</p>';
 
 		} elseif ($pol['config']['socios_estado'] == 'true') {
 			$result = sql("SELECT email, nombre FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 			while($r = r($result)) { $email = $r['email']; $nombre = $r['nombre']; }
 
-			$txt .= '<form action="/accion.php?a=socios&b=inscribirse" method="POST">
+			$txt .= '<form action="'.accion_url().'a=socios&b=inscribirse" method="POST">
 
 <fieldset><legend>Inscripción de socio de '.PAIS.'</legend>
 

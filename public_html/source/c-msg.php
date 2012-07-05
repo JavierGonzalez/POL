@@ -52,7 +52,7 @@ LIMIT 50", $link);
 
 <br />
 
-<div><button onclick="$(\'#box_msg\').toggle(\'slow\');">'._('Escribir mensaje').'</button> &nbsp; <span class="gris">'._('Tienes').' <b>'.$pol['msg'].'</b> '._('mensajes sin leer').'</span> '.boton(_('Marcar todo como leído'), '/accion.php?a=mensaje-leido&ID=all', false, 'small pill').'</div>';
+<div><button onclick="$(\'#box_msg\').toggle(\'slow\');">'._('Escribir mensaje').'</button> &nbsp; <span class="gris">'._('Tienes').' <b>'.$pol['msg'].'</b> '._('mensajes sin leer').'</span> '.boton(_('Marcar todo como leído'), accion_url().'a=mensaje-leido&ID=all', false, 'small pill').'</div>';
 
 
 
@@ -131,7 +131,7 @@ function click_form(tipo) {
 	$txt .= '
 <div id="box_msg"'.$ocultar_formulario.'>
 
-<form action="/accion.php?a=enviar-mensaje" method="post">
+<form action="'.accion_url().'a=enviar-mensaje" method="post">
 
 <p><b>'._('Destino').':</b><table border="0" style="margin-top:-15px;">
 <tr onclick="click_form(\'ciudadano\');">
@@ -192,7 +192,7 @@ ORDER BY leido ASC, time DESC
 LIMIT 100", $link);
 	while($r = mysql_fetch_array($result)){
 		if ($r['leido'] == 0) {
-			$boton = '<input type="checkbox" name="option2" onClick="window.location.href=\'/accion.php?a=mensaje-leido&ID=' . $r['ID'] . '\';"  checked />';
+			$boton = '<input type="checkbox" name="option2" onClick="window.location.href=\''.accion_url().'a=mensaje-leido&ID=' . $r['ID'] . '\';"  checked />';
 			$fondo = ' style="background:#FFFFCC;"';
 			
 		} else {
@@ -208,7 +208,7 @@ LIMIT 100", $link);
 <td valign="top" align="right" nowrap="nowrap"><b>'.crear_link($r['nick_envia']).'</b>'.$cargo.'<br /><acronym title="'.$r['time'].'" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td>
 <td valign="top" class="rich">'.$r['text'].'</td>
 <td valign="top"><button onclick="$(\'#ciudadano\').val(\''.$r['nick_envia'].'\');$(\'#box_msg\').toggle(\'slow\');">'._('Responder').'</button></td>
-<td valign="top">'.boton('X', '/accion.php?a=borrar-mensaje&ID='.$r['ID'], false, 'small red').'</td>
+<td valign="top">'.boton('X', accion_url().'a=borrar-mensaje&ID='.$r['ID'], false, 'small red').'</td>
 </tr>'."\n";
 	}
 

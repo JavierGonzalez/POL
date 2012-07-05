@@ -60,7 +60,7 @@ LIMIT 1", $link);
 		$txt .= '
 <h2>'._('Añadir pregunta').':</h2>
 <div id="edit">
-<form action="/accion.php?a=examenes&b=nueva-pregunta&ID='.$_GET['b'].'" method="post">
+<form action="'.accion_url().'a=examenes&b=nueva-pregunta&ID='.$_GET['b'].'" method="post">
 <ol>
 <li><b>'._('Pregunta').':</b> ('._('máximo').' 200 '._('caracteres').')<b><br />
 &iquest;<input type="text" name="pregunta" autocomplete="off" size="50" maxlength="200" />?</b></li>
@@ -94,7 +94,7 @@ ORDER BY time DESC", $link);
 				$respuestas .= '<option value="' . $ID . '">' . $respuesta . '</option>';
 			}
 
-			if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR ((nucleo_acceso($vp['acceso']['examenes_profesor'])) AND ($r2['user_ID'] == $pol['user_ID']))) { $boton = boton('x', '/accion.php?a=examenes&b=eliminar-pregunta&ID=' . $r2['ID'] . '&re_ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta pregunta y sus respuestas?', 'small red'); } else { $boton = ''; }
+			if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR ((nucleo_acceso($vp['acceso']['examenes_profesor'])) AND ($r2['user_ID'] == $pol['user_ID']))) { $boton = boton('x', accion_url().'a=examenes&b=eliminar-pregunta&ID=' . $r2['ID'] . '&re_ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta pregunta y sus respuestas?', 'small red'); } else { $boton = ''; }
 
 			$txt .= '<li>¿'.$r2['pregunta'].'? &nbsp; ('.$r2['tiempo'].' seg)<br /><select name="p" style="width:60px;"><option value=""></option>'.$respuestas.'</select> '.$boton.' '.crear_link($r2['nick']).'</li>';
 		}
@@ -106,7 +106,7 @@ ORDER BY time DESC", $link);
 			if (substr($r['cargo_ID'], 0, 1) != '-') { $readonly = ' readonly="readonly"'; } else { $readonly = ''; }
 			$txt .= '<hr />
 <h2>'._('Editar examen').':</h2>
-<form action="/accion.php?a=examenes&b=editar-examen&ID=' . $r['ID'] . '" method="post">
+<form action="'.accion_url().'a=examenes&b=editar-examen&ID=' . $r['ID'] . '" method="post">
 <ol>
 
 <li><b>'._('Titulo del examen').':</b> <input type="text" name="titulo" size="15" maxlength="30" value="' . $r['titulo'] . '"' . $readonly . ' /></li>
@@ -128,7 +128,7 @@ FROM examenes WHERE pais = '".PAIS."' AND ID = '" . $_GET['b'] . "' LIMIT 1", $l
 				while($r3 = mysql_fetch_array($result3)){ 
 					if ($r3['num_depreguntas'] == 0) {
 						$txt .='<hr />
-<form action="/accion.php?a=examenes&b=eliminar-examen" method="post">
+<form action="'.accion_url().'a=examenes&b=eliminar-examen" method="post">
 <input type="hidden" name="ID" value="' . $r['ID'] . '" /> 
 <input type="submit" value="'._('Eliminar examen').'"/>
 </form>';
@@ -175,7 +175,7 @@ ORDER BY aprobado ASC, nota DESC", $link);
 		if ($r['aprobado'] == 'ok') { $sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = ''; }
 		if ($r['cargo'] == 'true') { $cargo = '('._('Cargo ejercido').')'; } else { $cargo = ''; }
 		if (($r['cargo_ID'] <= 0) AND (time()-strtotime($r['time']) > $pol['config']['examen_repe']*6)) {
-			$caducar_examen = ' <form action="/accion.php?a=examenes&b=caducar_examen&ID='.$r['cargo_ID'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="X"  onclick="if (!confirm(\'&iquest;Seguro que quieres que CADUQUE el examen de ' . $r['nombre_examen'] . '?\')) { return false; }"/></form>';
+			$caducar_examen = ' <form action="'.accion_url().'a=examenes&b=caducar_examen&ID='.$r['cargo_ID'].'" method="POST"><input type="hidden" name="pais" value="'.$pol['pais'].'" /><input type="submit" value="X"  onclick="if (!confirm(\'&iquest;Seguro que quieres que CADUQUE el examen de ' . $r['nombre_examen'] . '?\')) { return false; }"/></form>';
 		} else { $caducar_examen = ''; }
 		$txt .= '<tr><td>' . $sello . '</td><td align="right"><b style="color:grey;">' . $r['nota'] . '</b></td><td><a href="/examenes/' . $r['examen_ID'] . '"><b>' . $r['nombre_examen'] . '</b></a></td><td>' . $cargo . '</td><td align="right"><acronym title="' . $r['time'] . '">' . duracion(time() - strtotime($r['time'])) .  '</acronym></td><td><b>'. $caducar_examen .'</b></td></tr>';
 	}
@@ -186,7 +186,7 @@ ORDER BY aprobado ASC, nota DESC", $link);
 } elseif (($_GET['a'] == 'crear') AND ($pol['estado'] == 'ciudadano')) { 	// CREAR NUEVA
 	$txt .= '<h1><a href="/examenes/">Examenes</a>: '._('Crear examen').'</h1>
 
-<form action="/accion.php?a=examenes&b=crear" method="post">
+<form action="'.accion_url().'a=examenes&b=crear" method="post">
 
 <ol>
 
@@ -248,7 +248,7 @@ VALUES ('" . $r['cargo_ID'] . "', '".PAIS."', '" . $pol['user_ID'] . "', '" . $d
 
 
 <div id="examen">
-<form action="/accion.php?a=examenes&b=examinar&ID='.$_GET['b'].'" method="post" id="elexamen">
+<form action="'.accion_url().'a=examenes&b=examinar&ID='.$_GET['b'].'" method="post" id="elexamen">
 <ol>';
 
 

@@ -148,7 +148,7 @@ function hace(cuando, ts, num, pre) {
 		if ((nm < num) && ((tiempo_cont >= (sec*2)) || (n == 4))) {
 			period = Math.floor(tiempo_cont / sec);
 			if (n == 4) { 
-				duracion += _["Pocos segundos"];
+				duracion += _["Segundos"];
 			} else {
 				duracion += period + " " + periods_txt[n];
 			}

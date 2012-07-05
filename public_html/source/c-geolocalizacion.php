@@ -100,7 +100,7 @@ function roundNumber(num, dec) {
 
 <div id="map" style="width:100%;height:400px"></div>
 
-<form action="/accion.php?a=geolocalizacion&b=add" method="POST">
+<form action="'.accion_url().'a=geolocalizacion&b=add" method="POST">
 
 <table border="0" width="100%">
 <tr>
@@ -115,7 +115,7 @@ function roundNumber(num, dec) {
 <td>'._('Marca tu lugar haciendo clic. La información será pública').'.<br />
 '._('Por privacidad la precisión guardada es de solo 1.112 metros a la redonda').'.</td>
 
-<td align="right">'.boton(_('Eliminar tu geolocalización'), '/accion.php?a=geolocalizacion&b=del', _('¿Estás seguro de querer borrar tu geolocalización de forma permanente?\n\nDebes saber que -para proteger la privacidad- la precisión guardada es de 1112 metros a la redonda, aleatoriamente.'), 'red small').'</td>
+<td align="right">'.boton(_('Eliminar tu geolocalización'), accion_url().'a=geolocalizacion&b=del', _('¿Estás seguro de querer borrar tu geolocalización de forma permanente?\n\nDebes saber que -para proteger la privacidad- la precisión guardada es de 1112 metros a la redonda, aleatoriamente.'), 'red small').'</td>
 
 </tr>
 </table>

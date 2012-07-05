@@ -137,11 +137,58 @@ while($r = r($result)) {
 <td align="right">'.num($r['kicks_num']).'</td>
 
 </tr>';
-	
-	$poblacion_num += $r['num'];
+
+	// Totalizadores
+	$total['num'] += $r['num'];
+
+	$total['c_hoy'] += $r['num']-$d['ciudadanos'][0];
+	$total['c_1d'] += $d['ciudadanos'][0]-$d['ciudadanos'][1];
+	$total['c_7d'] += $d['ciudadanos'][0]-$d['ciudadanos'][7];
+	$total['c_30d'] += $d['ciudadanos'][0]-$d['ciudadanos'][30];
+
+
+	$total['a_1d'] += $r['a_1d'];
+	$total['a_7d'] += $r['a_7d'];
+	$total['a_30d'] += $r['a_30d'];
+
+
+	$total['v_votantes'] += $r['v_votantes'];
+	$total['v_votos'] += $r['v_votos'];
+	$total['v_encurso'] += $r['v_encurso'];
+
+	$total['geo'] += $r['geo'];
+	$total['SC_num'] += $r['SC_num'];
+	$total['kicks_num'] += $r['kicks_num'];
+
 }
 
-$txt .= '</table>
+$txt .= '
+<tr>
+<td></td>
+<td align="right"><b>VirtualPol</b></td>
+<td align="right"><b>'.num($total['num']).'</b></td>
+
+<td align="right">'.confianza($total['c_hoy']).'</td>
+<td align="right">'.confianza($total['c_1d']).'</td>
+<td align="right">'.confianza($total['c_7d']).'</td>
+<td align="right">'.confianza($total['c_30d']).'</td>
+
+<td align="right">'.num($total['a_1d']).'</td>
+<td align="right"><b>'.num($total['a_7d']).'</b></td>
+<td align="right">'.num($total['a_30d']).'</td>
+
+<td align="right">'.num($total['v_votantes']).'</td>
+<td align="right">'.num($total['v_votos']).'</td>
+<td align="right"><b>'.num($total['v_encurso']).'</b></td>
+
+<td align="right">'.num($total['geo']).'</td>
+<td align="right">'.num($total['SC_num']).'</td>
+<td align="right">'.num($total['kicks_num']).'</td>
+
+<td align="right"></td>
+</tr>
+
+</table>
 
 </fieldset>';
 

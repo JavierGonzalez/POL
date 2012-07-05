@@ -158,7 +158,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 	$sel['acceso_votar'][$edit['acceso_votar']] = ' selected="selected"';
 	$sel['acceso_ver'][$edit['acceso_ver']] = ' selected="selected"';
 
-	$txt .= '<form action="http://'.strtolower(PAIS).'.'.DOMAIN.'/accion.php?a=votacion&b=crear" method="post">
+	$txt .= '<form action="'.accion_url().'a=votacion&b=crear" method="post">
 
 '.(isset($edit['ID'])?'<input type="hidden" name="ref_ID" value="'.$_GET['b'].'" />':'').'
 
@@ -390,8 +390,8 @@ LIMIT 500");
 	while($r = r($result)) {
 
 		if (nucleo_acceso($vp['acceso'][$r['tipo']])) {
-			$boton_borrar = boton('X', '/accion.php?a=votacion&b=eliminar&ID='.$r['ID'], '¿Estás seguro de querer ELIMINAR este borrador de votación?', 'small');
-			$boton_iniciar = boton(_('Iniciar'), '/accion.php?a=votacion&b=iniciar&ref_ID='.$r['ID'], '¿Estás seguro de querer INICIAR esta votación?', 'small');
+			$boton_borrar = boton('X', accion_url().'a=votacion&b=eliminar&ID='.$r['ID'], '¿Estás seguro de querer ELIMINAR este borrador de votación?', 'small');
+			$boton_iniciar = boton(_('Iniciar'), accion_url().'a=votacion&b=iniciar&ref_ID='.$r['ID'], '¿Estás seguro de querer INICIAR esta votación?', 'small');
 		} else {
 			$boton_borrar = boton('X', false, false, 'small');
 			$boton_iniciar = boton(_('Iniciar'), false, false, 'small');
@@ -502,7 +502,7 @@ LIMIT 250");
 <td class="rich"'.($r2['votos']>=0?' style="color:#000;"':'').'>'.$r2['texto'].'</td>
 <td nowrap class="gris">'.$r2['sentido'].'</td>
 <td nowrap align="right" class="gris">'.timer($r2['time']).'</td>
-<td>'.($r2['user_ID']==$pol['user_ID']?boton('X', '/accion.php?a=votacion&b=argumento-eliminar&ID='.$r2['ID'].'&ref_ID='.$r2['ref_ID'], '¿Seguro que quieres ELIMINAR tu argumento?', 'red small'):'').'</td>
+<td>'.($r2['user_ID']==$pol['user_ID']?boton('X', accion_url().'a=votacion&b=argumento-eliminar&ID='.$r2['ID'].'&ref_ID='.$r2['ref_ID'], '¿Seguro que quieres ELIMINAR tu argumento?', 'red small'):'').'</td>
 </tr>';
 					if ($r2['votos'] < $votos_mosotrar) { $argumentos_ocultos++; }
 				}
@@ -521,7 +521,7 @@ LIMIT 250");
 </ul>
 </blockquote>
 
-<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=votacion&b=argumento" method="POST">
+<form action="'.accion_url($pol['pais']).'a=votacion&b=argumento" method="POST">
 <input type="hidden" name="ref_ID" value="'.$r['ID'].'"  />
 
 <p>Tipo de argumento: 
@@ -944,7 +944,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 				$txt .= '<fieldset><legend>'._('Votar').'</legend>
 '.($pol['config']['info_consultas']>0&&$r['ha_votado']?'<p>'.boton(_('Siguiente votación').'</p>', '/votacion/next', false, 'orange large').'</p>':'').'
-<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=votacion&b=votar" method="post">
+<form action="'.accion_url($pol['pais']).'a=votacion&b=votar" method="post">
 <input type="hidden" name="ref_ID" value="'.$r['ID'].'"  />
 <p>';
 
@@ -1055,7 +1055,7 @@ function radio_check(value) {
 </form>
 
 '.($r['ha_votado']?'<p style="margin-top:30px;text-align:right;">'._('Comprobante de voto').':<br />
-'.boton(_('Enviar al email'), '/accion.php?a=votacion&b=enviar_comprobante&comprobante='.$r['ID'].'-'.$r['comprobante'], false, 'pill small').' <input type="text" value="'.$r['ID'].'-'.$r['comprobante'].'" size="48" readonly="readonly" style="color:#AAA;" /></p>':'').'</fieldset>';
+'.boton(_('Enviar al email'), accion_url().'a=votacion&b=enviar_comprobante&comprobante='.$r['ID'].'-'.$r['comprobante'], false, 'pill small').' <input type="text" value="'.$r['ID'].'-'.$r['comprobante'].'" size="48" readonly="readonly" style="color:#AAA;" /></p>':'').'</fieldset>';
 
 			}
 
@@ -1127,7 +1127,7 @@ LIMIT 500");
 <td align="right" title="'._('Participación').': '.($r['num_censo']==0?0:num($r['num']*100/$r['num_censo'], 2)).'% ('.num($r['num_censo']).')"><b>'.num($r['num']).'</b></td>
 <td>'.$votar.($r['cargo_ID']?'<a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /></a> ':'').'<a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').(!in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap" class="gris" align="right">'.timer($r['time_expire']).'</td>
-<td nowrap="nowrap">'.($r['user_ID']==$pol['user_ID']&&$r['estado']=='ok'?boton('Cancelar', '/accion.php?a=votacion&b=finalizar&ID='.$r['ID'], '¿Seguro que quieres CANCELAR esta votacion y convertirla en un BORRADOR?', 'small red'):'').'</td>
+<td nowrap="nowrap">'.($r['user_ID']==$pol['user_ID']&&$r['estado']=='ok'?boton('Cancelar', accion_url().'a=votacion&b=finalizar&ID='.$r['ID'], '¿Seguro que quieres CANCELAR esta votacion y convertirla en un BORRADOR?', 'small red'):'').'</td>
 <td>'.gbarra(round((time()-$time)*100)/($time_expire-$time)).'</td>
 <td align="right">'.($r['argumentos_num']>0?'<a href="/votacion/'.$r['ID'].'/argumentos"><b>'.num($r['argumentos_num']).'</b></a>':'').'</td>
 </tr>';

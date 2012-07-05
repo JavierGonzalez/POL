@@ -17,7 +17,7 @@ case 'crear':
 	$txt_nav = array('/grupos'=>_('Grupos'), _('Crear grupo'));
 	$txt_tab = array('/grupos'=>_('Ver grupos'), '/grupos/crear'=>_('Crear grupo'));
 
-	$txt .= '<form action="/accion.php?a=grupos&b=crear" method="POST">
+	$txt .= '<form action="'.accion_url().'a=grupos&b=crear" method="POST">
 
 <p>'._('Nombre').': <input type="text" name="nombre" size="20" maxlength="40" /> <input type="submit" value="'._('Crear grupo').'"'.(nucleo_acceso($vp['acceso']['control_grupos'])?'':' disabled="disabled"').' /> ('._('Pueden crear grupos').': '.verbalizar_acceso($vp['acceso']['control_grupos']).')
 
@@ -31,7 +31,7 @@ default:
 
 	$txt .= '<p>'._('Afiliandote a grupos podrás acceder a sus foros, documentos, chats y votaciones. Puedes afiliarte a múltiples grupos').'.</p>
 
-<form action="/accion.php?a=grupos&b=afiliarse" method="POST">
+<form action="'.accion_url().'a=grupos&b=afiliarse" method="POST">
 
 <fieldset><legend>'._('Grupos').'</legend>
 
@@ -63,7 +63,7 @@ default:
 <td align="right" style="font-size:18px;color:#777;" title="AFILIADOS: '.(is_array($users_array[$r['grupo_ID']])?implode(' ', $users_array[$r['grupo_ID']]):'').'"><b>'.$r['num'].'</b> (<span class="punteado">'._('Ver').'</span>)</td>
 <td>'.(is_array($foros_array[$r['grupo_ID']])?implode(' ', $foros_array[$r['grupo_ID']]):'').'</td>
 <td width="100" align="right" style="color:#888;">'.$r['grupo_ID'].'</td>
-<td>'.(nucleo_acceso($vp['acceso']['control_grupos'])?boton(_('Eliminar'), '/accion.php?a=grupos&b=eliminar&grupo_ID='.$r['grupo_ID'], false, 'red'):'').'</td>
+<td>'.(nucleo_acceso($vp['acceso']['control_grupos'])?boton(_('Eliminar'), accion_url().'a=grupos&b=eliminar&grupo_ID='.$r['grupo_ID'], false, 'red'):'').'</td>
 </tr>';
 	}
 

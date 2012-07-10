@@ -248,7 +248,7 @@ VALUES ('" . $r['cargo_ID'] . "', '".PAIS."', '" . $pol['user_ID'] . "', '" . $d
 
 
 <div id="examen">
-<form action="'.accion_url().'a=examenes&b=examinar&ID='.$_GET['b'].'" method="post" id="elexamen">
+<form action="/accion.php?a=examenes&b=examinar&ID='.$_GET['b'].'" method="post" id="elexamen">
 <ol>';
 
 

@@ -10,7 +10,7 @@ class EtherpadLiteClient {
   const CODE_INVALID_API_KEY    = 4;
 
   protected $apiKey = "";
-  protected $baseUrl = "http://beta.etherpad.org:9001/api";
+  protected $baseUrl = "http://localhost:9001/api";
   
   public function __construct($apiKey, $baseUrl = null){
     $this->apiKey  = $apiKey;
@@ -32,7 +32,7 @@ class EtherpadLiteClient {
 
   protected function call($function, array $arguments = array(), $method = 'GET'){
     $arguments['apikey'] = $this->apiKey;
-    $arguments = http_build_query($arguments);
+    $arguments = http_build_query($arguments, '', '&');
     $url = $this->baseUrl."/".self::API_VERSION."/".$function;
     if ($method !== 'POST'){
       $url .=  "?".$arguments;
@@ -267,6 +267,9 @@ class EtherpadLiteClient {
 
   // sets a boolean for the public status of a pad 
   public function setPublicStatus($padID, $publicStatus){
+    if (is_bool($publicStatus)) {
+      $publicStatus = $publicStatus ? "true" : "false";
+    }
     return $this->post("setPublicStatus", array(
       "padID"        => $padID,
       "publicStatus" => $publicStatus

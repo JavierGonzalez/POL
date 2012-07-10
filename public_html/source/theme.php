@@ -81,7 +81,7 @@ p_scroll = false;
 					<li><a href="/info/seguir"><?=_('Seguir')?>...</a></li>
 				</ul>
 			</li>
-			<li><a href="/api">API</a></li>
+			<!--<li><a href="/api">API</a></li>-->
 		</ul>
 	</li>
 

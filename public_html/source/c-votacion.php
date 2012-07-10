@@ -502,7 +502,7 @@ LIMIT 250");
 <td class="rich"'.($r2['votos']>=0?' style="color:#000;"':'').'>'.$r2['texto'].'</td>
 <td nowrap class="gris">'.$r2['sentido'].'</td>
 <td nowrap align="right" class="gris">'.timer($r2['time']).'</td>
-<td>'.($r2['user_ID']==$pol['user_ID']?boton('X', accion_url().'a=votacion&b=argumento-eliminar&ID='.$r2['ID'].'&ref_ID='.$r2['ref_ID'], '¿Seguro que quieres ELIMINAR tu argumento?', 'red small'):'').'</td>
+<td>'.($r2['user_ID']==$pol['user_ID']&&$r2['votos']<=6?boton('X', accion_url().'a=votacion&b=argumento-eliminar&ID='.$r2['ID'].'&ref_ID='.$r2['ref_ID'], '¿Seguro que quieres ELIMINAR tu argumento?', 'red small'):'').'</td>
 </tr>';
 					if ($r2['votos'] < $votos_mosotrar) { $argumentos_ocultos++; }
 				}
@@ -613,7 +613,7 @@ LIMIT 250");
 
 <tr>
 <td align="right">'._('Participación').':</td>
-<td><b>'.num(($r['num']*100)/$r['num_censo'],2).'%</b> ('.num($r['num']).' '._('votos').' '._('de').' '.num($r['num_censo']).' '._('votantes').')</td>
+<td><b>'.num(($r['num_censo']>0?($r['num']*100)/$r['num_censo']:0),2).'%</b> ('.num($r['num']).' '._('votos').' '._('de').' '.num($r['num_censo']).' '._('votantes').')</td>
 </tr>
 
 

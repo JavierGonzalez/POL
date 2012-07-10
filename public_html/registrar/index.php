@@ -390,7 +390,7 @@ $(document).ready(function() {
 <td align="right" valign="top"><b>'._('Contraseña').'</b>:</td>
 <td>
 
-<div class="password-meter" style="float:right;">
+<div class="password-meter" style="white-space:nowrap;margin-bottom:4px">
 	<div class="password-meter-message">&nbsp;</div>
 	<div class="password-meter-bg">
 		<div class="password-meter-bar"></div>
@@ -413,9 +413,31 @@ $(document).ready(function() {
 '._('En caso afirmativo indica el nick').': <input type="text" name="nick_clon" value="" size="10" maxlength="14" pattern="[A-Za-z0-9_]{0,14}" /> '._('En caso negativo dejar vacío').'.</td>
 </tr>
 
+
 <tr>
 <td></td>
-<td><input type="checkbox" name="condiciones" value="ok" id="checkcondiciones" required /> <label for="checkcondiciones"><b>'._('Aceptas las').' <a href="http://www'.'.'.DOMAIN.'/TOS" target="_blank">'._('Condiciones de Uso de VirtualPol').'</a>.</b></label></td>
+<td><span style="font-size:18px;">Cosas que debes saber:</span>
+<ul style="margin:0;">
+	<li><b>VirtualPol es tuyo.</b> Este proyecto lo construimos entre todos. Es software libre, gratuito, sin publicidad y está <u>al servicio del procomún</u>.</li>
+	<li><b>Es la primera red social democrática.</b> Una herramienta <u>pionera</u> que desde 2008 da soporte a diversas plataformas independientes entre sí.</li>
+	<li><b>Todos los usuarios son iguales.</b> Es la primera comunidad de internet <u>sin administradores</u> privilegiados. Cualquier usuario se puede involucrar en la gestión en absoluta igualdad de condiciones.</li>
+	<li><b>Democrático.</b> Todo se determina mediante mecanismos <u>genuinamente democráticos</u> (votaciones, elecciones, etc). El sistema es automático y esto garantiza que nadie puede acaparar el control.</li>
+	<li>Hay 3 lineas de participación:
+	<ol style="margin:0;">
+		<li><b>Chat</b>: para conocerse.</li>
+		<li><b>Foro</b>: para debatir en profundidad.</li>
+		<li><b>Votaciones</b>: para tomar decisiones.</li>
+	</ol>
+	</li>
+</ul>
+</td>
+</tr>
+
+
+
+<tr>
+<td></td>
+<td><input type="checkbox" name="condiciones" value="ok" id="checkcondiciones" required /> <label for="checkcondiciones"><b>'._('Aceptas las').' <a href="http://www'.'.'.DOMAIN.'/TOS" target="_blank">'._('Condiciones de Uso de VirtualPol').' (TOS)</a>.</b></label></td>
 </tr>
 
 <tr>

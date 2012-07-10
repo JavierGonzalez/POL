@@ -1193,7 +1193,7 @@ ORDER BY pols DESC LIMIT 1");
 
 	} elseif (($_GET['b'] == 'editarpalabra') AND (is_numeric($_GET['ID'])) AND (strlen($_POST['text']) <= 25)) {
 		$_POST['text'] = ereg_replace("[^ A-Za-z0-9-]", "", $_POST['text']);
-		$_POST['text'] = str_replace(array('http://', 'https://', ':', ',', '|', ' '), '', $_POST['text']);
+		$_POST['text'] = str_replace(array('http://', 'https://', ':', ',', '|'), '', $_POST['text']);
 		$_POST['url'] = str_replace(array('http://', 'https://', ':', ',', '|', ' '), '', $_POST['url']);
 		$dato = '';
 		foreach(explode(";", $pol['config']['palabras']) as $num => $t) {

@@ -181,6 +181,7 @@ ORDER BY time_last DESC", $link);
 	$txt .= '</div>';
 }
 
+$txt .= mysql_error();
 
 //THEME
 $txt_menu = 'info';

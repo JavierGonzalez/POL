@@ -16,6 +16,7 @@ function r($q) {return mysql_fetch_assoc($q);}
 // ### NUCLEO ACCESO 3.1
 function nucleo_acceso($tipo, $valor='', $pais=false) {
 	global $_SESSION;
+	$valor = trim($valor);
 	$rt = false;
 	if ($pais == false) { $pais = PAIS; }
 	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
@@ -47,6 +48,7 @@ function nucleo_acceso($tipo, $valor='', $pais=false) {
 }
 
 function verbalizar_acceso($tipo, $valor='') {
+	$valor = trim($valor);
 	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
 	elseif (stristr($tipo, '|')) { $valor = explodear('|', $tipo, 1); $tipo = explodear('|', $tipo, 0); }
 	switch ($tipo) { // ¿Quien tiene acceso?
@@ -98,6 +100,7 @@ function verbalizar_acceso($tipo, $valor='') {
 }
 
 function sql_acceso($tipo, $valor='', $pais=false) {
+	$valor = trim($valor);
 	if ($pais == false) { $pais = PAIS; }
 	if (is_array($tipo)) { $valor = $tipo[1]; $tipo = $tipo[0]; }
 	elseif (stristr($tipo, '|')) { $valor = explodear('|', $tipo, 1); $tipo = explodear('|', $tipo, 0); }

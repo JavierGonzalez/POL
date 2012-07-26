@@ -416,17 +416,18 @@ $(document).ready(function() {
 
 <tr>
 <td></td>
-<td><span style="font-size:18px;">Cosas que debes saber:</span>
+<td><br /><span style="font-size:18px;">Cosas que debes saber:</span>
 <ul style="margin:0;">
 	<li><b>VirtualPol es tuyo.</b> Este proyecto lo construimos entre todos. Es software libre, gratuito, sin publicidad y está <u>al servicio del procomún</u>.</li>
 	<li><b>Es la primera red social democrática.</b> Una herramienta <u>pionera</u> que desde 2008 da soporte a diversas plataformas independientes entre sí.</li>
 	<li><b>Todos los usuarios son iguales.</b> Es la primera comunidad de internet <u>sin administradores</u> privilegiados. Cualquier usuario se puede involucrar en la gestión en absoluta igualdad de condiciones.</li>
 	<li><b>Democrático.</b> Todo se determina mediante mecanismos <u>genuinamente democráticos</u> (votaciones, elecciones, etc). El sistema es automático y esto garantiza que nadie puede acaparar el control.</li>
-	<li>Hay 3 lineas de participación:
+	<li>Hay 4 lineas de participación:
 	<ol style="margin:0;">
 		<li><b>Chat</b>: para conocerse.</li>
 		<li><b>Foro</b>: para debatir en profundidad.</li>
 		<li><b>Votaciones</b>: para tomar decisiones.</li>
+		<li><b>Grupos de Trabajo</b>: para actuar y llevar las decisiones a la realidad.</li>
 	</ol>
 	</li>
 </ul>

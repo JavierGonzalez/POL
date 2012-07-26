@@ -53,7 +53,7 @@ $vp['langs'] = array(
 );
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)
-$vp['paises'] = array('15M', 'Hispania', 'MIC', 'JRO', 'MCxVBC', 'ETSIIT', 'Occupy', 'PS', 'PCP');
+$vp['paises'] = array('15M', 'Hispania', 'MIC', 'JRO', 'MCxVBC', 'ETSIIT', 'Occupy', 'PS', 'PCP', 'FCSM');
 
 
 if ($pais == 'www') {

@@ -68,7 +68,7 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
 'socios_responsable'=>array('valor'=>'', 'autoload'=>'no'),
 			);
 
-			if ($r['ASAMBLEA'] == 'true') {
+			if ($r['asamblea'] == 'true') {
 				$param['acceso'] = array('valor'=>'votacion_borrador;ciudadanos:|sondeo;cargo:6|referendum;cargo:6|parlamento;cargo:6|kick;cargo:6 13|kick_quitar;cargo:6 13|foro_borrar;cargo:6 13|control_gobierno;cargo:6|control_sancion;:|control_grupos;cargo:6|control_cargos;cargo:6|examenes_decano;cargo:6|examenes_profesor;privado:|crear_partido;cargo:6|control_socios;cargo:6|api_borrador;ciudadanos:|control_docs;cargo:6', 'autoload'=>'si');
 
 				sql("INSERT INTO cargos (pais, cargo_ID, asigna, nombre, nivel, elecciones, elecciones_electos, elecciones_cada, elecciones_durante, elecciones_votan) VALUES ('".$r['pais']."', '6', '0', 'Coordinador', '100', '".date('Y-m-d 20:00:00', time()+60*60*24*7)."', '7', '14', '2', 'ciudadanos')");
@@ -262,13 +262,13 @@ sql("CREATE TABLE `".strtolower($r['pais'])."_foros_msg` (
 <li><b>Cada plataforma es soberana</b> (es un principio de VirtualPol, ver principios en el <a href="/tos" target="_blank">TOS</a>, segundo apartado) y por lo tanto decide su propia gestión. Sin embargo la primera "legislatura" ostentará el poder el usuario que solicita la plataforma. Después el poder dependerá de unas elecciones automáticas y que -de ningún modo- se podrán detener u obstaculizar. Esto significa -explicitamente- que <b>el fundador inicial de la plataforma puede perder totalmente su control</b>, mediante principios democráticos.</li>
 <li>Si -del modo que fuera- en una plataforma se rompe el principio "Democracia", cosa que tecnicamente es imposible, tendrá que ser intervenida por VirtualPol para restaurar de nuevo la democracia automática, de la forma menos intrusiva posible.</li>
 </ul>
-<input type="checkbox" name="condiciones_extra" value="true" /> <b>He leído y aceptado estas condiciones adicionales</b>.<br /><br /><br />
+<input type="checkbox" name="condiciones_extra" value="true" required /> <b>He leído y aceptado estas condiciones adicionales</b>.<br /><br /><br />
 </td>
 </tr>
 
 <tr>
 <td align="right"><b>Nombre</b></td>
-<td><input type="text" name="pais" value="" size="10" maxlength="10" /></td>
+<td><input type="text" name="pais" value="" size="10" maxlength="10" required /></td>
 <td>Nombre corto de la plataforma. Por ejemplo "15M" o "Hispania". Solo letras y numeros, sin espacios.</td>
 </tr>
 
@@ -314,7 +314,7 @@ Organización menos estable y operativa, pero más representativo.<br />
 <tr>
 <td align="right" valign="top"><b>Justificación</b></td>
 <td colspan="2"><p>Razones y argumentos de porqué debe crearse esta plataforma en VirtualPol. Brevemente.</p>
-<textarea name="descripcion" style="width:500px;height:200px;"></textarea><br />
+<textarea name="descripcion" style="width:500px;height:200px;" required></textarea><br />
 <em>* La aprobación o rechazo dependerá directamente de este paso.</em></td>
 </tr>
 

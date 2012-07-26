@@ -66,7 +66,7 @@ WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 FROM cargos_users
 WHERE pais = '".PAIS."' 
 AND cargo_ID = '".$r['cargo_ID']."'
-AND aprobado = 'ok'
+AND (aprobado = 'ok' OR cargo = 'true')
 ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
 		while($r2 = mysql_fetch_array($result2)){
 
@@ -85,7 +85,8 @@ ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
 <td align="right" class="gris">'.timer($r2['fecha_last']).'</td>
 </tr>';
 				}
-				$candidatos[] = '<tr>
+				if ($r2['aprobado'] == 'ok') {
+					$candidatos[] = '<tr>
 <td>'.($asignador&&$r2['cargo']!='true'?'<form action="'.accion_url().'a=cargo&b=add&ID='.$r['cargo_ID'].'" method="POST">
 <input type="hidden" name="user_ID" value="'.$r2['user_ID'].'"  />'.boton(_('Asignar'), 'submit', false, 'small blue').'</form>':'').'</td>
 <td>'.($r2['cargo']=='true'?'<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" alt="icono '.$r['nombre'].'" width="16" height="16" border="0" style="margin-bottom:-3px;" />':'<img src="'.IMG.'cargos/0.gif" alt="icono" width="16" height="16" border="0" style="margin-bottom:-3px;" />').' '.crear_link($r2['nick']).'</td>
@@ -94,6 +95,7 @@ ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
 <td><img src="https://chart.googleapis.com/chart?cht=ls&chs=90x22&chd=t:'.implode(',', explode(' ', trim($r2['confianza_historico']))).'&chco=EA9800&chds=a&chbh=a" width="90" height="22" alt="Confianza" title="Confianza semanal" /></td>
 <td align="right">'.num($r2['nota'],1).'</td>
 </tr>';
+				}
 			}
 		}
 

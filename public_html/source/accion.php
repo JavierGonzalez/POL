@@ -1365,8 +1365,8 @@ case 'votacion':
 		}
 		
 		$_POST['time_expire'] = round($_POST['time_expire']*$_POST['time_expire_tipo']);
-		$_POST['debate_url'] = strip_tags($_POST['debate_url']);
-		$_POST['pregunta'] = strip_tags($_POST['pregunta']);
+		$_POST['debate_url'] = trim(strip_tags($_POST['debate_url']));
+		$_POST['pregunta'] = trim(strip_tags($_POST['pregunta']));
 		$_POST['descripcion'] = nl2br(strip_tags(trim($_POST['descripcion'])));
 		if ($_POST['aleatorio'] != 'true') { $_POST['aleatorio'] = 'false'; }
 

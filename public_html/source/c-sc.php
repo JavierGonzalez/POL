@@ -412,7 +412,7 @@ ORDER BY num DESC, time DESC");
 FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
-WHERE dispositivo = '".$r['dispositivo']."'
+WHERE dispositivo = '".$r['dispositivo']."' AND dispositivo IS NOT NULL
 GROUP BY user_ID
 ORDER BY MAX(uc.time) DESC");
 		while ($r2 = r($result2)) {

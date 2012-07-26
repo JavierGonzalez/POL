@@ -791,7 +791,8 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 <!--<td>'.boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange').'</td>-->
 
-<td><a name="fb_share">'._('Compartir').'</a></td>
+<td><div class="fb-like" data-send="false" data-layout="button_count" data-width="130" data-show-faces="false" data-font="verdana"></div></td>
+
 </tr></table></center>':'').'
 ';
 
@@ -853,7 +854,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				arsort($escrutinio['votos']);
 
 				// Imprime escrutinio en texto.
-				$txt .= '<fieldset><legend>'._('Resultado').'</legend><table border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">';
+				$txt .= '<fieldset><legend>'._('Resultado').'</legend><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top">';
 
 				// Imprime escrutinio en grafico.
 				if ($validez == true) { // Solo si el resultado es válido (menos de 50% de votos nulos).
@@ -872,7 +873,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				if ($validez == true) {
 
 					if ($r['tipo_voto'] == 'multiple') {
-						$txt .= '<table border="0" cellpadding="1" cellspacing="0"><tr><th></th><th colspan="2">'._('SI').'</th><th></th><th colspan="2">'._('NO').'</th></tr>';
+						$txt .= '<table border="0" cellpadding="1" cellspacing="0"><tr><th></th><th>'._('SI').'</th><th></th><th>'._('NO').'</th></tr>';
 						
 						$puntos_total_sin_en_blanco = $puntos_total - $escrutinio['votos'][$en_blanco_ID];
 
@@ -886,17 +887,13 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 									$porcentaje_si = ($voto_si>0?($voto_si*100)/($voto_si + $voto_no):0);
 									$porcentaje_no = ($voto_no>0?($voto_no*100)/($voto_si + $voto_no):0);
 
-									$txt .= '<tr title="'._('En Blanco').': '.num($voto_en_blanco).'">
+									$txt .= '<tr title="'.num($voto_si).' '._('SI').' - '.num($voto_no).' '._('NO').' - '.num($voto_en_blanco).' '._('En Blanco').'">
 
 <td class="rich"'.($respuestas_desc[$voto]?' title="'.$respuestas_desc[$voto].'" class="punteado"':'').'>'.$respuestas[$voto].'</td>
-
-<td align="right"'.($porcentaje_si>50?' style="font-weight:bold;"':'').'>'.num($voto_si).'</td>
 
 <td align="right"'.($porcentaje_si>50?' style="font-weight:bold;"':'').'>'.num($porcentaje_si,1).'%</td>
 
 <td> &nbsp; </td>
-
-<td align="right"'.($porcentaje_no>50?' style="font-weight:bold;"':'').'>'.num($voto_no).'</td>
 
 <td align="right"'.($porcentaje_no>50?' style="font-weight:bold;"':'').'>'.num($porcentaje_no,1).'%</td>
 
@@ -905,7 +902,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 								} else { $votos_en_blanco = $num; }
 							} else { unset($escrutinio['votos'][$voto]);  }
 						}
-						$txt .= '<tr><th></th><th colspan="2">'._('SI').'</th><th></th><th colspan="2">'._('NO').'</th></tr></table>';
+						$txt .= '<tr><th></th><th>'._('SI').'</th><th></th><th>'._('NO').'</th></tr></table>';
 
 					} else {
 						$txt .= '<table border="0" cellpadding="1" cellspacing="0"><tr><th>'._('Escrutinio').'</th><th>'.($r['tipo_voto']=='estandar'?_('Votos'):_('Puntos')).'</th><th></th></tr>';
@@ -929,7 +926,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 				// Imprime datos de legitimidad y validez
 				$txt .= '</td>
-<td valign="top" style="color:#888;">
+<td valign="top" align="right" style="color:#888;">
 '._('Legitimidad').': <span style="color:#555;"><b>'.num($votos_total).'</b>&nbsp;'._('votos').'</span>, <b>'.$escrutinio['votos_autentificados'].'</b>&nbsp;'._('autentificados').'.<br />
 '._('Validez').': '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>'._('NULO').'</b>&nbsp;'.$porcentaje_validez.'%</span>').'<br />
 <img width="200" height="120" title="Votos de validez: OK: '.num($escrutinio['validez']['true']).', NULO: '.$escrutinio['validez']['false'].'" src="http://chart.apis.google.com/chart?cht=p&chp=4.71&chd=t:'.$escrutinio['validez']['true'].','.$escrutinio['validez']['false'].'&chs=200x120&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>

@@ -273,7 +273,7 @@ echo '
 
 <td><g:plusone annotation="none"></g:plusone></td>
 
-<td valign="middle"><a name="fb_share">'._('Compartir').'</a></td>
+<td valign="middle"><div class="fb-like" data-send="false" data-layout="button_count" data-width="130" data-show-faces="false" data-font="verdana"></div></td>
 
 <td><a href="http://www.tuenti.com/share" class="tuenti-share-button"></a></td>
 
@@ -298,8 +298,16 @@ if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != '')) {
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js">
 {lang: 'es'}
 </script>
-<script type="text/javascript" src="http://static.ak.fbcdn.net/connect.php/js/FB.Share"></script>
 <script type="text/javascript" src="http://widgets.tuenti.com/widgets.js"></script>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1&appId=358872204161898";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
 <script type="text/javascript">
 /* GA */

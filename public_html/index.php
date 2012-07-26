@@ -80,7 +80,7 @@ while($r = r($result)) {
 	$txt .= '<tr style="background:'.$pais_config['bg_color'].';'.($r['num']<10?'display:none;" class="p-inactiva"':'"').'>
 <td><a href="http://'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" alt="'.$pais.'" /></a></td>
 
-<td><span style="float:right;font-size:22px;"><b>'.num($r['num']).'</b></span><a href="http://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:18px;">'.$pais_config['pais_des'].'</b></a><br />
+<td><span style="float:right;font-size:22px;"><b>'.num($r['num']).'</b></span><a href="http://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:'.($r['num']>1000?18:16).'px;">'.$pais_config['pais_des'].'</b></a><br />
 <em style="color:#777;">'.ucfirst($pais_config['tipo']).'</em></td>
 
 </tr>';

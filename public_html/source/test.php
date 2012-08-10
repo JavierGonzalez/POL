@@ -17,21 +17,15 @@ $txt .= ' ';
 /***************************************************************************/
 
 
-$result2 = sql("SELECT nick, email FROM users WHERE pais = '15M' AND estado = 'ciudadano' AND email != '' ORDER BY ID ASC LIMIT 1");
-while($r2 = r($result2)){ 
-	$mensaje = '<p>Hola '.$r2['nick'].':</p>
+$result = sql("SELECT ID, nav, nav_resolucion 
+FROM users_con 
+WHERE nav_resolucion IS NOT NULL");
+while($r = r($result)){ 
+	if (!strpos($r['nav'], ' | '.$r['nav_resolucion'])) {
+		$txt .= $r['nav'].'<br />';
+		sql("UPDATE users_con SET nav = '".$r['nav']." | ".$r['nav_resolucion']."' WHERE ID = '".$r['ID']."' LIMIT 1");
+	}
 
-<p>Con el fin de dinamizar los proyectos de los Grupos de Trabajo de la Asamblea Virtual necesitamos vuestra colaboración. Podéis hacerlo entrando en el siguiente enlace para rellenar un breve formulario con el que podremos saber la disponibilidad de cada uno para colaborar en los proyectos en curso:</p>
-
-<p><a href="https://docs.google.com/spreadsheet/viewform?formkey=dHV0VE1LckpTRmV6NzdOQXpTRERQakE6MQ"><b style="font-size:18px;">Rellenar formulario</b></a></p>
-
-<p>Podéis encontrar los proyectos <a href="http://15m.virtualpol.com/doc/00---proyectos-en-curso">aquí</a></p>
-
-<p>También os recordamos que depende de todos nosotros mantener ese documento actualizado.</p>
-
-<p>Asamblea Virtual 15M</p>';
-	enviar_email(null, 'Formulario sobre Grupos de Trabajo de la Asamblea Virtual', $mensaje, $r2['email']);
-	$txt .= $r2['nick'].'<br />';
 }
 
 

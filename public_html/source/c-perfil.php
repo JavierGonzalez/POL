@@ -72,7 +72,7 @@ if ($user_ID == $pol['user_ID']) { //es USER
 	$text_limit = 1600 - strlen(strip_tags($r['text']));
 	
 	
-	$txt .= '<tr><td align="center"><button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;" class="pill">'._('Editar perfil').'</button> '.boton(_('Opciones de usuario'), REGISTRAR.'login.php?a=panel').' '.boton(_('Autentificación'), SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton(_('Rechazar ciudadanía'), REGISTRAR, false, 'red').' ':'').'
+	$txt .= '<tr><td><p style="text-align:center;"><button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;" class="pill">'._('Editar perfil').'</button> '.boton(_('Opciones de usuario'), REGISTRAR.'login.php?a=panel').' '.boton(_('Autentificación'), SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton(_('Rechazar ciudadanía'), REGISTRAR, false, 'red').' ':'').'<p>
 
 
 
@@ -158,9 +158,6 @@ if ($user_ID == $pol['user_ID']) { //es USER
 
 	} // fin ECONOMIA
 
-	$txt .= '<fieldset><legend>Clave API</legend><input class="api_box" type="text" size="12" value="'.$r['api_pass'].'" readonly="readonly" /> '.boton('Generar clave', accion_url().'a=api&b=gen_pass', '¿Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua dejará de funcionar.', 'blue').' (Equivale a tu contraseña, mantenla en secreto. Más info: <a href="'.SSL_URL.'api.php">API</a>)</fieldset>';
-
-
 	$txt .= '
 <fieldset><legend>'._('Biografía').'</legend>
 <form action="'.accion_url().'a=avatar&b=desc" method="post">
@@ -226,9 +223,10 @@ ORDER BY voto DESC, time ASC");
 		$voto_anterior = $r2['voto'];
 		$txt .= crear_link($r2['nick'], 'nick', null, $r2['pais']) . ' ';
 	}
-
 	$txt .= '</p></fieldset>';
 
+
+	$txt .= '<fieldset><legend>Clave API</legend><input class="api_box" type="text" size="12" value="'.$r['api_pass'].'" readonly="readonly" /> '.boton('Generar clave', accion_url().'a=api&b=gen_pass', '¿Seguro que deseas CAMBIAR tu clave API?\n\nLa antigua dejará de funcionar.', 'blue').' (Equivale a tu contraseña, mantenla en secreto. Más info: <a href="'.SSL_URL.'api.php">API</a>)</fieldset>';
 
 	if (!ASAMBLEA) {
 		$txt .= '<form action="'.accion_url().'a=afiliarse" method="post">
@@ -381,7 +379,7 @@ $txt .= (count($txt_cargos)>0?implode(' ', $txt_cargos):_('Ninguno')).'</b></td>
 
 
 /* Expiraciones:
-Tras 60 dias inactivo
+Tras 90 dias inactivo
 
 Excepciones:
 * Autentificados
@@ -394,7 +392,7 @@ if ($r['fecha_registro'] < tiempo(365*2)) {  $txt .= _('Vitalicio').' ('._('vete
 elseif ($r['dnie'] == 'true') { $txt .= _('Vitalicio').' ('._('autentificado').')'; }
 elseif ($r['socio'] == 'true') { $txt .= _('Vitalicio').' ('._('asociado').')'; }
 elseif ($r['donacion'] > 0) { $txt .= _('Vitalicio').' ('._('donante').')'; }
-else { $txt .= _('En').' '.num(60-((time()-strtotime($r['fecha_last']))/60/60/24)).' '._('días'); }
+else { $txt .= _('En').' '.num(90-((time()-strtotime($r['fecha_last']))/60/60/24)).' '._('días'); }
 
 
 

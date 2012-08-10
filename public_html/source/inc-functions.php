@@ -210,8 +210,8 @@ function escape($a, $escape=true, $html=true) {
 }
 
 
-function gbarra($porcentaje, $size=false) {
-	return '<div class="gbarra"'.($size!=false?' style="width:'.$size.'px;"':'').'><strong class="barra" style="width:'.round($porcentaje).'%;">'.round($porcentaje).'%</strong></div>';
+function gbarra($porcentaje, $size=false, $mostrar_porcentaje=true) {
+	return '<div class="gbarra"'.($size!=false?' style="width:'.$size.'px;"':'').'><strong class="barra" style="width:'.round($porcentaje).'%;">'.($mostrar_porcentaje==true?round($porcentaje).'%':'&nbsp;').'</strong></div>';
 }
 
 function pass_key($t, $type='sha') {

@@ -87,8 +87,13 @@ case 'api':
 		$refer_url = 'perfil/editar/';
 	}
 	break;
-	
-case 'socios';
+
+case 'users_con':
+	sql("DELETE FROM users_con WHERE user_ID = '".$pol['user_ID']."' ORDER BY time DESC LIMIT 1");
+	users_con($pol['user_ID'], $_REQUEST['extra'], 'session'); mysql_close(); exit;
+	break;
+
+case 'socios':
 	$refer_url = 'socios';
 	$es_socio = false;
 	$result = sql("SELECT ID, estado, socio_ID FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
@@ -142,7 +147,7 @@ VALUES ('".$date."', '".$date."', '".PAIS."', '".($last_socio_ID==0?10000:$last_
 	break;
 
 
-case 'grupos';
+case 'grupos':
 	if (($_GET['b'] == 'crear') AND (nucleo_acceso($vp['acceso']['control_grupos']))) {
 		sql("INSERT INTO grupos (pais, nombre) VALUES ('".PAIS."', '".ucfirst($_POST['nombre'])."')");
 	} elseif (($_GET['b'] == 'eliminar') AND (nucleo_acceso($vp['acceso']['control_grupos'])) AND ($_GET['grupo_ID'])) {
@@ -422,7 +427,7 @@ LIMIT 1");
 		sql("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'");
 
 		evento_log('Rechaza ciudadanía');
-		evento_chat('<b>[#] '.crear_link($nick).' rechaza la Ciudadania</b> de '.PAIS);
+		evento_chat('<b>[#]</b> '.crear_link($nick).' rechaza la Ciudadania de '.PAIS);
 
 		unset($_SESSION);
 		session_unset(); session_destroy();
@@ -957,17 +962,28 @@ case 'gobierno':
 			}
 		}
 		
-		if ($_FILES['nuevo_logo']['name']) {
+		if ($_FILES['nuevo_bandera']['name']) {
 			$nom_file = RAIZ.'/img/banderas/'.PAIS.'.png';
 			copy($nom_file, RAIZ.'/img/banderas/'.PAIS.'_'.time().'.png');
-			if ((str_replace('image/', '', $_FILES['nuevo_logo']['type']) == 'png') AND ($_FILES['nuevo_logo']['size'] <= 50000)) {
-				move_uploaded_file($_FILES['nuevo_logo']['tmp_name'], $nom_file);
+			if ((str_replace('image/', '', $_FILES['nuevo_bandera']['type']) == 'png') AND ($_FILES['nuevo_bandera']['size'] <= 50000)) {
+				move_uploaded_file($_FILES['nuevo_bandera']['tmp_name'], $nom_file);
 			}
 			if (file_exists($nom_file)) {
 				evento_chat('<b>[GOBIERNO]</b> Configuración ('.crear_link($pol['nick']).'): nueva bandera <img src="'.IMG.'banderas/'.PAIS.'.png?'.rand(1000,9999).'" width="80" height="50" /> (<a href="/control/gobierno">Gobierno</a>)');
 			}
 		}
 
+		
+		if ($_FILES['nuevo_logo']['name']) {
+			$nom_file = RAIZ.'/img/banderas/'.PAIS.'_logo.png';
+			copy($nom_file, RAIZ.'/img/banderas/'.PAIS.'_logo_'.time().'.png');
+			if ((str_replace('image/', '', $_FILES['nuevo_logo']['type']) == 'png') AND ($_FILES['nuevo_logo']['size'] <= 80000)) {
+				move_uploaded_file($_FILES['nuevo_logo']['tmp_name'], $nom_file);
+			}
+			if (file_exists($nom_file)) {
+				evento_chat('<b>[GOBIERNO]</b> Configuración ('.crear_link($pol['nick']).'): nuevo logo <img src="'.IMG.'banderas/'.PAIS.'_logo.png?'.rand(1000,9999).'" width="200" height="60" /> (<a href="/control/gobierno">Gobierno</a>)');
+			}
+		}
 		evento_log('Gobierno configuración: principal');
 		$refer_url = 'control/gobierno';
 

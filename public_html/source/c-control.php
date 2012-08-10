@@ -952,7 +952,14 @@ ORDER BY salario DESC");
 	} else {
 
 
-$txt_header .= '
+		function print_td_url($titulo, $name, $desc='') {
+			return '<tr>
+<td align="right" title="'.$desc.'">'.$titulo.':</td>
+<td><input type="url" name="url_'.$name.'" value="'.$pol['config']['url'][$name].'" placeholder="http://" size="30" /></td>
+</tr>';
+		}
+
+		$txt_header .= '
 <script type="text/javascript">
 function change_bg(img) {
 	$("#header").css("background","#FFFFFF url(\''.IMG.'bg/"+img+"\') repeat top left");
@@ -986,7 +993,7 @@ $(function() {
 <table border="0" cellspacing="3" cellpadding="0">
 
 
-<tr><td align="right">'._('Siglas').':</td><td><b>'.PAIS.'</b></td></tr>
+<tr><td align="right">URL:</td><td>http://<b>'.PAIS.'</b>.virtualpol.com</td></tr>
 
 <tr><td align="right">'._('Nombre').':</td><td><input type="text" name="pais_des" size="24" maxlength="40" value="'.$pol['config']['pais_des'].'" /></td></tr>
 
@@ -1048,6 +1055,18 @@ $txt .= '
 </fieldset>
 
 
+<fieldset><legend>URLs</legend>
+<table>
+'.print_td_url('Carta Magna', 'cartamagna', 'Documento, constitucion, declaración, ley, reglas o normas principales.').'
+'.print_td_url('Ayuda', 'ayuda', 'Documento de ayuda').'
+'.print_td_url('Bienvenida', 'bienvenida', 'Documento de bienvenida').'
+'.print_td_url('Vídeo', 'video', 'Video de introducción a la plataforma').'
+'.print_td_url('Facebook', 'fbfanpage', 'Fanpage de Facebook').'
+'.print_td_url('Twitter', 'twitter', 'Cuenta de twitter').'
+'.print_td_url('Google+', 'googleplus', 'Cuenta de Google+').'
+</table>
+</fieldset>
+
 
 </td><td valign="top">
 
@@ -1081,13 +1100,22 @@ $txt .= '</select>
 </tr>
 
 <tr>
-<td align="right" nowrap>'._('Bandera').':<br /><img src="'.IMG.'banderas/'.PAIS.'.png?'.rand(10000,99999).'" width="80" height="50" border="0" /></td>
-<td nowrap><input type="file" name="nuevo_logo" accept="image/png" /> (png, 80x50, max 50kb)</td>
+<td align="right" nowrap>'._('Bandera').' (80x50):</td>
+<td nowrap><img src="'.IMG.'banderas/'.PAIS.'.png?'.rand(10000,99999).'" width="80" height="50" style="border:1px solid #CCC;background:#FFF;" />  (png, 80x50, max 50kb)<br /><input type="file" name="nuevo_bandera" accept="image/png" /></td>
 </tr>
+
+
+<tr>
+<td align="right" nowrap>'._('Logo').' (200x60):</td>
+<td nowrap><img src="'.IMG.'banderas/'.PAIS.'_logo.png?'.rand(10000,99999).'" width="200" height="60" style="border:1px solid #CCC;background:#FFF;" />  (png, 200x60)<br /><input type="file" name="nuevo_logo" accept="image/png" /></td>
+</tr>
+
+
+
 
 <tr>
 <td align="right">'._('Color de fondo').':</td>
-<td><input type="color" name="bg_color" value="'.strtolower($pol['config']['bg_color']).'" style="background:'.$pol['config']['bg_color'].';" /></td>
+<td><input type="color" name="bg_color" value="'.strtolower($pol['config']['bg_color']).'" style="background:'.$pol['config']['bg_color'].';width:150px;" /></td>
 </tr>
 
 </table>

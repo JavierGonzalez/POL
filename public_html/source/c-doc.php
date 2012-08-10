@@ -105,7 +105,7 @@ if ($_GET['a']) {
 
 			if ($_GET['b'] == 'backup') { $r['text'] = $r['text_backup']; }
 
-			if (strpos($r['text'], '&lt;/div&gt;')) { $r['text'] = '<p style="font-size:25px;"><a href="/doc/'.$r['url'].'/presentacion"><b>'._('Ver presentación').'</b></a></p>'; }
+			if (substr($r['text'], 0, 8) == '&lt;div ') { $r['text'] = '<p style="font-size:25px;"><a href="/doc/'.$r['url'].'/presentacion"><b>'._('Ver presentación').'</b></a></p>'; }
 
 			$txt .= '
 <div>

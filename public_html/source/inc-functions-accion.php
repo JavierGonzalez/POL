@@ -123,7 +123,7 @@ function presentacion($titulo, $html, $url='http://www.virtualpol.com') {
 <p>Para una mejor experiencia por favor usa la ultima versión del navegador <b>Chrome</b> o <b>Safari</b>. Firefox 10 (proximamente) tambien será soportado.</p>
 </div>
 
-'.str_replace('&quot;', '"', str_replace('&gt;', '>', str_replace('&lt;', '<', strip_tags($html)))).'
+'.str_replace('&#x2F;', '/', str_replace('&quot;', '"', str_replace('&gt;', '>', str_replace('&lt;', '<', strip_tags($html))))).'
 
 
 <div class="hint">
@@ -558,7 +558,7 @@ ORDER BY orden ASC");
 	return $f;
 }
 
-function users_con($user_ID, $extra='', $tipo='session') {
+function users_con($user_ID, $extra='', $tipo='session', $rejs=false) {
 	$IP = direccion_IP('longip');
 	$host = strtolower(gethostbyaddr(long2ip($IP))); if ($host == '') { $host = long2ip($IP); }
 	$extra_array = explode('|', $extra); // res1|res2|login_seg|bitdepth|dispositivo
@@ -584,7 +584,7 @@ function users_con($user_ID, $extra='', $tipo='session') {
 	while($r = r($result)){ $el_pais = "'".$r['IP_pais']."'"; }
 	if (strlen($hoste[count($hoste)-1]) == 2) { $el_pais = "'".strtoupper($hoste[count($hoste)-1])."'"; }
 	if ((!$el_pais) AND (CLAVE_API_ipinfodb != '...')) { 
-		$res = file_get_contents('http://api.ipinfodb.com/v3/ip-city/?key='.CLAVE_API_ipinfodb.'&ip='.$la_IP[0].'.'.$la_IP[1].'.'.rand(1,254).'.'.rand(1,254));
+		$res = file_get_contents('http://api.ipinfodb.com/v3/ip-city/?key='.CLAVE_API_ipinfodb.'&ip='.$la_IP[0].'.'.$la_IP[1].'.1.1');
 		$res = strtoupper(explodear(';', $res, 3));
 		if (strlen($res) != 2) { $res = '??'; }
 		$el_pais = "'".$res."'";
@@ -596,11 +596,11 @@ function users_con($user_ID, $extra='', $tipo='session') {
 	$i = get_browser(null, true);
 
 	sql("INSERT INTO users_con (user_ID, time, IP, host, proxy, nav, login_ms, login_seg, nav_resolucion, ISP, tipo, nav_so, IP_pais, IP_rango, IP_rango3, dispositivo) 
-VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".$_SERVER['HTTP_X_FORWARDED_FOR']."', '".$_SERVER['HTTP_USER_AGENT']." | ".$_SERVER['HTTP_ACCEPT_LANGUAGE']."', '".round((microtime(true)-TIME_START)*1000)."', '".$extra_array[2]."', ".($extra_array[0]?"'".$extra_array[0]." ".$extra_array[3]."'":"NULL").", ".$ISP.", '".$tipo."', '".str_replace('Android Android', 'Android', $i['platform']." ".$i['parent'])."', ".$el_pais.", '".$la_IP[0].".".$la_IP[1]."', '".$la_IP[0].".".$la_IP[1].".".$la_IP[2]."', ".($_COOKIE['trz']?"'".$_COOKIE['trz']."'":"NULL").")");
+VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".$_SERVER['HTTP_X_FORWARDED_FOR']."', '".$_SERVER['HTTP_USER_AGENT']." | ".$_SERVER['HTTP_ACCEPT_LANGUAGE']."".($extra_array[0]?" | ".$extra_array[0]." ".$extra_array[3]:"")."', '".round((microtime(true)-TIME_START)*1000)."', '".$extra_array[2]."', ".($extra_array[0]?"'".$extra_array[0]." ".$extra_array[3]."'":"NULL").", ".$ISP.", '".$tipo."', '".str_replace('Android Android', 'Android', $i['platform']." ".$i['parent'])."', ".$el_pais.", '".$la_IP[0].".".$la_IP[1]."', '".$la_IP[0].".".$la_IP[1].".".$la_IP[2]."', ".($_COOKIE['trz']?"'".$_COOKIE['trz']."'":"NULL").")");
 
 	sql("UPDATE users SET host = '".$host."' WHERE ID = '".$user_ID."' LIMIT 1");
 
-	return true;
+	return ($rejs==true?'<script type="text/javascript"> $(document).ready(function(){ $.post("'.vp_url('/accion.php?a=users_con', $_SESSION['pol']['pais']).'", { extra: screen.width + "x" + screen.height + "|" + screen.availWidth + "x" + screen.availHeight + "||" + screen.colorDepth + "|"}); }); </script>':true);
 }
 
 ?>

@@ -59,7 +59,7 @@ p_scroll = false;
 
 <div id="content-left">
 	
-	<a href="http://www.virtualpol.com"><img src="<?=IMG?>logo/vp2.png" width="200" height="60" alt="VirtualPol" /></a>
+	<a href="/"><img src="<?=IMG?>banderas/<?=PAIS?>_logo.png" width="200" height="60" alt="<?=PAIS?>" /></a>
 	
 	<ul class="menu vertical">
 
@@ -194,7 +194,7 @@ if ((ECONOMIA) AND (substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa')) {
 	<div id="header">
 
 		<div id="header-logo">
-			<a href="/"><img src="<?=IMG?>banderas/<?=PAIS?>.png" width="80" height="50" alt="logo" /></a>
+			<!--<a href="/"><img src="<?=IMG?>banderas/<?=PAIS?>.png" width="80" height="50" alt="logo" /></a>-->
 			<span class="htxt" id="header-logo-p"><?=$pol['config']['pais_des']?></span>
 		</div>
 
@@ -240,20 +240,19 @@ if (isset($pol['user_ID'])) {
 
 	<div id="footer">
 
-		<div id="footer-right">
-			<p><?=_('VirtualPol, la primera <b>Red Social Democrática</b>')?> <?=boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange')?></p>
+		<div id="footer-right" style="text-align:center;">
+			<p><a href="http://www.virtualpol.com" title="VirtualPol"><img src="<?=IMG?>logo/vp2.png" width="200" height="60" alt="VirtualPol" /></a><br />
+			<?=_('La primera red social democrática')?></p>
 			
-			<p><a target="_blank" href="http://www.virtualpol.com/video"><?=_('Vídeo')?></a> | <a target="_blank" href="http://www.virtualpol.com/documentacion"><?=_('Ayuda / Documentación')?></a><br />
-			<a target="_blank" href="http://www.virtualpol.com/desarrollo"><?=_('Desarrollo / Código fuente')?></a> | <a target="_blank" href="http://www.virtualpol.com/TOS" title="Condiciones de Uso">TOS</a><br />
+			<p><a target="_blank" href="http://www.virtualpol.com/video"><?=_('Vídeo')?></a> | <a target="_blank" href="http://www.virtualpol.com/documentacion"><?=_('Documentación')?></a> | <a target="_blank" href="http://www.virtualpol.com/desarrollo"><?=_('Desarrollo')?></a> | <a target="_blank" href="http://www.virtualpol.com/TOS" title="Condiciones de Uso">TOS</a><br />
 			<?php
 			if (!isset($pol['user_ID'])) { 
 				echo '<a target="_blank" href="http://gonzo.teoriza.com" title="GONZO">Javier González</a> (<a target="_blank" href="http://www.teoriza.com" title="Blogs">Teoriza</a>, <a target="_blank" href="http://www.eventuis.com" title="Eventos">eventuis</a>, <a target="_blank" href="http://www.perfectcine.com" title="Cine">PerfectCine</a>)<br />'; 
-			} else { 
-				echo boton(_('Reportar problema'), 'https://github.com/JavierGonzalez/VirtualPol/issues/new', '¿Estás seguro de hacer un reporte a desarrollo?\n\nSolo reportar problemas tecnicos o del sistema.\nSé conciso y no olvides aportar datos.\n\n¡Gracias!', 'small pill grey').' &nbsp;'; 
+			} else {  
 				if ($pol['user_ID'] == 1) { echo num((microtime(true)-TIME_START)*1000).'ms '.num(memory_get_usage()/1000).'kb |'; } 
 			}
 			?>
-			<span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2012
+			<span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2012 <?=boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange')?>
 			</p>
 		</div>
 		

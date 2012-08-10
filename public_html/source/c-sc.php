@@ -272,7 +272,7 @@ case 'filtro':
 	// LIMPIEZA DATOS IRRELEVANTES
 	$result = sql("SELECT * FROM users_con ORDER BY user_ID ASC, time DESC");
 	while ($r = r($result)) {
-		if (($r['user_ID'] == $rl['user_ID']) AND ($r['dispositivo'] == $rl['dispositivo']) AND ($r['IP'] == $rl['IP']) AND ($r['nav'] == $rl['nav'])) { sql("DELETE FROM users_con WHERE ID = '".$r['ID']."' LIMIT 1"); } $rl = $r;
+		//if (($r['user_ID'] == $rl['user_ID']) AND ($r['dispositivo'] == $rl['dispositivo']) AND ($r['IP'] == $rl['IP']) AND ($r['nav'] == $rl['nav'])) { sql("DELETE FROM users_con WHERE ID = '".$r['ID']."' LIMIT 1"); } $rl = $r;
 	}
 
 	$txt_nav['/sc/filtro'] = 'Filtro';
@@ -363,12 +363,11 @@ case 'filtro':
 <table>
 <tr>
 <th colspan="3"></th>
-<th>Dispositivo</th>
-<th nowrap>ISP / Rango / País / IP</th>
+<th nowrap colspan="2">ISP / Rango / País / IP</th>
+<th>Traza</th>
+<th nowrap>SO / Navegador</th>
 <th>Clave</th>
 <th>Email</th>
-<th nowrap>SO / Navegador</th>
-<th>Pantalla</th>
 <th></th>
 </tr>';
 	$result = sql("SELECT user_ID, ISP, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, nick, estado, u.pais, pass, nota_SC, email, uc.tipo, uc.time, v.voto AS has_votado, u.voto_confianza".$sql_select."
@@ -393,7 +392,16 @@ default:
 
 
 
-	$txt .= '<fieldset><legend>Dispositivo</legend><table>';
+	$txt .= '<fieldset><legend>Dispositivo</legend><table>
+<tr>
+<th colspan="4"></th>
+<th nowrap colspan="2">ISP / Rango / País / IP</th>
+<th>Traza</th>
+<th nowrap>SO / Navegador</th>
+<th>Clave</th>
+<th>Email</th>
+<th></th>
+</tr>';
 	$clones_array_full = array();
 	$result = sql("SELECT COUNT(DISTINCT user_ID) AS num, dispositivo
 FROM users_con `uc`
@@ -443,17 +451,7 @@ ORDER BY MAX(uc.time) DESC");
 
 
 
-	$txt .= '<fieldset><legend>IP</legend><table>
-<tr>
-<th colspan="4"></th>
-<th title="Hardware">Dispositivo</th>
-<th title="Proveedor de Internet / Pais (98% precision) / Dirección IP y host">ISP / Rango / País / IP</th>
-<th title="Coincidencia de contraseña">Clave</th>
-<th title="Proveedor de email">Email</th>
-<th>SO / Navegador</th>
-<th>Pantalla</th>
-<th></th>
-</tr>';
+	$txt .= '<fieldset><legend>IP</legend><table>';
 
 // IPs publicas de algunos ISPs que sacan a sus clientes compartiendo la misma. Esto es util para identificar estas coincidencias y evitar falsos positivos.
 $IP_publicas = array(
@@ -638,10 +636,11 @@ function print_td($r, $count=false) {
 
 <td nowrap align="right" style="background:'.$vp['bg'][$r['pais']].';"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span> '.($pol['user_ID']&&$r['user_ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['user_ID'].'" class="votar" type="confianza" name="'.$r['user_ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
 
-<td nowrap colspan="2" title="'.$r['host'].'"><span style="float:right;">'.unico($r['ISP'], 'ISP', true).unico($r['IP_rango'].'.*', 'IP_rango', true).unico($r['IP_pais'], 'IP_pais', true).unico($r['IP'], 'IP', false, true).'</span>'.unico($r['dispositivo'], 'Dispositivo').'</td>
+<td nowrap colspan="2" title="'.$r['host'].'" align="right">'.unico($r['ISP'], 'ISP', true).unico($r['IP_rango'].'.*', 'IP_rango', true).unico($r['IP_pais'], 'IP_pais', true).unico($r['IP'], 'IP', false, true).'</td>
+<td nowrap>'.unico($r['dispositivo'], '<b>Traza</b>').'</td>
+<td nowrap title="'.$r['nav'].'">'.unico($r['nav'], 'nav', $r['nav_so'].' <span class="peque">'.explodear(' ', $r['nav_resolucion'], 0).'</span>').'</td>
 <td nowrap>'.unico($r['pass'], 'Clave', (in_array($r['pass'], $pass_simple)?'Clave simple':'Clave')).'</td>
 <td nowrap title="'.$r['email'].'">'.unico(explodear('@', $r['email'], 1), 'email', true).'</td>
-<td nowrap colspan="2" title="'.$r['nav'].'"><span style="float:right;">'.($r['nav_resolucion']?unico($r['nav_resolucion'].'bit', 'res', true):'').'</span>'.unico($r['nav'], 'nav', $r['nav_so']).'</td>
 <td nowrap>'.print_nota_SC($r['nota_SC'], $r['user_ID']).'</td>
 </tr>';
 }

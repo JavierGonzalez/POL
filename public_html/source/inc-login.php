@@ -98,7 +98,7 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 			$update = ", visitas = visitas + 1, nav = '".$_SERVER['HTTP_USER_AGENT']."', fecha_init = '".$date."'";
 			if ($fecha_init != '0000-00-00 00:00:00') { $update .= ", online = online + ".(strtotime($fecha_last)-strtotime($fecha_init)); }
 			include_once('inc-functions-accion.php');
-			users_con($pol['user_ID']);
+			$txt .= users_con($pol['user_ID'], '', 'session', true);
 		}
 		sql("UPDATE LOW_PRIORITY users SET paginas = paginas + 1, fecha_last = '".$date."'".$update." WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	} else { unset($pol); session_unset(); session_destroy(); } // impide el acceso a expulsados

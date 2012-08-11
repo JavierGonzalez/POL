@@ -372,7 +372,7 @@ while($r = r($result)) {
 
 <p>En VirtualPol nos esmeramos en tener un censo seguro y fiel a la realidad, en lugar de tener cientos de miles de usuarios sin actividad. Por ello los usuarios que no entran en 90 días son borrados por inactividad.</p>
 
-<p>Tu usuario "'.$r['nick'].'" está a punto de expirar por inactividad. Debes entrar lo antes posible en VirtualPol. Si entras con tu usuario es suficiente para reiniciar el contador de inactividad.</p>
+<p>Tu usuario "'.$r['nick'].'" está a punto de expirar por inactividad. Debes entrar lo antes posible en VirtualPol. Solo con entrar basta para que tu usuario "'.$r['nick'].'" no expire.</p>
 
 <p><a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'"><b style="font-size:20px;">Regresa a '.$r['pais'].' y participa!</b></a></p>
 
@@ -406,16 +406,14 @@ if (date('N') == 7) { // SOLO DOMINGO
 	}
 	
 	// Actualizar nuevos SC
-	$SC_num = 8; // 8 SC + Custodiador = 9 SC
-	$margen_365d = date('Y-m-d 20:00:00', time() - 86400*365); // Antiguedad minima: 365 dias.
-	sql("UPDATE users SET SC = 'false' WHERE ID != 1");
-	$result = sql("SELECT ID FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".tiempo(365)."' AND ser_SC = 'true' AND ID != 1 ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT ".mysql_real_escape_string($SC_num));
+	sql("UPDATE users SET SC = 'false'");
+	$result = sql("SELECT ID FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".tiempo(365)."' AND ser_SC = 'true' ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT ".SC_NUM);
 	while($r = r($result)){ 
 		sql("UPDATE users SET SC = 'true' WHERE ID = '".$r['ID']."' LIMIT 1");
 	}
 
 
-	evento_chat('<b>[PROCESO] Supervisores del Censo:</b> '.implode(' ', get_supervisores_del_censo()));
+	evento_chat('<b>[PROCESO] Supervisores del Censo electos:</b> '.implode(' ', get_supervisores_del_censo()));
 	
 }
 

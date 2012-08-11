@@ -73,6 +73,7 @@ define('SQL', strtolower(PAIS).'_');
 define('USERCOOKIE', '.'.DOMAIN);
 define('HOST', $_SERVER['HTTP_HOST']);
 define('VOTO_CONFIANZA_MAX', 50); // Máximo de votos de confianza emitibles
+define('SC_NUM', 9); // Numero de SC electos.
 define('MP_MAX', 25); // Máximo de MP (mensajes privados) que puede enviar un ciudadano
 define('VER', 10); // Version de archivos estaticos. Util para forzar el refresco de js y css. Incrementar.
 $datos_perfil = array('Blog', 'Twitter', 'Facebook', 'Google+', '', 'Menéame');

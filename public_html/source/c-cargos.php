@@ -172,21 +172,21 @@ LIMIT 1", $link);
 
 <fieldset><legend>Log de acciones</legend>
 
-<table>
+<table class="rich">
 <tr>
 <th colspan="2">'._('Fecha').'</th>
-<th>'._('Quien').'</th>
 <th>'._('Acción').'</th>
 </tr>';
 
-$result = sql("SELECT *
+$result = sql("SELECT time, accion
 FROM log 
-WHERE pais = '".PAIS."' AND accion LIKE 'Cargo ".$r['nombre']." %'
+WHERE pais = '".PAIS."' AND accion_a = 'cargo' AND accion LIKE 'Cargo ".$r['nombre']." %'
 ORDER BY time DESC LIMIT 25");
 while($r = r($result)){
 	$txt .= '<tr>
-<td align="right">'.timer($r['time']).'</td><td>'.substr($r['time'], 11, 5).'</td>
-<td'.($r['nick']==$pol['nick']?' style="font-weight:bold;"':'').'>'.crear_link($r['nick']).'</td><td>'.$r['accion'].'</td>
+<td align="right">'.timer($r['time']).'</td>
+<td>'.substr($r['time'], 11, 5).'</td>
+<td>'.$r['accion'].'</td>
 </tr>'."\n";
 }
 $txt .= '</table>

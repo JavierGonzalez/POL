@@ -26,15 +26,6 @@ evento_chat('<b>[PROCESO] Inicio del proceso diario...</b>');
 
 // TIME MARGEN
 $date			= date('Y-m-d 20:00:00'); 					// ahora
-$margen_24h		= date('Y-m-d 20:00:00', time() - 86400);	// 24 h
-$margen_2dias	= date('Y-m-d 20:00:00', time() - 172800);	// 2 dias
-$margen_5dias	= date('Y-m-d 20:00:00', time() - 432000);	// 5 dias
-$margen_10dias	= date('Y-m-d 20:00:00', time() - 864000);	// 10 dias
-$margen_15dias	= date('Y-m-d 20:00:00', time() - 1296000); // 15 dias
-$margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); // 30 dias
-$margen_60dias	= date('Y-m-d 20:00:00', time() - 5184000); // 60 dias
-$margen_90dias	= date('Y-m-d 20:00:00', time() - 7776000); // 90 dias
-$margen_180dias	= date('Y-m-d 20:00:00', time() - (86400*180)); // 180 dias
 
 
 // LOAD CONFIG $pol['config'][]
@@ -70,7 +61,7 @@ while($r = r($result)){
 		sql("UPDATE users SET ref_num = ref_num + 1 WHERE ID = '".$r['user_ID']."' LIMIT 1");
 	}
 }
-sql("DELETE FROM referencias WHERE time < '".$margen_30dias."'");
+sql("DELETE FROM referencias WHERE time < '".tiempo(30)."'");
 
 
 // SALARIOS
@@ -86,7 +77,7 @@ $gasto_total = 0;
 foreach($salarios as $user_ID => $salario) {
 	$result = sql("SELECT ID
 FROM users
-WHERE ID = '".$user_ID."' AND fecha_last > '".$margen_24h."' AND pais = '".PAIS."'
+WHERE ID = '".$user_ID."' AND fecha_last > '".tiempo(1)."' AND pais = '".PAIS."'
 LIMIT 1");
 	while($r = r($result)){
 		$txt .= $user_ID. ' - '.$salario."<br />\n";
@@ -116,7 +107,7 @@ else {
 $salario_inempol = $pol['config']['pols_inem'];
 $gasto_total = 0;
 if ($salario_inempol > 0) {
-	$result = sql("SELECT ID FROM users WHERE fecha_last > '".$margen_24h."' AND pais = '".PAIS."'");
+	$result = sql("SELECT ID FROM users WHERE fecha_last > '".tiempo(1)."' AND pais = '".PAIS."'");
 	while($r = r($result)){ 
 		if ($tiene_sueldo[$r['ID']] != 'ok') {
 			$gasto_total += $salario_inempol;
@@ -230,7 +221,7 @@ if ($pol['config']['impuestos'] > 0) {
 
 	$result = sql("SELECT ID, nick, pols, estado,
 (SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = users.ID AND nivel = '0' AND exenta_impuestos = '0' GROUP BY user_ID) AS pols_cuentas
-FROM users WHERE pais = '".PAIS."' AND fecha_registro < '".$margen_24h."'
+FROM users WHERE pais = '".PAIS."' AND fecha_registro < '".tiempo(1)."'
 ORDER BY fecha_registro ASC");
 	while($r = r($result)) { 
 		$pols_total = ($r['pols'] + $r['pols_cuentas']);
@@ -321,30 +312,28 @@ sql("DELETE FROM chats WHERE pais = '".PAIS."' AND fecha_last < '".$margen_chate
 */
 
 // ELIMINAR MENSAJES PRIVADOS
-sql("DELETE FROM mensajes WHERE time < '".$margen_15dias."'");
+sql("DELETE FROM mensajes WHERE time < '".tiempo(15)."'");
 
 // ELIMINAR TRANSACCIONES ANTIGUAS
-sql("DELETE FROM transacciones WHERE pais = '".PAIS."' AND time < '".$margen_60dias."'");
+sql("DELETE FROM transacciones WHERE pais = '".PAIS."' AND time < '".tiempo(60)."'");
 
 // ELIMINAR LOG EVENTOS
-sql("DELETE FROM ".SQL."log WHERE time < '".$margen_90dias."'");
+sql("DELETE FROM ".SQL."log WHERE time < '".tiempo(90)."'");
 
 // ELIMINAR bans antiguos
-sql("DELETE FROM kicks WHERE pais = '".PAIS."' AND (estado = 'inactivo' OR estado = 'cancelado') AND expire < '".$margen_60dias."'");
+sql("DELETE FROM kicks WHERE pais = '".PAIS."' AND (estado = 'inactivo' OR estado = 'cancelado') AND expire < '".tiempo(60)."'");
 
 // ELIMINAR hilos BASURA
-sql("DELETE FROM ".SQL."foros_hilos WHERE estado = 'borrado' AND time_last < '".$margen_10dias."'");
+sql("DELETE FROM ".SQL."foros_hilos WHERE estado = 'borrado' AND time_last < '".tiempo(10)."'");
 
 // ELIMINAR mensajes BASURA
-sql("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '".$margen_10dias."'");
+sql("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '".tiempo(10)."'");
 
 // ELIMINAR examenes antiguos
-//sql("DELETE FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'false' AND time < '".$margen_60dias."'");
+//sql("DELETE FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'false' AND time < '".tiempo(60)."'");
 
 // ELIMINAR notificaciones
-sql("DELETE FROM notificaciones WHERE time < '".$margen_10dias."'");
-
-
+sql("DELETE FROM notificaciones WHERE time < '".tiempo(10)."'");
 
 
 /* Expiraciones:
@@ -401,8 +390,12 @@ $result = sql("SELECT item_ID, SUM(voto) AS num_confianza FROM votos WHERE tipo 
 while ($r = r($result)) { 
 	sql("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['item_ID']."' LIMIT 1");
 }
-sql("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '".$margen_180dias."')");
+sql("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '".tiempo(180)."')");
 
+
+
+// Quitar candidaturas de SC que estén más de 15 dias inactivos.
+sql("UPDATE users SET ser_SC = 'false' WHERE ser_SC = 'true' AND fecha_last < '".tiempo(15)."'");
 
 if (date('N') == 7) { // SOLO DOMINGO
 
@@ -416,7 +409,7 @@ if (date('N') == 7) { // SOLO DOMINGO
 	$SC_num = 8; // 8 SC + Custodiador = 9 SC
 	$margen_365d = date('Y-m-d 20:00:00', time() - 86400*365); // Antiguedad minima: 365 dias.
 	sql("UPDATE users SET SC = 'false' WHERE ID != 1");
-	$result = sql("SELECT ID FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".$margen_365d."' AND ser_SC = 'true' AND ID != 1 ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT ".mysql_real_escape_string($SC_num));
+	$result = sql("SELECT ID FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".tiempo(365)."' AND ser_SC = 'true' AND ID != 1 ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT ".mysql_real_escape_string($SC_num));
 	while($r = r($result)){ 
 		sql("UPDATE users SET SC = 'true' WHERE ID = '".$r['ID']."' LIMIT 1");
 	}
@@ -435,7 +428,7 @@ $result = sql("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND
 while($r = r($result)) { $st['ciudadanos'] = $r['num']; }
 
 // nuevos
-$result = sql("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_registro > '".$margen_24h."'");
+$result = sql("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_registro > '".tiempo(1)."'");
 while($r = r($result)) { $st['nuevos'] = $r['num']; }
 evento_chat('<b>[PROCESO]</b> Ciudadanos nuevos: <b>'.$st['nuevos'].'</b>, Ciudadanos expirados: <b>'.$st['eliminados'].'</b>. Balance: <b>'.round($st['nuevos'] - $st['eliminados']).'</b>');
 
@@ -450,14 +443,14 @@ if (ECONOMIA) {
 
 	// transacciones
 
-	$result = sql("SELECT COUNT(ID) AS num FROM transacciones WHERE pais = '".PAIS."' AND time > '".$margen_24h."'");
+	$result = sql("SELECT COUNT(ID) AS num FROM transacciones WHERE pais = '".PAIS."' AND time > '".tiempo(1)."'");
 	while($r = r($result)) { $st['transacciones'] = $r['num']; }
 } else { $st['transacciones'] = 0; $st['pols_cuentas'] = 0; }
 
 // hilos+msg
-$result = sql("SELECT COUNT(ID) AS num FROM ".SQL."foros_hilos WHERE time > '".$margen_24h."'");
+$result = sql("SELECT COUNT(ID) AS num FROM ".SQL."foros_hilos WHERE time > '".tiempo(1)."'");
 while($r = r($result)) { $st['hilos_msg'] = $r['num']; }
-$result = sql("SELECT COUNT(ID) AS num FROM ".SQL."foros_msg WHERE time > '".$margen_24h."'");
+$result = sql("SELECT COUNT(ID) AS num FROM ".SQL."foros_msg WHERE time > '".tiempo(1)."'");
 while($r = r($result)) { $st['hilos_msg'] = $st['hilos_msg'] + $r['num']; }
 
 // pols_gobierno
@@ -492,7 +485,7 @@ if (ECONOMIA) {
 
 
 // 24h: ciudadanos que entraron en 24h (CONDICION NUEVA: y que no sean ciudadanos nuevos).
-$result = sql("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'");
+$result = sql("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".tiempo(1)."' AND fecha_registro < '".tiempo(1)."'");
 while($r = r($result)) { $st['24h'] = $r['num']; }
 
 // confianza

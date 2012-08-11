@@ -15,7 +15,7 @@ redirect 301 /contenido http://creativecommons.org/licenses/by-sa/3.0/deed.es_ES
 
 ## Motor de redirecciones
 RewriteEngine on 
-RewriteRule ^(TOS|legal|manual|documentacion|donaciones|donar|desarrollo|presentacion|video)$ /pages.php?a=$1 [L]
+RewriteRule ^(TOS|legal|manual|documentacion|donaciones|donar|desarrollo|presentacion|video|reglamento-sc)$ /pages.php?a=$1 [L]
 
 
 ## Permite acceso cross-site (diferente dominio) para archivos de fuentes (iconos). Necesario para IE/Firefox.

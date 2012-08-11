@@ -444,7 +444,7 @@ case 'expulsar':
 			sql("UPDATE users SET estado = 'ciudadano', fecha_last = '".$date."' WHERE ID = '".$r['user_ID']."' LIMIT 1");
 			sql("UPDATE expulsiones SET estado = 'cancelado' WHERE ID = '".$_GET['ID']."' LIMIT 1");
 			//evento_chat('<span class="expulsado"><img src="'.IMG.'varios/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
-			evento_log('Expulsión a '.$r['tiempo'].' cancelada');
+			evento_log('Expulsión a @'.$r['tiempo'].' cancelada');
 		}
 
 	} elseif ((nucleo_acceso('supervisores_censo')) AND ($_POST['razon']) AND ($_POST['nick']) AND (!in_array($_POST['nick'], $sc))) { 
@@ -476,7 +476,7 @@ case 'expulsar':
 
 			//evento_chat('<span class="expulsado"><img src="'.IMG.'varios/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['nick'].'</b> ha sido expulsado de VirtualPol. Razon: <b>'.$_POST['razon'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
 
-			evento_log('Expulsión a '.$r['nick'].', razón: '.$r['razon']);
+			evento_log('Expulsión a @'.$r['nick'].', razón: '.$r['razon']);
 			$refer_url = 'perfil/'.$r['nick'];
 		}
 	}
@@ -1155,7 +1155,7 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 		while($r = r($result)){ 
 			if ($r['ceder_user_ID']) {
 				sql("UPDATE empresas SET user_ID = '".$r['ceder_user_ID']."' WHERE pais = '".PAIS."' AND ID = '".$r['ID']."' LIMIT 1");
-				evento_log('Cede empresa #'.$r['ID'].' a '.$_POST['nick']);
+				evento_log('Cede empresa #'.$r['ID'].' a @'.$_POST['nick']);
 			}
 		}
 		$refer_url = 'empresas';
@@ -1205,7 +1205,7 @@ ORDER BY pols DESC LIMIT 1");
 			evento_chat('<b>[#] '.crear_link($pol['nick']).' cede</b> "la frase" a <b>'.crear_link($r['nick']).'</b>'); 
 		}
 		$refer_url = 'subasta/editar';
-		evento_log('Frase cedida a '.$r['nick']);
+		evento_log('Frase cedida a @'.$r['nick']);
 
 	} elseif (($_GET['b'] == 'editarpalabra') AND (is_numeric($_GET['ID'])) AND (strlen($_POST['text']) <= 25)) {
 		$_POST['text'] = ereg_replace("[^ A-Za-z0-9-]", "", $_POST['text']);
@@ -1238,7 +1238,7 @@ ORDER BY pols DESC LIMIT 1");
 			}
 			sql("UPDATE config SET valor = '".$dato."' WHERE pais = '".PAIS."' AND dato = 'palabras' LIMIT 1");
 			evento_chat('<b>[#] '.crear_link($pol['nick']).' cede</b> la "palabra '.($_GET['ID'] + 1).'" a <b>'.crear_link($r['nick']).'</b>');
-			evento_log('Palabra #'.($_GET['ID'] + 1).' cedida a '.$r['nick']);
+			evento_log('Palabra #'.($_GET['ID'] + 1).' cedida a @'.$r['nick']);
 		}
 		$refer_url = 'subasta/editar';
 	}
@@ -1709,7 +1709,7 @@ case 'kick':
 				$result = sql("SELECT nick FROM users WHERE ID = '".$kickeado_id."' LIMIT 1");
 				while($r = r($result)){ $kickeado_nick = $r['nick'];}
 				
-				evento_log('Kick a '.$kickeado_nick.' cancelado');
+				evento_log('Kick a @'.$kickeado_nick.' cancelado');
 				
 				evento_chat('<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[KICK]</b> El kick a <b>'.$kickeado_nick.'</b> ha sido cancelado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>.</span>');
 			}
@@ -1754,7 +1754,7 @@ case 'kick':
 			sql("INSERT INTO kicks (pais, user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".PAIS."', '".$el_userid."', ".$pol['user_ID'].", '".$expire."', '".$_POST['razon']."', 'activo', '".$_POST['expire']."', ".$kick_IP.", '".$pol['cargo']."', '".$_POST['motivo']."')");
 
 			evento_chat('<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>');
-			evento_log('Kick a '.$kick_nick.', tiempo('.$_POST['expire'].'), razon: '.$_POST['razon']);
+			evento_log('Kick a @'.$kick_nick.', tiempo('.$_POST['expire'].'), razon: '.$_POST['razon']);
 		}
 		$refer_url = 'control/kick';
 	}

@@ -283,17 +283,20 @@ case 'filtro':
 	switch ($_GET['b']) {
 		case 'IP': 
 			$sql_select = ", dispositivo, nav_resolucion"; 
-			$sql_where = "IP = '".$_GET['c']."'"; 
+			$sql_where = "IP = '".$_GET['c']."'";
+			$sql_limit = 1000;
 			break;
 
 		case 'nick': 
 			$sql_select = ", dispositivo, nav_resolucion"; 
-			$sql_where = "nick IN ('".implode("','", explode('-', $_GET['c']))."')"; 
+			$sql_where = "nick IN ('".implode("','", explode('-', $_GET['c']))."')";
+			$sql_limit = 1000;
 			break;
 
 		case 'user_ID': 
 			$sql_select = ", dispositivo, nav_resolucion"; 
-			$sql_where = "user_ID IN ('".implode("','", explode('-', $_GET['c']))."')"; 
+			$sql_where = "user_ID IN ('".implode("','", explode('-', $_GET['c']))."')";
+			$sql_limit = 1000;
 			break;
 
 		case 'nuevos':
@@ -370,12 +373,12 @@ case 'filtro':
 <th>Email</th>
 <th></th>
 </tr>';
-	$result = sql("SELECT user_ID, ISP, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, nick, estado, u.pais, pass, nota_SC, email, uc.tipo, uc.time, v.voto AS has_votado, u.voto_confianza".$sql_select."
+	$result = sql("SELECT user_ID, ISP, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, nick, estado, u.pais, pass, nota_SC, email, uc.tipo, MAX(uc.time) AS time, v.voto AS has_votado, u.voto_confianza".$sql_select."
 FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
 WHERE ".$sql_where."
-ORDER BY ".$sql_order." LIMIT 50");
+ORDER BY ".$sql_order." LIMIT ".(is_numeric($sql_limit)?$sql_limit:25));
 	while ($r = r($result)) { $txt .= print_td($r); }
 	$txt .= '</table></fieldset>';
 	break;

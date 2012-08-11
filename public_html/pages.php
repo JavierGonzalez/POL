@@ -86,6 +86,24 @@ case 'desarrollo':
 </div>';
 	break;
 
+case 'reglamento-sc':
+	$txt_title = 'Reglamento de Supervisión del Censo'; 
+	$txt_nav = array('Reglamento de Supervisión del Censo');
+
+	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 1188 LIMIT 1", $link); // doc_ID 1188 = Reglamento
+	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
+
+	$txt .= '
+<div>
+<h1 style="text-align:center;font-size:28px;">'.$title.'</h1>
+
+<div id="doc_pad">
+'.$text.'
+</div>
+
+</div>';
+	break;
+
 
 case 'manual': redirect('http://www.virtualpol.com/documentacion'); break;
 case 'documentacion':

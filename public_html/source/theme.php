@@ -98,6 +98,7 @@ p_scroll = false;
 					<li><a href="/log"><?=_('Log de acciones')?></a></li>
 				</ul>
 			</li>
+			<li><a href="/info/supervision-del-censo"><?=_('Supervisión censo')?></a></li>
 			<li><a href="/buscar"><?=_('Buscar')?></a></li>
 			<li><a href="#" style="cursor:default;"><?=_('Sobre VirtualPol')?>...</a>
 				<ul>

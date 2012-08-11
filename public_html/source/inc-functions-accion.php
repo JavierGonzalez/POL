@@ -98,7 +98,7 @@ function evento_log($accion, $es_sistema=false) {
 	global $pol, $link, $_REQUEST;
 	if (!isset($pol['user_ID'])) { $es_sistema = true; }
 	if (PAIS == 'Ninguno') { $pais = $pol['pais']; } else { $pais = PAIS; }
-	sql("INSERT INTO log (pais, user_ID, nick, time, accion, accion_a) VALUES ('".$pais."', '".($es_sistema==false?$pol['user_ID']:0)."', '".($es_sistema==false?$pol['nick']:'Sistema')."', '".date('Y-m-d H:i:s')."', '".$accion."', '".$_REQUEST['a']."')");
+	sql("INSERT INTO log (pais, user_ID, nick, time, accion, accion_a) VALUES ('".$pais."', '".($es_sistema==false?$pol['user_ID']:0)."', '".($es_sistema==false?$pol['nick']:'Sistema')."', '".date('Y-m-d H:i:s')."', '".$accion."', '".(substr($accion, 0, 6)=='Cargo '?'cargo':$_REQUEST['a'])."')");
 }
 
 function presentacion($titulo, $html, $url='http://www.virtualpol.com') {
@@ -230,7 +230,7 @@ function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 			evento_chat('<b>[CARGO]</b> El cargo de <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" /> '.$r['nombre'].' ha sido asignado a '.crear_link($nick_asignado).' por '.crear_link(($sistema==true?'VirtualPol':$pol['nick'])));
 			notificacion($user_ID, 'Te ha sido asignado el cargo '.$r['nombre'], '/cargos');
 		}
-		evento_log('Cargo '.$r['nombre'].' asignado a '.$nick_asignado.' por '.($sistema==true?'VirtualPol':$pol['nick']));
+		evento_log('Cargo '.$r['nombre'].' asignado a @'.$nick_asignado.' por '.($sistema==true?'VirtualPol':'@'.$pol['nick']));
 	}
 }
 
@@ -250,12 +250,13 @@ LIMIT 1");
 		sql("UPDATE users SET nivel = '" . $user_nivel_max . "'" . $user_nivel_sql . " WHERE ID = '".$user_ID."' LIMIT 1");
 		actualizar('cargos', $user_ID);
 
-		if ($evento_chat) { 
-			$result2 = sql("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1");
-			while($r2 = r($result2)){ $nick_asignado = $r2['nick']; }
+		$result2 = sql("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1");
+		while($r2 = r($result2)){ $nick_asignado = $r2['nick']; }
+
+		if ($evento_chat) { 	
 			evento_chat('<b>[CARGO] '.crear_link(($sistema==true?'VirtualPol':$pol['nick'])).' quita</b> el cargo <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$r['nombre'].' a '. crear_link($nick_asignado));
 		}
-		evento_log('Cargo '.$r['nombre'].' quitado a '.$nick_asignado.' por '.($sistema==true?'VirtualPol':$pol['nick']));
+		evento_log('Cargo '.$r['nombre'].' quitado a @'.$nick_asignado.' por '.($sistema==true?'VirtualPol':'@'.$pol['nick']));
 	}
 }
 
@@ -303,7 +304,7 @@ LIMIT 1");
 			while($r2 = r($result2)){ $nick_asignado = $r2['nick']; }
 			evento_chat('<b>[CARGO] '.crear_link(($sistema==true?'VirtualPol':$pol['nick'])).' quita</b> el cargo <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$r['nombre'].' a '. crear_link($nick_asignado));
 		}
-		evento_log('Cargo '.$r['nombre'].' quitado a '.$nick_asignado.' por '.($sistema==true?'VirtualPol':$pol['nick']));
+		evento_log('Cargo '.$r['nombre'].' quitado a @'.$nick_asignado.' por '.($sistema==true?'VirtualPol':'@'.$pol['nick']));
 	}
 }
 

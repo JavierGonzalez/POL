@@ -456,11 +456,12 @@ case 'expulsar':
 		$result = sql("SELECT nick, ID FROM users WHERE nick IN ('".implode("','", explode(' ', $_POST['nick']))."') AND estado != 'expulsado' LIMIT 8");
 		while ($r = r($result)) {
 			sql("UPDATE users SET estado = 'expulsado' WHERE ID = '".$r['ID']."' LIMIT 1");
-			sql("DELETE FROM votos WHERE emisor_ID = '".$r['ID']."'");
+			//sql("DELETE FROM votos WHERE emisor_ID = '".$r['ID']."'");
 
 			// Cambia a "En Blanco" los votos. Es equivalente a anular el voto.
 			$result2 = sql("SELECT ID, tipo_voto, respuestas FROM votacion WHERE estado = 'ok'");
 			while ($r2 = r($result2)) { 
+				$voto_en_blanco = '';
 				if ($r2['tipo_voto'] == 'multiple') { 
 					foreach (implode('|', $r2['respuestas']) AS $id => $pregunta) { if ($pregunta != '') { $voto_en_blanco .= '0 '; } }
 					$voto_en_blanco = trim($voto_en_blanco);

@@ -57,8 +57,8 @@ while($r = r($result)) {
 
 $txt .= '</table>
 <p class="gris"><em>Requisitos para ser candidato:</em><br />
-* Postularse como candidato voluntario (<a href="'.REGISTRAR.'login.php?a=panel">aquí</a>).<br />
-* Antiguedad de al menos un año.
+1. Antiguedad de al menos un año.<br />
+2. Postularse como candidato voluntario (<a href="'.REGISTRAR.'login.php?a=panel">aquí</a>).
 </p>
 </fieldset>
 </div>
@@ -66,8 +66,8 @@ $txt .= '</table>
 <div class="col_7">
 
 <fieldset><legend>Información</legend>
-<p>VirtualPol tiene -por necesidad- un avanzado sistema de supervisión del censo. Hay unas <a href="http://www.virtualpol.com/TOS">condiciones de uso</a> (TOS) que prohibe lo estrictamente necesario, por ejemplo la creación de más de un usuario por persona.</p>
-<p>Los encargados de aplicar el TOS -con ayuda de un avanzado sistema de detección- son los supervisores del censo. Son los ciudadanos de VirtualPol con más votos de confianza y al menos un año de antiguedad, elegidos semanalmente por democracia directa de forma automática.</p>
+<p>VirtualPol tiene -por necesidad- un avanzado sistema de supervisión del censo. Las <a href="http://www.virtualpol.com/TOS">Condiciones de Uso</a> (TOS) regulan lo estrictamente esencial, por ejemplo la creación de más de un usuario por persona.</p>
+<p>Los encargados de aplicar el TOS -con ayuda de un avanzado sistema de detección- son los supervisores del censo. Son los '.SC_NUM.' ciudadanos de VirtualPol con más votos de confianza y al menos un año de antiguedad, elegidos semanalmente por democracia directa de forma automática.</p>
 <p>La función de esta página es aportar la máxima transparencia posible sobre esta importante labor.</p>
 <p class="gris">* <a href="http://www.virtualpol.com/reglamento-sc">Reglamento de Supervisión del Censo</a> (en redacción)</p>
 </fieldset>
@@ -89,7 +89,7 @@ $txt .= '</table>
 (SELECT estado FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_estado
 FROM expulsiones
 WHERE estado != 'indultado'
-ORDER BY expire DESC LIMIT 17");
+ORDER BY expire DESC LIMIT 15");
 	while($r = r($result)){
 		
 		if ((isset($sc[$pol['user_ID']])) AND ($r['expulsado_pais']) AND ($r['estado'] == 'expulsado')) { 
@@ -106,6 +106,7 @@ ORDER BY expire DESC LIMIT 17");
 
 		}
 		$txt .= '</table>
+<p class="gris">* Puedes comprobar en qué consiste cada infracción en las <a href="http://www.virtualpol.com/TOS">Condiciones de Uso</a>.</p>
 <p><a href="/control/expulsiones">Ver lista completa</a></p>
 </fieldset>
 </div>

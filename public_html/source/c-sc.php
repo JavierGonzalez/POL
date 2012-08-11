@@ -308,11 +308,13 @@ case 'filtro':
 			$sql_select .= ", MAX(uc.time) AS time"; 
 			$sql_where = "u.estado = 'expulsado' GROUP BY user_ID"; 
 			$sql_order = "fecha_last DESC"; 
+			$sql_uctime = true;
 			break;
 
 		case 'SC':  
 			$sql_where = "SC = 'true' GROUP BY user_ID"; 
-			$sql_order = "voto_confianza DESC"; 
+			$sql_order = "voto_confianza DESC";
+			$sql_uctime = true;
 			break;
 
 		case 'confianza':  
@@ -353,6 +355,7 @@ case 'filtro':
 		case 'conexion-oculta':
 			$sql_select .= ", MAX(uc.time) AS time"; 
 			$sql_where = "ISP LIKE 'Ocultado%' GROUP BY user_ID";
+			$sql_uctime = true;
 			break;
 
 		case 'actividad':
@@ -373,7 +376,7 @@ case 'filtro':
 <th>Email</th>
 <th></th>
 </tr>';
-	$result = sql("SELECT user_ID, ISP, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, nick, estado, u.pais, pass, nota_SC, email, uc.tipo, MAX(uc.time) AS time, v.voto AS has_votado, u.voto_confianza".$sql_select."
+	$result = sql("SELECT user_ID, ISP, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, nick, estado, u.pais, pass, nota_SC, email, uc.tipo, ".($sql_uctime==true?'MAX(uc.time) AS time':'uc.time').", v.voto AS has_votado, u.voto_confianza".$sql_select."
 FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'

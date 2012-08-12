@@ -488,7 +488,7 @@ LIMIT 200", $link);
 					} else { 
 						$titulo = '<a href="/foro/' . $r['url'] . '/' . $r2['url'] . '"><b>' . $r2['title'] . '</b></a>'; 
 					}
-					if (strtotime($r2['time']) > (time() - 86400)) { $titulo = $titulo . ' <sup style="font-size:9px;color:red;">Nuevo!</sup>'; }
+					if (strtotime($r2['time']) > (time() - 86400)) { $titulo = $titulo . ' <sup style="font-size:9px;color:red;">¡Nuevo!</sup>'; }
 
 					if (($pol['user_ID'] == $r2['user_ID']) AND (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']))) { 
 						$editar = ' '.boton('X', accion_url().'a=foro&b=eliminarhilo&ID='.$r2['ID'], '¿Estás seguro de querer ELIMINAR este HILO?', 'small red'); 
@@ -549,7 +549,7 @@ LIMIT ".mysql_real_escape_string($r['limite']), $link);
 	<td align="right"><b>'.$r2['num'].'</b></td>
 	<td align="right" style="padding-right:4px;">'.confianza($r2['votos'], $r2['votos_num']).'</td>
 	
-	<td><a'.($time_hilo>(time()-432000)?' style="font-weight:bold;"':'').' href="/foro/'.$r['url'].'/'.$r2['url'].'" class="rich">'.$r2['title'].'</a>'.($time_hilo>(time()-86400)?' <sup style="font-size:9px;color:red;">Nuevo!</sup>':'').'</td>
+	<td><a'.($time_hilo>(time()-432000)?' style="font-weight:bold;"':'').' href="/foro/'.$r['url'].'/'.$r2['url'].'" class="rich">'.$r2['title'].'</a>'.($time_hilo>(time()-86400)?' <sup style="font-size:9px;color:red;">¡Nuevo!</sup>':'').'</td>
 	
 	<td align="right" nowrap="nowrap"><span class="timer" value="'.$time_hilo.'"></span></td>
 	</tr>';

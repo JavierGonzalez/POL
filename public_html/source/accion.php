@@ -443,8 +443,6 @@ case 'expulsar':
 		while ($r = r($result)) {
 			sql("UPDATE users SET estado = 'ciudadano', fecha_last = '".$date."' WHERE ID = '".$r['user_ID']."' LIMIT 1");
 			sql("UPDATE expulsiones SET estado = 'cancelado' WHERE ID = '".$_GET['ID']."' LIMIT 1");
-			//evento_chat('<span class="expulsado"><img src="'.IMG.'varios/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['tiempo'].'</b> ha sido <b>DESexpulsado</b> de VirtualPol por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
-			evento_log('Expulsión a @'.$r['tiempo'].' cancelada');
 		}
 
 	} elseif ((nucleo_acceso('supervisores_censo')) AND ($_POST['razon']) AND ($_POST['nick']) AND (!in_array($_POST['nick'], $sc))) { 
@@ -474,11 +472,6 @@ case 'expulsar':
 			}
 			
 			sql("INSERT INTO expulsiones (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')");
-
-			//evento_chat('<span class="expulsado"><img src="'.IMG.'varios/expulsar.gif" title="Expulsion" border="0" /> <b>[EXPULSION] '.$r['nick'].'</b> ha sido expulsado de VirtualPol. Razon: <b>'.$_POST['razon'].'</b> (<a href="/control/expulsiones/">Ver expulsiones</a>)</span>', '0', '', false, 'e', 'VP');
-
-			evento_log('Expulsión a @'.$r['nick'].', razón: '.$r['razon']);
-			$refer_url = 'perfil/'.$r['nick'];
 		}
 	}
 	break;
@@ -1548,7 +1541,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 		redirect(vp_url('/votacion/'.$votacion_ID));
 
 	} elseif (($_GET['b'] == 'argumento') AND (is_numeric($_POST['ref_ID'])) AND (strlen($_POST['texto']) > 1)) {
-		$result = sql("SELECT * FROM votacion WHERE estado != 'end' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' LIMIT 1");
+		$result = sql("SELECT * FROM votacion WHERE estado != 'end' AND ID = '".$_POST['ref_ID']."' LIMIT 1");
 		while($r = r($result)) {
 			$_POST['sentido'] = substr(strip_tags($_POST['sentido']), 0, 40);
 			if (nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) {
@@ -1565,10 +1558,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 	}
 
 	// actualizar info en theme
-	$result = sql("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_ver = 'anonimos'");
-	while($r = r($result)) {
-		sql("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_consultas' LIMIT 1");
-	}
+	actualizar('votaciones');
 
 	$refer_url = 'votacion';
 	break;

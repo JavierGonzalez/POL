@@ -335,9 +335,13 @@ sql("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '".tiempo
 // ELIMINAR notificaciones
 sql("DELETE FROM notificaciones WHERE time < '".tiempo(10)."'");
 
+// ELIMINAR users_con
+sql("DELETE FROM users_con WHERE time < '".tiempo(70)."'");
+
+
 
 /* Expiraciones:
-Tras 60 dias inactivo
+Tras 90 dias inactivo
 
 Excepciones:
 * Autentificados

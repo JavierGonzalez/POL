@@ -60,9 +60,14 @@ while($r = r($result)){
 
 				case 'elecciones': // $r['ejecutar'] = elecciones|$cargo_ID|$numero_a_asignar
 					
+					$cargo_del = array();
+					$cargo_add = array();
+
 					// Quita todos los cargos de las elecciones (reset)
 					$result2 = sql("SELECT user_ID FROM cargos_users WHERE cargo_ID = '".$cargo_ID."' AND pais = '".PAIS."' AND cargo = 'true'");
-					while($r2 = r($result2)) { cargo_del($cargo_ID, $r2['user_ID'], true, true); }
+					while($r2 = r($result2)) { 
+						$cargo_del[] = $r2['user_ID'];
+					}
 
 					// Reset campo temporal (más simple que crear tablas temporales)
 					sql("UPDATE users SET temp = NULL WHERE temp IS NOT NULL");
@@ -83,8 +88,18 @@ while($r = r($result)){
 					$result2 = sql("SELECT ID, nick FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND temp IS NOT NULL ORDER BY temp DESC, fecha_registro ASC, voto_confianza DESC LIMIT 50");
 					while($r2 = r($result2)) {
 						$n++;
-						if ($n <= explodear('|', $r['ejecutar'], 2)) { cargo_add($cargo_ID, $r2['ID'], true, true); }
+						if ($n <= explodear('|', $r['ejecutar'], 2)) { 
+							$cargo_add[] = $r2['ID'];
+						}
 						$guardar[] = $r2['nick'].'.'.$votacion_preferencial_nick[$r2['nick']];
+					}
+
+					// Asignación de cargos
+					foreach ($cargo_del AS $user_ID) {
+						if (!in_array($user_ID, $cargo_add)) { cargo_del($cargo_ID, $user_ID, true, true); }
+					}
+					foreach ($cargo_add AS $user_ID) {
+						if (!in_array($user_ID, $cargo_del)) { cargo_add($cargo_ID, $user_ID, true, true); }
 					}
 					
 					// Guarda escrutinio
@@ -103,10 +118,7 @@ while($r = r($result)){
 	}
 
 	// Actualiza contador de votaciones activas
-	$result2 = sql("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_ver = 'anonimos'");
-	while($r2 = r($result2)) {
-		sql("UPDATE config SET valor = '".$r2['num']."' WHERE pais = '".PAIS."' AND dato = 'info_consultas' LIMIT 1");
-	}
+	actualizar('votaciones');
 }
 // FIN DE FINALIZAR VOTACIONES
 
@@ -1099,7 +1111,7 @@ ORDER BY siglas ASC");
 <th></th>
 <th>'._('Votos').'</th>
 <th></th>
-<th colspan="4" align="left"><span style="float:right;">Argumentos</span>'._('Finaliza en').'...</th>
+<th colspan="4" align="left"><span style="float:right;">Argumentos</span>'._('Finaliza').'... &nbsp;</th>
 </tr>';
 	$mostrar_separacion = true;
 	
@@ -1125,7 +1137,7 @@ LIMIT 500");
 <td>'.$votar.($r['cargo_ID']?'<a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /></a> ':'').'<a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').(!in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>
 <td nowrap="nowrap" class="gris" align="right">'.timer($r['time_expire']).'</td>
 <td nowrap="nowrap">'.($r['user_ID']==$pol['user_ID']&&$r['estado']=='ok'?boton('Cancelar', accion_url().'a=votacion&b=finalizar&ID='.$r['ID'], '¿Seguro que quieres CANCELAR esta votacion y convertirla en un BORRADOR?', 'small red'):'').'</td>
-<td>'.gbarra(round((time()-$time)*100)/($time_expire-$time)).'</td>
+<td>'.gbarra(round((time()-$time)*100)/($time_expire-$time), 60, false).'</td>
 <td align="right">'.($r['argumentos_num']>0?'<a href="/votacion/'.$r['ID'].'/argumentos"><b>'.num($r['argumentos_num']).'</b></a>':'').'</td>
 </tr>';
 		}

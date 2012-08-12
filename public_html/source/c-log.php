@@ -17,7 +17,7 @@ if (is_numeric($_GET['a'])) {
 
 $txt .= '<br />'.$p_paginas.'
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="rich">
 <tr>
 <th colspan="2">'._('Fecha').'</th>
 <th>'._('Quien').'</th>
@@ -30,7 +30,7 @@ WHERE pais = '".PAIS."'".($_GET['a']=='nick'?" AND nick = '".$_GET['b']."'":"").
 ORDER BY time DESC LIMIT ".mysql_real_escape_string($p_limit), $link);
 while($r = mysql_fetch_array($result)){
 	$txt .= '<tr>
-<td align="right">'.timer($r['time']).'</td><td>'.substr($r['time'], 11, 5).'</td>
+<td align="right">'.timer($r['time']).'</td><td class="gris">'.substr($r['time'], 11, 5).'</td>
 <td>'.crear_link($r['nick']).'</td><td>'.$r['accion'].'</td>
 </tr>'."\n";
 }

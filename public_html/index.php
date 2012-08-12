@@ -77,7 +77,7 @@ while($r = r($result)) {
 	$result2 = sql("SELECT valor, dato FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo', 'bg_color')");
 	while($r2 = r($result2)) { $pais_config[$r2['dato']] = $r2['valor']; }
 
-	$txt .= '<tr style="background:'.$pais_config['bg_color'].';'.($r['num']<10?'display:none;" class="p-inactiva"':'"').'>
+	$txt .= '<tr style="background:'.$pais_config['bg_color'].';'.($r['num']<40?'display:none;" class="p-inactiva"':'"').'>
 <td><a href="http://'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" alt="'.$pais.'" /></a></td>
 
 <td><span style="float:right;font-size:22px;"><b>'.num($r['num']).'</b></span><a href="http://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:'.($r['num']>1000?18:16).'px;">'.$pais_config['pais_des'].'</b></a><br />

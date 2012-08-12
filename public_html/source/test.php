@@ -17,17 +17,6 @@ $txt .= ' ';
 /***************************************************************************/
 
 
-$result = sql("SELECT ID, nav, nav_resolucion 
-FROM users_con 
-WHERE nav_resolucion IS NOT NULL");
-while($r = r($result)){ 
-	if (!strpos($r['nav'], ' | '.$r['nav_resolucion'])) {
-		$txt .= $r['nav'].'<br />';
-		sql("UPDATE users_con SET nav = '".$r['nav']." | ".$r['nav_resolucion']."' WHERE ID = '".$r['ID']."' LIMIT 1");
-	}
-
-}
-
 
 
 //**************************************************************************/

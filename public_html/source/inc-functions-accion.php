@@ -70,6 +70,13 @@ function actualizar($accion, $user_ID=false) {
 	if ($user_ID == false) { $user_ID = $pol['user_ID']; }
 	switch ($accion) {
 		
+		case 'votaciones':
+			$result = sql("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_ver = 'anonimos'");
+			while($r = r($result)) {
+				sql("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_consultas' LIMIT 1");
+			}
+			break;
+
 		case 'examenes':
 			$data_array = array();
 			$result = sql("SELECT cargo_ID, (SELECT ID FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_ID FROM cargos_users WHERE user_ID = '".$user_ID."' AND aprobado = 'ok'");

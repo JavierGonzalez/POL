@@ -364,26 +364,31 @@ case 'filtro':
 			$sql_where = "'true' = 'true' GROUP BY user_ID";
 	}
 
-	$txt .= '
-<fieldset>
-<table>
-<tr>
-<th colspan="3"></th>
-<th nowrap colspan="2">ISP / Rango / País / IP</th>
-<th>Traza</th>
-<th nowrap>SO / Navegador</th>
-<th>Clave</th>
-<th>Email</th>
-<th></th>
-</tr>';
+
+	$clones_array_full = array();
 	$result = sql("SELECT user_ID, ISP, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, nick, estado, u.pais, pass, nota_SC, email, uc.tipo, ".($sql_uctime==true?'MAX(uc.time) AS time':'uc.time').", v.voto AS has_votado, u.voto_confianza".$sql_select."
 FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
 WHERE ".$sql_where."
 ORDER BY ".$sql_order." LIMIT ".(is_numeric($sql_limit)?$sql_limit:25));
-	while ($r = r($result)) { $txt .= print_td($r); }
-	$txt .= '</table></fieldset>';
+	while ($r = r($result)) { $clones_array_full[] = $r['user_ID']; $txt_td .= print_td($r); }
+	
+	$txt .= '
+<fieldset>
+<table>
+<tr>
+<th colspan="3" align="left"><a href="/sc/filtro/user_ID/'.implode('-', $clones_array_full).'" class="button blue small">&nbsp;</a></th>
+<th nowrap colspan="2">ISP / Rango / País / IP</th>
+<th>Traza</th>
+<th nowrap>SO / Navegador</th>
+<th>Clave</th>
+<th>Email</th>
+<th></th>
+</tr>
+'.$txt_td.'
+</table>
+</fieldset>';
 	break;
 	
 
@@ -469,6 +474,8 @@ $IP_publicas = array(
 '93.186.23',	// Blackberry
 '93.186.31',	// Blackberry
 '77.209.224',	// Airtel movil
+'77.209.225',	// Airtel movil
+'77.209.226',	// Airtel movil
 );
 
 foreach ($IP_publicas AS $IPs) { $longIP_publicas[] = ip2long($IPs); }

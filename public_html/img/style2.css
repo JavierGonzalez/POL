@@ -11,7 +11,7 @@ body {
 	font-family: "Arial", "Helvetica", sans-serif;
 }
 #content-left { 
-	position:fixed;
+	position:absolute;
 	left:0px;
 	top:0px;
 	width:200px;

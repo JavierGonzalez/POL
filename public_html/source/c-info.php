@@ -69,7 +69,7 @@ $txt .= '</table>
 <p>VirtualPol tiene -por necesidad- un avanzado sistema de supervisión del censo. Las <a href="http://www.virtualpol.com/TOS">Condiciones de Uso</a> (TOS) regulan lo estrictamente esencial, por ejemplo la creación de más de un usuario por persona.</p>
 <p>Los encargados de aplicar el TOS -con ayuda de un avanzado sistema de detección- son los supervisores del censo. Son los '.SC_NUM.' ciudadanos de VirtualPol con más votos de confianza y al menos un año de antiguedad, elegidos semanalmente por democracia directa de forma automática.</p>
 <p>La función de esta página es aportar la máxima transparencia posible sobre esta importante labor.</p>
-<p class="gris">* <a href="http://www.virtualpol.com/reglamento-sc">Reglamento de Supervisión del Censo</a> (en redacción)</p>
+<p class="gris">* <a href="http://www.virtualpol.com/reglamento-sc">Reglamento de Supervisión del Censo</a></p>
 </fieldset>
 
 

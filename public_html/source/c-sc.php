@@ -200,8 +200,8 @@ if ($_GET['a'] != 'bloqueos') {
 '.(is_numeric($_GET['a'])||!$_GET['a']?'
 Profundidad: <select onchange="filtro_change(this)">
 <option value="/sc/2"'.($_GET['a']==2?' selected="selected"':'').'>2 días</option>
-<option value="/sc/5"'.($_GET['a']==5?' selected="selected"':'').'>5 días</option>
-<option value="/sc/15"'.(!$_GET['a']||$_GET['a']==15?' selected="selected"':'').'>15 días</option>
+<option value="/sc/5"'.(!$_GET['a']||$_GET['a']==5?' selected="selected"':'').'>5 días</option>
+<option value="/sc/15"'.($_GET['a']==15?' selected="selected"':'').'>15 días</option>
 <option value="/sc/30"'.($_GET['a']==30?' selected="selected"':'').'>30 días</option>
 <option value="/sc/60"'.($_GET['a']==60?' selected="selected"':'').'>60 días</option>
 <option value="/sc/10000"'.($_GET['a']==10000?' selected="selected"':'').'>Máximo</option>
@@ -397,7 +397,7 @@ ORDER BY ".$sql_order." LIMIT ".(is_numeric($sql_limit)?$sql_limit:25));
 
 default:
 
-	if (!$_GET['a']) { $_GET['a'] = 15; }
+	if (!$_GET['a']) { $_GET['a'] = 5; }
 
 	$sql_con = "uc.time > '".tiempo($_GET['a'])."' AND ";
 

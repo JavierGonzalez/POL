@@ -53,7 +53,7 @@ $vp['langs'] = array(
 );
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)
-$vp['paises'] = array('15M', 'Hispania', 'MIC', 'JRO', 'MCxVBC', 'ETSIIT', 'Occupy', 'PS', 'PCP', 'FCSM');
+$vp['paises'] = array('15M', 'Hispania', 'MIC', 'JRO', 'MCxVBC', 'ETSIIT', 'Occupy', 'PS', 'PCP', 'FCSM', 'PDI');
 
 
 if ($pais == 'www') {
@@ -75,7 +75,7 @@ define('HOST', $_SERVER['HTTP_HOST']);
 define('VOTO_CONFIANZA_MAX', 50); // Máximo de votos de confianza emitibles
 define('SC_NUM', 9); // Numero de SC electos.
 define('MP_MAX', 25); // Máximo de MP (mensajes privados) que puede enviar un ciudadano
-define('VER', 10); // Version de archivos estaticos. Util para forzar el refresco de js y css. Incrementar.
+define('VER', 12); // Version de archivos estaticos. Util para forzar el refresco de js y css. Incrementar.
 $datos_perfil = array('Blog', 'Twitter', 'Facebook', 'Google+', '', 'Menéame');
 $columnas = 14; $filas = 14; // Dimensiones mapa
 

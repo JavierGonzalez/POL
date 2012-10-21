@@ -386,6 +386,7 @@ LIMIT 1");
 			sql("UPDATE users SET ref_num = ref_num - 1 WHERE ID = '".$ref."' LIMIT 1");
 		}
 		sql("DELETE FROM users WHERE ID = '".$user_ID."' LIMIT 1");
+		sql("DELETE FROM users_con WHERE user_ID = '".$user_ID."'");
 		sql("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
 		sql("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'");
 		sql("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'");

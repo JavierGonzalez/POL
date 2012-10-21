@@ -88,7 +88,7 @@ foreach (array('Ahora', 'ahora', 'años', 'meses','días','horas','minutos','min
 	$txt_js .= '"'.$d.'":"'._($d).'",';
 }
 $txt_js .= '};';
-$txt_js .= 'ACCION_URL = "'.accion_url().'";';
+//$txt_js .= 'ACCION_URL = "'.accion_url().'";';
 
 file_put_contents($root_dir.'img/scripts_all.js', $txt_js);
 echo '</table>';

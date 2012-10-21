@@ -139,12 +139,12 @@ $txt .= '</select>
 <table>
 <tr>
 <td align="right">Nombre completo</td>
-<td><input type="text" name="nombre" value="'.$nombre.'" size="30" maxlength="90" required /></td>
+<td><input type="text" name="nombre" value="'.(strlen($nombre)>2?$nombre:'').'" size="30" maxlength="90" required /></td>
 </tr>
 
 <tr>
 <td align="right">NIF</td>
-<td class="gris"><input type="text" name="NIF" value="" size="10" maxlength="10" required /> Por ejemplo: 123456789A</td>
+<td class="gris"><input type="text" name="NIF" value="" size="10" maxlength="10" placeholder="123456789A" pattern="[0-9]{8,9}[A-Z]{1}" required /> Ejemplo: 123456789A</td>
 </tr>
 </table>
 
@@ -164,7 +164,7 @@ $txt .= '</select>
 
 <tr>
 <td align="right">Código postal</td>
-<td><input type="text" name="cp" value="" size="5" maxlength="8" required /></td>
+<td><input type="text" name="cp" value="" size="5" maxlength="8" pattern="[0-9]{5,6}" required /></td>
 </tr>
 
 <tr>
@@ -186,7 +186,7 @@ $txt .= '</select>
 
 <tr>
 <td align="right">Teléfono</td>
-<td><input type="tel" name="contacto_telefono" value="" size="15" maxlength="10" /> (opcional)</td>
+<td><input type="tel" name="contacto_telefono" value="" size="15" maxlength="10" pattern="[0-9+]{9,13}" /> (opcional)</td>
 </tr>
 </table>
 
@@ -205,7 +205,7 @@ $txt .= '</select>
 
 </blockquote>
 
-<p>'.boton('Inscribirse como socio de '.PAIS.' ('.$pol['config']['pais_des'].')', 'submit', false, 'large blue').'</p>
+<p>'.boton('Inscribirse como socio de '.$pol['config']['pais_des'], 'submit', false, 'large blue').'</p>
 
 </fieldset>
 

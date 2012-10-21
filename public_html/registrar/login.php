@@ -483,8 +483,8 @@ function login_start() {
 	$("#boton_iniciar_sesion").html("'._('Iniciando sesión...').'");
 	timestamp_end = Math.round(+new Date()/1000);
 	$("#input_extra").val(screen.width + "x" + screen.height + "|" + screen.availWidth + "x" + screen.availHeight + "|" + Math.round(timestamp_end - timestamp_start) + "|" + screen.colorDepth + "|");
-	$("#login_pass").val(hex_md5($("#login_pass").val()));
-	$("#login_pass").attr("name", "pass_md5");
+	//$("#login_pass").val(hex_md5($("#login_pass").val()));
+	//$("#login_pass").attr("name", "pass_md5");
 }
 </script>
 <style>

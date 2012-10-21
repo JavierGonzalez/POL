@@ -101,8 +101,8 @@ case 'socios':
 
 	if (($_GET['b'] == 'inscribirse') AND (nucleo_acceso('ciudadanos')) AND ($es_socio == false) AND ($pol['config']['socios_estado'] == 'true') AND ($_POST['nombre']) AND ($_POST['NIF']) AND ($_POST['localidad']) AND ($_POST['cp']) AND ($_POST['contacto_email'])) {
 		$last_socio_ID = 0;
-		$result = sql("SELECT socio_ID FROM socios WHERE pais = '".PAIS."' ORDER BY socio_ID DESC LIMIT 1");
-		while($r = r($result)) { $last_socio_ID = $r['socio_ID']; }
+		
+		$last_socio_ID = sql("SELECT socio_ID FROM socios WHERE pais = '".PAIS."' ORDER BY socio_ID DESC LIMIT 1", true);
 		
 		sql("INSERT INTO socios (time, time_last, pais, socio_ID, user_ID, nombre, NIF, pais_politico, localidad, cp, direccion, contacto_email, contacto_telefono) 
 VALUES ('".$date."', '".$date."', '".PAIS."', '".($last_socio_ID==0?10000:$last_socio_ID+1)."', '".$pol['user_ID']."', '".ucfirst(trim($_POST['nombre']))."', '".str_replace(' ', '', str_replace('-', '', strtoupper(trim($_POST['NIF']))))."', '".$_POST['pais_politico']."', '".ucfirst($_POST['localidad'])."', '".trim($_POST['cp'])."', '".ucfirst(trim($_POST['direccion']))."', '".strtolower(trim($_POST['contacto_email']))."', '".str_replace(' ', '', trim($_POST['contacto_telefono']))."')");
@@ -215,7 +215,7 @@ case 'bloqueos':
 			$data = array();
 			foreach (explode("\n", $_POST[$tipo]) AS $linea) {
 				$linea = strtolower(trim(strip_tags($linea)));
-				if (strlen($linea) >= 5) { $data[] = $linea; }
+				if (strlen(explodear(' ', $linea, 0)) >= 5) { $data[] = $linea; }
 			}
 			if (count($data) > 0) { sort($data); sql("UPDATE config SET valor = '".implode("\n", $data)."' WHERE dato = '".$tipo."' LIMIT 1"); }
 		}

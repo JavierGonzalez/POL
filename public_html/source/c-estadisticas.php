@@ -54,7 +54,7 @@ $txt .= '
 
 <th colspan="3" style="border-left:1px dotted #999;">Actividad</th>
 
-<th colspan="3" style="border-left:1px dotted #999;">Votaciones</th>
+<th colspan="5" style="border-left:1px dotted #999;">Votaciones</th>
 
 
 
@@ -77,7 +77,10 @@ $txt .= '
 
 <th title="Numero de votos de la mayor votación de los últimos 30 días">Votantes</th>
 <th title="Numero de votos emitidos en los últimos 30 días">Votos</th>
-<th title="Votaciones En Curso">E.C.</th>
+<th title="Votaciones En Curso">Activas</th>
+<th>Votaciones</th>
+<th>Votos total</th>
+
 
 <th title="Ciudadanos geolocalizados">Geo.</th>
 <th title="Supervisores del Censo">SC</th>
@@ -89,6 +92,8 @@ $result = sql("SELECT pais, valor AS num,
 (SELECT COUNT(*) FROM votacion WHERE pais = config.pais AND estado = 'ok') AS v_encurso,
 (SELECT MAX(num) FROM votacion WHERE pais = config.pais AND time_expire > '".tiempo(30)."') AS v_votantes,
 (SELECT SUM(num) FROM votacion WHERE pais = config.pais AND time_expire > '".tiempo(30)."') AS v_votos,
+(SELECT COUNT(*) FROM votacion WHERE pais = config.pais) AS v_votaciones,
+(SELECT SUM(num) FROM votacion WHERE pais = config.pais) AS v_votos_total,
 (SELECT COUNT(*) FROM users WHERE pais = config.pais AND estado = 'ciudadano' AND fecha_last > '".tiempo(1)."' AND fecha_registro < '".tiempo(1)."') AS a_1d,
 (SELECT COUNT(*) FROM users WHERE pais = config.pais AND estado = 'ciudadano' AND fecha_last > '".tiempo(7)."' AND fecha_registro < '".tiempo(7)."') AS a_7d,
 (SELECT COUNT(*) FROM users WHERE pais = config.pais AND estado = 'ciudadano' AND fecha_last > '".tiempo(30)."' AND fecha_registro < '".tiempo(30)."') AS a_30d,
@@ -131,6 +136,8 @@ while($r = r($result)) {
 <td align="right">'.num($r['v_votantes']).'</td>
 <td align="right">'.num($r['v_votos']).'</td>
 <td align="right"><b>'.num($r['v_encurso']).'</b></td>
+<td align="right"><b>'.num($r['v_votaciones']).'</b></td>
+<td align="right"><b>'.num($r['v_votos_total']).'</b></td>
 
 <td align="right">'.num($r['geo']).'</td>
 <td align="right">'.num($r['SC_num']).'</td>
@@ -155,6 +162,8 @@ while($r = r($result)) {
 	$total['v_votantes'] += $r['v_votantes'];
 	$total['v_votos'] += $r['v_votos'];
 	$total['v_encurso'] += $r['v_encurso'];
+	$total['v_votaciones'] += $r['v_votaciones'];
+	$total['v_votos_total'] += $r['v_votos_total'];
 
 	$total['geo'] += $r['geo'];
 	$total['SC_num'] += $r['SC_num'];
@@ -180,6 +189,8 @@ $txt .= '
 <td align="right">'.num($total['v_votantes']).'</td>
 <td align="right">'.num($total['v_votos']).'</td>
 <td align="right"><b>'.num($total['v_encurso']).'</b></td>
+<td align="right"><b>'.num($total['v_votaciones']).'</b></td>
+<td align="right"><b>'.num($total['v_votos_total']).'</b></td>
 
 <td align="right">'.num($total['geo']).'</td>
 <td align="right">'.num($total['SC_num']).'</td>

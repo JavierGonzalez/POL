@@ -341,7 +341,7 @@ sql("DELETE FROM users_con WHERE time < '".tiempo(70)."'");
 
 
 /* Expiraciones:
-Tras 90 dias inactivo
+Tras 120 dias inactivo
 
 Excepciones:
 * Autentificados
@@ -356,7 +356,7 @@ Emails de aviso de expiración:
 $st['eliminados'] = 0;
 $result = sql("SELECT ID, estado, nick FROM users
 WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registro > '".tiempo(365*2)."' AND 
-(pais IN ('ninguno', '".PAIS."') AND fecha_last <= '".tiempo(90)."')) OR 
+(pais IN ('ninguno', '".PAIS."') AND fecha_last <= '".tiempo(120)."')) OR 
 (estado IN ('validar', 'expulsado') AND fecha_last <= '".tiempo(10)."') 
 LIMIT 80");
 while($r = r($result)) {
@@ -370,6 +370,8 @@ WHERE estado IN ('ciudadano', 'turista') AND dnie = 'false' AND socio = 'false' 
 (pais = '".PAIS."' AND 
 ((fecha_last >= '".tiempo(30, '00:00:00')."' AND fecha_last <= '".tiempo(30, '23:59:59')."') OR 
 (fecha_last >= '".tiempo(55, '00:00:00')."' AND fecha_last <= '".tiempo(55, '23:59:59')."')))
+OR 
+(fecha_last >= '".tiempo(85, '00:00:00')."' AND fecha_last <= '".tiempo(85, '23:59:59')."')))
 LIMIT 1000");
 while($r = r($result)) {
 	$mensaje = '<p>Hola ciudadano '.$r['nick'].':</p>

@@ -8,8 +8,12 @@
 */
 
 
-// MySQL micro-framework v0.1
-function sql($q,$l=null) {global $link; return mysql_query($q,($l==null?$link:$l));}
+// MySQL micro-framework v0.2
+function sql($q,$l=null) {
+	global $link; 
+	if($l===true){$rr=mysql_query($q,$link);while($r=mysql_fetch_row($rr)){return $r[0];}} 
+	else{return mysql_query($q,($l===null?$link:$l));}
+}
 function r($q) {return mysql_fetch_assoc($q);}
 
 

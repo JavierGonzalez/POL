@@ -44,6 +44,7 @@ if (isset($_GET['bg'])) {
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '<?=IMG?>';
+ACCION_URL = "<?=accion_url()?>";
 p_scroll = false;
 </script>
 
@@ -94,7 +95,7 @@ p_scroll = false;
 				<ul>
 					<li><a href="/estadisticas"><?=_('Estadísticas')?></a></li>
 					<li><a href="/estadisticas/macro"><?=_('Estadísticas macro')?></a></li>
-					<li><a href="http://chartbeat.com/dashboard/?url=virtualpol.com&amp;k=ecc15496e00f415838f6912422024d06" target="_blank"><?=_('Estadísticas online')?></a></li>
+					<!--<li><a href="http://chartbeat.com/dashboard/?url=virtualpol.com&amp;k=ecc15496e00f415838f6912422024d06" target="_blank"><?=_('Estadísticas online')?></a></li>-->
 					<li><a href="/log"><?=_('Log de acciones')?></a></li>
 				</ul>
 			</li>

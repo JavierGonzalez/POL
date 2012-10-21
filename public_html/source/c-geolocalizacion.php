@@ -9,7 +9,7 @@
 
 include('inc-login.php');
 
-$centro = '40.18,-3.66'; // Madrid
+$centro = '40.42,-3.70'; // Madrid (Plaza del Sol)
 
 
 // GEN
@@ -20,7 +20,7 @@ if (!isset($pol['user_ID'])) {
 } elseif ($_GET['a'] == 'vecinos') {
 	include_once('inc-functions-accion.php');
 
-	$user_y = '40.41'; $user_x = '-3.70'; // Madrid
+	$user_y = explodear(',', $centro, 0); $user_x = explodear(',', $centro, 1);
 	$result = mysql_query("SELECT x, y FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { $user_x = $r['x']; $user_y = $r['y']; $geo = true; }
 
@@ -52,7 +52,7 @@ if (!isset($pol['user_ID'])) {
 
 } elseif ($_GET['a'] == 'fijar') {
 	
-	$center['y'] = '40.3'; $center['x'] = '-3.6';
+	$center['y'] = explodear(',', $centro, 0); $center['x'] = explodear(',', $centro, 1);
 	$result = mysql_query("SELECT x, y FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1", $link);
 	while ($r = mysql_fetch_array($result)) { 
 		$center['x'] = $r['x']; 

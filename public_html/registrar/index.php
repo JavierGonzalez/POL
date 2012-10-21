@@ -86,7 +86,7 @@ case 'registrar': //CHECK
 
 		foreach (explode("\n", $pol['config']['backlist_IP']) AS $la_IP) {
 			$la_IP = trim($la_IP);
-			if ((strlen($la_IP) >= 4) AND (stristr(' '.direccion_IP(), ' '.explodear(' ', $la_IP, 0)))) { $bloquear_registro = true; }
+			if (stristr(' '.direccion_IP(), ' '.explodear(' ', $la_IP, 0))) { $bloquear_registro = true; }
 		}
 
 		

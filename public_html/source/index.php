@@ -10,7 +10,7 @@
 include('inc-login.php');
 
 
-if (($pol['user_ID'] == 1) OR ($pol['user_ID'] == 208162) OR ($pol['user_ID'] == 211725)) {
+if ((false) AND ($pol['user_ID'] == 1) OR ($pol['user_ID'] == 208162) OR ($pol['user_ID'] == 211725)) {
 	
 	$txt_nav = array('/'=>'Bienvenido a '.$pol['config']['pais_des']);
 

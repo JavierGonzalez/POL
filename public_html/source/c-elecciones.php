@@ -109,7 +109,7 @@ while($r = mysql_fetch_array($result)) {
 			$d = explode('.', $d);
 			if ($d[2] != 'B') {
 				$cnum++;
-				$txt .= '<tr><td align="right">'.($d[2]&&$d[2]!='COORDINACION'?$d[2]:'').'</td><td nowrap'.($cnum<=$elecciones_electos?' style="font-weight:bold;"':'').'>'.($cnum<=$elecciones_electos?'<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" style="margin-top:-5px;" /> ':'').''.crear_link($d[0]).'</td><td align="right"><b>'.$d[1].'</b></td></tr>';
+				$txt .= '<tr><td align="right" nowrap>'.($d[2]&&$d[2]!='COORDINACION'?$d[2]:'').'</td><td nowrap'.($cnum<=$elecciones_electos?' style="font-weight:bold;"':'').'>'.($cnum<=$elecciones_electos?'<img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" style="margin-top:-5px;" /> ':'').''.crear_link($d[0]).'</td><td align="right"><b>'.$d[1].'</b></td></tr>';
 				$escrutinio_d[] = $d[1];
 			}
 		}

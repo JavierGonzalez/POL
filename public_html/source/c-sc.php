@@ -469,6 +469,7 @@ $IP_publicas = array(
 '85.62.234',	// Orange movil
 '85.62.233',	// Orange movil
 '81.45.7',		// Movistar movil
+'81.45.52',		// Movistar movil
 '195.235.76',	// Movistar movil
 '80.58.205',	// Movistar CanguroNet
 '93.186.23',	// Blackberry

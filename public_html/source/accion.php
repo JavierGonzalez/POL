@@ -427,7 +427,7 @@ LIMIT 1");
 		sql("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'");
 
 		evento_log('Rechaza ciudadanía');
-		evento_chat('<b>[#]</b> '.crear_link($nick).' rechaza la Ciudadania de '.PAIS);
+		//evento_chat('<b>[#]</b> '.crear_link($nick).' rechaza la Ciudadania de '.PAIS);
 
 		unset($_SESSION);
 		session_unset(); session_destroy();

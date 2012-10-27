@@ -1055,7 +1055,7 @@ $txt .= '
 </fieldset>
 
 
-<fieldset><legend>URLs</legend>
+<fieldset><legend>URLs (EN DESARROLLO...)</legend>
 <table>
 '.print_td_url('Carta Magna', 'cartamagna', 'Documento, constitucion, declaración, ley, reglas o normas principales.').'
 '.print_td_url('Ayuda', 'ayuda', 'Documento de ayuda').'

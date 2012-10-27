@@ -254,7 +254,7 @@ if (isset($pol['user_ID'])) {
 				if ($pol['user_ID'] == 1) { echo num((microtime(true)-TIME_START)*1000).'ms '.num(memory_get_usage()/1000).'kb |'; } 
 			}
 			?>
-			<span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2012 <?=boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange')?>
+			<span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2012<!-- <?=boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange')?>-->
 			</p>
 		</div>
 		

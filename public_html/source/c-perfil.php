@@ -72,7 +72,7 @@ if ($user_ID == $pol['user_ID']) { //es USER
 	$text_limit = 1600 - strlen(strip_tags($r['text']));
 	
 	
-	$txt .= '<tr><td><p style="text-align:center;"><button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;" class="pill">'._('Editar perfil').'</button> '.boton(_('Opciones de usuario'), REGISTRAR.'login.php?a=panel').' '.boton(_('Autentificación'), SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton(_('Rechazar ciudadanía'), REGISTRAR, false, 'red').' ':'').'<p>
+	$txt .= '<tr><td><p style="text-align:center;"><button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;" class="pill">'._('Editar perfil').'</button> '.boton(_('Opciones de usuario'), REGISTRAR.'login.php?a=panel').' '.boton(_('Autentificación'), SSL_URL.'dnie.php').' '.($pol['pais']!='ninguno'?boton(_('Cambiar ciudadanía'), REGISTRAR, false, 'red').' ':'').'<p>
 
 
 

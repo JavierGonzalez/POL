@@ -41,7 +41,7 @@ date_default_timezone_set((isset($pol['config']['timezone'])?$pol['config']['tim
 // LENGUAJES ACTIVADOS
 $vp['langs'] = array(
 'es_ES'=>'Español (100%)',
-'en_US'=>'English (70%)',
+'en_US'=>'English (95%)',
 'fr'=>'Français (70%)',
 'ca_ES'=>'Català (70%)',
 'gl_ES'=>'Galego (70%)',
@@ -53,7 +53,7 @@ $vp['langs'] = array(
 );
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)
-$vp['paises'] = array('15M', 'Hispania', 'MIC', 'JRO', 'MCxVBC', 'ETSIIT', 'Occupy', 'PS', 'PCP', 'FCSM', 'PDI');
+$vp['paises'] = array('15M', 'Hispania', 'MIC', 'JRO', 'ETSIIT', 'Occupy', 'PCP', 'FCSM', 'PDI', '25S', 'Plebiscito');
 
 
 if ($pais == 'www') {

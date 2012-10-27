@@ -133,8 +133,8 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
   `estado` enum('ok','eliminado') character set utf8 NOT NULL default 'ok',
   `acceso_msg` tinyint(3) unsigned NOT NULL default '1',
   `acceso_leer` varchar(900) character set utf8 NOT NULL default 'anonimos',
-  `acceso_escribir` varchar(900) character set utf8 NOT NULL default 'ciudadanos',
-  `acceso_escribir_msg` varchar(900) NOT NULL default 'ciudadanos',
+  `acceso_escribir` varchar(900) character set utf8 NOT NULL default 'ciudadanos_global',
+  `acceso_escribir_msg` varchar(900) NOT NULL default 'ciudadanos_global',
   `acceso_cfg_leer` varchar(900) character set utf8 NOT NULL default '',
   `acceso_cfg_escribir` varchar(900) character set utf8 NOT NULL default '',
   `acceso_cfg_escribir_msg` varchar(900) NOT NULL default '',
@@ -184,7 +184,7 @@ sql("CREATE TABLE `".strtolower($r['pais'])."_foros_msg` (
 
 
 			// Subforo General
-			sql("INSERT INTO ".strtolower($r['pais'])."_foros (url, title, descripcion, acceso, time, estado, acceso_msg, acceso_leer, acceso_escribir, acceso_escribir_msg, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_msg, limite) VALUES ('general', 'General', '', '1', '1', 'ok', '0', 'anonimos', 'ciudadanos', 'ciudadanos_global', '', '', '', '10')");
+			sql("INSERT INTO ".strtolower($r['pais'])."_foros (url, title, descripcion, acceso, time, estado, acceso_msg, acceso_leer, acceso_escribir, acceso_escribir_msg, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_msg, limite) VALUES ('general', 'General', '', '1', '1', 'ok', '0', 'anonimos', 'ciudadanos_global', 'ciudadanos_global', '', '', '', '10')");
 
 			// PREGUNTA DE EXAMEN GENERICA
 			sql("INSERT INTO examenes_preg (pais, examen_ID, user_ID, time, pregunta, respuestas, tiempo) VALUES ('".$r['pais']."', '0', '0', '".$date."', 'Quieres ser candidato de este cargo', 'SI|NO', '15')");

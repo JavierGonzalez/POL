@@ -255,18 +255,17 @@ if ($pol['estado'] == 'ciudadano') {
 	while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
-	$txt_title = _('Rechazar ciudadanía');
+	$txt_title = _('Cambiar ciudadanía');
 	$txt_nav = array(_('Ciudadanía'));
 
 	$txt .= '<p><b>'._('Actualmente eres ciudadano en la plataforma').' '.$pol['pais'].'</b>.</p>
 
 <blockquote>
-<p style="color:red;"><b>'._('Rechazar ciudadanía').' '._('de').' '.$pol['pais'].'</b>:</p>
+<p style="color:red;"><b>'._('Cambiar ciudadanía').' '._('de').' '.$pol['pais'].'</b>:</p>
 
 <ul>
-<li>Esta acción es irreversible.</li>
+<li>Siempre podrás elegir tu ciudadanía libremente pero recuerda que no puedes crear más de un usuario.</li>
 <li>No es necesario tener el estatus de ciudadano para participar (parcialmente) en otras plataformas.</li>
-<li>Podrás solicitar ciudadanía en otra plataforma o regresar.</li>
 '.($pol['pais']=='Hispania'?'
 <li style="color:red;"><b>PERDERAS:</b> tus cuentas bancarias (pero tus monedas), <b>cargos</b>, examenes, <b>votos</b> en elecciones activas en este momento, tus empresas, tu partido, subastas de hoy y todos los derechos de ciudadano.</li>
 <li>CONSERVARAS: tus monedas (restando un arancel del <b style="color:red;">'.$pol['config']['arancel_salida'].'%</b>), tu antiguedad, online, mensajes privados, confianza, mensajes en foro... y todo lo dem&aacute;s.</li>
@@ -278,10 +277,10 @@ if (strtotime($pol['rechazo_last']) < (time() - 21600)) { // 6 horas
 	$txt .= '
 <form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=rechazar-ciudadania" method="POST">
 <input type="hidden" name="pais" value="'.$pol['pais'].'" />
-<p>'.boton(_('Rechazar ciudadanía de la plataforma').' '.$pol['pais'], 'submit', '¿Estás seguro de querer RECHAZAR ciudadanía?', 'pill red').'</p>
+<p>'.boton(_('Cambiar ciudadanía de la plataforma').' '.$pol['pais'], 'submit', '¿Estás seguro de querer CAMBIAR ciudadanía?', 'pill red').'</p>
 </form>';
 
-} else { $txt .= '<p style="color:red;"><b>Solo puedes rechazar tu ciudadanía una vez cada 6 horas...</b></p>'; }
+} else { $txt .= '<p style="color:red;"><b>Solo puedes cambiar tu ciudadanía una vez cada 6 horas...</b></p>'; }
 
 $txt .= '</blockquote>';
 

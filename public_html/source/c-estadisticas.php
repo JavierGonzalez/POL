@@ -81,7 +81,7 @@ $txt .= '
 <th>Votaciones</th>
 <th>Votos total</th>
 
-
+<th title="Dias de existencia">Días</th>
 <th title="Ciudadanos geolocalizados">Geo.</th>
 <th title="Supervisores del Censo">SC</th>
 <th title="Kicks (bloqueos por moderación) en los últimos 30 días">Kicks</th>
@@ -99,7 +99,8 @@ $result = sql("SELECT pais, valor AS num,
 (SELECT COUNT(*) FROM users WHERE pais = config.pais AND estado = 'ciudadano' AND fecha_last > '".tiempo(30)."' AND fecha_registro < '".tiempo(30)."') AS a_30d,
 (SELECT COUNT(*) FROM users WHERE pais = config.pais AND estado = 'ciudadano' AND x IS NOT NULL) AS geo,
 (SELECT COUNT(*) FROM users WHERE pais = config.pais AND SC = 'true') AS SC_num,
-(SELECT COUNT(*) FROM kicks WHERE pais = config.pais AND expire > '".tiempo(30)."') AS kicks_num
+(SELECT COUNT(*) FROM kicks WHERE pais = config.pais AND expire > '".tiempo(30)."') AS kicks_num,
+(SELECT COUNT(*) FROM stats WHERE pais = config.pais) AS dias_num
 FROM config WHERE dato = 'info_censo' ORDER BY ABS(valor) DESC LIMIT 25");
 while($r = r($result)) {
 
@@ -139,6 +140,7 @@ while($r = r($result)) {
 <td align="right"><b>'.num($r['v_votaciones']).'</b></td>
 <td align="right"><b>'.num($r['v_votos_total']).'</b></td>
 
+<td align="right">'.num($r['dias_num']).'</td>
 <td align="right">'.num($r['geo']).'</td>
 <td align="right">'.num($r['SC_num']).'</td>
 <td align="right">'.num($r['kicks_num']).'</td>
@@ -192,6 +194,7 @@ $txt .= '
 <td align="right"><b>'.num($total['v_votaciones']).'</b></td>
 <td align="right"><b>'.num($total['v_votos_total']).'</b></td>
 
+<td align="right"></td>
 <td align="right">'.num($total['geo']).'</td>
 <td align="right">'.num($total['SC_num']).'</td>
 <td align="right">'.num($total['kicks_num']).'</td>

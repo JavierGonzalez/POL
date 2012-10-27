@@ -160,7 +160,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 
 
 	// Pre-selectores
-	if (!isset($edit['ID'])) { $edit['tipo'] = 'sondeo'; $edit['acceso_votar'] = 'ciudadanos'; $edit['acceso_ver'] = 'anonimos'; }
+	if (!isset($edit['ID'])) { $edit['tipo'] = 'sondeo'; $edit['acceso_votar'] = 'ciudadanos_global'; $edit['acceso_ver'] = 'anonimos'; }
 	
 	$sel['tipo_voto'][$edit['tipo_voto']] = ' selected="selected"';
 	$sel['privacidad'][$edit['privacidad']] = ' selected="selected"';
@@ -538,12 +538,10 @@ LIMIT 250");
 
 <p>Tipo de argumento: 
 <select name="sentido">
-<option value="" selected></option>
-
 <optgroup label="Sobre las opciones de votación:">
 <option value="A favor">A favor</option>
 <option value="En contra">En contra</option>
-<option value="En blanco">En blanco</option>
+<option value="En blanco" selected>En blanco</option>
 </optgroup>
 
 <optgroup label="Sobre la votación:">

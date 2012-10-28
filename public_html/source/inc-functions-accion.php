@@ -439,15 +439,10 @@ function gen_text($text, $type='') {
 	$text = preg_replace('#(<[^>]+[\s\r\n\"\'])(on|xmlns)[^>]*>#iU', "$1>", $text); //prevent XSS
 	if ($type == 'plain') {
 		$text = strip_tags($text);
-		//$text = nl2br($text);
-		$text = str_replace("\n\n", "<br /><br />\n\n", $text); //LINUX
-		$text = str_replace("\r\n\r\n", "<br /><br />\r\n\r\n", $text); //WINDOWS
 	} else {
 		$text = strip_tags($text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>,<span>,<font>,<strong>,<p>,<b>,<em>,<ul>,<ol>,<li>,<blockquote>,<a>,<h2>,<h3>,<h4>,<br>,<hr>,<table>,<tr>,<td>,<th>");
-		$text = str_replace("\n\n", "<br /><br />\n\n", $text); //LINUX
-		$text = str_replace("\r\n\r\n", "<br /><br />\r\n\r\n", $text); //WINDOWS
-	} 
-
+	}
+	$text = nl2br($text);
 	return $text;
 }
 

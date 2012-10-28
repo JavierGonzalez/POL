@@ -24,16 +24,18 @@ case 'supervision-del-censo':
 <fieldset><legend>Supervisores del censo</legend><table width="100%">
 <tr>
 <th colspan="2" style="font-weight:normal;">Confianza</th>
-<th align="right" style="font-weight:normal;" nowrap>Último acceso</th>
+<th></th>
+<th align="right" style="font-weight:normal;" nowrap>Antigüedad</th>
 </tr>';
 
 
-$result = sql("SELECT ID AS user_ID, nick, pais, voto_confianza, fecha_last, (SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = users.ID LIMIT 1) AS has_votado FROM users WHERE SC = 'true' ORDER BY voto_confianza DESC");
+$result = sql("SELECT ID AS user_ID, nick, pais, voto_confianza, fecha_last, fecha_registro, (SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = users.ID LIMIT 1) AS has_votado FROM users WHERE SC = 'true' ORDER BY voto_confianza DESC");
 while($r = r($result)) {
 	$txt .= '<tr>
 <td align="right" nowrap="nowrap"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span></td>
 <td nowrap="nowrap">'.($pol['user_ID']&&$r['user_ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['user_ID'].'" class="votar" type="confianza" name="'.$r['user_ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
 <td nowrap><span class="gris" style="float:right">'.timer($r['fecha_last']).'</span><b>'.crear_link($r['nick']).'</b></td>
+<td align="right" nowrap>'.timer($r['fecha_registro']).'</td>
 </tr>';
 }
 
@@ -46,12 +48,13 @@ $txt .= '</table>
 <fieldset><legend>Candidatos a supervisor del censo</legend><table width="100%">';
 
 
-$result = sql("SELECT ID AS user_ID, nick, pais, voto_confianza, fecha_last, (SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = users.ID LIMIT 1) AS has_votado FROM users WHERE SC = 'false' AND ser_SC = 'true' AND fecha_registro < '".tiempo(365)."' AND voto_confianza > 0 ORDER BY voto_confianza DESC LIMIT 10");
+$result = sql("SELECT ID AS user_ID, nick, pais, voto_confianza, fecha_last, fecha_registro, (SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = users.ID LIMIT 1) AS has_votado FROM users WHERE SC = 'false' AND ser_SC = 'true' AND fecha_registro < '".tiempo(365)."' AND voto_confianza > 0 ORDER BY voto_confianza DESC LIMIT 10");
 while($r = r($result)) {
 	$txt .= '<tr>
 <td align="right" nowrap="nowrap"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span></td>
 <td nowrap="nowrap">'.($pol['user_ID']&&$r['user_ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['user_ID'].'" class="votar" type="confianza" name="'.$r['user_ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
 <td nowrap><span class="gris" style="float:right">'.timer($r['fecha_last']).'</span>'.crear_link($r['nick']).'</td>
+<td align="right" nowrap>'.timer($r['fecha_registro']).'</td>
 </tr>';
 }
 

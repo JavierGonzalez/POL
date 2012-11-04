@@ -343,7 +343,7 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais=false
 			sql("UPDATE users SET pols = pols - ".$pols." WHERE ID = '".$emisor_ID."' AND pais = '".$pais."' LIMIT 1");
 		} else {
 			if (isset($pol['nick'])) { $concepto = '<b>'.$pol['nick'].'&rsaquo;</b> '.$concepto; }
-			sql("UPDATE uentas SET pols = pols - ".$pols." WHERE ID = '".substr($emisor_ID, 1)."' AND pais = '".$pais."' LIMIT 1");
+			sql("UPDATE cuentas SET pols = pols - ".$pols." WHERE ID = '".substr($emisor_ID, 1)."' AND pais = '".$pais."' LIMIT 1");
 		}
 
 		//ingresar

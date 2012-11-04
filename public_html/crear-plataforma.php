@@ -72,16 +72,18 @@ VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".
 				$param['acceso'] = array('valor'=>'votacion_borrador;ciudadanos:|sondeo;cargo:6|referendum;cargo:6|parlamento;cargo:6|kick;cargo:6 13|kick_quitar;cargo:6 13|foro_borrar;cargo:6 13|control_gobierno;cargo:6|control_sancion;:|control_grupos;cargo:6|control_cargos;cargo:6|examenes_decano;cargo:6|examenes_profesor;privado:|crear_partido;cargo:6|control_socios;cargo:6|api_borrador;ciudadanos:|control_docs;cargo:6', 'autoload'=>'si');
 
 				sql("INSERT INTO cargos (pais, cargo_ID, asigna, nombre, nivel, elecciones, elecciones_electos, elecciones_cada, elecciones_durante, elecciones_votan) VALUES ('".$r['pais']."', '6', '0', 'Coordinador', '100', '".date('Y-m-d 20:00:00', time()+60*60*24*7)."', '7', '14', '2', 'ciudadanos')");
+				sql("INSERT INTO examenes (pais, titulo, time, cargo_ID) VALUES ('".$r['pais']."', 'Coordinador', '".$date."', '6')");
 				$cargo_primario = 6;
 			} else {
 				$param['acceso'] = array('valor'=>'votacion_borrador;ciudadanos:|sondeo;cargo:7|referendum;cargo:7|parlamento;cargo:7|kick;cargo:7 13|kick_quitar;cargo:7 13|foro_borrar;cargo:7 13|control_gobierno;cargo:7|control_sancion;:|control_grupos;cargo:7|control_cargos;cargo:7|examenes_decano;cargo:7|examenes_profesor;privado:|crear_partido;cargo:7|control_socios;cargo:7|api_borrador;ciudadanos:|control_docs;cargo:7', 'autoload'=>'si');
 
 				sql("INSERT INTO cargos (pais, cargo_ID, asigna, nombre, nivel, elecciones, elecciones_electos, elecciones_cada, elecciones_durante, elecciones_votan) VALUES ('".$r['pais']."', '7', '0', 'Presidente', '100', '".date('Y-m-d 20:00:00', time()+60*60*24*7)."', '1', '14', '2', 'ciudadanos')");
+				sql("INSERT INTO examenes (pais, titulo, time, cargo_ID) VALUES ('".$r['pais']."', 'Presidente', '".$date."', '7')");
 				$cargo_primario = 7;
 			}
 			
 			sql("INSERT INTO cargos (pais, cargo_ID, asigna, nombre, nivel) VALUES ('".$r['pais']."', '13', '".$cargo_primario."', 'Moderador', '50')");
-
+			sql("INSERT INTO examenes (pais, titulo, time, cargo_ID) VALUES ('".$r['pais']."', 'Moderador', '".$date."', '13')");
 
 			// PARAMETROS PRINCIPALES
 			foreach ($param AS $dato => $valores) {

@@ -17,6 +17,7 @@ if (isset($txt_title)) { $txt_title .= ' - '.$pol['config']['pais_des'].' (Virtu
 else { $txt_title = $pol['config']['pais_des'].' (VirtualPol)'; }
 
 
+
 // Tapiz de fondo (1400x100)
 if (isset($_GET['bg'])) { 
 	$body_bg = 'url(\'http://'.$_GET['bg'].'\')';
@@ -276,8 +277,6 @@ echo '
 
 <td valign="middle"><div class="fb-like" data-send="false" data-layout="button_count" data-width="130" data-show-faces="false" data-font="verdana"></div></td>
 
-<td><a href="http://www.tuenti.com/share" class="tuenti-share-button"></a></td>
-
 </tr></table>';
 
 if ((ECONOMIA) AND (isset($pol['config']['pols_frase']))) {
@@ -299,7 +298,6 @@ if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != '')) {
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js">
 {lang: 'es'}
 </script>
-<script type="text/javascript" src="http://widgets.tuenti.com/widgets.js"></script>
 
 <div id="fb-root"></div>
 <script>(function(d, s, id) {

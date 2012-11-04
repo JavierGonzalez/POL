@@ -400,8 +400,8 @@ sql("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '".tie
 
 
 
-// Quitar candidaturas de SC que estén más de 15 dias inactivos.
-sql("UPDATE users SET ser_SC = 'false' WHERE ser_SC = 'true' AND fecha_last < '".tiempo(15)."'");
+// Quitar candidaturas de SC que estén más de 60 dias inactivos.
+sql("UPDATE users SET ser_SC = 'false' WHERE ser_SC = 'true' AND fecha_last < '".tiempo(60)."'");
 
 if (date('N') == 7) { // SOLO DOMINGO
 

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="Javier González González - desarrollo@virtualpol.com" />
+
+<title>Sorteo Universal</title>
+
+
+<!-- Libreria jquery estandar -->
+<script src="jquery.min.js"></script>
+
+
+<!-- Libreria Mersenne Twister. Fuente original: https://gist.github.com/300494 -->
+<script src="mersenne-twister.js"></script>
+
+
+</head>
+<body>
+
+
+<table width="100%"><tr><td align="center">
+
+
+
+<table width="1000"><tr><td colspan="3">
+
+<span style="float:right;font-size:20px;"><a href="https://github.com/JavierGonzalez/Sorteo-Universal" target="_blank"><b>GitHub</b></a></span>
+
+
+<h1>Sorteo Universal</h1>
+
+<h2>Designación por sorteo con verificabilidad universal</h2>
+
+<p style="text-align:justify;">Prueba de concepto de selección por sorteo. A partir de una lista de candidatos (Censo) se crea otra lista (Seleccionados) ordenada aleatoriamente. Para ello se recurre a <a href="http://es.wikipedia.org/wiki/Mersenne_twister" target="_blank">Mersenne Twister (MT19937)</a>, uno de los mejores algoritmos generadores de números aleatorios. Se ha usado <a href="https://gist.github.com/300494" target="_blank">esta versión</a> en javascript. Mersenne Twister es de código abierto, portable y está traducido a múltiples lenguajes por lo que se puede reproducir facilmente en cualquier sistema para verificar el resultado, sin necesidad de Internet.</p>
+
+<p style="text-align:justify;">El algoritmo genera secuencias de ciclo largo, totalmente repetibles y verificables, a partir de una semilla. Cada semilla generará una secuencia única. Para un sorteo verificable y transparente, se sugiere introducir la lista ordenada alfabéticamente y usar múltiples números de diferentes loterías como semillas aleatorias. A modo de ejemplo se establece como semilla los números premiados del <a href="http://es.wikipedia.org/wiki/Sorteo_Extraordinario_de_Navidad#.C3.9Altimos_Premios_Gordos_y_ciudades_agraciadas" target="_blank">Sorteo Extraordinario de Navidad</a> (<em>El Gordo</em>, España) de los años 1986, 2010 y 2011, concatenados en este orden.</p>
+
+</td></tr><tr><td valign="top">
+
+<h2>Censo (<span id="censo_num"></span>)</h2>
+<textarea id="censo" placeholder="Un candidato por linea..." style="width:300px;height:600px;">Abeja
+Abejorro
+Ácaro
+Águila
+Alcaudón
+Alce
+Almeja
+Alpaca
+Araña
+Ardilla
+Armadillo
+Armiño
+Ave
+Avestruz
+Avispa
+Azno
+Babosa
+Babuino
+Ballena
+Bisonte
+Boa
+Bogavante
+Bonobo
+Buey
+Búfalo
+Búho
+Buitre
+Burro
+Caballito de mar
+Caballo
+Cabra
+Cacatúa
+Cachalote
+Caimán
+Calamar
+Camaleón
+Camello
+Cangrejo
+Canguro
+Capibara
+Caracol
+Castor
+Casuario
+Cebra
+Celacanto
+Centollo
+Cerdo
+Chancho
+Chimpancé
+Chinche
+Chinchilla
+Ciempiés
+Ciervo
+Cigala
+Cigüeña
+Cisne
+Cobaya
+Cobra
+Cochino
+Cocodrilo
+Coendú
+Colibrí
+Comadreja
+Cóndor
+Conejo
+Coral
+Corégono
+Corneja
+Coyote
+Cucaracha
+Cuervo
+Culebra
+Cuy
+Delfín
+Dingo
+Dragón de Komodo
+Elefante
+Emú
+Equidna
+Erizo
+Erizo de mar
+Escarabajo
+Escorpión
+Esponja
+Estrella de mar
+Farra
+Flamenco
+Foca
+Gacela
+Galápago
+Gallina
+Gamba
+Ganso
+Garza
+Gato
+Gato montés
+Gavilán
+Glotón
+Golondrina
+Gorila
+Gorgojo
+Gorrión
+Grulla
+Guacamayo
+Guácharo
+Guanaco
+Guepardo
+Halcón
+Hamster
+Hiena
+Hipopótamo
+Holotiura
+Hormiga
+Humano
+Ibis
+Iguana
+Impala
+Jabalí
+Jabirú
+Jaguar
+Jerbo
+Jirafa
+Kiwi
+Koala
+Krill
+Lagartija
+Lagarto
+Langosta
+Langostino
+Lechuza
+Lemming
+Lemur
+León
+León marino
+Leopardo
+Libélula
+Liebre
+Lince
+Llama
+Lobo
+Lobo marino
+Lombriz
+Loro
+Luciérnaga
+Manatí
+Mandril
+Mapache
+Marabú
+Mariposa
+Medusa
+Mejillón
+Milpiés
+Mofeta
+Mono
+Morsa
+Mosca
+Mosquito
+Murciélago
+Narval
+Nutria
+Ñandú
+Ñu
+Ocelote
+Okapi
+Oveja
+Orangután
+Orca
+Oso pardo
+Oso de agua
+Oso hormiguero
+Oso polar
+Pájaro
+Paloma
+Panda
+Pangolín
+Pantera
+Papagayo
+Pato
+Pelícano
+Perdiz
+Perezoso
+Perico
+Peripato
+Perro
+Petirrojo
+Pez
+Pez espada
+Pez loro
+Pez payaso
+Pez volador
+Picofeo
+Pingüino
+Pinzón
+Piojo
+Piquituerto
+Pitón
+Polilla
+Pólipo
+Puercoespín
+Pulga
+Pulpo
+Puma
+Quitón
+Rana
+Rata
+Ratón
+Raya
+Rémora
+Reno
+Rinoceronte
+Salamandra
+Salmón
+Saltamontes
+Sanguijuela
+Sapo
+Serpiente
+Suricata
+Tábano
+Tapir
+Tarántula
+Tejón
+Tenia
+Termita
+Tiburón
+Tigre
+Topo
+Tortuga
+Tucán
+Vaca
+Varano
+Venado
+Vencejo
+Víbora
+Vicuña
+Vinchuca
+Wombat
+Yak
+Zarigüeya
+Zorrino
+Zorro</textarea>
+
+</td><td valign="top">
+
+<h2>Seleccionados <input type="number" id="electos_num" value="10" min="1" max="99" style="text-align:right;font-size:22px;" /></h2>
+<textarea id="electos" style="width:300px;height:300px;" readonly></textarea>
+
+</td><td valign="top">
+
+<h2>Parámetros</h2>
+
+<p>Semilla (solo números):<br />
+<input type="text" value="037727925058268" id="semilla" style="font-size:22px;" maxlength="20" /></p>
+
+<p><button id="sortear" style="font-size:22px;">Sortear</button></p>
+
+
+</td></tr></table>
+
+
+
+</td></tr></table>
+
+
+<script type="text/JavaScript">
+
+// Ejecutar al cargar
+sortear();
+
+// Eventos para refresco
+$("#sortear").click(function () { sortear(); });
+$("#electos_num").change(function () { sortear(); });
+$("#semilla, #censo").keyup(function() { sortear(); });
+
+function sortear() {
+
+	// Define variables utiles
+	var r = "";
+	var electos_num = $("#electos_num").val();
+	var semilla = $("#semilla").val().replace(/\s/gi, "");
+	var mt = new MersenneTwister(semilla);
+	var censo = $("#censo").val().split("\n");
+
+	// Recorre el array de elementos del censo relacionandolos con un numero aleatorio de MT
+	var censo_num = 0;
+	ra = new Array();
+	for (var n in censo) {
+		if (censo[n]!="") { ra[censo[n]] = mt.random(); censo_num++; }
+	}
+	
+	$("#censo_num").html(censo_num);
+
+	// Ordena el array de forma asociativa y por value (el numero aleatorio MT), de menor a mayor, siendo este el orden del resultado final
+	var n = 0;
+	bySortedValue(ra, function(key, value) {
+		if (n<electos_num) { r += key + "\n"; n++; }
+	});
+	
+	// Imprime resultado final
+	$("#electos").text(r);
+}
+
+// Funcion para ordenar un array de forma asociativa (muy retorcido con Javascript)
+// Fuente: http://stackoverflow.com/a/5200010/1442693
+function bySortedValue(obj, callback, context) {
+    var tuples = [];
+    for (var key in obj) tuples.push([key, obj[key]]);
+    tuples.sort(function(a, b) { return a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0 });
+    var length = tuples.length;
+    while (length--) callback.call(context, tuples[length][0], tuples[length][1]);
+}
+</script>
+
+
+</body>
+</html>

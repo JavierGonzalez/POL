@@ -75,7 +75,7 @@ p_scroll = false;
 				</ul>
 			</li>
 			<li><a href="/msg"><?=_('Mensajes privados')?></a></li>
-			<?=(isset($pol['user_ID'])?'<li><a href="mumble://'.$pol['nick'].'@cryptious.net/Occupy%20Rooms/Europe/OccupySpain/?version=1.2.0">'._('Voz').'</a><ul><li><a href="/info/voz">'._('Configurar').' <em>Mumble</em></a></li></ul></li>':'')?>
+			<?=(isset($pol['user_ID'])?'<li><a href="'.mumble_url().'">'._('Voz').'</a><ul><li><a href="/info/voz">'._('Configurar').' <em>Mumble</em></a></li></ul></li>':'')?>
 			<li><a href="#" style="cursor:default;"><?=_('Redes sociales')?></a>
 				<ul>
 					<li><a href="<?=(ASAMBLEA?'https://twitter.com/#!/AsambleaVirtuaI':'https://twitter.com/#!/VirtualPol')?>">Twitter</a></li>

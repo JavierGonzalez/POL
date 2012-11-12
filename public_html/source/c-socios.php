@@ -27,8 +27,9 @@ if (($_GET['a'] == 'configurar') AND (nucleo_acceso($vp['acceso']['control_socio
 </tr>
 
 <tr>
-<td align="right">Cargo de socio</td>
-<td><select name="socios_ID">';
+<td align="right">Cargo asignado a socios</td>
+<td><select name="socios_ID">
+<option value="0">Ninguno.</option>';
 
 	$result = sql("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND asigna > 0 ORDER BY nivel DESC");
 	while($r = r($result)) {

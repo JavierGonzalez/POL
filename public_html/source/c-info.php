@@ -253,6 +253,10 @@ case 'voz':
 	$txt .= '
 <p>'._('El chat de voz de VirtualPol funciona mediante un programa externo llamado Mumble. Es un programa de escritorio gratuito, fácil de instalar, compatible con todos los sistemas, software libre y con encriptación de las comunicaciones. Es la mejor formula disponible para proveer a VirtualPol de una opcion de comunicación por voz').'.</p>
 
+<div style="float:left;margin:20px 40px 150px 0;">
+<script type="text/javascript" src="http://view.light-speed.com/mumble.php?url=https%3A//api.mumble.com/mumble/cvp.php%3Ftoken%3DLSG-8D-383B3DEB&c=055b75&r=6&h=292&w=202&css=https%3A//view.light-speed.com/styles/mumble-minimal.css"></script>
+</div>
+
 <p><b>'._('¿Como usar el chat de voz?').'</b></p>
 
 <ol>
@@ -262,16 +266,19 @@ case 'voz':
 		<li>OSX (<a href="http://sourceforge.net/projects/mumble/files%2FMumble%2F1.2.3%2FMumble-1.2.3.dmg/download">'._('Descargar').'</a>)</li>
 		<li>GNU/Linux (<a href="http://sourceforge.net/projects/mumble/files%2FMumble%2F1.2.3%2Fmurmur-static_x86-1.2.3.tar.bz2/download">'._('Descargar').'</a>) <span style="color:grey;">'._('Nota: puede haber problemas para que el navegador ejecute el programa').', <a href="http://mumble.sourceforge.net/Mumble_URL#URL_Handler_Installation">'._('info aquí').'</a>.</span></li>
 		<li><a href="http://mumble.sourceforge.net/">'._('Ver todas las descargas').'</a></li>
-	</ul><br />
+	</ul>
 	</li>
 
 <li>'._('Conecta unos <b>auriculares con micrófono</b> (es lo más comodo, para que no se acople el sonido)').'.<br /><br /></li>
 
-<li><b>¡<a href="mumble://'.$pol['nick'].'@cryptious.net/Other/?version=1.2.0">'._('Entra aquí').'</a>!</b> (<a href="mumble://'.$pol['nick'].'@cryptious.net/Other/?version=1.2.0">'._('servidor alternativo').'</a>)</li>
+<li><b>¡<a href="'.mumble_url().'" style="font-size:18px;">'._('Entra aquí').'</a>!</b></li>
 
 </ol>
 
-<p><br />'._('El servidor de Mumble es "cryptious.net". De uso compartido con otras plataformas').'.</p>';
+<p>Servidor: <b>virtualpol.mumble.com</b><br />
+Puerto: <b>3704</b><br />
+Contraseña: <b>'.(nucleo_acceso('ciudadanos_global')?'vp':'***').'</b></p>
+';
 
 
 	$txt_title = _('Chat de voz');

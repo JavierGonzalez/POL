@@ -1,26 +1,8 @@
-<?php
-/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
-** Javier Gonz√°lez Gonz√°lez <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
-** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
-** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
-** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
-** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
-*/
-
-include('inc-login.php');
-include('inc-functions-accion.php');
-
-// ENVIO DE EMAILS DE AVISO
-
-if (false) {
-
-	evento_chat('<b>[#] Comienzo de envio de emails</b>.');
-	
-	$emails_enviados = 0;
-	$result = sql("SELECT ID, nick, email FROM users WHERE estado = 'ciudadano' AND email != '' AND pais ='15M' ORDER BY fecha_registro ASC LIMIT 1");
-	while($r = r($result)) {
-
-		$txt_email = '<style>
+<html>
+<head>
+<title>mail0</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
 body{
 color:#ffffff;
 font-family:arial;
@@ -61,6 +43,8 @@ font-size:14px;
 font-size:9px;
 }
 </style>
+</head>
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <!-- Save for Web Slices (mail0.psd) -->
 <table id="Table_01" width="690" height="1290" border="0" cellpadding="0" cellspacing="0">
 	<tr>
@@ -75,8 +59,8 @@ font-size:9px;
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_04.jpg" width="34" height="83" alt=""></td>
 		<td colspan="2" width="619" height="83" class="titulo">
-		En Asamblea Virtual evolucionamos continuamente, por ello creemos conveniente comunicarte en qu√© estamos trabajando y qu√© necesitamos para conseguir nuestros objetivos.<br>
-Recuerda que cada individuo es tan importante como cualquier otro, y el conjunto de la Asamblea solo podr√° conseguir sus metas si cada uno de nosotros actuamos para que eso ocurra.
+		En Asamblea Virtual evolucionamos continuamente, por ello creemos conveniente comunicarte en quÈ estamos trabajando y quÈ necesitamos para conseguir nuestros objetivos.<br>
+Recuerda que cada individuo es tan importante como cualquier otro, y el conjunto de la Asamblea solo podr· conseguir sus metas si cada uno de nosotros actuamos para que eso ocurra.
 		</td>
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_06.jpg" width="37" height="83" alt=""></td>
@@ -95,7 +79,7 @@ Recuerda que cada individuo es tan importante como cualquier otro, y el conjunto
 		<td>
 			<a href="http://15m.virtualpol.com/foro/debates-internos/av-reloaded" target="_blank"><img src="http://www.virtualpol.com/img/mail/av1/images/mail0_11.jpg" width="94" height="73" alt=""></a></td>
 		<td width="525" height="73">
-			<strong>AV Reloaded.</strong> Estamos trabajando en la simplificaci√≥n del funcionamiento en la Asamblea Virtual as√≠ como de sus protocolos, para agilizar los procesos y ser m√°s eficientes.<br>
+			<strong>AV Reloaded.</strong> Estamos trabajando en la simplificaciÛn del funcionamiento en la Asamblea Virtual asÌ como de sus protocolos, para agilizar los procesos y ser m·s eficientes.<br>
 <a href="http://15m.virtualpol.com/foro/debates-internos/av-reloaded" target="_blank">http://15m.virtualpol.com/foro/debates-internos/av-reloaded</a>
 			</td>
 		<td>
@@ -107,7 +91,7 @@ Recuerda que cada individuo es tan importante como cualquier otro, y el conjunto
 		<td>
 			<a href="http://15m.virtualpol.com/doc/tutorial-coordinacion-interactivo/presentacion/" target="_blank"><img src="http://www.virtualpol.com/img/mail/av1/images/mail0_15.jpg" width="94" height="70" alt=""></a></td>
 		<td width="525" height="70">
-			<strong>Manual Interactivo</strong>, en funcionamiento. Hemos creado un manual interactivo(1) para facilitar el uso de la herramienta seg√∫n los protocolos que tenemos establecidos actualmente.<br>
+			<strong>Manual Interactivo</strong>, en funcionamiento. Hemos creado un manual interactivo(1) para facilitar el uso de la herramienta seg˙n los protocolos que tenemos establecidos actualmente.<br>
 <a href="http://15m.virtualpol.com/doc/tutorial-coordinacion-interactivo/presentacion/" target="_blank">http://15m.virtualpol.com/doc/tutorial-coordinacion-interactivo/presentacion/</a>
 
 			</td>
@@ -121,7 +105,7 @@ Recuerda que cada individuo es tan importante como cualquier otro, y el conjunto
 			<a href="http://15m.virtualpol.com/foro/comunicados/inicio-del-proyecto-salvemos-rtve"><img src="http://www.virtualpol.com/img/mail/av1/images/mail0_19.jpg" width="94" height="83" alt=""></a></td>
 		<td width="525" height="83">
 			
-<strong>Salvemos RTVE.</strong> Hemos iniciado el proyecto Salvemos RTVE y estamos redactando distintos comunicados para expresar nuestra queja respecto al uso partidista y manipulaci√≥n de un medio p√∫blico como es el de RTVE.<br>
+<strong>Salvemos RTVE.</strong> Hemos iniciado el proyecto Salvemos RTVE y estamos redactando distintos comunicados para expresar nuestra queja respecto al uso partidista y manipulaciÛn de un medio p˙blico como es el de RTVE.<br>
 <a href="http://15m.virtualpol.com/foro/comunicados/inicio-del-proyecto-salvemos-rtve">http://15m.virtualpol.com/foro/comunicados/inicio-del-proyecto-salvemos-rtve</a>
 			</td>
 		<td>
@@ -133,7 +117,7 @@ Recuerda que cada individuo es tan importante como cualquier otro, y el conjunto
 		<td>
 			<a href="http://15m.virtualpol.com/foro/educacion/proyecto-la-revolucion-de-la-raiz/" target="_blank"><img src="http://www.virtualpol.com/img/mail/av1/images/mail0_23.jpg" width="94" height="75" alt=""></a></td>
 		<td width="525" height="75">
-	<strong>La Revoluci√≥n de la Ra√≠z.</strong> Hemos iniciado el proyecto La Revoluci√≥n de la Ra√≠z, con el que se pretende extraer informaci√≥n sobre uno de los sistemas de Educaci√≥n m√°s avanzados.<br>
+	<strong>La RevoluciÛn de la RaÌz.</strong> Hemos iniciado el proyecto La RevoluciÛn de la RaÌz, con el que se pretende extraer informaciÛn sobre uno de los sistemas de EducaciÛn m·s avanzados.<br>
 <a href="http://15m.virtualpol.com/foro/educacion/proyecto-la-revolucion-de-la-raiz/" target="_blank">http://15m.virtualpol.com/foro/educacion/proyecto-la-revolucion-de-la-raiz/</a>
 	
 	</td>
@@ -146,7 +130,7 @@ Recuerda que cada individuo es tan importante como cualquier otro, y el conjunto
 		<td>
 			<a href="http://15m.virtualpol.com/foro/comunicados/coordinadora-25s" target="_blank"><img src="http://www.virtualpol.com/img/mail/av1/images/mail0_27.jpg" width="94" height="76" alt=""></a></td>
 		<td  width="525" height="76">
-		<strong>Coordinadora 25S.</strong> Apoyamos plenamente la petici√≥n de un proceso constituyente realizada por la Coordinadora 25S.<br>
+		<strong>Coordinadora 25S.</strong> Apoyamos plenamente la peticiÛn de un proceso constituyente realizada por la Coordinadora 25S.<br>
 <a href="http://15m.virtualpol.com/foro/comunicados/coordinadora-25s" target="_blank">http://15m.virtualpol.com/foro/comunicados/coordinadora-25s</a>
 
 		</td>
@@ -161,9 +145,9 @@ Recuerda que cada individuo es tan importante como cualquier otro, y el conjunto
 		<td width="525" height="92">
 		
 		
-Aprovechamos esta ocasi√≥n para dar nuestro m√°s sentido apoyo al compa√±ero Miguel Angel Quinteiro (maq en la Asamblea Virtual) que ha sido imputado tras su detenci√≥n el 25S, por defender nuestros derechos.<br><br>
+Aprovechamos esta ocasiÛn para dar nuestro m·s sentido apoyo al compaÒero Miguel Angel Quinteiro (maq en la Asamblea Virtual) que ha sido imputado tras su detenciÛn el 25S, por defender nuestros derechos.<br><br>
 
-<span class="nota">(1)  De momento solo se puede visualizar en Chrome y Firefox. En Internet Explorer funcionar√° con la versi√≥n 10 que permite la tecnolog√≠a CSS3</span>
+<span class="nota">(1)  De momento solo se puede visualizar en Chrome y Firefox. En Internet Explorer funcionar· con la versiÛn 10 que permite la tecnologÌa CSS3</span>
 		
 		</td>
 		<td>
@@ -184,7 +168,7 @@ Aprovechamos esta ocasi√≥n para dar nuestro m√°s sentido apoyo al compa√±ero Mig
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_38.jpg" width="94" height="43" alt=""></td>
 		<td width="525" height="43">
 			
-			Hacemos lo que est√° en nuestra mano, pero sin una mayor colaboraci√≥n no podemos avanzar todo lo que quisi√©ramos, por eso pedimos una colaboraci√≥n en los siguientes √°mbitos:
+			Hacemos lo que est· en nuestra mano, pero sin una mayor colaboraciÛn no podemos avanzar todo lo que quisiÈramos, por eso pedimos una colaboraciÛn en los siguientes ·mbitos:
 			</td>
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_40.jpg" width="37" height="43" alt=""></td>
@@ -195,8 +179,8 @@ Aprovechamos esta ocasi√≥n para dar nuestro m√°s sentido apoyo al compa√±ero Mig
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_42.jpg" width="94" height="88" alt=""></td>
 		<td width="525" height="88">
-		Necesitamos m√°s candidatos a Coordinador. Sin suficientes Coordinadores la Asamblea ejecuta sus protocolos de forma mucho m√°s lenta. Si queremos fluidez en la toma de decisiones necesitamos m√°s colaboraci√≥n en la gesti√≥n interna de la Asamblea. <br>
-		Aqu√≠ ( <a href="http://15m.virtualpol.com/doc/tutorial-coordinacion-interactivo/presentacion#/opcion3-2-1" target="_blank">http://15m.virtualpol.com/doc/tutorial-coordinacion-interactivo/presentacion#/opcion3-2-1</a> ) tienes las instrucciones para ser Coordinador.
+		Necesitamos m·s candidatos a Coordinador. Sin suficientes Coordinadores la Asamblea ejecuta sus protocolos de forma mucho m·s lenta. Si queremos fluidez en la toma de decisiones necesitamos m·s colaboraciÛn en la gestiÛn interna de la Asamblea. <br>
+		AquÌ ( <a href="http://15m.virtualpol.com/doc/tutorial-coordinacion-interactivo/presentacion#/opcion3-2-1" target="_blank">http://15m.virtualpol.com/doc/tutorial-coordinacion-interactivo/presentacion#/opcion3-2-1</a> ) tienes las instrucciones para ser Coordinador.
 			</td>
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_44.jpg" width="37" height="88" alt=""></td>
@@ -207,7 +191,7 @@ Aprovechamos esta ocasi√≥n para dar nuestro m√°s sentido apoyo al compa√±ero Mig
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_46.jpg" width="94" height="42" alt=""></td>
 		<td width="525" height="42">
-			Necesitamos Redactores y Correctores para poder agilizar la creaci√≥n de comunicados y votaciones.
+			Necesitamos Redactores y Correctores para poder agilizar la creaciÛn de comunicados y votaciones.
 			</td>
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_48.jpg" width="37" height="42" alt=""></td>
@@ -218,7 +202,7 @@ Aprovechamos esta ocasi√≥n para dar nuestro m√°s sentido apoyo al compa√±ero Mig
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_50.jpg" width="94" height="45" alt=""></td>
 		<td width="525" height="45">
-			Necesitamos Dise√±adores para la creaci√≥n de panfletos para las futuras manifestaciones y eventos.
+			Necesitamos DiseÒadores para la creaciÛn de panfletos para las futuras manifestaciones y eventos.
 			</td>
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_52.jpg" width="37" height="45" alt=""></td>
@@ -229,7 +213,7 @@ Aprovechamos esta ocasi√≥n para dar nuestro m√°s sentido apoyo al compa√±ero Mig
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_54.jpg" width="94" height="57" alt=""></td>
 		<td width="525" height="57">
-		Necesitamos especialistas en redes sociales y "Community Managers" para colaborar en los distintos canales de comunicaci√≥n (facebook, blog...). Para este cargo preguntad a alg√∫n usuario con cargo "Comunicador".
+		Necesitamos especialistas en redes sociales y "Community Managers" para colaborar en los distintos canales de comunicaciÛn (facebook, blog...). Para este cargo preguntad a alg˙n usuario con cargo "Comunicador".
 		</td>
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_56.jpg" width="37" height="57" alt=""></td>
@@ -240,7 +224,7 @@ Aprovechamos esta ocasi√≥n para dar nuestro m√°s sentido apoyo al compa√±ero Mig
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_58.jpg" width="94" height="30" alt=""></td>
 		<td width="525" height="30">
-		Necesitamos Abogados o del √°mbito legal que nos puedan asesorar en momentos puntuales.
+		Necesitamos Abogados o del ·mbito legal que nos puedan asesorar en momentos puntuales.
 		</td>
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_60.jpg" width="37" height="30" alt=""></td>
@@ -251,7 +235,7 @@ Aprovechamos esta ocasi√≥n para dar nuestro m√°s sentido apoyo al compa√±ero Mig
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_62.jpg" width="94" height="51" alt=""></td>
 		<td width="525" height="51">
-		Para saber m√°s acerca de c√≥mo formar parte de estos cargos sigue estas instrucciones: <br>
+		Para saber m·s acerca de cÛmo formar parte de estos cargos sigue estas instrucciones: <br>
 		<a href="http://15m.virtualpol.com/doc/tutorial-coordinacion-interactivo/presentacion#/opcion2-1-1" target="_blank">http://15m.virtualpol.com/doc/tutorial-coordinacion-interactivo/presentacion#/opcion2-1-1</a>
 		</td>
 		<td>
@@ -261,7 +245,7 @@ Aprovechamos esta ocasi√≥n para dar nuestro m√°s sentido apoyo al compa√±ero Mig
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_65.jpg" width="34" height="67" alt=""></td>
 		<td colspan="2"  width="619" height="67" class="titulo">
-		Sabemos que no es f√°cil, pero Asamblea Virtual es solo un medio, lo que hagamos con este medio depende de nosotros como individuos. Para conseguir un cambio necesitamos empezar por nosotros mismos. Gracias por todo lo que est√°is haciendo por cambiar nuestro futuro.
+		Sabemos que no es f·cil, pero Asamblea Virtual es solo un medio, lo que hagamos con este medio depende de nosotros como individuos. Para conseguir un cambio necesitamos empezar por nosotros mismos. Gracias por todo lo que est·is haciendo por cambiar nuestro futuro.
 
 
 		</td>
@@ -272,7 +256,7 @@ Aprovechamos esta ocasi√≥n para dar nuestro m√°s sentido apoyo al compa√±ero Mig
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_68.jpg" width="34" height="65" alt=""></td>
 		<td colspan="2" width="619" height="65" class="aviso">
-			Si no puedes ver correctamente este e-mail haz <a href="http://www.virtualpol.com/img/mail/av1/" target="_blank">click aqu√≠</a>
+			Si no puedes ver correctamente este e-mail haz <a href="http://www.virtualpol.com/img/mail/av1/" target="_blank">click aquÌ</a>
 			
 			</td>
 		<td>
@@ -288,17 +272,8 @@ Aprovechamos esta ocasi√≥n para dar nuestro m√°s sentido apoyo al compa√±ero Mig
 		<td>
 			<img src="http://www.virtualpol.com/img/mail/av1/images/mail0_74.jpg" width="37" height="33" alt=""></td>
 	</tr>
-</table>';
-		$txt_titulo = $r['nick'].', mensaje importante de Asamblea Virtual';
+</table>
+<!-- End Save for Web Slices -->
 
-		enviar_email($r['ID'], $txt_titulo, $txt_email);
-		$emails_enviados++;
-
-		$txt .= $votar_num.' '.$r['nick'].'<br />';
-	}
-	evento_chat('<b>[#] Terminado el envio de emails</b> <span style="color:grey;">('.num($emails_enviados).' emails enviados, '.round(microtime(true)-TIME_START).' seg de proceso)</span>.');
-}
-
-$txt .= '<hr />'.$contador;
-include('theme.php');
-?>
+</body>
+</html>

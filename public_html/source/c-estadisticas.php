@@ -15,7 +15,7 @@ function gen_grafico($datos, $fecha='', $cero=false) {
 	 
 
 	if ($cero) { $datos = strtr(chart_data($datos), 'A', '_'); } else { $datos = chart_data($datos); }
-	return 'http://chart.apis.google.com/chart?cht=lc&chs=800x120&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|_____|'.$dato_last.'&chd=s:'.$datos.'&chf=bg,s,ffffff01|c,s,ffffff01&chco=0066FF&chm=B,FFFFFF,0,0,0';
+	return '//chart.googleapis.com/chart?cht=lc&chs=800x120&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|_____|'.$dato_last.'&chd=s:'.$datos.'&chf=bg,s,ffffff01|c,s,ffffff01&chco=0066FF&chm=B,FFFFFF,0,0,0';
 }
 
 function gen_datos($datos, $cero=false, $datos2=false) {
@@ -120,7 +120,7 @@ while($r = r($result)) {
 
 <td><em style="color:#777;font-size:12px;">'.ucfirst($pais_config['tipo']).'</em></td>
 
-<td title="'.$pais_config['pais_des'].'"><a href="http://'.strtolower($pais).'.'.DOMAIN.'"><b style="font-size:18px;">'.$pais.'</b></a></td>
+<td title="'.$pais_config['pais_des'].'"><a href="//'.strtolower($pais).'.'.DOMAIN.'"><b style="font-size:18px;">'.$pais.'</b></a></td>
 
 <td align="right"><b>'.num($r['num']).'</b></td>
 
@@ -356,11 +356,11 @@ $txt .= '<span style="float:right;font-size:12px;margin-top:-15px;">('.num($i).'
 <fieldset><legend>'._('Demografía').'</legend>
 
 <b id="1.1">1.1 <span style="color:#0000FF;">'._('Ciudadanos').'</span>/<span style="color:#FF0000;">'._('países').'</span></b> (<a href="/info/censo">'._('Ver censo').'</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['ciudadanos'], false, $d['paises']):gen_datos($d['ciudadanos'], false)).'" alt="Ciudadanos/paises" border="0" />
+<img src="//chart.googleapis.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['ciudadanos'], false, $d['paises']):gen_datos($d['ciudadanos'], false)).'" alt="Ciudadanos/paises" border="0" />
 
 
 <br /><b id="1.2">1.2 '._('Ciudadanos').' <span style="color:#0000FF;">'._('nuevos').'</span>/<span style="color:#FF0000;">'._('expirados').'</span></b>  (<a href="/info/censo/nuevos">'._('Ver nuevos').'</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['nuevos'], false, $d['eliminados']):gen_datos($d['nuevos'], false)).'" alt="Ciudadanos nuevos/expirados" border="0" />
+<img src="//chart.googleapis.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['nuevos'], false, $d['eliminados']):gen_datos($d['nuevos'], false)).'" alt="Ciudadanos nuevos/expirados" border="0" />
 </fieldset>
 
 <fieldset><legend>'._('Actividad').'</legend>
@@ -405,7 +405,7 @@ if (ECONOMIA) {
 <img src="'.gen_grafico($d['mapa']).'" alt="Porcentaje de ocupacion" border="0" />
 
 <br /><b id="3.7">3.7 <span style="color:#0000FF;">'._('Empresas').'</span>/<span style="color:#FF0000;">'._('transacciones').'</span></b> (<a href="/empresas">'._('Ver empresas').'</a> , <a href="/pols">'._('Ver transferencias').'</a>)<br />
-<img src="http://chart.apis.google.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['empresas'], true, $d['transacciones']):gen_datos($d['empresas'], true)).'" alt="Empresas" border="0" />
+<img src="//chart.googleapis.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET['a']?gen_datos($d['empresas'], true, $d['transacciones']):gen_datos($d['empresas'], true)).'" alt="Empresas" border="0" />
 
 </fieldset>';
 }
@@ -442,7 +442,7 @@ ORDER BY num DESC", $link);
 
 	$txt .= '
 <td><b>'.$PAIS.'</b><br />
-<img src="http://chart.apis.google.com/chart?cht=p&chs=200x100&chds=a
+<img src="//chart.googleapis.com/chart?cht=p&chs=200x100&chds=a
 &chd=t:'.implode(',', $g_datos).','.$g_otros.'
 &chl='.implode('|', $g_siglas).'|Otros
 &chf=bg,s,ffffff01|c,s,ffffff01" alt="Afiliados por partido" title="Afiliados por partido" />

@@ -55,7 +55,7 @@ default:
 		foreach (explode(' ', $r['acceso_cfg_leer']) AS $grupo_ID) { $foros_array[$grupo_ID][] = '<a href="/foro/'.$r['url'].'"><b>'.$r['title'].'</b></a>'; }
 	}
 
-	$result = mysql_query("SELECT * FROM grupos WHERE pais = '".PAIS."' ORDER BY num DESC", $link);
+	$result = mysql_query("SELECT * FROM grupos WHERE pais = '".PAIS."' ORDER BY grupo_ID ASC", $link);
 	while($r = mysql_fetch_array($result)) {
 		$txt .= '<tr>
 <td align="right"><input type="checkbox" name="grupo_'.$r['grupo_ID'].'" id="grupo_'.$r['grupo_ID'].'" value="true"'.(nucleo_acceso('grupos', $r['grupo_ID'])?' checked="checked"':'').' /></td>

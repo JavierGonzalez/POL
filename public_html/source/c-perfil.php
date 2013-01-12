@@ -51,7 +51,7 @@ while($r = r($result)){
 <input type="text" name="nota_SC" size="25" maxlength="255" value="'.$r['nota_SC'].'" />
 '.boton(_('OK'), 'submit', false, 'pill small').'
 '.boton('&nbsp;', '/sc/filtro/user_ID/'.$r['ID'], false, 'blue small').' 
-'.boton('&nbsp;', 'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/control/expulsiones/expulsar/'.$r['nick'], false, 'red small').'
+'.boton('&nbsp;', '//'.strtolower($pol['pais']).'.'.DOMAIN.'/control/expulsiones/expulsar/'.$r['nick'], false, 'red small').'
 </form>
 </div>
 '.$r['ID'].' <span title="'.$r['avatar_localdir'].'" style="font-size:11px;">'.$r['email'].'</span> <span style="font-size:12px;" title="'.$r['nav'].'">'.num($r['visitas']).'v '.num($r['paginas']).'pv<br /><a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-30,30)).'">'.ocultar_IP($r['host'], 'host').'</a></span>
@@ -276,7 +276,7 @@ $txt .= '
 
 '.($r['avatar']=='true'?'<img src="'.IMG.'a/'.$r['ID'].'.jpg" alt="'.$nick.'" title="Avatar" width="120" height="120" style="border:1px solid #AAA;" />':'').'
 
-'.(nucleo_acceso('ciudadanos_global')&&is_numeric($r['x'])?'<a href="http://maps.google.es/maps?q='.$r['y'].','.$r['x'].'&hl=es&t=m" target="_blank"><img width="250" height="120" class="static_map" style="border:1px solid #AAA;" src="http://maps.google.com/maps/api/staticmap?
+'.(nucleo_acceso('ciudadanos_global')&&is_numeric($r['x'])?'<a href="http://maps.google.es/maps?q='.$r['y'].','.$r['x'].'&hl=es&t=m" target="_blank"><img width="250" height="120" class="static_map" style="border:1px solid #AAA;" src="//maps.google.com/maps/api/staticmap?
 center='.$r['y'].','.$r['x'].'&amp;zoom=11&amp;size=250x120&amp;maptype=roadmap&amp;sensor=false&amp;markers=icon:'.IMG.'ico/marker.png|'.$r['y'].','.$r['x'].'" alt="Geo" title="Geolocalización" /></a>':'').'
 
 '.(str_replace(array('0', ' '), '', $r['confianza_historico'])!=''?'

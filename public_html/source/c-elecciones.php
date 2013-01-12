@@ -99,7 +99,7 @@ while($r = mysql_fetch_array($result)) {
 <td colspan="7">';
 
 	if ($r['estado'] == 'end') {
-		$txt .= '<table border="0"><tr><td valign="top"><img src="http://chart.apis.google.com/chart?cht=p&chd=t:'.round(($r['num']*100)/$r['num_censo'], 2).','.round(100-(($r['num']*100)/$r['num_censo']), 2).'&chs=300x160&chds=a&chl='._('Participación').'|'._('Abstención').'&chf=bg,s,ffffff01|c,s,ffffff01&chp=3.14" alt="'._('Participación').'" /></td>';
+		$txt .= '<table border="0"><tr><td valign="top"><img src="//chart.googleapis.com/chart?cht=p&chd=t:'.round(($r['num']*100)/$r['num_censo'], 2).','.round(100-(($r['num']*100)/$r['num_censo']), 2).'&chs=300x160&chds=a&chl='._('Participación').'|'._('Abstención').'&chf=bg,s,ffffff01|c,s,ffffff01&chp=3.14" alt="'._('Participación').'" /></td>';
 		
 		$txt .= '<td valign="top"><table border="0"><tr><th></th><th>'._('Candidato').'</th><th>'._('Puntos').'</th></tr>';
 		$cnum = 0;

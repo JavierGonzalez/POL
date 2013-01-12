@@ -2,13 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
 <head>
 <meta charset="utf-8" />
-<meta name="author" content="Javier González González - desarrollo@virtualpol.com" />
+<meta name="coauthor" content="Javier González González - desarrollo@virtualpol.com" />
+<meta name="coauthor" content="Víctor García Carrasco - vic12345@terra.es" />
 
 <title>Sorteo Universal</title>
 
 
-<!-- Libreria jquery estandar -->
-<script src="jquery.min.js"></script>
+<!-- Libreria jQuery estandar -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
 
 <!-- Libreria Mersenne Twister. Fuente original: https://gist.github.com/300494 -->
@@ -32,9 +33,11 @@
 
 <h2>Designación por sorteo con verificabilidad universal</h2>
 
-<p style="text-align:justify;">Prueba de concepto de selección por sorteo. A partir de una lista de candidatos (Censo) se crea otra lista (Seleccionados) ordenada aleatoriamente. Para ello se recurre a <a href="http://es.wikipedia.org/wiki/Mersenne_twister" target="_blank">Mersenne Twister (MT19937)</a>, uno de los mejores algoritmos generadores de números aleatorios. Se ha usado <a href="https://gist.github.com/300494" target="_blank">esta versión</a> en javascript. Mersenne Twister es de código abierto, portable y está traducido a múltiples lenguajes por lo que se puede reproducir facilmente en cualquier sistema para verificar el resultado, sin necesidad de Internet.</p>
+<p style="text-align:justify;">Prueba de concepto de selección por sorteo. A partir de una lista de candidatos (Censo) se crea otra lista (Seleccionados) ordenada aleatoriamente. Para llevar a cabo el sorteo se recurre a <a href="http://es.wikipedia.org/wiki/Mersenne_twister" target="_blank">Mersenne Twister (MT19937)</a>, uno de los mejores algoritmos generadores de números aleatorios. Se ha usado <a href="https://gist.github.com/300494" target="_blank">esta versión</a> en javascript. Mersenne Twister es de código abierto, portable y está traducido a múltiples lenguajes por lo que se puede reproducir facilmente en cualquier sistema para verificar el resultado, sin necesidad de Internet.</p>
 
-<p style="text-align:justify;">El algoritmo genera secuencias de ciclo largo, totalmente repetibles y verificables, a partir de una semilla. Cada semilla generará una secuencia única. Para un sorteo verificable y transparente, se sugiere introducir la lista ordenada alfabéticamente y usar múltiples números de diferentes loterías como semillas aleatorias. A modo de ejemplo se establece como semilla los números premiados del <a href="http://es.wikipedia.org/wiki/Sorteo_Extraordinario_de_Navidad#.C3.9Altimos_Premios_Gordos_y_ciudades_agraciadas" target="_blank">Sorteo Extraordinario de Navidad</a> (<em>El Gordo</em>, España) de los años 1986, 2010 y 2011, concatenados en este orden.</p>
+<p style="text-align:justify;">El algoritmo genera secuencias numéricas de ciclo largo, totalmente repetibles y verificables, a partir de una semilla. Cada semilla generará una secuencia única y uniformemente distribuida, de números en coma flotante de doble precisión comprendidos entre 0 y 1. A cada miembro de la lista se le asigna un valor aleatorio y luego se reordena la lista de menor a mayor. La casilla "seleccionados" determina dónde queremos truncar la lista de salida. La casilla "bloque" sirve para generar nuevas secuencias a partir de la misma semilla repitiendo el proceso n veces. Se ha limitado su valor máximo a 999 por razones de eficiencia computacional.</p>
+
+<p style="text-align:justify;">Para un sorteo verificable y transparente, se sugiere que el orden de la lista ordenada sea conocido de antemano (orden alfabético p.ej.) y usar números de lotería, o una combinación de estos, como semillas aleatorias. A modo de ejemplo se establece como semilla los números premiados del <a href="http://es.wikipedia.org/wiki/Sorteo_Extraordinario_de_Navidad#.C3.9Altimos_Premios_Gordos_y_ciudades_agraciadas" target="_blank">Sorteo Extraordinario de Navidad</a> (<em>El Gordo</em>, España) de los años 1986, 2010 y 2011, concatenados en este orden.</p>
 
 </td></tr><tr><td valign="top">
 
@@ -292,6 +295,9 @@ Zorro</textarea>
 <p>Semilla (solo números):<br />
 <input type="text" value="037727925058268" id="semilla" style="font-size:22px;" maxlength="20" /></p>
 
+<p>Bloque (solo números):<br />
+<input type="text" value="1" id="bloque" style="font-size:22px;" maxlength="3" /></p>
+
 <p><button id="sortear" style="font-size:22px;">Sortear</button></p>
 
 
@@ -310,24 +316,31 @@ sortear();
 // Eventos para refresco
 $("#sortear").click(function () { sortear(); });
 $("#electos_num").change(function () { sortear(); });
-$("#semilla, #censo").keyup(function() { sortear(); });
+$("#semilla, #bloque, #censo").keyup(function() { sortear(); });
 
 function sortear() {
 
 	// Define variables utiles
 	var r = "";
 	var electos_num = $("#electos_num").val();
+	var bloque_num = 0;
 	var semilla = $("#semilla").val().replace(/\s/gi, "");
 	var mt = new MersenneTwister(semilla);
 	var censo = $("#censo").val().split("\n");
+	var bloque = $("#bloque").val();
 
 	// Recorre el array de elementos del censo relacionandolos con un numero aleatorio de MT
-	var censo_num = 0;
 	ra = new Array();
-	for (var n in censo) {
-		if (censo[n]!="") { ra[censo[n]] = mt.random(); censo_num++; }
-	}
-	
+	if (bloque==0) { bloque = 1; }
+
+	do {
+		var censo_num = 0;
+		for (var n in censo) {
+			if (censo[n]!="") { ra[censo[n]] = mt.random(); censo_num++; }
+		}
+		bloque_num++;
+	} while (bloque_num!=bloque)
+
 	$("#censo_num").html(censo_num);
 
 	// Ordena el array de forma asociativa y por value (el numero aleatorio MT), de menor a mayor, siendo este el orden del resultado final
@@ -335,13 +348,13 @@ function sortear() {
 	bySortedValue(ra, function(key, value) {
 		if (n<electos_num) { r += key + "\n"; n++; }
 	});
-	
-	// Imprime resultado final
+
+	// Actualiza el resultado
 	$("#electos").text(r);
 }
 
 // Funcion para ordenar un array de forma asociativa (muy retorcido con Javascript)
-// Fuente: http://stackoverflow.com/a/5200010/1442693
+// Fuente de esta función: http://stackoverflow.com/a/5200010/1442693
 function bySortedValue(obj, callback, context) {
     var tuples = [];
     for (var key in obj) tuples.push([key, obj[key]]);
@@ -349,6 +362,7 @@ function bySortedValue(obj, callback, context) {
     var length = tuples.length;
     while (length--) callback.call(context, tuples[length][0], tuples[length][1]);
 }
+////////
 </script>
 
 

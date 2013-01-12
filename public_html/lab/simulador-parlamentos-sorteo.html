@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="coauthor" content="Javier González González - desarrollo@virtualpol.com" />
+<meta name="coauthor" content="Víctor García Carrasco - vic12345@terra.es" />
+
+<title>Simulador de parlamentos elegidos por sorteo</title>
+
+<!-- Libreria jQuery estandar -->
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+
+<!-- Libreria DataTables 1.9.4 - http://datatables.net -->
+<script type="text/javascript" src="datatables/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="datatables/js/jquery.dataTables.columnFilter.js"></script>
+
+<style type="text/css">
+@import "datatables/css/demo_table.css";
+#datatable td.right { text-align:right; }
+#datatable th { cursor:pointer; }
+#datatable td { 
+	white-space:nowrap; 
+	padding:4px 8px;
+	margin:0;
+}
+
+
+#parametros textarea { white-space:nowrap; overflow-y:scroll; overflow-x:hidden; width:120px; height:120px; }
+#parametros input { width:122px; }
+#parametros input[data-align] { font-weight:bold; }
+
+
+</style>
+
+</head>
+
+<body>
+
+<table width="100%"><tr><td align="center">
+
+<table width="1000"><tr><td colspan="3">
+
+<span style="float:right;font-size:20px;"><a href="https://github.com/JavierGonzalez/Sorteo-Universal" target="_blank"><b>GitHub</b></a></span>
+
+
+<h1>Simulador de parlamentos elegidos por sorteo</h1>
+
+<p style="text-align:justify;">Simulación de perfiles de diputados elegidos por sorteo entre toda la ciudadanía Española, segun datos del INE. Representa aproximadamente cómo sería un parlamento de 350 escaños. EN DESARROLLO.</p>
+
+
+<fieldset id="parametros"><legend>Parametros</legend>
+<button id="bsimular" style="font-weight:bold;font-size:20px;">Simular Parlamento</button> &nbsp; <input type="number" id="diputados_num" value="350" min="1" max="1000" style="text-align:right;font-weight:bold;font-size:18px;" /> escaños / diputados.<br />
+
+
+<table width="100%"><tr>
+
+<td valign="top"><input type="text" value="Sexo" id="p_0" data-align="left" /><br /><textarea id="t_0">
+50.58 Mujer
+49.42 Hombre
+</textarea></td>
+
+<td valign="top"><input type="text" value="Edad" id="p_1" data-align="right" /><br /><textarea id="t_1">
+1.18 18
+1.20 19
+1.20 20
+1.22 21
+1.24 22
+1.26 23
+1.29 24
+1.31 25
+1.37 26
+1.43 27
+1.49 28
+1.57 29
+1.66 30
+1.75 31
+1.83 32
+1.92 33
+1.97 34
+2.02 35
+2.02 36
+2.01 37
+1.98 38
+1.98 39
+1.97 40
+1.93 41
+1.93 42
+1.94 43
+1.95 44
+1.93 45
+1.93 46
+1.95 47
+1.86 48
+1.81 49
+1.77 50
+1.80 51
+1.76 52
+1.70 53
+1.66 54
+1.55 55
+1.51 56
+1.45 57
+1.46 58
+1.43 59
+1.37 60
+1.32 61
+1.39 62
+1.45 63
+1.28 64
+1.28 65
+1.31 66
+1.25 67
+1.21 68
+1.01 69
+0.99 70
+1.15 71
+0.78 72
+0.89 73
+1.00 74
+1.06 75
+1.02 76
+1.00 77
+1.00 78
+0.95 79
+0.89 80
+0.84 81
+0.76 82
+0.70 83
+0.62 84
+0.57 85
+0.50 86
+0.44 87
+0.38 88
+0.33 89
+0.26 90
+0.21 91
+0.14 92
+0.12 93
+0.09 94
+0.07 95
+0.05 96
+0.04 97
+0.03 98
+0.02 99
+0.01 100
+0.01 101
+</textarea></td>
+
+<td valign="top"><input type="text" value="Hijos" id="p_2" data-align="left" /><br /><textarea id="t_2">
+4736 Ninguno
+1580 Uno
+2675 Dos
+&nbsp;869 Tres
+&nbsp;197 Cuatro
+&nbsp;105 Cinco+
+</textarea></td>
+<!-- Fuente: http://www.aceprensa.com/media/uploads/article_imgs/185-99-A_1.jpg -->
+
+<td valign="top"><input type="text" value="Comunidad Autonoma" id="p_3" data-align="left" /><br /><textarea id="t_3">
+17.85 Andalucía
+15.98 Cataluña
+13.75 Comunidad de Madrid
+10.84 Comunidad Valenciana
+&nbsp;5.92 Galicia
+&nbsp;5.42 Castilla y León
+&nbsp;4.63 País Vasco
+&nbsp;4.51 Islas Canarias
+&nbsp;4.48 Castilla-La Mancha
+&nbsp;3.12 Región de Murcia
+&nbsp;2.85 Aragón
+&nbsp;2.36 Islas Baleares
+&nbsp;2.35 Extremadura
+&nbsp;2.29 Princip. de Asturias
+&nbsp;1.36 Navarra
+&nbsp;1.26 Cantabria
+&nbsp;0.68 La Rioja
+&nbsp;0.17 Ceuta
+&nbsp;0.17 Melilla
+</textarea></td>
+
+<td valign="top"><input type="text" value="Voto" id="p_4" data-align="left" /><br /><textarea id="t_4">
+1111 Abstención
+1086 PP
+&nbsp;700 PSOE
+&nbsp;252 Otro partido
+&nbsp;168 IU
+&nbsp;114 UPyD
+&nbsp;&nbsp;65 En Blanco / Nulo
+
+</textarea></td>
+
+<td valign="top"><input type="text" value="Cociente Intelectual" id="p_5" data-align="left" /><br /><textarea id="t_5">
+&nbsp;4 Muy superior
+16 Superior
+60 Promedio
+16 Inferior
+&nbsp;4 Muy inferior
+</textarea></td>
+
+<td valign="top"><input type="text" value="Situación económica" id="p_6" data-align="left" /><br /><textarea id="t_6">
+100 
+12 Mucha dificultad
+21 Bajo umbral pobreza
+</textarea></td>
+
+</tr></table>
+
+</fieldset>
+
+
+<table width="100%" id="datatable" cellpadding="0" cellspacing="0">
+</table>
+
+<p style="white-space:nowrap;">* Los datos de las columnas de las tablas no están relacionados entre sí.</p>
+
+
+
+
+
+<script type="text/javascript">
+
+// Ejecutar al cargar
+simular_parlamento();
+
+// Eventos para refresco
+$("#parametros textarea, #parametros input").change(function() { 
+	$("#datatable").dataTable().fnDestroy();
+	simular_parlamento();
+});
+
+$("#bsimular").click(function() { 
+	$("#datatable").dataTable().fnDestroy();
+	simular_parlamento();
+});
+
+
+function bolsa_sorteo(item_id) {
+	var lineas = $("#t_" + item_id).val().split("\n");
+	item_array = [];
+	item_array["total"] = 0;
+	items = [];
+
+	lineas.forEach(function (value, name) {
+		if (value) {
+			var coef_num = value.replace("&nbsp;", " ").trim().split(" ")[0];
+			if (is_numeric(coef_num)) {
+				value = value.replace(coef_num, "").trim();
+			} else {
+				coef_num = 1;
+			}
+			coef_num = coef_num*100;
+			items[value] = parseInt(coef_num);
+			item_array["total"] += parseInt(coef_num);
+		}
+	});
+
+	
+	item_array["values"] = items;
+	
+	//console.log(item_array);
+
+	return item_array;
+}
+
+function sorteo(item_array) {
+	var sel = "";
+	var rand_sel = mt_rand(1, item_array["total"]);
+	var last = 0;
+
+	bySortedValue(item_array["values"], function(name, value) {
+		if (last < rand_sel && (last + value) >= rand_sel) { sel = name; }
+		last += value;
+	});
+
+	return sel;
+}
+
+function simular_parlamento() {
+
+	// Parametros
+	diputados_num = $("#diputados_num").val();
+
+	table_hr = [];
+	table_hr.push({ "sTitle": "Escaño", "sClass": "right" });
+
+	col_array = [];
+	for (var e=0;e<=6;e++) {
+		table_hr.push({ "sTitle": $("#p_" + e).val(), "sClass": $("#p_" + e).attr("data-align") });
+		col_array[e] = bolsa_sorteo(e);
+	}
+
+
+	// Motor generador de diputados
+	table_td = [];
+	for (var l=1;l<=diputados_num;l++) {
+		table_td.push([ 
+			l,
+			sorteo(col_array[0]),
+			sorteo(col_array[1]),
+			sorteo(col_array[2]),
+			sorteo(col_array[3]),
+			sorteo(col_array[4]),
+			sorteo(col_array[5]),
+			sorteo(col_array[6]),
+		]);
+	}
+
+	$("#datatable").dataTable({
+		"aaData": table_td,
+		"aoColumns": table_hr,
+		"sScrollY": "440px",
+        "bPaginate": false,
+        "bScrollCollapse": true,
+		"bPaginate":		false,
+		"bLengthChange":	false,
+		"bFilter":			true,
+		"bSort":			true,
+		"bInfo":			true,
+		"bAutoWidth":		false,
+		"oLanguage": {
+			"sSearch":			"Filtro:",
+			"sInfo":			"_TOTAL_ escaños",
+			"sInfoFiltered":	"(de _MAX_ escaños en total)",
+		},
+	}).columnFilter({
+		aoColumns: [ 
+		null,
+		{ type: "select", values: ['Hombre', 'Mujer']  },
+		{ type: "number" },
+		{ type: "text" },
+		{ type: "text" },
+		{ type: "text" },
+		{ type: "text" },
+		{ type: "text" },
+		]
+	});
+}
+
+
+function mt_rand(min, max) {
+	// http://kevin.vanzonneveld.net
+	// +   original by: Onno Marsman
+	// +   improved by: Brett Zamir (http://brett-zamir.me)
+	// +   input by: Kongo
+	var argc = arguments.length;
+	if (argc === 0) {
+		min = 0;
+		max = 2147483647;
+	}
+	else if (argc === 1) {
+		throw new Error('Warning: mt_rand() expects exactly 2 parameters, 1 given');
+	}
+	else {
+		min = parseInt(min, 10);
+		max = parseInt(max, 10);
+	}
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function is_numeric(n) {
+	return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function bySortedValue(obj, callback, context) {
+	// Funcion para ordenar un array de forma asociativa (muy retorcido con Javascript)
+	// Fuente de esta función: http://stackoverflow.com/a/5200010/1442693
+    var tuples = [];
+    for (var key in obj) tuples.push([key, obj[key]]);
+    tuples.sort(function(a, b) { return a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0 });
+    var length = tuples.length;
+    while (length--) callback.call(context, tuples[length][0], tuples[length][1]);
+}
+
+</script>
+
+
+</body>
+</html>

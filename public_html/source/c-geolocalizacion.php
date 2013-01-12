@@ -60,7 +60,7 @@ if (!isset($pol['user_ID'])) {
 	}
 
 	$txt .= '
-<script type="text/javascript" src="http://maps.google.com/maps?file=api&v=2&key="></script>
+<script type="text/javascript" src="//maps.google.com/maps?file=api&v=2&key="></script>
 <script type="text/javascript">
 
 $(document).ready(function(){ initialize(); });
@@ -132,7 +132,7 @@ function roundNumber(num, dec) {
 	}
 
 	$txt .='
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
 <script type="text/javascript" src="'.IMG.'lib/markerclusterer_packed.js"></script>
 <script type="text/javascript">
 nicks = new Array();
@@ -348,7 +348,7 @@ $txt .= '</optgroup>
 
 </div>
 
-<p><button onclick="redirect_POST(\'http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/enviar\');" class="small">'._('Enviar mensaje privado').'</button>
+<p><button onclick="redirect_POST(\'//'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/enviar\');" class="small">'._('Enviar mensaje privado').'</button>
 '.(nucleo_acceso($vp['acceso']['control_gobierno'])?'<br /><button onclick="redirect_POST(\'/control/gobierno/notificaciones\');" class="small">'._('Crear notificación').'</button>':'').'</p>
 </div>
 

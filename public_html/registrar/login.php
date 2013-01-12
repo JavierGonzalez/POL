@@ -369,7 +369,7 @@ case 'trz':
 			sql("UPDATE users_con SET dispositivo = '".$_GET['x']."' WHERE tipo = 'login' AND user_ID = '".$r['ID']."' ORDER BY time DESC LIMIT 1");
 		}
 	}
-	redirect($_GET['u']);
+	redirect(base64_decode($_GET['u']));
 	break;
 
 case 'login':
@@ -417,10 +417,10 @@ ec.get("'.$traza_nom.'", function(value) {
 	if (value === undefined) {
 		var get_ms = new Date().getTime();
 		everc_value = '.(isset($_COOKIE['trz'])?'"'.$_COOKIE['trz'].'"':'get_ms + Math.floor(Math.random()*1001)').';
-		$("#redirect").attr("content", "9;url='.REGISTRAR.'login.php?a=trz&x=" + everc_value + "&y='.$user_ID.'&z='.$api_pass.'&u='.$url.'");
+		$("#redirect").attr("content", "9;url='.REGISTRAR.'login.php?a=trz&x=" + everc_value + "&y='.$user_ID.'&z='.$api_pass.'&u='.base64_encode($url).'");
 		ec.set("'.$traza_nom.'", everc_value);
 	} else { everc_value = value; }
-	window.location.href = "'.REGISTRAR.'login.php?a=trz&x=" + everc_value + "&y='.$user_ID.'&z='.$api_pass.'&u='.$url.'";
+	window.location.href = "'.REGISTRAR.'login.php?a=trz&x=" + everc_value + "&y='.$user_ID.'&z='.$api_pass.'&u='.base64_encode($url).'";
 });
 </script>
 <style type="text/css">

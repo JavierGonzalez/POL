@@ -20,7 +20,7 @@ else { $txt_title = $pol['config']['pais_des'].' (VirtualPol)'; }
 
 // Tapiz de fondo (1400x100)
 if (isset($_GET['bg'])) { 
-	$body_bg = 'url(\'http://'.$_GET['bg'].'\')';
+	$body_bg = 'url(\'//'.$_GET['bg'].'\')';
 } else if (isset($pol['config']['bg'])) { 
 	$body_bg = 'url(\''.IMG.'bg/'.$pol['config']['bg'].'\')'; 
 } else { $body_bg = 'none'; }
@@ -39,8 +39,8 @@ if (isset($_GET['bg'])) {
 </style>
 
 
-<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="<?=IMG?>scripts_all.js?v=<?=VER?>"></script>
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
@@ -96,7 +96,7 @@ p_scroll = false;
 				<ul>
 					<li><a href="/estadisticas"><?=_('Estadísticas')?></a></li>
 					<li><a href="/estadisticas/macro"><?=_('Estadísticas macro')?></a></li>
-					<!--<li><a href="http://chartbeat.com/dashboard/?url=virtualpol.com&amp;k=ecc15496e00f415838f6912422024d06" target="_blank"><?=_('Estadísticas online')?></a></li>-->
+					<li><a href="http://chartbeat.com/dashboard/?url=virtualpol.com&amp;k=ecc15496e00f415838f6912422024d06" target="_blank"><?=_('Estadísticas online')?></a></li>
 					<li><a href="/log"><?=_('Log de acciones')?></a></li>
 				</ul>
 			</li>
@@ -173,7 +173,7 @@ echo '<p id="palabras">';
 
 foreach(explode(';', $pol['config']['palabras']) as $t) {
 	$t = explode(':', $t);
-	echo ($t[1]!=''?'<a href="http://'.$t[1].'">'.$t[2].'</a>':$t[2]).($pol['user_ID']==$t[0]||nucleo_acceso($vp['acceso']['control_gobierno'])?' <a href="/subasta/editar" style="float:right;color:#CCC;">#</a>':'').'<br />';
+	echo ($t[1]!=''?'<a href="//'.$t[1].'">'.$t[2].'</a>':$t[2]).($pol['user_ID']==$t[0]||nucleo_acceso($vp['acceso']['control_gobierno'])?' <a href="/subasta/editar" style="float:right;color:#CCC;">#</a>':'').'<br />';
 }
 
 echo '</p>';
@@ -197,7 +197,6 @@ if ((ECONOMIA) AND (substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa')) {
 	<div id="header">
 
 		<div id="header-logo">
-			<!--<a href="/"><img src="<?=IMG?>banderas/<?=PAIS?>.png" width="80" height="50" alt="logo" /></a>-->
 			<span class="htxt" id="header-logo-p"><?=$pol['config']['pais_des']?></span>
 		</div>
 
@@ -244,7 +243,7 @@ if (isset($pol['user_ID'])) {
 	<div id="footer">
 
 		<div id="footer-right" style="text-align:center;">
-			<p><a href="http://www.virtualpol.com" title="VirtualPol"><img src="<?=IMG?>logo/vp2.png" width="200" height="60" alt="VirtualPol" /></a><br />
+			<p><a href="//www.virtualpol.com" title="VirtualPol"><img src="<?=IMG?>logo/vp2.png" width="200" height="60" alt="VirtualPol" /></a><br />
 			<?=_('La primera red social democrática')?></p>
 			
 			<p><a target="_blank" href="http://www.virtualpol.com/video"><?=_('Vídeo')?></a> | <a target="_blank" href="http://www.virtualpol.com/documentacion"><?=_('Documentación')?></a> | <a target="_blank" href="http://www.virtualpol.com/desarrollo"><?=_('Desarrollo')?></a> | <a target="_blank" href="http://www.virtualpol.com/TOS" title="Condiciones de Uso">TOS</a><br />
@@ -255,7 +254,7 @@ if (isset($pol['user_ID'])) {
 				if ($pol['user_ID'] == 1) { echo num((microtime(true)-TIME_START)*1000).'ms '.num(memory_get_usage()/1000).'kb |'; } 
 			}
 			?>
-			<span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2012<!-- <?=boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange')?>-->
+			<span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2013<!-- <?=boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange')?>-->
 			</p>
 		</div>
 		

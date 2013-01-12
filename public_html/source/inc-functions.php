@@ -298,7 +298,10 @@ function mumble_url($canal='') {
 	return 'mumble://'.$pol['nick'].':vp@virtualpol.mumble.com:3704/'.$canal.'?version=1.2.0';
 }
 
-function accion_url($pais=false) { return SSL_URL.'source/accion.php?http_host='.($pais==false?HOST:strtolower($pais).'.'.DOMAIN).'&'; }
+function accion_url($pais=false) { 
+	//return SSL_URL.'source/accion.php?http_host='.($pais==false?HOST:strtolower($pais).'.'.DOMAIN).'&'; 
+	return '/accion.php?';
+}
 function vp_url($path='/', $pais=PAIS) { return 'http://'.strtolower($pais).'.'.DOMAIN.$path; }
 function error($txt='Acción no permitida o erronea') { redirect('http://'.HOST.'/?error='.base64_encode($txt)); }
 function num($num, $dec=0) { return number_format(round($num, $dec), $dec, ',', '.'); }

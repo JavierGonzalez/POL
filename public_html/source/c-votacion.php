@@ -567,6 +567,22 @@ LIMIT 250");
 ':'');
 
 
+
+			$result2 = sql("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
+			while($r2 = r($result2)) { $comentarios_num = $r2['num']; }
+
+			$txt .= '<fieldset style="font-size:13px;"><legend>'._('Comentarios adjuntos al voto').' ('.($r['estado']=='end'?$comentarios_num.' '._('comentarios').' &nbsp; '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
+			if (nucleo_acceso('ciudadanos_global')) {
+				if ($r['estado'] == 'end') { 
+					$result2 = sql("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
+					while($r2 = r($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
+				} else { $txt .= '<p style="color:red;">'._('Los comentarios estarán visibles al finalizar la votación').'.</p>'; }
+			} else { $txt .= '<p style="color:red;">'._('Para ver los comentarios debes ser ciudadano').'.</p>'; }
+			$txt .= '</fieldset>';
+
+
+
+
 		} elseif ($_GET['b'] == 'info') {
 			$time_expire = strtotime($r['time_expire']);
 			$time = strtotime($r['time']);
@@ -925,7 +941,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 						foreach ($escrutinio['votos'] AS $voto => $num) { 
 							if ($respuestas[$voto]) {
 								if ($respuestas[$voto] != 'En Blanco') {
-									$txt .= '<tr><td>'.($r['tipo']=='elecciones'?crear_link($respuestas[$voto]):$respuestas[$voto]).'</td><td align="right" title="'.num(($num*100)/$puntos_total, 1).'%"><b>'.num($num).'</b></td><td align="right">'.num(($num*100)/$puntos_total_sin_en_blanco, 1).'%</td></tr>';
+									$txt .= '<tr><td>'.($r['tipo']=='elecciones'?crear_link($respuestas[$voto]):$respuestas[$voto]).'</td><td align="right" title="'.num(($num*100)/$puntos_total, 1).'%"><b>'.num($num).'</b></td><td align="right">'.num(($num*100)/$puntos_total_sin_en_blanco, 1).'%</td><td>'.gbarra(($num*100)/$puntos_total_sin_en_blanco, 60, false).'</td></tr>';
 								} else { $votos_en_blanco = $num; }
 							} else { unset($escrutinio['votos'][$voto]);  }
 						}

@@ -45,7 +45,7 @@ Realizadas cada <b>".$r['elecciones_cada']." días</b>, durante <b>".$r['eleccio
 'En Blanco|".implode('|',$candidatos_nick)."|', 
 '',
 '".$date."', 
-'".date('Y-m-d H:i:s', time()+($r['elecciones_durante']*24*60*60))."', 
+'".($candidatos_num<=$r['elecciones_electos']?$date:date('Y-m-d H:i:s', time()+($r['elecciones_durante']*24*60*60)))."', 
 '0', 
 'ok', 
 'elecciones',  
@@ -71,7 +71,7 @@ Realizadas cada <b>".$r['elecciones_cada']." días</b>, durante <b>".$r['eleccio
 		}
 
 		// Enviar emails.
-		if (($r['asigna'] == 0) AND (explodear('|', $r['elecciones_votan'], 0) == 'ciudadanos')) {
+		if (($candidatos_num <= $r['elecciones_electos']) AND ($r['asigna'] == 0) AND (explodear('|', $r['elecciones_votan'], 0) == 'ciudadanos')) {
 			$result2 = sql("SELECT nick, email FROM users WHERE pais = '".PAIS."' AND estado != 'expulsado'");
 			while($r2 = r($result2)){ 
 				$mensaje = '<p>Hola '.$r2['nick'].':</p>

@@ -301,6 +301,9 @@ LIMIT 300", $link);
 	break;
 
 case 'censo':
+
+	if (!$pol['user_ID']) { redirect('/'); }
+
 	$num_element_pag = $pol['config']['info_censo'];
 
 	// num ciudadanos activos (los que entraron en las ultimas 24h sin ser nuevos ciudadanos)

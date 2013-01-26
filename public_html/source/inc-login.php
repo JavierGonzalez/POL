@@ -118,6 +118,11 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	if ($pol['estado'] == 'expulsado') {  session_unset(); session_destroy(); }
 }
 
+
+// Forzado SSL
+if (false AND !$_SERVER['HTTPS'] AND isset($pol['nick'])) { redirect('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']); }
+
+
 $vp['lang'] = $pol['config']['lang'];
 if ((isset($vp['lang'])) AND ($vp['lang'] != 'es_ES')) {
 	// Carga internacionalización

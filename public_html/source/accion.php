@@ -996,7 +996,7 @@ case 'gobierno':
 ($_POST['pols_mensajetodos'] >= 300) AND 
 ($_POST['pols_examen'] >= 0) AND 
 ($pol['config']['pols_mensajeurgente'] >= 0) AND
-($_POST['impuestos'] <= 5) AND ($_POST['impuestos'] >= 0) AND
+($_POST['impuestos'] <= 25) AND ($_POST['impuestos'] >= 0) AND
 ($_POST['impuestos_minimo'] >= -1000) AND
 ($_POST['impuestos_empresa'] <= 1000) AND ($_POST['impuestos_empresa'] >= 0) AND
 ($_POST['arancel_salida'] <= 100) AND ($_POST['arancel_salida'] >= 0)

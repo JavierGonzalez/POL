@@ -11,11 +11,11 @@ include('config.php');
 include('source/inc-functions.php');
 include('source/inc-functions-accion.php');
 
+exit; // REVISAR TODO EL CODIGO ANTES DE ABRIR ESTA API
+
 if ($_GET['pass']) {
 	$link = conectar();
 }
-
-exit; // ANTES DE ABRIR ESTO VIGILAR INYECCION SQL
 
 //Funciones
 function api_pass() { return substr(md5(mt_rand(1000000000,9999999999)), 0, 12); }

@@ -1010,20 +1010,21 @@ LIMIT 250");
 </span>
 
 ':'').'</td>
-<td class="rich"'.($r2['votos']>=0?' style="color:#000;"':'').'>'.$r2['texto'].'</td>
+<td class="rich" style="'.($r2['votos']>=0?'color:#000;':'').'font-size:16px;">'.$r2['texto'].'</td>
 <td nowrap class="gris">'.$r2['sentido'].'<br />'.timer($r2['time']).($r2['user_ID']==$pol['user_ID']&&$r2['votos']<=6?boton('X', accion_url().'a=votacion&b=argumento-eliminar&ID='.$r2['ID'].'&ref_ID='.$r2['ref_ID'], '¿Seguro que quieres ELIMINAR tu argumento?', 'red small'):'').'</td>
 </tr>';
 				if ($r2['votos'] < $votos_mosotrar) { $argumentos_ocultos++; }
 			}
-			$txt .= '</table>'.($argumentos_ocultos>0&&nucleo_acceso('ciudadanos_global')?'<a href="#" onclick="$(\'.negativizados\').toggle();return false;">'._('Mostrar argumentos negativos ('.$argumentos_ocultos.')').'</a>':'').(nucleo_acceso('ciudadanos_global')&&$r['estado']!='end'&&$argumentos_num>0?' <span style="color:red;"><em>Si un argumento <b>no te gusta pero es correcto</b> debes marcarlo como <u>correcto</u>.</em></span>':'');
+			$txt .= '</table>'.($r['estado']!='end'&&$argumentos_ocultos>0&&nucleo_acceso('ciudadanos_global')?'<a href="#" onclick="$(\'.negativizados\').toggle();return false;">'._('Mostrar argumentos negativos ('.$argumentos_ocultos.')').'</a>':'').(nucleo_acceso('ciudadanos_global')&&$r['estado']!='end'&&$argumentos_num>0?' <span style="color:red;"><em>Si un argumento <b>no te gusta pero es correcto</b> debes marcarlo como <u>correcto</u>.</em></span>':'');
 
 		
 			$txt .= '
 '.($r['estado']!='end'&&$argumentos_mios==0&&nucleo_acceso('confianza', 0)&&nucleo_acceso('antiguedad', 5)&&nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])?'
 
-<p><a href="#" onclick="$(\'#add-argument\').toggle();return false;">'._('Añadir argumento').'</a></p>
+<p><a href="#" onclick="$(\'#add-argument\').toggle(\'slow\');return false;">'._('Añadir argumento').'</a></p>
 
 <div id="add-argument" style="display:none;">
+<!--
 <blockquote>'._('Reglas de uso').':
 <ul>
 <li>Correcta escritura.</li>
@@ -1031,35 +1032,46 @@ LIMIT 250");
 <li>No debatir, solo argumentos.</li>
 </ul>
 </blockquote>
+-->
 
 <form action="'.accion_url($pol['pais']).'a=votacion&b=argumento" method="POST">
 <input type="hidden" name="ref_ID" value="'.$r['ID'].'"  />
 
-<p>Tipo de argumento: 
-<select name="sentido">
-<optgroup label="Sobre las opciones de votación:">
-<option value="A favor">A favor</option>
-<option value="En contra">En contra</option>
-<option value="En blanco">En blanco</option>
+<p><select name="sentido" required>
+<option value=""></option>
+<optgroup label="Sobre el voto:">
+<option value="Argumento">Argumento</option>
+<option value="A favor">Argumento a favor</option>
+<option value="En contra">Argumento en contra</option>
 </optgroup>
 
 <optgroup label="Sobre la votación:">
-<option value="Impugnación">Impugnación</option>
-<option value="Matiz" selected>Matiz</option>
+<option value="Matiz">Matiz</option>
 <option value="Información">Información</option>
 <option value="Corrección">Corrección</option>
+<option value="Impugnación">Impugnación</option>
 </optgroup>
 
-</select></p>
+</select> <input type="text" name="texto" value="" size="80" maxlength="160" placeholder="Escribe aquí tu argumento..." required /> (160 caracteres)</p>
 
-<p><input type="text" name="texto" value="" size="80" maxlength="160" placeholder="Escribe aquí tu argumento..." required /> (160 caracteres)</p>
+<p>
+
+&nbsp; <input type="checkbox" id="check1" name="check1" value="true" required /> <label for="check1">La escritura es correcta.</label><br />
+
+&nbsp; <input type="checkbox" id="check2" name="check1" value="true" required /> <label for="check2">El argumento es nuevo.</label><br />
+
+&nbsp; <input type="checkbox" id="check3" name="check1" value="true" required /> <label for="check3">Es un argumento, no incita al debate, ni es una pregunta.</label><br />
+
+</ul>
+
+</p>
+
+<p>'.boton(_('Añadir argumento'), 'submit', false, 'blue').'</p>
 
 <p>
 * Los argumentos se ocultarán automáticamente al alcanzar un balance de votos negativo.<br />
 * Los argumentos son públicos y anónimos.
 </p>
-
-<p>'.boton(_('Añadir argumento'), 'submit', '¿Estás seguro de cumplir las reglas de uso?', 'blue').'</p>
 
 </form>
 
@@ -1068,7 +1080,7 @@ LIMIT 250");
 ':'');
 			$txt .= '</fieldset>';
 
-			if (nucleo_acceso('ciudadanos_global')) {
+			if ($r['estado']=='end' AND nucleo_acceso('ciudadanos_global')) {
 				$result2 = sql("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
 				while($r2 = r($result2)) { $comentarios_num = $r2['num']; }
 

@@ -150,7 +150,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 
 	$txt_title = _('Borrador de votación');
 	$txt_nav = array('/votacion'=>_('Votaciones'), '/votacion/borradores'=>_('Borradores'), _('Crear votación'));
-	$txt_tab = array('/votacion/borradores'=>_('Ver borradores'), '/votacion/'.$_GET['b']=>_('Previsualizar'), '/votacion/crear/'.$_GET['b']=>_('Editar borrador'), '/votacion/'.$_GET['b'].'/argumentos'=>_('Argumentos'));
+	$txt_tab = array('/votacion/borradores'=>_('Ver borradores'), '/votacion/'.$_GET['b']=>_('Previsualizar'), '/votacion/crear/'.$_GET['b']=>_('Editar borrador'));
 
 	// EDITAR
 	if (is_numeric($_GET['b'])) {
@@ -429,8 +429,7 @@ LIMIT 500");
 (SELECT voto FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado,
 (SELECT validez FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado_validez,
 (SELECT mensaje FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_mensaje,
-(SELECT comprobante FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS comprobante,
-(SELECT COUNT(*) FROM votacion_argumentos WHERE ref_ID = votacion.ID AND votos >= 0) AS argumentos_num
+(SELECT comprobante FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS comprobante
 FROM votacion
 WHERE ID = '".$_GET['a']."' AND pais = '".PAIS."'
 LIMIT 1");
@@ -455,17 +454,17 @@ LIMIT 1");
 
 		if ($r['estado'] == 'ok') { 
 			$txt_nav['/votacion/'.$r['ID']] = _('En curso').': '.num($votos_total).' '._('votos');
-			$txt_tab = array('/votacion/'.$r['ID']=>_('Votación'), '/votacion/'.$r['ID'].'/argumentos'=>_('Argumentos').' ('.$r['argumentos_num'].')', '/votacion/'.$r['ID'].'/info'=>_('Más información'));
+			$txt_tab = array('/votacion/'.$r['ID']=>_('Votación'), '/votacion/'.$r['ID'].'/info'=>_('Más información'));
 
 			$tiempo_queda =  '<span style="color:blue;">'._('Quedan').' '.timer($time_expire, true).'.</span>'; 
 		} elseif ($r['estado'] == 'borrador') {
 			$txt_nav[] = _('Borrador');
-			$txt_tab = array('/votacion/borradores'=>_('Ver borradores'), '/votacion/'.$r['ID']=>_('Previsualizar'), '/votacion/crear/'.$r['ID']=>_('Editar borrador'), '/votacion/'.$r['ID'].'/argumentos'=>_('Argumentos').' ('.$r['argumentos_num'].')');
+			$txt_tab = array('/votacion/borradores'=>_('Ver borradores'), '/votacion/'.$r['ID']=>_('Previsualizar'), '/votacion/crear/'.$r['ID']=>_('Editar borrador'));
 
 			$tiempo_queda =  '<span style="color:red;">'._('Borrador').' <span style="font-weight:normal;">('._('Previsualización de votación').')</span></span> ';
 		} else { 
 			$txt_nav['/votacion/'.$r['ID']] = _('Finalizado').': '.num($votos_total).' '._('votos');
-			$txt_tab = array('/votacion/'.$r['ID']=>_('Votación'), '/votacion/'.$r['ID'].'/argumentos'=>_('Argumentos').' ('.$r['argumentos_num'].')', '/votacion/'.$r['ID'].'/info'=>_('Más información'));
+			$txt_tab = array('/votacion/'.$r['ID']=>_('Votación'), '/votacion/'.$r['ID'].'/info'=>_('Más información'));
 			if (isset($pol['user_ID'])) { $txt_tab['/votacion/'.$r['ID'].'/verificacion'] = _('Verificación'); }
 			$tiempo_queda =  '<span style="color:grey;">'._('Finalizado').'</span>'; 
 		}
@@ -474,116 +473,7 @@ LIMIT 1");
 
 
 
-		if (($_GET['b'] == 'argumentos') AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
-
-			$txt .= '
-<fieldset class="rich votacion_desc_min"><legend style="font-size:22px;font-weight:bold;">'.$r['pregunta'].'</legend>
-<p>'.$r['descripcion'].'</p>
-'.(substr($r['debate_url'], 0, 4)=='http'?'<p><b>'._('Debate').': <a href="'.$r['debate_url'].'">'._('aquí').'</a>.</b></p>':'').'
-</fieldset>';
-			
-			if ($r['argumentos_num'] > 0) {
-				$txt .= '<fieldset><legend>'._('Argumentos').'</legend>
-
-'.($r['estado']!='end'?'<p style="color:red;"><em>Si un argumento <b>no te gusta pero es correcto</b> debes marcarlo como <u>correcto</u>.</em></p>':'').'
-
-<table>';
-
-				$votos_mosotrar = 0;
-				$argumentos_ocultos = 0;
-				$result2 = sql("SELECT va.ID, va.user_ID, va.ref_ID, va.sentido, va.texto, va.time, va.votos, va.votos_num, v.voto
-FROM votacion_argumentos `va`
-LEFT JOIN votos `v` ON (tipo = 'argumentos' AND item_ID = va.ID AND emisor_ID = '".$pol['user_ID']."')
-WHERE va.ref_ID = '".$r['ID']."'
-ORDER BY va.votos DESC, va.time DESC
-LIMIT 250");
-				while($r2 = r($result2)) {
-					$txt .= '
-<tr'.($r2['votos']<$votos_mosotrar?' style="display:none;" class="negativizados"':'').'>
-<td align="right" id="argumentos'.$r2['ID'].'">'.confianza($r2['votos'], $r2['votos_num']).'</td>
-<td class="gris" nowrap>'.(nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])&&$r2['user_ID']!=$pol['user_ID']&&$r['estado']!='end'?'
-
-<span id="data_argumentos'.$r2['ID'].'" type="argumentos" name="'.$r2['ID'].'" value="'.$r2['voto'].'">
-
-<input type="radio" id="rac'.$r2['ID'].'" class="radio_argumentos'.$r2['ID'].'" name="radio_argumentos'.$r2['ID'].'" onclick="votar(1, \'argumentos\', \''.$r2['ID'].'\');"'.($r2['voto']==1?' checked="checked"':'').'> <label for="rac'.$r2['ID'].'">Correcto</label><br />
-<input type="radio" id="rai'.$r2['ID'].'" class="radio_argumentos'.$r2['ID'].'" name="radio_argumentos'.$r2['ID'].'" onclick="votar(-1, \'argumentos\', \''.$r2['ID'].'\');"'.($r2['voto']==-1?' checked="checked"':'').'> <label for="rai'.$r2['ID'].'">Incorrecto</label>
-
-</span>
-
-':'').'</td>
-<td class="rich"'.($r2['votos']>=0?' style="color:#000;"':'').'>'.$r2['texto'].'</td>
-<td nowrap class="gris">'.$r2['sentido'].'</td>
-<td nowrap align="right" class="gris">'.timer($r2['time']).'</td>
-<td>'.($r2['user_ID']==$pol['user_ID']&&$r2['votos']<=6?boton('X', accion_url().'a=votacion&b=argumento-eliminar&ID='.$r2['ID'].'&ref_ID='.$r2['ref_ID'], '¿Seguro que quieres ELIMINAR tu argumento?', 'red small'):'').'</td>
-</tr>';
-					if ($r2['votos'] < $votos_mosotrar) { $argumentos_ocultos++; }
-				}
-				$txt .= '</table>'.($argumentos_ocultos>0&&nucleo_acceso('ciudadanos_global')?'<a href="#" onclick="$(\'.negativizados\').toggle();return false;">'._('Mostrar argumentos negativos ('.$argumentos_ocultos.')').'</a>':'').'</fieldset>';
-			}
-			
-			$txt .= '
-'.($r['estado']!='end'&&nucleo_acceso('confianza', 0)&&nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])?'
-<fieldset><legend>Añadir argumento</legend>
-<blockquote>Reglas de uso:
-<ul>
-<li>Correcta escritura.</li>
-<li>No duplicar argumentos.</li>
-<li>No preguntas.</li>
-<li>Una sola cuestión por argumento.</li>
-</ul>
-</blockquote>
-
-<form action="'.accion_url($pol['pais']).'a=votacion&b=argumento" method="POST">
-<input type="hidden" name="ref_ID" value="'.$r['ID'].'"  />
-
-<p>Tipo de argumento: 
-<select name="sentido">
-<optgroup label="Sobre las opciones de votación:">
-<option value="A favor">A favor</option>
-<option value="En contra">En contra</option>
-<option value="En blanco" selected>En blanco</option>
-</optgroup>
-
-<optgroup label="Sobre la votación:">
-<option value="Impugnación">Impugnación</option>
-<option value="Matiz">Matiz</option>
-<option value="Información">Información</option>
-<option value="Corrección">Corrección</option>
-</optgroup>
-
-</select> (opcional)</p>
-
-<p><input type="text" name="texto" value="" size="80" maxlength="160" placeholder="Escribe aquí tu argumento..." required /> (160 caracteres máximo)</p>
-
-<p>* Los argumentos solo podrán ser eliminados por su autor. Se ocultarán automáticamente si tiene un balance de votos negativo.<br />
-* Los argumentos son públicos y anónimos.</p>
-
-<p>'.boton(_('Añadir argumento'), 'submit', '¿Estás seguro de cumplir las reglas de uso?', 'blue').'</p>
-
-</form>
-
-
-</fieldset>
-':'');
-
-
-
-			$result2 = sql("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
-			while($r2 = r($result2)) { $comentarios_num = $r2['num']; }
-
-			$txt .= '<fieldset style="font-size:13px;"><legend>'._('Comentarios adjuntos al voto').' ('.($r['estado']=='end'?$comentarios_num.' '._('comentarios').' &nbsp; '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
-			if (nucleo_acceso('ciudadanos_global')) {
-				if ($r['estado'] == 'end') { 
-					$result2 = sql("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
-					while($r2 = r($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
-				} else { $txt .= '<p style="color:red;">'._('Los comentarios estarán visibles al finalizar la votación').'.</p>'; }
-			} else { $txt .= '<p style="color:red;">'._('Para ver los comentarios debes ser ciudadano').'.</p>'; }
-			$txt .= '</fieldset>';
-
-
-
-
-		} elseif ($_GET['b'] == 'info') {
+		if ($_GET['b'] == 'info') {
 			$time_expire = strtotime($r['time_expire']);
 			$time = strtotime($r['time']);
 			
@@ -718,18 +608,6 @@ LIMIT 250");
 
 </table>
 </fieldset>';
-
-			$result2 = sql("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
-			while($r2 = r($result2)) { $comentarios_num = $r2['num']; }
-
-			$txt .= '<fieldset style="font-size:13px;"><legend>'._('Comentarios adjuntos al voto').' ('.($r['estado']=='end'?$comentarios_num.' '._('comentarios').' &nbsp; '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
-			if (nucleo_acceso('ciudadanos_global')) {
-				if ($r['estado'] == 'end') { 
-					$result2 = sql("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
-					while($r2 = r($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
-				} else { $txt .= '<p style="color:red;">'._('Los comentarios estarán visibles al finalizar la votación').'.</p>'; }
-			} else { $txt .= '<p style="color:red;">'._('Para ver los comentarios debes ser ciudadano').'.</p>'; }
-			$txt .= '</fieldset>';
 	
 
 		} elseif ($_GET['b'] == 'verificacion') {
@@ -966,7 +844,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				$tiene_acceso_votar = nucleo_acceso($r['acceso_votar'],$r['acceso_cfg_votar']);
 
 				$txt .= '<fieldset><legend>'._('Votar').'</legend>
-'.($pol['config']['info_consultas']>0&&$r['ha_votado']?'<p>'.boton(_('Siguiente votación').'</p>', '/votacion/next', false, 'orange large').'</p>':'').'
+'.($pol['config']['info_consultas']>0&&$r['ha_votado']?'<p>'.boton(_('Siguiente votación').'</p>', '/votacion/next', false, 'orange').'</p>':'').'
 <form action="'.accion_url($pol['pais']).'a=votacion&b=votar" method="post">
 <input type="hidden" name="ref_ID" value="'.$r['ID'].'"  />
 <p>';
@@ -1077,8 +955,7 @@ function radio_check(value) {
 
 </form>
 
-'.($r['ha_votado']?'<p style="margin-top:30px;text-align:right;">'._('Comprobante de voto').':<br />
-'.boton(_('Enviar al email'), accion_url().'a=votacion&b=enviar_comprobante&comprobante='.$r['ID'].'-'.$r['comprobante'], false, 'pill small').' <input type="text" value="'.$r['ID'].'-'.$r['comprobante'].'" size="48" readonly="readonly" style="color:#AAA;" /></p>':'').'</fieldset>';
+'.($r['ha_votado']?'<p style="margin-top:20px;text-align:right;">'._('Comprobante de voto').':<br /><input type="text" value="'.$r['ID'].'-'.$r['comprobante'].'" size="48" readonly="readonly" style="color:#AAA;" /> '.boton(_('Enviar a mi email'), accion_url().'a=votacion&b=enviar_comprobante&comprobante='.$r['ID'].'-'.$r['comprobante'], false, 'pill small').'</p>':'').'</fieldset>';
 
 			}
 
@@ -1100,6 +977,116 @@ ORDER BY siglas ASC");
 				}
 				$txt .= '</table></fieldset>';
 			}
+
+
+
+
+
+			$txt .= '<fieldset id="argumentos"><legend>'._('Argumentos').'</legend><table>';
+
+			$votos_mosotrar = 0;
+			$argumentos_ocultos = 0;
+			$argumentos_num = 0;
+			$result2 = sql("SELECT va.ID, va.user_ID, va.ref_ID, va.sentido, va.texto, va.time, va.votos, va.votos_num, v.voto
+FROM votacion_argumentos `va`
+LEFT JOIN votos `v` ON (tipo = 'argumentos' AND item_ID = va.ID AND emisor_ID = '".$pol['user_ID']."')
+WHERE va.ref_ID = '".$r['ID']."'
+ORDER BY va.votos DESC, va.time DESC
+LIMIT 250");
+			while($r2 = r($result2)) {
+				$argumentos_num++;
+				$txt .= '
+<tr'.($r2['votos']<$votos_mosotrar?' style="display:none;" class="negativizados"':'').'>
+<td align="right" id="argumentos'.$r2['ID'].'">'.confianza($r2['votos'], $r2['votos_num']).'</td>
+<td class="gris" nowrap>'.(nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])&&$r2['user_ID']!=$pol['user_ID']&&$r['estado']!='end'?'
+
+<span id="data_argumentos'.$r2['ID'].'" type="argumentos" name="'.$r2['ID'].'" value="'.$r2['voto'].'">
+
+<input type="radio" id="rac'.$r2['ID'].'" class="radio_argumentos'.$r2['ID'].'" name="radio_argumentos'.$r2['ID'].'" onclick="votar(1, \'argumentos\', \''.$r2['ID'].'\');"'.($r2['voto']==1?' checked="checked"':'').'> <label for="rac'.$r2['ID'].'">Correcto</label><br />
+<input type="radio" id="rai'.$r2['ID'].'" class="radio_argumentos'.$r2['ID'].'" name="radio_argumentos'.$r2['ID'].'" onclick="votar(-1, \'argumentos\', \''.$r2['ID'].'\');"'.($r2['voto']==-1?' checked="checked"':'').'> <label for="rai'.$r2['ID'].'">Incorrecto</label>
+
+</span>
+
+':'').'</td>
+<td class="rich"'.($r2['votos']>=0?' style="color:#000;"':'').'>'.$r2['texto'].'</td>
+<td nowrap class="gris">'.$r2['sentido'].'<br />'.timer($r2['time']).($r2['user_ID']==$pol['user_ID']&&$r2['votos']<=6?boton('X', accion_url().'a=votacion&b=argumento-eliminar&ID='.$r2['ID'].'&ref_ID='.$r2['ref_ID'], '¿Seguro que quieres ELIMINAR tu argumento?', 'red small'):'').'</td>
+</tr>';
+				if ($r2['votos'] < $votos_mosotrar) { $argumentos_ocultos++; }
+			}
+			$txt .= '</table>'.($argumentos_ocultos>0&&nucleo_acceso('ciudadanos_global')?'<a href="#" onclick="$(\'.negativizados\').toggle();return false;">'._('Mostrar argumentos negativos ('.$argumentos_ocultos.')').'</a>':'').(nucleo_acceso('ciudadanos_global')&&$r['estado']!='end'&&$argumentos_num>0?' <span style="color:red;"><em>Si un argumento <b>no te gusta pero es correcto</b> debes marcarlo como <u>correcto</u>.</em></span>':'');
+
+		
+			$txt .= '
+'.($r['estado']!='end'&&nucleo_acceso('confianza', 0)&&nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])?'
+
+<p><a href="#" onclick="$(\'#add-argument\').toggle();return false;">'._('Añadir argumento').'</a></p>
+
+<div id="add-argument" style="display:none;">
+<blockquote>'._('Reglas de uso').':
+<ul>
+<li>Correcta escritura.</li>
+<li>No repetir argumentos.</li>
+<li>No debatir, solo argumentos.</li>
+</ul>
+</blockquote>
+
+<form action="'.accion_url($pol['pais']).'a=votacion&b=argumento" method="POST">
+<input type="hidden" name="ref_ID" value="'.$r['ID'].'"  />
+
+<p>Tipo de argumento: 
+<select name="sentido">
+<optgroup label="Sobre las opciones de votación:">
+<option value="A favor">A favor</option>
+<option value="En contra">En contra</option>
+<option value="En blanco">En blanco</option>
+</optgroup>
+
+<optgroup label="Sobre la votación:">
+<option value="Impugnación">Impugnación</option>
+<option value="Matiz" selected>Matiz</option>
+<option value="Información">Información</option>
+<option value="Corrección">Corrección</option>
+</optgroup>
+
+</select></p>
+
+<p><input type="text" name="texto" value="" size="80" maxlength="160" placeholder="Escribe aquí tu argumento..." required /> (160 caracteres)</p>
+
+<p>
+* Los argumentos se ocultarán automáticamente al alcanzar un balance de votos negativo.<br />
+* Los argumentos son públicos y anónimos.
+</p>
+
+<p>'.boton(_('Añadir argumento'), 'submit', '¿Estás seguro de cumplir las reglas de uso?', 'blue').'</p>
+
+</form>
+
+
+</div>
+':'');
+			$txt .= '</fieldset>';
+
+			if (nucleo_acceso('ciudadanos_global')) {
+				$result2 = sql("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
+				while($r2 = r($result2)) { $comentarios_num = $r2['num']; }
+
+				$txt .= '<fieldset style="font-size:13px;"><legend>'._('Comentarios adjuntos al voto').' ('.($r['estado']=='end'?$comentarios_num.' '._('comentarios').' &nbsp; '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
+				if (nucleo_acceso('ciudadanos_global')) {
+					if ($r['estado'] == 'end') { 
+						$result2 = sql("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
+						while($r2 = r($result2)) { $txt .= '<p>'.$r2['mensaje'].'</p>'; }
+					} else { $txt .= '<p style="color:grey;">'._('Los comentarios serán visibles al finalizar la votación').'.</p>'; }
+				} else { $txt .= '<p style="color:grey;">'._('Para ver los comentarios debes ser ciudadano').'.</p>'; }
+				$txt .= '</fieldset>';
+			}
+
+
+
+
+
+
+
+
 		}
 	}
 
@@ -1152,7 +1139,7 @@ LIMIT 500");
 <td nowrap="nowrap" class="gris" align="right">'.timer($r['time_expire']).'</td>
 <td nowrap="nowrap">'.($r['user_ID']==$pol['user_ID']&&$r['estado']=='ok'?boton('Cancelar', accion_url().'a=votacion&b=finalizar&ID='.$r['ID'], '¿Seguro que quieres CANCELAR esta votacion y convertirla en un BORRADOR?', 'small red'):'').'</td>
 <td>'.gbarra(round((time()-$time)*100)/($time_expire-$time), 60, false).'</td>
-<td align="right">'.($r['argumentos_num']>0?'<a href="/votacion/'.$r['ID'].'/argumentos"><b>'.num($r['argumentos_num']).'</b></a>':'').'</td>
+<td align="right">'.($r['argumentos_num']>0?'<a href="/votacion/'.$r['ID'].'#argumentos"><b>'.num($r['argumentos_num']).'</b></a>':'').'</td>
 </tr>';
 		}
 	}

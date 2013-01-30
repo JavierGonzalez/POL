@@ -987,6 +987,7 @@ ORDER BY siglas ASC");
 			$votos_mosotrar = 0;
 			$argumentos_ocultos = 0;
 			$argumentos_num = 0;
+			$argumentos_mios = 0;
 			$result2 = sql("SELECT va.ID, va.user_ID, va.ref_ID, va.sentido, va.texto, va.time, va.votos, va.votos_num, v.voto
 FROM votacion_argumentos `va`
 LEFT JOIN votos `v` ON (tipo = 'argumentos' AND item_ID = va.ID AND emisor_ID = '".$pol['user_ID']."')
@@ -995,6 +996,7 @@ ORDER BY va.votos DESC, va.time DESC
 LIMIT 250");
 			while($r2 = r($result2)) {
 				$argumentos_num++;
+				if ($r2['user_ID']==$pol['user_ID']) { $argumentos_mios++; }
 				$txt .= '
 <tr'.($r2['votos']<$votos_mosotrar?' style="display:none;" class="negativizados"':'').'>
 <td align="right" id="argumentos'.$r2['ID'].'">'.confianza($r2['votos'], $r2['votos_num']).'</td>
@@ -1017,7 +1019,7 @@ LIMIT 250");
 
 		
 			$txt .= '
-'.($r['estado']!='end'&&nucleo_acceso('confianza', 0)&&nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])?'
+'.($r['estado']!='end'&&$argumentos_mios==0&&nucleo_acceso('confianza', 0)&&nucleo_acceso('antiguedad', 5)&&nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])?'
 
 <p><a href="#" onclick="$(\'#add-argument\').toggle();return false;">'._('Añadir argumento').'</a></p>
 

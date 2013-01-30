@@ -336,7 +336,7 @@ sql("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '".tiempo
 sql("DELETE FROM notificaciones WHERE time < '".tiempo(10)."'");
 
 // ELIMINAR users_con
-sql("DELETE FROM users_con WHERE time < '".tiempo(70)."'");
+sql("DELETE FROM users_con WHERE time < '".tiempo(30)."'");
 
 
 
@@ -347,7 +347,7 @@ Excepciones:
 * Autentificados
 * Socios
 * Donantes
-* Veteranos (más de 2 años de antiguedad)
+* Veteranos (1 año de antiguedad)
 
 Emails de aviso de expiración:
 1. Tras 30 días inactivo
@@ -355,7 +355,7 @@ Emails de aviso de expiración:
 */
 $st['eliminados'] = 0;
 $result = sql("SELECT ID, estado, nick FROM users
-WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registro > '".tiempo(365*2)."' AND 
+WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registro > '".tiempo(365)."' AND 
 (pais IN ('ninguno', '".PAIS."') AND fecha_last <= '".tiempo(120)."')) OR 
 (estado IN ('validar', 'expulsado') AND fecha_last <= '".tiempo(10)."') 
 LIMIT 80");

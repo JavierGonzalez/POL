@@ -1547,14 +1547,14 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 			if (nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) {
 				sql("INSERT INTO votacion_argumentos (ref_ID, user_ID, time, sentido, texto) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".tiempo()."', '".$_POST['sentido']."', '".ucfirst(trim(substr(strip_tags($_POST['texto']), 0, 180)))."')");
 				if (in_array($r['acceso_ver'], array('anonimos', 'ciudadanos_global', 'ciudadanos'))) {
-					evento_chat('<b>[#]</b> <a href="/votacion/'.$_POST['ref_ID'].'/argumentos">Argumento añadido en votación</a>'.($_POST['sentido']?' <span class="gris">('.$_POST['sentido'].')</span>':''), '0', '', true, 'e'); 
+					evento_chat('<b>[#]</b> <a href="/votacion/'.$_POST['ref_ID'].'#argumentos">Argumento añadido en votación</a>'.($_POST['sentido']?' <span class="gris">('.$_POST['sentido'].')</span>':''), '0', '', true, 'e'); 
 				}
 			}
-			redirect(vp_url('/votacion/'.$r['ID'].'/argumentos'));
+			redirect(vp_url('/votacion/'.$r['ID']));
 		}
 	} elseif (($_GET['b'] == 'argumento-eliminar') AND (is_numeric($_GET['ID']))) {
 		sql("DELETE FROM votacion_argumentos WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
-		redirect(vp_url('/votacion/'.$_GET['ref_ID'].'/argumentos'));
+		redirect(vp_url('/votacion/'.$_GET['ref_ID']));
 	}
 
 	// actualizar info en theme

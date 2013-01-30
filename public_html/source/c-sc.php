@@ -650,7 +650,7 @@ function print_td($r, $count=false) {
 
 <td nowrap align="right" style="background:'.$vp['bg'][$r['pais']].';"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span> '.($pol['user_ID']&&$r['user_ID']!=$pol['user_ID']?'<span id="data_confianza'.$r['user_ID'].'" class="votar" type="confianza" name="'.$r['user_ID'].'" value="'.$r['has_votado'].'"></span>':'').'</td>
 
-<td nowrap colspan="2" title="'.$r['host'].'" align="right">'.unico($r['ISP'], 'ISP', true).unico($r['IP_rango'].'.*', 'IP_rango', true).unico($r['IP_pais'], 'IP_pais', true).unico($r['IP'], 'IP', false, true).'</td>
+<td nowrap colspan="2" title="...'.substr($r['host'],5).'" align="right">'.unico($r['ISP'], 'ISP', true).unico($r['IP_rango'].'.*', 'IP_rango', true).unico($r['IP_pais'], 'IP_pais', true).unico($r['IP'], 'IP', false, true).'</td>
 <td nowrap>'.unico($r['dispositivo'], '<b>Traza</b>').'</td>
 <td nowrap title="'.$r['nav'].'">'.unico($r['nav'], 'nav', $r['nav_so'].' <span class="peque">'.explodear(' ', $r['nav_resolucion'], 0).'</span>').'</td>
 <td nowrap>'.unico($r['pass'], 'Clave', (in_array($r['pass'], $pass_simple)?'Clave simple':'Clave')).'</td>

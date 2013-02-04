@@ -1024,15 +1024,6 @@ LIMIT 250");
 <p><a href="#" onclick="$(\'#add-argument\').toggle(\'slow\');return false;">'._('Añadir argumento').'</a></p>
 
 <div id="add-argument" style="display:none;">
-<!--
-<blockquote>'._('Reglas de uso').':
-<ul>
-<li>Correcta escritura.</li>
-<li>No repetir argumentos.</li>
-<li>No debatir, solo argumentos.</li>
-</ul>
-</blockquote>
--->
 
 <form action="'.accion_url($pol['pais']).'a=votacion&b=argumento" method="POST">
 <input type="hidden" name="ref_ID" value="'.$r['ID'].'"  />
@@ -1056,22 +1047,27 @@ LIMIT 250");
 
 <p>
 
-&nbsp; <input type="checkbox" id="check1" name="check1" value="true" required /> <label for="check1">La escritura es correcta.</label><br />
+&nbsp; <input type="checkbox" id="check1" name="check1" value="true" required /> <label for="check1">
+No debate ni está repetido.</label><br />
 
-&nbsp; <input type="checkbox" id="check2" name="check1" value="true" required /> <label for="check2">El argumento es nuevo.</label><br />
+&nbsp; <input type="checkbox" id="check2" name="check1" value="true" required /> <label for="check2">
+La escritura es correcta y respetuosa.</label><br />
 
-&nbsp; <input type="checkbox" id="check3" name="check1" value="true" required /> <label for="check3">Es un argumento, no incita al debate, ni es una pregunta.</label><br />
+&nbsp; <input type="checkbox" id="check3" name="check1" value="true" required /> <label for="check3">
+El argumento es imparcial y objetivo.</label><br />
 
 </ul>
 
 </p>
 
-<p>'.boton(_('Añadir argumento'), 'submit', false, 'blue').'</p>
+<table>
+<tr>
+<td>'.boton(_('Añadir argumento'), 'submit', false, 'blue').'</td>
 
-<p>
-* Los argumentos se ocultarán automáticamente al alcanzar un balance de votos negativo.<br />
-* Los argumentos son públicos y anónimos.
-</p>
+<td style="color:grey;">* Se ocultará automáticamente si alcanza un balance de votos negativo.<br />
+* Los argumentos son públicos y anónimos.</td>
+</tr>
+</table>
 
 </form>
 

@@ -355,7 +355,7 @@ case 'borrar-usuario':
 
 
 case 'ser_SC':
-	sql("UPDATE users SET ser_SC = '".($_POST['ser_SC']=='true'?'true':'false')."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+	sql("UPDATE users SET ser_SC = '".($_POST['ser_SC']=='true'?'true':'false')."' WHERE ser_SC IN ('true', 'false') AND ID = '".$pol['user_ID']."' LIMIT 1");
 	redirect(REGISTRAR."login.php?a=panel");
 	break;
 

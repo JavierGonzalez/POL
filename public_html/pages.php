@@ -102,6 +102,7 @@ case 'reglamento-sc':
 </div>
 
 </div>';
+
 	break;
 
 

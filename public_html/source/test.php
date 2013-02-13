@@ -17,10 +17,35 @@ $txt .= ' ';
 /***************************************************************************/
 
 
+function prevent_XSS_and_SQL_inyection() {
+	global $_GET, $_POST, $_REQUEST, $_COOKIE;
+	
+	$var = '_POST';
+	${$var}['test'] = 'FUNCIONA!';
+	print_r($_POST);
+	
+	/*
+	foreach (array('GET', 'POST', 'REQUEST', 'COOKIE') AS $_) {
+		foreach (${'_'.$_} AS $key=>$value) {
+			if (get_magic_quotes_gpc()) { $value = stripslashes($value); }
+			$value = str_replace(
+				array("\r\n",   "\n",     '\'',    '"',     '\\'   ), 
+				array('<br />', '<br />', '&#39;', '&#34;', '&#92;'),
+				$value);
+			${'_'.$_}[$key] = mysql_real_escape_string($value); 
+		}
+	}
+	*/
+}
 
 
+$_POST['test'] = "'hola'\n\n\n";
 
+$txt .= $_POST['test'].' (antes)<br />';
 
+prevent_XSS_and_SQL_inyection();
+
+$txt .= $_POST['test'].' (despues)<br />';
 
 
 

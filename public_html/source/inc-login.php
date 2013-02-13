@@ -16,19 +16,12 @@ $date = date('Y-m-d H:i:s');
 $IP = direccion_IP('longip');
 
 // Prevención de inyección
-/* Metodo antiguo, tiene agujeros.
-foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape($val); }
-foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val, false); }
-foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
-foreach ($_COOKIE AS $nom => $val) { $_COOKIE[$nom] = escape($val); }
-*/
-
-foreach (explode(' ', 'GET POST REQUEST COOKIE') AS $_) {
+foreach (array('GET', 'POST', 'REQUEST', 'COOKIE') AS $_) {
 	foreach (${'_'.$_} AS $key=>$value) {
 		if (get_magic_quotes_gpc()) { $value = stripslashes($value); }
 		$value = str_replace(
-			array("\r\n",  '\'',    '"',     '\\'   ), 
-			array('<br />', '&#39;', '&#34;', '&#92;'),
+			array("\r\n",   "\n",     '\'',    '"',     '\\'   ), 
+			array('<br />', '<br />', '&#39;', '&#34;', '&#92;'),
 		$value);
 		${'_'.$_}[$key] = mysql_real_escape_string($value); 
 	}

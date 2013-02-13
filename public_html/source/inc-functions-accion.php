@@ -438,9 +438,9 @@ function gen_text($text, $type='') {
 	if (mb_detect_encoding($text) != 'UTF-8') { $text = utf8_encode($text); }
 	$text = preg_replace('#(<[^>]+[\s\r\n\"\'])(on|xmlns)[^>]*>#iU', "$1>", $text); //prevent XSS
 	if ($type == 'plain') {
-		$text = strip_tags($text);
+		$text = strip_tags($text, '<br>');
 	} else {
-		$text = strip_tags($text, "<img>,<b>,<i>,<s>,<embed>,<object>,<param>,<span>,<font>,<strong>,<p>,<b>,<em>,<ul>,<ol>,<li>,<blockquote>,<a>,<h2>,<h3>,<h4>,<br>,<hr>,<table>,<tr>,<td>,<th>");
+		$text = strip_tags($text, "<br>,<img>,<b>,<i>,<s>,<embed>,<object>,<param>,<span>,<font>,<strong>,<p>,<b>,<em>,<ul>,<ol>,<li>,<blockquote>,<a>,<h2>,<h3>,<h4>,<br>,<hr>,<table>,<tr>,<td>,<th>");
 	}
 	$text = nl2br($text);
 	return $text;

@@ -90,7 +90,7 @@ while($r = mysql_fetch_array($result)) {
 
 
 <td align="right" title="Votos / Participación"'.($r['estado']=='ok'?' style="font-style:italic;"':'').'><b>'.num($r['num']).'</b> '._('votos').'</td>
-<td align="right">'.num(($r['num']*100)/$r['num_censo'], 2).'%</td>
+<td align="right">'.num(($r['num_censo']>0?($r['num']*100)/$r['num_censo']:0), 2).'%</td>
 
 <td>'.($r['estado']=='end'?'<button class="small blue" onclick="$(\'#escrutinio_'.$r['ID'].'\').toggle(\'slow\');">'._('Ver resultado').'</button>':'').'</td>
 
@@ -99,7 +99,7 @@ while($r = mysql_fetch_array($result)) {
 <td colspan="7">';
 
 	if ($r['estado'] == 'end') {
-		$txt .= '<table border="0"><tr><td valign="top"><img src="//chart.googleapis.com/chart?cht=p&chd=t:'.round(($r['num']*100)/$r['num_censo'], 2).','.round(100-(($r['num']*100)/$r['num_censo']), 2).'&chs=300x160&chds=a&chl='._('Participación').'|'._('Abstención').'&chf=bg,s,ffffff01|c,s,ffffff01&chp=3.14" alt="'._('Participación').'" /></td>';
+		$txt .= '<table border="0"><tr><td valign="top"><img src="//chart.googleapis.com/chart?cht=p&chd=t:'.($r['num_censo']>0?round(($r['num']*100)/$r['num_censo'], 2).','.round(100-(($r['num']*100)/$r['num_censo']), 2):'1,1').'&chs=300x160&chds=a&chl='._('Participación').'|'._('Abstención').'&chf=bg,s,ffffff01|c,s,ffffff01&chp=3.14" alt="'._('Participación').'" /></td>';
 		
 		$txt .= '<td valign="top"><table border="0"><tr><th></th><th>'._('Candidato').'</th><th>'._('Puntos').'</th></tr>';
 		$cnum = 0;

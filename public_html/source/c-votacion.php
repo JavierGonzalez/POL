@@ -43,20 +43,21 @@ while($r = r($result)){
 			}
 		}
 
-		// Determina validez: mayoria simple <= votacion nula
-		if ($validez_voto['false'] < $validez_voto['true']) { 
+		// Determina validez
+		if ($validez_voto['false']<=$validez_voto['true']) { 
 			// OK: votación válida
-			$cargo_ID = explodear('|', $r['ejecutar'], 1);
+			$cargo_ID = explodear('|',$r['ejecutar'],1);
 			
-			switch (explodear('|', $r['ejecutar'], 0)) {
+			switch (explodear('|',$r['ejecutar'],0)) {
 
 				case 'cargo': // $r['ejecutar'] = cargo|$cargo_ID|$user_ID
 					if ($voto[1] > $voto[2]) {
-						cargo_add($cargo_ID, explodear('|', $r['ejecutar'], 2), true, true);
+						cargo_add($cargo_ID, explodear('|',$r['ejecutar'],2), true, true);
 					} else {
-						cargo_del($cargo_ID, explodear('|', $r['ejecutar'], 2), true, true);
+						cargo_del($cargo_ID, explodear('|',$r['ejecutar'],2), true, true);
 					}
 					break;
+
 
 				case 'elecciones': // $r['ejecutar'] = elecciones|$cargo_ID|$numero_a_asignar
 					
@@ -82,7 +83,7 @@ while($r = r($result)){
 						}
 					}
 
-					// Asigna ordenando con mysql teniendo en cuenta la antiguedad para desempatar
+					// Asigna ordenando con SQL teniendo en cuenta la antiguedad para desempatar
 					$n = 0;
 					$guardar = array();
 					$result2 = sql("SELECT ID, nick FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND temp IS NOT NULL ORDER BY temp DESC, fecha_registro ASC, voto_confianza DESC LIMIT 50");
@@ -750,9 +751,12 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 					}
 				}
 
-				// Determina validez (por mayoria simple)
-				$nulo_limite = ceil(($votos_total)/2);
-				if ($escrutinio['validez']['false'] < $escrutinio['validez']['true']) { $validez = true; } else { $validez = false; }
+				// Si el numero de votos nulos es mayor, la votación es nula
+				if ($escrutinio['validez']['false']<=$escrutinio['validez']['true']) { 
+					$validez = true; 
+				} else { 
+					$validez = false; 
+				}
 
 				// Opciones del escrutinio en orden descendente.
 				arsort($escrutinio['votos']);
@@ -769,7 +773,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 						}
 					}
 
-					if ((count($respuestas) <= 8) AND ($r['tipo_voto'] != 'multiple')) { 
+					if ($votos_total>0 AND count($respuestas)<=8 AND $r['tipo_voto']!='multiple') { 
 						$txt .= '<img src="//chart.googleapis.com/chart?cht=p&chds=a&chp=4.71&chd=t:'.implode(',', $grafico_array_votos).'&chs=350x175&chl='.implode('|', $grafico_array_respuestas).'&chf=bg,s,ffffff01|c,s,ffffff01&chco=FF9900|FFBE5E|FFD08A|FFDBA6" alt="Escrutinio" width="350" height="175" /><br />'; 
 					}
 				}
@@ -819,11 +823,16 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 						foreach ($escrutinio['votos'] AS $voto => $num) { 
 							if ($respuestas[$voto]) {
 								if ($respuestas[$voto] != 'En Blanco') {
-									$txt .= '<tr><td>'.($r['tipo']=='elecciones'?crear_link($respuestas[$voto]):$respuestas[$voto]).'</td><td align="right" title="'.num(($num*100)/$puntos_total, 1).'%"><b>'.num($num).'</b></td><td align="right">'.num(($num*100)/$puntos_total_sin_en_blanco, 1).'%</td><td>'.gbarra(($num*100)/$puntos_total_sin_en_blanco, 60, false).'</td></tr>';
+									$txt .= '
+<tr><td>'.($r['tipo']=='elecciones'?crear_link($respuestas[$voto]):$respuestas[$voto]).'</td>
+<td align="right" title="'.num(($puntos_total>0?($num*100)/$puntos_total:0), 2).'%"><b>'.num($num).'</b></td>
+<td align="right">'.num(($puntos_total_sin_en_blanco>0?($num*100)/$puntos_total_sin_en_blanco:0), 2).'%</td>
+<td>'.gbarra(($puntos_total_sin_en_blanco>0?($num*100)/$puntos_total_sin_en_blanco:0), 60, false).'</td>
+</tr>';
 								} else { $votos_en_blanco = $num; }
 							} else { unset($escrutinio['votos'][$voto]);  }
 						}
-						$txt .= '<tr><td nowrap="nowrap" title="Voto no computable. Equivale a: No sabe/No contesta."><em>'._('En Blanco').'</em></td><td align="right" title="'.num(($votos_en_blanco*100)/$puntos_total, 1).'%"><b>'.num($votos_en_blanco).'</b></td><td></td></tr></table>';
+						$txt .= '<tr><td nowrap="nowrap" title="Voto no computable. Equivale a: No sabe/No contesta."><em>'._('En Blanco').'</em></td><td align="right" title="'.num(($puntos_total>0?($votos_en_blanco*100)/$puntos_total:0), 1).'%"><b>'.num($votos_en_blanco).'</b></td><td></td></tr></table>';
 					}
 				}
 				
@@ -832,8 +841,10 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 				$txt .= '</td>
 <td valign="top" align="right" style="color:#888;">
 '._('Legitimidad').': <span style="color:#555;"><b>'.num($votos_total).'</b>&nbsp;'._('votos').'</span>, <b>'.$escrutinio['votos_autentificados'].'</b>&nbsp;'._('autentificados').'.<br />
-'._('Validez').': '.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($escrutinio['validez']['true'] * 100) / $votos_total, 1).'%</span>':'<span style="color:#FF0000;"><b>'._('NULO').'</b>&nbsp;'.$porcentaje_validez.'%</span>').'<br />
-<img width="200" height="120" title="Votos de validez: OK: '.num($escrutinio['validez']['true']).', NULO: '.$escrutinio['validez']['false'].'" src="//chart.googleapis.com/chart?cht=p&chp=4.71&chd=t:'.$escrutinio['validez']['true'].','.$escrutinio['validez']['false'].'&chs=200x120&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>
+'._('Validez').': 
+
+'.($validez?'<span style="color:#2E64FE;"><b>OK</b>&nbsp;'.num(($votos_total>0?($escrutinio['validez']['true'] * 100) / $votos_total:100), 1).'%</span>':'<span style="color:#FF0000;"><b>'._('NULO').'</b>&nbsp;'.$porcentaje_validez.'%</span>').'<br />
+<img width="200" height="120" title="Votos de validez: OK: '.num($escrutinio['validez']['true']).', NULO: '.$escrutinio['validez']['false'].'" src="//chart.googleapis.com/chart?cht=p&chp=4.71&chd=t:'.($escrutinio['validez']['true']==0&&$escrutinio['validez']['false']==0?'1,0':$escrutinio['validez']['true'].','.$escrutinio['validez']['false']).'&chs=200x120&chds=a&chl=OK|NULO&chf=bg,s,ffffff01|c,s,ffffff01&chco=2E64FE,FF0000,2E64FE,FF0000" alt="Validez" /></td>
 </tr></table>
 
 </fieldset>';
@@ -999,23 +1010,26 @@ LIMIT 250");
 				if ($r2['user_ID']==$pol['user_ID']) { $argumentos_mios++; }
 				$txt .= '
 <tr'.($r2['votos']<$votos_mosotrar?' style="display:none;" class="negativizados"':'').'>
-<td align="right" id="argumentos'.$r2['ID'].'">'.confianza($r2['votos'], $r2['votos_num']).'</td>
+
 <td class="gris" nowrap>'.(nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])&&$r2['user_ID']!=$pol['user_ID']&&$r['estado']!='end'?'
 
 <span id="data_argumentos'.$r2['ID'].'" type="argumentos" name="'.$r2['ID'].'" value="'.$r2['voto'].'">
 
-<input type="radio" id="rac'.$r2['ID'].'" class="radio_argumentos'.$r2['ID'].'" name="radio_argumentos'.$r2['ID'].'" onclick="votar(1, \'argumentos\', \''.$r2['ID'].'\');"'.($r2['voto']==1?' checked="checked"':'').'> <label for="rac'.$r2['ID'].'">Correcto</label><br />
-<input type="radio" id="rai'.$r2['ID'].'" class="radio_argumentos'.$r2['ID'].'" name="radio_argumentos'.$r2['ID'].'" onclick="votar(-1, \'argumentos\', \''.$r2['ID'].'\');"'.($r2['voto']==-1?' checked="checked"':'').'> <label for="rai'.$r2['ID'].'">Incorrecto</label>
+<input type="radio" id="rac'.$r2['ID'].'" class="radio_argumentos'.$r2['ID'].'" name="radio_argumentos'.$r2['ID'].'" onclick="votar(1, \'argumentos\', \''.$r2['ID'].'\');"'.($r2['voto']==1?' checked="checked"':'').'> <label for="rac'.$r2['ID'].'">Acertado</label><br />
+<input type="radio" id="rai'.$r2['ID'].'" class="radio_argumentos'.$r2['ID'].'" name="radio_argumentos'.$r2['ID'].'" onclick="votar(-1, \'argumentos\', \''.$r2['ID'].'\');"'.($r2['voto']==-1?' checked="checked"':'').'> <label for="rai'.$r2['ID'].'">Equivocado</label>
 
 </span>
 
 ':'').'</td>
+
+<td align="right" id="argumentos'.$r2['ID'].'">'.confianza($r2['votos'], $r2['votos_num']).'</td>
+
 <td class="rich" style="'.($r2['votos']>=0?'color:#000;':'').'font-size:16px;">'.$r2['texto'].'</td>
-<td nowrap class="gris">'.$r2['sentido'].'<br />'.timer($r2['time']).($r2['user_ID']==$pol['user_ID']&&$r2['votos']<=6?boton('X', accion_url().'a=votacion&b=argumento-eliminar&ID='.$r2['ID'].'&ref_ID='.$r2['ref_ID'], '¿Seguro que quieres ELIMINAR tu argumento?', 'red small'):'').'</td>
+<td class="gris" align="right" nowrap>'.$r2['sentido'].'<br />'.timer($r2['time']).($r2['user_ID']==$pol['user_ID']&&$r2['votos']<=6?boton('X', accion_url().'a=votacion&b=argumento-eliminar&ID='.$r2['ID'].'&ref_ID='.$r2['ref_ID'], '¿Seguro que quieres ELIMINAR tu argumento?', 'red small'):'').'</td>
 </tr>';
 				if ($r2['votos'] < $votos_mosotrar) { $argumentos_ocultos++; }
 			}
-			$txt .= '</table>'.($r['estado']!='end'&&$argumentos_ocultos>0&&nucleo_acceso('ciudadanos_global')?'<a href="#" onclick="$(\'.negativizados\').toggle();return false;">'._('Mostrar argumentos negativos ('.$argumentos_ocultos.')').'</a>':'').(nucleo_acceso('ciudadanos_global')&&$r['estado']!='end'&&$argumentos_num>0?' <span style="color:red;"><em>Si un argumento <b>no te gusta pero es correcto</b> debes marcarlo como <u>correcto</u>.</em></span>':'');
+			$txt .= '</table>'.($r['estado']!='end'&&$argumentos_ocultos>0&&nucleo_acceso('ciudadanos_global')?'<a href="#" onclick="$(\'.negativizados\').toggle();return false;">'._('Mostrar argumentos negativos ('.$argumentos_ocultos.')').'</a>':'').(false&&nucleo_acceso('ciudadanos_global')&&$r['estado']!='end'&&$argumentos_num>0?' <span style="color:red;"><em>Si un argumento <b>no te gusta pero es acertado</b> debes marcarlo como <u>acertado</u>.</em></span>':'');
 
 		
 			$txt .= '
@@ -1048,13 +1062,13 @@ LIMIT 250");
 <p>
 
 &nbsp; <input type="checkbox" id="check1" name="check1" value="true" required /> <label for="check1">
-No debate ni está repetido.</label><br />
+El argumento es imparcial y objetivo.</label><br />
 
-&nbsp; <input type="checkbox" id="check2" name="check1" value="true" required /> <label for="check2">
+&nbsp; <input type="checkbox" id="check2" name="check2" value="true" required /> <label for="check2">
 La escritura es correcta y respetuosa.</label><br />
 
-&nbsp; <input type="checkbox" id="check3" name="check1" value="true" required /> <label for="check3">
-El argumento es imparcial y objetivo.</label><br />
+&nbsp; <input type="checkbox" id="check3" name="check3" value="true" required /> <label for="check3">
+No está repetido.</label><br />
 
 </ul>
 
@@ -1080,7 +1094,7 @@ El argumento es imparcial y objetivo.</label><br />
 				$result2 = sql("SELECT COUNT(*) AS num FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
 				while($r2 = r($result2)) { $comentarios_num = $r2['num']; }
 
-				$txt .= '<fieldset style="font-size:13px;"><legend>'._('Comentarios adjuntos al voto').' ('.($r['estado']=='end'?$comentarios_num.' '._('comentarios').' &nbsp; '.num(($comentarios_num*100)/$votos_total, 1).'%':'?').')</legend>';
+				$txt .= '<fieldset style="font-size:13px;"><legend>'._('Comentarios adjuntos al voto').' ('.($r['estado']=='end'?$comentarios_num.' '._('comentarios').' &nbsp; '.($votos_total>0?num(($comentarios_num*100)/$votos_total, 1).'%':'?'):'0%').')</legend>';
 				if (nucleo_acceso('ciudadanos_global')) {
 					if ($r['estado'] == 'end') { 
 						$result2 = sql("SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND mensaje != ''");
@@ -1089,10 +1103,6 @@ El argumento es imparcial y objetivo.</label><br />
 				} else { $txt .= '<p style="color:grey;">'._('Para ver los comentarios debes ser ciudadano').'.</p>'; }
 				$txt .= '</fieldset>';
 			}
-
-
-
-
 
 
 
@@ -1149,7 +1159,7 @@ LIMIT 500");
 <td nowrap="nowrap" class="gris" align="right">'.timer($r['time_expire']).'</td>
 <td nowrap="nowrap">'.($r['user_ID']==$pol['user_ID']&&$r['estado']=='ok'?boton('Cancelar', accion_url().'a=votacion&b=finalizar&ID='.$r['ID'], '¿Seguro que quieres CANCELAR esta votacion y convertirla en un BORRADOR?', 'small red'):'').'</td>
 <td>'.gbarra(round((time()-$time)*100)/($time_expire-$time), 60, false).'</td>
-<td align="right">'.($r['argumentos_num']>0?'<a href="/votacion/'.$r['ID'].'#argumentos"><b>'.num($r['argumentos_num']).'</b></a>':'').'</td>
+<td align="right">'.($r['argumentos_num']>0?'<b>'.num($r['argumentos_num']).'</b>':'').'</td>
 </tr>';
 		}
 	}

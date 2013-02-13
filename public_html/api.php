@@ -11,7 +11,11 @@ include('config.php');
 include('source/inc-functions.php');
 include('source/inc-functions-accion.php');
 
+
+///////////////////////////////////////////////////////
 exit; // REVISAR TODO EL CODIGO ANTES DE ABRIR ESTA API
+
+
 
 if ($_GET['pass']) {
 	$link = conectar();

@@ -371,7 +371,7 @@ FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
 WHERE ".$sql_where."
-ORDER BY ".$sql_order." LIMIT ".(is_numeric($sql_limit)?$sql_limit:25));
+ORDER BY ".$sql_order." LIMIT ".mysql_real_escape_string((is_numeric($sql_limit)?$sql_limit:25)));
 	while ($r = r($result)) { $clones_array_full[] = $r['user_ID']; $txt_td .= print_td($r); }
 	
 	$txt .= '

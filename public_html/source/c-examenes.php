@@ -257,7 +257,7 @@ VALUES ('" . $r['cargo_ID'] . "', '".PAIS."', '" . $pol['user_ID'] . "', '" . $d
 			$result2 = mysql_query("SELECT ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo
 FROM examenes_preg
 WHERE pais = '".PAIS."' AND (examen_ID = '" . $_GET['b'] . "' OR examen_ID = 0)
-ORDER BY examen_ID DESC, RAND() LIMIT " . $r['num_preguntas'], $link);
+ORDER BY examen_ID DESC, RAND() LIMIT ".mysql_real_escape_string($r['num_preguntas']), $link);
 			echo mysql_error($link);
 			while($r2 = mysql_fetch_array($result2)){
 				$respuestas = '';

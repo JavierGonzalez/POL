@@ -71,7 +71,7 @@ Realizadas cada <b>".$r['elecciones_cada']." días</b>, durante <b>".$r['eleccio
 		}
 
 		// Enviar emails.
-		if ($candidatos_num>$r['elecciones_electos'] AND $r['asigna']==0 AND in_array(explodear('|', $r['elecciones_votan'], 0), array('ciudadanos', 'ciudadanos_global')) {
+		if ($candidatos_num>$r['elecciones_electos'] AND $r['asigna']==0 AND in_array(explodear('|', $r['elecciones_votan'], 0), array('ciudadanos', 'ciudadanos_global'))) {
 			$result2 = sql("SELECT nick, email FROM users WHERE pais = '".PAIS."' AND estado != 'expulsado'");
 			while($r2 = r($result2)){ 
 				$mensaje = '<p>Hola '.$r2['nick'].':</p>

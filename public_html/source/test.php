@@ -17,37 +17,90 @@ $txt .= ' ';
 /***************************************************************************/
 
 
-function prevent_XSS_and_SQL_inyection() {
-	global $_GET, $_POST, $_REQUEST, $_COOKIE;
-	
-	$var = '_POST';
-	${$var}['test'] = 'FUNCIONA!';
-	print_r($_POST);
-	
-	/*
-	foreach (array('GET', 'POST', 'REQUEST', 'COOKIE') AS $_) {
-		foreach (${'_'.$_} AS $key=>$value) {
-			if (get_magic_quotes_gpc()) { $value = stripslashes($value); }
-			$value = str_replace(
-				array("\r\n",   "\n",     '\'',    '"',     '\\'   ), 
-				array('<br />', '<br />', '&#39;', '&#34;', '&#92;'),
-				$value);
-			${'_'.$_}[$key] = mysql_real_escape_string($value); 
-		}
-	}
-	*/
+
+
+
+
+
+?>
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
 }
 
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
 
-$_POST['test'] = "'hola'\n\n\n";
+</style>
+<body>
+<script src="https://www.virtualpol.com/img/lib/d3.v3.min.js"></script>
+<script>
 
-$txt .= $_POST['test'].' (antes)<br />';
+var width = 960,
+    height = 500;
 
-prevent_XSS_and_SQL_inyection();
+var color = d3.scale.category20();
 
-$txt .= $_POST['test'].' (despues)<br />';
+var force = d3.layout.force()
+    .charge(-120)
+    .linkDistance(30)
+    .size([width, height]);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+d3.json("/accion.php?a=experimento-1", function(error, graph) {
+  force
+      .nodes(graph.nodes)
+      .links(graph.links)
+      .start();
+
+  var link = svg.selectAll(".link")
+      .data(graph.links)
+    .enter().append("line")
+      .attr("class", "link")
+      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+  var node = svg.selectAll(".node")
+      .data(graph.nodes)
+    .enter().append("circle")
+      .attr("class", "node")
+      .attr("r", 5)
+      .style("fill", function(d) { return color(d.group); })
+      .call(force.drag);
+
+  node.append("title")
+      .text(function(d) { return d.name; });
+
+  force.on("tick", function() {
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+  });
+});
+
+</script>
 
 
+
+
+
+
+<?php
+mysql_close();
+exit;
 
 
 

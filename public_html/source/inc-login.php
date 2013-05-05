@@ -16,6 +16,11 @@ $date = date('Y-m-d H:i:s');
 $IP = direccion_IP('longip');
 
 // Prevención de inyección
+foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape($val); }
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val, false); }
+foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
+foreach ($_COOKIE AS $nom => $val) { $_COOKIE[$nom] = escape($val); }
+/*
 foreach (array('GET', 'POST', 'REQUEST', 'COOKIE') AS $_) {
 	foreach (${'_'.$_} AS $key=>$value) {
 		if (get_magic_quotes_gpc()) { $value = stripslashes($value); }
@@ -26,6 +31,7 @@ foreach (array('GET', 'POST', 'REQUEST', 'COOKIE') AS $_) {
 		${'_'.$_}[$key] = mysql_real_escape_string($value); 
 	}
 }
+*/
 
 
 // LOGIN

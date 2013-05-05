@@ -319,7 +319,7 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 
 <div class="votar_form">
 <p><b>'._('Pregunta').'</b>: 
-<input type="text" name="pregunta" size="57" maxlength="70" value="'.$edit['pregunta'].'" required /></p>
+<input type="text" name="pregunta" size="57" maxlength="140" value="'.$edit['pregunta'].'" required /></p>
 </div>
 
 <p><b>'._('Descripción').'</b>:<br />

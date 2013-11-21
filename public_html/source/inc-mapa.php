@@ -69,7 +69,7 @@ color:blue;
 font-weight:bold;
 text-align:center;
 }
-#msg {position:absolute;display:none;}
+#msg {position:absolute;display:none;z-index:10;}
 </style>
 
 <script type="text/javascript">

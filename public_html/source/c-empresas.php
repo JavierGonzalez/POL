@@ -112,7 +112,7 @@ LIMIT 1", $link);
 
 		if ($pol['user_ID'] == $r['user_ID']) { $editar .= boton(_('Editar'), '/empresas/editar/'.$r['ID']); }
 		
-		$txt .= '<br /><div class="amarillo">'.$r['descripcion'].'</div>
+		$txt .= '<br /><div class="amarillo">'.html_entity_decode($r['descripcion']).'</div>
 
 <p class="azul">'._('Fundador').': <b>'.crear_link($r['nick']).'</b> | '._('creación').': <em>'.explodear(" ", $r['time'], 0).'</em> | '._('sector').': <a href="/empresas/'.$r['cat_url'].'">'.$r['cat_nom'].'</a> | '._('visitas').': '.$r['pv'].'</p>
 

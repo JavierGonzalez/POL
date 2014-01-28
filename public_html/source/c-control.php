@@ -659,7 +659,7 @@ case 'gobierno':
 <tr>
 <td>'._('Nombre').':</td>
 <td><input type="text" name="nombre" size="10" maxlength="30" value="" /></td>
-'.(ECONOMIA?'<td><select name="tipo"><option value="doc">'._('Documentos').'</option><option value="empresas">'._('Empresas').'</option></select></td>':'').'
+'.(ECONOMIA?'<td><select name="tipo"><option value="docs">'._('Documentos').'</option><option value="empresas">'._('Empresas').'</option></select></td>':'').'
 <td><input value="'._('Crear categoría').'" style="font-size:18px;" type="submit"'.$dis.' /></td>
 </tr>
 </table>

@@ -484,7 +484,7 @@ CREATE TABLE `empresas` (
   `user_ID` mediumint(8) NOT NULL default '0',
   `descripcion` text character set utf8 NOT NULL,
   `web` varchar(200) character set utf8 NOT NULL default '',
-  `cat_ID` tinyint(3) NOT NULL default '0',
+  `cat_ID` smallint(6) NOT NULL default '0',
   `time` datetime NOT NULL default '0000-00-00 00:00:00',
   `pv` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (`ID`),

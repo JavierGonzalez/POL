@@ -120,7 +120,7 @@ ORDER BY fecha_registro ASC", $link);
 
 			$txt .= '<h1><a href="/partidos">'._('Partidos').'</a>: '.$r['siglas'].' | '.$r['nombre'].'</h1>
 
-<p>'.$r['descripcion'].'</p>
+<p>'.html_entity_decode($r['descripcion']).'</p>
 
 <ul id="partido">
 '.(ECONOMIA?'<li>'._('Presidente').' '._('de').' '.$r['siglas'].': <b>'.crear_link($r['nick_presidente']).'</b><br /><br /></li>':'').'

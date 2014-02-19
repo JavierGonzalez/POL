@@ -1421,7 +1421,7 @@ ORDER BY time DESC");
 
 
 
-if ($pol['cargo'] != 9) { $disabled = ' disabled="disabled"'; }
+if (!nucleo_acceso($vp['acceso']['control_sancion'])) { $disabled = ' disabled="disabled"'; }
 
 $txt .= '</table><br />
 

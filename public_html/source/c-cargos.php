@@ -73,7 +73,7 @@ ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
 			if ($r['asigna'] > 0) { $asignador = nucleo_acceso('cargo', $r['asigna']); } else { $asignador = false; }
 			if ($r['nombre'] == 'Socio') { $asignador = false; }
 
-			if ($r2['nick_estado'] == 'ciudadano') {
+			if ($r2['nick_estado'] == 'ciudadano' || $r2['nick_estado'] == 'expulsado') {
 				if ($r2['cargo'] == 'true') {
 					$activos_nick[] = $r2['nick'];
 					$activos_last[$r2['nick']] = $r2['fecha_last'];

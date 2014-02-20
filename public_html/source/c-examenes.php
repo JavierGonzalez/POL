@@ -457,7 +457,7 @@ ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
 
 	$txt .= '</table>';
 
-	$txt .= '<p><b class="big">' . ($num_generales + $num_especificas) . '</b> '._('preguntas').': <b>' . $num_especificas . '</b> '._('especificas').' + <b>' . $num_generales . '</b> '._('generales').' ' . $boton . '</p>'; 
+	$txt .= '<p><b class="big">' . ($num_generales + $num_especificas) . '</b> '._('preguntas').': <b>' . $num_especificas . '</b> '._('especificas').' + <b>' . $num_generales . '</b> '._('generales').'</p>'; 
 
 	if (nucleo_acceso($vp['acceso']['examenes_decano'])) { $txt_tab = array('/examenes/crear'=>_('Crear exámen')); }
 

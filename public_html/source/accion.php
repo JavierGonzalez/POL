@@ -1390,7 +1390,7 @@ case 'votacion':
 				break;
 
 			case 'cargo':
-				$result = sql("SELECT nombre FROM cargos WHERE cargo_ID = '".$_POST['cargo']."' LIMIT 1");
+				$result = sql("SELECT nombre FROM cargos WHERE cargo_ID = '".$_POST['cargo']."' AND pais = '".PAIS."'  LIMIT 1");
 				while($r = r($result)){ $cargo_nombre = $r['nombre']; }
 
 				$result = sql("SELECT ID, nick FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' LIMIT 1");

@@ -372,8 +372,17 @@ function cambiar_tipo_votacion(tipo) {
 	$("#acceso_ver, #acceso_votar, #time_expire, .votar_form, #votos_expire, #tipo_voto, #privacidad").show();
 	$("#cargo_form").hide();
 	switch (tipo) {
-		case "parlamento": $("#acceso_votar, #votos_expire, #privacidad, #acceso_ver").hide(); break;
-		case "cargo": $("'.(ASAMBLEA?'':'#acceso_ver, #acceso_votar, ').'#time_expire, .votar_form, #votos_expire, #tipo_voto, #privacidad").hide(); $("#cargo_form").show(); break;
+		case "parlamento": 
+			$(".votar_form input").val(""); 
+			$("#acceso_votar, #votos_expire, #privacidad, #acceso_ver").hide(); 
+			break;
+		case "cargo": 
+			$("'.(ASAMBLEA?'':'#acceso_ver, #acceso_votar, ').'#time_expire, .votar_form, #votos_expire, #tipo_voto, #privacidad").hide(); 
+			$(".votar_form input").val("Automatico"); 
+			$("#cargo_form").show(); 
+			break;
+		default:
+			$(".votar_form input").val("");
 	}
 }
 

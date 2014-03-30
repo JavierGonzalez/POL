@@ -1455,7 +1455,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 				while($r2 = r($result2)){ $censo_num = $r2['num']; }
 
 				sql("UPDATE votacion SET estado = 'ok', user_ID = '".$pol['user_ID']."', time = '".$date."', time_expire = '".$r['time_expire']."', num_censo = '".$censo_num."' WHERE ID = '".$r['ID']."' LIMIT 1");
-				if ($r['acceso_ver'] == 'anonimos') {
+				if (in_array($r['acceso_ver'], array('anonimos', 'ciudadanos_global', 'ciudadanos'))) {
 					evento_chat('<b>[VOTACIÓN] <a href="/votacion/'.$r['ID'].'">'.$r['pregunta'].'</a></b> <span style="color:grey;">('.duracion($r['time_expire']).')</span>');
 				}
 			}

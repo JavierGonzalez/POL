@@ -226,7 +226,9 @@ UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMI
 	} else { echo 'n 0 &nbsp; &nbsp; <b style="color:#FF0000;">No tienes permiso de escritura.</b>'."\n"; }
 
 } else if ($_GET['a'] == 'noti') {
-	include_once('inc-login.php');
+	$pol['nick'] = $_SESSION['pol']['nick'];
+	$pol['user_ID'] = $_SESSION['pol']['user_ID'];
+	//include_once('inc-login.php');
 ?>
 <script type="text/javascript">
 $('ul.menu').each(function(){ $(this).find('li').has('ul').addClass('has-menu').append('<span class="arrow">&nbsp;</span>'); });

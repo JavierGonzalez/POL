@@ -42,7 +42,7 @@ function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 
 				case 'textrico':
 					$f .= '<li><b>' . $v['nombre'] . ':</b><br />';
-					include('inc-functions-accion.php');
+					//include('inc-functions-accion.php');
 					$f .= editor_enriquecido($v['name']) . '</li>' . "\n";
 					
 					break;

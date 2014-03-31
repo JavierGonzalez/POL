@@ -157,15 +157,23 @@ case 'afiliarse':
 
 case 'crear-partido':
 
-	$txt .= '<h2>'._('Crear partido').':</h2>';
-
-	$pol_form = array(
-	array('type'=>'text', 'name'=>'siglas', 'value'=>'', 'size'=>'6', 'maxlegth'=>'10', 'nombre'=>'Siglas', 'desc'=>'Escribe entre 2 y 10 letras may&uacute;sculas, guion permitido.'),
-	array('type'=>'text', 'name'=>'nombre', 'value'=>'', 'size'=>'', 'maxlegth'=>'40', 'nombre'=>'Nombre', 'desc'=>'Frase a modo de nombre que concuerda con las siglas anteriormente dadas.'),
-	array('type'=>'textrico', 'name'=>'descripcion', 'size'=>'10', 'nombre'=>'Introducci&oacute;n'),
-	);
-	$txt .= polform($_GET['a'], $pol_form, _('Crear partido'));
-
+	$partido = "";
+	$result = sql("SELECT ID, siglas, nombre FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$pol['user_ID']."'");
+	while($r = r($result)){ $partido = crear_link($r['siglas'], 'partido');}
+	
+	if ($partido == ""){
+		$txt .= '<h2>'._('Crear partido').':</h2>';
+		$pol_form = array(
+		array('type'=>'text', 'name'=>'siglas', 'value'=>'', 'size'=>'6', 'maxlegth'=>'10', 'nombre'=>'Siglas', 'desc'=>'Escribe entre 2 y 10 letras may&uacute;sculas, guion permitido.'),
+		array('type'=>'text', 'name'=>'nombre', 'value'=>'', 'size'=>'', 'maxlegth'=>'40', 'nombre'=>'Nombre', 'desc'=>'Frase a modo de nombre que concuerda con las siglas anteriormente dadas.'),
+		array('type'=>'textrico', 'name'=>'descripcion', 'size'=>'10', 'nombre'=>'Introducci&oacute;n'),
+		);
+		
+		$txt .= polform($_GET['a'], $pol_form, _('Crear partido'));
+	}
+	
+	$txt .= '<p><br/>'.('Ya eres presidente de un partido: ').$partido.'</p>';
+	$txt .= '<a href="/partidos/"><b>'._('Volver').'</b></a>';
 
 	break;
 

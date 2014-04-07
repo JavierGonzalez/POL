@@ -1077,7 +1077,7 @@ case 'gobierno':
 		$refer_url = 'control/gobierno/foro';
 
 	} elseif (($_GET['b'] == 'eliminarsubforo') AND (nucleo_acceso($vp['acceso']['control_gobierno'])) AND ($_GET['ID'])) {
-		sql("UPDATE ".SQL."foros SET estado = 'eliminado' WHERE ID = '".$_GET['ID']."' LIMIT 1");
+		sql("DELETE FROM ".SQL."foros WHERE ID = '".$_GET['ID']."' LIMIT 1");
 		evento_log('Gobierno configuración: foro eliminado #'.$_GET['ID']);
 		$refer_url = 'control/gobierno/foro';
 	

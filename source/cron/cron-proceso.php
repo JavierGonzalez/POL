@@ -392,7 +392,7 @@ http://www.'.DOMAIN.'</p>';
 
 // ACTUALIZACION DEL VOTO CONFIANZA
 sql("UPDATE users SET voto_confianza = '0'");
-$result = sql("SELECT item_ID, SUM(voto) AS num_confianza FROM votos WHERE tipo = 'confianza' GROUP BY item_ID");
+$result = sql("SELECT item_ID, SUM(voto) AS num_confianza FROM votos, users WHERE tipo = 'confianza' AND users.id = emisor_ID AND (users.estado != 'expulsado' and users.estado != 'validar') GROUP BY item_ID");
 while ($r = r($result)) { 
 	sql("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['item_ID']."' LIMIT 1");
 }

@@ -78,8 +78,8 @@ p_scroll = false;
 			<?=(isset($pol['user_ID'])?'<li><a href="'.mumble_url().'">'._('Voz').'</a><ul><li><a href="/info/voz">'._('Configurar').' <em>Mumble</em></a></li></ul></li>':'')?>
 			<li><a href="#" style="cursor:default;"><?=_('Redes sociales')?></a>
 				<ul>
-					<li><a href="<?=(ASAMBLEA?'https://twitter.com/#!/AsambleaVirtuaI':'https://twitter.com/#!/VirtualPol')?>">Twitter</a></li>
-					<?=(ASAMBLEA?'<li><a href="https://www.facebook.com/AsambleaVirtual">Facebook</a></li><li><a href="https://plus.google.com/108444972669760594358/posts?hl=es">Google+</a></li>':'')?>
+					<li><a href="<?=(ASAMBLEA?'#':'https://twitter.com/#!/VirtualPol')?>">Twitter</a></li>
+					<?=(ASAMBLEA?'<li><a href="#">Facebook</a></li><li><a href="#">Google+</a></li>':'')?>
 					<li><a href="/info/seguir"><?=_('Seguir')?>...</a></li>
 				</ul>
 			</li>

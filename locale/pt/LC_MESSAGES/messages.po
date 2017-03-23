@@ -30,35 +30,35 @@ msgstr "A primeira Rede Social Democrática"
 
 #: D:\www\VirtualPol\public_html\./index.php:33
 msgid "Bienvenido a VirtualPol"
-msgstr "Bem-vindo a VirtualPol"
+msgstr "Bem-vindo ao VirtualPol"
 
 #: D:\www\VirtualPol\public_html\./index.php:67
 msgid "Plataforma"
-msgstr ""
+msgstr "Simulador"
 
 #: D:\www\VirtualPol\public_html\./index.php:68
 msgid "Población"
-msgstr ""
+msgstr "População"
 
 #: D:\www\VirtualPol\public_html\./index.php:121
 msgid "días"
-msgstr "días"
+msgstr "dias"
 
 #: D:\www\VirtualPol\public_html\./index.php:145
 msgid "Ciudadanos"
-msgstr ""
+msgstr "Cidadãos"
 
 #: D:\www\VirtualPol\public_html\./index.php:149
 msgid "Autentificados"
-msgstr ""
+msgstr "Autenticados"
 
 #: D:\www\VirtualPol\public_html\./index.php:153
 msgid "Solicitar nueva plataforma"
-msgstr ""
+msgstr "Solicitar nova plataforma"
 
 #: D:\www\VirtualPol\public_html\./theme.php:12
 msgid "ERROR"
-msgstr ""
+msgstr "ERRO"
 
 #: D:\www\VirtualPol\public_html\./theme.php:12
 msgid "Página inexistente"
@@ -70,7 +70,7 @@ msgstr "Ir a"
 
 #: D:\www\VirtualPol\public_html\./theme.php:64
 msgid "Vídeo bienvenida"
-msgstr "Vídeo bem-vindo"
+msgstr "Vídeo de boas vindas"
 
 #: D:\www\VirtualPol\public_html\./theme.php:65
 msgid "Documentación"
@@ -86,15 +86,15 @@ msgstr "Desenvolvimento"
 
 #: D:\www\VirtualPol\public_html\./theme.php:71
 msgid "Plataformas"
-msgstr ""
+msgstr "Simuladores"
 
 #: D:\www\VirtualPol\public_html\./theme.php:73
 msgid "Donaciones"
-msgstr "Doação"
+msgstr "Doações"
 
 #: D:\www\VirtualPol\public_html\./theme.php:87
 msgid "ciudadanos"
-msgstr ""
+msgstr "cidadãos"
 
 #: D:\www\VirtualPol\public_html\./theme.php:87
 msgid "online"
@@ -102,27 +102,27 @@ msgstr "online"
 
 #: D:\www\VirtualPol\public_html\./theme.php:110
 msgid "Opciones"
-msgstr ""
+msgstr "Opções"
 
 #: D:\www\VirtualPol\public_html\./theme.php:110
 msgid "Salir"
-msgstr ""
+msgstr "Sair"
 
 #: D:\www\VirtualPol\public_html\./theme.php:112
 msgid "Crear ciudadano"
-msgstr ""
+msgstr "Criar cidadão"
 
 #: D:\www\VirtualPol\public_html\./theme.php:112
 msgid "Iniciar sesión"
-msgstr ""
+msgstr "Iniciar sessão"
 
 #: D:\www\VirtualPol\public_html\./theme.php:143
 msgid "VirtualPol, la primera <b>Red Social Democrática</b>"
-msgstr ""
+msgstr "VirtualPol, a primeira <b>Rede Social Democrática</b>"
 
 #: D:\www\VirtualPol\public_html\./theme.php:143
 msgid "Donar"
-msgstr ""
+msgstr "Doar"
 
 #: D:\www\VirtualPol\public_html\./theme.php:145
 msgid "Vídeo"
@@ -3661,117 +3661,117 @@ msgstr ""
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:18
 msgid "Privado"
-msgstr ""
+msgstr "Privado"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:18
 msgid "Excluir"
-msgstr ""
+msgstr "Excluir"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:18
 msgid "Afiliado"
-msgstr ""
+msgstr "Afiliado"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:18
 msgid "Antiguedad"
-msgstr ""
+msgstr "Antiguidade"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:18
 msgid "Autentificacion"
-msgstr ""
+msgstr "Autenticação"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:18
 msgid "Supervisores censo"
-msgstr ""
+msgstr "Censo de supervisores"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:18
 msgid "Ciudadanos global"
-msgstr ""
+msgstr "Cidadãos Globais"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:18
 msgid "Anonimos"
-msgstr ""
+msgstr "Anônimos"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:21
 msgid "ok"
-msgstr ""
+msgstr "ok"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:21
 msgid "end"
-msgstr ""
+msgstr "end"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:21
 msgid "del"
-msgstr ""
+msgstr "del"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:21
 msgid "borrador"
-msgstr ""
+msgstr "rascunho"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:24
 msgid "semanas"
-msgstr ""
+msgstr "semanas"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:24
 msgid "Pocos segundos"
-msgstr ""
+msgstr "Poucos segundos"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 msgid "estandar"
-msgstr ""
+msgstr "padrão"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 msgid "multiple"
-msgstr ""
+msgstr "múltiplo"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 msgid "ninguno"
-msgstr ""
+msgstr "nenhum"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 msgid "turista"
-msgstr ""
+msgstr "turista"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 msgid "extranjero"
-msgstr ""
+msgstr "estrangeiro"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 msgid "ciudadano"
-msgstr ""
+msgstr "cidadão"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 msgid "expulsado"
-msgstr ""
+msgstr "expulso"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 msgid "validar"
-msgstr ""
+msgstr "validar"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 msgid "borrado"
-msgstr ""
+msgstr "apagado"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 msgid "activo"
-msgstr ""
+msgstr "ativo"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 msgid "cancelado"
-msgstr ""
+msgstr "cancelado"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 msgid "cancelar"
-msgstr ""
+msgstr "cancelar"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:257
 msgid "min"
-msgstr ""
+msgstr "min"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions-accion.php:27
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:258
 msgid "seg"
-msgstr ""
+msgstr "seg"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:50
 msgid "todo el mundo (Internet)"
@@ -3779,7 +3779,7 @@ msgstr "todo o mundo (Internet)"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:51
 msgid "todos los ciudadanos de VirtualPol"
-msgstr "todos os cidadãos de VirtualPol"
+msgstr "todos os cidadãos do VirtualPol"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:52
 msgid "todos los ciudadanos de"
@@ -3800,7 +3800,7 @@ msgstr "todos os cidadãos exceto"
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:54
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:96
 msgid "nadie"
-msgstr ""
+msgstr "ninguém"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:54
 msgid "los ciudadanos"
@@ -3829,44 +3829,44 @@ msgstr "cidadãos com os exames aprovados"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:72
 msgid "ciudadanos con cargo"
-msgstr ""
+msgstr "cidadãos com cargo"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:80
 msgid "ciudadanos afiliados al partido"
-msgstr ""
+msgstr "cidadãos afiliados ao partido"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:88
 msgid "ciudadanos afiliados al grupo:"
-msgstr ""
+msgstr "cidadãos afiliados ao partido"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:91
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:95
 msgid "ciudadanos con al menos"
-msgstr ""
+msgstr "cidadãos com ao menos"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:91
 msgid "monedas"
-msgstr ""
+msgstr "moedas"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:92
 msgid "ciudadanos inscritos como socios de"
-msgstr ""
+msgstr "cidadãos inscritos como sócios de"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:93
 msgid "ciudadanos autentificados"
-msgstr ""
+msgstr "cidadãos autenticados"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:95
 msgid "días de antigüedad"
-msgstr ""
+msgstr "Velhos tempos"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:171
 msgid "Primer paso: Crea tu ciudadano"
-msgstr "Primer paso: Criar seu cidadão"
+msgstr "Primeiro passo: Criar seu cidadão"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:172
 msgid "Proceso diario"
-msgstr "Processo diario"
+msgstr "Processo diário"
 
 #: D:\www\VirtualPol\public_html\./source/inc-functions.php:172
 msgid "No hay notificaciones"
@@ -3886,7 +3886,7 @@ msgstr "Comunicação"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:69
 msgid "Foros"
-msgstr "Debates"
+msgstr "Foruns"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:71
 msgid "Última actividad"
@@ -3915,7 +3915,7 @@ msgstr "Redes sociais"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:96
 msgid "Estadísticas online"
-msgstr ""
+msgstr "Estatísticas online"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:97
 msgid "Log de acciones"
@@ -3923,11 +3923,11 @@ msgstr "Log de ações"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:101
 msgid "Sobre VirtualPol"
-msgstr "Sobre VirtualPol"
+msgstr "Sobre o VirtualPol"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:103
 msgid "Vídeo de bienvenida"
-msgstr "Vídeo de bem-vindo"
+msgstr "Vídeo de boas vindas"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:140
 msgid "Cuentas"
@@ -3939,49 +3939,49 @@ msgstr "Suas moedas"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:157
 msgid "Inscríbete como socio"
-msgstr ""
+msgstr "Inscrever-se como sócio"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:161
 msgid "VirtualPol está siendo traducido desde el Español original a muchos más idiomas. Puedes ayudar en la traducción. ¡Gracias!"
-msgstr ""
+msgstr "VirtualPol está sendo traduzido do Espanhol aos mais variados idiomas que existe. Contribua com a tradução! Obrigado."
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:161
 msgid "Traducción VirtualPol"
-msgstr ""
+msgstr "Tradução do VirtualPol"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:173
 msgid "mapa"
-msgstr ""
+msgstr "mapa"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:173
 msgid "Subasta"
-msgstr ""
+msgstr "Leilão"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:199
 msgid "Solicitar ciudadania"
-msgstr ""
+msgstr "Solicitar cidadania"
 
 #: D:\www\VirtualPol\public_html\./source/theme.php:241
 msgid "Reportar problema"
-msgstr ""
+msgstr "Reportar Problema"
 
 #~ msgid "Debate sobre esta votación"
-#~ msgstr "Debate sobre esta votación"
+#~ msgstr "Debate sobre esta votação"
 
 #~ msgid "Tiempo de expiración"
-#~ msgstr "Tiempo de expiración"
+#~ msgstr "Tempo de expiração"
 
 #~ msgid "Cuidado"
 #~ msgstr "Cuidado"
 
 #~ msgid "Lo recibirán todos los ciudadanos de"
-#~ msgstr "Lo recibirán todos los ciudadanos de"
+#~ msgstr "Recebemos todos os cidadãos de"
 
 #~ msgid "Caducidad exámenes"
-#~ msgstr "Caducidad exámenes"
+#~ msgstr "Exames de aptidão"
 
 #~ msgid "Imagen tapiz"
-#~ msgstr "Imagen tapiz"
+#~ msgstr "Imagem de fundo"
 
 #~ msgid "Finalizar"
 #~ msgstr "Finalizar"
@@ -3990,7 +3990,7 @@ msgstr ""
 #~ msgstr "afiliado"
 
 #~ msgid "confianza"
-#~ msgstr "confianza"
+#~ msgstr "confiança"
 
 #~ msgid "grupos"
 #~ msgstr "grupos"
@@ -4002,31 +4002,31 @@ msgstr ""
 #~ msgstr "supervisores_censo"
 
 #~ msgid "Entrar con tu ciudadano"
-#~ msgstr "Entrar con tu ciudadano"
+#~ msgstr "Entrar com seu cidadão"
 
 #~ msgid "¿Aún no tienes usuario registrado?"
-#~ msgstr "¿Aún no tienes usuario registrado?"
+#~ msgstr "Ainda não se registrou?"
 
 #~ msgid "Buscador de perfiles"
-#~ msgstr "Buscador de perfiles"
+#~ msgstr "Buscador de perfis"
 
 #~ msgid "Espacio para lo que quieras"
-#~ msgstr "Espacio para lo que quieras"
+#~ msgstr "Espaço para o que você quiser"
 
 #~ msgid "Guardar avatar"
-#~ msgstr "Guardar avatar"
+#~ msgstr "Salvar avatar"
 
 #~ msgid "Retirar candidatura"
-#~ msgstr "Retirar candidatura"
+#~ msgstr "Cancelar candidatura"
 
 #~ msgid "Para poder votar"
 #~ msgstr "Para poder votar"
 
 #~ msgid "Para ver votación"
-#~ msgstr "Para ver votación"
+#~ msgstr "Para ver votação"
 
 #~ msgid "Hola mundo!"
-#~ msgstr "Hola mundo!"
+#~ msgstr "Olá mundo!"
 
 #~ msgid "Otra prueba"
-#~ msgstr "Other test"
+#~ msgstr "Outro teste"

@@ -36,7 +36,7 @@ while($r = r($result)){
 
 	if ($r['estado'] == 'expulsado') {
 		$razon = false;
-		$result2 = sql("SELECT razon FROM expulsiones WHERE user_ID = '".$r['ID']."' ORDER BY expire DESC LIMIT 1");
+		$result2 = sql("SELECT razon FROM expulsiones WHERE estado='expulsado' and user_ID = '".$r['ID']."' ORDER BY expire DESC LIMIT 1");
 		while ($r2 = r($result2)) { $razon = $r2['razon']; }
 	}
 

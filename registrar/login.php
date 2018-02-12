@@ -440,7 +440,7 @@ body, a { color:#FFFFFF; cursor:progress; }
 		switch ($nick_estado) {
 			case 'turista': case 'ciudadano': $msg_error = _('Contraseña incorrecta'); break;
 			case 'expulsado': 
-				$result = sql("SELECT razon FROM expulsiones WHERE tiempo = '".$nick."' ORDER BY expire DESC LIMIT 1");
+				$result = sql("SELECT razon FROM expulsiones WHERE estado='expulsado' andtiempo = '".$nick."' ORDER BY expire DESC LIMIT 1");
 				while ($r = r($result)) { $razon = $r['razon']; }
 				$msg_error = ($razon?'Expulsado por incumplimiento del TOS. Infracción: <em>'.$razon.'</em>':'Auto-eliminado'); 
 				break;

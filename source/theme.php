@@ -39,7 +39,6 @@ if (isset($_GET['bg'])) {
 </style>
 
 
-<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="<?=IMG?>scripts_all.js?v=<?=VER?>"></script>
 <script type="text/javascript">
@@ -79,7 +78,6 @@ p_scroll = false;
 			<li><a href="#" style="cursor:default;"><?=_('Redes sociales')?></a>
 				<ul>
 					<li><a href="<?=(ASAMBLEA?'#':'https://twitter.com/#!/VirtualPol')?>">Twitter</a></li>
-					<?=(ASAMBLEA?'<li><a href="#">Facebook</a></li><li><a href="#">Google+</a></li>':'')?>
 					<li><a href="/info/seguir"><?=_('Seguir')?>...</a></li>
 				</ul>
 			</li>
@@ -108,7 +106,6 @@ p_scroll = false;
 					<li><a href="http://www.virtualpol.com/manual" target="_blank"><?=_('Documentación')?></a></li>
 					<li><a href="http://www.virtualpol.com/TOS" target="_blank"><?=_('Condiciones de uso')?></a></li>
 					<li><a href="http://www.virtualpol.com/desarrollo" target="_blank"><?=_('Desarrollo')?></a></li>
-					<li><a href="https://virtualpol.com/donaciones" target="_blank"><?=_('Donaciones')?></a></li>
 				</ul>
 			</li>
 		</ul>
@@ -254,7 +251,7 @@ if (isset($pol['user_ID'])) {
 				if ($pol['user_ID'] == 1) { echo num((microtime(true)-TIME_START)*1000).'ms '.num(memory_get_usage()/1000).'kb |'; } 
 			}
 			?>
-			<span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2013<!-- <?=boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange')?>-->
+			<span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2013
 			</p>
 		</div>
 		
@@ -262,19 +259,14 @@ if (isset($pol['user_ID'])) {
 <?php
 echo '<table><tr><td height="30" nowrap="nowrap"><b>'.$pol['config']['pais_des'].'</b></td>';
 
-if (ASAMBLEA) {
-	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-text="VirtualPol, '._('la primera red social democrática').'" data-lang="'.($vp['lang']=='es_ES'?'es':'en').'" data-size="large" data-related="AsambleaVirtuaI" data-count="none" data-hashtags="15M">'.($vp['lang']=='es_ES'?'Twittear':'Twitt').'</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>';
-} else {
-	echo '<td><a href="https://twitter.com/share" class="twitter-share-button" data-text="VirtualPol, '._('la primera red social democrática').'" data-lang="'.($vp['lang']=='es_ES'?'es':'en').'" data-size="large" data-related="VirtualPol" data-count="none" data-hashtags="VirtualPol">'.($vp['lang']=='es_ES'?'Twittear':'Twitt').'</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></td>';
-}
+echo '<td></td>';
+
 
 echo '
 
-<td><g:plusone annotation="none"></g:plusone></td>
+<td></td>
 
-<td valign="middle"><div class="fb-like" data-send="false" data-layout="button_count" data-width="130" data-show-faces="false" data-font="verdana"></div></td>
+<td valign="middle"></td>
 
 </tr></table>';
 
@@ -294,18 +286,7 @@ if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != '')) {
 <fieldset id="pnick" style="display:none;"></fieldset>
 
 
-<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
-{lang: 'es'}
-</script>
-
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1&appId=358872204161898";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
 
 <script type="text/javascript">
 /* GA */
@@ -319,23 +300,6 @@ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www')
 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 
-/* CHARTBEAT */
-var _sf_async_config={uid:26055,domain:"virtualpol.com"};
-(function(){
-function loadChartbeat() {
-window._sf_endpt=(new Date()).getTime();
-var e = document.createElement('script');
-e.setAttribute('language', 'javascript');
-e.setAttribute('type', 'text/javascript');
-e.setAttribute('src',
-(("https:" == document.location.protocol) ? "https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" : "http://static.chartbeat.com/") +
-"js/chartbeat.js");
-document.body.appendChild(e);
-}
-var oldonload = window.onload;
-window.onload = (typeof window.onload != 'function') ?
-loadChartbeat : function() { oldonload(); loadChartbeat(); };
-})();
 </script>
 </body>
 </html>

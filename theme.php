@@ -68,8 +68,6 @@ p_scroll = false;
 
 	<div id="menu-next">
 
-<?=(nucleo_acceso('ciudadanos_global')&&false?'<p style="text-align:center;">'.boton(_('Donaciones'), 'http://www.virtualpol.com/donaciones', false, 'small pill orange').'</p>':'')?>
-
 
 <?php
 $result = mysql_query("SELECT nick, pais
@@ -138,7 +136,7 @@ if (isset($pol['user_ID'])) {
 	<div id="footer">
 
 		<div id="footer-right">
-			<p><?=_('VirtualPol, la primera <b>Red Social Democrática</b>')?> <?=boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange')?></p>
+			<p><?=_('VirtualPol, la primera <b>Red Social Democrática</b>')?></p>
 			
 			<p><a target="_blank" href="http://www.virtualpol.com/video"><?=_('Vídeo')?></a> | <a target="_blank" href="http://www.virtualpol.com/documentacion"><?=_('Ayuda / Documentación')?></a><br />
 			<a target="_blank" href="http://www.virtualpol.com/desarrollo"><?=_('Desarrollo / Código fuente')?></a> | <a target="_blank" href="http://www.virtualpol.com/TOS" title="Condiciones de Uso">TOS</a><br />

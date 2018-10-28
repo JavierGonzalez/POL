@@ -10,6 +10,11 @@
 // Conecta con la base de datos, define constantes, carga el sistema de usuarios de VP, hace un par de gestiones rutinarias.
 include('inc-login.php');
 
+
+echo 'Deprecated, service down.';
+exit;
+
+
 if (!$_SERVER['HTTPS']) { redirect(SSL_URL.'dnie.php'); } // Fuerza el uso de una conexion segura entre navegador y servidor. (https SSL)
 
 // Comprueba si el usuario está autentificado o no.
@@ -33,7 +38,7 @@ Consiste en una miniaturización irreversible de la información extraida del DN
 
 Por ejemplo, este código: 
 
-	hash('sha256', '.VirtualPol.clave_del_sistema.72135000A.JAVIER RUBALCABA RAJOY.')
+	hash('sha256', '.VirtualPol.clave_del_sistema.ESNIF.NOMBRE_APELLIDO_APELLIDO.')
 
 Se convierte en:
 

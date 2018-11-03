@@ -64,7 +64,8 @@ $txt .= '<table>
 
 <table border="0" cellpadding="2" cellspacing="0" width="430">
 <tr>
-<th colspan="2" align="left">'._('Plataformas').'</th>
+<th align="left">'._('Plataformas').'</th>
+<th align="right">'._('Usuarios').'</th>
 </tr>';
 
 
@@ -77,7 +78,7 @@ while($r = r($result)) {
 	$result2 = sql("SELECT valor, dato FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo', 'bg_color')");
 	while($r2 = r($result2)) { $pais_config[$r2['dato']] = $r2['valor']; }
 
-	$txt .= '<tr style="background:'.$pais_config['bg_color'].';'.($r['num']<40?'display:none;" class="p-inactiva"':'"').'>
+	$txt .= '<tr style="background:'.$pais_config['bg_color'].';'.($r['num']<0?'display:none;" class="p-inactiva"':'"').'>
 <td><a href="http://'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" alt="'.$pais.'" /></a></td>
 
 <td><span style="float:right;font-size:22px;"><b>'.num($r['num']).'</b></span><a href="http://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:'.($r['num']>1000?18:16).'px;">'.$pais_config['pais_des'].'</b></a><br />
@@ -89,10 +90,10 @@ while($r = r($result)) {
 }
 
 
-$txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="2"><a href="#" onclick="$(\'tr .p-inactiva\').toggle();return false;">'._('Ver todas las plataformas').'</a></td></tr>
+$txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="2"><!--<a href="#" onclick="$(\'tr .p-inactiva\').toggle();return false;">'._('Ver todas las plataformas').'</a>--></td></tr>
 
 <tr>
-<td colspan="2"><span style="float:right;font-size:20px;"><b>'.num($poblacion_num).'</b></span>'.(nucleo_acceso('antiguedad', 2)?boton(_('Solicitar nueva plataforma'), '/crear-plataforma.php', false, 'small pill'):'').'</td>
+<td colspan="2"><span style="float:right;font-size:20px;"><b>'.num($poblacion_num).'</b></span><!--'.(nucleo_acceso('antiguedad', 2)?boton(_('Solicitar nueva plataforma'), '/crear-plataforma.php', false, 'small pill'):'').'--></td>
 </tr>
 
 </table>

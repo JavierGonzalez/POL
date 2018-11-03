@@ -122,22 +122,18 @@ Chat de '.PAIS.': <b>'.$titulo.'</b><br />
 <div id="chatform">
 <form method="POST" onSubmit="return enviarmsg();">
 
-<table width="100%">
-<tr>
+<div class="envio_mensaje_container">
+	<div class="refrescar_evento"><img id="vpc_actividad" onclick="actualizar_ahora();" src="'.IMG.'ico/punto_gris.png" width="16" height="16" title="Actualizar chat" style="margin-top:4px;" /></div>
 
-<td width="46" align="right" valign="middle"><img id="vpc_actividad" onclick="actualizar_ahora();" src="'.IMG.'ico/punto_gris.png" width="16" height="16" title="Actualizar chat" style="margin-top:4px;" /></td>
+	<div class="cuadro_mensaje">
+	'.(isset($pol['user_ID'])?'
+	<input type="text" data-emojiable="true" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%; height: 32px; " autofocus="autofocus" value="" required />':boton(_('¡Regístrate para participar!'), REGISTRAR.'?p='.PAIS, false, 'green')).'
+	</div>
 
-<td valign="middle">
-'.(isset($pol['user_ID'])?'
-<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%;" autofocus="autofocus" value="" required />':boton(_('¡Regístrate para participar!'), REGISTRAR.'?p='.PAIS, false, 'green')).'
-</td>
+	<div class="ocultar_evento">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">'._('Ocultar eventos').'</label></div>
 
-<td nowrap="nowrap" valign="middle" title="Marcar para ocultar eventos del chat">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">'._('Ocultar eventos').'</label></td>
-
-<td align="right">'.boton(_('Enviar'), 'submit', false, '', '', ' id="botonenviar"').'</td>
-
-</tr>
-</table>
+	<div class="enviar_mensaje">'.boton(_('Enviar'), 'submit', false, '', '', ' id="botonenviar"').'</div>
+</div>
 
 </form>
 
@@ -207,6 +203,41 @@ window.onload = function(){
 
 </script>';
 
+$GLOBALS['txt_footer'].='
+      <script>$(function() {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+          emojiable_selector: \'[data-emojiable=true]\',
+          assetsPath: \''.IMG.'emoji/img/\',
+          popupButtonClasses: \'fa fa-smile-o\',
+		  norealTime: true
+        });
+        // Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
+        // You may want to delay this step if you have dynamically created input fields that appear later in the loading process
+        // It can be called as many times as necessary; previously converted input fields will not be converted again
+        //window.emojiPicker.discover();
+      });
+	  
+	  function fix_onChange_editable_elements()
+		{
+		  var tags = document.querySelectorAll(\'[contenteditable=true][onChange]\');//(requires FF 3.1+, Safari 3.1+, IE8+)
+		  for (var i=tags.length-1; i>=0; i--) if (typeof(tags[i].onblur)!=\'function\')
+		  {
+			tags[i].onfocus = function()
+			{
+			  this.data_orig=this.innerHTML;
+			};
+			tags[i].onblur = function()
+			{
+			  if (this.innerHTML != this.data_orig)
+				this.onchange();
+			  delete this.data_orig;
+			};
+		  }
+		}
+		fix_onChange_editable_elements();
+	  </script>';
+    
 
 
 

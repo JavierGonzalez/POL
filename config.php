@@ -53,7 +53,9 @@ $vp['langs'] = array(
 );
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)
-$vp['paises'] = array('15M', 'Hispania', 'MIC', 'JRO', 'ETSIIT', 'Occupy', 'PCP', 'FCSM', 'PDI', '25S', 'Plebiscito', 'POL');
+$vp['paises'] = array('Simulador', 'Asamblea');
+// borrados: 'ETSIIT', 'PCP', 'Occupy', 'Plebiscito', 'PDI'
+// borrados: '15M', 'Hispania', 'JRO', 'FCSM', '25S', 'POL', 'MIC'
 
 
 if ($pais == 'www') {
@@ -73,7 +75,7 @@ define('SQL', strtolower(PAIS).'_');
 define('USERCOOKIE', '.'.DOMAIN);
 define('HOST', $_SERVER['HTTP_HOST']);
 define('VOTO_CONFIANZA_MAX', 50); // Máximo de votos de confianza emitibles
-define('SC_NUM', 9); // Numero de SC electos.
+define('SC_NUM', 5); // Numero de SC electos.
 define('MP_MAX', 25); // Máximo de MP (mensajes privados) que puede enviar un ciudadano
 define('VER', 12); // Version de archivos estaticos. Util para forzar el refresco de js y css. Incrementar.
 $datos_perfil = array('Blog', 'Twitter', 'Facebook', 'Google+', '', 'Menéame');
@@ -82,11 +84,11 @@ $columnas = 14; $filas = 14; // Dimensiones mapa
 
 // URLS
 
-define('REGISTRAR', 'https://www.'.DOMAIN.'/registrar/'); // Zona de registro y opciones de usuario
-define('SSL_URL', 'https://www.'.DOMAIN.'/'); // SSL_URL | http://www.virtualpol.com/ = https://www.virtualpol.com/
+define('REGISTRAR', 'http://www.'.DOMAIN.'/registrar/'); // Zona de registro y opciones de usuario
+define('SSL_URL', 'http://www.'.DOMAIN.'/'); // SSL_URL | http://www.virtualpol.com/ = https://www.virtualpol.com/
 
 if ($_SERVER['HTTPS']) {
-	define('IMG', 'https://www.'.DOMAIN.'/img/'); // Archivos estaticos bajo https
+	define('IMG', 'http://www.'.DOMAIN.'/img/'); // Archivos estaticos bajo https
 } else {
 	define('IMG', 'http://www.'.DOMAIN.'/img/'); // Archivos estaticos
 }

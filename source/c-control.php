@@ -616,6 +616,8 @@ case 'gobierno':
 <th>'._('Nombre').'</th>
 <th>'._('Tipo').'</th>
 <th>'._('Nivel').'</th>
+<th>Actual</th>
+<th>Publicable</th>
 </tr>';
 	$subforos = '';
 	$result = sql("SELECT * FROM cat WHERE pais = '".PAIS."' ORDER BY tipo DESC, orden ASC");
@@ -629,7 +631,13 @@ case 'gobierno':
 			$result2 = sql("SELECT COUNT(*) AS el_num FROM empresas WHERE pais = '".PAIS."' AND cat_ID = '".$r['ID']."'");
 			while($r2 = r($result2)){ $num = $r2['el_num']; }
 		}
-
+		$checkbox = '<input class="checkbox_impuestos" type="checkbox" name="'.$r['ID'].'_publicable" value="1"'.$disabled;
+		
+		if ($r['publicar'] == '1') {
+			$checkbox .= ' checked="checked"';
+		}
+		$checkbox .= ' />';
+			
 		$txt .= '<tr>
 <td><input type="text" style="text-align:right;" name="'.$r['ID'].'_orden" size="1" maxlength="3" value="'.$r['orden'].'" /></td>
 
@@ -640,6 +648,9 @@ case 'gobierno':
 <td><input type="text" style="text-align:right;" name="'.$r['ID'].'_nivel" size="1" maxlength="3" value="'.$r['nivel'].'" /></td>
 
 <td align="right" style="color:#999;" nowrap="nowrap"><b>'.$num.'</b></td>
+<td align="center">'.$checkbox.'
+</td>
+
 
 <td>'.($num==0?boton('Eliminar', accion_url().'a=gobierno&b=categorias&c=eliminar&ID='.$r['ID'], false, 'small red'):'').'</td>
 </tr>'."\n";
@@ -660,6 +671,7 @@ case 'gobierno':
 <td>'._('Nombre').':</td>
 <td><input type="text" name="nombre" size="10" maxlength="30" value="" /></td>
 '.(ECONOMIA?'<td><select name="tipo"><option value="docs">'._('Documentos').'</option><option value="empresas">'._('Empresas').'</option></select></td>':'').'
+<td><strong>Publicable &nbsp;</strong><input class="checkbox_impuestos" type="checkbox" name="publicable" value="1" /></td>
 <td><input value="'._('Crear categoría').'" style="font-size:18px;" type="submit"'.$dis.' /></td>
 </tr>
 </table>

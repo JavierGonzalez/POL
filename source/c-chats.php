@@ -220,7 +220,9 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 <td align="right" nowrap>';
 
 		$txt .= ((($r['estado'] != 'activo') AND ($pol['pais'] == $r['pais']) AND (nucleo_acceso($vp['acceso']['control_gobierno'])))?boton(_('Activar'), accion_url($r['pais']).'a=chat&b=activar&chat_ID='.$r['chat_ID'], false, 'small orange'):'').' '.
-($pol['user_ID'] == $r['user_ID'] || nucleo_acceso('privado', $r['admin']) || nucleo_acceso($vp['acceso']['control_gobierno'])?boton(_('Borrar'), accion_url($r['pais']).'a=chat&b=eliminar&chat_ID='.$r['chat_ID'], '¿Estás seguro de querer ELIMINAR este chat?', 'small red pill'):'').'</td>
+($pol['user_ID'] == $r['user_ID'] || nucleo_acceso('privado', $r['admin']) || nucleo_acceso($vp['acceso']['control_gobierno'])?boton(_('Borrar'), accion_url($r['pais']).'a=chat&b=eliminar&chat_ID='.$r['chat_ID'], '¿Estás seguro de querer ELIMINAR este chat?', 'small red pill'):'').' '.
+($pol['user_ID'] == $r['user_ID'] ?boton(_('Limpiar'), accion_url($r['pais']).'a=chat&b=limpiar&chat_ID='.$r['chat_ID'], '¿Estás seguro de querer LIMPIAR este chat?', 'small green pill'):'').
+'</td>
 </tr>';
 	}
 	$txt .= '</table>';

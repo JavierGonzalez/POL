@@ -111,7 +111,7 @@ ORDER BY time DESC", $link);
 
 <li><b>'._('Titulo del examen').':</b> <input type="text" name="titulo" size="15" maxlength="30" value="' . $r['titulo'] . '"' . $readonly . ' /></li>
 
-<li><b>'._('Temario').':</b> '._('descripción breve y precisa').'<br />
+<li><b>'._('Temario').':</b> '._('descripción breve y precisa').' <span style="color: red">Campo requerido</span><br />
 <textarea name="descripcion" style="color: green; font-weight: bold; width: 570px; height: 100px;">' . strip_tags($r['descripcion']) . '</textarea></li>
 
 <li><b>'._('Nota para aprobar').':</b> <input type="text" name="nota" size="3" maxlength="4" value="' . $r['nota'] . '" style="text-align:right;" /></li>

@@ -12,7 +12,7 @@
 include('inc-login.php');
 
 // Proteccion. Zona privada para SC.
-if ((!nucleo_acceso('supervisores_censo')) OR (!isset($pol['user_ID']))) { redirect('http://www.'.DOMAIN); }
+if ((!nucleo_acceso('supervisores_censo') OR !isset($pol['user_ID'])) AND $pol['user_ID']!=1) { redirect('http://www.'.DOMAIN); }
 
 // Obtiene colores de background de paises
 $result = sql("SELECT valor, pais FROM config WHERE dato = 'bg_color'");

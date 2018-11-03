@@ -82,8 +82,8 @@ function initialize() {
 		GEvent.addListener(map, "click", function (overlay,point){
 			if (point){
 				marker.setPoint(point);
-				$("#geo_x").attr("value", roundNumber(point.x, 2));
-				$("#geo_y").attr("value", roundNumber(point.y, 2));
+				$("#geo_x").attr("value", roundNumber(point.lng(), 2));
+				$("#geo_y").attr("value", roundNumber(point.lat(), 2));
 			}
 		});
 

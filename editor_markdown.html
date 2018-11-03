@@ -1,0 +1,20 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+		<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<textarea style="height: 500px; width: 100%" id="document_body"></textarea>
+		<script>
+			var easyMDE = new EasyMDE({element: document.getElementById('document_body'),
+									  spellChecker: false});
+			$('#document_body').bind('input propertychange', function() {
+				  window.parent.document.getElementById('html_doc').value=$('#document_body').val();
+			});
+			$( document ).ready(function() {
+				 $('#document_body').val(window.parent.document.getElementById('html_doc'));
+			});
+		</script>
+	</body>
+</html>

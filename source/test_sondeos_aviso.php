@@ -18,7 +18,7 @@ include('inc-functions-accion.php');
 
 
 
-exit;
+//exit;
 
 
 evento_chat('<b>[#] Comienzo de envio de emails</b> semanales de aviso de votaciones.');

@@ -1,0 +1,30 @@
+Header unset ETag
+FileETag None
+
+## Fuerza cacheo para archivos estaticos
+<FilesMatch "\.(js|css|ico|pdf|jpg|jpeg|png|gif|eot|ttf|otf|woff)$">
+Header set Cache-Control "public"
+Header set Expires "Thu, 15 Apr 2020 20:00:00 GMT"
+Header unset Last-Modified
+</FilesMatch> 
+
+## Redirecciones
+redirect 301 /codigo https://github.com/JavierGonzalez/VirtualPol
+redirect 301 /license http://www.gnu.org/licenses/gpl.html
+redirect 301 /contenido http://creativecommons.org/licenses/by-sa/3.0/deed.es_ES
+
+## Motor de redirecciones
+RewriteEngine on 
+RewriteRule ^(TOS|legal|manual|documentacion|donaciones|donar|desarrollo|presentacion|video|reglamento-sc)$ /pages.php?a=$1 [L]
+
+
+## Permite acceso cross-site (diferente dominio) para archivos de fuentes (iconos). Necesario para IE/Firefox.
+AddType application/vnd.ms-fontobject .eot
+AddType font/ttf .ttf
+AddType font/otf .otf
+AddType font/woff .woff
+<FilesMatch "\.(ttf|otf|eot|woff)$">
+<IfModule mod_headers.c>
+Header set Access-Control-Allow-Origin "*"
+</IfModule>
+</FilesMatch>

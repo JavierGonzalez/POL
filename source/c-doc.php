@@ -8,8 +8,12 @@
 */
 
 include('inc-login.php');
+include('parsedown/Parsedown.php');
 
 if ($_GET['a']) {
+	$parsedown = new Parsedown;
+	$parsedown->setSafeMode(true);
+	$parsedown->setBreaksEnabled(true);
 
 	$result = mysql_query("SELECT * FROM docs WHERE url = '".$_GET['a']."' AND pais = '".PAIS."' LIMIT 1", $link);
 	while($r = mysql_fetch_array($result)){
@@ -32,9 +36,10 @@ if ($_GET['a']) {
 			pad('create', $pad_ID, $r['text']);
 
 			$txt .= '
-<form action="'.accion_url($pol['pais']).'a=editar-documento&ID='.$r['ID'].'" method="POST">
+<form action="'.accion_url($pol['pais']).'a=editar-documento&ID='.$r['ID'].'" name="editar_documento" id="editar_documento" method="POST">
 <input type="hidden" name="url" value="'.$r['url'].'"  />
 <input type="hidden" name="doc_ID" value="'.$r['ID'].'"  />
+<input type="hidden" name="html_doc" id="html_doc" value="'.$r['text'].'" />
 
 <h1 class="quitar" style="margin-bottom:6px;"><a href="/doc">'._('Documento').'</a>: '._('Editar').'</a></h1>
 
@@ -81,7 +86,8 @@ if ($_GET['a']) {
 <input type="text" name="titulo" value="'.$r['title'].'" size="30" maxlength="50" style="font-size:22px;" /> &nbsp; 
 <button onclick="$(\'#doc_opciones\').slideToggle(\'slow\');return false;">'._('Opciones').'</button> &nbsp; 
 '.boton(_('Publicar'), 'submit', false, 'large blue').' <a href="/doc/'.$r['url'].'">'._('Última publicación hace').' <span class="timer" value="'.strtotime($r['time_last']).'"></span></a>.</div>
-
+<iframe style="width:100%;height:850px;scrolling: none; border: none" id="document_frame" src="/editor_markdown.php">
+</iframe>
 </form>
 
 '.pad('print', $pad_ID);
@@ -112,7 +118,7 @@ if ($_GET['a']) {
 <h1 style="font-size:28px;">'.$r['title'].'</h1>
 
 <div id="doc_pad" style="min-height:250px;">
-'.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])||nucleo_acceso($vp['acceso']['control_docs'])?$r['text']:'<b style="color:red;">'._('No tienes acceso de lectura').'.</b>').'
+'.(nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])||nucleo_acceso($vp['acceso']['control_docs'])?$parsedown->text($r['text']):'<b style="color:red;">'._('No tienes acceso de lectura').'.</b>').'
 </div>
 
 </div>
@@ -128,8 +134,6 @@ if ($_GET['a']) {
 		}
 		$txt_title = $r['title'];
 	}
-
-
 
 } else { //docs
 

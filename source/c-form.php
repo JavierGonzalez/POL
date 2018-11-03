@@ -160,7 +160,6 @@ case 'crear-partido':
 	$partido = "";
 	$result = sql("SELECT ID, siglas, nombre FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$pol['user_ID']."'");
 	while($r = r($result)){ $partido = crear_link($r['siglas'], 'partido');}
-	
 	if ($partido == ""){
 		$txt .= '<h2>'._('Crear partido').':</h2>';
 		$pol_form = array(
@@ -174,9 +173,7 @@ case 'crear-partido':
 	
 	$txt .= '<p><br/>'.('Ya eres presidente de un partido: ').$partido.'</p>';
 	$txt .= '<a href="/partidos/"><b>'._('Volver').'</b></a>';
-
 	break;
-
 
 
 default: redirect('http://'.HOST.'/');

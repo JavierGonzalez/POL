@@ -192,7 +192,7 @@ while($r = r($result)){
 		$p = '';
 		$p['user_ID'] = $r['user_ID'];
 	}
-	$coste = ceil(($r['size_x'] * $r['size_y']) * $pol['config']['factor_propiedad']);
+	$coste = round(($r['size_x'] * $r['size_y']) * $pol['config']['factor_propiedad'], 2);
 	$p['pols'] += $coste;
 	$p['pols_total'] = $r['pols_total'];
 	$p['prop'][$r['ID']] = $coste;
@@ -229,7 +229,7 @@ ORDER BY fecha_registro ASC");
 		if ($pols_total >= $minimo) { // REGLAS
 			$base_imponible = $pols_total;
 			if ($minimo < 0) { $base_imponible -= $minimo; }
-			$impuesto = ceil( ( $base_imponible * $porcentaje) / 100);
+			$impuesto = round( ( $base_imponible * $porcentaje) / 100, 2);
 			$redaudacion += $impuesto;
 		} else { $impuesto = 0; $num_porcentaje_0++; }
 
@@ -243,7 +243,7 @@ ORDER BY fecha_registro ASC");
 
 			$result2 = sql("SELECT ID, pols FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' AND nivel = '0' AND exenta_impuestos = '0'");
 			while($r2 = r($result2)) {
-				$impuesto_cuenta = ceil(($r2['pols']/$pols_total) * $impuesto);
+				$impuesto_cuenta = round(($r2['pols']/$pols_total) * $impuesto, 2);
 				pols_transferir($impuesto_cuenta, '-'.$r2['ID'], '-1', 'IMPUESTO '.date('Y-m-d').': '.$pol['config']['impuestos'].'%');
 				$resto_impuestos -= $impuesto_cuenta;
 			}
@@ -272,7 +272,7 @@ if ($pol['config']['impuestos_empresa'] > 0) {
 		// comprueba si existe el propietario de la empresa antes de ejecutar el impuesto
 		$result2 = sql("SELECT ID, pols FROM users WHERE ID = '".$r['user_ID']."' AND pais = '".PAIS."' LIMIT 1");
 		while($r2 = r($result2)) { 
-			$impuesto = round($pol['config']['impuestos_empresa'] * $r['num']);
+			$impuesto = round($pol['config']['impuestos_empresa'] * $r['num'], 2);
 			if ($r2['pols'] >= $impuesto) {
 				$recaudacion_empresas += $impuesto;
 				pols_transferir($impuesto, $r['user_ID'], '-1', 'IMPUESTO EMPRESAS '.date('Y-m-d').': '.$r['num'].' empresas');	
@@ -307,9 +307,9 @@ while($r = r($result)){
 
 
 // ELIMINAR CHAT INACTIVOS TRAS N DIAS
-/*$margen_chatexpira = date('Y-m-d 20:00:00', time() - (86400 * $pol['config']['chat_diasexpira']));
+$margen_chatexpira = date('Y-m-d 20:00:00', time() - (86400 * $pol['config']['chat_diasexpira']));
 sql("DELETE FROM chats WHERE pais = '".PAIS."' AND fecha_last < '".$margen_chatexpira."'");
-*/
+
 
 // ELIMINAR MENSAJES PRIVADOS
 sql("DELETE FROM mensajes WHERE time < '".tiempo(15)."'");
@@ -360,8 +360,8 @@ WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registr
 (estado IN ('validar', 'expulsado') AND fecha_last <= '".tiempo(10)."') 
 LIMIT 80");
 while($r = r($result)) {
-	if ($r['estado'] == 'ciudadano') { $st['eliminados']++; }
-	eliminar_ciudadano($r['ID']);
+	//if ($r['estado'] == 'ciudadano') { $st['eliminados']++; }
+	//eliminar_ciudadano($r['ID']);
 }
 
 // Emails de aviso de expiración
@@ -384,7 +384,11 @@ while($r = r($result)) {
 
 <p><b>VirtualPol</b> - La primera Red Social Democrática.<br />
 http://www.'.DOMAIN.'</p>';
-	enviar_email(null, 'Tu usuario '.$r['nick'].' está a punto de expirar por inactividad', $mensaje, $r['email']);
+	//enviar_email(null, 'Tu usuario '.$r['nick'].' está a punto de expirar por inactividad', $mensaje, $r['email']);
+	if ($r['estado'] == 'ciudadano') { 
+		$st['eliminados']++; 
+		convertir_turista($r['ID']);
+	}
 }
 
 
@@ -400,8 +404,8 @@ sql("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '".tie
 
 
 
-// Quitar candidaturas de SC que estén más de 60 dias inactivos.
-sql("UPDATE users SET ser_SC = 'false' WHERE ser_SC = 'true' AND fecha_last < '".tiempo(60)."'");
+// Quitar candidaturas de SC que estén más de 30 dias inactivos.
+sql("UPDATE users SET ser_SC = 'false' WHERE ser_SC = 'true' AND fecha_last < '".tiempo(30)."'");
 
 if (date('N') == 7) { // SOLO DOMINGO
 

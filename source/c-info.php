@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* The source code packaged with this file is Free Software, Copyright (C) 2008 by
 ** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
 ** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
@@ -466,7 +466,8 @@ case 'economia':
 // 11 AGOSTO 2010: 544.645 | 554.528 | 674.518
 // 28 AGOSTO 2011: 883.003
 
-$moneda_mundial = '883003';
+//$moneda_mundial = '883003';
+$moneda_mundial = '100000';
 
 
 $txt .= '<br /><table border="0" cellspacing="0" cellpadding="2">

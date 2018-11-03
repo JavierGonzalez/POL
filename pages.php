@@ -19,6 +19,35 @@ case 'video':
 	break;
 
 
+case 'donaciones':
+	$txt_title = 'Donaciones a VirtualPol'; 
+	$txt_nav = array('Donaciones');
+
+	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 752 LIMIT 1", $link); // doc_ID 752 = Donaciones
+	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
+
+
+	$text = str_replace(':botones_donar:', '
+<table border="0" width="100%" style="margin-bottom:-25px;">
+<tr>
+	<td align="center" valign="top">
+		<span class="gris">PayPal / Tarjeta de crédito</span>
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+			<input type="hidden" name="cmd" value="_s-xclick">
+			<input type="hidden" name="hosted_button_id" value="A6JJDTXA44V9Q">
+			<input type="image" src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal. La forma rápida y segura de pagar en Internet.">
+			<img alt="" border="0" src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif" width="1" height="1">
+		</form>
+	</td>
+	<td align="center" valign="top">
+		<span class="gris">Transferencia bancaria:</span><br />
+		3174 5899 90 2025993516<br /> 
+		<em>Caixa Vinaros, Javier González</em>
+	</td>
+</tr>
+</table>
+', $text);
+
 
 	$txt .= '
 <div>
@@ -40,7 +69,7 @@ case 'presentacion':
 
 
 case 'desarrollo':
-	$txt_title = 'Desarrollo de VirtualPol | Codigo fuente, Software libre, descargar'; 
+	$txt_title = 'Desarrollo de VirtualPol2 | Codigo fuente, Software libre, descargar'; 
 	$txt_nav = array('Desarrollo');
 
 	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 10 LIMIT 1", $link); // doc_ID 10 = Desarrollo

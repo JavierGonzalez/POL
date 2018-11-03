@@ -1,0 +1,33 @@
+.envio_mensaje_container{
+	width: 100%;
+	height: 32px;
+	position:relative;
+	float:left;
+	padding-top: 2px;
+}
+
+.refrescar_evento{
+		width: 3%;
+		float:left;
+		margin-top: 3px;
+}
+	
+.cuadro_mensaje{
+		width: 73%;
+		float:left;
+}
+	
+.cuadro_mensaje.input{
+	height: 32px;
+}
+
+.ocultar_evento{
+		width: 14%;
+		float:left;
+		margin-top: 3px;
+}
+
+.enviar_mensaje{
+		width: 4%;
+		float:left;
+}

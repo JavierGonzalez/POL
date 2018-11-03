@@ -295,7 +295,7 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 
 function mumble_url($canal='') {
 	global $pol;
-	return 'mumble://'.$pol['nick'].':vp@virtualpol.mumble.com:3704/'.$canal.'?version=1.2.0';
+	return 'mumble://'.$pol['nick'].'@occupytalk.org:64738/Other?version=1.2.0';
 }
 
 function accion_url($pais=false) { 
@@ -310,7 +310,7 @@ function implodear($pat, $str, $num) { $exp = implode($pat, $str); return $exp[$
 function entre($num, $min, $max) { if ((is_numeric($num)) AND ($num >= $min) AND ($num <= $max)) { return true; } else { return false; } }
 function direccion_IP($tipo='ip') { return ($tipo=='longip'?ip2long($_SERVER['REMOTE_ADDR']):$_SERVER['REMOTE_ADDR']); }
 function avatar($user_ID, $size='') { return '<img src="'.IMG.'a/'.$user_ID.($size?'_'.$size:'').'.jpg" alt="'.$user_ID.'"'.($size!=''?' width="'.$size.'" height="'.$size.'" class="redondeado"':'').' />'; }
-function pols($pols) { return '<span class="'.($pols<0?'pn':'pp').'">'.number_format($pols, 0, ',', '.').'</span>'; }
+function pols($pols) { return '<span class="'.($pols<0?'pn':'pp').'">'.number_format($pols, 2, '.', ',').'</span>'; }
 function tiempo($dias=0, $hora='H:i:s', $tipo='pasado') { 
 	return date('Y-m-d '.$hora, ($tipo=='pasado'?time()-(86400*round($dias)):time()+(86400*round($dias)))); 
 }

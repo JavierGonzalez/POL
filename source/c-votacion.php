@@ -14,7 +14,7 @@ $votaciones_tipo = array('sondeo', 'referendum', 'parlamento', 'cargo', 'eleccio
 
 // FINALIZAR VOTACIONES
 $result = sql("SELECT ID, tipo, tipo_voto, num, pregunta, respuestas, ejecutar, privacidad, acceso_ver FROM votacion 
-WHERE estado = 'ok' AND pais = '".PAIS."' AND (time_expire <= '".$date."' OR ((votos_expire != 0) AND (num >= votos_expire)))");
+WHERE estado = 'ok' AND pais = '".PAIS."' AND (tipo_voto = 'aleatorio' OR time_expire <= '".$date."' OR ((votos_expire != 0) AND (num >= votos_expire)))");
 while($r = r($result)){
 	
 	// Finaliza la votación
@@ -254,6 +254,11 @@ if (($_GET['a'] == 'verificacion') AND ($_GET['b']) AND (isset($pol['user_ID']))
 <option value="5puntos"'.$sel['tipo_voto']['5puntos'].'>5 '._('votos').' (15 '._('puntos').')</option>
 <option value="8puntos"'.$sel['tipo_voto']['8puntos'].'>8 '._('votos').' (36 '._('puntos').')</option>
 </optgroup>
+
+<optgroup label="'._('Sorteo').'">
+<option value="aleatorio"'.$sel['tipo_voto']['aleatorio'].' disabled>'._('Aleatorio').'</option>
+</optgroup>
+
 </select></span>
 
 <br />
@@ -383,6 +388,7 @@ function cambiar_tipo_votacion(tipo) {
 			break;
 		default:
 			$(".votar_form input").val("");
+			$("input[name="respuesta0"]).val("En Blanco");
 	}
 }
 
@@ -408,7 +414,7 @@ function opcion_nueva() {
 FROM votacion
 WHERE estado = 'borrador' AND pais = '".PAIS."'
 ORDER BY time DESC
-LIMIT 500");
+LIMIT 5000");
 	while($r = r($result)) {
 
 		if (nucleo_acceso($vp['acceso'][$r['tipo']])) {
@@ -696,12 +702,16 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 <td nowrap="nowrap"><b style="font-size:20px;color:#777;">¡'._('Difunde').' '.($r['estado']=='end'?_('este resultado'):_('esta votación')).'!</b> &nbsp;</td>
 
 <td width="140" height="35">
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.HOST.'/votacion/'.$r['ID'].'" data-text="'.($r['estado']=='ok'?_('VOTACIÓN'):_('RESULTADO')).': '.substr($r['pregunta'], 0, 83).'" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="15M">Twittear</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </td>
 
 
-<td width="50"></td>
+<td width="50"><g:plusone annotation="none" href="http://'.HOST.'/votacion/'.$r['ID'].'"></g:plusone></td>
 
-<td></td>
+<!--<td>'.boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange').'</td>-->
+
+<td><div class="fb-like" data-send="false" data-layout="button_count" data-width="130" data-show-faces="false" data-font="verdana"></div></td>
 
 </tr></table></center>':'').'
 ';
@@ -1009,7 +1019,7 @@ FROM votacion_argumentos `va`
 LEFT JOIN votos `v` ON (tipo = 'argumentos' AND item_ID = va.ID AND emisor_ID = '".$pol['user_ID']."')
 WHERE va.ref_ID = '".$r['ID']."'
 ORDER BY va.votos DESC, va.time DESC
-LIMIT 250");
+LIMIT 2500");
 			while($r2 = r($result2)) {
 				$argumentos_num++;
 				if ($r2['user_ID']==$pol['user_ID']) { $argumentos_mios++; }
@@ -1147,7 +1157,7 @@ No está repetido.</label><br />
 FROM votacion
 WHERE estado = 'ok' AND pais = '".PAIS."'
 ORDER BY time_expire ASC
-LIMIT 500");
+LIMIT 5000");
 	while($r = r($result)) {
 		$time_expire = strtotime($r['time_expire']);
 		$time = strtotime($r['time']);
@@ -1207,7 +1217,7 @@ $txt .= '<fieldset><legend>'._('Finalizadas').'</legend>
 FROM votacion
 WHERE estado = 'end' AND pais = '".PAIS."'
 ORDER BY time_expire DESC
-LIMIT 500");
+LIMIT 5000");
 	while($r = r($result)) {
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 			$txt .= '<tr class="v_'.$r['tipo'].($r['acceso_ver']!='anonimos'?' v_privadas':'').'"'.(in_array($r['tipo'], array('referendum', 'parlamento', 'sondeo', 'elecciones'))&&in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'':' style="display:none;"').'>

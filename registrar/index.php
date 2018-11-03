@@ -371,6 +371,9 @@ $(document).ready(function() {
 
 <fieldset><legend>'._('Crear ciudadano').'</legend>
 
+<fieldset><legend>Atencion:</legend><h3 style="color:red">Se ha detectado un problema con los e-mails de validación cuando se usa hotmail/outlook, se recomienda usar gmail.<br/>Estamos trabajando en arreglar el fallo, tened paciencia.</h3>
+</fieldset>
+
 <div style="color:red;font-weight:bold;">'.$verror.'</div>
 
 <table>

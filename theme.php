@@ -31,6 +31,7 @@ if (isset($_GET['bg'])) {
 <title><?=$txt_title?></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="language" content="es_ES" />
+<meta name="google-site-verification" content="sOlnqlxPXY2K01CFCybausXX0aufZjWcadvcfJBxLCo" />
 <meta name="description" content="<?=(isset($txt_description)?$txt_description:$txt_title.' - '.$kw.PAIS)?> | <?=_('La primera Red Social Democrática')?> | VirtualPol" />
 
 <link rel="stylesheet" type="text/css" href="<?=IMG?>style_all.css?v=<?=VER?>" media="all" />
@@ -67,6 +68,8 @@ p_scroll = false;
 	</ul>
 
 	<div id="menu-next">
+
+<?=(nucleo_acceso('ciudadanos_global')&&false?'<p style="text-align:center;">'.boton(_('Donaciones'), 'http://www.virtualpol.com/donaciones', false, 'small pill orange').'</p>':'')?>
 
 
 <?php
@@ -136,7 +139,7 @@ if (isset($pol['user_ID'])) {
 	<div id="footer">
 
 		<div id="footer-right">
-			<p><?=_('VirtualPol, la primera <b>Red Social Democrática</b>')?></p>
+			<p><?=_('VirtualPol, la primera <b>Red Social Democrática</b>')?> <?=boton(_('Donar'), 'http://virtualpol.com/donaciones', false, 'small pill orange')?></p>
 			
 			<p><a target="_blank" href="http://www.virtualpol.com/video"><?=_('Vídeo')?></a> | <a target="_blank" href="http://www.virtualpol.com/documentacion"><?=_('Ayuda / Documentación')?></a><br />
 			<a target="_blank" href="http://www.virtualpol.com/desarrollo"><?=_('Desarrollo / Código fuente')?></a> | <a target="_blank" href="http://www.virtualpol.com/TOS" title="Condiciones de Uso">TOS</a><br />

@@ -115,7 +115,8 @@ LIMIT 1");
 		if (isset($borrar_msg)) { $msg = ''; }
 
 		$msg = str_replace(array("\n", "\r", "ส็็็็็็็็", "ส็็็็็็็็็็็็็็็็็็็็็็็็็"), "", str_replace("'", "''", trim($msg)));
-		
+		$msg = strip_tags($msg);
+
 		$target_ID = 0;
 		$tipo = 'c';
 
@@ -226,7 +227,7 @@ UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMI
 	} else { echo 'n 0 &nbsp; &nbsp; <b style="color:#FF0000;">No tienes permiso de escritura.</b>'."\n"; }
 
 } else if ($_GET['a'] == 'noti') {
-	$pol['nick'] = $_SESSION['pol']['nick'];
+        $pol['nick'] = $_SESSION['pol']['nick'];
 	$pol['user_ID'] = $_SESSION['pol']['user_ID'];
 	//include_once('inc-login.php');
 ?>

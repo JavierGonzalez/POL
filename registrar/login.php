@@ -387,7 +387,7 @@ case 'login':
 	$user_ID = false;
 
 	if (strlen($pass) != 32) { $pass = md5($pass); }
-	$result = sql("SELECT ID, nick, api_pass FROM users WHERE ".(strpos($nick, '@')!==false?"email = '".$nick."'":"nick = '".$nick."'")." AND pass = '".$pass."' AND estado != 'expulsado' LIMIT 1");
+	$result = sql("SELECT ID, nick, api_pass FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." AND pass = '".$pass."' AND estado != 'expulsado' LIMIT 1");
 	while ($r = r($result)) { 
 		$user_ID = $r['ID']; 
 		$nick = $r['nick']; 
@@ -434,7 +434,7 @@ body, a { color:#FFFFFF; cursor:progress; }
 </html>';
 		} else { redirect($url); } 
 	} else { 
-		$result = sql("SELECT estado FROM users WHERE ".(strpos($nick, '@')!==false?"email = '".$nick."'":"nick = '".$nick."'")." LIMIT 1");
+		$result = sql("SELECT estado FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." LIMIT 1");
 		while ($r = r($result)) { $nick_estado = $r['estado']; }
 
 		switch ($nick_estado) {

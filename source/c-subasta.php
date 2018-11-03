@@ -107,7 +107,6 @@ FROM config WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1", $link)
 <table border="0" cellspacing="2" cellpadding="0" class="pol_table">
 
 <tr>
-<td colspan="4" align="center"><img src="http://chart.apis.google.com/chart?cht=lc&chs=360x100&chxt=y&chxl=0:|0|' . round($dgrafico_max_1 / 2) . '|' . $dgrafico_max_1 . '&chd=s:' . chart_data($dgrafico[1]) . '&chco=0066FF&chm=B,FFFFDD,0,0,0&chf=bg,s,ffffff01|c,s,ffffff01" width="360" height="100" /></td>
 </tr>';
 
 	$ganador = 'ok';
@@ -124,12 +123,12 @@ LIMIT 10", $link);
 			$txt .= '
 <tr>
 <td colspan="4" class="amarillo"><form action="/accion.php?a=mercado&b=puja&ID=1" method="post">
-<b><input type="text" name="puja" value="' . ($row['pols'] + 10) . '" size="4" maxlength="7" style="text-align:right;" class="pols" /> '.MONEDA.' <input class="pujar" disabled="disabled" type="submit" value="Pujar" /> &nbsp; "La frase"</b></form></td>
+<b><input type="text" name="puja" value="" size="4" maxlength="7" style="text-align:right;" class="pols" /> '.MONEDA.' <input class="pujar" disabled="disabled" type="submit" value="Pujar" /> &nbsp; "La frase"</b></form></td>
 </tr>';
 			$bold = ' style="font-weight:bold;"'; 
 			$ganador = '<b>(Ganador)</b>'; 
 		} else { $ganador = false; $bold = ''; }
-		$txt .= '<tr><td align="right"><b style="font-size:20px;">' . pols($row['pols']) . '</b></td><td' . $bold . '>' . crear_link($row['nick']) . '</td><td' . $bold . '><span class="timer" value="'.strtotime($row['time']).'"></span></td><td>' . $ganador . '</td></tr>';
+		//$txt .= '<tr><td align="right"><b style="font-size:20px;">' . pols($row['pols']) . '</b></td><td' . $bold . '>' . crear_link($row['nick']) . '</td><td' . $bold . '><span class="timer" value="'.strtotime($row['time']).'"></span></td><td>' . $ganador . '</td></tr>';
 	}
 
 
@@ -152,7 +151,6 @@ LIMIT 10", $link);
 <table border="0" cellspacing="2" cellpadding="0" class="pol_table">
 
 <tr>
-<td colspan="4" align="center"><img src="http://chart.apis.google.com/chart?cht=lc&chs=360x100&chxt=y&chxl=0:|0|' . round($dgrafico_max_2 / 2) . '|' . $dgrafico_max_2 . '&chd=s:' . chart_data($dgrafico[2]) . '&chco=0066FF&chm=B,FFFFDD,0,0,0&chf=bg,s,ffffff01|c,s,ffffff01" width="360" height="100" /></td>
 </tr>';
 
 	$gan = 0;
@@ -172,7 +170,7 @@ LIMIT 10", $link);
 		$txt .= '
 <tr>
 <td colspan="4" class="amarillo"><form action="/accion.php?a=mercado&b=puja&ID=2" method="post">
-<b><input type="text" name="puja" value="' . ($row['los_pols'] + 10) . '" size="4" maxlength="7" readonly="readonly" style="text-align:right;" class="pols" /> '.MONEDA.' <input type="submit" value="Pujar" class="pujar" disabled="disabled" /> &nbsp; "las palabras"</b></form></td>
+<b><input type="text" name="puja" value="" size="4" maxlength="7" readonly="readonly" style="text-align:right;" class="pols" /> '.MONEDA.' <input type="submit" value="Pujar" class="pujar" disabled="disabled" /> &nbsp; "las palabras"</b></form></td>
 </tr>';
 		}
 		if ($gan <= $pol['config']['palabras_num']) { $bold = ' style="font-weight:bold;"'; $ganador = '<b>(Ganador)</b>'; } else { $bold = ''; $ganador = false; }
@@ -184,7 +182,7 @@ LIMIT 10", $link);
 		$txt .= '
 <tr>
 <td colspan="4" class="amarillo"><form action="/accion.php?a=mercado&b=puja&ID=2" method="post">
-<b><input type="text" name="puja" value="' . ($row['los_pols'] + 10) . '" size="4" class="pols" readonly="readonly" maxlength="7" style="text-align:right;" /> '.MONEDA.' <input type="submit" value="Pujar" class="pujar" disabled="disabled" /> &nbsp; "las palabras"</b></form></td>
+<b><input type="text" name="puja" value="" size="4" class="pols" readonly="readonly" maxlength="7" style="text-align:right;" /> '.MONEDA.' <input type="submit" value="Pujar" class="pujar" disabled="disabled" /> &nbsp; "las palabras"</b></form></td>
 </tr>';
 	}
 

@@ -30,6 +30,28 @@ switch ($_GET['a']) { //############## BIG ACTION SWITCH ############
 
 
 
+
+
+	case 'experimento-1':
+		
+
+		$result = sql("SELECT item_ID, emisor_ID FROM votos WHERE tipo = 'confianza'");
+		while($r = r($result)) {
+			$users[$r['item_ID']] = array('name'=>$r['item_ID'], 'group'=>1);
+			$users[$r['emisor_ID']] = array('name'=>$r['emisor_ID'], 'group'=>1);
+			
+			$links[] = array('source'=>$r['emisor_ID'], 'target'=>$r['receptor_ID'], 'value'=>1);
+		}
+
+		$pp['nodes'] = $users;
+		$pp['links'] = $links;
+		echo json_encode($pp);
+
+
+
+		break;
+
+
 /*
  * Vieja API para conectar con Facebook se comenta por si en el futuro fuese necesario recuperarla
  */
@@ -297,10 +319,14 @@ WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS
 		sql("UPDATE chats SET estado = 'activo' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado != 'activo' AND pais = '".PAIS."' LIMIT 1");
 		$refer_url = 'chats';
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['chat_ID'])) {
-		sql("DELETE FROM chats WHERE chat_ID = '".$_GET['chat_ID']."' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false')."') LIMIT 1");
+		sql("DELETE FROM chats WHERE chat_ID = '".$_GET['chat_ID']."' AND pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false')."') LIMIT 1");
+		$refer_url = 'chats';
+	} elseif (($_GET['b'] == 'limpiar') AND ($_GET['chat_ID'])) {
+		error_log("Cleaning chat... "."DELETE FROM chats_msg WHERE chat_ID = '".$_GET['chat_ID']."' AND '".$pol['user_ID']."' = (select user_ID from chats where chat_ID = '".$_GET['chat_ID']."' LIMIT 1)");
+		sql("DELETE FROM chats_msg WHERE chat_ID = '".$_GET['chat_ID']."' AND '".$pol['user_ID']."' = (select user_ID from chats where chat_ID = '".$_GET['chat_ID']."' LIMIT 1)");
 		$refer_url = 'chats';
 	} elseif (($_GET['b'] == 'bloquear') AND ($_GET['chat_ID'])) {
-		sql("UPDATE chats SET estado = 'bloqueado' WHERE chat_ID = '".$_GET['chat_ID']."' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false')."') LIMIT 1");
+		sql("UPDATE chats SET estado = 'bloqueado' WHERE chat_ID = '".$_GET['chat_ID']."' AND pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false')."') LIMIT 1");
 		$refer_url = 'chats';
 	}
 	break;
@@ -483,7 +509,7 @@ case 'voto':
 	$item_ID = $_GET['item_ID'];
 	$voto = $_GET['voto'];
 	$tipos_posibles = array('confianza', 'hilos', 'msg', 'argumentos');
-	$votos_posibles = array('1', '0', '-1');
+	$votos_posibles = array('1', '0'); // Eliminado el voto de confianza '-1'.
 	$voto_result = "false";
 	if ((in_array($tipo, $tipos_posibles)) AND (in_array($voto, $votos_posibles))) {
 
@@ -1038,10 +1064,12 @@ case 'gobierno':
 		if ($_GET['c'] == 'editar') {
 			$result = sql("SELECT ID FROM cat WHERE pais = '".PAIS."'");
 			while ($r = r($result)) { 
-				sql("UPDATE cat SET url = '". gen_url($_POST[$r['ID'].'_nombre'])."', nombre = '".$_POST[$r['ID'].'_nombre']."', nivel = '".$_POST[$r['ID'].'_nivel']."', orden = '".$_POST[$r['ID'].'_orden']."' WHERE ID = '".$r['ID']."' LIMIT 1");
+				error_log("Updating category: UPDATE cat SET url = '". gen_url($_POST[$r['ID'].'_nombre'])."', nombre = '".$_POST[$r['ID'].'_nombre']."', nivel = '".$_POST[$r['ID'].'_nivel']."', orden = '".$_POST[$r['ID'].'_orden']."', publicar='".$_POST[$r['ID'].'_publicable']."' WHERE ID = '".$r['ID']."' LIMIT 1");
+				sql("UPDATE cat SET url = '". gen_url($_POST[$r['ID'].'_nombre'])."', nombre = '".$_POST[$r['ID'].'_nombre']."', nivel = '".$_POST[$r['ID'].'_nivel']."', orden = '".$_POST[$r['ID'].'_orden']."', publicar='".$_POST[$r['ID'].'_publicable']."' WHERE ID = '".$r['ID']."' LIMIT 1");
 			}
 		} elseif ($_GET['c'] == 'crear') {
-			sql("INSERT INTO cat (pais, url, nombre, nivel, orden, tipo) VALUES ('".PAIS."', '".gen_url($_POST['nombre'])."', '".substr($_POST['nombre'], 0, 40)."', '0', '10', '".($_POST['tipo']?$_POST['tipo']:'docs')."')");
+			error_log("Inserting category: INSERT INTO cat (pais, url, nombre, nivel, orden, tipo, publicar) VALUES ('".PAIS."', '".gen_url($_POST['nombre'])."', '".substr($_POST['nombre'], 0, 40)."', '0', '10', '".($_POST['tipo']?$_POST['tipo']:'docs')."', '".$_POST['publicable']."')");
+			sql("INSERT INTO cat (pais, url, nombre, nivel, orden, tipo, publicar) VALUES ('".PAIS."', '".gen_url($_POST['nombre'])."', '".substr($_POST['nombre'], 0, 40)."', '0', '10', '".($_POST['tipo']?$_POST['tipo']:'docs')."', '".$_POST['publicable']."')");
 
 		} elseif ($_GET['c'] == 'eliminar') {
 			sql("DELETE FROM cat WHERE ID = '".$_GET['ID']."' LIMIT 1");
@@ -1170,20 +1198,15 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 
 
 case 'mercado':
-	if (($_GET['b'] == 'puja') AND ($pol['estado'] != 'extranjero') AND ($_GET['ID']) AND ($_POST['puja'] > 0) AND (ctype_digit($_POST['puja'])) AND (date('H:i') != '20:00')) {
+	if (($_GET['b'] == 'puja') AND ($pol['estado'] != 'extranjero') AND ($_GET['ID']) AND ($_POST['puja'] > 0) AND (is_numeric($_POST['puja'])) AND (date('H:i') != '20:00')) {
 		$ID = $_GET['ID'];
 		$pols = $_POST['puja'];
-		$pols_max = true;
-		$result = sql("SELECT pols FROM pujas 
-WHERE pais = '".PAIS."' AND mercado_ID = '".$ID."' 
-ORDER BY pols DESC LIMIT 1");
-		while($r = r($result)){ if ($r['pols'] >= $pols) { $pols_max = false; } }
 
-		if (($pols_max) AND ($pols <= $pol['pols'])) {
+		if ($pols <= $pol['pols']) {
 			sql("INSERT INTO pujas (pais, mercado_ID, user_ID, pols, time) VALUES ('".PAIS."', '".$ID."', '".$pol['user_ID']."', '".$pols."', '".$date."')");
-			evento_chat('<b>[#]</b> puja '.pols($pols).' '.MONEDA.' de <em>'.$pol['nick'].'</em> (<a href="/subasta/">Subasta</a>)'); 
+			evento_chat('<b>[#]</b> <em>'.$pol['nick'].'</em> Ha realizado una puja en la subasta (<a href="/subasta/">Subasta</a>)'); 
 		}
-		evento_log('Puja ('.$pols.' monedas)');
+		//evento_log('Puja ('.$pols.' monedas)');
 		$refer_url = 'subasta';
 	
 	} elseif (($_GET['b'] == 'editarfrase') AND (($pol['config']['pols_fraseedit'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['control_gobierno'])))) {
@@ -1248,7 +1271,7 @@ case 'pols':
 
 	$refer_url = 'pols#error';
 
-	if (($_GET['b'] == 'transferir') AND (ctype_digit($_POST['pols'])) AND ($_POST['pols'] > 0) AND ($_POST['concepto'])) {
+	if (($_GET['b'] == 'transferir') AND (is_numeric($_POST['pols'])) AND ($_POST['pols'] > 0) AND ($_POST['concepto'])) {
 
 
 
@@ -1268,7 +1291,7 @@ case 'pols':
 			$result = sql("SELECT ID, pais FROM users WHERE pais = '".PAIS."' AND ID = '".$pol['user_ID']."' AND pols >= '".$pols."' AND estado = 'ciudadano' LIMIT 1");
 			while($r = r($result)){ $pais_origen = $r['pais']; $origen = 'ciudadano'; }
 
-		} elseif (ctype_digit($_POST['origen'])) { 
+		} elseif (is_numeric($_POST['origen'])) { 
 			//Cuenta
 
 			$result = sql("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."')) LIMIT 1");
@@ -1668,14 +1691,24 @@ case 'foro':
 		$text = gen_text($_POST['text'], 'plain');
 
 		if ($_POST['hilo']) { //msg
+			$result = sql("SELECT f.url foro, h.url hilo, m.ID mensaje FROM ".SQL."foros f, ".SQL."foros_hilos h, ".SQL."foros_msg m where f.ID = h.sub_ID and m.hilo_ID = h.ID and m.ID='".$_POST['hilo']."'");
+			$r =r($result);
+
 			sql("UPDATE ".SQL."foros_msg SET text = '".$text."' WHERE ID = '".$_POST['hilo']."' AND estado = 'ok' AND user_ID = '".$pol['user_ID']."' AND time > '".date('Y-m-d H:i:s', time() - 3600)."' LIMIT 1");
+			evento_log('Foro mensaje editado <a href="/foro/'.$r['foro'].'/'.$r['hilo'].'#m-'.$r['mensaje'].'">#'.$_POST['hilo'].'</a>');
 		} else { //hilo
 			if (strlen($_POST['title']) >= 4) {
+				$result = sql("SELECT f.url foro, h.url hilo FROM ".SQL."foros f, ".SQL."foros_hilos h where f.ID = h.sub_ID and  h.ID='".$_POST['subforo']."'");
+				$r =r($result);
+	
 				$title = strip_tags($_POST['title']);
 				sql("UPDATE ".SQL."foros_hilos SET text = '".$text."', title = '".$title."'".($_POST['sub_ID'] > 0?", sub_ID = '".$_POST['sub_ID']."'":'')." WHERE ID = '".$_POST['subforo']."' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1");
+				evento_log('Foro hilo editado <a href="/foro/'.$r['foro'].'/'.$r['hilo'].'">#'.$_POST['hilo'].'</a>');
 			}
 		}
-		evento_log('Foro '.($_POST['hilo']?'mensaje':'hilo').' editado #'.$_POST['hilo']);
+
+
+		
 		$refer_url = '/foro/r/'.$_POST['subforo'];
 	}
 	break;
@@ -1964,6 +1997,7 @@ FROM users WHERE pais = '".PAIS."' AND estado = 'ciudadano' AND temp IS NOT NULL
 				}
 				
 				sql("UPDATE cargos SET nombre = '".$_POST['nombre_'.$r['cargo_ID']]."', nombre_extra = '".strip_tags($_POST['nombre_extra_'.$r['cargo_ID']])."', asigna = '".$_POST['asigna_'.$r['cargo_ID']]."', nivel = '".$_POST['nivel_'.$r['cargo_ID']]."', autocargo = '".($_POST['autocargo_'.$r['cargo_ID']]?'true':'false')."'".$sql_set." WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1");
+				sql("UPDATE examenes SET titulo = '".$_POST['nombre_'.$r['cargo_ID']]."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1");
 			}
 		}
 		if ($_POST['editar_elecciones'] == 'true') { $refer_url = 'cargos/editar/elecciones'; } else { $refer_url = 'cargos/editar'; }
@@ -1981,6 +2015,7 @@ FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' AND a
 				sql("DELETE FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' LIMIT 1");
 			}
 		}
+		evento_log('Cargo '.$_GET['cargo_ID'].' eliminado por '.$pol['user_ID']);
 		$refer_url = 'cargos/editar';
 
 
@@ -2057,16 +2092,23 @@ case 'editar-documento':
 		$result = sql("SELECT ID, pad_ID, pais, url, title, acceso_leer, acceso_escribir, acceso_cfg_escribir FROM docs WHERE ID = '".$_POST['doc_ID']."' LIMIT 1");
 		while($r = r($result)){ 
 
-			$text = str_replace("'", "&#39;", pad('get', $r['pad_ID']));
+			$text = $_POST['html_doc'];
 			
 			// Prevent SSX basic
 			$text = str_replace("<script", "nojs", $text);
 			$text = str_replace("&lt;script", "nojs", $text);
+			$text = str_replace("&lt;br /&gt;", "", $text);
+			$text = str_replace("<br />", "", $text);
+		
 
 			if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_docs']))) {
 				sql("UPDATE docs SET cat_ID = '".$_POST['cat']."', text = '".$text."', title = '".$_POST['titulo']."', time_last = '".$date."', acceso_leer = '".$_POST['acceso_leer']."', acceso_escribir = '".$_POST['acceso_escribir']."', acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."', version = version + 1 WHERE ID = '".$r['ID']."' LIMIT 1");
 			}
 			if (in_array($r['acceso_leer'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))) { evento_log('Documento editado: <a href="/doc/'.$r['url'].'">'.$r['title'].'</a>'); }
+
+			publicar_documento($r['ID'], 'Documento editado: <a href="/doc/'.$r['url'].'">'.$r['title'].'</a>');
+
+			
 			redirect(vp_url('/doc/'.$r['url'].'/editar', $r['pais']));
 		}
 	}
@@ -2084,11 +2126,12 @@ case 'crear-documento':
 (pais, url, title, text, time, time_last, estado, cat_ID, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir) 
 VALUES ('".PAIS."', '".$url."', '".$_POST['title']."', '', '".$date."', '".$date."', 'ok', '".$_POST['cat']."', 'privado', 'privado', '".strtolower($pol['nick'])."', '".strtolower($pol['nick'])."')");
 		
-		$result = sql("SELECT ID FROM docs WHERE pais = '".PAIS."' AND url = '".$url."' LIMIT 1");
+/*		$result = sql("SELECT ID FROM docs WHERE pais = '".PAIS."' AND url = '".$url."' LIMIT 1");
 		while($r = r($result)){ sql("UPDATE docs SET pad_ID = '".$r['ID'].".".rand(100000,999999)."' WHERE ID = '".$r['ID']."' LIMIT 1"); }
-
+*/
 		actualizar('contador_docs');
 		evento_log('Documento creado: <a href="/doc/'.$url.'">'.$_POST['title'].'</a>');
+		publicar_documento($r['ID'], 'Documento creado: <a href="/doc/'.$url.'">'.$_POST['title'].'</a>');
 	}
 	$refer_url = 'doc/'.$url.'/editar';
 	break;

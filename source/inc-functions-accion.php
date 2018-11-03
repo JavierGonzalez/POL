@@ -7,11 +7,12 @@
 ** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
 */
 
+/*
 function api_facebook($accion, $item_ID, $sistema=false) {
-	/* DOCUMENTACION FB
-GRAPH API - https://developers.facebook.com/docs/reference/api/message/
-OBTENER TOKENS - http://www.damnsemicolon.com/php/auto-post-facebook-with-facebook-sdk
-*/
+	// DOCUMENTACION FB
+//GRAPH API - https://developers.facebook.com/docs/reference/api/message/
+//OBTENER TOKENS - http://www.damnsemicolon.com/php/auto-post-facebook-with-facebook-sdk
+
 	require_once('../img/lib/facebook-php/facebook.php');
 	global $date, $pol;
 
@@ -62,8 +63,19 @@ FROM api_posts WHERE post_ID = '".$item_ID."' LIMIT 1");
 		}
 	}
 }
+*/
 
 
+function publicar_documento($id, $txt){
+	error_log('Publicar documento SQL: SELECT c.publicar FROM docs d, cat c WHERE d.cat_id=c.id AND d.id='.$id.' LIMIT 1');
+	$result = sql("SELECT c.publicar FROM docs d, cat c WHERE d.cat_id=c.id AND d.id='".$id."' LIMIT 1");
+	while ($r = r($result)){
+	error_log('resultado: '.$r['c.publicar']);
+		if ($r['publicar']){
+			evento_chat($txt);
+		}
+	}
+}
 
 function actualizar($accion, $user_ID=false) {
 	global $pol, $link;
@@ -141,6 +153,11 @@ function presentacion($titulo, $html, $url='http://www.virtualpol.com') {
 
 
 
+<div style="position: fixed; bottom: 10px; left: 10px;">
+<a href="https://twitter.com/share" class="twitter-share-button" data-text="Presentación '.$url.'/presentacion VirtualPol" data-lang="es" data-size="large" data-related="VirtualPol">Twittear</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+
 <a href="'.$url.'"><img style="position: absolute; top: -3px; left: -3px; border: 0; border-bottom-right-radius:12px; -moz-border-radius-bottomright:12px; -webkit-border-bottom-right-radius:12px; opacity:0.5;filter:alpha(opacity=50)" src="'.IMG.'logo-virtualpol-1.gif" alt="VirtualPol"></a>
 
 
@@ -152,6 +169,8 @@ function presentacion($titulo, $html, $url='http://www.virtualpol.com') {
 }
 
 
+/*
+Sustitución de etherpad-lite por editor de markdown
 function pad($control, $ID=false, $txt='') {
 	if ($control != 'print') {
 		include('../img/lib/etherpad-lite/etherpad-lite-client.php');
@@ -168,8 +187,38 @@ function pad($control, $ID=false, $txt='') {
 		case 'delete': try { $e->deletePad($ID); return true; } catch (Exception $error) { return false; } break;
 	}
 }
+*/
 
+function pad($control, $ID=false, $txt='') {
+	switch ($control) {
+		case 'print':
+			return '<script>var converter = new showdown.Converter();'
+			.'html      = converter.makeHtml('.$txt.');'
+			.'</script>';
+			break;
 
+		case 'create': 
+			$GLOBALS['txt_footer'] .= '<script>'
+			.'var simplemde = new EasyMDE({ element: document.getElementById("document_frame").contentWindow.document.getElementById("document_body") ,
+				renderingConfig: {
+					singleLineBreaks: false,
+					codeSyntaxHighlighting: true,
+				},
+				spellChecker: false
+			});'
+			/*.'$(\'#editar_documento\').submit(function(event) {'
+			.'event.preventDefault();'
+			.'$(\'input.html_doc\').val(simplemde.value());'
+			.'$(this).unbind(\'submit\').submit();'
+			.'return true'
+			.'});'*/
+			.'</script>';
+			return '<textarea id="document_body" style="display: none;">'.$txt.'</textarea>';
+			break;
+		case 'get': try { return $e->getHTML($ID)->html; } catch (Exception $error) { return false; } break;
+		case 'delete': try { $e->deletePad($ID); return true; } catch (Exception $error) { return false; } break;
+	}
+}
 
 // ELIMINACION DE TINYMCE EN CURSO
 function editor_enriquecido($name, $txt='') {
@@ -338,7 +387,7 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais=false
 			sql("UPDATE users SET pols = pols - ".$pols." WHERE ID = '".$emisor_ID."' AND pais = '".$pais."' LIMIT 1");
 		} else {
 			if (isset($pol['nick'])) { $concepto = '<b>'.$pol['nick'].'&rsaquo;</b> '.$concepto; }
-			sql("UPDATE cuentas SET pols = pols - ".$pols." WHERE ID = '".substr($emisor_ID, 1)."' AND pais = '".$pais."' LIMIT 1");
+			sql("UPDATE cuentas SET pols = pols - ".$pols." WHERE ".($emisor_ID==-1?"gobierno = 'true'":"ID = '".substr($emisor_ID, 1)."'")." AND pais = '".$pais."' LIMIT 1");
 		}
 
 		//ingresar
@@ -410,6 +459,39 @@ LIMIT 1");
 				sql("DELETE FROM ".SQL."foros_hilos WHERE user_ID = '".$user_ID."'");
 		}
 		*/
+	}
+}
+
+function convertir_turista($ID) {
+	global $link, $pol;
+	$user_ID = false;
+	$result3 = sql("SELECT IP, pols, nick, ID, ref, estado".(ECONOMIA?",
+(SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$ID."') AS pols_cuentas":"")." 
+FROM users 
+WHERE ID = '".$ID."' 
+LIMIT 1");
+	while($r3 = r($result3)) {
+		$user_ID = $r3['ID']; 
+		$estado = $r3['estado']; 
+		$pols = ($r3['pols'] + $r3['pols_cuentas']); 
+		$nick = $r3['nick']; 
+		$ref = $r3['ref']; 
+		$IP = $r3['IP'];
+	}
+
+	if (is_numeric($user_ID)) { 
+		// ELIMINAR CIUDADANO
+
+		if (ECONOMIA) { pols_transferir($pols, $user_ID, '-1', '&dagger; Defuncion: <em>'.$nick.'</em>'); }
+
+		sql("UPDATE users set pais='ninguno', estado='turista' WHERE ID = '".$user_ID."' LIMIT 1");
+		sql("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'");
+		sql("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'");
+		sql("DELETE FROM chats WHERE user_ID = '".$user_ID."'");
+
+		sql("DELETE FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
+		sql("DELETE FROM mapa WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
+		sql("DELETE FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
 	}
 }
 

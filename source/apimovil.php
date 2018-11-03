@@ -11,6 +11,7 @@ include('inc-login.php');
 if (isset($pol['nick']))
 {
 	//Informacion basica del usuario	
+	//var_dump($pol);
 	$datosUsuario = array (
 		'nick'		=> $pol["nick"], 
 		'pais' 		=> $pol["pais"],
@@ -24,6 +25,7 @@ if (isset($pol['nick']))
 	while($r = r($result)){
 		/* Composicion de la imagen en c-perfil.php
 		// <img src="'.IMG.'a/'.$r['ID'].'.jpg" alt="'.$nick.'" title="Avatar" width="120" height="120" style="border:1px solid #AAA;" />
+		// Constante de imagenes en config http://www.'.DOMAIN.'/img/
 		*/
 		if ($r['avatar']){
 			$avatar = array ('avatar' => strtolower($r['avatar']),'avatar_url'=>'http://www.virtualpol.com/img/a/'.$pol['user_ID'].'.jpg');
@@ -34,6 +36,7 @@ if (isset($pol['nick']))
                 $datosUsuario['pols'] = $r['pols'];
 		$datosUsuario['cargo'] = $r['cargo'];
 		$datosUsuario['sc'] = $r['sc'];
+	//var_dump($r);
 	}
 	
 	// Notificaciones
@@ -84,6 +87,9 @@ if (isset($pol['nick']))
 		'votaciones' 	=> $votaci_num
 	);
 
+	//SELECT noti_ID, visto, texto, url, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones 
+	//WHERE user_ID = '201137'  AND visto='false' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 7
+
         // Plaza
 	$result = sql("SELECT chat_ID, titulo,
 	(SELECT COUNT(DISTINCT nick) FROM chats_msg WHERE chat_ID = chats.chat_ID AND user_ID = 0 AND tipo != 'e') AS online
@@ -97,7 +103,7 @@ if (isset($pol['nick']))
 	}
 
 	// Chats
-	//60*30 (ultima media hora)
+//60*30 (ultima media hora)
 	//60*60 (ultima hora)
 	//60*60*24 (ultimo dia)
 	$chats = array ();

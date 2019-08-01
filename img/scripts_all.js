@@ -962,7 +962,6 @@ function enriquecer(m, bbcode){
     m = m.replace(/:(tarta|roto2|palm|moneda):/gi, ' <img src="' + IMG + 'smiley/$1.gif" alt=":$1:" border="0" title=":$1:" width="16" height="16" />');
     m = m.replace(/(\s|^)(:troll:)/gi, ' <img src="' + IMG + 'smiley/troll.gif" alt=":troll:" border="0" title=":troll:" width="15" height="15" />');
     m = m.replace(/(\s|^)(:falso:)/gi, ' <img src="' + IMG + 'smiley/sonrie.gif" border="0" alt=":falso:" title=":falso:" width="15" height="15" onMouseOver="$(this).attr(\'src\', \'' + IMG + 'smiley/troll.gif\');" />');
-    m = m.replace(/:(corona):/gi, ' <img src="' + IMG + 'smiley/$1.gif" alt="¡Viva el rey!" border="0" title="¡Viva el rey!" width="16" height="16" />');
 
 
     // URLs

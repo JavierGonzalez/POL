@@ -9,7 +9,7 @@
 
 // PROCESO ejecutado cada 10 minutos.
 
-$root_dir = '/var/www/vhosts/virtualpol.com/httpdocs/real/';
+$root_dir = '/var/www/vhosts/virtualpol.com/httpdocs/';
 $_SERVER['HTTP_HOST'] = '15m.virtualpol.com';
 include($root_dir.'config.php');
 include($root_dir.'source/inc-functions-accion.php');

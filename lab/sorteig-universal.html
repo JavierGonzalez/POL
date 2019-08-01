@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ca">
+<head>
+<meta charset="UTF-8" />
+<meta name="coauthor" content="Javier González González -  gonzomail@gmail.com" />
+<meta name="coauthor" content="Víctor García Carrasco   - victorgc81@gmail.com" />
+
+<title>Sorteig Universal</title>
+
+<!-- Libreria jQuery estandar -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+
+<!-- Libreria Mersenne Twister. Fuente original: https://gist.github.com/300494 -->
+<script src="mersenne-twister.js"></script>
+
+
+</head>
+<body>
+<table width="100%"><tbody><tr><td align="center">
+<table width="1000"><tbody><tr><td colspan="3">
+
+
+
+<h1>Sorteig Universal</h1>
+
+<h2>Designació per sorteig amb verificabilitat universal</h2>
+
+<p style="text-align:justify;">Prova de concepte de selecció per sorteig. A partir d'una llista de candidats (Cens) es crea una altra llista (Seleccionats) ordenada aleatoriament. Per portar a terme el sorteig es recorre a <a href="http://es.wikipedia.org/wiki/Mersenne_twister" target="_blank">Mersenne Twister (MT19937)</a>, un dels millors algoritmes generadors de nombres aleatoris. S'ha usat <a href="https://gist.github.com/300494" target="_blank">aquesta versió</a> en javascript. Mersenne Twister és de codi obert, portable i està traduït a múltiples llenguatges així que es pot reproduïr fàcilment en qualsevol sistema per verificar el resultat, sense necessitat d'Internet.</p>
+
+<p style="text-align:justify;">L'algorisme genera seqüencies numèriques de cicle llarg, totalmente repetibles i verificables, a partir d'una llavor. Cada llavor generarà una seqüencia única i uniformement distribuida, de valors en coma flotant de doble precisió compresos entre 0 i 1. A cada miembro de la lista se li assigna un valor aleatori i després s'ordena la llista de menor a major. La casella "seleccionats" determina on volem truncar la llista de sortida. La casella "bloc" serveix per a generar noves seqüencies a partir de la mateixa llavor repetint el procés n cops. S'ha limitat el seu valor màxim a 999 per raons d'eficiència computacional.</p>
+
+<p style="text-align:justify;">Per a un sorteig verificable i transparent, es suggereig que l'ordre de la llista sigui conegut d'avantmà (ordre alfabètic p.ex.) i emprar números de loteria, o una combinació d'aquests, com a llavors aleatories. A mode d'exemple s'estableix como a llavor els números premiats del <a href="http://es.wikipedia.org/wiki/Sorteo_Extraordinario_de_Navidad#.C3.9Altimos_Premios_Gordos_y_ciudades_agraciadas" target="_blank">Sorteig Extraordinari de Nadal</a> (<em>La Grossa</em>, España) dels anys 1986, 2010 i 2011, concatenats en aquest ordre.</p>
+
+</td></tr><tr><td valign="top">
+
+<h2>Cens: <span id="censo_num"></span></h2>
+<textarea id="censo" placeholder="Un candidat per línia..." style="width:300px;height:600px;">Jordi
+Rafael
+Manel
+Andrea
+Clara
+Miquel
+Robert
+Ana
+Guillem
+Marta
+Víctor
+Joan
+Maite
+Josep
+Raimon
+Lluis
+Eloisa
+Isabel
+</textarea>
+
+</td><td valign="top">
+
+<h2>Seleccionats: <input id="electos_num" value="10" min="1" max="99" style="text-align:right;font-size:22px;" type="number"></h2>
+<textarea id="electos" style="width:300px;height:300px;" readonly="readonly">
+
+</textarea>
+
+</td><td valign="top">
+
+<h2>Paràmetres</h2>
+
+<p>Llavor (només números):<br>
+<input value="037727925058268" id="semilla" style="font-size:22px;" maxlength="20" type="text"></p>
+
+<p>Bloc (només números):<br>
+<input type="number" value="1" value="10" min="1" max="999" id="bloque" style="font-size:22px;text-align:right;" maxlength="3" /></p>
+
+<p><button id="sortear" style="font-size:22px;">Sortejar</button></p>
+
+</td></tr></tbody></table>
+
+
+</td></tr></tbody></table>
+
+
+<script type="text/JavaScript">
+
+// Ejecutar al cargar
+sortear();
+
+
+// Eventos para refresco
+$("#sortear").click(function () { sortear(); });
+$("#electos_num, #bloque").change(function () { sortear(); });
+$("#semilla, #bloque, #censo").keyup(function() { sortear(); });
+
+function sortear() {
+
+	// Define variables utiles
+	var r = "";
+	var electos_num = $("#electos_num").val();
+	var bloque_num = 0;
+	var semilla = $("#semilla").val().replace(/\s/gi, "");
+	var mt = new MersenneTwister(semilla);
+	var censo = $("#censo").val().split("\n");
+	var bloque = $("#bloque").val();
+
+	// Recorre el array de elementos del censo relacionandolos con un numero aleatorio de MT
+	ra = new Array();
+	if (bloque==0) { bloque = 1; }
+
+	do {
+		var censo_num = 0;
+		for (var n in censo) {
+			if (censo[n]!="") { ra[censo[n]] = mt.random(); censo_num++; }
+		}
+		bloque_num++;
+	} while (bloque_num!=bloque)
+
+	$("#censo_num").html(censo_num);
+
+	// Ordena el array de forma asociativa y por value (el numero aleatorio MT), de menor a mayor, siendo este el orden del resultado final
+	var n = 0;
+	bySortedValue(ra, function(key, value) {
+		if (n<electos_num) { r += key + "\n"; n++; }
+	});
+
+	// Actualiza el resultado
+	$("#electos").text(r);
+}
+
+// Funcion para ordenar un array de forma asociativa (muy retorcido con Javascript)
+// Fuente de esta función: http://stackoverflow.com/a/5200010/1442693
+function bySortedValue(obj, callback, context) {
+    var tuples = [];
+    for (var key in obj) tuples.push([key, obj[key]]);
+    tuples.sort(function(a, b) { return a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0 });
+    var length = tuples.length;
+    while (length--) callback.call(context, tuples[length][0], tuples[length][1]);
+}
+////////
+</script>
+
+
+
+</body></html>

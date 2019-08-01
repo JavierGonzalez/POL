@@ -7,7 +7,7 @@
 ** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
 */
 
-$root_dir = '/var/www/vhosts/virtualpol.com/httpdocs/real/';
+$root_dir = '/var/www/vhosts/virtualpol.com/httpdocs/';
 
 // Busca cargos con elecciones activas y en fecha de activar
 $result = sql("SELECT * FROM cargos WHERE pais = '".PAIS."' AND elecciones <= '".$date."' LIMIT 20");

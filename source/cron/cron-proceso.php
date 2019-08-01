@@ -7,7 +7,7 @@
 ** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
 */
 
-$root_dir = '/var/www/vhosts/virtualpol.com/httpdocs/real/';
+$root_dir = '/var/www/vhosts/virtualpol.com/httpdocs/';
 
 include($root_dir.'config.php');
 include($root_dir.'source/inc-functions-accion.php');

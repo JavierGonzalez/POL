@@ -10,6 +10,8 @@
 include('inc-login.php');
 
 
+exit;
+
 
 if ($_GET['a'] == 'accion') {
 	// ACCIONES

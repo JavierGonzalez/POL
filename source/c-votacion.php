@@ -698,20 +698,15 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 '.($r['acceso_ver']=='anonimos'&&((!isset($pol['user_ID'])) || ($r['ha_votado']) || ($r['estado']=='end'))?'<center><table border="0">
 <tr>
-'.(!isset($pol['user_ID'])?'<td>'.boton(_('¡Crea tu ciudadano para votar!'), REGISTRAR.'?p='.PAIS, false, 'large green').' '.boton(_('Iniciar sesión'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), false, 'large blue').'</td>':'').'
-<td nowrap="nowrap"><b style="font-size:20px;color:#777;">¡'._('Difunde').' '.($r['estado']=='end'?_('este resultado'):_('esta votación')).'!</b> &nbsp;</td>
+'.(!isset($pol['user_ID'])?'<td>'.boton(_('¡Crea tu ciudadano para votar!'), REGISTRAR.'?p='.PAIS, false, 'large green').' '.boton(_('Iniciar sesión'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), false, 'large blue').'</td>
 
-<td width="140" height="35">
-<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://'.HOST.'/votacion/'.$r['ID'].'" data-text="'.($r['estado']=='ok'?_('VOTACIÓN'):_('RESULTADO')).': '.substr($r['pregunta'], 0, 83).'" data-lang="es" data-size="large" data-related="AsambleaVirtuaI" data-hashtags="15M">Twittear</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</td>
+<td nowrap="nowrap"><b style="font-size:20px;color:#777;">¡'._('Difunde').' '._('esta votación').'!</b> &nbsp;</td>
 
 
-<td width="50"><g:plusone annotation="none" href="http://'.HOST.'/votacion/'.$r['ID'].'"></g:plusone></td>
+':'').'
 
-<!--<td>'.boton(_('Donar'), 'https://virtualpol.com/donaciones', false, 'small pill orange').'</td>-->
 
-<td><div class="fb-like" data-send="false" data-layout="button_count" data-width="130" data-show-faces="false" data-font="verdana"></div></td>
+
 
 </tr></table></center>':'').'
 ';

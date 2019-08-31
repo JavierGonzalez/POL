@@ -407,8 +407,9 @@ case 'login':
 			echo '<html>
 <header>
 <title></title>
-<meta http-equiv="refresh" id="redirect" content="9;url='.$url.'">
+<meta http-equiv="refresh" id="redirect" content="0;url='.$url.'">
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<!--
 <script type="text/javascript" src="'.IMG.'lib/evercookie/swfobject-2.2.min.js"></script>
 <script type="text/javascript" src="'.IMG.'lib/evercookie/evercookie.js"></script>
 <script type="text/javascript">
@@ -423,6 +424,7 @@ ec.get("'.$traza_nom.'", function(value) {
 	window.location.href = "'.REGISTRAR.'login.php?a=trz&x=" + everc_value + "&y='.$user_ID.'&z='.$api_pass.'&u='.base64_encode($url).'";
 });
 </script>
+-->
 <style type="text/css">
 body, a { color:#FFFFFF; cursor:progress; }
 *, body { display:none; cursor:progress; }

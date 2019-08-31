@@ -8,6 +8,12 @@
 */
 include('inc-login.php');
 
+
+
+exit;
+
+
+
 if (isset($pol['nick']))
 {
 	//Informacion basica del usuario	

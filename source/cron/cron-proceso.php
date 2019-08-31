@@ -315,10 +315,10 @@ sql("DELETE FROM chats WHERE pais = '".PAIS."' AND fecha_last < '".$margen_chate
 sql("DELETE FROM mensajes WHERE time < '".tiempo(15)."'");
 
 // ELIMINAR TRANSACCIONES ANTIGUAS
-sql("DELETE FROM transacciones WHERE pais = '".PAIS."' AND time < '".tiempo(60)."'");
+sql("DELETE FROM transacciones WHERE pais = '".PAIS."' AND time < '".tiempo(365)."'");
 
 // ELIMINAR LOG EVENTOS
-sql("DELETE FROM ".SQL."log WHERE time < '".tiempo(90)."'");
+sql("DELETE FROM ".SQL."log WHERE time < '".tiempo(365)."'");
 
 // ELIMINAR bans antiguos
 sql("DELETE FROM kicks WHERE pais = '".PAIS."' AND (estado = 'inactivo' OR estado = 'cancelado') AND expire < '".tiempo(60)."'");

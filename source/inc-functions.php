@@ -204,7 +204,7 @@ function escape($a, $escape=true, $html=true) {
 	$a = str_replace("'", '&#39;', $a);
 	$a = str_replace('"', '&quot;', $a);
 	$a = str_replace(array("\x00", "\x1a"), '', $a);
-	if ($escape == true) { $a = mysql_real_escape_string($a); }
+	$a = mysql_real_escape_string($a);
 
 	// XSS
 	if ($html == false) { $a = strip_tags($a); }

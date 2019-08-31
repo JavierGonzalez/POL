@@ -139,16 +139,18 @@ if (isset($pol['user_ID'])) {
 	<div id="footer">
 
 		<div id="footer-right">
-			<p><?=_('VirtualPol, la primera <b>Red Social Democrática</b>')?> <?=boton(_('Donar'), 'http://virtualpol.com/donaciones', false, 'small pill orange')?></p>
+			<p>VirtualPol</p>
 			
 			<p><a target="_blank" href="http://www.virtualpol.com/video"><?=_('Vídeo')?></a> | <a target="_blank" href="http://www.virtualpol.com/documentacion"><?=_('Ayuda / Documentación')?></a><br />
 			<a target="_blank" href="http://www.virtualpol.com/desarrollo"><?=_('Desarrollo / Código fuente')?></a> | <a target="_blank" href="http://www.virtualpol.com/TOS" title="Condiciones de Uso">TOS</a><br />
+
+				<span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2019<br />
+
 <?php
 unset($txt);
-if (!isset($pol['user_ID'])) { echo '<a target="_blank" href="http://gonzo.teoriza.com" title="GONZO">Javier González</a> (<a target="_blank" href="http://www.teoriza.com" title="Blogs">Teoriza</a>, <a target="_blank" href="http://www.eventuis.com" title="Eventos">eventuis</a>, <a target="_blank" href="http://www.perfectcine.com" title="Cine">PerfectCine</a>)<br />'; }
-if ($pol['user_ID'] == 1) { echo num((microtime(true)-TIME_START)*1000).'ms '.num(memory_get_usage()/1000).'kb | '; }
+echo num((microtime(true)-TIME_START)*1000).'ms '.num(memory_get_usage()/1000).'kb';
 ?>
-				<span title="<?=_('Época antigua en IRC')?>" style="color:#BBB;">2004-</span>2008-2012
+
 			</p>
 		</div>
 		

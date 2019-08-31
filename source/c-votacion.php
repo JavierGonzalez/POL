@@ -968,8 +968,8 @@ function radio_check(value) {
 				$txt .= ' '.boton(($r['ha_votado']?_('Modificar voto'):_('Votar')), ($r['estado']!='borrador'&&$tiene_acceso_votar?'submit':false), false, 'large '.($tiene_acceso_votar?'blue':'red')).' <span style="white-space:nowrap;">'.($tiene_acceso_votar?($r['ha_votado']?'<span style="color:#2E64FE;">'._('Puedes modificar tu voto durante').' <span class="timer" value="'.$time_expire.'"></span>.</span>':'<span style="color:#2E64FE;">'._('Tienes').' <span class="timer" value="'.$time_expire.'"></span> '._('para votar').'.</span>'):'<span style="color:red;white-space:nowrap;">'.(!$pol['user_ID']?'<b>'._('Para votar debes').' <a href="'.REGISTRAR.'?p='.PAIS.'">'._('crear tu ciudadano').'</a>.</b>':_('No tienes acceso para votar, pueden votar').' '.verbalizar_acceso($r['acceso_votar'], $r['acceso_cfg_votar']).'.').'</span>').'</span></p>
 
 <p>
-<input id="validez_true" type="radio" name="validez" value="true"'.($r['que_ha_votado_validez']!='false'?' checked="checked"':'').' /> <label for="validez_true">'._('Votación válida').'.</label><br />
-<input id="validez_false" type="radio" name="validez" value="false"'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> <label for="validez_false">'._('Votación nula (inválida, inapropiada o tendenciosa)').'.</label>
+<input id="validez_true" type="radio" name="validez" value="true" required'.($r['que_ha_votado_validez']=='true'?' checked="checked"':'').' /> <label for="validez_true">'._('Votación válida').'.</label><br />
+<input id="validez_false" type="radio" name="validez" value="false" required'.($r['que_ha_votado_validez']=='false'?' checked="checked"':'').' /> <label for="validez_false">'._('Votación nula (inválida, inapropiada o tendenciosa)').'.</label>
 </p>
 
 <p><input type="text" name="mensaje" value="'.$r['que_ha_mensaje'].'" size="80" maxlength="160" placeholder="'._('Puedes escribir aquí un comentario').' ('.($r['privacidad']=='true'?_('opcional, secreto y público al finalizar la votación'):_('opcional y público al finalizar la votación')).')" /></p>

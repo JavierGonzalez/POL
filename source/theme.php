@@ -149,9 +149,6 @@ p_scroll = false;
 
 <?php
 
-if (nucleo_acceso('ciudadanos')) {
-	echo '<p style="font-size:18px;margin-left:30px;"><a href="/hacer">¿<b>Qué hacer</b>?</a></p>';
-}
 
 if (($pol['config']['socios_estado']=='true') AND (nucleo_acceso('ciudadanos')) AND (!nucleo_acceso('socios'))) {
 	echo '<p style="text-align:center;">'.boton(_('Inscríbete como socio'), '/socios', false, 'orange small').'</p>';

@@ -53,9 +53,10 @@ $vp['langs'] = array(
 );
 
 // CONFIG PLATAFORMAS (pendiente de desmantelar)
-$vp['paises'] = array('Simulador', 'Asamblea');
+$vp['paises'] = array('POL');
 // borrados: 'ETSIIT', 'PCP', 'Occupy', 'Plebiscito', 'PDI'
 // borrados: '15M', 'Hispania', 'JRO', 'FCSM', '25S', 'POL', 'MIC'
+// 2019-08-31 borrados: 'Simulador', 'Asamblea'
 
 
 if ($pais == 'www') {
@@ -67,7 +68,7 @@ if ($pais == 'www') {
 
 // CONFIG
 define('PROYECTO', 'VirtualPol');
-define('PROYECTO_ESLOGAN', 'La primera red social democrática');
+define('PROYECTO_ESLOGAN', 'El Pueblo Virtual');
 define('DOMAIN', 'virtualpol.com');
 define('CONTACTO_EMAIL', 'desarrollo@virtualpol.com');
 
@@ -75,10 +76,11 @@ define('SQL', strtolower(PAIS).'_');
 define('USERCOOKIE', '.'.DOMAIN);
 define('HOST', $_SERVER['HTTP_HOST']);
 define('VOTO_CONFIANZA_MAX', 50); // Máximo de votos de confianza emitibles
-define('SC_NUM', 5); // Numero de SC electos.
+define('SC_NUM', 3); // Numero de SC electos.
 define('MP_MAX', 25); // Máximo de MP (mensajes privados) que puede enviar un ciudadano
-define('VER', 12); // Version de archivos estaticos. Util para forzar el refresco de js y css. Incrementar.
-$datos_perfil = array('Blog', 'Twitter', 'Facebook', 'Google+', '', 'Menéame');
+define('VER', 13); // Version de archivos estaticos. Util para forzar el refresco de js y css. Incrementar.
+$datos_perfil = array('Blog', 'Twitter', 'Facebook', '', 'Menéame');
+
 $columnas = 14; $filas = 14; // Dimensiones mapa
 
 
@@ -94,4 +96,3 @@ if ($_SERVER['HTTPS']) {
 }
 
 define('MONEDA', '<img src="'.IMG.'varios/m.gif" />'); 
-?>

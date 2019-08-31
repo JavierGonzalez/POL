@@ -430,8 +430,8 @@ case 'economia':
 // 11 AGOSTO 2010: 544.645 | 554.528 | 674.518
 // 28 AGOSTO 2011: 883.003
 // jajajjaja inflación non-stop, los usuarios pidieron insistentemente ampliar la masa monetaria sucesivamente, dificil no ceder. Fail.
+// 31 AGOSTO 2019: 100.000
 
-//$moneda_mundial = '883003';
 $moneda_mundial = '100000';
 
 

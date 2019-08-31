@@ -9,6 +9,8 @@
 
 include('inc-login.php');
 
+exit;
+
 $result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 

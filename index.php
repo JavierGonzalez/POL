@@ -46,7 +46,7 @@ $txt .= '<table>
 
 <li><b>Herramientas de comunicaci&oacute;n</b>: salas de chat, foros, mensajes privados, notas...</li>
 
-<li>Custodiado por un <b>avanzado sistema de Supervisi&oacute;n del Censo</b> (<a href="'.SSL_URL.'dnie.php" title="Autentificaci&oacute;n mediante DNIe y otros certificados">DNIe</a>, <abbr title="Avanzado sistema de deteccion mediante factores tecnicos">sistema de detecci&oacute;n</abbr>, supervisores elegidos democr&aacute;ticamente, <a href="https://www.'.DOMAIN.'/TOS" title="Condiciones de Uso de VirtualPol">TOS</a>...).</li>
+<li>Custodiado por un <b>avanzado sistema de Supervisi&oacute;n del Censo</b> (<a href="'.SSL_URL.'dnie.php" title="Autentificaci&oacute;n mediante DNIe y otros certificados">DNIe</a>, <abbr title="Avanzado sistema de deteccion mediante factores tecnicos">sistema de detecci&oacute;n</abbr>, supervisores elegidos democr&aacute;ticamente, <a href="//www.'.DOMAIN.'/TOS" title="Condiciones de Uso de VirtualPol">TOS</a>...).</li>
 
 <li>Algunos datos: '.num($num_votaciones_votos).' votos procesados en '.num($num_votaciones).' votaciones y '.num($num_votos).' votos de otros tipos.</li>
 
@@ -76,9 +76,9 @@ while($r = r($result)) {
 	while($r2 = r($result2)) { $pais_config[$r2['dato']] = $r2['valor']; }
 
 	$txt .= '<tr style="background:'.$pais_config['bg_color'].';'.($r['num']<0?'display:none;" class="p-inactiva"':'"').'>
-<td><a href="https://'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" alt="'.$pais.'" /></a></td>
+<td><a href="//'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" alt="'.$pais.'" /></a></td>
 
-<td><span style="float:right;font-size:22px;"><b>'.num($r['num']).'</b></span><a href="https://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:'.($r['num']>1000?18:16).'px;">'.$pais_config['pais_des'].'</b></a><br />
+<td><span style="float:right;font-size:22px;"><b>'.num($r['num']).'</b></span><a href="//'.$pais_low.'.'.DOMAIN.'"><b style="font-size:'.($r['num']>1000?18:16).'px;">'.$pais_config['pais_des'].'</b></a><br />
 <em style="color:#777;">'.ucfirst($pais_config['tipo']).'</em></td>
 
 </tr>';

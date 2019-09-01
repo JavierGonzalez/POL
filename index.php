@@ -10,7 +10,7 @@
 include('inc-login.php');
 
 
-$txt_description = _('La primera Red Social Democrática').'. Simulador Politico y social Español, democracia participativa, simulador, politica'; 
+$txt_description = _('El Pueblo Virtual').'. Simulador Politico y social Español, democracia participativa, simulador, politica'; 
 
 /* Datos estadisticos
 Se contabilizan los siguientes datos antiguos conservadas en tablas antiguas.
@@ -36,9 +36,6 @@ $txt .= '<table>
 
 <tr><td valign="top">
 
-
-<p>VirtualPol es la primera <b>red social democrática</b>.</p>
-
 <p><b>En VirtualPol no hay administrador.</b> Se ha automatizado la democracia. Todo se decide con pilares democr&aacute;ticos (1 ciudadano 1 voto). En VirtualPol hay diferentes plataformas independientes entre s&iacute; que comparten este sistema como base.</p>
 
 <p>Los principales gestores se eligen mediante elecciones peri&oacute;dicas y autom&aacute;ticas, de forma que nadie puede detener el ciclo. De esta forma no existe ning&uacute;n usuario privilegiado, todos parten de la absoluta igualdad de condiciones.</p>
@@ -47,9 +44,9 @@ $txt .= '<table>
 
 <li><b>Herramientas democráticas</b>: elecciones, votaciones avanzadas, sistema de cargos, <abbr title="El voto de confianza es un voto +1 -1 secreto, que cada usuario otorga a otros usuarios">voto de confianza</abbr>, grupos/partidos, control de <abbr title="Los kicks sirven para moderar, son bloqueos temporales de usuarios">kicks</abbr>, <abbr title="Exámenes tipo test automaticos">exámenes</abbr>...</li>
 
-<li><b>Herramientas de comunicaci&oacute;n</b>: salas de chat, foros, voz (mumble), mensajes privados, notas...</li>
+<li><b>Herramientas de comunicaci&oacute;n</b>: salas de chat, foros, mensajes privados, notas...</li>
 
-<li>Custodiado por un <b>avanzado sistema de Supervisi&oacute;n del Censo</b> (<a href="'.SSL_URL.'dnie.php" title="Autentificaci&oacute;n mediante DNIe y otros certificados">DNIe</a>, <abbr title="Avanzado sistema de deteccion mediante factores tecnicos">sistema de detecci&oacute;n</abbr>, supervisores elegidos democr&aacute;ticamente, <a href="http://www.'.DOMAIN.'/TOS" title="Condiciones de Uso de VirtualPol">TOS</a>...). M&aacute;s de 3 a&ntilde;os de experiencia funcionando con solidez.</li>
+<li>Custodiado por un <b>avanzado sistema de Supervisi&oacute;n del Censo</b> (<a href="'.SSL_URL.'dnie.php" title="Autentificaci&oacute;n mediante DNIe y otros certificados">DNIe</a>, <abbr title="Avanzado sistema de deteccion mediante factores tecnicos">sistema de detecci&oacute;n</abbr>, supervisores elegidos democr&aacute;ticamente, <a href="https://www.'.DOMAIN.'/TOS" title="Condiciones de Uso de VirtualPol">TOS</a>...).</li>
 
 <li>Algunos datos: '.num($num_votaciones_votos).' votos procesados en '.num($num_votaciones).' votaciones y '.num($num_votos).' votos de otros tipos.</li>
 
@@ -57,7 +54,7 @@ $txt .= '<table>
 </ul>
 
 
-<p>VirtualPol es la primera comunidad de Internet sin administrador. Un paso firme hacia la Democracia Participativa.</p>
+<p>VirtualPol es la primera comunidad de Internet sin administrador.</p>
 
 
 </td><td valign="top">
@@ -79,9 +76,9 @@ while($r = r($result)) {
 	while($r2 = r($result2)) { $pais_config[$r2['dato']] = $r2['valor']; }
 
 	$txt .= '<tr style="background:'.$pais_config['bg_color'].';'.($r['num']<0?'display:none;" class="p-inactiva"':'"').'>
-<td><a href="http://'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" alt="'.$pais.'" /></a></td>
+<td><a href="https://'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" alt="'.$pais.'" /></a></td>
 
-<td><span style="float:right;font-size:22px;"><b>'.num($r['num']).'</b></span><a href="http://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:'.($r['num']>1000?18:16).'px;">'.$pais_config['pais_des'].'</b></a><br />
+<td><span style="float:right;font-size:22px;"><b>'.num($r['num']).'</b></span><a href="https://'.$pais_low.'.'.DOMAIN.'"><b style="font-size:'.($r['num']>1000?18:16).'px;">'.$pais_config['pais_des'].'</b></a><br />
 <em style="color:#777;">'.ucfirst($pais_config['tipo']).'</em></td>
 
 </tr>';

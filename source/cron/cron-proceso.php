@@ -341,7 +341,7 @@ sql("DELETE FROM users_con WHERE time < '".tiempo(30)."'");
 
 
 /* Expiraciones:
-Tras 120 dias inactivo
+NUNCA
 
 Excepciones:
 * Autentificados
@@ -353,6 +353,8 @@ Emails de aviso de expiración:
 1. Tras 30 días inactivo
 2. Tras 55 días inactivo
 */
+
+/*
 $st['eliminados'] = 0;
 $result = sql("SELECT ID, estado, nick FROM users
 WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registro > '".tiempo(365)."' AND 
@@ -360,9 +362,11 @@ WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registr
 (estado IN ('validar', 'expulsado') AND fecha_last <= '".tiempo(10)."') 
 LIMIT 80");
 while($r = r($result)) {
-	//if ($r['estado'] == 'ciudadano') { $st['eliminados']++; }
-	//eliminar_ciudadano($r['ID']);
+	if ($r['estado'] == 'ciudadano') { $st['eliminados']++; }
+	eliminar_ciudadano($r['ID']);
 }
+*/
+
 
 // Emails de aviso de expiración
 $result = sql("SELECT ID, pais, nick, email FROM users
@@ -386,8 +390,8 @@ while($r = r($result)) {
 http://www.'.DOMAIN.'</p>';
 	//enviar_email(null, 'Tu usuario '.$r['nick'].' está a punto de expirar por inactividad', $mensaje, $r['email']);
 	if ($r['estado'] == 'ciudadano') { 
-		$st['eliminados']++; 
-		convertir_turista($r['ID']);
+		//$st['eliminados']++; 
+		//convertir_turista($r['ID']);
 	}
 }
 

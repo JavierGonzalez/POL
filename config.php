@@ -86,13 +86,13 @@ $columnas = 14; $filas = 14; // Dimensiones mapa
 
 // URLS
 
-define('REGISTRAR', 'http://www.'.DOMAIN.'/registrar/'); // Zona de registro y opciones de usuario
-define('SSL_URL', 'http://www.'.DOMAIN.'/'); // SSL_URL | http://www.virtualpol.com/ = https://www.virtualpol.com/
+define('REGISTRAR', 'https://www.'.DOMAIN.'/registrar/'); // Zona de registro y opciones de usuario
+define('SSL_URL', 'https://www.'.DOMAIN.'/'); // SSL_URL | http://www.virtualpol.com/ = https://www.virtualpol.com/
 
 if ($_SERVER['HTTPS']) {
-	define('IMG', 'http://www.'.DOMAIN.'/img/'); // Archivos estaticos bajo https
+	define('IMG', 'https://www.'.DOMAIN.'/img/'); // Archivos estaticos bajo https
 } else {
-	define('IMG', 'http://www.'.DOMAIN.'/img/'); // Archivos estaticos
+	define('IMG', 'https://www.'.DOMAIN.'/img/'); // Archivos estaticos
 }
 
 define('MONEDA', '<img src="'.IMG.'varios/m.gif" />'); 

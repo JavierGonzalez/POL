@@ -138,7 +138,7 @@ case 'registrar': //CHECK
 									
 									sql("INSERT INTO users 
 (nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, confianza_historico, pais, pass, pass2, host, IP_proxy, dnie_check, bando, nota_SC, fecha_legal) 
-VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'turista', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '0', '".(in_array($_GET['p'], $vp['paises'])?$_GET['p']:'ninguno')."', '".$pass_md5."', '".$pass_sha."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')");
+VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'turista', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '0', 'ninguno', '".$pass_md5."', '".$pass_sha."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')");
 									$result = sql("SELECT ID FROM users WHERE nick = '".$nick."' LIMIT 1");
 									while($r = r($result)){ $new_ID = $r['ID']; }
 									
@@ -371,8 +371,6 @@ $(document).ready(function() {
 
 <fieldset><legend>'._('Crear ciudadano').'</legend>
 
-<fieldset><legend>Atencion:</legend><h3 style="color:red">Se ha detectado un problema con los e-mails de validación cuando se usa hotmail/outlook, se recomienda usar gmail.<br/>Estamos trabajando en arreglar el fallo, tened paciencia.</h3>
-</fieldset>
 
 <div style="color:red;font-weight:bold;">'.$verror.'</div>
 

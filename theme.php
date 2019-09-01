@@ -166,9 +166,6 @@ echo '</tr></table>';
 <div id="pnick" class="azul" style="display:none;"></div>
 
 
-<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
-{lang: 'es'}
-</script>
 
 <script type="text/javascript">
 /* GA */
@@ -182,23 +179,6 @@ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www')
 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 
-/* CHARTBEAT */
-var _sf_async_config={uid:26055,domain:"virtualpol.com"};
-(function(){
-  function loadChartbeat() {
-    window._sf_endpt=(new Date()).getTime();
-    var e = document.createElement('script');
-    e.setAttribute('language', 'javascript');
-    e.setAttribute('type', 'text/javascript');
-    e.setAttribute('src',
-       (("https:" == document.location.protocol) ? "https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" : "http://static.chartbeat.com/") +
-       "js/chartbeat.js");
-    document.body.appendChild(e);
-  }
-  var oldonload = window.onload;
-  window.onload = (typeof window.onload != 'function') ?
-     loadChartbeat : function() { oldonload(); loadChartbeat(); };
-})();
 </script>
 </body>
 </html>

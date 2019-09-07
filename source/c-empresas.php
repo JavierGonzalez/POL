@@ -73,42 +73,12 @@ LIMIT 1", $link);
 
 } elseif ($_GET['a']) { //VER EMPRESA
 
-	$result = mysql_query("SELECT ID FROM cat WHERE pais = '".PAIS."' AND tipo = 'empresas' AND url = '".$_GET['a']."' LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) { $cat_ID = $r['ID']; }
+	$cat_nom = $empresaController->getCategory()->nombre;
+	$emp_nom = $empresaController->getEmpresa()->nombre;
 
-	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
-(SELECT nombre FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_nom,
-(SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url,
-(SELECT nick FROM users WHERE ID = empresas.user_ID LIMIT 1) AS nick
-FROM empresas
-WHERE pais = '".PAIS."' AND url = '".$_GET['b']."' AND cat_ID = '".$cat_ID."'
-LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) {
-
-		mysql_query("UPDATE empresas SET pv = pv+1 WHERE pais = '".PAIS."' AND ID = '".$r['ID']."' LIMIT 1", $link);
-		$r['pv']++;
-
-		$txt_title = _('Empresas').': '.$r['nombre'].' - '._('Sector').': '.$r['cat_nom'];
-		$txt_nav = array('/empresas'=>_('Empresas'), '/empresas/'.$_GET['a']=>$r['cat_nom'], $r['nombre']);
-
-		if ($pol['user_ID'] == $r['user_ID']) { $editar .= boton(_('Editar'), '/empresas/editar/'.$r['ID']); }
-		
-		$txt .= '<br /><div class="amarillo">'.html_entity_decode($r['descripcion'],ENT_COMPAT , 'UTF-8').'</div>
-
-<p class="azul">'._('Fundador').': <b>'.crear_link($r['nick']).'</b> | '._('creación').': <em>'.explodear(" ", $r['time'], 0).'</em> | '._('sector').': <a href="/empresas/'.$r['cat_url'].'">'.$r['cat_nom'].'</a> | '._('visitas').': '.$r['pv'].'</p>
-
-<table width="100%"><tr>';
-		if ($r['user_ID'] == $pol['user_ID']) {  
-			$txt .= '<td><form action="/accion.php?a=empresa&b=acciones&ID='.$r['ID'].'" method="post">
-'._('Ceder acciones a').': <input type="text" name="nick" size="8" maxlength="20" value="" /><br />
-'._('Cantidad de acciones a').': <input type="text" name="cantidad" size="8" maxlength="3" value="" /><br />
-'.boton(_('Ceder'), 'submit', false, 'small').' ['._('En desarrollo').']
-</form></td>';
-			$boton = '<form action="/accion.php?a=empresa&b=ceder&ID='.$r['ID'].'" method="post">
-'.boton(_('Ceder a').':', 'submit', false, 'small').' <input type="text" name="nick" size="8" maxlength="20" value="" /></form> '.boton('X', '/accion.php?a=empresa&b=eliminar&ID='.$r['ID'], '¿Estas seguro de querer ELIMINAR definitivamente esta empresa?', 'red'); 
-		}
-		$txt .= '<td align="right">'.$boton.$editar.'</td></tr></table>';
-	}
+	$txt_title = _('Empresas').': '.$emp_nom.' - '._('Sector').': '.$cat_nom;
+	$txt_nav = array('/empresas' => _('Empresas'), '/empresas/'.$urlA => $cat_nom, $emp_nom);
+	$txt = $empresaController->verEmpresa();
 
 } else { // #EMPRESAS
 	

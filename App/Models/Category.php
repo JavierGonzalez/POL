@@ -8,6 +8,8 @@ class Category extends Eloquent
 {
 
     protected $table = 'cat';
+    protected $primaryKey = 'ID';
+    public $timestamps = false;
 
     public function empresas()
     {

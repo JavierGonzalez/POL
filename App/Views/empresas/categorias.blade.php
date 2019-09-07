@@ -10,7 +10,7 @@
 
     @foreach ($categoria->empresas as $empresa)
     <tr>
-        <td align="right">{!! crear_link($r['nick']) !!}</td>
+        <td align="right">{!! crear_link($empresa->user->nick) !!}</td>
         <td><a href="/empresas/{{ $categoria->url }}/{{ $empresa->url }}"><b>{{ $empresa->nombre }}</b></a></td>
         <td align="right"><b> {{  $empresa->pv }} </b> {{ _('visitas') }} </td>
     </tr>

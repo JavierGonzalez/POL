@@ -91,5 +91,17 @@ class EmpresaController
         ]);
     }
 
+    public function crearEmpresa()
+    {
+        $categories = $this->baseQuery()
+                    ->orderBy('orden')
+                    ->get();
+
+        return $this->blade->make('empresas.crear', [
+            'categories' => $categories,
+            'pols_empresa' => $this->pol['config']['pols_empresa']
+        ]);
+    }
+
 
 }

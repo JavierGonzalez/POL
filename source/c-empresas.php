@@ -48,23 +48,7 @@ LIMIT 1", $link);
 
 } elseif ($_GET['a'] == 'crear-empresa') { //CREAR EMPRESA
 
-	$result = mysql_query("SELECT ID, url, nombre, num FROM cat WHERE pais = '".PAIS."' AND tipo = 'empresas' ORDER BY num DESC", $link);
-	while($r = mysql_fetch_array($result)) {
-		$txt_li .= '<option value="'.$r['ID'].'">'.$r['nombre'].'</option>';
-	}
-
-	$txt .= '
-<form action="/accion.php?a=empresa&b=crear" method="post">
-
-<p>'._('Sector').': <select name="cat">' . $txt_li . '</select> ('._('No modificable').')</p>
-
-<p>'._('Nombre').': <input type="text" name="nombre" size="20" maxlength="20" /> ('._('No modificable').')</p>
-
-<p>'.boton('Crear Empresa', false, false, '', $pol['config']['pols_empresa']).'</p>
-
-<p><a href="/empresas"><b>'._('Ver empresas').'</b></a></p>
-
-</form>';
+	$txt = $empresaController->crearEmpresa();
 
 } elseif (($_GET['a']) AND (!$_GET['b'])) { //VER SECTOR
 

@@ -7,7 +7,10 @@
 ** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
 */
 
+use App\Controllers\EmpresaController;
+
 include('inc-login.php');
+$empresaController = new EmpresaController($pol);
 
 if (($_GET['a'] == 'editar') AND ($_GET['b'])) { //EDITAR EMPRESA
 
@@ -132,26 +135,7 @@ LIMIT 1", $link);
 } else { // #EMPRESAS
 	
 	$txt_nav = array('/empresas'=>_('Empresas'));
-
-	$txt .= '<p>'.boton(_('Crear Empresa'), '/empresas/crear-empresa', false, '', $pol['config']['pols_empresa']).'</p>
-
-<table border="0" cellspacing="0" cellpadding="2">';
-
-	$result = mysql_query("SELECT ID, url, nombre, num
-FROM cat
-WHERE pais = '".PAIS."' AND tipo = 'empresas'
-ORDER BY orden ASC", $link);
-	while($r = mysql_fetch_array($result)) {
-		$pv_num = 0;
-		$result2 = mysql_query("SELECT pv FROM empresas WHERE pais = '".PAIS."' AND cat_ID = '".$r['ID']."'", $link);
-		while($r2 = mysql_fetch_array($result2)) { $pv_num += $r2['pv']; }
-
-		$txt .= '<tr class="amarillo"><td><a href="/empresas/'.$r['url'].'" style="font-size:19px;"><b>'.$r['nombre'].'</b></a></td><td align="right"><b>'.$r['num'].'</b> '._('empresas').'</td><td align="right"><b>'.$pv_num.'</b> '._('visitas').'</td></tr>';
-
-		$txt .= '<tr><td colspan="3" height="6"></td></tr>';
-	}
-
-	$txt .= '</table><p>'.boton(_('Crear Empresa'), '/empresas/crear-empresa', false, '', $pol['config']['pols_empresa']).'</p>';
+	$txt .= $empresaController->index();
 }
 
 

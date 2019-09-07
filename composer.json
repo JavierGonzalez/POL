@@ -1,0 +1,18 @@
+{
+    "name": "wbeimarlogatto/virtual-pol",
+    "authors": [
+        {
+            "name": "Logatto",
+            "email": "wblomo22@gmail.com"
+        }
+    ],
+    "require": {
+        "illuminate/database": "^5.4",
+        "jenssegers/blade": "^1.1"
+    },
+    "autoload": {
+        "classmap": [
+            "App"
+        ]
+    }
+}

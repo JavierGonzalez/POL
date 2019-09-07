@@ -7,11 +7,17 @@
 ** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
 */
 
+class Coneccion
+{
+	const MYSQL_DB = '...';
+	const MYSQL_USER = '...';
+	const MYSQL_PASS = '...';
+}
 
 function conectar() {
-	$mysql_db = '...';
-	$mysql_user = '...';
-	$mysql_pass = '...';
+	$mysql_db = Coneccion::MYSQL_DB;
+	$mysql_user = Coneccion::MYSQL_USER;
+	$mysql_pass = Coneccion::MYSQL_PASS;
 
 	$error_msg = '<h1>MySQL Error</h1><p>Lo siento, la base de datos no funciona temporalmente.</p>';
 	if (!($l=@mysql_connect('localhost', $mysql_user, $mysql_pass))) { echo $error_msg; exit; }
@@ -28,4 +34,26 @@ define('CLAVE_API_ETHERPAD', '...');
 
 define('FB_APIKEY', '...');
 define('FB_SECRET', '...');
+
+
+// CONEXIONES DEL ORM ELOQUENT
+require "vendor/autoload.php";
+
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+$capsule = new Capsule;
+$capsule->addConnection([
+   "driver" => "mysql",
+   "host" =>"127.0.0.1",
+   "database" => Coneccion::MYSQL_DB,
+   "username" => Coneccion::MYSQL_USER,
+   "password" => Coneccion::MYSQL_PASS
+]);
+
+//Make this Capsule instance available globally.
+$capsule->setAsGlobal();
+
+// Setup the Eloquent ORM.
+$capsule->bootEloquent();
+$capsule->bootEloquent();
 ?>

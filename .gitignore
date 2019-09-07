@@ -5,3 +5,6 @@ img/style_all.css
 Los_mineros_*.pdf
 Miners_are_*.pdf
 BMP_*.pdf
+
+/vendor/
+/cache/

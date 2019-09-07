@@ -44,7 +44,6 @@ if (isset($_GET['bg'])) {
 
 <!--[if lt IE 9]><script src="<?=($_SERVER['HTTPS']?'https://':'http://')?>html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script type="text/javascript" src="<?=($_SERVER['HTTPS']?'https://':'http://')?>ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-
 <script type="text/javascript" src="<?=IMG?>scripts_all.js?v=<?=VER?>"></script>
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();

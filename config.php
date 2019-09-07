@@ -92,7 +92,7 @@ define('SSL_URL', 'https://www.'.DOMAIN.'/'); // SSL_URL | http://www.virtualpol
 if ($_SERVER['HTTPS']) {
 	define('IMG', 'https://www.'.DOMAIN.'/img/'); // Archivos estaticos bajo https
 } else {
-	define('IMG', 'https://www.'.DOMAIN.'/img/'); // Archivos estaticos
+	define('IMG', 'http://www.'.DOMAIN.'/img/'); // Archivos estaticos
 }
 
 define('MONEDA', '<img src="'.IMG.'varios/m.gif" />'); 

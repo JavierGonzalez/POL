@@ -10,7 +10,12 @@
 use App\Controllers\EmpresaController;
 
 include('inc-login.php');
+
+$urlA = $_GET['a'];
+$urlB = $_GET['b'];
+
 $empresaController = new EmpresaController($pol);
+$empresaController->setUrls($urlA, $urlB);
 
 if (($_GET['a'] == 'editar') AND ($_GET['b'])) { //EDITAR EMPRESA
 
@@ -63,35 +68,8 @@ LIMIT 1", $link);
 
 } elseif (($_GET['a']) AND (!$_GET['b'])) { //VER SECTOR
 
-	$result = mysql_query("SELECT ID, url, nombre, num
-FROM cat
-WHERE pais = '".PAIS."' AND tipo = 'empresas'
-AND url = '".$_GET['a']."'
-ORDER BY num DESC", $link);
-	while($r = mysql_fetch_array($result)) {
-		$cat_ID = $r['ID'];
-		$cat_nom = $r['nombre'];
-		$cat_num = $r['num'];
-	}
-	
-	$txt_nav = array('/empresas'=>_('Empresas'), $cat_nom);
-
-	$txt .= '<table border="0" cellspacing="0" cellpadding="2">
-
-<tr class="amarillo"><td>
-<a href="/empresas/'.$_GET['a'].'"><b>'.$cat_nom.'</b></a></td><td>'.$cat_num.'</td><td></td>
-</tr>';
-
-	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
-(SELECT nick FROM users WHERE ID = empresas.user_ID LIMIT 1) AS nick
-FROM empresas
-WHERE pais = '".PAIS."' AND cat_ID = '".$cat_ID."'
-ORDER BY time ASC", $link);
-	while($r = mysql_fetch_array($result)) {
-		$txt .= '<tr><td align="right">'.crear_link($r['nick']).'</td><td><a href="/empresas/'.$_GET['a'].'/'.$r['url'].'"><b>'.$r['nombre'].'</b></a></td><td align="right"><b>'.$r['pv'].'</b> '._('visitas').'</td></tr>';
-	}
-	$txt .= '</table><p><a href="/empresas"><b>'._('Ver empresas').'</b></a></p>';
-
+	$txt_nav = array('/empresas'=>_('Empresas'), $empresaController->getCategory()->nombre);
+	$txt .= $empresaController->verCategoria();
 
 } elseif ($_GET['a']) { //VER EMPRESA
 
@@ -135,7 +113,7 @@ LIMIT 1", $link);
 } else { // #EMPRESAS
 	
 	$txt_nav = array('/empresas'=>_('Empresas'));
-	$txt .= $empresaController->index();
+	$txt .= $empresaController->indexCategorias();
 }
 
 

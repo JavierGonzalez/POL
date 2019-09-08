@@ -7,7 +7,7 @@
 ** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
 */
 
-class Coneccion
+class Conexion
 {
 	const MYSQL_DB = '...';
 	const MYSQL_USER = '...';
@@ -15,9 +15,9 @@ class Coneccion
 }
 
 function conectar() {
-	$mysql_db = Coneccion::MYSQL_DB;
-	$mysql_user = Coneccion::MYSQL_USER;
-	$mysql_pass = Coneccion::MYSQL_PASS;
+	$mysql_db = Conexion::MYSQL_DB;
+	$mysql_user = Conexion::MYSQL_USER;
+	$mysql_pass = Conexion::MYSQL_PASS;
 
 	$error_msg = '<h1>MySQL Error</h1><p>Lo siento, la base de datos no funciona temporalmente.</p>';
 	if (!($l=@mysql_connect('localhost', $mysql_user, $mysql_pass))) { echo $error_msg; exit; }
@@ -45,9 +45,9 @@ $capsule = new Capsule;
 $capsule->addConnection([
    "driver" => "mysql",
    "host" =>"127.0.0.1",
-   "database" => Coneccion::MYSQL_DB,
-   "username" => Coneccion::MYSQL_USER,
-   "password" => Coneccion::MYSQL_PASS
+   "database" => Conexion::MYSQL_DB,
+   "username" => Conexion::MYSQL_USER,
+   "password" => Conexion::MYSQL_PASS
 ]);
 
 //Make this Capsule instance available globally.

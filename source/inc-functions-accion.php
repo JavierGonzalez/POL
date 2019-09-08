@@ -222,7 +222,7 @@ function pad($control, $ID=false, $txt='') {
 
 // ELIMINACION DE TINYMCE EN CURSO
 function editor_enriquecido($name, $txt='') {
-        $GLOBALS['txt_header'] .= '
+        $txt_header = '
 <script type="text/javascript" src="'.IMG.'tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 document.domain = "'.DOMAIN.'";
@@ -243,7 +243,7 @@ theme_advanced_statusbar_location : "bottom",
 theme_advanced_resizing : true,
 });
 </script>';
-        return '<textarea name="'.$name.'" style="width:750px;height:350px;">'.$txt.'</textarea>';
+        return $txt_header . '<textarea name="'.$name.'" style="width:750px;height:350px;">'.$txt.'</textarea>';
 }
 
 function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', $pais='', $nick=false) {

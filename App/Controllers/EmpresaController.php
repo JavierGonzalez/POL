@@ -39,16 +39,34 @@ class EmpresaController
 
     private function baseEmpresa()
     {
-        return Empresa::where([
-            'pais' => PAIS,
-            'url'  => $this->urlB
-        ]);
+        $fieldsWhere = [
+            'pais' => PAIS
+        ];
+
+        if($this->urlA == 'editar'){
+            $fieldsWhere['ID'] = $this->urlB;
+            $fieldsWhere['user_ID'] = $this->pol['user_ID'];
+        }else{
+            $fieldsWhere['url'] = $this->urlB;
+        }
+
+        $empresa = Empresa::where($fieldsWhere);
+
+       return $empresa;
     }
 
     public function getCategory()
     {
+        $fieldsWhere = [];
+
+        if($this->urlA == 'editar'){
+            $fieldsWhere['id'] = $this->getEmpresa()->cat_ID;
+        }else{
+            $fieldsWhere['url'] = $this->urlA;
+        }
+
         return $this->baseQuery()
-                    ->where('url', $this->urlA)
+                    ->where($fieldsWhere)
                     ->first();
     }
 
@@ -99,6 +117,17 @@ class EmpresaController
 
         return $this->blade->make('empresas.crear', [
             'categories' => $categories,
+            'pols_empresa' => $this->pol['config']['pols_empresa']
+        ]);
+    }
+
+
+    public function editarEmpresa()
+    {
+        $empresa = $this->getEmpresa();
+        
+        return $this->blade->make('empresas.editar', [
+            'empresa' => $empresa,
             'pols_empresa' => $this->pol['config']['pols_empresa']
         ]);
     }

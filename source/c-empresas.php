@@ -19,33 +19,18 @@ $empresaController->setUrls($urlA, $urlB);
 
 if (($_GET['a'] == 'editar') AND ($_GET['b'])) { //EDITAR EMPRESA
 
-	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time,
-(SELECT nombre FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_nom,
-(SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url,
-(SELECT nick FROM users WHERE ID = empresas.user_ID LIMIT 1) AS nick
-FROM empresas
-WHERE pais = '".PAIS."' AND ID = '".$_GET['b']."' 
-AND user_ID = '".$pol['user_ID']."'
-LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) {
-		
-		$txt_title = _('Empresa').': ' . $r['nombre'] . ' - '._('Sector').': ' . $r['cat_nom'];
-		$txt_nav = array('/empresas'=>_('Empresas'), '/empresas/'.$r['url']=>$r['cat_nom'], $r['nombre'], _('Editar'));
+	$category = $empresaController->getCategory();
+	$empresa = $empresaController->getEmpresa();
+	
+	$txt_title = _('Empresa').': ' . $empresa->nombre . ' - '._('Sector').': ' . $category->nombre;
+	$txt_nav = array('/empresas'=>_('Empresas'), '/empresas/'.$category->url=>$category->nombre, $empresa->nombre, _('Editar'));
 
-		include('inc-functions-accion.php');
-		$txt .= '
-<form action="/accion.php?a=empresa&b=editar&ID='.$r['ID'].'" method="post">
-<input type="hidden" name="return" value="'.$r['cat_url'].'/'.$r['url'].'" />
+	include('inc-functions-accion.php');
 
-<p class="amarillo">'._('Fundador').': <b>'.crear_link($r['nick']).'</b> '._('el').' <em>'.explodear(' ', $r['time'], 0).'</em>, '._('sector').': <a href="/empresas/'.$r['cat_url'].'">'.$r['cat_nom'].'</a></p>
-
-<p class="amarillo">'.editor_enriquecido('txt', $r['descripcion']).'</p>
-
-<p><input type="submit" value="'._('Guardar').'" /> &nbsp; <a href="/empresas"><b>'._('Ver empresas').'</b></a></form></p>
-';
+	if($empresa->user_ID == $pol['user_ID']){
+		$txt = $empresaController->editarEmpresa();
 	}
-
-
+		
 } elseif ($_GET['a'] == 'crear-empresa') { //CREAR EMPRESA
 
 	$txt = $empresaController->crearEmpresa();

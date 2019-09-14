@@ -71,7 +71,7 @@ Ceder al Ciudadano: <input type="text" name="nick" size="14" maxlength="20" valu
 	$txt_header .= '
 <script type="text/javascript">
 window.onload = function(){ 
-	setTimeout(function(){ $(".pujar").removeAttr("disabled"); }, 2000); 
+	setTimeout(function(){ $(".pujar").removeAttr("disabled"); $(".pujar").removeClass("disabled"); }, 2000); 
 }
 </script>';
 
@@ -170,7 +170,7 @@ LIMIT 10", $link);
 		$txt .= '
 <tr>
 <td colspan="4" class="amarillo"><form action="/accion.php?a=mercado&b=puja&ID=2" method="post">
-<b><input type="text" name="puja" value="" size="4" maxlength="7" readonly="readonly" style="text-align:right;" class="pols" /> '.MONEDA.' <input type="submit" value="Pujar" class="pujar" disabled="disabled" /> &nbsp; "las palabras"</b></form></td>
+<b><input type="text" name="puja" value="'.($row['los_pols']+1).'" size="4" maxlength="7" readonly="readonly" style="text-align:right;" class="pols" /> '.MONEDA.' <input type="submit" value="Pujar" class="pujar" disabled="disabled" /> &nbsp; "las palabras"</b></form></td>
 </tr>';
 		}
 		if ($gan <= $pol['config']['palabras_num']) { $bold = ' style="font-weight:bold;"'; $ganador = '<b>(Ganador)</b>'; } else { $bold = ''; $ganador = false; }
@@ -182,7 +182,7 @@ LIMIT 10", $link);
 		$txt .= '
 <tr>
 <td colspan="4" class="amarillo"><form action="/accion.php?a=mercado&b=puja&ID=2" method="post">
-<b><input type="text" name="puja" value="" size="4" class="pols" readonly="readonly" maxlength="7" style="text-align:right;" /> '.MONEDA.' <input type="submit" value="Pujar" class="pujar" disabled="disabled" /> &nbsp; "las palabras"</b></form></td>
+<b><input type="text" name="puja" value="1" size="4" class="pols" readonly="readonly" maxlength="7" style="text-align:right;" /> '.MONEDA.' <input type="submit" value="Pujar" class="pujar" disabled="disabled" /> &nbsp; "las palabras"</b></form></td>
 </tr>';
 	}
 

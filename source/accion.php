@@ -319,8 +319,8 @@ WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS
 		sql("UPDATE chats SET estado = 'activo' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado != 'activo' AND pais = '".PAIS."' LIMIT 1");
 		$refer_url = 'chats';
 	} elseif (($_GET['b'] == 'eliminar') AND ($_GET['chat_ID'])) {
-		sql("DELETE FROM chats WHERE chat_ID = '".$_GET['chat_ID']."' AND pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false')."') LIMIT 1");
-		$refer_url = 'chats';
+		sql("DELETE FROM chats WHERE chat_ID = '".$_GET['chat_ID']."' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false')."' OR admin = '".$pol['nick']."') LIMIT 1");
+        $refer_url = 'chats';
 	} elseif (($_GET['b'] == 'limpiar') AND ($_GET['chat_ID'])) {
 		error_log("Cleaning chat... "."DELETE FROM chats_msg WHERE chat_ID = '".$_GET['chat_ID']."' AND '".$pol['user_ID']."' = (select user_ID from chats where chat_ID = '".$_GET['chat_ID']."' LIMIT 1)");
 		sql("DELETE FROM chats_msg WHERE chat_ID = '".$_GET['chat_ID']."' AND '".$pol['user_ID']."' = (select user_ID from chats where chat_ID = '".$_GET['chat_ID']."' LIMIT 1)");

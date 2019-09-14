@@ -128,7 +128,7 @@ LIMIT 10", $link);
 			$bold = ' style="font-weight:bold;"'; 
 			$ganador = '<b>(Ganador)</b>'; 
 		} else { $ganador = false; $bold = ''; }
-		//$txt .= '<tr><td align="right"><b style="font-size:20px;">' . pols($row['pols']) . '</b></td><td' . $bold . '>' . crear_link($row['nick']) . '</td><td' . $bold . '><span class="timer" value="'.strtotime($row['time']).'"></span></td><td>' . $ganador . '</td></tr>';
+		$txt .= '<tr><td align="right"><b style="font-size:20px;">' . pols($row['pols']) . '</b></td><td' . $bold . '>' . crear_link($row['nick']) . '</td><td' . $bold . '><span class="timer" value="'.strtotime($row['time']).'"></span></td><td>' . $ganador . '</td></tr>';
 	}
 
 

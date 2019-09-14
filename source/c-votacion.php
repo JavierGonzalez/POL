@@ -388,7 +388,7 @@ function cambiar_tipo_votacion(tipo) {
 			break;
 		default:
 			$(".votar_form input").val("");
-			$("input[name="respuesta0"]).val("En Blanco");
+			$("input[name=\'respuesta0\']").val("En Blanco");
 	}
 }
 

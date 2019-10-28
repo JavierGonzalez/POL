@@ -692,7 +692,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 			$txt .= '
 <fieldset class="rich"><legend style="font-size:22px;font-weight:bold;">'.$r['pregunta'].'</legend>
 <p'.($r['estado']=='end'||isset($r['ha_votado'])?' class="votacion_desc_min"':'').'>
-'.$r['descripcion'].'</p>
+'.nl2br($r['descripcion']).'</p>
 '.(substr($r['debate_url'], 0, 4)=='http'?'<p><b>'._('Debate').': <a href="'.$r['debate_url'].'">'._('aquí').'</a>.</b></p>':'').'
 </fieldset>
 

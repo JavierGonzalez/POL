@@ -165,7 +165,7 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'turista', '1', '" . str
 
                                         enviar_email(null, _('Verificar nuevo usuario').': '.$nick, $mensaje, $email);
 
-                                        $registro_txt .= '<p><span style="color:green;"><b>'._('¡Correcto!').'</b></span>. '._('Tu usuario ha sido creado exitosamente').'.</p><p>'._('Último paso. Ahora <b>debes revisar tu email</b>, te hemos enviado un email para validar tu usuario').'.</p><p><em>* '._('Por favor, rescata el email si lo encuentras en la carpeta de spam. Esta medida es por seguridad').'</em>.</p>';
+                                        $registro_txt .= '<p><span style="color:green;"><b>'._('¡Correcto!').'</b></span>. '._('Tu usuario ha sido creado exitosamente').'.</p><p>'._('Ya puedes hacer login con tu usuario.').'</em>.</p>';
 
                                     } else {$nick = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick está ocupado, por favor elige otro').'</p>';}
                                 } else {$nick = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick debe tener entre 3 y 14 caracteres').'</p>';}

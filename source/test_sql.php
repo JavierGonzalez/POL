@@ -25,8 +25,8 @@ $txt .= 'Nuevo: '.num((microtime(true)-$anterior)*1000).'ms<hr />';
 $anterior = microtime(true);
 
 // METODO ANTIGUO
-$result = mysql_query("SELECT * FROM votacion_votos", $link);
-while($r = mysql_fetch_array($result)) {
+$result = mysql_query_old("SELECT * FROM votacion_votos", $link);
+while($r = mysqli_fetch_array($result)) {
 	$guardar = $r['voto'];
 }
 
@@ -43,8 +43,8 @@ $txt .= 'Nuevo: '.num((microtime(true)-$anterior)*1000).'ms<hr />';
 $anterior = microtime(true);
 
 // METODO ANTIGUO
-$result = mysql_query("SELECT * FROM votacion_votos", $link);
-while($r = mysql_fetch_array($result)) {
+$result = mysql_query_old("SELECT * FROM votacion_votos", $link);
+while($r = mysqli_fetch_array($result)) {
 	$guardar = $r['voto'];
 }
 
@@ -62,8 +62,8 @@ $anterior = microtime(true);
 
 
 // METODO ANTIGUO
-$result = mysql_query("SELECT * FROM votacion_votos", $link);
-while($r = mysql_fetch_array($result)) {
+$result = mysql_query_old("SELECT * FROM votacion_votos", $link);
+while($r = mysqli_fetch_array($result)) {
 	$guardar = $r['voto'];
 }
 

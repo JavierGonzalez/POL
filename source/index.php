@@ -131,7 +131,7 @@ $txt .= '</table>
 }
 
 
-$txt .= mysql_error();
+$txt .= mysqli_error($link);
 
 $txt_description = $pol['config']['pais_des'].'. '.PAIS;
 $txt_menu = 'comu';

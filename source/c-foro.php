@@ -31,31 +31,31 @@ function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 		if ($edit) { //editar
 			$return_url = 'foro/';
 			if ($hilo) { //msg
-				$result = mysql_query("SELECT text, cargo FROM ".SQL."foros_msg WHERE ID = '" . $hilo . "' AND estado = 'ok' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-				while($r = mysql_fetch_array($result)){ $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
+				$result = mysql_query_old("SELECT text, cargo FROM ".SQL."foros_msg WHERE ID = '" . $hilo . "' AND estado = 'ok' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+				while($r = mysqli_fetch_array($result)){ $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
 			} else { //hilo
-				$result = mysql_query("SELECT sub_ID, text, cargo, title, user_ID, ID FROM ".SQL."foros_hilos WHERE ID = '" . $subforo . "' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1", $link);
-				while($r = mysql_fetch_array($result)){ $sub_ID = $r['sub_ID']; $edit_ID = $r['ID']; $edit_user_ID = $r['user_ID']; $edit_title = $r['title']; $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
+				$result = mysql_query_old("SELECT sub_ID, text, cargo, title, user_ID, ID FROM ".SQL."foros_hilos WHERE ID = '" . $subforo . "' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1", $link);
+				while($r = mysqli_fetch_array($result)){ $sub_ID = $r['sub_ID']; $edit_ID = $r['ID']; $edit_user_ID = $r['user_ID']; $edit_title = $r['title']; $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
 			}
 			$edit_text = strip_tags($edit_text);
 		}
 		if ($citar != null) { //citar
 			if ($citar>0) { //msg
-				$result = mysql_query("SELECT text, user_ID FROM ".SQL."foros_msg WHERE ID = '" . $citar . "' AND estado = 'ok'  LIMIT 1", $link);
-				while($r = mysql_fetch_array($result)){ 
+				$result = mysql_query_old("SELECT text, user_ID FROM ".SQL."foros_msg WHERE ID = '" . $citar . "' AND estado = 'ok'  LIMIT 1", $link);
+				while($r = mysqli_fetch_array($result)){ 
 					$edit_text = $r['text']; 
 					$user_ID = $r['user_ID'];
 				}
 			} 
 			else {
-				$result = mysql_query("SELECT text, user_ID FROM ".SQL."foros_hilos WHERE ID = '" . abs($citar) . "' AND estado = 'ok' LIMIT 1", $link);
-				while($r = mysql_fetch_array($result)){ 
+				$result = mysql_query_old("SELECT text, user_ID FROM ".SQL."foros_hilos WHERE ID = '" . abs($citar) . "' AND estado = 'ok' LIMIT 1", $link);
+				while($r = mysqli_fetch_array($result)){ 
 					$edit_text = $r['text']; 
 					$user_ID = $r['user_ID'];
 				}
 			}
-			$result = mysql_query("SELECT nick FROM users WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
-			while($r = mysql_fetch_array($result)){ 
+			$result = mysql_query_old("SELECT nick FROM users WHERE ID = '" . $user_ID . "' LIMIT 1", $link);
+			while($r = mysqli_fetch_array($result)){ 
 				$edit_text = '[quote='.$r['nick'].'] '.$edit_text.' [/quote]'; 
 			}
 			
@@ -64,13 +64,13 @@ function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 		}
 
 		if ($pol['nivel'] > 1) {
-			$result = mysql_query("SELECT cargo_ID, 
+			$result = mysql_query_old("SELECT cargo_ID, 
 (SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargos_users.cargo_ID = cargo_ID LIMIT 1) AS nombre,
 (SELECT nivel FROM cargos WHERE pais = '".PAIS."' AND cargos_users.cargo_ID = cargo_ID LIMIT 1) AS nivel
 FROM cargos_users  
 WHERE cargo = 'true' AND pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."'
 ORDER BY nivel DESC", $link);
-			while($r = mysql_fetch_array($result)){
+			while($r = mysqli_fetch_array($result)){
 				$select_cargos .= '<option value="'.$r['cargo_ID'].'"'.($edit_cargo==$r['cargo_ID']?' selected="selected"':'').'>'.$r['nombre'].'</option>'."\n";
 			}
 		}
@@ -92,8 +92,8 @@ ORDER BY nivel DESC", $link);
 
 			if ($edit) {
 				$html .= '<p>Foro: <select name="sub_ID">';
-				$result = mysql_query("SELECT ID, url, title, acceso_escribir, acceso_cfg_escribir FROM ".SQL."foros WHERE estado = 'ok' ORDER BY time ASC", $link);
-				while($r = mysql_fetch_array($result)){ 
+				$result = mysql_query_old("SELECT ID, url, title, acceso_escribir, acceso_cfg_escribir FROM ".SQL."foros WHERE estado = 'ok' ORDER BY time ASC", $link);
+				while($r = mysqli_fetch_array($result)){ 
 					$html .= '<option value="'.$r['ID'].'"'.($r['ID']==$sub_ID?' selected="selected"':'').(nucleo_acceso($r['acceso_escribir'],$r['acceso_cfg_escribir'])?'':' disabled="disabled"').'>'.$r['title'].'</option>';
 				}
 				$html .= '</select></p>';
@@ -161,13 +161,13 @@ pol_foros_msg		(`ID``hilo_ID` `user_ID` `time` `text` `cargo`)
 
 if ($_GET['a'] == 'r') { // redirigir
 
-	$result = mysql_query("SELECT url,
+	$result = mysql_query_old("SELECT url,
 (SELECT url FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS subforo
 FROM ".SQL."foros_hilos
 WHERE ID = '".$_GET['b']."'
 LIMIT 1", $link);
-$txt .= mysql_error($link);
-	while($r = mysql_fetch_array($result)) {
+$txt .= mysqli_error($link);
+	while($r = mysqli_fetch_array($result)) {
 		redirect('/foro/'.$r['subforo'].'/'.$r['url']);
 	}
 
@@ -180,8 +180,8 @@ $txt .= mysql_error($link);
 
 
 	if ($_GET['b']) {
-		$result = mysql_query("SELECT ID, nick FROM users WHERE nick = '".$_GET['b']."' LIMIT 1", $link);
-		while($r = mysql_fetch_array($result)) {
+		$result = mysql_query_old("SELECT ID, nick FROM users WHERE nick = '".$_GET['b']."' LIMIT 1", $link);
+		while($r = mysqli_fetch_array($result)) {
 			$el_nick = $r['nick'];
 			$el_user_ID = $r['ID'];
 		}
@@ -198,16 +198,16 @@ $txt .= mysql_error($link);
 
 <table border="0" cellpadding="1" cellspacing="0">';
 
-	$result = mysql_query("SELECT ID, url FROM ".SQL."foros", $link);
-	while($r = mysql_fetch_array($result)) { $sub[$r['ID']] = $r['url']; }
+	$result = mysql_query_old("SELECT ID, url FROM ".SQL."foros", $link);
+	while($r = mysqli_fetch_array($result)) { $sub[$r['ID']] = $r['url']; }
 
-	$result = mysql_query("SELECT h.ID, h.cargo, h.time, h.votos, h.votos_num, h.num, h.sub_ID, h.url, h.title, h.text, u.nick
+	$result = mysql_query_old("SELECT h.ID, h.cargo, h.time, h.votos, h.votos_num, h.num, h.sub_ID, h.url, h.title, h.text, u.nick
 FROM ".SQL."foros_hilos `h`
 LEFT JOIN users `u` ON (u.ID = h.user_ID)
 WHERE user_ID = '".$el_user_ID."'
 ORDER BY h.time DESC
 LIMIT 10", $link);
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 		$txt .= '<tr><td align="right" valign="top" colspan="2">' . print_lateral($r['nick'], $r['cargo'], $r['time'], '', $pol['user_ID'], '', $r['votos'], $r['votos_num'], false, 'hilos', $r['ID']) . '</td><td align="right" valign="top"><b style="font-size:20px;">'.$r['num'].'</b></td><td valign="top" colspan="2" nowrap="nowrap" style="color:grey;"><a href="/foro/' . $sub[$r['sub_ID']] . '/' . $r['url'] . '/"><b>' . $r['title'] . '</b></a><br />' . substr(strip_tags($r['text']), 0, 90) . '..</td></tr>';
 	}
 
@@ -219,10 +219,10 @@ LIMIT 10", $link);
 
 <table border="0" cellpadding="1" cellspacing="0">';
 
-	$result = mysql_query("SELECT ID, url FROM ".SQL."foros", $link);
-	while($r = mysql_fetch_array($result)) { $sub[$r['ID']] = $r['url']; }
+	$result = mysql_query_old("SELECT ID, url FROM ".SQL."foros", $link);
+	while($r = mysqli_fetch_array($result)) { $sub[$r['ID']] = $r['url']; }
 
-	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo, votos, votos_num,
+	$result = mysql_query_old("SELECT ID, hilo_ID, user_ID, time, text, cargo, votos, votos_num,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
 (SELECT nombre FROM cargos WHERE cargo_ID = ".SQL."foros_msg.cargo LIMIT 1) AS encalidad,
 (SELECT url FROM ".SQL."foros_hilos WHERE ID = ".SQL."foros_msg.hilo_ID LIMIT 1) AS hilo_url,
@@ -232,10 +232,10 @@ FROM ".SQL."foros_msg
 WHERE hilo_ID != '-1' AND user_ID = '".$el_user_ID."'
 ORDER BY time DESC
 LIMIT 50", $link);
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 
-		$result2 = mysql_query("SELECT COUNT(*) AS resp_num FROM ".SQL."foros_msg WHERE hilo_ID = '".$r['hilo_ID']."' AND time > '".$r['time']."'", $link);
-		while($r2 = mysql_fetch_array($result2)) {
+		$result2 = mysql_query_old("SELECT COUNT(*) AS resp_num FROM ".SQL."foros_msg WHERE hilo_ID = '".$r['hilo_ID']."' AND time > '".$r['time']."'", $link);
+		while($r2 = mysqli_fetch_array($result2)) {
 			$resp_num = $r2['resp_num'];
 		}
 
@@ -259,10 +259,10 @@ LIMIT 50", $link);
 
 <table border="0" cellpadding="1" cellspacing="0">';
 
-	$result = mysql_query("SELECT ID, url FROM ".SQL."foros", $link);
-	while($r = mysql_fetch_array($result)) { $sub[$r['ID']] = $r['url']; }
+	$result = mysql_query_old("SELECT ID, url FROM ".SQL."foros", $link);
+	while($r = mysqli_fetch_array($result)) { $sub[$r['ID']] = $r['url']; }
 
-	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, text, cargo, votos, votos_num,
+	$result = mysql_query_old("SELECT ID, hilo_ID, user_ID, time, text, cargo, votos, votos_num,
 (SELECT nick FROM users WHERE ID = m.user_ID LIMIT 1) AS nick,
 (SELECT nombre FROM cargos WHERE cargo_ID = m.cargo LIMIT 1) AS encalidad,
 (SELECT url FROM ".SQL."foros_hilos WHERE ID = m.hilo_ID LIMIT 1) AS hilo_url,
@@ -273,9 +273,9 @@ FROM ".SQL."foros_msg `m`
 WHERE hilo_ID != '-1' AND estado = 'ok'
 ORDER BY time DESC
 LIMIT 50", $link);
-	while($r = mysql_fetch_array($result)) {
-		$result2 = mysql_query("SELECT acceso_leer, acceso_cfg_leer FROM ".SQL."foros WHERE ID = '".$r['sub_ID']."' LIMIT 1", $link);
-		while($r2 = mysql_fetch_array($result2)) {
+	while($r = mysqli_fetch_array($result)) {
+		$result2 = mysql_query_old("SELECT acceso_leer, acceso_cfg_leer FROM ".SQL."foros WHERE ID = '".$r['sub_ID']."' LIMIT 1", $link);
+		while($r2 = mysqli_fetch_array($result2)) {
 			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {
 				$txt .= '<tr>
 <td align="right" valign="top" colspan="2" nowrap="nowrap">'.print_lateral($r['nick'], $r['cargo'], $r['time'], '', $r['user_ID'], '', $r['votos'], $r['votos_num'], $r['voto'], 'msg', $r['ID']).'</td>
@@ -297,14 +297,14 @@ LIMIT 50", $link);
 } elseif ($_GET['b']) {			//foro/subforo/hilo-prueba
 
 
-	$result = mysql_query("SELECT h.ID, sub_ID, user_ID, h.url, h.title, h.time, time_last, h.text, h.cargo, num, u.nick, u.estado, u.avatar, acceso_leer, acceso_escribir, acceso_escribir_msg, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_msg, votos, votos_num, v.voto, f.title AS foro_title, f.url AS foro_url, f.descripcion
+	$result = mysql_query_old("SELECT h.ID, sub_ID, user_ID, h.url, h.title, h.time, time_last, h.text, h.cargo, num, u.nick, u.estado, u.avatar, acceso_leer, acceso_escribir, acceso_escribir_msg, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_msg, votos, votos_num, v.voto, f.title AS foro_title, f.url AS foro_url, f.descripcion
 FROM ".SQL."foros_hilos `h`
 LEFT JOIN ".SQL."foros `f` ON (f.ID = sub_ID)
 LEFT JOIN users `u` ON (u.ID = user_ID)
 LEFT JOIN votos `v` ON (tipo = 'hilos' AND v.pais = '".PAIS."' AND item_ID = h.ID AND emisor_ID = '".$pol['user_ID']."')
 WHERE h.url = '".$_GET['b']."' AND h.estado = 'ok'
 LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 
 		// Foro incorrecto? redireccion.
 		if ($_GET['a'] != $r['foro_url']) { 
@@ -357,13 +357,13 @@ LIMIT 1", $link);
 </td>
 </td>';
 
-			$result2 = mysql_query("SELECT m.ID, hilo_ID, user_ID, m.time, m.text, m.cargo, nick, m.estado AS nick_estado, avatar, votos, votos_num, v.voto
+			$result2 = mysql_query_old("SELECT m.ID, hilo_ID, user_ID, m.time, m.text, m.cargo, nick, m.estado AS nick_estado, avatar, votos, votos_num, v.voto
 FROM ".SQL."foros_msg `m`
 LEFT JOIN users `u` on (u.ID = user_ID)
 LEFT JOIN votos `v` ON (tipo = 'msg' AND v.pais = '".PAIS."' AND item_ID = m.ID AND emisor_ID = '".$pol['user_ID']."')
 WHERE hilo_ID = '".$r['ID']."' AND m.estado = 'ok'
-ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysql_real_escape_string($p_limit)), $link);
-			while($r2 = mysql_fetch_array($result2)) {
+ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysqli_real_escape_string($link,$p_limit)), $link);
+			while($r2 = mysqli_fetch_array($result2)) {
 
 				if (($pol['user_ID'] == $r2['user_ID']) AND ($subforo != 'notaria') AND (strtotime($r2['time']) > (time() - 3600))) { 
 					$editar = boton('Editar', '/foro/editar/'.$r2['hilo_ID'].'/'.$r2['ID'], false, 'small').boton('X', accion_url().'a=foro&b=eliminarreply&ID='.$r2['ID'].'&hilo_ID='.$r2['hilo_ID'], '¿Estás seguro de querer ELIMINAR tu MENSAJE?', 'small red').' '; 
@@ -385,8 +385,8 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysql
 			if (!$pol['user_ID']) { $txt .= '<p class="azul"><b>Para poder participar en esta conversacion has de <a href="'.REGISTRAR.'?p='.PAIS.'">registrar tu ciudadano</a></b></p>'; }
 			
 			$txt .= '<fieldset><legend>Más hilos</legend><p>';
-			$result2 = mysql_query("SELECT url, title, (SELECT url FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS subforo FROM ".SQL."foros_hilos WHERE estado = 'ok' ORDER BY RAND() LIMIT 10", $link);
-			while($r2 = mysql_fetch_array($result2)) {
+			$result2 = mysql_query_old("SELECT url, title, (SELECT url FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS subforo FROM ".SQL."foros_hilos WHERE estado = 'ok' ORDER BY RAND() LIMIT 10", $link);
+			while($r2 = mysqli_fetch_array($result2)) {
 				$txt .= '<a href="/foro/'.$r2['subforo'].'/'.$r2['url'].'/">'.$r2['title'].'</a>, ';
 			}
 			$txt .= '<p></fieldset>';
@@ -404,7 +404,7 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysql
 
 <table border="0" cellpadding="1" cellspacing="0">';
 
-	$result = mysql_query("SELECT ID, sub_ID, user_ID, url, title, time, time_last, text, cargo, num, votos, votos_num,
+	$result = mysql_query_old("SELECT ID, sub_ID, user_ID, url, title, time, time_last, text, cargo, num, votos, votos_num,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
 (SELECT avatar FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS avatar,
 (SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) FROM users WHERE ID = ".SQL."foros_hilos.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
@@ -412,7 +412,7 @@ ORDER BY ".($_GET['c']=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysql
 FROM ".SQL."foros_hilos
 WHERE estado = 'borrado'
 ORDER BY time_last DESC", $link);
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 		if (nucleo_acceso($vp['acceso']['foro_borrar'])) { $boton = boton('Restaurar', accion_url().'a=foro&b=restaurar&c=hilo&ID=' . $r['ID'], '¿Quieres RESTAURAR este HILO y sus MENSAJES?'); } else { $boton = boton('Restaurar'); }
 
 		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['votos_num'], false, 'hilos') . '</td><td valign="top"><p class="pforo"><b style="color:blue;">' . $r['title'] . '</b><br />' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time_last'] . '"><span class="timer" value="'.strtotime($r['time_last']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
@@ -427,7 +427,7 @@ $txt .= '</table></fieldset>
 
 
 
-	$result = mysql_query("SELECT ID, hilo_ID, user_ID, time, time2, text, cargo, votos, votos_num,
+	$result = mysql_query_old("SELECT ID, hilo_ID, user_ID, time, time2, text, cargo, votos, votos_num,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
 (SELECT avatar FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS avatar,
 (SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) FROM users WHERE ID = ".SQL."foros_msg.user_ID AND partido_afiliado != '0' LIMIT 1) AS siglas,
@@ -435,7 +435,7 @@ $txt .= '</table></fieldset>
 FROM ".SQL."foros_msg
 WHERE estado = 'borrado'
 ORDER BY time2 DESC", $link);
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 		if (nucleo_acceso($vp['acceso']['foro_borrar'])) { $boton = boton('Restaurar', accion_url().'a=foro&b=restaurar&c=mensaje&ID=' . $r['ID'], '¿Quieres RESTAURAR este MENSAJE?'); } else { $boton = boton('Restaurar'); }
 
 		$txt .= '<tr><td align="right" valign="top">' . print_lateral($r['nick'], $r['cargo'], $r['time'], $r['siglas'], $r['user_ID'], $r['avatar'], $r['votos'], $r['votos_num'], false) . '</td><td valign="top"><p class="pforo">' . $r['text'] . '</p></td><td valign="top" nowrap="nowrap"><acronym title="' . $r['time2'] . '"><span class="timer" value="'.strtotime($r['time2']).'"></span></acronym></td><td valign="top">' . $boton . '</td></tr>';
@@ -450,8 +450,8 @@ ORDER BY time2 DESC", $link);
 
 } elseif ($_GET['a']) {	//foro/subforo/
 
-	$result = mysql_query("SELECT * FROM ".SQL."foros WHERE url = '" . $_GET['a'] . "' AND estado = 'ok' LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) {
+	$result = mysql_query_old("SELECT * FROM ".SQL."foros WHERE url = '" . $_GET['a'] . "' AND estado = 'ok' LIMIT 1", $link);
+	while($r = mysqli_fetch_array($result)) {
 		if (nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) {
 			$return_url = 'foro/'.$r['url'].'/';
 			
@@ -473,14 +473,14 @@ ORDER BY time2 DESC", $link);
 <th>Creado</th>
 <th></th>
 </tr>';
-			$result2 = mysql_query("SELECT ID, url, user_ID, title, time, time_last, cargo, num, sub_ID, votos, votos_num,
+			$result2 = mysql_query_old("SELECT ID, url, user_ID, title, time, time_last, cargo, num, sub_ID, votos, votos_num,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
 (SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS estado
 FROM ".SQL."foros_hilos
 WHERE sub_ID = '" . $r['ID'] . "' AND estado = 'ok'
 ORDER BY time_last DESC
 LIMIT 200", $link);
-			while($r2 = mysql_fetch_array($result2)) {
+			while($r2 = mysqli_fetch_array($result2)) {
 
 				if ($r2['estado'] != 'expulsado') {
 					if (strtotime($r2['time']) < (time() - 432000)) { 
@@ -512,12 +512,12 @@ LIMIT 200", $link);
 
 } else {						//foro/
 	$foro_oculto_num = 0;
-	$result = mysql_query("SELECT *,
+	$result = mysql_query_old("SELECT *,
 (SELECT COUNT(*) FROM ".SQL."foros_hilos WHERE sub_ID = ".SQL."foros.ID LIMIT 1) AS num
 FROM ".SQL."foros
 WHERE estado = 'ok'
 ORDER BY time ASC", $link);
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 		if (nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) {
 
 			$txt_table .= '<tr class="amarillo">
@@ -534,14 +534,14 @@ ORDER BY time ASC", $link);
 <td align="right" width="10%">'.boton('Crear Hilo', (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?'/foro/'.$r['url'].'#enviar':false), false, 'large').'</td>
 </tr>';
 
-			$result2 = mysql_query("SELECT ID, url, user_ID, title, time, time_last, cargo, num, votos, votos_num,
+			$result2 = mysql_query_old("SELECT ID, url, user_ID, title, time, time_last, cargo, num, votos, votos_num,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
 (SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS user_estado
 FROM ".SQL."foros_hilos
 WHERE sub_ID = '".$r['ID']."' AND estado = 'ok'
 ORDER BY time_last DESC
-LIMIT ".mysql_real_escape_string($r['limite']), $link);
-			while($r2 = mysql_fetch_array($result2)) {
+LIMIT ".mysqli_real_escape_string($link,$r['limite']), $link);
+			while($r2 = mysqli_fetch_array($result2)) {
 				if ($r2['user_estado'] != 'expulsado') {
 					$time_hilo = strtotime($r2['time']);
 					$txt_table .= '<tr>

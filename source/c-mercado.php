@@ -31,10 +31,10 @@ http://<input type="text" name="url" size="63" maxlength="80" value="' . $url . 
 	$queda = duracion(strtotime(date('Y-m-d 20:00:00')) - time());
 	if (substr($queda, 0, 1) == '-') { $queda = '1 dia'; }
 
-	$result = mysql_query("SELECT valor,
+	$result = mysql_query_old("SELECT valor,
 (SELECT nick FROM users WHERE ID = config.valor LIMIT 1) AS nick
 FROM config WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)){ $nick = $row['nick']; }
+	while($row = mysqli_fetch_array($result)){ $nick = $row['nick']; }
 
 	$txt .= '<h1>Subasta ' . $_GET['a'] . '</h1>
 
@@ -55,13 +55,13 @@ FROM config WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1", $link)
 </tr>';
 
 	$ganador = 'ok';
-	$result = mysql_query("SELECT user_ID, pols, time,
+	$result = mysql_query_old("SELECT user_ID, pols, time,
 (SELECT nick FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick
 FROM pujas
 WHERE pais = '".PAIS."' AND mercado_ID = 1
 ORDER BY pols DESC
 LIMIT 15", $link);
-	while($row = mysql_fetch_array($result)) {
+	while($row = mysqli_fetch_array($result)) {
 		if ($ganador == 'ok') { $ganador = '<b>(Ganador)</b>'; } else { $ganador = false; }
 		$txt .= '<tr><td align="right"><b style="font-size:20px;">' . pols($row['pols']) . '</b></td><td>' . crear_link($row['nick']) . '</td><td>' . duracion(time() - strtotime($row['time'])) . '</td><td>' . $ganador . '</td></tr>';
 	}

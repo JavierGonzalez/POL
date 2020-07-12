@@ -217,8 +217,8 @@ $txt_nav[] = 'Macro';
 
 	echo 'Dia (20:00)	Pais	Ciudadanos	Ciudadanos nuevos	Ciudadanos eliminados	Ciudadanos que entraron en 24h, sin ser nuevos	Hilos en el foro	Confianza	Partidos	Empresas	Pols	Pols Gobierno	Pols cuentas	Pols frase+palabras	Numero de transacciones	Porcentaje del mapa en venta	Pols de la propiedad mas barata en venta'."\n";
 
-	$result = mysql_query("SELECT * FROM stats ORDER BY time DESC, pais ASC LIMIT 20000", $link);
-	while($r = mysql_fetch_array($result)) {
+	$result = mysql_query_old("SELECT * FROM stats ORDER BY time DESC, pais ASC LIMIT 20000", $link);
+	while($r = mysqli_fetch_array($result)) {
 		echo explodear(' ', $r['time'], 0).'	'.$r['pais'].'	'.$r['ciudadanos'].'	'.$r['nuevos'].'	'.$r['eliminados'].'	'.$r['24h'].'	'.$r['hilos_msg'].'	'.$r['confianza'].'	'.$r['partidos'].'	'.$r['empresas'].'	'.$r['pols'].'	'.$r['pols_gobierno'].'	'.$r['pols_cuentas'].'	'.$r['frase'].'	'.$r['transacciones'].'	'.$r['mapa'].'	'.$r['mapa_vende']."\n";
 	}
 	exit;
@@ -248,8 +248,8 @@ $txt .= '
 <th title="Pols de la propiedad mas barata en venta">MV</th>
 </tr>
 ';
-$result = mysql_query("SELECT * FROM stats WHERE pais = '".PAIS."' ORDER BY time DESC, pais ASC LIMIT 20000", $link);
-while($r = mysql_fetch_array($result)) {
+$result = mysql_query_old("SELECT * FROM stats WHERE pais = '".PAIS."' ORDER BY time DESC, pais ASC LIMIT 20000", $link);
+while($r = mysqli_fetch_array($result)) {
 
 
 $txt .= '<tr>
@@ -284,7 +284,7 @@ $txt .= '</table>';
 	$txt_tab = array('/estadisticas'=>'VirtualPol');
 
 $i = 0;
-$result = mysql_query("SELECT 
+$result = mysql_query_old("SELECT 
 SUM(ciudadanos) AS ciudadanos, 
 SUM(nuevos) AS nuevos,
 SUM(hilos_msg) AS hilos_msg,
@@ -308,7 +308,7 @@ FROM stats
 GROUP BY time
 ORDER BY time ASC
 LIMIT 2000", $link);
-while($r = mysql_fetch_array($result)) {
+while($r = mysqli_fetch_array($result)) {
 
 	$d['paises'][$i] = $r['paises'];
 	$d['ciudadanos'][$i] = $r['ciudadanos'];
@@ -423,13 +423,13 @@ foreach ($vp['paises'] AS $PAIS) {
 	$g_otros = 0;
 	$g_datos = array();
 	$g_siglas = array();
-	$result = mysql_query("SELECT COUNT(ID) AS num, partido_afiliado,
+	$result = mysql_query_old("SELECT COUNT(ID) AS num, partido_afiliado,
 (SELECT siglas FROM partidos WHERE pais = '".$PAIS."' AND ID = users.partido_afiliado) AS siglas
 FROM users 
 WHERE estado = 'ciudadano' AND pais = '".$PAIS."'
 GROUP BY partido_afiliado
 ORDER BY num DESC", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 		$n++;
 		if ($n <= 10) {
 			if ($r['partido_afiliado'] == 0) { $r['siglas'] = 'Ninguno'; }

@@ -164,7 +164,7 @@ function presentacion($titulo, $html, $url='http://www.virtualpol.com') {
 <script src="'.IMG.'lib/impress/js/impress.js"></script>
 </body>
 </html>';
-	mysql_close($link);
+	mysqli_close($link);
 	exit;
 }
 
@@ -505,7 +505,7 @@ function gen_url($url) {
 	$url = trim($url);
 	$url = strtr(utf8_decode($url), utf8_decode(' àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'), utf8_decode('-aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
 	$url = str_replace(array('&quot;', '&#39;'), '', $url);
-	$url = ereg_replace("[^A-Za-z0-9-]", "", $url);
+	$url = preg_replace("[^A-Za-z0-9-]", "", $url);
 	$url = substr($url, 0, 90);
 	$url = strip_tags($url);
 	$url = strtolower($url);

@@ -17,7 +17,7 @@ $pais = explodear('.', $_SERVER['HTTP_HOST'], 0);	// Obtiene "PAIS" de "PAIS.dom
 
 
 // LOAD CONFIG
-$result = mysql_unbuffered_query("SELECT dato, valor FROM config WHERE pais = '".escape($pais)."' AND autoload = 'si'");
+$result = mysql_query_old("SELECT dato, valor FROM config WHERE pais = '".escape($pais)."' AND autoload = 'si'");
 while ($r = r($result)) { 
 	switch ($r['dato']) {
 		case 'PAIS': define('PAIS', $r['valor']); break;
@@ -59,11 +59,8 @@ $vp['paises'] = array('POL');
 // 2019-08-31 borrados: 'Simulador', 'Asamblea'
 
 
-if ($pais == 'www') {
+if (!defined('PAIS'))
 	define('PAIS', 'Ninguno');
-} elseif (!defined('PAIS')) {
-	//redirect('http://www.virtualpol.com');
-}
 
 
 // CONFIG

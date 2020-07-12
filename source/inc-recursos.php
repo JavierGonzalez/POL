@@ -8,9 +8,9 @@
 */
 $txt_recursos .= '<div id="currencies" class="currencies"><ul>';
 
-$result = mysql_query("SELECT ur.quantity, r.name, r.icon from resources r, user_resources ur where ur.resource_id=r.id and ur.user_id=".$pol['user_ID']." and r.type='currency'");
+$result = mysql_query_old("SELECT ur.quantity, r.name, r.icon from resources r, user_resources ur where ur.resource_id=r.id and ur.user_id=".$pol['user_ID']." and r.type='currency'");
 
-while($r = mysql_fetch_array($result)) {
+while($r = mysqli_fetch_array($result)) {
     $txt_recursos .= '<li><img src='.IMG.'/'.$r['icon'].' alt="'.$r['name'].'">'.$r['quantity'].'</li>'; 
 }
 

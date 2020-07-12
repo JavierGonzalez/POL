@@ -294,4 +294,4 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 <?=$txt_footer?>
 
 </html>
-<?php if ($link) { mysql_close($link); } ?>
+<?php if ($link) { mysqli_close($link); } ?>

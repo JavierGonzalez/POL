@@ -32,9 +32,9 @@ if (($_GET['a']) AND ($_GET['pass'])) {
 
 	$txt = 'error: pass';
 	//check PASS
-	$res = mysql_query("SELECT * FROM  users WHERE api_pass = '".$_GET['pass']."' LIMIT 1", $link);
-	while($r = mysql_fetch_array($res)){
-		mysql_query("UPDATE users SET api_num = api_num + 1 WHERE ID = '".$r['ID']."' LIMIT 1", $link);
+	$res = mysql_query_old("SELECT * FROM  users WHERE api_pass = '".$_GET['pass']."' LIMIT 1", $link);
+	while($r = mysqli_fetch_array($res)){
+		mysql_query_old("UPDATE users SET api_num = api_num + 1 WHERE ID = '".$r['ID']."' LIMIT 1", $link);
 		
 		$txt = 'ok';
 		
@@ -49,14 +49,14 @@ if (($_GET['a']) AND ($_GET['pass'])) {
 			case 'transacciones':
 				$txt = '';
 				if (substr($_GET['cuenta'], 0, 1) == '-') {
-					$result2 = mysql_query("SELECT *,
+					$result2 = mysql_query_old("SELECT *,
 (SELECT nick FROM users WHERE transacciones.emisor_ID != '".$_GET['cuenta']."' AND ID = transacciones.emisor_ID LIMIT 1) AS emisor_nick,
 (SELECT nick FROM users WHERE transacciones.receptor_ID != '".$_GET['cuenta']."' AND ID = transacciones.receptor_ID LIMIT 1) AS receptor_nick
 FROM transacciones 
 WHERE pais = '".PAIS."' AND emisor_ID = '".$_GET['cuenta']."' OR receptor_ID = '".$_GET['cuenta']."' 
 ORDER BY time DESC
 LIMIT 500", $link);
-					while($r2 = mysql_fetch_array($result2)){ 
+					while($r2 = mysqli_fetch_array($result2)){ 
 						if ($r2['emisor_ID'] == $_GET['cuenta']) { 
 							$r2['pols'] = '-'.$r2['pols']; 
 						}
@@ -82,8 +82,8 @@ LIMIT 500", $link);
 					if ($_GET['origen']) {
 						// cuenta
 						$_GET['origen'] = str_replace('-', '', $_GET['origen']);
-						$result = mysql_query("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_GET['origen']."' AND pols >= '".$_GET['pols']."' AND (user_ID = '".$r['ID']."' OR '".$r['nivel']."' >= nivel) LIMIT 1", $link);
-						while($row = mysql_fetch_array($result)){ $origen = '-'.$_GET['origen']; }
+						$result = mysql_query_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_GET['origen']."' AND pols >= '".$_GET['pols']."' AND (user_ID = '".$r['ID']."' OR '".$r['nivel']."' >= nivel) LIMIT 1", $link);
+						while($row = mysqli_fetch_array($result)){ $origen = '-'.$_GET['origen']; }
 					} else {
 						// personal
 						if ($r['pols'] >= $_GET['pols']) { $origen = $r['ID']; }
@@ -94,12 +94,12 @@ LIMIT 500", $link);
 					if (substr($_GET['destino'], 0, 1) == '-') {
 						// Cuenta
 						$_GET['destino'] = str_replace('-', '', $_GET['destino']);
-						$result = mysql_query("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_GET['destino']."' LIMIT 1", $link);
-						while($row = mysql_fetch_array($result)){ $destino = '-'.$row['ID']; }
+						$result = mysql_query_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_GET['destino']."' LIMIT 1", $link);
+						while($row = mysqli_fetch_array($result)){ $destino = '-'.$row['ID']; }
 					} else {
 						// NICK
-						$result = mysql_query("SELECT ID FROM  users WHERE nick = '".$_GET['destino']."' LIMIT 1", $link);
-						while($row = mysql_fetch_array($result)){ $destino = $row['ID']; }
+						$result = mysql_query_old("SELECT ID FROM  users WHERE nick = '".$_GET['destino']."' LIMIT 1", $link);
+						while($row = mysqli_fetch_array($result)){ $destino = $row['ID']; }
 					}
 
 					// ejecuta transferencia
@@ -201,5 +201,5 @@ Devuelve la lista de las ultimas 500 transferencias de MONEDA de una cuenta banc
 <?php
 }
 
-if ($link) { mysql_close($link); }
+if ($link) { mysqli_close($link); }
 ?>

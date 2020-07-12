@@ -11,10 +11,10 @@
 // MySQL micro-framework v0.2
 function sql($q,$l=null) {
 	global $link; 
-	if($l===true){$rr=mysql_query($q,$link);while($r=mysql_fetch_row($rr)){return $r[0];}} 
-	else{return mysql_query($q,($l===null?$link:$l));}
+	if($l===true){$rr=mysql_query_old($q,$link);while($r=mysqli_fetch_row($rr)){return $r[0];}} 
+	else{return mysql_query_old($q,($l===null?$link:$l));}
 }
-function r($q) {return mysql_fetch_assoc($q);}
+function r($q) {return mysqli_fetch_assoc($q);}
 
 
 // ### NUCLEO ACCESO 3.1
@@ -199,12 +199,13 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 }
 
 function escape($a, $escape=true, $html=true) {
+	global $link;
 	// SQL INYECTION
 	$a = nl2br($a);
 	$a = str_replace("'", '&#39;', $a);
 	$a = str_replace('"', '&quot;', $a);
 	$a = str_replace(array("\x00", "\x1a"), '', $a);
-	$a = mysql_real_escape_string($a);
+	$a = mysqli_real_escape_string($link, $a);
 
 	// XSS
 	if ($html == false) { $a = strip_tags($a); }
@@ -249,7 +250,7 @@ function ocultar_IP($IP, $tipo='IP') {
 function redirect($url, $r301=true) {
 	if ($r301 == true) { header('HTTP/1.1 301 Moved Permanently'); } 
 	header('Location: '.$url); 
-	mysql_close();
+	mysqli_close($link);
 	exit;
 }
 
@@ -330,11 +331,11 @@ function paginacion($type, $url, $ID, $num_ahora=null, $num_total=null, $num='10
 	if (!$num_total) {
 		switch ($type) {
 			case 'subforo': 
-				$result = mysql_fetch_row(sql("SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE ID = '".$ID."'"));
+				$result = mysqli_fetch_row(sql("SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE ID = '".$ID."'"));
 				$num_total = $result[0];
 				break;
 			case 'eventos': 
-				$result = mysql_fetch_row(sql("SELECT COUNT(ID) FROM log WHERE pais = '".PAIS."'"));
+				$result = mysqli_fetch_row(sql("SELECT COUNT(ID) FROM log WHERE pais = '".PAIS."'"));
 				$num_total = $result[0];
 				break;
 		}

@@ -355,7 +355,7 @@ while($r2 = r($result2)) {
 		$txt_cand[] = '<a href="/cargos/'.$r2['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r2['cargo_ID'].'.gif" width="16" height="16" alt="'.$r2['nombre'].'" title="'.$r2['nombre'].' ('.$r2['nota'].')" /></a>';
 	}
 }
-$txt .= (count($txt_cargos)>0?implode(' ', $txt_cargos):_('Ninguno')).'</b></td>
+$txt .= (count((array)$txt_cargos)>0?implode(' ', $txt_cargos):_('Ninguno')).'</b></td>
 </tr>
 
 
@@ -364,7 +364,7 @@ $txt .= (count($txt_cargos)>0?implode(' ', $txt_cargos):_('Ninguno')).'</b></td>
 <td><b>'.timer(time()-$r['online'], true).'</b> <span title="'.num($r['paginas']).' páginas vistas">('.num($r['visitas']).' '._('visitas').')</span></td>
 
 <td align="right" title="Nota media: '.$r['nota'].'">'._('Candidaturas').':</td>
-<td><b>'.(count($txt_cand)>0?implode(' ', $txt_cand):_('Ninguna')).'</b></td>
+<td><b>'.(count((array)$txt_cand)>0?implode(' ', $txt_cand):_('Ninguna')).'</b></td>
 </tr>
 
 
@@ -466,7 +466,7 @@ $txt .= (count($txt_grupos)>0?implode(' ', $txt_grupos):_('Ninguno')).'</b></td>
 		}
 
 
-	} else { header("HTTP/1.0 404 Not Found"); mysql_close($link); exit; }
+	} else { header("HTTP/1.0 404 Not Found"); mysqli_close($link); exit; }
 }
 
 

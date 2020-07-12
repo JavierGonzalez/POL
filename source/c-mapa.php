@@ -16,8 +16,8 @@ function generar_color() {
 	return $color;
 }
 
-$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
-while($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
+$result = mysql_query_old("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
+while($r = mysqli_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 
@@ -34,11 +34,11 @@ S - solar			Blanco		(solar, en venta, link a compra)			null
 
 if (($_GET['a'] == 'compraventa') AND ($_GET['b'])) { //Comprar
 
-		$result = mysql_query("SELECT *
+		$result = mysql_query_old("SELECT *
 FROM mapa
 WHERE pais = '".PAIS."' AND ID = '".$_GET['b']."' AND estado = 'v'
 LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 
 		$txt_title = _('Mapa').': '._('Comprar propiedad');
 		$txt_nav = array('/mapa'=>_('Mapa'), _('Comprar propiedad').' '.$_GET['b']);
@@ -59,11 +59,11 @@ LIMIT 1", $link);
 
 } elseif (($_GET['a'] == 'vender') AND ($_GET['b'])) { // VENDER
 
-	$result = mysql_query("SELECT *
+	$result = mysql_query_old("SELECT *
 FROM mapa
 WHERE pais = '".PAIS."' AND ID = '" . $_GET['b'] . "' 
 LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 
 		$txt_title = _('Mapa').': '._('Vender propiedad');
 		$txt_nav = array('/mapa'=>_('Mapa'), _('Vender propiedad').' '.$_GET['b']);
@@ -93,11 +93,11 @@ LIMIT 1", $link);
 	$txt_title = _('Mapa').': '._('Editar propiedad');
 	$txt_nav = array('/mapa'=>_('Mapa'), _('Editar propiedad'));
 
-	$result = mysql_query("SELECT *
+	$result = mysql_query_old("SELECT *
 FROM mapa
 WHERE pais = '".PAIS."' AND ID = '" . $_GET['b'] . "' AND (user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."'))
 LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 
 
 		for ($n=1;$n <=15;$n++) {
@@ -160,11 +160,11 @@ LIMIT 1", $link);
 </tr>';
 	$multip = 10;
 	
-	$result = mysql_query("SELECT *
+	$result = mysql_query_old("SELECT *
 FROM mapa
 WHERE pais = '".PAIS."' AND user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')
 ORDER BY estado ASC, time ASC", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 
 		if ($r['estado'] == 'v') { $r['color'] = 'FF0'; }
 
@@ -388,10 +388,10 @@ ORDER BY estado ASC, time ASC", $link);
 
 
 	// datos graficos
-	$result = mysql_query("SELECT mapa_vende
+	$result = mysql_query_old("SELECT mapa_vende
 FROM stats WHERE pais = '".PAIS."' AND mapa_vende != 0 
 ORDER BY time ASC LIMIT 500", $link);
-	while($row = mysql_fetch_array($result)){
+	while($row = mysqli_fetch_array($result)){
 		$dgrafico[] = $row['mapa_vende'];
 	}
 	if ($dgrafico) { $dgrafico_max = max($dgrafico); } else { $dgrafico_max = 0; }
@@ -411,7 +411,7 @@ $txt .= '
 <p class="gris">'._('Con más propiedades').'</p><ol>';
 
 $n = 0;
-$result = mysql_query("SELECT SUM(superficie) AS superficie, COUNT(*) AS num,
+$result = mysql_query_old("SELECT SUM(superficie) AS superficie, COUNT(*) AS num,
 (SELECT nick FROM users WHERE ID = mapa.user_ID LIMIT 1) AS nick,
 (SELECT cargo FROM users WHERE ID = mapa.user_ID LIMIT 1) AS cargo
 FROM mapa
@@ -419,7 +419,7 @@ WHERE pais = '".PAIS."' AND estado != 'e'
 GROUP BY user_ID
 ORDER BY superficie DESC, num ASC
 LIMIT 15");
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$n++;
 	if ($n <= 3) { 
 		$first = true;
@@ -435,14 +435,14 @@ while ($row = mysql_fetch_array($result)) {
 <p class="gris">'._('Las propiedades más extensas').'</p><ol>';
 
 $n = 0;
-$result = mysql_query("SELECT size_x, size_y, superficie,
+$result = mysql_query_old("SELECT size_x, size_y, superficie,
 (SELECT nick FROM users WHERE ID = mapa.user_ID LIMIT 1) AS nick,
 (SELECT cargo FROM users WHERE ID = mapa.user_ID LIMIT 1) AS cargo
 FROM mapa
 WHERE pais = '".PAIS."' AND estado != 'e'
 ORDER BY superficie DESC
 LIMIT 15");
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$n++;
 	if ($n <= 3) { 
 		$first = true;

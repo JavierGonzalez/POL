@@ -18,6 +18,6 @@ foreach ($vp['paises'] AS $pais) {
 	}
 }
 
-mysql_close($link);
+mysqli_close($link);
 
 ?>

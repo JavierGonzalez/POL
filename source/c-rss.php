@@ -35,8 +35,8 @@ ORDER BY time DESC
 LIMIT 20
 QUERY;
 // La ejecutamos
-$rst = mysql_query($query);
-$array = mysql_fetch_array($rst);
+$rst = mysql_query_old($query);
+$array = mysqli_fetch_array($rst);
 
 $fecha=date("r");// Pillamos la fecha de generación del archivo
 // pintamos lo que toca

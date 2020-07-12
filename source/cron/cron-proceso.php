@@ -593,5 +593,5 @@ ORDER BY time_expire DESC LIMIT 5");
 
 }
 
-mysql_close($link);
+mysqli_close($link);
 ?>

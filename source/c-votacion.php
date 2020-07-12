@@ -663,7 +663,7 @@ $txt .= '
 				$txt .= '<tr><td colspan="3" style="color:red;"><hr /><b>'._('Tienes que ser ciudadano para ver la tabla de comprobantes').'.</b></td></tr>';
 			} else if (($r['estado'] == 'end') AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 				$contador_votos = 0;
-				$result2 = mysql_unbuffered_query("SELECT user_ID, voto, validez, comprobante, mensaje,
+				$result2 = mysql_query_old("SELECT user_ID, voto, validez, comprobante, mensaje,
 (SELECT nick FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS nick
 FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".($r['tipo_voto']=='estandar'?" ORDER BY voto ASC":""), $link);
 				while($r2 = r($result2)) { 

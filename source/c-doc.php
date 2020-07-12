@@ -15,8 +15,8 @@ if ($_GET['a']) {
 	$parsedown->setSafeMode(true);
 	$parsedown->setBreaksEnabled(true);
 
-	$result = mysql_query("SELECT * FROM docs WHERE url = '".$_GET['a']."' AND pais = '".PAIS."' LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){
+	$result = mysql_query_old("SELECT * FROM docs WHERE url = '".$_GET['a']."' AND pais = '".PAIS."' LIMIT 1", $link);
+	while($r = mysqli_fetch_array($result)){
 		
 		$pad_ID = $r['pad_ID'];
 
@@ -144,8 +144,8 @@ if ($_GET['a']) {
 
 	$txt .= '<div id="docs">';
 
-	$result = mysql_query("SELECT ID, nombre, tipo FROM cat WHERE pais = '".PAIS."' AND tipo = 'docs' ORDER BY orden ASC", $link);
-	while($r = mysql_fetch_array($result)){
+	$result = mysql_query_old("SELECT ID, nombre, tipo FROM cat WHERE pais = '".PAIS."' AND tipo = 'docs' ORDER BY orden ASC", $link);
+	while($r = mysqli_fetch_array($result)){
 
 		// CAT
 		$txt .= '<fieldset><legend>'.$r['nombre'].'</legend>
@@ -158,11 +158,11 @@ if ($_GET['a']) {
 <th>'._('Escritura').'</th>
 </tr>';
 		
-		$result2 = mysql_query("SELECT title, url, time, estado, time_last, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir, version
+		$result2 = mysql_query_old("SELECT title, url, time, estado, time_last, acceso_leer, acceso_escribir, acceso_cfg_leer, acceso_cfg_escribir, version
 FROM docs
 WHERE estado = 'ok' AND cat_ID = '".$r['ID']."' AND pais = '".PAIS."'
 ORDER BY time_last DESC", $link);
-		while($r2 = mysql_fetch_array($result2)){
+		while($r2 = mysqli_fetch_array($result2)){
 
 			if (nucleo_acceso($r2['acceso_leer'], $r2['acceso_cfg_leer'])) {
 				$txt .= '<tr>
@@ -185,7 +185,7 @@ ORDER BY time_last DESC", $link);
 	$txt .= '</div>';
 }
 
-$txt .= mysql_error();
+$txt .= mysqli_error($link);
 
 //THEME
 $txt_menu = 'info';

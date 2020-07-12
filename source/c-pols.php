@@ -28,12 +28,12 @@ if (($_GET['a'] == 'cuentas') AND ($_GET['b'] == 'crear')) {
 
 } elseif (($_GET['a'] == 'cuentas') AND ($_GET['b'])) {
 
-	$result = mysql_query("SELECT ID, nombre, user_ID, pols, nivel, time,
+	$result = mysql_query_old("SELECT ID, nombre, user_ID, pols, nivel, time,
 (SELECT nick FROM users WHERE ID = cuentas.user_ID LIMIT 1) AS nick
 FROM cuentas
 WHERE pais = '".PAIS."' AND ID = '" . $_GET['b'] . "'
 LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)) {
+	while($row = mysqli_fetch_array($result)) {
 		$ID = $row['ID'];
 		$pols = $row['pols'];
 		$nombre = $row['nombre'];
@@ -45,8 +45,8 @@ LIMIT 1", $link);
 		$txt_title = 'Cuenta bancaria: ' . $nombre;
 		$txt_nav = array('/pols'=>'Economía', '/pols/cuentas'=>'Cuenta bancaria', $nombre);
 
-		$result = mysql_unbuffered_query("SELECT COUNT(*) AS num FROM transacciones WHERE pais = '".PAIS."' AND (emisor_ID = '-" . $ID . "' OR receptor_ID = '-" . $ID . "')", $link);
-		while($row = mysql_fetch_array($result)){ $total = $row['num']; }
+		$result = mysql_query_old("SELECT COUNT(*) AS num FROM transacciones WHERE pais = '".PAIS."' AND (emisor_ID = '-" . $ID . "' OR receptor_ID = '-" . $ID . "')", $link);
+		while($row = mysqli_fetch_array($result)){ $total = $row['num']; }
 
 		if (is_numeric($_GET['c'])) { $ahora = $_GET['c']; } 
 		else { $ahora = ''; }
@@ -65,14 +65,14 @@ LIMIT 1", $link);
 </tr>';
 
 // concepto != 'CP' AND concepto != 'INEMPOL' AND concepto != 'Salario' AND 
-	$result = mysql_query("SELECT ID, pols, concepto, time, receptor_ID, emisor_ID,
+	$result = mysql_query_old("SELECT ID, pols, concepto, time, receptor_ID, emisor_ID,
 (SELECT nick FROM users WHERE ID = transacciones.emisor_ID LIMIT 1) AS nick_emisor,
 (SELECT nick FROM users WHERE ID = transacciones.receptor_ID LIMIT 1) AS nick_receptor
 FROM transacciones
 WHERE pais = '".PAIS."' AND (emisor_ID = '-" . $ID . "' OR receptor_ID = '-" . $ID . "')
 ORDER BY time DESC
-LIMIT ".mysql_real_escape_string($p_limit), $link);
-	while($row = mysql_fetch_array($result)) {
+LIMIT ".mysqli_real_escape_string($link,$p_limit), $link);
+	while($row = mysqli_fetch_array($result)) {
 
 		if ($row['emisor_ID'] == '-' . $ID) { //doy
 			$transferir_nick = $row['nick_receptor'];
@@ -92,8 +92,8 @@ LIMIT ".mysql_real_escape_string($p_limit), $link);
 			
 			$cuenta_ID = substr($transf_ID, 1);
 
-			$result2 = mysql_query("SELECT nombre FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$cuenta_ID."' LIMIT 1", $link);
-			while($row2 = mysql_fetch_array($result2)){ $cuenta_nombre = $row2['nombre']; }
+			$result2 = mysql_query_old("SELECT nombre FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$cuenta_ID."' LIMIT 1", $link);
+			while($row2 = mysqli_fetch_array($result2)){ $cuenta_nombre = $row2['nombre']; }
 			
 			$transferir_nick = $transf_ID;
 			$transf = $transf_pre . ' #<a href="/pols/cuentas/' . $cuenta_ID . '/"><b>' . $cuenta_nombre . '</b></a>';
@@ -136,12 +136,12 @@ LIMIT ".mysql_real_escape_string($p_limit), $link);
 <th></th>
 </tr>';
 
-	$result = mysql_query("SELECT ID, nombre, user_ID, pols, nivel, time, exenta_impuestos,
+	$result = mysql_query_old("SELECT ID, nombre, user_ID, pols, nivel, time, exenta_impuestos,
 (SELECT nick FROM users WHERE ID = cuentas.user_ID LIMIT 1) AS nick
 FROM cuentas
 WHERE pais = '".PAIS."' 
 ORDER BY nivel DESC, pols DESC", $link);
-	while($row = mysql_fetch_array($result)) {
+	while($row = mysqli_fetch_array($result)) {
 		if ($row['nivel'] == 0) {
 			$propietario = crear_link($row['nick']);
 			$checkbox = '<input class="checkbox_impuestos" type="checkbox" name="exenta_impuestos'.$row['ID'].'" value="1"'.$disabled;
@@ -187,10 +187,10 @@ ORDER BY nivel DESC, pols DESC", $link);
 	} else {
 		$select1_ok = ' checked="checked"';
 	}
-	$result = mysql_query("SELECT ID, nombre, pols, user_ID, nivel
+	$result = mysql_query_old("SELECT ID, nombre, pols, user_ID, nivel
 FROM cuentas WHERE pais = '".PAIS."'  
 ORDER BY nivel DESC, nombre ASC", $link);
-	while($row = mysql_fetch_array($result)){
+	while($row = mysqli_fetch_array($result)){
 		if (($row['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= $row['nivel']) AND ($row['nivel'] != 0) AND ($pol['nivel'] != 120))) {
 			if ($row['pols'] < 1) { $extra = ' disabled="disabled"'; } else { $extra = ''; }
 			$select_origen .= '<option value="' . $row['ID'] . '"' . $extra . '>' . pols($row['pols']) . ' - ' . $row['nombre'] . '</option>' . "\n";
@@ -228,8 +228,8 @@ function click_ciudadano() {
 </script>';
 
 	// load config full
-	$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'arancel_salida'", $link);
-	while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
+	$result = mysql_query_old("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'arancel_salida'", $link);
+	while ($row = mysqli_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
 
 	if ($pol['pols'] < 1) { $extra_personal = ' disabled="disabled"'; } else { $extra_personal = ''; }
 
@@ -276,22 +276,22 @@ function click_ciudadano() {
 <th colspan="3">Concepto</th>
 </tr>';
 
-	$result = mysql_unbuffered_query("SELECT COUNT(*) AS num FROM transacciones WHERE pais = '".PAIS."' AND (emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "')", $link);
-	while($row = mysql_fetch_array($result)){ $total = $row['num']; }
+	$result = mysql_query_old("SELECT COUNT(*) AS num FROM transacciones WHERE pais = '".PAIS."' AND (emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "')", $link);
+	while($row = mysqli_fetch_array($result)){ $total = $row['num']; }
 
 	if (is_numeric($_GET['a'])) { $ahora = $_GET['a']; } 
 	else { $ahora = ''; }
 
 	paginacion('censo', '/pols/', null, $ahora, $total, 15);
 
-	$result = mysql_query("SELECT ID, pols, concepto, time, receptor_ID, emisor_ID,
+	$result = mysql_query_old("SELECT ID, pols, concepto, time, receptor_ID, emisor_ID,
 (SELECT nick FROM users WHERE ID = transacciones.emisor_ID LIMIT 1) AS nick_emisor,
 (SELECT nick FROM users WHERE ID = transacciones.receptor_ID LIMIT 1) AS nick_receptor
 FROM transacciones
 WHERE pais = '".PAIS."' AND (emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "')
 ORDER BY time DESC
-LIMIT " . mysql_real_escape_string($p_limit), $link);
-	while($row = mysql_fetch_array($result)) {
+LIMIT " . mysqli_real_escape_string($link,$p_limit), $link);
+	while($row = mysqli_fetch_array($result)) {
 
 		if ($row['nick_emisor'] == $pol['nick']) { //doy
 			$transferir_nick = $row['nick_receptor'];
@@ -311,8 +311,8 @@ LIMIT " . mysql_real_escape_string($p_limit), $link);
 			
 			$cuenta_ID = substr($transf_ID, 1);
 
-			$result2 = mysql_query("SELECT nombre FROM cuentas WHERE pais = '".PAIS."' AND ID = '" . $cuenta_ID . "' LIMIT 1", $link);
-			while($row2 = mysql_fetch_array($result2)){ $cuenta_nombre = $row2['nombre']; }
+			$result2 = mysql_query_old("SELECT nombre FROM cuentas WHERE pais = '".PAIS."' AND ID = '" . $cuenta_ID . "' LIMIT 1", $link);
+			while($row2 = mysqli_fetch_array($result2)){ $cuenta_nombre = $row2['nombre']; }
 			
 			$transferir_nick = $transf_ID;
 			$transf = $transf_pre . ' #<a href="/pols/cuentas/' . $cuenta_ID . '/"><b>' . $cuenta_nombre . '</b></a>';

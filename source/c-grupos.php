@@ -45,18 +45,18 @@ default:
 </tr>
 ';
 
-	$result = mysql_query("SELECT ID, nick, grupos FROM users WHERE pais = '".PAIS."' AND estado = 'ciudadano' AND grupos != ''", $link);
-	while($r = mysql_fetch_array($result)) {
+	$result = mysql_query_old("SELECT ID, nick, grupos FROM users WHERE pais = '".PAIS."' AND estado = 'ciudadano' AND grupos != ''", $link);
+	while($r = mysqli_fetch_array($result)) {
 		foreach (explode(' ', $r['grupos']) AS $grupo_ID) { $users_array[$grupo_ID][] = $r['nick']; }
 	}
 
-	$result = mysql_query("SELECT url, title, acceso_cfg_leer FROM ".SQL."foros WHERE estado = 'ok' AND acceso_leer = 'grupos'", $link);
-	while($r = mysql_fetch_array($result)) {
+	$result = mysql_query_old("SELECT url, title, acceso_cfg_leer FROM ".SQL."foros WHERE estado = 'ok' AND acceso_leer = 'grupos'", $link);
+	while($r = mysqli_fetch_array($result)) {
 		foreach (explode(' ', $r['acceso_cfg_leer']) AS $grupo_ID) { $foros_array[$grupo_ID][] = '<a href="/foro/'.$r['url'].'"><b>'.$r['title'].'</b></a>'; }
 	}
 
-	$result = mysql_query("SELECT * FROM grupos WHERE pais = '".PAIS."' ORDER BY grupo_ID ASC", $link);
-	while($r = mysql_fetch_array($result)) {
+	$result = mysql_query_old("SELECT * FROM grupos WHERE pais = '".PAIS."' ORDER BY grupo_ID ASC", $link);
+	while($r = mysqli_fetch_array($result)) {
 		$txt .= '<tr>
 <td align="right"><input type="checkbox" name="grupo_'.$r['grupo_ID'].'" id="grupo_'.$r['grupo_ID'].'" value="true"'.(nucleo_acceso('grupos', $r['grupo_ID'])?' checked="checked"':'').' /></td>
 <td><b><label for="grupo_'.$r['grupo_ID'].'" class="inline">'.$r['nombre'].'</label></b></td>

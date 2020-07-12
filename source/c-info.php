@@ -161,12 +161,12 @@ $txt .= '<tr>
 </tr>';
 
 	$dias = 1;
-	$result = mysql_query("SELECT ID, nick, datos, voto_confianza
+	$result = mysql_query_old("SELECT ID, nick, datos, voto_confianza
 FROM users
 WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND datos != ''
 ORDER BY voto_confianza DESC
 LIMIT 10000", $link);
-	while($r = mysql_fetch_array($result)) { 
+	while($r = mysqli_fetch_array($result)) { 
 
 		$datos_array = explode('][', $r['datos']);
 
@@ -213,12 +213,12 @@ case 'expiracion':
 <th>'._('Ciudadanos').'</th>
 </tr>';
 	$dias = 1;
-	$result = mysql_query("SELECT fecha_last, COUNT(*) AS num, DAY(fecha_last) AS day 
+	$result = mysql_query_old("SELECT fecha_last, COUNT(*) AS num, DAY(fecha_last) AS day 
 FROM users
 WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_registro > '".$margen_30dias."'
 GROUP BY day
 ORDER BY fecha_last DESC", $link);
-	while($r = mysql_fetch_array($result)) { 
+	while($r = mysqli_fetch_array($result)) { 
 		$txt .= '<tr><td align="right">'.$dias++.'</td><td align="right">'.$r['day'].'</td><td align="right"><b>'.$r['num'].'</b></td></tr>'; 
 	}
 	$txt .= '</table>
@@ -235,12 +235,12 @@ ORDER BY fecha_last DESC", $link);
 </tr>';
 
 	$dias = 1;
-	$result = mysql_query("SELECT fecha_last, COUNT(*) AS num, DAY(fecha_last) AS day 
+	$result = mysql_query_old("SELECT fecha_last, COUNT(*) AS num, DAY(fecha_last) AS day 
 FROM users
 WHERE estado = 'ciudadano' AND pais = '".PAIS."'
 GROUP BY day
 ORDER BY fecha_last DESC", $link);
-	while($r = mysql_fetch_array($result)) { 
+	while($r = mysqli_fetch_array($result)) { 
 		$txt .= '<tr><td align="right">'.$dias++.'</td><td align="right">'.$r['day'].'</td><td align="right"><b>'.$r['num'].'</b></td></tr>'; 
 	}
 	$txt .= '</table>
@@ -253,12 +253,12 @@ ORDER BY fecha_last DESC", $link);
 case 'foto':
 
 	$txt .= '<h1>'._('Instantánea de').' VirtualPol</h1><br />';
-	$result = mysql_query("SELECT ID, nick, pais
+	$result = mysql_query_old("SELECT ID, nick, pais
 FROM users
 WHERE estado = 'ciudadano' AND avatar = 'true'
 ORDER BY online DESC
 LIMIT 300", $link);
-	while($r = mysql_fetch_array($result)) { 
+	while($r = mysqli_fetch_array($result)) { 
 		$txt .= '<img src="'.IMG.'a/'.$r['ID'].'.jpg" alt="'.$r['nick'].'" title="'.$r['nick'].'" />'; 
 	}
 
@@ -272,14 +272,14 @@ case 'censo':
 
 	// num ciudadanos activos (los que entraron en las ultimas 24h sin ser nuevos ciudadanos)
 	$margen_24h = date('Y-m-d H:i:s', time() - 86400);	// 24 h
-	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado != 'expulsado' AND estado != 'validar' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link));
+	$result = mysqli_fetch_row(mysql_query_old("SELECT COUNT(ID) FROM users WHERE estado != 'expulsado' AND estado != 'validar' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link));
 	$censo_activos_vp = $result[0];
-	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link));
+	$result = mysqli_fetch_row(mysql_query_old("SELECT COUNT(ID) FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".$margen_24h."' AND fecha_registro < '".$margen_24h."'", $link));
 	$censo_activos = $result[0];
 
 
 	// num expulsados
-	$result = mysql_fetch_row(mysql_query("SELECT COUNT(ID) FROM users WHERE estado = 'expulsado'", $link));
+	$result = mysqli_fetch_row(mysql_query_old("SELECT COUNT(ID) FROM users WHERE estado = 'expulsado'", $link));
 	$censo_expulsados = $result[0];
 
 	if ((!is_numeric($_GET['c'])) AND ($_GET['b'] == 'busqueda')) {
@@ -367,10 +367,10 @@ $txt .= '
 
 	$sc = get_supervisores_del_censo();
 
-	$result = mysql_query("SELECT ID, ID AS user_ID, nick, nombre, estado, pais, nivel, online, ref, ref_num, num_elec, voto_confianza, fecha_registro, nota, fecha_last, cargo, avatar, datos,
+	$result = mysql_query_old("SELECT ID, ID AS user_ID, nick, nombre, estado, pais, nivel, online, ref, ref_num, num_elec, voto_confianza, fecha_registro, nota, fecha_last, cargo, avatar, datos,
 (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas".$sql_extra."
-FROM users ".$order_by." LIMIT ".mysql_real_escape_string($p_limit), $link);
-	while($r = mysql_fetch_array($result)){
+FROM users ".$order_by." LIMIT ".mysqli_real_escape_string($link,$p_limit), $link);
+	while($r = mysqli_fetch_array($result)){
 		if ($r['online'] != 0) { $online = duracion($r['online']); } else { $online = ''; }
 		if ($r['avatar'] == 'true') { $avatar = avatar($r['ID'], 40) . ' '; } else { $avatar = ''; }
 		if ($r['siglas']) { $partido = '<a href="/partidos/' . strtolower($r['siglas']) . '/">' . $r['siglas'] . '</a>'; } else { $partido = ''; }
@@ -462,11 +462,11 @@ $txt .= '<br /><table border="0" cellspacing="0" cellpadding="2">
 
 </tr>';
 
-$result0 = mysql_query("SELECT pais FROM config WHERE dato = 'ECONOMIA' AND valor = 'true'");
-while($r0 = mysql_fetch_array($result0)) {
+$result0 = mysql_query_old("SELECT pais FROM config WHERE dato = 'ECONOMIA' AND valor = 'true'");
+while($r0 = mysqli_fetch_array($result0)) {
 		$pais = $r0['pais'];
 
-$result = mysql_query("SELECT SUM(pols + IFNULL((SELECT SUM(pols) FROM cuentas WHERE pais = '".$pais."' AND user_ID = users.ID GROUP BY user_ID),0)) AS pols_ciudadanos,
+$result = mysql_query_old("SELECT SUM(pols + IFNULL((SELECT SUM(pols) FROM cuentas WHERE pais = '".$pais."' AND user_ID = users.ID GROUP BY user_ID),0)) AS pols_ciudadanos,
 (SELECT COUNT(ID) FROM users WHERE pais = '".$pais."' AND estado = 'ciudadano') AS num_ciudadanos,
 (SELECT SUM(pols) FROM cuentas WHERE pais = '".$pais."' AND nivel > 0) AS pols_gobierno,
 (SELECT SUM(pols) FROM users WHERE pais = '".$pais."' AND pols < 0) AS pols_negativo,
@@ -477,16 +477,16 @@ $result = mysql_query("SELECT SUM(pols + IFNULL((SELECT SUM(pols) FROM cuentas W
 (SELECT AVG(salario) FROM cargos WHERE pais = '".$pais."') AS salario_medio
 FROM users
 WHERE pais = '".$pais."'");
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 
 
-		$result2 = mysql_query("SELECT nick, pais,
+		$result2 = mysql_query_old("SELECT nick, pais,
 (pols + IFNULL((SELECT SUM(pols) FROM cuentas WHERE pais = '".$pais."' AND user_ID = users.ID GROUP BY user_ID),0)) AS pols_total
 FROM users
 WHERE pais = '".$pais."'
 ORDER BY pols_total DESC 
 LIMIT 25", $link);
-		while ($r2 = mysql_fetch_array($result2)) {
+		while ($r2 = mysqli_fetch_array($result2)) {
 			$ricos[$r2['nick'].':'.$r2['pais']] = $r2['pols_total'];
 		}
 
@@ -527,8 +527,8 @@ $txt .= '<td align="right">'.pols($r['inem']).'</td>
 
 	// GEN GRAFICO VISITAS
 	$n = 0;
-	$result = mysql_query("SELECT pols, pols_cuentas FROM stats WHERE pais = '".$pais."' ORDER BY time DESC LIMIT 9", $link);
-	while($r = mysql_fetch_array($result)){
+	$result = mysql_query_old("SELECT pols, pols_cuentas FROM stats WHERE pais = '".$pais."' ORDER BY time DESC LIMIT 9", $link);
+	while($r = mysqli_fetch_array($result)){
 		if ($gph[$pais]) { $gph[$pais] = ',' . $gph[$pais]; }
 		$gph_maxx[$n] += $r['pols'] + $r['pols_cuentas'];
 		$gph[$pais] = $r['pols'] + $r['pols_cuentas'] . $gph[$pais];
@@ -537,8 +537,8 @@ $txt .= '<td align="right">'.pols($r['inem']).'</td>
 	}
 }
 
-	$result = mysql_query("SELECT SUM(pols) AS pols_total FROM users WHERE pais = 'ninguno'");
-	while($r = mysql_fetch_array($result)) { $pols_turistas = $r['pols_total']; }
+	$result = mysql_query_old("SELECT SUM(pols) AS pols_total FROM users WHERE pais = 'ninguno'");
+	while($r = mysqli_fetch_array($result)) { $pols_turistas = $r['pols_total']; }
 
 	$total_moneda = $total+$pols_turistas;
 
@@ -584,8 +584,8 @@ $txt .= '</ol>
 
 <h2>'._('Deudores').':</h2><ol>';
 
-$result = mysql_query("SELECT pols, pais, nick FROM users WHERE pols < 0 ORDER BY pols ASC");
-while($r = mysql_fetch_array($result)) {
+$result = mysql_query_old("SELECT pols, pais, nick FROM users WHERE pols < 0 ORDER BY pols ASC");
+while($r = mysqli_fetch_array($result)) {
 	$txt .= '<li>'.pols($r['pols']).' '.MONEDA.' <b class="big">'.crear_link($r['nick'], 'nick', 'ciudadano', $r['pais']).'</b></li>';
 }
 

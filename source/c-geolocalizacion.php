@@ -21,8 +21,8 @@ if (!isset($pol['user_ID'])) {
 	include_once('inc-functions-accion.php');
 
 	$user_y = explodear(',', $centro, 0); $user_x = explodear(',', $centro, 1);
-	$result = mysql_query("SELECT x, y FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1", $link);
-	while ($r = mysql_fetch_array($result)) { $user_x = $r['x']; $user_y = $r['y']; $geo = true; }
+	$result = mysql_query_old("SELECT x, y FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1", $link);
+	while ($r = mysqli_fetch_array($result)) { $user_x = $r['x']; $user_y = $r['y']; $geo = true; }
 
 	if ($geo) {
 		$txt .= '<p>'._('Los ciudadanos más cercanos a ti').'.</p>';
@@ -37,8 +37,8 @@ if (!isset($pol['user_ID'])) {
 <th>'._('Distancia').'</th>
 <th>'._('Último acceso').'</th>
 </tr>';
-	$result = mysql_query("SELECT ID, nick, pais, avatar, fecha_last, x, y, POW(x-".$user_x.",2)+POW(y-".$user_y.",2) AS dist FROM users WHERE estado = 'ciudadano' AND x IS NOT NULL ORDER BY dist ASC LIMIT 100", $link);
-	while ($r = mysql_fetch_array($result)) { 
+	$result = mysql_query_old("SELECT ID, nick, pais, avatar, fecha_last, x, y, POW(x-".$user_x.",2)+POW(y-".$user_y.",2) AS dist FROM users WHERE estado = 'ciudadano' AND x IS NOT NULL ORDER BY dist ASC LIMIT 100", $link);
+	while ($r = mysqli_fetch_array($result)) { 
 		$txt .= '<tr>
 <td>'.($r['avatar']=='true'?avatar($r['ID'], 40):'').'</td>
 <td><b style="font-size:16px;">'.crear_link($r['nick']).'</b></td>
@@ -53,8 +53,8 @@ if (!isset($pol['user_ID'])) {
 } elseif ($_GET['a'] == 'fijar') {
 	
 	$center['y'] = explodear(',', $centro, 0); $center['x'] = explodear(',', $centro, 1);
-	$result = mysql_query("SELECT x, y FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1", $link);
-	while ($r = mysql_fetch_array($result)) { 
+	$result = mysql_query_old("SELECT x, y FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1", $link);
+	while ($r = mysqli_fetch_array($result)) { 
 		$center['x'] = $r['x']; 
 		$center['y'] = $r['y'];
 	}
@@ -126,8 +126,8 @@ function roundNumber(num, dec) {
 } else { // MAPA
 
 	if (nucleo_acceso('ciudadanos')) {
-		$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1", $link);
-		while ($r = mysql_fetch_array($result)) { $geo = true; }
+		$result = mysql_query_old("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1", $link);
+		while ($r = mysqli_fetch_array($result)) { $geo = true; }
 		if ($geo != true) { $txt .= '<p>'._('No estás geolocalizado').' '.boton(_('Geolocalízate'), '/geolocalizacion/fijar', false, 'red').'</p>'; }
 	}
 
@@ -297,8 +297,8 @@ function redirect_POST(la_url) {
 
 <optgroup label="'._('Cargos').'">';
 
-$result = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
-while ($r = mysql_fetch_array($result)) { 
+$result = mysql_query_old("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
+while ($r = mysqli_fetch_array($result)) { 
 	$txt .= '<option value="cargo|'.$r['cargo_ID'].'">'.$r['nombre'].'</option>';
 }
 
@@ -307,8 +307,8 @@ $txt .= '</optgroup>
 
 <optgroup label="'._('Grupos').'">';
 
-$result = mysql_query("SELECT grupo_ID, nombre FROM grupos WHERE pais = '".PAIS."' ORDER BY num DESC", $link);
-while ($r = mysql_fetch_array($result)) { 
+$result = mysql_query_old("SELECT grupo_ID, nombre FROM grupos WHERE pais = '".PAIS."' ORDER BY num DESC", $link);
+while ($r = mysqli_fetch_array($result)) { 
 	$txt .= '<option value="grupos|'.$r['grupo_ID'].'">'.$r['nombre'].'</option>';
 }
 

@@ -19,8 +19,8 @@ if (!$_SERVER['HTTPS']) { redirect(SSL_URL.'dnie.php'); } // Fuerza el uso de un
 
 // Comprueba si el usuario está autentificado o no.
 $dnie_autentificado = false;
-$result = mysql_query("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND dnie = 'true'", $link);
-while ($r = mysql_fetch_array($result)) { $dnie_autentificado = true; }
+$result = mysql_query_old("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND dnie = 'true'", $link);
+while ($r = mysqli_fetch_array($result)) { $dnie_autentificado = true; }
 
 if ((isset($pol['user_ID'])) AND ($dnie_autentificado == false)) {
 	// Es un usuario y no está autentificado con DNIe 
@@ -53,8 +53,8 @@ Este resultado final no supone ninguna información en claro.
 
 		// Busca checks coincidentes (para garantizar que cada DNIe se inscribe una vez).
 		$dnie_clon = false;
-		$result = mysql_query("SELECT ID FROM users WHERE dnie_check = '".$dnie_check."' AND dnie = 'true' LIMIT 1", $link);
-		while ($r = mysql_fetch_array($result)) { $dnie_clon = true; }
+		$result = mysql_query_old("SELECT ID FROM users WHERE dnie_check = '".$dnie_check."' AND dnie = 'true' LIMIT 1", $link);
+		while ($r = mysqli_fetch_array($result)) { $dnie_clon = true; }
 
 		if ($dnie_clon == true) { 
 			// Persona ya identificada con otro usuario. No realiza la autentificacion. 
@@ -64,7 +64,7 @@ Este resultado final no supone ninguna información en claro.
 
 		} else {
 			// Autentificacion correcta. El DNIe es inedito. Procede a guardar el hash en la base de datos.
-			mysql_query("UPDATE users SET dnie = 'true', dnie_check = '".$dnie_check."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+			mysql_query_old("UPDATE users SET dnie = 'true', dnie_check = '".$dnie_check."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 
 			unset($dnie_check); // Elimina el hash.
 

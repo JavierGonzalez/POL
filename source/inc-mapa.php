@@ -28,11 +28,11 @@ S - solar			Blanco		(solar, en venta, link a compra)			null
 $count = 1;
 $prop = '';
 $m = null;
-$result = mysql_query("SELECT ID, pos_x, pos_y, size_x, size_y, link, pols, color, estado, superficie, nick
+$result = mysql_query_old("SELECT ID, pos_x, pos_y, size_x, size_y, link, pols, color, estado, superficie, nick
 FROM mapa
 WHERE pais = '".PAIS."' 
 ORDER BY pos_y ASC, pos_x ASC", $link);
-while($r = mysql_fetch_array($result)) {
+while($r = mysqli_fetch_array($result)) {
 
 	$sup_total += $r['superficie'];
 

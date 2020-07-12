@@ -12,13 +12,13 @@ include('inc-login.php');
 
 if ($_GET['a']) {
 
-	$result = mysql_query("SELECT 
+	$result = mysql_query_old("SELECT 
 ID, siglas, nombre, descripcion, fecha_creacion, ID_presidente, 
 (SELECT nick FROM users WHERE ID = partidos.ID_presidente LIMIT 1) AS nick_presidente
 FROM partidos 
 WHERE pais = '".PAIS."' AND siglas = '" . trim($_GET['a']) . "'
 LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 
 		if (($_GET['b'] == 'editar')) { //edit/  AND ($r['ID_presidente'] == $pol['user_ID'])
 
@@ -27,27 +27,27 @@ LIMIT 1", $link);
 
 			//print listas
 			$candidatos_num = 0;
-			$result2 = mysql_query("SELECT user_ID, orden, 
+			$result2 = mysql_query_old("SELECT user_ID, orden, 
 (SELECT nick FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS nick,
 (SELECT cargo FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS cargo,
 (SELECT voto_confianza FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS confianza
 FROM partidos_listas
 WHERE pais = '".PAIS."' AND ID_partido = '" . $r['ID'] . "'
 ORDER BY ID ASC", $link);
-			while($r2 = mysql_fetch_array($result2)){ 
+			while($r2 = mysqli_fetch_array($result2)){ 
 				if ((!$li_listas) AND (ECONOMIA)) {  $li_presi = ' &larr; Candidato a presidente'; } else { $li_presi = ''; }
 				$li_listas .= '<li><form action="/accion.php?a=partido-lista&b=del&ID=' . $r['ID'] . '" method="post"><input type="hidden" name="user_ID" value="' . $r2['user_ID'] . '"  /><input style="height:26px;" type="submit" value="X" /> <img src="'.IMG.'cargos/'.$r2['cargo'].'.gif" /><b>' . crear_link($r2['nick']) . '</b> ' . $li_presi . '</form></li>' . "\n"; 
 				$candidatos_num++;
 			}
 
 			$ciudadanos_num = 0;
-			$result2 = mysql_query("SELECT ID, nick, fecha_last, voto_confianza,
+			$result2 = mysql_query_old("SELECT ID, nick, fecha_last, voto_confianza,
 (SELECT user_ID FROM partidos_listas WHERE pais = '".PAIS."' AND ID_partido = '" . $r['ID'] . "' AND user_ID = users.ID LIMIT 1) AS en_lista, 
 (SELECT user_ID FROM cargos_users WHERE cargo_ID = '6' AND user_ID = users.ID AND aprobado = 'ok' LIMIT 1) AS es_diputado
 FROM users 
 WHERE estado != 'validar' AND partido_afiliado = '".$r['ID']."' AND pais = '".PAIS."'
 ORDER BY nick DESC", $link);
-			while($r2 = mysql_fetch_array($result2)){
+			while($r2 = mysqli_fetch_array($result2)){
 				if ((!$r2['en_lista']) AND ($r2['es_diputado'])) {
 					$ciudadanos .= '<option value="' . $r2['ID'] . '">' . $r2['nick'] . ' (' . confianza($r2['voto_confianza']) . ', ' . duracion(time() - strtotime($r2['fecha_last'])) . ')</option>';
 					$ciudadanos_num++;
@@ -90,14 +90,14 @@ ORDER BY nick DESC", $link);
 
 			//print listas
 			$num_listas = 0;
-			$result2 = mysql_query("SELECT user_ID,
+			$result2 = mysql_query_old("SELECT user_ID,
 (SELECT nick FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS nick,
 (SELECT voto_confianza FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS confianza,
 (SELECT fecha_last FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS fecha_last
 FROM partidos_listas
 WHERE pais = '".PAIS."' AND ID_partido = '" . $r['ID'] . "'
 ORDER BY ID ASC", $link);
-			while($r2 = mysql_fetch_array($result2)){ 
+			while($r2 = mysqli_fetch_array($result2)){ 
 				$li_presi = '';
 				if ((!ASAMBLEA) AND (!$li_listas)) {  $li_presi = ' &larr; Candidato a Presidente'; }
 				if ((!ASAMBLEA) AND ($r['ID_presidente'] == $r2['user_ID'])) {  $li_presi .= ' &larr; Presidente de ' . $r['siglas']; }
@@ -106,11 +106,11 @@ ORDER BY ID ASC", $link);
 			}
 
 
-				$result3 = mysql_query("SELECT nick, estado
+				$result3 = mysql_query_old("SELECT nick, estado
 FROM users
 WHERE partido_afiliado = '" . $r['ID'] . "' AND pais = '".PAIS."' AND estado = 'ciudadano'
 ORDER BY fecha_registro ASC", $link);
-				while($r3 = mysql_fetch_array($result3)){ 
+				while($r3 = mysqli_fetch_array($result3)){ 
 					$num_afiliados++;
 					$afiliados .= ' ' . crear_link($r3['nick'], 'nick', $r3['estado']) . ','; 
 				}
@@ -160,7 +160,7 @@ ORDER BY fecha_registro ASC", $link);
 
 
 
-	$result = mysql_query("SELECT ID, siglas, nombre, fecha_creacion, ID_presidente,
+	$result = mysql_query_old("SELECT ID, siglas, nombre, fecha_creacion, ID_presidente,
 (SELECT nick FROM users WHERE ID = partidos.ID_presidente LIMIT 1) AS nick_presidente, 
 (SELECT (SELECT nick FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS nick FROM partidos_listas WHERE pais = '".PAIS."' AND ID_partido = partidos.ID ORDER BY ID ASC LIMIT 1) AS nick_candidato, 
 (SELECT COUNT(ID) FROM users WHERE partido_afiliado = partidos.ID AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS afiliados, 
@@ -168,7 +168,7 @@ ORDER BY fecha_registro ASC", $link);
 FROM partidos 
 WHERE pais = '".PAIS."' AND estado = 'ok'
 ORDER BY num_lista DESC, afiliados DESC, nombre DESC", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 
 		$num_lista = $r['num_lista'];
 		if ($num_lista > 0) {			

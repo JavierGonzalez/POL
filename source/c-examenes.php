@@ -29,29 +29,29 @@ function boton_cargo($value, $url, $cargo) {
 
 function shuffle_assoc($input_array){
 	foreach($input_array as $key => $value){
-		$temp_array[$value][key] = $key;
+		$temp_array[$value]['key'] = $key;
 	}
 	shuffle($input_array);
 	foreach($input_array as $key => $value){
-		$return_array[$temp_array[$value][key]] = $value;
+		$return_array[$temp_array[$value]['key']] = $value;
 	}
 	return $return_array;
 }
 
 // carga config
-$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
-while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
+$result = mysql_query_old("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
+while ($r = mysqli_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 // INIT
 if (($_GET['a'] == 'editar') AND (((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) AND ($pol['estado'] == 'ciudadano'))) { 		// EDITAR
 
 	if (!$_GET['b']) { $_GET['b'] = 0; }
 
-	$result = mysql_query("SELECT ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas
+	$result = mysql_query_old("SELECT ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas
 FROM examenes
 WHERE pais = '".PAIS."' AND ID = '".$_GET['b']."'
 LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 		
 		$txt_title = _('Editar examen');
 		$txt_nav = array('/examenes'=>_('Exámenes'), _('Editar examen').': '.$r['titulo']);
@@ -82,12 +82,12 @@ LIMIT 1", $link);
 <h2>'._('Preguntas').':</h2>
 <ol id="lista">';
 
-		$result2 = mysql_query("SELECT ID, examen_ID, user_ID, pregunta, respuestas, tiempo,
+		$result2 = mysql_query_old("SELECT ID, examen_ID, user_ID, pregunta, respuestas, tiempo,
 (SELECT nick FROM users WHERE ID = examenes_preg.user_ID LIMIT 1) AS nick
 FROM examenes_preg
 WHERE pais = '".PAIS."' AND examen_ID = '".$_GET['b']."'
 ORDER BY time DESC", $link);
-		while($r2 = mysql_fetch_array($result2)){
+		while($r2 = mysqli_fetch_array($result2)){
 			$respuestas = '';
 			$res = explode("|", $r2['respuestas']);
 			foreach($res as $ID => $respuesta) {
@@ -123,9 +123,9 @@ ORDER BY time DESC", $link);
 </ol>
 </form>';
 			if ((nucleo_acceso($vp['acceso']['examenes_decano'])) AND ($r['cargo_ID'] < 0))  {
-				$result3 = mysql_query("SELECT (SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas
+				$result3 = mysql_query_old("SELECT (SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas
 FROM examenes WHERE pais = '".PAIS."' AND ID = '" . $_GET['b'] . "' LIMIT 1", $link);
-				while($r3 = mysql_fetch_array($result3)){ 
+				while($r3 = mysqli_fetch_array($result3)){ 
 					if ($r3['num_depreguntas'] == 0) {
 						$txt .='<hr />
 <form action="'.accion_url().'a=examenes&b=eliminar-examen" method="post">
@@ -149,8 +149,8 @@ FROM examenes WHERE pais = '".PAIS."' AND ID = '" . $_GET['b'] . "' LIMIT 1", $l
 } elseif (($_GET['a'] == 'mis-examenes') AND ($pol['estado'] == 'ciudadano')) { 	// MIS EXAMENES
 
 	// load config full
-	$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
-	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
+	$result = mysql_query_old("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
+	while ($r = mysqli_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 	$txt_title = _('Mis exámenes');
 	$txt_nav = array('/examenes'=>_('Exámenes'), _('Mis exámenes'));
@@ -165,13 +165,13 @@ FROM examenes WHERE pais = '".PAIS."' AND ID = '" . $_GET['b'] . "' LIMIT 1", $l
 <th>'._('Hace').'</th>
 </tr>';
 
-	$result = mysql_query("SELECT cargo_ID, user_ID, time, aprobado, cargo, nota, 
+	$result = mysql_query_old("SELECT cargo_ID, user_ID, time, aprobado, cargo, nota, 
 (SELECT titulo FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre_examen,
 (SELECT ID FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_ID
 FROM cargos_users
 WHERE user_ID = '" . $pol['user_ID'] . "'
 ORDER BY aprobado ASC, nota DESC", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 		if ($r['aprobado'] == 'ok') { $sello = '<img src="'.IMG.'varios/estudiado.gif" alt="Aprobado" title="Aprobado" border="0" />'; } else { $sello = ''; }
 		if ($r['cargo'] == 'true') { $cargo = '('._('Cargo ejercido').')'; } else { $cargo = ''; }
 		if (($r['cargo_ID'] <= 0) AND (time()-strtotime($r['time']) > $pol['config']['examen_repe']*6)) {
@@ -200,14 +200,14 @@ ORDER BY aprobado ASC, nota DESC", $link);
 } elseif (($_GET['a'] == 'examen') AND ($_GET['b']) AND ($_GET['b'] != 0) AND ($pol['estado'] == 'ciudadano')) { 
 														// HACER EXAMEN
 
-	$result = mysql_query("SELECT ID, titulo, user_ID, time, cargo_ID, nota, num_preguntas,
+	$result = mysql_query_old("SELECT ID, titulo, user_ID, time, cargo_ID, nota, num_preguntas,
 (SELECT time FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = examenes.cargo_ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS fecha_ultimoexamen,
 (SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_preguntas_especificas,
 (SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = 0 LIMIT 1) AS num_preguntas_generales
 FROM examenes
 WHERE pais = '".PAIS."' AND ID = '".$_GET['b']."'
 LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 
 		$preguntas_disponibles = $r['num_preguntas_especificas'] + $r['num_preguntas_generales'];
 		$margen_ultimoexamen = strtotime($r['fecha_ultimoexamen']) + $pol['config']['examen_repe'];
@@ -216,10 +216,10 @@ LIMIT 1", $link);
 			// marca examen como hecho	
 			if ($r['fecha_ultimoexamen']) {
 				//update 
-				mysql_query("UPDATE cargos_users SET time = '" . $date . "', nota = 0.0, aprobado = 'no' WHERE cargo_ID = '" . $r['cargo_ID'] . "' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+				mysql_query_old("UPDATE cargos_users SET time = '" . $date . "', nota = 0.0, aprobado = 'no' WHERE cargo_ID = '" . $r['cargo_ID'] . "' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
 			} else {
 				//insert
-				mysql_query("INSERT INTO cargos_users 
+				mysql_query_old("INSERT INTO cargos_users 
 (cargo_ID, pais, user_ID, time, aprobado, nota) 
 VALUES ('" . $r['cargo_ID'] . "', '".PAIS."', '" . $pol['user_ID'] . "', '" . $date . "', 'no', '0.0')", $link);
 			}	
@@ -254,14 +254,14 @@ VALUES ('" . $r['cargo_ID'] . "', '".PAIS."', '" . $pol['user_ID'] . "', '" . $d
 
 			$examen_tiempo = 0;
 			$respuestas_correctas = array();
-			$result2 = mysql_query("SELECT ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo
+			$result2 = mysql_query_old("SELECT ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo
 FROM examenes_preg
 WHERE pais = '".PAIS."' AND (examen_ID = '" . $_GET['b'] . "' OR examen_ID = 0)
-ORDER BY examen_ID DESC, RAND() LIMIT ".mysql_real_escape_string($r['num_preguntas']), $link);
-			echo mysql_error($link);
-			while($r2 = mysql_fetch_array($result2)){
+ORDER BY examen_ID DESC, RAND() LIMIT ".mysqli_real_escape_string($link,$r['num_preguntas']), $link);
+			echo mysqli_error($link);
+			while($r2 = mysqli_fetch_array($result2)){
 				$respuestas = '';
-				$res2 = '';
+				$res2 = [];
 				$res = explode("|", $r2['respuestas']);
 				
 				$res2['a'] = $res[0];
@@ -342,13 +342,13 @@ window.onload = function(){
 
 } elseif (($_GET['a']) AND ($_GET['a'] != 0)) {				// VER EXAMEN
 
-	$result = mysql_query("SELECT ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas,
+	$result = mysql_query_old("SELECT ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas,
 (SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_preguntas_especificas,
 (SELECT time FROM cargos_users WHERE cargo_ID = examenes.cargo_ID AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1) AS fecha_ultimoexamen
 FROM examenes
 WHERE pais = '".PAIS."' AND ID = '" . $_GET['a'] . "'
 LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 
 		$txt_title = _('Examen').' '._('de').' ' . $r['titulo'];
 		$txt_nav = array('/examenes'=>_('Exámenes'), $r['titulo']);
@@ -367,8 +367,8 @@ LIMIT 1", $link);
 		if ($r['cargo_ID'] == 0) {
 			$txt .= _('Examen sin vinculación con cargo').'.';
 		} else {
-			$result2 = mysql_query("SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1", $link);
-			while($r2 = mysql_fetch_array($result2)){ $txt .= _('Examen vinculado al cargo').': <a href="/cargos/">' . $r2['nombre'] . '</a>.'; $cargo_nom = $r2['nombre']; }	
+			$result2 = mysql_query_old("SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1", $link);
+			while($r2 = mysqli_fetch_array($result2)){ $txt .= _('Examen vinculado al cargo').': <a href="/cargos/">' . $r2['nombre'] . '</a>.'; $cargo_nom = $r2['nombre']; }	
 		}
 
 		$txt .= '</p>';
@@ -392,8 +392,8 @@ LIMIT 1", $link);
 	$txt_nav = array('/examenes'=>_('Exámenes'));
 	$txt_tab = array('/cargos'=>_('Cargos'));
 
-	$result = mysql_query("SELECT examen_ID FROM examenes_preg WHERE pais = '".PAIS."'", $link);
-	while($r = mysql_fetch_array($result)){ 
+	$result = mysql_query_old("SELECT examen_ID FROM examenes_preg WHERE pais = '".PAIS."'", $link);
+	while($r = mysqli_fetch_array($result)){ 
 		 if ($r['examen_ID'] == 0) { $num_generales++; } else { $num_especificas++; }
 	}
 	
@@ -413,18 +413,18 @@ LIMIT 1", $link);
 </tr>';
 
 
-	$result = mysql_query("SELECT ID, titulo, user_ID, time, cargo_ID, nota, num_preguntas,
+	$result = mysql_query_old("SELECT ID, titulo, user_ID, time, cargo_ID, nota, num_preguntas,
 (SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_preguntas_especificas,
 (SELECT COUNT(*) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = examenes.cargo_ID) AS examinados,
 (SELECT COUNT(*) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = examenes.cargo_ID AND aprobado = 'ok') AS aprobados
 FROM examenes
 WHERE pais = '".PAIS."' AND ID != 0
 ORDER BY nota DESC, num_preguntas_especificas DESC", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 
 		if (substr($r['cargo_ID'], 0, 1) != '-') {
-			$result2 = mysql_query("SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '" . $r['cargo_ID'] . "' LIMIT 1", $link);
-			while($r2 = mysql_fetch_array($result2)){ $cargo = '<img src="'.IMG.'cargos/' . $r['cargo_ID'] . '.gif" title="' . $r2['nombre'] . '" />'; }
+			$result2 = mysql_query_old("SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '" . $r['cargo_ID'] . "' LIMIT 1", $link);
+			while($r2 = mysqli_fetch_array($result2)){ $cargo = '<img src="'.IMG.'cargos/' . $r['cargo_ID'] . '.gif" title="' . $r2['nombre'] . '" />'; }
 		} else { $cargo = ''; }
 
 		if ((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) { $boton = boton(_('Editar'), '/examenes/editar/'.$r['ID'], false, 'small'); } 

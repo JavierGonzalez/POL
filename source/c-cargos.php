@@ -33,11 +33,11 @@ if ($_GET['a'] == 'organigrama') { // ORGANIGRAMA
 
 	function cargo_bien($c){ return str_replace(' ', '_', $c); }
 
-	$result = mysql_query("SELECT nombre, asigna, elecciones,
+	$result = mysql_query_old("SELECT nombre, asigna, elecciones,
 (SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = c.asigna LIMIT 1) AS asigna_nombre
 FROM cargos `c`
 WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 		if ($r['asigna'] <= 0) { $r['asigna_nombre'] = 'CIUDADANOS'; }
 
 		$data_cargos[] = cargo_bien($r['asigna_nombre']).'->'.cargo_bien($r['nombre']);
@@ -47,8 +47,8 @@ WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 
 } elseif (is_numeric($_GET['a'])) { // VER CARGO
 
-	$result = mysql_query("SELECT * FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['a']."' LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) {
+	$result = mysql_query_old("SELECT * FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['a']."' LIMIT 1", $link);
+	while($r = mysqli_fetch_array($result)) {
 		$txt_nav = array('/cargos'=>'Cargos', '/cargos/'.$r['cargo_ID']=>$r['nombre']);
 
 		if ($r['nombre_extra'] != '') { $txt .= '<p>'.$r['nombre_extra'].'</p>'; }
@@ -57,7 +57,7 @@ WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 		$activos = array();
 		$candidatos = array();
 		$activos_nick = array();
-		$result2 = mysql_query("SELECT *, 
+		$result2 = mysql_query_old("SELECT *, 
 (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick,
 (SELECT estado FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick_estado,
 (SELECT fecha_last FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_last,
@@ -68,7 +68,7 @@ WHERE pais = '".PAIS."'
 AND cargo_ID = '".$r['cargo_ID']."'
 AND (aprobado = 'ok' OR cargo = 'true')
 ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
-		while($r2 = mysql_fetch_array($result2)){
+		while($r2 = mysqli_fetch_array($result2)){
 
 			if ($r['asigna'] > 0) { $asignador = nucleo_acceso('cargo', $r['asigna']); } else { $asignador = false; }
 			if ($r['nombre'] == 'Socio') { $asignador = false; }
@@ -112,12 +112,12 @@ ORDER BY voto_confianza DESC, nota DESC, fecha_last DESC", $link);
 		if (isset($r['elecciones'])) {
 
 			// CADENA DE SUCESION
-			$result2 = mysql_query("SELECT * 
+			$result2 = mysql_query_old("SELECT * 
 FROM votacion
 WHERE tipo = 'elecciones' AND pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND estado = 'end'
 ORDER BY time_expire DESC
 LIMIT 1", $link);
-			while($r2 = mysql_fetch_array($result2)) {
+			while($r2 = mysqli_fetch_array($result2)) {
 
 				$cnum = 0;
 				$elecciones_electos = explodear('|', $r2['ejecutar'], 2);
@@ -227,12 +227,12 @@ $txt .= '</table>
 	// Obtiene cargos automaticos (para imponer el limite de 1 automatico por usuario, con el fin de evitar "picar en todos los cargos")
 	$cargos_automaticos = array();
 	if (isset($pol['user_ID'])) {
-		$result = mysql_query("SELECT cargo_ID FROM cargos WHERE pais = '".PAIS."' AND autocargo = 'true'", $link);
-		while($r = mysql_fetch_array($result)){ $cargos_automaticos[] = $r['cargo_ID']; }
+		$result = mysql_query_old("SELECT cargo_ID FROM cargos WHERE pais = '".PAIS."' AND autocargo = 'true'", $link);
+		while($r = mysqli_fetch_array($result)){ $cargos_automaticos[] = $r['cargo_ID']; }
 	}
 
 	$cargo_ID_array = array();
-	$result = mysql_query("SELECT *, 
+	$result = mysql_query_old("SELECT *, 
 (SELECT cargo FROM cargos_users WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS cargo,
 (SELECT aprobado FROM cargos_users WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS aprobado,
 (SELECT nota FROM cargos_users WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS nota,
@@ -240,15 +240,15 @@ $txt .= '</table>
 (SELECT COUNT(ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = cargos.cargo_ID AND cargo = 'true') AS cargo_num,
 (SELECT COUNT(ID) FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = cargos.cargo_ID AND aprobado = 'ok') AS candidatos_num
 FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 
 		$cargo_ID_array[] = $r['cargo_ID'];
 		if (($editar) AND ($r['asigna'] > 0)) { $cargo_editar = true; } else { $cargo_editar = false; }
 
 		$cargos_nick = array();
 		if ($r['cargo_num'] > 0) {
-			$result2 = mysql_query("SELECT (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick, (SELECT voto_confianza FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS confianza FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND cargo = 'true' ORDER BY confianza DESC LIMIT 10", $link);
-			while($r2 = mysql_fetch_array($result2)){ $cargos_nick[] = crear_link($r2['nick']); }
+			$result2 = mysql_query_old("SELECT (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick, (SELECT voto_confianza FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS confianza FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND cargo = 'true' ORDER BY confianza DESC LIMIT 10", $link);
+			while($r2 = mysqli_fetch_array($result2)){ $cargos_nick[] = crear_link($r2['nick']); }
 		}
 
 		$txt_el_td = '<span style="white-space:nowrap;">
@@ -259,8 +259,8 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 
 		if ($cargo_editar) {
 			$txt_el_td .= '<td align="right">'.($r['asigna']>0&&$r['cargo_num']==0?boton('X', accion_url().'a=cargo&b=eliminar&cargo_ID='.$r['cargo_ID'], '¿Estás seguro de querer ELIMINAR este cargo?', 'small red').' ':'').'<select name="asigna_'.$r['cargo_ID'].'">';
-			$result2 = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID != '".$r['cargo_ID']."' ORDER BY nivel DESC", $link);
-			while($r2 = mysql_fetch_array($result2)){
+			$result2 = mysql_query_old("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID != '".$r['cargo_ID']."' ORDER BY nivel DESC", $link);
+			while($r2 = mysqli_fetch_array($result2)){
 				$txt_el_td .= '<option value="'.$r2['cargo_ID'].'"'.($r['asigna']==$r2['cargo_ID']?' selected="selected"':'').'>'.$r2['nombre'].'</option>';
 			}
 			$txt_el_td .= '</select></td>';
@@ -389,8 +389,8 @@ días
 
 		$txt .= '</tr></table></p><p>'._('Cargo supeditado a').': <select name="asigna">';
 		
-		$result2 = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
-		while($r2 = mysql_fetch_array($result2)){
+		$result2 = mysql_query_old("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
+		while($r2 = mysqli_fetch_array($result2)){
 			$txt .= '<option value="'.$r2['cargo_ID'].'">'.$r2['nombre'].'</option>';
 		}
 		$txt .= '</select> '._('Nivel').': <input type="text" name="nivel" value="5" maxlength="2" size="2" style="text-align:right;" /></p>

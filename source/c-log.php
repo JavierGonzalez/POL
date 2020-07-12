@@ -24,11 +24,11 @@ $txt .= '<br />'.$p_paginas.'
 <th>'._('Acción').'</th>
 </tr>';
 
-$result = mysql_query("SELECT *
+$result = mysql_query_old("SELECT *
 FROM log 
 WHERE pais = '".PAIS."'".($_GET['a']=='nick'?" AND nick = '".$_GET['b']."'":"")."
-ORDER BY time DESC LIMIT ".mysql_real_escape_string($p_limit), $link);
-while($r = mysql_fetch_array($result)){
+ORDER BY time DESC LIMIT ".mysqli_real_escape_string($link,$p_limit), $link);
+while($r = mysqli_fetch_array($result)){
 	$txt .= '<tr>
 <td align="right">'.timer($r['time']).'</td><td class="gris">'.substr($r['time'], 11, 5).'</td>
 <td>'.crear_link($r['nick']).'</td><td>'.$r['accion'].'</td>

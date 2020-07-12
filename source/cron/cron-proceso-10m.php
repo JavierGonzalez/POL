@@ -27,5 +27,5 @@ while($r = r($result)) {
 
 
 
-mysql_close($link);
+mysqli_close($link);
 ?>

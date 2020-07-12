@@ -10,8 +10,8 @@
 include('inc-login.php');
 
 // carga config
-$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
-while ($row = mysql_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
+$result = mysql_query_old("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
+while ($row = mysqli_fetch_array($result)) { $pol['config'][$row['dato']] = $row['valor']; }
 
  if ($_GET['a'] == 'editar') {
 
@@ -77,10 +77,10 @@ window.onload = function(){
 
 	// datos graficos
 	$i = 0;
-	$result = mysql_query("SELECT mercado_ID, pols
+	$result = mysql_query_old("SELECT mercado_ID, pols
 FROM pujas WHERE pais = '".PAIS."' AND mercado_ID = '1' OR mercado_ID = '2' 
 ORDER BY time ASC LIMIT 500", $link);
-	while($row = mysql_fetch_array($result)){
+	while($row = mysqli_fetch_array($result)){
 		$dgrafico[$row['mercado_ID']][] = $row['pols'];
 		$i++;
 	}
@@ -91,10 +91,10 @@ ORDER BY time ASC LIMIT 500", $link);
 	$queda = duracion(strtotime(date('Y-m-d 20:00:00')) - time());
 	if (substr($queda, 0, 1) == '-') { $queda = '1 dia'; }
 
-	$result = mysql_query("SELECT valor,
+	$result = mysql_query_old("SELECT valor,
 (SELECT nick FROM users WHERE ID = config.valor LIMIT 1) AS nick
 FROM config WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1", $link);
-	while($row = mysql_fetch_array($result)){ $nick = $row['nick']; }
+	while($row = mysqli_fetch_array($result)){ $nick = $row['nick']; }
 
 
 	$txt .= '<h1>Subastas (<a href="/subasta/">Actualizar</a>) <span class="gris">Proceso en <span class="timer" value="'.strtotime(date('Y-m-d 20:00:00')).'"></span></span></h1>
@@ -111,13 +111,13 @@ FROM config WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1", $link)
 
 	$ganador = 'ok';
 	$init = false;
-	$result = mysql_query("SELECT user_ID, pols, time,
+	$result = mysql_query_old("SELECT user_ID, pols, time,
 (SELECT nick FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick
 FROM pujas
 WHERE pais = '".PAIS."' AND mercado_ID = 1
 ORDER BY pols DESC
 LIMIT 10", $link);
-	while($row = mysql_fetch_array($result)) {
+	while($row = mysqli_fetch_array($result)) {
 		$init = true;
 		if ($ganador == 'ok') { 
 			$txt .= '
@@ -156,14 +156,14 @@ LIMIT 10", $link);
 	$gan = 0;
 	$ganador = '';
 	$init = false;
-	$result = mysql_query("SELECT user_ID, MAX(pols) AS los_pols, time,
+	$result = mysql_query_old("SELECT user_ID, MAX(pols) AS los_pols, time,
 (SELECT nick FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick
 FROM pujas
 WHERE pais = '".PAIS."' AND mercado_ID = 2
 GROUP BY user_ID
 ORDER BY los_pols DESC
 LIMIT 10", $link);
-	while($row = mysql_fetch_array($result)) {
+	while($row = mysqli_fetch_array($result)) {
 		$init = true;
 		$gan++;
 		if ($gan == 1) {
@@ -192,8 +192,8 @@ LIMIT 10", $link);
 
 	foreach(explode(";", $pol['config']['palabras']) as $t) {
 		$t = explode(":", $t);
-		$result = mysql_query("SELECT nick FROM users WHERE ID = '" . $t[0] . "' LIMIT 1", $link);
-		while($row = mysql_fetch_array($result)){ 
+		$result = mysql_query_old("SELECT nick FROM users WHERE ID = '" . $t[0] . "' LIMIT 1", $link);
+		while($row = mysqli_fetch_array($result)){ 
 			$txt .= crear_link($row['nick']) . ' ';
 		}
 		

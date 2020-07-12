@@ -22,8 +22,8 @@ case 'video':
 
 case 'presentacion':
 	include_once('source/inc-functions-accion.php');
-	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 577 LIMIT 1", $link); // doc_ID 577 = Test
-	while($r = mysql_fetch_array($result)) { presentacion($r['title'], $r['text']); }
+	$result = mysql_query_old("SELECT title, text FROM docs WHERE ID = 577 LIMIT 1", $link); // doc_ID 577 = Test
+	while($r = mysqli_fetch_array($result)) { presentacion($r['title'], $r['text']); }
 	break;
 
 
@@ -31,8 +31,8 @@ case 'desarrollo':
 	$txt_title = 'Desarrollo de VirtualPol2 | Codigo fuente, Software libre, descargar'; 
 	$txt_nav = array('Desarrollo');
 
-	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 10 LIMIT 1", $link); // doc_ID 10 = Desarrollo
-	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
+	$result = mysql_query_old("SELECT title, text FROM docs WHERE ID = 10 LIMIT 1", $link); // doc_ID 10 = Desarrollo
+	while($r = mysqli_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
 
 	$txt .= '
 <div>
@@ -49,8 +49,8 @@ case 'reglamento-sc':
 	$txt_title = 'Reglamento de Supervisión del Censo'; 
 	$txt_nav = array('Reglamento de Supervisión del Censo');
 
-	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 1188 LIMIT 1", $link); // doc_ID 1188 = Reglamento
-	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
+	$result = mysql_query_old("SELECT title, text FROM docs WHERE ID = 1188 LIMIT 1", $link); // doc_ID 1188 = Reglamento
+	while($r = mysqli_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
 
 	$txt .= '
 <div>
@@ -70,8 +70,8 @@ case 'documentacion':
 	$txt_title = 'Documentación de VirtualPol | Manual, ayuda'; 
 	$txt_nav = array('Documentación');
 
-	$result = mysql_query("SELECT title, text FROM docs WHERE ID = 2 LIMIT 1", $link); // doc_ID 2 = Documentacion
-	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
+	$result = mysql_query_old("SELECT title, text FROM docs WHERE ID = 2 LIMIT 1", $link); // doc_ID 2 = Documentacion
+	while($r = mysqli_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
 
 	$txt .= '
 <div>
@@ -90,8 +90,8 @@ case 'legal': redirect('http://www.virtualpol.com/TOS'); break;
 case 'TOS':
 	$txt_nav = array('TOS');
 	if (isset($pol['user_ID'])) {
-		$result = mysql_query("SELECT fecha_legal FROM users WHERE ID = '".$pol['user_ID']."' AND fecha_legal != '0000-00-00 00:00:00'", $link);
-		while($r = mysql_fetch_array($result)) { $fecha_legal = $r['fecha_legal']; }
+		$result = mysql_query_old("SELECT fecha_legal FROM users WHERE ID = '".$pol['user_ID']."' AND fecha_legal != '0000-00-00 00:00:00'", $link);
+		while($r = mysqli_fetch_array($result)) { $fecha_legal = $r['fecha_legal']; }
 
 		if ($fecha_legal) {
 			$txt_legal = '<p style="text-align:right;">Como usuario de VirtualPol aceptaste las siguientes condiciones en la fecha: '.$fecha_legal.'.</p>';
@@ -103,8 +103,8 @@ case 'TOS':
 	}
 
 
-	$result = mysql_query("SELECT title, text FROM docs WHERE ID = '1' LIMIT 1", $link); // doc_ID 1 = TOS
-	while($r = mysql_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
+	$result = mysql_query_old("SELECT title, text FROM docs WHERE ID = '1' LIMIT 1", $link); // doc_ID 1 = TOS
+	while($r = mysqli_fetch_array($result)) { $title = $r['title']; $text = $r['text']; }
 
 
 	$txt_title = 'CONDICIONES DE USO DE VIRTUALPOL | Informacion legal, contacto';

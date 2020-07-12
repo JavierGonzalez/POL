@@ -81,11 +81,11 @@ $txt .= '<table border="0" cellspacing="0" cellpadding="1">
 <tr><td valign="top" style="color:#999;">'.explodear(' ', $date, 0).'</td><td valign="top"><em><b>Hoy</b>...</em></td><td valign="top"></td></tr>
 ';
 
-$result = mysql_query("SELECT *
+$result = mysql_query_old("SELECT *
 FROM hechos
 WHERE estado = 'ok'
 ORDER BY time DESC", $link);
-while($r = mysql_fetch_array($result)) {
+while($r = mysqli_fetch_array($result)) {
 
 	if (($r['nick'] == $pol['nick']) OR (nucleo_acceso('supervisores_censo')) OR ($pol['nivel'] >= 97)) {
 		$boton = boton('x', '/accion.php?a=historia&b=del&ID='.$r['ID'], false, 'small');

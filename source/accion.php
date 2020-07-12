@@ -105,14 +105,14 @@ case 'test': // Test de desarrollo - eliminar pronto
 	
 case 'api':
 	if (($pol['user_ID']) AND ($_GET['b'] == 'gen_pass')) {
-		mysql_query("UPDATE users SET api_pass = '".substr(md5(mt_rand(1000000000,9999999999)), 0, 12)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
+		mysql_query_old("UPDATE users SET api_pass = '".substr(md5(mt_rand(1000000000,9999999999)), 0, 12)."' WHERE ID = '".$pol['user_ID']."' LIMIT 1", $link);
 		$refer_url = 'perfil/editar/';
 	}
 	break;
 
 case 'users_con':
 	sql("DELETE FROM users_con WHERE user_ID = '".$pol['user_ID']."' ORDER BY time DESC LIMIT 1");
-	users_con($pol['user_ID'], $_REQUEST['extra'], 'session'); mysql_close(); exit;
+	users_con($pol['user_ID'], $_REQUEST['extra'], 'session'); mysqli_close($link); exit;
 	break;
 
 case 'socios':
@@ -576,7 +576,7 @@ case 'voto':
 		}
 	}
 	echo $voto_result;
-	mysql_close($link); exit;
+	mysqli_close($link); exit;
 	break;
 
 
@@ -1678,7 +1678,7 @@ case 'foro':
 		$refer_url = 'foro';
 
 	} elseif (($_GET['b'] == 'eliminarreply') AND ($_GET['hilo_ID']) AND ($_GET['ID'])) {
-		$result = mysql_unbuffered_query("SELECT ID FROM ".SQL."foros_msg WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND time > '".date('Y-m-d H:i:s', time() - 3600)."' LIMIT 1");
+		$result = mysql_query_old("SELECT ID FROM ".SQL."foros_msg WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' AND time > '".date('Y-m-d H:i:s', time() - 3600)."' LIMIT 1");
 		while($r = r($result)){ $es_ok = true; }
 		if ($es_ok) {
 			sql("DELETE FROM ".SQL."foros_msg WHERE ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
@@ -1719,7 +1719,7 @@ case 'kick':
 	if (($_GET['b'] == 'quitar') AND ($_GET['ID'])) {
 
 		$es_policiaexpulsador = false;
-		$result = mysql_unbuffered_query("SELECT ID, user_ID, autor FROM kicks WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1");
+		$result = mysql_query_old("SELECT ID, user_ID, autor FROM kicks WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1");
 		while($r = r($result)){ 
 			if ($pol['user_ID'] == $r['autor']) {
 				$es_policiaexpulsador = true;

@@ -20,8 +20,8 @@ if ($_GET['b'] == 'e') { $externo = true; } else { $externo = false; }
 
 if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['pol']['nick']; }
 
-$result = mysql_query("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
-while ($r = mysql_fetch_array($result)) { 
+$result = mysql_query_old("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET['a']."' LIMIT 1", $link);
+while ($r = mysqli_fetch_array($result)) { 
 	
 	$txt_nav = array('/chats'=>_('Chats'), $r['titulo']);
 	$txt_tab = array('/chats/'.$r['url'].'/log'=>_('Log'), '/chats/'.$r['url'].'/opciones'=>_('Opciones'));
@@ -29,7 +29,7 @@ while ($r = mysql_fetch_array($result)) {
 	if ($r['pais'] != PAIS) { redirect('http://'.strtolower($r['pais']).'.'.DOMAIN.'/chats/'.$_GET['a'].'/'.$_GET['b']); }
 
 
-	if ($pol['user_ID']) { mysql_query("UPDATE chats SET stats_visitas = stats_visitas + 1, fecha_last = '".$date."' WHERE chat_ID = ".$r['chat_ID']." LIMIT 1", $link); }
+	if ($pol['user_ID']) { mysql_query_old("UPDATE chats SET stats_visitas = stats_visitas + 1, fecha_last = '".$date."' WHERE chat_ID = ".$r['chat_ID']." LIMIT 1", $link); }
 
 	$chat_ID = $r['chat_ID'];
 	$titulo = $r['titulo'];
@@ -49,8 +49,8 @@ while ($r = mysql_fetch_array($result)) {
 }
 
 // genera array js, nombres cargos
-$result = mysql_query("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
-while ($r = mysql_fetch_array($result)) {
+$result = mysql_query_old("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
+while ($r = mysqli_fetch_array($result)) {
 	if ($array_cargos) { $array_cargos .= ', '; } 
 	$array_cargos .= $r['cargo_ID'].':"'.$r['nombre'].'"';
 }
@@ -262,7 +262,7 @@ pageTracker._trackPageview();
 } catch(err) {}
 </script>
 </body></html>';
-	if ($link) { mysql_error($link); } exit;
+	if ($link) { mysqli_error($link); } exit;
 }
 
 ?>

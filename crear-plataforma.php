@@ -17,7 +17,7 @@ if ($_GET['a'] == 'accion') {
 	// ACCIONES
 
 	if (($_GET['b'] == 'add') AND (entre(strlen($_POST['pais']), 2, 10)) AND (is_numeric($_POST['participacion'])) AND ($_POST['condiciones_extra']== 'true')) {
-		mysql_query("INSERT INTO plataformas (estado, pais, asamblea, economia, user_ID, time, descripcion, participacion) 
+		mysql_query_old("INSERT INTO plataformas (estado, pais, asamblea, economia, user_ID, time, descripcion, participacion) 
 VALUES ('pendiente', '".str_replace(' ', '', strip_tags($_POST['pais']))."', '".$_POST['asamblea']."', '".$_POST['economia']."', '".$pol['user_ID']."', '".$date."', '".strip_tags($_POST['descripcion'])."', '".$_POST['participacion']."')", $link);
 		$txt .= '<p>Solicitud enviada correctamente.</p>';
 

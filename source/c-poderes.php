@@ -20,10 +20,10 @@ function get_cargo($cargo_ID, $salto=', ', $reicon=false) {
 	$html = '';
 	$limit = '';
 	if ($num != false) { $limit = ' LIMIT ' . $num; }
-	$result = mysql_query("SELECT 
+	$result = mysql_query_old("SELECT 
 (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick
 FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '" . $cargo_ID . "' AND cargo = 'true'" . $limit);
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 		if ($html) { $html .= $salto; if ($reicon) { $html .= '<img src="'.IMG.'cargos/' . $cargo_ID . '.gif" /> '; } }
 		$html .= crear_link($row['nick']); 
 	}
@@ -101,14 +101,14 @@ $txt .= '
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td><ol>';
 
-$result = mysql_query("SELECT nick, cargo,
+$result = mysql_query_old("SELECT nick, cargo,
 (pols + IFNULL((SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = users.ID GROUP BY user_ID),0)) AS pols_total
 FROM users
 WHERE pais = '".PAIS."'
 ORDER BY pols_total DESC 
 LIMIT 15");
-$txt .= mysql_error($link);
-while ($row = mysql_fetch_array($result)) {
+$txt .= mysqli_error($link);
+while ($row = mysqli_fetch_array($result)) {
 	if (!$first) { 
 		$first = true;
 		$txt .= '<li><img src="'.IMG.'cargos/' . $row['cargo'] . '.gif" /> <b>' . crear_link($row['nick']) . '</b></li>';
@@ -121,9 +121,9 @@ $txt .= '</ol></td><td valign="top"><ol>';
 
 
 $first = '';
-$result = mysql_query("SELECT nombre, ID
+$result = mysql_query_old("SELECT nombre, ID
 FROM cuentas WHERE pais = '".PAIS."' AND nivel <= 5 AND gobierno = 'false' ORDER BY pols DESC LIMIT 15");
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	if (!$first) { 
 		$first = true;
 		$txt .= '<li><a href="/pols/cuentas/' . $row['ID'] . '/"><b>' . $row['nombre'] . '</b></a></li>';
@@ -140,7 +140,7 @@ $txt .= '</ol></td></tr></table>
 <p class="gris">Con m&aacute;s propiedades</p><ol>';
 
 $first = '';
-$result = mysql_query("SELECT SUM(superficie) AS superficie,
+$result = mysql_query_old("SELECT SUM(superficie) AS superficie,
 (SELECT nick FROM users WHERE ID = mapa.user_ID LIMIT 1) AS nick,
 (SELECT cargo FROM users WHERE ID = mapa.user_ID LIMIT 1) AS cargo
 FROM mapa
@@ -148,8 +148,8 @@ WHERE pais = '".PAIS."' AND estado != 'e'
 GROUP BY user_ID
 ORDER BY superficie DESC
 LIMIT 15");
-$txt .= mysql_error($link);
-while ($row = mysql_fetch_array($result)) {
+$txt .= mysqli_error($link);
+while ($row = mysqli_fetch_array($result)) {
 	if (!$first) { 
 		$first = true;
 		// (' . ($row['s'] - $row['num'])  . ')

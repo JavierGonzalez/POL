@@ -11,7 +11,7 @@ include('inc-login.php');
 
 if (($_GET['a'] == 'editar') AND ($_GET['b'])) { //EDITAR EMPRESA
 
-	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time,
+	$result = mysql_query_old("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time,
 (SELECT nombre FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_nom,
 (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url,
 (SELECT nick FROM users WHERE ID = empresas.user_ID LIMIT 1) AS nick
@@ -19,7 +19,7 @@ FROM empresas
 WHERE pais = '".PAIS."' AND ID = '".$_GET['b']."' 
 AND user_ID = '".$pol['user_ID']."'
 LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 		
 		$txt_title = _('Empresa').': ' . $r['nombre'] . ' - '._('Sector').': ' . $r['cat_nom'];
 		$txt_nav = array('/empresas'=>_('Empresas'), '/empresas/'.$r['url']=>$r['cat_nom'], $r['nombre'], _('Editar'));
@@ -40,8 +40,8 @@ LIMIT 1", $link);
 
 } elseif ($_GET['a'] == 'crear-empresa') { //CREAR EMPRESA
 
-	$result = mysql_query("SELECT ID, url, nombre, num FROM cat WHERE pais = '".PAIS."' AND tipo = 'empresas' ORDER BY num DESC", $link);
-	while($r = mysql_fetch_array($result)) {
+	$result = mysql_query_old("SELECT ID, url, nombre, num FROM cat WHERE pais = '".PAIS."' AND tipo = 'empresas' ORDER BY num DESC", $link);
+	while($r = mysqli_fetch_array($result)) {
 		$txt_li .= '<option value="'.$r['ID'].'">'.$r['nombre'].'</option>';
 	}
 
@@ -60,12 +60,12 @@ LIMIT 1", $link);
 
 } elseif (($_GET['a']) AND (!$_GET['b'])) { //VER SECTOR
 
-	$result = mysql_query("SELECT ID, url, nombre, num
+	$result = mysql_query_old("SELECT ID, url, nombre, num
 FROM cat
 WHERE pais = '".PAIS."' AND tipo = 'empresas'
 AND url = '".$_GET['a']."'
 ORDER BY num DESC", $link);
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 		$cat_ID = $r['ID'];
 		$cat_nom = $r['nombre'];
 		$cat_num = $r['num'];
@@ -79,12 +79,12 @@ ORDER BY num DESC", $link);
 <a href="/empresas/'.$_GET['a'].'"><b>'.$cat_nom.'</b></a></td><td>'.$cat_num.'</td><td></td>
 </tr>';
 
-	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
+	$result = mysql_query_old("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
 (SELECT nick FROM users WHERE ID = empresas.user_ID LIMIT 1) AS nick
 FROM empresas
 WHERE pais = '".PAIS."' AND cat_ID = '".$cat_ID."'
 ORDER BY time ASC", $link);
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 		$txt .= '<tr><td align="right">'.crear_link($r['nick']).'</td><td><a href="/empresas/'.$_GET['a'].'/'.$r['url'].'"><b>'.$r['nombre'].'</b></a></td><td align="right"><b>'.$r['pv'].'</b> '._('visitas').'</td></tr>';
 	}
 	$txt .= '</table><p><a href="/empresas"><b>'._('Ver empresas').'</b></a></p>';
@@ -92,19 +92,19 @@ ORDER BY time ASC", $link);
 
 } elseif ($_GET['a']) { //VER EMPRESA
 
-	$result = mysql_query("SELECT ID FROM cat WHERE pais = '".PAIS."' AND tipo = 'empresas' AND url = '".$_GET['a']."' LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) { $cat_ID = $r['ID']; }
+	$result = mysql_query_old("SELECT ID FROM cat WHERE pais = '".PAIS."' AND tipo = 'empresas' AND url = '".$_GET['a']."' LIMIT 1", $link);
+	while($r = mysqli_fetch_array($result)) { $cat_ID = $r['ID']; }
 
-	$result = mysql_query("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
+	$result = mysql_query_old("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
 (SELECT nombre FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_nom,
 (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url,
 (SELECT nick FROM users WHERE ID = empresas.user_ID LIMIT 1) AS nick
 FROM empresas
 WHERE pais = '".PAIS."' AND url = '".$_GET['b']."' AND cat_ID = '".$cat_ID."'
 LIMIT 1", $link);
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 
-		mysql_query("UPDATE empresas SET pv = pv+1 WHERE pais = '".PAIS."' AND ID = '".$r['ID']."' LIMIT 1", $link);
+		mysql_query_old("UPDATE empresas SET pv = pv+1 WHERE pais = '".PAIS."' AND ID = '".$r['ID']."' LIMIT 1", $link);
 		$r['pv']++;
 
 		$txt_title = _('Empresas').': '.$r['nombre'].' - '._('Sector').': '.$r['cat_nom'];
@@ -137,14 +137,14 @@ LIMIT 1", $link);
 
 <table border="0" cellspacing="0" cellpadding="2">';
 
-	$result = mysql_query("SELECT ID, url, nombre, num
+	$result = mysql_query_old("SELECT ID, url, nombre, num
 FROM cat
 WHERE pais = '".PAIS."' AND tipo = 'empresas'
 ORDER BY orden ASC", $link);
-	while($r = mysql_fetch_array($result)) {
+	while($r = mysqli_fetch_array($result)) {
 		$pv_num = 0;
-		$result2 = mysql_query("SELECT pv FROM empresas WHERE pais = '".PAIS."' AND cat_ID = '".$r['ID']."'", $link);
-		while($r2 = mysql_fetch_array($result2)) { $pv_num += $r2['pv']; }
+		$result2 = mysql_query_old("SELECT pv FROM empresas WHERE pais = '".PAIS."' AND cat_ID = '".$r['ID']."'", $link);
+		while($r2 = mysqli_fetch_array($result2)) { $pv_num += $r2['pv']; }
 
 		$txt .= '<tr class="amarillo"><td><a href="/empresas/'.$r['url'].'" style="font-size:19px;"><b>'.$r['nombre'].'</b></a></td><td align="right"><b>'.$r['num'].'</b> '._('empresas').'</td><td align="right"><b>'.$pv_num.'</b> '._('visitas').'</td></tr>';
 

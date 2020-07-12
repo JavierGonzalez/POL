@@ -220,8 +220,8 @@ $txt .= '</select>
 
 if (nucleo_acceso($vp['acceso']['control_socios'])) {
 	$contador['socio'] = 0; $contador['inscrito'] = 0;
-	$result = mysql_query("SELECT COUNT(*) AS num, estado FROM socios WHERE pais = '".PAIS."' GROUP BY estado", $link);
-	while($r = mysql_fetch_array($result)){ $contador[$r['estado']] = $r['num']; }
+	$result = mysql_query_old("SELECT COUNT(*) AS num, estado FROM socios WHERE pais = '".PAIS."' GROUP BY estado", $link);
+	while($r = mysqli_fetch_array($result)){ $contador[$r['estado']] = $r['num']; }
 	$txt_tab['/socios/inscritos'] = 'Pendientes ('.$contador['inscrito'].')';
 	$txt_tab['/socios/asociados'] = 'Asociados ('.$contador['socio'].')';
 	$txt_tab['/socios/configurar'] = 'Configurar';

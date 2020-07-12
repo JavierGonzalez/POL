@@ -27,7 +27,7 @@ if ($_GET['a'] == 'mensajes-enviados') {
 <th></th>
 </tr>';
 
-	$result = mysql_query("SELECT 
+	$result = mysql_query_old("SELECT 
 ID, envia_ID, recibe_ID, time, text,
 (SELECT nick FROM users WHERE users.ID = recibe_ID LIMIT 1) AS nick_envia,
 (SELECT nombre FROM cargos WHERE cargos.cargo_ID = cargo LIMIT 1) AS cargo
@@ -35,7 +35,7 @@ FROM mensajes
 WHERE envia_ID = '" . $pol['user_ID'] . "'
 ORDER BY time DESC
 LIMIT 50", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 
 
 		$txt .= '<tr><td valign="top"></td><td valign="top" align="right"><b>'.crear_link($r['nick_envia']).'</b><br /><b>'.str_replace(' ', '&nbsp;', $r['cargo']).'</b><acronym title="'.$r['time'].'" style="font-size:12px;"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym></td><td valign="top" class="rich">'.$r['text'].'</td><td valign="top">'.boton(_('Responder'), '/msg/'.$r['nick_envia']).'</td><td valign="top"></td></tr>'."\n";
@@ -57,8 +57,8 @@ LIMIT 50", $link);
 
 
 	// load config
-	$result = mysql_query("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
-	while ($r = mysql_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
+	$result = mysql_query_old("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'", $link);
+	while ($r = mysqli_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 	if ($_GET['a'] == 'cargos') {
 		$pre_cargo = $_GET['b'];
@@ -70,11 +70,11 @@ LIMIT 50", $link);
 	}
 	if (isset($_POST['ciudadanos'])) { $pre_nick = $_POST['ciudadanos']; }
 
-	$result = mysql_query("SELECT cargo_ID, nombre,
+	$result = mysql_query_old("SELECT cargo_ID, nombre,
 (SELECT COUNT(*) FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'true' AND cargo_ID = cargos.cargo_ID LIMIT 1) AS cargos_num
 FROM cargos
 WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 		if ($r['cargos_num'] > 0) {
 			$select_todoscargos .= '<option value="' . $r['cargo_ID'] . '"'.($pre_cargo==$r['cargo_ID']?' selected="selected"':'').'>'.$r['nombre'].' ('.$r['cargos_num'].')</option>';
 		}
@@ -82,18 +82,18 @@ WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 	$select_todoscargos .= '<option value="SC"'.($pre_cargo=='SC'?' selected="selected"':'').'>&nbsp; &nbsp; '._('Supervisores del Censo').'</option>';
 
 	//tus cargos
-	$result = mysql_query("SELECT cargo_ID, 
+	$result = mysql_query_old("SELECT cargo_ID, 
 (SELECT nombre FROM cargos WHERE cargos.ID = cargo_ID LIMIT 1) AS nombre
 FROM cargos_users 
 WHERE cargo = 'true'
 AND user_ID = '" . $pol['user_ID'] . "'
 ORDER BY nombre ASC", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 		$select_cargos .= '<option value="' . $r['cargo_ID'] . '">' . $r['nombre'] . '</option>';
 	}
 
-	$result = mysql_query("SELECT * FROM grupos WHERE pais = '".PAIS."' ORDER BY num DESC", $link);
-	while($r = mysql_fetch_array($result)){
+	$result = mysql_query_old("SELECT * FROM grupos WHERE pais = '".PAIS."' ORDER BY num DESC", $link);
+	while($r = mysqli_fetch_array($result)){
 		if (in_array($r['grupo_ID'], explode(' ', $pol['grupos']))) {
 			$select_grupos .= '<option value="'.$r['grupo_ID'].'">'.$r['nombre'].' ('.$r['num'].')</option>';
 		}
@@ -182,7 +182,7 @@ function click_form(tipo) {
 <th></th>
 </tr>';
 
-	$result = mysql_query("SELECT 
+	$result = mysql_query_old("SELECT 
 ID, envia_ID, recibe_ID, time, text, leido, cargo, recibe_masivo,
 (SELECT nick FROM users WHERE users.ID = envia_ID LIMIT 1) AS nick_envia,
 (SELECT nombre FROM cargos WHERE cargos.cargo_ID = cargo LIMIT 1) AS cargo_nom
@@ -190,7 +190,7 @@ FROM mensajes
 WHERE recibe_ID = '" . $pol['user_ID'] . "'
 ORDER BY leido ASC, time DESC
 LIMIT 100", $link);
-	while($r = mysql_fetch_array($result)){
+	while($r = mysqli_fetch_array($result)){
 		if ($r['leido'] == 0) {
 			$boton = '<input type="checkbox" name="option2" onClick="window.location.href=\''.accion_url().'a=mensaje-leido&ID=' . $r['ID'] . '\';"  checked />';
 			$fondo = ' style="background:#FFFFCC;"';

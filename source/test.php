@@ -24,7 +24,7 @@ $txt .= ' ';
 
 
 //**************************************************************************/
-$txt .= mysql_error();
+$txt .= mysqli_error($link);
 $txt_title = 'Test';
 $txt_nav = array('Test');
 include('theme.php');

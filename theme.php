@@ -73,11 +73,11 @@ p_scroll = false;
 
 
 <?php
-$result = mysql_query("SELECT nick, pais
+$result = mysql_query_old("SELECT nick, pais
 FROM users 
 WHERE fecha_last > '".date('Y-m-d H:i:00', time() - 3600)."' AND estado != 'expulsado'
 ORDER BY fecha_last DESC", $link);
-while($r = mysql_fetch_array($result)){ 
+while($r = mysqli_fetch_array($result)){ 
 	$li_online_num++; 
 	if ($li_online_num <= 50) {
 	$li_online .= '<a href="http://'.strtolower($r['pais']).'.'.DOMAIN.'/perfil/'.$r['nick'].'" style="color:#AAA;">'.$r['nick'].'</a> '; }
@@ -182,4 +182,4 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 </script>
 </body>
 </html>
-<?php if ($link) { mysql_close($link); } ?>
+<?php if ($link) { mysqli_close($link); } ?>

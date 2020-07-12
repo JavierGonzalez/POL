@@ -28,7 +28,7 @@ foreach (array('GET', 'POST', 'REQUEST', 'COOKIE') AS $_) {
 			array("\r\n",   "\n",     '\'',    '"',     '\\'   ), 
 			array('<br />', '<br />', '&#39;', '&#34;', '&#92;'),
 		$value);
-		${'_'.$_}[$key] = mysql_real_escape_string($value); 
+		${'_'.$_}[$key] = mysqli_real_escape_string($link,$value); 
 	}
 }
 */

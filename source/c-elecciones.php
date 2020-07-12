@@ -40,12 +40,12 @@ $txt .= '</tr></table>
 ';
 
 
-$result = mysql_query("SELECT * 
+$result = mysql_query_old("SELECT * 
 FROM cargos
 WHERE pais = '".PAIS."' AND elecciones IS NOT NULL
 ORDER BY elecciones ASC
 LIMIT 50", $link);
-while($r = mysql_fetch_array($result)) {
+while($r = mysqli_fetch_array($result)) {
 	$time_start = strtotime($r['elecciones']);
 	$time_anterior = strtotime($r['elecciones'])-($r['elecciones_cada']*24*60*60);
 
@@ -68,12 +68,12 @@ while($r = mysql_fetch_array($result)) {
 
 
 // ELECCIONES EXISTENTES
-$result = mysql_query("SELECT * 
+$result = mysql_query_old("SELECT * 
 FROM votacion
 WHERE tipo = 'elecciones' AND pais = '".PAIS."'
 ORDER BY time_expire DESC
 LIMIT 1000", $link);
-while($r = mysql_fetch_array($result)) {
+while($r = mysqli_fetch_array($result)) {
 	$time_expire = strtotime($r['time_expire']);
 	$time = strtotime($r['time']);
 	if ($r['estado'] == 'end') { $n++; }

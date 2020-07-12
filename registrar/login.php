@@ -542,5 +542,5 @@ function login_start() {
 }
  
 
-if ($link) { @mysql_close($link); }
+if ($link) { @mysqli_close($link); }
 ?>

@@ -21,7 +21,7 @@ define('DOMAIN', 'virtualpol.com');
 function acceso_check($chat_ID, $ac=null) {
 	global $link;
 	if (isset($ac)) { $check = array($ac); } else { $check = array('leer','escribir','escribir_ex'); }
-	$result = mysql_unbuffered_query("SELECT HIGH_PRIORITY acceso_leer, acceso_escribir, acceso_escribir_ex, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_ex, pais FROM chats WHERE chat_ID = ".$chat_ID." LIMIT 1");
+	$result = mysql_query_old("SELECT HIGH_PRIORITY acceso_leer, acceso_escribir, acceso_escribir_ex, acceso_cfg_leer, acceso_cfg_escribir, acceso_cfg_escribir_ex, pais FROM chats WHERE chat_ID = ".$chat_ID." LIMIT 1");
 	while ($r = r($result)) { 
 		foreach ($check AS $a) { $acceso[$a] = nucleo_acceso($r['acceso_'.$a], $r['acceso_cfg_'.$a]); }
 	}
@@ -39,7 +39,7 @@ function chat_refresh($chat_ID, $msg_ID=0) {
 	$t = '';
 
 	if (acceso_check($chat_ID, 'leer') === true) { // Permite leer  
-		$res = mysql_unbuffered_query("SELECT HIGH_PRIORITY * FROM chats_msg 
+		$res = mysql_query_old("SELECT HIGH_PRIORITY * FROM chats_msg 
 WHERE chat_ID = ".$chat_ID." AND 
 msg_ID > ".$msg_ID."".(isset($_SESSION['pol']['user_ID'])?" AND (user_ID = '0' OR user_ID = ".$_SESSION['pol']['user_ID']." OR (tipo = 'p' AND nick LIKE '".$_SESSION['pol']['nick']."&rarr;%'))":" AND tipo != 'p'")." 
 ORDER BY msg_ID DESC LIMIT 50");
@@ -54,12 +54,12 @@ ORDER BY msg_ID DESC LIMIT 50");
 // Prevención de inyección
 foreach (array('GET', 'POST', 'REQUEST', 'COOKIE') AS $_) {
 	foreach (${'_'.$_} AS $key=>$value) {
-		if (get_magic_quotes_gpc()) { $value = stripslashes($value); }
+		// if (get_magic_quotes_gpc()) { $value = stripslashes($value); }
 		$value = str_replace(
 			array("\r\n",   "\n",     '\'',    '"',     '\\'   ), 
 			array('<br />', '<br />', '&#39;', '&#34;', '&#92;'),
 		$value);
-		${'_'.$_}[$key] = mysql_real_escape_string($value); 
+		${'_'.$_}[$key] = mysqli_real_escape_string($link,$value); 
 	}
 }
 
@@ -271,5 +271,5 @@ FROM users WHERE nick = '".str_replace('@', '', $_POST['nick'])."' LIMIT 1");
 }
 
 
-mysql_close($link);
+mysqli_close($link);
 ?>

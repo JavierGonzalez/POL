@@ -18,8 +18,8 @@ if ($_GET['a'] == 'mmm') {
 
 	$notame_max = 160;			// Restaurados los 160 caracteres
 
-	$result = mysql_query("SELECT COUNT(ID) AS num FROM ".SQL."foros_msg WHERE hilo_ID = '-1'", $link);
-	while($row = mysql_fetch_array($result)) { $notas_num = $row['num']; }
+	$result = mysql_query_old("SELECT COUNT(ID) AS num FROM ".SQL."foros_msg WHERE hilo_ID = '-1'", $link);
+	while($row = mysqli_fetch_array($result)) { $notas_num = $row['num']; }
 
 	$txt .= '<h1>'._('Notas').' '.$notas_num.' (<a href="/notas">'._('Actualizar').'</a>)</h1>
 
@@ -46,7 +46,7 @@ if ($pol['estado'] == 'ciudadano') { //eliminada limitacion a extranjeros
 ';
 }
 
-	$result = mysql_query("SELECT ID, user_ID, time, text, 
+	$result = mysql_query_old("SELECT ID, user_ID, time, text, 
 (SELECT nick FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS nick,
 (SELECT avatar FROM users WHERE ID = ".SQL."foros_msg.user_ID LIMIT 1) AS avatar
 FROM ".SQL."foros_msg
@@ -54,7 +54,7 @@ WHERE hilo_ID = '-1'
 ORDER BY time DESC
 LIMIT 50", $link);
         $num_id=0;
-	while($row = mysql_fetch_array($result)){
+	while($row = mysqli_fetch_array($result)){
 
 		if ($row['user_ID'] == $pol['user_ID']) { 
 			$boton = boton('X', '/accion.php?a=foro&b=eliminarreply&ID=' . $row['ID'] . '&hilo_ID=-1', '&iquest;Est&aacute;s seguro de querer ELIMINAR esta NOTA?') . '</span>'; 

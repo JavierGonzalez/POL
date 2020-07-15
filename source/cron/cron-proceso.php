@@ -189,7 +189,7 @@ while($r = r($result)){
 				sql("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$unID."' AND user_ID = '".$p['user_ID']."' LIMIT 1");
 			}
 		}
-		$p = '';
+		$p = [];
 		$p['user_ID'] = $r['user_ID'];
 	}
 	$coste = round(($r['size_x'] * $r['size_y']) * $pol['config']['factor_propiedad'], 2);

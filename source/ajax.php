@@ -53,7 +53,7 @@ ORDER BY msg_ID DESC LIMIT 50");
 
 // Prevención de inyección
 foreach (array('GET', 'POST', 'REQUEST', 'COOKIE') AS $_) {
-	foreach (${'_'.$_} AS $key=>$value) {
+	foreach ((array)${'_'.$_} AS $key=>$value) {
 		// if (get_magic_quotes_gpc()) { $value = stripslashes($value); }
 		$value = str_replace(
 			array("\r\n",   "\n",     '\'',    '"',     '\\'   ), 

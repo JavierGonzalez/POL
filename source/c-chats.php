@@ -229,7 +229,7 @@ FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creac
 }
 
 // Limpiar logs de 24h
-sql("DELETE FROM chats_msg WHERE time < '".date('Y-m-d H:i:s', time() - (60*60*24))."'");
+// sql("DELETE FROM chats_msg WHERE time < '".date('Y-m-d H:i:s', time() - (60*60*24))."'");
 
 $txt_menu = 'comu';
 if (!$externo) { include('theme.php'); }

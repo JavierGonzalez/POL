@@ -294,14 +294,14 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 			
 			if ((nucleo_acceso('privado', $r['admin'])) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 				if ($_POST['acceso_cfg_leer']) { 
-					$_POST['acceso_cfg_leer'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_leer']))); 
+					$_POST['acceso_cfg_leer'] = trim(preg_replace(' +', ' ', strtolower($_POST['acceso_cfg_leer']))); 
 				}
 				if ($_POST['acceso_cfg_escribir']) { 
-					$_POST['acceso_cfg_escribir'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir'])));
+					$_POST['acceso_cfg_escribir'] = trim(preg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir'])));
 				}
 
 				if ($_POST['acceso_cfg_escribir_ex']) { 
-					$_POST['acceso_cfg_escribir_ex'] = trim(ereg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir_ex'])));
+					$_POST['acceso_cfg_escribir_ex'] = trim(preg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir_ex'])));
 				}
 				sql("UPDATE chats 
 SET acceso_leer = '".$_POST['acceso_leer']."', 
@@ -842,7 +842,7 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 
 	} elseif (($_GET['b'] == 'editar') AND ($_GET['ID']) AND ($_POST['color']) AND ($_POST['link'] != 'e') AND ($_POST['link'] != 'v')) {
 
-		$_POST['color2'] = ereg_replace("[^A-Fa-f0-9]", "", $_POST['color2']);
+		$_POST['color2'] = preg_replace("[^A-Fa-f0-9]", "", $_POST['color2']);
 		if (strlen($_POST['color2']) == 3) { 
 			$_POST['color2'] = strtoupper($_POST['color2']);
 			if (($_POST['color2'] == 'FFF') OR ($_POST['color2'] == '000') OR ($_POST['color2'] == 'FF0') OR ($_POST['color2'] == '333')) {
@@ -851,7 +851,7 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 				$_POST['color'] = strtoupper(trim($_POST['color2'])); 
 			}
 		}
-		$_POST['color'] = ereg_replace("[^A-Fa-f0-9]", "", $_POST['color']);
+		$_POST['color'] = preg_replace("[^A-Fa-f0-9]", "", $_POST['color']);
 
 		$result = sql("SELECT * FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1");
 		while($r = r($result)){ 
@@ -860,7 +860,7 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 
 
 		if ((strlen($_POST['text']) <= $superficie)) {
-			$_POST['text'] = ereg_replace("[^A-Za-z0-9-]", "", $_POST['text']);
+			$_POST['text'] = preg_replace("[^A-Za-z0-9-]", "", $_POST['text']);
 		}
 			
 		$_POST['link'] = strip_tags($_POST['link']);
@@ -1226,7 +1226,7 @@ case 'mercado':
 		evento_log('Frase cedida a @'.$r['nick']);
 
 	} elseif (($_GET['b'] == 'editarpalabra') AND (is_numeric($_GET['ID'])) AND (strlen($_POST['text']) <= 25)) {
-		$_POST['text'] = ereg_replace("[^ A-Za-z0-9-]", "", $_POST['text']);
+		$_POST['text'] = preg_replace("[^ A-Za-z0-9-]", "", $_POST['text']);
 		$_POST['text'] = str_replace(array('http://', 'https://', ':', ',', '|'), '', $_POST['text']);
 		$_POST['url'] = str_replace(array('http://', 'https://', ':', ',', '|', ' '), '', $_POST['url']);
 		$dato = '';
@@ -1763,8 +1763,8 @@ case 'kick':
 		}
 
 
-		$_POST['razon'] = ereg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['razon']));
-		$_POST['motivo'] = ereg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
+		$_POST['razon'] = preg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['razon']));
+		$_POST['motivo'] = preg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
 
 		if (
 (nucleo_acceso($vp['acceso']['kick'])) AND 

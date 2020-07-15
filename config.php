@@ -8,6 +8,8 @@
 */
 
 
+define('TIME_START', microtime(true));
+
 // INICIALIZACION
 define('RAIZ', dirname(__FILE__).'/');
 include(RAIZ.'config-pwd.php');						// Passwords y claves

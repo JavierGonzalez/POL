@@ -7,8 +7,6 @@
 ** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
 */
 
-define('TIME_START', microtime(true));
-
 include('config.php'); // config raiz
 
 

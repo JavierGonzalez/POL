@@ -70,13 +70,13 @@ function animal_captcha_check($try) {
 	if (isset($_SESSION['animalcaptcha'])) {
 		$try = animal_captcha_quitar_acentos($try);
 		$try = trim(strip_tags($try));
-		$try = ereg_replace("[áàâãÁÀÂÃ]", "a", $try);
-		$try = ereg_replace("[éèêÉÈÊ]", "e", $try);
-		$try = ereg_replace("[íìîÍÌÎ]", "i", $try);
-		$try = ereg_replace("[ÓÒÔÕóòôõ]", "o", $try);
-		$try = ereg_replace("[ÚÙÛÜúùûü]", "u", $try);
-		$try = ereg_replace("[çÇ]", "c", $try);
-		$try = ereg_replace("[ñÑ]", "n", $try);
+		$try = preg_replace("[áàâãÁÀÂÃ]", "a", $try);
+		$try = preg_replace("[éèêÉÈÊ]", "e", $try);
+		$try = preg_replace("[íìîÍÌÎ]", "i", $try);
+		$try = preg_replace("[ÓÒÔÕóòôõ]", "o", $try);
+		$try = preg_replace("[ÚÙÛÜúùûü]", "u", $try);
+		$try = preg_replace("[çÇ]", "c", $try);
+		$try = preg_replace("[ñÑ]", "n", $try);
 		$delete = array('²', '¡', 'º', 'ª', '“', '”', '„', '"', '\'', '.', ',', '_', ':',';','.', '´','!','¿','?','[',']','{','}','(',')','/','%','&','$','@');
 		$try = str_replace($delete, "", $try);
 		$try = utf8_encode(strtolower($try));

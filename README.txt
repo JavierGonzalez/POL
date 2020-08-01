@@ -1,32 +1,32 @@
-VirtualPol.com
+POL.VirtualPol.com
 
 
 ####################
 ### INTRODUCCION ###
 ####################
-VirtualPol es un sistema de plataformas democraticas autogestionadas. Es pionero 
-en la busqueda de la ausencia de administrador y en la supervisiÛn del censo, 
-basandose en pilares democraticos. El sistema tiene como objetivo ser lo m·s 
+POL es un sistema democratico auto-gestionado. Es pionero 
+en la busqueda de la ausencia de administrador y en la supervisi√≥n del censo, 
+basandose en pilares democraticos. El sistema tiene como objetivo ser lo m√°s 
 automatico y flexible posible. Toda automatizacion significa un paso adelante al 
-no hacer falta un administrador para esa tarÈa.
+no hacer falta un administrador para esa tar√©a.
 
-Los principios de VirtualPol son: democracia, igualdad, transparencia, soberanÌa, 
+Los principios de POL son: democracia, igualdad, transparencia, soberan√≠a, 
 flexibilidad y software libre.
 
-La web principal est· funcionando actualmente en http://www.virtualpol.com/
+La web principal est√° funcionando actualmente en https://pol.virtualpol.com
 
 
 ################
 ### HISTORIA ###
 ################
-El concepto de VirtualPol fue originado a mediados del 2004 en un canal de 
+El concepto de POL fue originado a mediados del 2004 en un canal de 
 una red de IRC llamado #pol creado por RhoX Cheme, Pablo1 y otros amigos. 
-En 2005 GONZO (Javier Gonz·lez Gonz·lez) creÛ un bot de IRC que dio capacidad 
-telem·tica y automatizada a la sala de chat. Esta versiÛn inicial del concepto 
-fue el precursor del proyecto actual VirtualPol. Tuvo actividad durante 2 aÒos.
+En 2005 GONZO (Javier Gonz√°lez Gonz√°lez) cre√≥ un bot de IRC que dio capacidad 
+telem√°tica y automatizada a la sala de chat. Esta versi√≥n inicial del concepto 
+fue el precursor del proyecto actual VirtualPol. Tuvo actividad durante 2 a√±os.
 
-El 1 de Octubre del 2008 entrÛ en funcionamiento la primera versiÛn publica y 
-estable de VirtualPol (en pol.teoriza.com). El desarrollo ha sufrido cambios 
+El 1 de Octubre del 2008 entr√≥ en funcionamiento la primera versi√≥n publica y 
+estable de POL (en pol.teoriza.com). El desarrollo ha sufrido cambios 
 diarios desde entonces.
 
 El resultado del camino desde entonces hasta hoy es este codigo fuente.
@@ -35,16 +35,16 @@ El resultado del camino desde entonces hasta hoy es este codigo fuente.
 ################
 ### LICENCIA ###
 ################
-El codigo fuente de VirtualPol est· publicado bajo licencia GNU GPL v3. Siendo 
-asÌ software libre. http://www.virtualpol.com/license
+El codigo fuente de VirtualPol est√° publicado bajo licencia GNU GPL v3. Siendo 
+as√≠ software libre. http://www.virtualpol.com/license
 
-Se especifican las dos siguientes condiciones aÒadidas:
+Se especifican las dos siguientes condiciones a√±adidas:
 
-1. Se debe reconocer los crÈditos de la obra mediante un enlace web regular en 
-el pie de todas las p·ginas con el texto ìVirtualPolî y llevando hacia la siguiente 
-direcciÛn http://www.virtualpol.com/.
+1. Se debe reconocer los cr√©ditos de la obra mediante un enlace web regular en 
+el pie de todas las p√°ginas con el texto "POL" y llevando hacia la siguiente 
+direcci√≥n http://www.virtualpol.com/.
 
-2. Se debe reportar cualquier fallo de seguridad encontrado en el cÛdigo fuente.
+2. Se debe reportar cualquier fallo de seguridad encontrado en el cÔøΩdigo fuente.
 
 
 ######################
@@ -52,14 +52,25 @@ direcciÛn http://www.virtualpol.com/.
 ######################
 
 # CODIGO FUENTE
-2008-04-01 GONZO (Javier Gonz·lez Gonz·lez) - gonzomail(a)gmail.com
-2009-10-09 Cucuta - wblomo22(a)gmail.com
-2009-10-09 selvatgi - selvatgi(a)gmail.com
-2009-10-09 oportunista - teo.diaz(a)gmail.com
-2010-03-12 Eduard - eduardmail(a)gmail.com
-2010-05-12 Bradduk - bradduk(a)gmail.com
-2010-10-26 Brook - zerocool.cmg(a)gmail.com
-2012-01-22 LaSaRuX - lasarux(a)gmail.com
+JavierGonzalez gonzo@virtualpol.com
+alfonsovillarinoarias@gmail.com alfonsovillarinoarias@gmail.com@98f5015e-b27f-11de-a73b-b36ed9d36964
+algasa@gmail.com algasa@gmail.com@98f5015e-b27f-11de-a73b-b36ed9d36964
+bibaroto2 bibaroto2@98f5015e-b27f-11de-a73b-b36ed9d36964
+bradduk bradduk@gmail.com
+chaskarron chaskarron@gmail.com
+eduardmail eduardmail@98f5015e-b27f-11de-a73b-b36ed9d36964
+Gabriel falconeta8@gmail.com
+J.A. Nache nache.nache@gmail.com
+Logatto wblomo22@gmail.com
+McMooray mcmooray@gmail.com
+selvatgi selvatgi@gmail.com
+Shrewd Shrewd23@hotmail.com
+teo.diaz teo.diaz@98f5015e-b27f-11de-a73b-b36ed9d36964
+Teodoro Diaz Diz teo.diaz@gmail.com
+wblomo22 wblomo22@98f5015e-b27f-11de-a73b-b36ed9d36964
+zerocool zerocool.cmg@gmail.com
+
+
 
 # PARTICIPANTES
 Pablo1 drosan Baldor Johnny_Palillo Troll Naaram al00 Sanchez Zokaar Anto 
@@ -80,4 +91,4 @@ Oblak67
 ### CONTACTO ###
 ################
 desarrollo@virtualpol.com
-Javier Gonz·lez Gonz·lez - gonzomail@gmail.com
+Javier Gonz√°lez Gonz√°lez - gonzo@virtualpol.com

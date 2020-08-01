@@ -440,7 +440,7 @@ $wgExtensionCredits['parserhook'][] = array(
 			{
 				$txt = imageAtrributes( $args, $storagename, $map, $outputType, $wgUploadPath ); // if we want borders/position/...
 			} else {
-				$txt  = '<map name="' . $storagename . '">' . $map . '</map>' .
+				echo '<map name="' . $storagename . '">' . $map . '</map>' .
 					 '<img src="' . $wgUploadPath . '/graphviz/' . $storagename . '.' . $outputType . '"' .
 							   ' usemap="#' . $storagename . '" />';
 			}
@@ -451,7 +451,7 @@ $wgExtensionCredits['parserhook'][] = array(
 
 		/* give it back to your wiki
 		 */
-		if ( $wgGraphVizSettings->info ) { $txt .= $info;} // do we want the information snipptes?
+		if ( $wgGraphVizSettings->info ) { echo $info;} // do we want the information snipptes?
 		return $txt;
 	}
 
@@ -613,14 +613,14 @@ $wgExtensionCredits['parserhook'][] = array(
 		}
 
 		// Produce the basic html
-		$txt  = '<map name="' . $storagename . '">' . $map . '</map>' .
+		echo '<map name="' . $storagename . '">' . $map . '</map>' .
 					 '<img class="' . $imageClass . '" style="' . $imageStyle . '"' .
 					  'alt="' . $alt . '" src="' . $wgUploadPath . '/graphviz/' . $storagename . '.' . $outputType . '"' .
 							   ' usemap="#' . $storagename . '" />';
 
 		// Add necessary containers
 		if ( $caption != null ) {
-			$txt .= '<div class="' . $captionDivClass . '">' . $caption . '</div>';
+			echo '<div class="' . $captionDivClass . '">' . $caption . '</div>';
 		}
 		if ( $innerDivClass != null ) {
 			$txt = '<div class="' . $innerDivClass . '">' . $txt . '</div>';

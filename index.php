@@ -1,106 +1,137 @@
-<?php
-/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
-** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
-** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
-** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
-** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
-** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
-*/
-
-include('inc-login.php');
+<?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-$txt_description = _('El Pueblo Virtual').'. Simulador Politico y social Español, democracia participativa, simulador, politica'; 
-
-/* Datos estadisticos
-Se contabilizan los siguientes datos antiguos conservadas en tablas antiguas.
-Plataforma votaciones votos
-Atlantis 402 4540
-POL 773 13752
-Hispania 1079 15546
-Vulcan 161 954
-VP 369 11341
-*/
-$result = sql("SELECT COUNT(*) AS num FROM votacion");
-while($r = r($result)) { $num_votaciones = $r['num']+2784; }
-
-$result = sql("SELECT COUNT(*) AS num FROM votacion_votos");
-while($r = r($result)) { $num_votaciones_votos = $r['num']+46133; }
-
-$result = sql("SELECT COUNT(*) AS num FROM votos");
-while($r = r($result)) { $num_votos = $r['num']; }
-
-$txt_nav = array(_('Bienvenido a VirtualPol'));
-
-$txt .= '<table>
-
-<tr><td valign="top">
-
-<p><b>En VirtualPol no hay administrador.</b> Se ha automatizado la democracia. Todo se decide con pilares democr&aacute;ticos (1 ciudadano 1 voto). En VirtualPol hay diferentes plataformas independientes entre s&iacute; que comparten este sistema como base.</p>
-
-<p>Los principales gestores se eligen mediante elecciones peri&oacute;dicas y autom&aacute;ticas, de forma que nadie puede detener el ciclo. De esta forma no existe ning&uacute;n usuario privilegiado, todos parten de la absoluta igualdad de condiciones.</p>
-
-<ul><em>VirtualPol ofrece:</em>
-
-<li><b>Herramientas democráticas</b>: elecciones, votaciones avanzadas, sistema de cargos, <abbr title="El voto de confianza es un voto +1 -1 secreto, que cada usuario otorga a otros usuarios">voto de confianza</abbr>, grupos/partidos, control de <abbr title="Los kicks sirven para moderar, son bloqueos temporales de usuarios">kicks</abbr>, <abbr title="Exámenes tipo test automaticos">exámenes</abbr>...</li>
-
-<li><b>Herramientas de comunicaci&oacute;n</b>: salas de chat, foros, mensajes privados, notas...</li>
-
-<li>Custodiado por un <b>avanzado sistema de Supervisi&oacute;n del Censo</b> (<a href="'.SSL_URL.'dnie.php" title="Autentificaci&oacute;n mediante DNIe y otros certificados">DNIe</a>, <abbr title="Avanzado sistema de deteccion mediante factores tecnicos">sistema de detecci&oacute;n</abbr>, supervisores elegidos democr&aacute;ticamente, <a href="//www.'.DOMAIN.'/TOS" title="Condiciones de Uso de VirtualPol">TOS</a>...).</li>
-
-<li>Algunos datos: '.num($num_votaciones_votos).' votos procesados en '.num($num_votaciones).' votaciones y '.num($num_votos).' votos de otros tipos.</li>
-
-<li>Es <a href="/desarrollo">Software Libre</a>, gratuito y sin publicidad.</li>
-</ul>
 
 
-<p>VirtualPol es la primera comunidad de Internet sin administrador.</p>
+$_GET[1] = strtolower(PAIS);
+include('chat/index.php');
 
 
-</td><td valign="top">
-
-<table border="0" cellpadding="2" cellspacing="0" width="430">
-<tr>
-<th align="left">'._('Plataformas').'</th>
-<th align="right">'._('Usuarios').'</th>
-</tr>';
-
-
-$result = sql("SELECT pais, valor AS num FROM config WHERE dato = 'info_censo' ORDER BY ABS(valor) DESC LIMIT 100");
-while($r = r($result)) {
-
-	$pais = $r['pais'];
-	$pais_low = strtolower($pais);
-
-	$result2 = sql("SELECT valor, dato FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo', 'bg_color')");
-	while($r2 = r($result2)) { $pais_config[$r2['dato']] = $r2['valor']; }
-
-	$txt .= '<tr style="background:'.$pais_config['bg_color'].';'.($r['num']<0?'display:none;" class="p-inactiva"':'"').'>
-<td><a href="//'.$pais_low.'.'.DOMAIN.'"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" alt="'.$pais.'" /></a></td>
-
-<td><span style="float:right;font-size:22px;"><b>'.num($r['num']).'</b></span><a href="//'.$pais_low.'.'.DOMAIN.'"><b style="font-size:'.($r['num']>1000?18:16).'px;">'.$pais_config['pais_des'].'</b></a><br />
-<em style="color:#777;">'.ucfirst($pais_config['tipo']).'</em></td>
-
-</tr>';
+/*
+if ((false) AND ($pol['user_ID'] == 1) OR ($pol['user_ID'] == 208162) OR ($pol['user_ID'] == 211725)) {
 	
-	$poblacion_num += $r['num'];
+	$txt_nav = array('/'=>'Bienvenido a '.$pol['config']['pais_des']);
+
+	echo '
+<style type="text/css">
+.mtitulo { text-align:right; font-size:20px; color:#555; }
+.widthflex { max-width:100px; overflow:hidden; }
+.legend2 { color:#BBB; }
+</style>
+
+
+<div class="col_4">
+<fieldset><legend><a href="/chats"><b>Chats</b></a> <span class="legend2">&mdash; Conversar</span></legend>
+
+<table width="100%">';
+
+$result = sql("SELECT url, titulo,
+(SELECT COUNT(DISTINCT nick) FROM chats_msg WHERE chat_ID = chats.chat_ID AND user_ID = 0 AND time > '".date('Y-m-d H:i:s', time() - 60*30)."') AS online
+FROM chats 
+WHERE pais = '".PAIS."' AND estado = 'activo' ORDER BY online DESC, fecha_creacion ASC 
+LIMIT 6");
+while ($r = r($result)) { 
+	echo '<tr>
+<td align="right" class="gris" title="Participantes en el chat"><b>'.num($r['online']).'</b></td>
+<td class="widthflex" nowrap>'.($r['url']==strtolower(PAIS)?'<span style="float:right;">'.boton(_('Entrar'), '/chats/'.$r['url'].'', false, 'blue small').'</span>':'').'<a href="/chats/'.$r['url'].'">'.($r['url']==strtolower(PAIS)?'<b style="font-size:17px;">'.$r['titulo'].'</b>':$r['titulo']).'</b></a></td>
+</tr>';
+}
+echo '</table>
+
+
+
+
+</fieldset>
+</div>
+
+<div class="col_4">
+<fieldset><legend><a href="/foro"><b>Foro</b></a> <span class="legend2">&mdash; Debatir</span></legend>
+<table>';
+
+$result = sql("SELECT url, title, num, votos, votos_num,
+(SELECT url FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS sub_url
+FROM ".SQL."foros_hilos
+WHERE estado = 'ok' AND votos > 1
+ORDER BY time_last DESC
+LIMIT 6");
+while($r = r($result)) {
+	echo '<tr>
+<td align="right" title="Votos">'.confianza($r['votos'], $r['votos_num']).'</td>
+<td width="100%" class="widthflex" title="'.$r['title'].'" nowrap><a href="/foro/'.$r['sub_url'].'/'.$r['url'].'">'.$r['title'].'</a></td>
+<td align="right" title="Mensajes" class="gris"><b>'.num($r['num']).'<b></td>
+</tr>';
 }
 
 
-$txt .= '<tr><td style="border-bottom:1px solid grey;" colspan="2"><!--<a href="#" onclick="$(\'tr .p-inactiva\').toggle();return false;">'._('Ver todas las plataformas').'</a>--></td></tr>
+	echo '</table>
 
-<tr>
-<td colspan="2"><span style="float:right;font-size:20px;"><b>'.num($poblacion_num).'</b></span><!--'.(nucleo_acceso('antiguedad', 2)?boton(_('Solicitar nueva plataforma'), '/crear-plataforma.php', false, 'small pill'):'').'--></td>
-</tr>
+</fieldset>
+</div>
 
-</table>
+<div class="col_4">
+<fieldset><legend><a href="/votacion"><b>Votaciones</b></a> <span class="legend2">&mdash; Decidir</span></legend>
+<table width="100%">';
+$linea = 0;
+$result = sql("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, num_censo, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, cargo_ID,
+(SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado
+FROM votacion
+WHERE estado IN ('ok', 'end') AND pais = '".PAIS."'
+ORDER BY estado ASC, time_expire DESC
+LIMIT 8");
+while($r = r($result)) {
 
-</td></tr></table>';
+	if ((nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
+		echo '<tr'.($r['estado']=='end'&&++$linea==1?' style="border-top:1px solid #CCC;"':'').'>
+<td align="right" class="gris" title="'._('Participación').': '.($r['num_censo']==0?0:num($r['num']*100/$r['num_censo'], 1)).'% ('.num($r['num_censo']).')"><b>'.num($r['num']).'</b></td>
 
-$result = sql("SELECT COUNT(*) AS num FROM plataformas WHERE estado = 'pendiente'");
-while($r = r($result)) { $plat_num = $r['num']; }
+<td width="100%" class="widthflex" nowrap>'.(($r['estado']=='ok'&&!$r['ha_votado'])||($r['estado']=='end')?'<span style="float:right;margin-right:-5px;"><a href="/votacion/'.$r['ID'].'" class="button small blue" style="margin-top:-2px;">'.($r['estado']=='ok'?_('Votar'):_('Resultado')).'</a></span>':'').($r['cargo_ID']?'<a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /></a> ':'').'<a href="/votacion/'.$r['ID'].'">'.$r['pregunta'].'</a></td>
+</tr>';
+	}
+}
 
-if ($pol['user_ID'] == 1) { $txt_tab['/crear-plataforma.php?a=admin'] = 'Plataformas pendientes ('.$plat_num.')'; }
+echo '</table>
 
-include('theme.php');
-?>
+
+
+</fieldset>
+</div>
+
+
+
+<hr />
+
+
+
+<div class="col_6">
+<fieldset><legend>Notificaciones</legend>
+...
+</fieldset>
+</div>
+
+<div class="col_3">
+<fieldset><legend>Cargos</legend>
+</fieldset>
+</div>
+
+<div class="col_3">
+<fieldset><legend>Elecciones</legend>
+</fieldset>
+</div>
+
+
+<div style="height:100px;"></div>';
+
+
+} else {
+	// CHAT PLAZA
+	$_GET[1] = strtolower(PAIS);
+	include('inc-chats.php');
+}
+
+
+echo mysqli_error($link);
+
+$txt_description = $pol['config']['pais_des'].'. '.PAIS;
+$txt_menu = 'comu';
+
+*/

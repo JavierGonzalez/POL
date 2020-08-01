@@ -1,6 +1,7 @@
 User-Agent: *
 Allow: /
-Disallow: /accion.php*
-Disallow: /ajax.php*
-Disallow: /api.php*
+Disallow: /accion*
+Disallow: /ajax*
+Disallow: /api*
 Disallow: /legal
+Disallow: /TOS

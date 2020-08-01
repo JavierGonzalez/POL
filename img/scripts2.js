@@ -45,7 +45,7 @@ $(document).ready(function() {
     $(".nick").mouseover(function() {
         var wnick = $(this).text();
         if (!whois_cache[wnick]) {
-            pnick = setTimeout(function() { $.post("/ajax.php", { a: "whois", nick: wnick }, function(data) { $("#pnick").css("display", "none");
+            pnick = setTimeout(function() { $.post("/ajax", { a: "whois", nick: wnick }, function(data) { $("#pnick").css("display", "none");
                     whois_cache[wnick] = data;
                     print_whois(data, wnick); }); }, 500);
         } else { print_whois(whois_cache[wnick], wnick); }
@@ -82,7 +82,7 @@ function pscr() {
 function pscr_close() { p_scroll = false; }
 
 function actualizar_noti() {
-    $('#notif').load('/ajax.php?a=noti');
+    $('#notif').load('/ajax?a=noti');
     if (p_scroll == false) { clearInterval(p_st); }
     search_timers();
 }
@@ -271,7 +271,7 @@ function chat_query_ajax() {
         clearTimeout(refresh);
         var start = new Date().getTime();
         $("#vpc_actividad").attr("src", IMG + "ico/punto_azul.png");
-        $.post("/ajax.php", { chat_ID: chat_ID, n: msg_ID },
+        $.post("/ajax", { chat_ID: chat_ID, n: msg_ID },
             function(data) {
                 ajax_refresh = true;
                 if (data) { print_msg(data); }
@@ -428,7 +428,7 @@ function enviarmsg() {
         clearTimeout(refresh);
         $("#botonenviar").attr("disabled", "disabled");
         $("#vpc_msg").attr("value", "").css("background", "none").css("color", "black");
-        $.post("/ajax.php", { a: "enviar", chat_ID: chat_ID, n: msg_ID, msg: elmsg, anonimo: anonimo },
+        $.post("/ajax", { a: "enviar", chat_ID: chat_ID, n: msg_ID, msg: elmsg, anonimo: anonimo },
             function(data) {
                 ajax_refresh = true;
                 if (data) { chat_sin_leer = -1;

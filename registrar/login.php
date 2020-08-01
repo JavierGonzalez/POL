@@ -1,14 +1,7 @@
-<?php
-/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
-** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
-** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
-** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
-** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
-** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
-*/
+<?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
-include('../inc-login.php');
-include('../source/inc-functions-accion.php');
+
+
 
 
 function ischecked($num, $user_info) {
@@ -17,7 +10,7 @@ function ischecked($num, $user_info) {
 	return $return;
 }
 
-switch ($_GET['a']) {
+switch ($_GET[1]) {
 
 
 case 'panel':
@@ -29,7 +22,7 @@ case 'panel':
 		$result = sql("SELECT ser_SC FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 		while($r = r($result)) { $ser_SC = $r['ser_SC']; }
 
-		$txt .= '<h1>'._('Opciones de usuario').' ('.$pol['nick'].'):</h1>
+		echo '<h1>'._('Opciones de usuario').' ('.$pol['nick'].'):</h1>
 
 <div style="max-width:640px;">
 
@@ -59,9 +52,9 @@ case 'panel':
 	while ($r = r($result)) { $the_lang = $r['lang']; }
 
 	foreach ($vp['langs'] AS $loc => $lang) {
-		$txt .= '<option value="'.$loc.'"'.($loc==$the_lang?' selected="selected"':'').'>'.$lang.'</option>';
+		echo '<option value="'.$loc.'"'.($loc==$the_lang?' selected="selected"':'').'>'.$lang.'</option>';
 	}
-	$txt .= '</select>
+	echo '</select>
 </td>
 <td valign="middle" align="right" valign="top">
 '.boton(_('Cambiar'), 'submit', false, 'large blue').'
@@ -146,7 +139,7 @@ case 'panel':
 </div>';
 
 	} else { //Intruso
-		$txt .= '<p><b style="color:blue;">'._('Cambio efectuado correctamente.</b> Debes entrar de nuevo con tu usuario y contraseña').'.</p>';
+		echo '<p><b style="color:blue;">'._('Cambio efectuado correctamente.</b> Debes entrar de nuevo con tu usuario y contraseña').'.</p>';
 	}
 
 
@@ -164,15 +157,15 @@ case 'panel':
 case 'recuperar-pass':
 	if ($pol['user_ID']) { redirect(REGISTRAR.'login.php?a=panel'); exit; }
 
-	$txt .= '<h2>'._('¿Has olvidado tu contraseña?').'</h2>';
+	echo '<h2>'._('¿Has olvidado tu contraseña?').'</h2>';
 
-	if ($_GET['b']=='no-existe') {
-		$txt .= '<p style="color:red;"><b>'._('No existe ningún usuario con ese email. Probablemente ha sido eliminado por inactividad, puedes registrarte de nuevo').'.</b></p>';
-	} elseif ($_GET['b']=='no-24h') {
-		$txt .= '<p style="color:red;"><b>'._('Solo se puede hacer una recuperación de contraseña cada 24 horas. Debes esperar').'.</b></p>';
+	if ($_GET[2]=='no-existe') {
+		echo '<p style="color:red;"><b>'._('No existe ningún usuario con ese email. Probablemente ha sido eliminado por inactividad, puedes registrarte de nuevo').'.</b></p>';
+	} elseif ($_GET[2]=='no-24h') {
+		echo '<p style="color:red;"><b>'._('Solo se puede hacer una recuperación de contraseña cada 24 horas. Debes esperar').'.</b></p>';
 	}
 
-	$txt .= '<p>'._('No te preocupes, puedes solicitar una recuperación de contraseña. Siguiendo estos pasos').':</p>
+	echo '<p>'._('No te preocupes, puedes solicitar una recuperación de contraseña. Siguiendo estos pasos').':</p>
 
 <ol>
 <li><form action="'.REGISTRAR.'login.php?a=start-reset-pass" method="POST">'._('Tu email').': <input type="text" name="email" value="" style="width:250px;" /> <input type="submit" value="'._('Iniciar recuperación de contraseña').'" style="font-weight:bold;" onclick="alert(\'Recibirás en segundos un email en tu correo.\n\nSi no lo recibes escribe a '.CONTACTO_EMAIL.'\');" /></form></li>
@@ -195,7 +188,7 @@ case 'reset-pass':
 	while ($r = r($result)) { 
 		$check = true;
 		
-		$txt .= '<h2>'._('Cambio de contraseña').':</h2>
+		echo '<h2>'._('Cambio de contraseña').':</h2>
 
 <p>'._('Escribe tu nueva contraseña para efectuar el cambio').':</p>
 
@@ -209,7 +202,7 @@ case 'reset-pass':
 </form>';
 		
 	}
-	if ($check != true) { $txt .= _('Error').'.'; }
+	if ($check != true) { echo _('Error').'.'; }
 
 	$txt_title = _('Recuperar contraseña');
 	$txt_nav = array(_('Recuperar contraseña'));
@@ -258,9 +251,9 @@ VirtualPol</p>";
 		while ($r = r($result)) { $nick_existe = true; }
 		
 		if ($nick_existe) {
-			redirect(REGISTRAR.'login.php?a=recuperar-pass&b=no-24h');
+			redirect(REGISTRAR.'login.php?a=recuperar-pass/no-24h');
 		} else {
-			redirect(REGISTRAR.'login.php?a=recuperar-pass&b=no-existe');
+			redirect(REGISTRAR.'login.php?a=recuperar-pass/no-existe');
 		}
 	} else {
 		redirect('http://www.'.DOMAIN);
@@ -381,7 +374,7 @@ case 'login':
 	} elseif ($_REQUEST['url']) { 
 		$url = escape(base64_decode($_REQUEST['url'])); 
 	} else {
-		$url = 'http://15m.'.DOMAIN; 
+		$url = ''; 
 	}
 
 	$user_ID = false;
@@ -471,12 +464,12 @@ case 'logout':
 
 default:
 
-	$txt .= '<div style="width:380px;margin:0 auto;">';
+	echo '<div style="width:380px;margin:0 auto;">';
 
 	if (isset($pol['user_ID'])) {
-		$txt .= '<p>'._('Ya estás logueado correctamente como').' <b>'.$pol['nick'].'</b>.</p>';
+		echo '<p>'._('Ya estás logueado correctamente como').' <b>'.$pol['nick'].'</b>.</p>';
 	} else {
-		$txt .= '
+		echo '
 <script type="text/javascript" src="'.IMG.'lib/md5.js"></script>
 <script type="text/javascript">
 timestamp_start = Math.round(+new Date()/1000);
@@ -533,7 +526,7 @@ function login_start() {
 </form>';
 	}
 
-	$txt .= '</div>';
+	echo '</div>';
 
 	$txt_title = _('Iniciar sesión');
 	$txt_nav = array(_('Iniciar sesión'));

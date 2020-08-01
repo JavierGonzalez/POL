@@ -1,18 +1,7 @@
-<?php
-/* The source code packaged with this file is Free Software, Copyright (C) 2008 by
-** Javier González González <desarrollo AT virtualpol.com> <gonzomail AT gmail.com>
-** It's licensed under the GNU GENERAL PUBLIC LICENSE v3 unless stated otherwise.
-** You can get copies of the licenses here: http://www.gnu.org/licenses/gpl.html
-** The source: http://www.virtualpol.com/codigo - TOS: http://www.virtualpol.com/TOS
-** VirtualPol, The first Democratic Social Network - http://www.virtualpol.com
-*/
-
-include('../inc-login.php');
-include('../source/inc-functions-accion.php');
+<?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-// Configuración de registro
-define('CAPTCHA_REGISTRO', false);
+
 
 
 $result = sql("SELECT valor, dato FROM config WHERE PAIS IS NULL");
@@ -58,7 +47,7 @@ foreach ($vp['paises'] AS $pais) {
 }
 
 
-switch ($_GET['a']) {
+switch ($_GET[1]) {
 
 case 'registrar': //CHECK
 	$nick = trim($_POST['nick']);
@@ -73,7 +62,7 @@ case 'registrar': //CHECK
 
 
 	//CONTROL: captcha
-	include('animal-captcha-check.php');
+
 	if ($_POST['condiciones'] == 'ok') {
 
 
@@ -95,7 +84,7 @@ case 'registrar': //CHECK
 		if ($bloquear_registro === false) {
 
 
-            if ((CAPTCHA_REGISTRO == false) OR (animal_captcha_check($_POST['animal']) == true)) {
+            if (true) {
 
                 //CONTROL: solo letras y numeros en nick
                 if ((onlynumbers($nick) == true) AND (!in_array($nick, $nicks_prohibidos))) { 
@@ -260,7 +249,7 @@ if ($pol['estado'] == 'ciudadano') {
 	$txt_title = _('Cambiar ciudadanía');
 	$txt_nav = array(_('Ciudadanía'));
 
-	$txt .= '<p><b>'._('Actualmente eres ciudadano en la plataforma').' '.$pol['pais'].'</b>.</p>
+	echo '<p><b>'._('Actualmente eres ciudadano en la plataforma').' '.$pol['pais'].'</b>.</p>
 
 <blockquote>
 <p style="color:red;"><b>'._('Cambiar ciudadanía').' '._('de').' '.$pol['pais'].'</b>:</p>
@@ -276,20 +265,20 @@ if ($pol['estado'] == 'ciudadano') {
 
 
 if (strtotime($pol['rechazo_last']) < (time() - 21600)) { // 6 horas
-	$txt .= '
-<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion.php?a=rechazar-ciudadania" method="POST">
+	echo '
+<form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion/rechazar-ciudadania" method="POST">
 <input type="hidden" name="pais" value="'.$pol['pais'].'" />
 <p>'.boton(_('Cambiar ciudadanía de la plataforma').' '.$pol['pais'], 'submit', '¿Estás seguro de querer CAMBIAR ciudadanía?', 'pill red').'</p>
 </form>';
 
-} else { $txt .= '<p style="color:red;"><b>Solo puedes cambiar tu ciudadanía una vez cada 6 horas...</b></p>'; }
+} else { echo '<p style="color:red;"><b>Solo puedes cambiar tu ciudadanía una vez cada 6 horas...</b></p>'; }
 
-$txt .= '</blockquote>';
+echo '</blockquote>';
 
 } elseif (($pol['estado'] == 'turista') AND ($pol['pais'] != 'ninguno')) {
 	$txt_title = 'Registrar: PASO 2 (Solicitar Ciudadania)';
 	$txt_nav = array('Crear ciudadano');
-	$txt .= '<h1><span class="gris">1. Crear usuario |</span> 2. Solicitar Ciudadan&iacute;a <span class="gris">| 3. Ser Ciudadano</span></h1><hr /><p>Tu solicitud de ciudadanía en '.$pol['pais'].' está en proceso.</p>';
+	echo '<h1><span class="gris">1. Crear usuario |</span> 2. Solicitar Ciudadan&iacute;a <span class="gris">| 3. Ser Ciudadano</span></h1><hr /><p>Tu solicitud de ciudadanía en '.$pol['pais'].' está en proceso.</p>';
 
 } elseif (($pol['estado'] == 'turista') AND ($pol['pais'] == 'ninguno')) {
 	$txt_title = _('Solicitar ciudadanía');
@@ -298,7 +287,7 @@ $txt .= '</blockquote>';
 
 	if (!$_GET['pais']) { $_GET['pais'] = $vp['paises'][0]; }
 
-	$txt .= '
+	echo '
 <p>'._('Dentro de VirtualPol hay diversas plataformas democraticas que son 100% independientes. Elige en la que quieres participar').'.</p>
 
 <form action="?a=solicitar-ciudadania" method="post">
@@ -318,7 +307,7 @@ $txt .= '</blockquote>';
 		$result2 = sql("SELECT dato, valor FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo')");
 		while($r2 = r($result2)) { $pais_array[$r2['dato']] = $r2['valor']; }
 		$n++;
-		$txt .= '
+		echo '
 <tr style="font-size:19px;">
 <td valign="middle"><img src="'.IMG.'banderas/'.$pais.'.png" width="80" height="50" border="0" /></td>
 <td><input type="radio" name="pais" id="pr_'.$pais.'" value="'.$pais.'"'.($n==1?' checked="checked"':'').' /></td>
@@ -326,7 +315,7 @@ $txt .= '</blockquote>';
 </tr>';
 	}
 
-	$txt .= '
+	echo '
 <tr>
 <td colspan="2"></td>
 <td>'.boton(_('Solicitar ciudadanía'), 'submit', false, 'large blue').'</td>
@@ -341,7 +330,7 @@ $txt .= '</blockquote>';
 } elseif ($registro_txt) {
 	$txt_title = _('Registrar usuario');
 	$txt_nav = array(_('Registro'));
-	$txt .= $registro_txt;
+	echo $registro_txt;
 } else {
 
 
@@ -361,7 +350,7 @@ $(document).ready(function() {
 	$txt_title = _('Crear ciudadano');
 	$txt_nav = array(_('Crear ciudadano'));
 
-	$txt .= '<form action="?a=registrar'.($_GET['p']?'&p='.$_GET['p']:'').($_GET['r']?'&r='.$_GET['r']:'').'" method="POST" id="form_crear_ciudadano">
+	echo '<form action="?a=registrar'.($_GET['p']?'&p='.$_GET['p']:'').($_GET['r']?'&r='.$_GET['r']:'').'" method="POST" id="form_crear_ciudadano">
 
 <input type="hidden" name="extra" value="" id="input_extra" />
 <input type="hidden" name="repid" value="' . $rn . '" />
@@ -403,11 +392,6 @@ $(document).ready(function() {
 <input id="pass2" type="password" autocomplete="off" name="pass2" value="" maxlength="40" style="margin-top:1px;" required /> '._('Introduce otra vez').'.</td>
 </tr>
 
-'.(CAPTCHA_REGISTRO?'<tr>
-<td align="right" valign="top"><b>'._('¿Qué animal es?').'</b>:</td>
-<td><img src="animal-captcha.php" alt="Animal" id="animalcaptchaimg"  onclick="document.getElementById(\'animalcaptchaimg\').src=\'animal-captcha.php?\'+Math.random();" title="'._('Visualizar otro animal').'" /><br />
-<input type="text" name="animal" value="" autocomplete="off" size="14" maxlength="20" placeholder="'._('Ejemplo: león').'" pattern="[A-Za-záéíóúÁÉÍÓÚñÑüÜ]{2,20}" required /> '._('Un nombre, sin espacios, nivel primaria').' (<a href="http://www.teoriza.com/captcha/example.php" target="_blank">Animal Captcha</a>)</td>
-</tr>':'').'
 
 <tr>
 <td></td>

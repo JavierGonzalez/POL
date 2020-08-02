@@ -2,13 +2,6 @@
 
 
 
-// Prevención de inyección
-foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val); }
-foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape($val); }
-foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
-
-
-if (!isset($_COOKIE['teorizauser'])) { session_start(); }
 
 if ($_GET[2] == 'e') { $externo = true; } else { $externo = false; }
 
@@ -18,12 +11,14 @@ $result = mysql_query_old("SELECT * FROM chats WHERE estado = 'activo' AND url =
 while ($r = mysqli_fetch_array($result)) { 
 	
 	$txt_nav = array('/chat'=>_('Chats'), $r['titulo']);
-	$txt_tab = array('/chat/'.$r['url'].'/log'=>_('Log'), '/chat/'.$r['url'].'/opciones'=>_('Opciones'));
+	$txt_tab = array('/chat/log/'.$r['url']=>_('Log'), '/chat/opciones/'.$r['url'] => _('Opciones'));
 
 	if ($r['pais'] != PAIS) { redirect('chat/'.$_GET[1].'/'.$_GET[2]); }
 
 
-	if ($pol['user_ID']) { mysql_query_old("UPDATE chats SET stats_visitas = stats_visitas + 1, fecha_last = '".$date."' WHERE chat_ID = ".$r['chat_ID']." LIMIT 1", $link); }
+	if ($pol['user_ID']) { 
+		mysql_query_old("UPDATE chats SET stats_visitas = stats_visitas + 1, fecha_last = '".$date."' WHERE chat_ID = ".$r['chat_ID']." LIMIT 1", $link); 
+	}
 
 	$chat_ID = $r['chat_ID'];
 	$titulo = $r['titulo'];
@@ -68,7 +63,7 @@ if ($externo) {
 		echo  '<span style="float:right;"><a href="'.REGISTRAR.'?='.PAIS.'">'._('Crear ciudadano').'</a></span>'.$titulo;
 	}
 } else {
-	echo  '<span class="quitar"><span style="float:right;">[<a href="/chat/'.$_GET[1].'/opciones">'._('Opciones').'</a>] [<a href="/chat/'.$_GET[1].'/log">'._('Log').'</a>]</span><a href="/chat/">'._('Chat').'</a>: '.$titulo.'</span>';
+	echo  '<span class="quitar"><span style="float:right;">[<a href="/chat/opciones/'.$_GET[1].'">'._('Opciones').'</a>] [<a href="/chat/log/'.$_GET[1].'">'._('Log').'</a>]</span><a href="/chat">'._('Chat').'</a>: '.$titulo.'</span>';
 }
 
 $a_leer = nucleo_acceso($acceso_leer, $acceso_cfg_leer);
@@ -199,17 +194,12 @@ window.onload = function(){
 
 $txt_footer .= '
       <script>$(function() {
-        // Initializes and creates emoji set from sprite sheet
         window.emojiPicker = new EmojiPicker({
           emojiable_selector: \'[data-emojiable=true]\',
           assetsPath: \''.IMG.'emoji/img/\',
           popupButtonClasses: \'fa fa-smile-o\',
 		  norealTime: true
         });
-        // Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
-        // You may want to delay this step if you have dynamically created input fields that appear later in the loading process
-        // It can be called as many times as necessary; previously converted input fields will not be converted again
-        //window.emojiPicker.discover();
       });
 	  
 	  function fix_onChange_editable_elements()

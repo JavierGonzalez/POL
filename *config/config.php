@@ -6,6 +6,10 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL ^ E_NOTICE);
 
+
+$maxsim['output'] = 'template';
+
+
 // INICIALIZACION
 define('RAIZ', dirname(__FILE__).'/');
 $link = conectar();									// Conecta MySQL
@@ -80,8 +84,7 @@ $datos_perfil = array('Blog', 'Twitter', 'Facebook', '', 'Menéame');
 $columnas = 14; $filas = 14; // Dimensiones mapa
 
 
-// URLSclear
-clear
+// URLS
 
 define('REGISTRAR', '/registrar/'); // Zona de registro y opciones de usuario
 define('SSL_URL', '/');

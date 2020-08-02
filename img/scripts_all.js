@@ -564,7 +564,7 @@ function votar(voto, tipo, item_ID){
     var voto_pre = parseInt($("#data_" + radio_ID).attr("value"));
     if (voto_pre == voto){ voto = 0;
         $(".radio_" + radio_ID).removeAttr("checked"); }
-    $.get("/accion.php", { a: "voto", tipo: tipo, item_ID: item_ID, voto: voto }, function(data){
+    $.get("/accion/voto", { tipo: tipo, item_ID: item_ID, voto: voto }, function(data){
         if (data){
             if (data == "false"){
                 $(".radio_" + radio_ID).removeAttr("checked");
@@ -742,7 +742,7 @@ function chat_query_ajax(){
         clearTimeout(refresh);
         var start = new Date().getTime();
         $("#vpc_actividad").attr("src", IMG + "ico/punto_azul.png");
-        $.post("/ajax", { chat_ID: chat_ID, n: msg_ID },
+        $.post("/chat/ajax", { chat_ID: chat_ID, n: msg_ID },
             function(data){
                 ajax_refresh = true;
                 if (data){ print_msg(data); }
@@ -899,7 +899,7 @@ function enviarmsg(){
         clearTimeout(refresh);
         $("#botonenviar").attr("disabled", "disabled");
         $("#vpc_msg").attr("value", "").css("background", "none").css("color", "black");
-        $.post("/ajax", { a: "enviar", chat_ID: chat_ID, n: msg_ID, msg: elmsg, anonimo: anonimo },
+        $.post("/chat/enviar", { chat_ID: chat_ID, n: msg_ID, msg: elmsg, anonimo: anonimo },
             function(data){
                 ajax_refresh = true;
                 if (data){ chat_sin_leer = -1;

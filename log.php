@@ -4,7 +4,7 @@
 if (is_numeric($_GET[1])) { 
 	paginacion('eventos', '/log/', null, $_GET[1], null, '500');
 } else { 
-	paginacion('eventos', '/log/'.$_GET[1].'/'.$_GET[2].'/', null, $_GET[3], null, '500');
+	paginacion('eventos', '/log/'.$_GET[1].'/'.$_GET[2], null, $_GET[3], null, '500');
 }
 
 echo '<br />'.$p_paginas.'

@@ -173,7 +173,6 @@ if ($mapa_full) { $txt_mapa .= '<p><a href="/mapa/propiedades/"><b>Ver tus propi
 
 $txt_mapa .='
 <div id="msg" class="amarillo"></div>';
-?>
 
 
 

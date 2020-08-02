@@ -93,7 +93,7 @@ function votar(voto, tipo, item_ID) {
     var voto_pre = parseInt($("#data_" + radio_ID).attr("value"));
     if (voto_pre == voto) { voto = 0;
         $(".radio_" + radio_ID).removeAttr("checked"); }
-    $.get("/accion.php", { a: "voto", tipo: tipo, item_ID: item_ID, voto: voto }, function(data) {
+    $.get("/accion/voto", { tipo: tipo, item_ID: item_ID, voto: voto }, function(data) {
         if (data) {
             if (data == "false") {
                 $(".radio_" + radio_ID).removeAttr("checked");

@@ -7,7 +7,7 @@ function gen_grafico($datos, $fecha='', $cero=false) {
 	 
 
 	if ($cero) { $datos = strtr(chart_data($datos), 'A', '_'); } else { $datos = chart_data($datos); }
-	return '//chart.googleapis.com/chart?cht=lc&chs=800x120&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|_____|'.$dato_last.'&chd=s:'.$datos.'&chf=bg,s,ffffff01|c,s,ffffff01&chco=0066FF&chm=B,FFFFFF,0,0,0';
+	return '//chart.googleapis.com/chart?cht=lc&chs=1000x150&chxt=y,r&chxl=0:|_____|'.$maxValue.'|1:|_____|'.$dato_last.'&chd=s:'.$datos.'&chf=bg,s,ffffff01|c,s,ffffff01&chco=0066FF&chm=B,FFFFFF,0,0,0';
 }
 
 function gen_datos($datos, $cero=false, $datos2=false) {
@@ -348,11 +348,11 @@ echo '<span style="float:right;font-size:12px;margin-top:-15px;">('.num($i).' '.
 <fieldset><legend>'._('Demografía').'</legend>
 
 <b id="1.1">1.1 <span style="color:#0000FF;">'._('Ciudadanos').'</span>/<span style="color:#FF0000;">'._('países').'</span></b> (<a href="/info/censo">'._('Ver censo').'</a>)<br />
-<img src="//chart.googleapis.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET[1]?gen_datos($d['ciudadanos'], false, $d['paises']):gen_datos($d['ciudadanos'], false)).'" alt="Ciudadanos/paises" border="0" />
+<img src="//chart.googleapis.com/chart?cht=lc&chs=1000x150&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET[1]?gen_datos($d['ciudadanos'], false, $d['paises']):gen_datos($d['ciudadanos'], false)).'" alt="Ciudadanos/paises" border="0" />
 
 
 <br /><b id="1.2">1.2 '._('Ciudadanos').' <span style="color:#0000FF;">'._('nuevos').'</span>/<span style="color:#FF0000;">'._('expirados').'</span></b>  (<a href="/info/censo/nuevos">'._('Ver nuevos').'</a>)<br />
-<img src="//chart.googleapis.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET[1]?gen_datos($d['nuevos'], false, $d['eliminados']):gen_datos($d['nuevos'], false)).'" alt="Ciudadanos nuevos/expirados" border="0" />
+<img src="//chart.googleapis.com/chart?cht=lc&chs=1000x150&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET[1]?gen_datos($d['nuevos'], false, $d['eliminados']):gen_datos($d['nuevos'], false)).'" alt="Ciudadanos nuevos/expirados" border="0" />
 </fieldset>
 
 <fieldset><legend>'._('Actividad').'</legend>
@@ -370,7 +370,7 @@ echo '<span style="float:right;font-size:12px;margin-top:-15px;">('.num($i).' '.
 <br /><b id="2.5">2.5 '._('Confianza general').'</b> (<a href="/info/confianza">'._('Ver confianza').'</a>)<br />
 <img src="'.gen_grafico($d['confianza'], '', true).'" alt="Confianza" border="0" />
 
-<br /><b id="2.6">2.6 '._('Autentificados').'</b> (<a href="'.SSL_URL.'dnie.php">'._('Autentificación').'</a>)<br />
+<br /><b id="2.6">2.6 '._('Autentificados').'</b> (<a href="#">'._('Autentificación').'</a>)<br />
 <img src="'.gen_grafico($d['autentificados']).'" alt="autentificacion" border="0" />
 
 </fieldset>';
@@ -397,7 +397,7 @@ if (ECONOMIA) {
 <img src="'.gen_grafico($d['mapa']).'" alt="Porcentaje de ocupacion" border="0" />
 
 <br /><b id="3.7">3.7 <span style="color:#0000FF;">'._('Empresas').'</span>/<span style="color:#FF0000;">'._('transacciones').'</span></b> (<a href="/empresas">'._('Ver empresas').'</a> , <a href="/pols">'._('Ver transferencias').'</a>)<br />
-<img src="//chart.googleapis.com/chart?cht=lc&chs=800x120&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET[1]?gen_datos($d['empresas'], true, $d['transacciones']):gen_datos($d['empresas'], true)).'" alt="Empresas" border="0" />
+<img src="//chart.googleapis.com/chart?cht=lc&chs=1000x150&chf=bg,s,ffffff01|c,s,ffffff01&chco=0000FF,FF0000&chm=B,FFFFFF,0,0,0'.($_GET[1]?gen_datos($d['empresas'], true, $d['transacciones']):gen_datos($d['empresas'], true)).'" alt="Empresas" border="0" />
 
 </fieldset>';
 }
@@ -452,5 +452,3 @@ echo '</tr></table></fieldset>';
 
 //THEME
 $txt_menu = 'info';
-
-?>

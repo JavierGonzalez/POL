@@ -29,6 +29,21 @@ foreach ($maxsim['route'] AS $value) {
     }
 }
 
+if ($maxsim['output']=='plain') {
+    header('Content-Type: text/plain; charset=utf-8');
+
+} else if ($maxsim['output']=='json' OR is_array($echo)) {
+    ob_end_clean();
+    header('Content-type:application/json; charset=utf-8');
+    echo json_encode((array)$echo, JSON_PRETTY_PRINT);
+
+} else if (isset($maxsim['output'])) {
+    $echo = ob_get_contents();
+    ob_end_clean();
+    header('Content-Type:text/html; charset=utf-8');
+    include($maxsim['output'].'/index.php');
+}
+
 exit;
 
 
@@ -82,7 +97,6 @@ function maxsim_router(string $uri) {
         if (count($route['app'])>0)
             break;
     }
-
 
     if (!$route['app'])
         if (header("HTTP/1.0 404 Not Found"))

@@ -1,9 +1,6 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-
-global $pol, $vp, $txt_title, $txt_tab, $txt_nav, $txt_header, $txt_footer, $link, $txt_mapa, $txt_menu;
-
 // Errores y redirecciones.
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('/'); }
 if (isset($_GET['noti'])) { notificacion('visto', $_GET['noti']); }
@@ -133,7 +130,27 @@ foreach ((array)$maxsim['template']['js_array'] AS $key => $value)
 				<ul>
 					<?=($pol['config']['socios_estado']=='true'?'<li><a href="/socios">'._('Socios').'</a></li>':'')?>
 					<li><a href="/grupos"><?=_('Grupos')?></a></li>
-					<li><a href="/examenes"><?=_('Exámenes')?></a></li>
+					<li>
+
+function maxsim_template() {
+    global $maxsim, $echo;
+
+    if ($maxsim['output']=='plain') {
+        header('Content-Type: text/plain; charset=utf-8');
+
+    } else if ($maxsim['output']=='json') {
+        ob_end_clean();
+        header('Content-type:application/json; charset=utf-8');
+        echo json_encode((array)$echo, JSON_PRETTY_PRINT);
+    
+    } else if (isset($maxsim['output'])) {
+        $echo = ob_get_contents();
+        ob_end_clean();
+        header('Content-Type:text/html; charset=utf-8');
+        include($maxsim['output'].'/index.php');
+    }
+
+}<a href="/examenes"><?=_('Exámenes')?></a></li>
 				</ul>
 			</li>
 			<li><a href="/control/gobierno"><?=_('Gobierno')?></a>
@@ -185,10 +202,10 @@ foreach(explode(';', $pol['config']['palabras']) as $t) {
 
 echo '</p>';
 
-if ((ECONOMIA) AND (substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa')) {
+if (ECONOMIA AND substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa') {
 	echo '<a href="/mapa" class="gris" style="float:right;">'._('mapa').'</a><a href="/subasta" class="gris">'._('Subasta').'</a>';
 	if (!isset($cuadrado_size)) { $cuadrado_size = 12; }
-	include('mapa.php');
+	include('mapa/mapa.php');
 	echo '<div style="margin:4px 0 0 6px;">'.$txt_mapa.'</div>';
 }
 ?>

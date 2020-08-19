@@ -92,23 +92,21 @@ function maxsim_router(string $uri) {
             break;
 
         $route = array_merge_recursive($route, maxsim_autoload($ls));
-
-        foreach ($ls AS $e)
-            if (!$route['app'] AND basename($e)==$levels[$id+1].'.php')
-                $route['app'][] = $e;
         
         foreach ($ls AS $e)
-            if (!$route['app'] AND $id>0 AND basename($e)=='index.php')
-                $route['app'][] = $e;
+            if ($id>0 AND basename($e)=='index.php')
+                $route['app'][0] = $e;
 
-        if (count($route['app'])>0)
-            break;
+        foreach ($ls AS $e)
+            if (basename($e)==$levels[$id+1].'.php')
+                $route['app'][0] = $e;
+
     }
 
     if (!$route['app'])
         if (header("HTTP/1.0 404 Not Found"))
             if (file_exists('404.php'))
-                $route['app'][] = '404.php';
+                $route['app'][0] = '404.php';
 
     return (array) $route;
 }

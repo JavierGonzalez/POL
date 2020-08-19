@@ -2,7 +2,6 @@
 
 
 
-
 if ($_GET[2] == 'e') { $externo = true; } else { $externo = false; }
 
 if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['pol']['nick']; }

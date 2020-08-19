@@ -2,7 +2,6 @@
 
 
 
-
 $_GET[1] = strtolower(PAIS);
 include('chat/index.php');
 

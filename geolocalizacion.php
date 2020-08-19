@@ -10,7 +10,6 @@ if (!isset($pol['user_ID'])) {
 
 
 } elseif ($_GET[1] == 'vecinos') {
-	include_once('inc-functions-accion.php');
 
 	$user_y = explodear(',', $centro, 0); $user_x = explodear(',', $centro, 1);
 	$result = mysql_query_old("SELECT x, y FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1", $link);
@@ -123,7 +122,7 @@ function roundNumber(num, dec) {
 		if ($geo != true) { echo '<p>'._('No estás geolocalizado').' '.boton(_('Geolocalízate'), '/geolocalizacion/fijar', false, 'red').'</p>'; }
 	}
 
-	$txt .='
+	echo '
 <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
 <script type="text/javascript" src="'.IMG.'lib/markerclusterer_packed.js"></script>
 <script type="text/javascript">
@@ -340,7 +339,7 @@ echo '</optgroup>
 
 </div>
 
-<p><button onclick="redirect_POST(\'//'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/enviar\');" class="small">'._('Enviar mensaje privado').'</button>
+<p><button onclick="redirect_POST(\'/msg/enviar\');" class="small">'._('Enviar mensaje privado').'</button>
 '.(nucleo_acceso($vp['acceso']['control_gobierno'])?'<br /><button onclick="redirect_POST(\'/control/gobierno/notificaciones\');" class="small">'._('Crear notificación').'</button>':'').'</p>
 </div>
 
@@ -362,5 +361,3 @@ else { $txt_nav[] = '&nbsp;'; }
 
 $txt_tab = array('/geolocalizacion'=>_('Mapa'), '/geolocalizacion/vecinos'=>_('Ciudadanos cercanos'), '/geolocalizacion/fijar'=>_('Geolocalízate'));
 $txt_menu = 'info';
-
-?>

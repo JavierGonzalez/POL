@@ -87,7 +87,7 @@ ORDER BY ".($_GET[2]=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.mysqli_
 
         if ($acceso['escribir_msg']) { echo foro_enviar($r['sub_ID'], $r['ID'], null, $_GET[3]); }
 
-        if (!$pol['user_ID']) { echo '<p class="azul"><b>Para poder participar en esta conversacion has de <a href="'.REGISTRAR.'?p='.PAIS.'">registrar tu ciudadano</a></b></p>'; }
+        if (!$pol['user_ID']) { echo '<p class="azul"><b>Para poder participar en esta conversacion has de <a href="/registrar">registrar tu ciudadano</a></b></p>'; }
         
         echo '<fieldset><legend>Más hilos</legend><p>';
         $result2 = mysql_query_old("SELECT url, title, (SELECT url FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS subforo FROM ".SQL."foros_hilos WHERE estado = 'ok' ORDER BY RAND() LIMIT 10", $link);

@@ -86,7 +86,6 @@ $columnas = 14; $filas = 14; // Dimensiones mapa
 
 // URLS
 
-define('REGISTRAR', '/registrar/'); // Zona de registro y opciones de usuario
 define('SSL_URL', '/');
 define('IMG', '/img/'); // Archivos estaticos
 

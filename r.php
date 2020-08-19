@@ -14,5 +14,5 @@ VALUES ('" . $r['ID'] . "', '" . $IP . "', '" . $date . "', '" . $_SERVER['HTTP_
 	}
 
 }
-redirect('/registrar'.($user_plataforma?'?p='.$user_plataforma:''));
-?>
+
+redirect('/registrar');

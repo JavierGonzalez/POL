@@ -122,7 +122,7 @@ case 'crear-documento':
 
 	break;
 
-case 'solicitar-ciudadania': redirect(REGISTRAR); break;
+case 'solicitar-ciudadania': redirect('/registrar'); break;
 
 
 case 'afiliarse':

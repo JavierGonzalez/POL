@@ -2,14 +2,18 @@
 
 
 $maxsim = [
-    'version' => '0.5.0',
+    'version' => '0.5.2',
     'debug'   => ['crono_start' => hrtime(true)],
     'route'   => maxsim_router($_SERVER['REQUEST_URI']),
     ];
 
 maxsim_get($_SERVER['REQUEST_URI']);
 
+if ($_GET[0]==='maxsim')
+    exit($maxsim['version']);
+
 ob_start();
+
 
 foreach ($maxsim['route'] AS $value) {
     foreach ($value AS $file) {
@@ -18,10 +22,10 @@ foreach ($maxsim['route'] AS $value) {
             @include($file);
 
         else if (substr($file,-4)=='.css')
-            $maxsim['template']['autoload']['css'][] = $file;
+            $maxsim['template']['autoload']['css'][] = '/'.$file;
 
         else if (substr($file,-3)=='.js')
-            $maxsim['template']['autoload']['js'][] = $file;
+            $maxsim['template']['autoload']['js'][] = '/'.$file;
 
         else if (substr($file,-5)=='.json')
             if ($key_name = basename(str_replace('*', '', $file),'.json'))
@@ -29,8 +33,9 @@ foreach ($maxsim['route'] AS $value) {
     }
 }
 
-if ($maxsim['output']=='plain') {
-    header('Content-Type: text/plain; charset=utf-8');
+
+if ($maxsim['output']=='text') {
+    header('Content-Type:text/plain; charset=utf-8');
 
 } else if ($maxsim['output']=='json' OR is_array($echo)) {
     ob_end_clean();
@@ -44,7 +49,9 @@ if ($maxsim['output']=='plain') {
     include($maxsim['output'].'/index.php');
 }
 
+
 exit;
+
 
 
 function maxsim_get(string $uri) {

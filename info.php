@@ -54,7 +54,7 @@ while($r = r($result)) {
 echo '</table>
 <p class="gris"><em>Requisitos para ser candidato:</em><br />
 1. Antiguedad de al menos un año.<br />
-2. Postularse como candidato voluntario (<a href="'.REGISTRAR.'login.php?a=panel">aquí</a>).
+2. Postularse como candidato voluntario (<a href="/registrar/login/panel">aquí</a>).
 </p>
 </fieldset>
 </div>

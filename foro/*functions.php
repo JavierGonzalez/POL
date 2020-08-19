@@ -136,7 +136,7 @@ ORDER BY nivel DESC", $link);
 		}
 		return $html;
 	} else {
-		return '<p class="azul"><b>Debes ser Ciudadano para participar, <a href="'.REGISTRAR.'?p='.PAIS.'">regístrate aquí!</a></b></p>';
+		return '<p class="azul"><b>Debes ser Ciudadano para participar, <a href="/registrar">regístrate aquí!</a></b></p>';
 	}
 }
 

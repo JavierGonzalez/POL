@@ -148,7 +148,7 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'turista', '1', '" . str
 
 <p>'._('Para terminar el registro debes validar tu usuario. Simplemente tienes que entrar en la siguiente dirección web').':</p>
 
-<p><a href="'.REGISTRAR.'?a=verificar&code='.$api_pass.'&nick='.$nick.'">'.REGISTRAR.'?a=verificar&code='.$api_pass.'&nick='.$nick.'</a></p>
+<p><a href="/registrar/verificar?code='.$api_pass.'&nick='.$nick.'">/registrar/verificar?code='.$api_pass.'&nick='.$nick.'</a></p>
 
 <p>'._('¡Esto es todo!').'</p>';
 
@@ -158,7 +158,7 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'turista', '1', '" . str
 
                                     } else {$nick = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick está ocupado, por favor elige otro').'</p>';}
                                 } else {$nick = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick debe tener entre 3 y 14 caracteres').'</p>';}
-                            } else {$email = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('Dirección de email en uso').', <a href="'.REGISTRAR.'login.php?a=recuperar-pass"><b>'._('recupera tu usuario').'</b></a></p>';}
+                            } else {$email = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('Dirección de email en uso').', <a href="/registrar/login/recuperar-pass"><b>'._('recupera tu usuario').'</b></a></p>';}
                         } else {$email = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('El email no es valido').'</p>';}
                     } else { $pass1 = ''; $pass2 = '';  $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('Debes escribir la misma contraseña dos veces').'</p>';}
                 } else { $pass1 = ''; $pass2 = '';  $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick solo puede tener letras, numeros y el caracter: "_". La inicial nunca debe ser un numero').'.</p>';}
@@ -180,7 +180,7 @@ case 'verificar': //URL EMAIL
 
 		if ($r['pais'] == 'ninguno') {
 			sql("UPDATE users SET estado = 'turista' WHERE ID = '".$r['ID']."' LIMIT 1");
-			redirect(REGISTRAR.'login.php?a=login&user='.$r['nick'].'&pass_md5='.$r['pass'].'&url_http='.REGISTRAR);
+			redirect('/registrar/login/login?user='.$r['nick'].'&pass_md5='.$r['pass'].'&url_http=/registrar');
 		} else {
 			sql("UPDATE users SET estado = 'ciudadano' WHERE ID = '".$r['ID']."' LIMIT 1");
 
@@ -193,7 +193,7 @@ case 'verificar': //URL EMAIL
 			unset($_SESSION);
 			session_unset(); session_destroy();
 			
-			redirect(REGISTRAR.'login.php?a=login&user='.$r['nick'].'&pass_md5='.$r['pass'].'&url_http=http://'.strtolower($r['pais']).'.'.DOMAIN);
+			redirect('/registrar/login/login?user='.$r['nick'].'&pass_md5='.$r['pass'].'&url_http=/';
 		}
 	}
 
@@ -225,9 +225,9 @@ case 'solicitar-ciudadania':
 		unset($_SESSION);
 		session_unset(); session_destroy();
 
-		redirect('http://'.strtolower($_POST['pais']).'.'.DOMAIN);
+		redirect('/');
 	
-	} else { redirect(REGISTRAR); }
+	} else { redirect('/registrar'); }
 	
 	break;
 

@@ -395,7 +395,7 @@ case 'pass':
 			$new_pass = rand(1000000,9999999);
 			sql("UPDATE users SET pass = '".pass_key($new_pass, 'md5')."', pass2 = '".pass_key($new_pass)."', reset_last = fecha_registro WHERE ID = '".$user_ID."' LIMIT 1");
 
-			$mensaje = "<p>Ciudadano ".$nick.".</p><p>Se ha procedido a resetear tu contraseña por razones de seguridad. Por lo tanto tu contraseña ha cambiado.</p><p>Usuario: ".$nick."<br />Nueva contraseña: ".$new_pass."</p><p>Para entrar: ".REGISTRAR."login.php</p><p>Es recomendado que cambies tu contraseña. También puedes iniciar un proceso de recuperación con tu email.</p><p>Gracias, nos vemos en VirtualPol ;)</p><p>VirtualPol<br />".SSL_URL."</p>";
+			$mensaje = "<p>Ciudadano ".$nick.".</p><p>Se ha procedido a resetear tu contraseña por razones de seguridad. Por lo tanto tu contraseña ha cambiado.</p><p>Usuario: ".$nick."<br />Nueva contraseña: ".$new_pass."</p><p>Para entrar: /registrar/login</p><p>Es recomendado que cambies tu contraseña. También puedes iniciar un proceso de recuperación con tu email.</p><p>Gracias, nos vemos en VirtualPol ;)</p><p>VirtualPol<br />".SSL_URL."</p>";
 			enviar_email($user_ID, 'Nueva contraseña para el usuario: '.$nick, $mensaje);
 			
 			unset($new_pass);
@@ -452,7 +452,7 @@ LIMIT 1");
 		unset($_SESSION);
 		session_unset(); session_destroy();
 	}
-	redirect(REGISTRAR);
+	redirect('/registrar');
 	break;
 
 
@@ -2177,10 +2177,11 @@ if ($_GET[1] == 'logout') {
 	setcookie('teorizauser', '', time()-3600, '/', USERCOOKIE);
 	setcookie('teorizapass', '', time()-3600, '/', USERCOOKIE);
 	unset($_SESSION); session_destroy();
-	redirect(REGISTRAR.'login.php?a=logout');
+	redirect('/registrar/login/logout');
 }
 
 
 if (!isset($refer_url)) { $refer_url = '?error='.base64_encode(_('Acción no permitida o erronea').' ('.$_GET[1].')'); }
+
 redirect('//'.HOST.'/'.$refer_url);
-?>
+

@@ -113,44 +113,24 @@ foreach ((array)$maxsim['template']['js_array'] AS $key => $value)
 			<li><a href="/buscar"><?=_('Buscar')?></a></li>
 			<li><a href="#" style="cursor:default;"><?=_('Sobre VirtualPol')?>...</a>
 				<ul>
-					<li><a href/video" target="_blank"><?=_('Vídeo de bienvenida')?></a></li>
-					<li><a href/manual" target="_blank"><?=_('Documentación')?></a></li>
-					<li><a href/TOS" target="_blank"><?=_('Condiciones de uso')?></a></li>
-					<li><a href/desarrollo" target="_blank"><?=_('Desarrollo')?></a></li>
+					<li><a href="/video" target="_blank"><?=_('Vídeo de bienvenida')?></a></li>
+					<li><a href="/manual" target="_blank"><?=_('Documentación')?></a></li>
+					<li><a href="/TOS" target="_blank"><?=_('Condiciones de uso')?></a></li>
+					<li><a href="/desarrollo" target="_blank"><?=_('Desarrollo')?></a></li>
 				</ul>
 			</li>
 		</ul>
 	</li>
 
 	<li id="menu-demo"<?=($txt_menu=='demo'?' class="menu-sel"':'')?>><a href="/votacion"><?=_('Democracia')?></a>
-		<ul>tab
+		<ul>
 			<li><a href="/elecciones"><?=_('Elecciones')?></a></li>
 			<li><a href="/votacion"><b><?=_('Votaciones')?></b><span class="md"><?=$pol['config']['info_consultas']?></span></a></li>
 			<li><a href="/cargos"><?=_('Cargos')?></a>
 				<ul>
 					<?=($pol['config']['socios_estado']=='true'?'<li><a href="/socios">'._('Socios').'</a></li>':'')?>
 					<li><a href="/grupos"><?=_('Grupos')?></a></li>
-					<li>
-
-function maxsim_template() {
-    global $maxsim, $echo;
-
-    if ($maxsim['output']=='plain') {
-        header('Content-Type: text/plain; charset=utf-8');
-
-    } else if ($maxsim['output']=='json') {
-        ob_end_clean();
-        header('Content-type:application/json; charset=utf-8');
-        echo json_encode((array)$echo, JSON_PRETTY_PRINT);
-    
-    } else if (isset($maxsim['output'])) {
-        $echo = ob_get_contents();
-        ob_end_clean();
-        header('Content-Type:text/html; charset=utf-8');
-        include($maxsim['output'].'/index.php');
-    }
-
-}<a href="/examenes"><?=_('Exámenes')?></a></li>
+					<li><a href="/examenes"><?=_('Exámenes')?></a></li>
 				</ul>
 			</li>
 			<li><a href="/control/gobierno"><?=_('Gobierno')?></a>
@@ -230,9 +210,9 @@ if (ECONOMIA AND substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa') {
 <?php
 unset($txt_header);
 if (isset($pol['user_ID'])) {
-	echo '<span class="htxt">'.($pol['estado']=='extranjero'||$pol['estado']=='turista'?'<span style="margin-left:-10px;">'.boton(_('Solicitar ciudadanía'), REGISTRAR, false, 'small red').'</span>':'').' <a href="/perfil/'.$pol['nick'].'"><b>'.$pol['nick'].'</b>'.($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" width="16" height="16" alt="cargo" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(nucleo_acceso('supervisores_censo')?' | <a href="/sc">SC</a>':'').($pol['estado']=='extranjero'?'':' | <a href="/msg" title="'._('Mensajes privados').'"><span class="icon medium" data-icon="@"></span></a> ').(ECONOMIA&&$pol['estado']=='ciudadano'?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="'.REGISTRAR.'login.php?a=panel" title="'._('Opciones').'"><span class="icon medium" data-icon="z"></span></a> | <a href="/accion/logout"><b>'._('Salir').'</b></a></span>';
+	echo '<span class="htxt">'.($pol['estado']=='extranjero'||$pol['estado']=='turista'?'<span style="margin-left:-10px;">'.boton(_('Solicitar ciudadanía'), '/registrar', false, 'small red').'</span>':'').' <a href="/perfil/'.$pol['nick'].'"><b>'.$pol['nick'].'</b>'.($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" width="16" height="16" alt="cargo" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(nucleo_acceso('supervisores_censo')?' | <a href="/sc">SC</a>':'').($pol['estado']=='extranjero'?'':' | <a href="/msg" title="'._('Mensajes privados').'"><span class="icon medium" data-icon="@"></span></a> ').(ECONOMIA&&$pol['estado']=='ciudadano'?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="'.REGISTRAR.'login.php?a=panel" title="'._('Opciones').'"><span class="icon medium" data-icon="z"></span></a> | <a href="/accion/logout"><b>'._('Salir').'</b></a></span>';
 } else {
-	echo boton(_('Crear ciudadano'), REGISTRAR.'?p='.PAIS, false, 'large green').' '.boton(_('Iniciar sesión'), REGISTRAR.'login.php?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), false, 'large blue');
+	echo boton(_('Crear ciudadano'), '/registrar', false, 'large green').' '.boton(_('Iniciar sesión'), '/registrar/login?r='.$_SERVER['REQUEST_URI']), false, 'large blue');
 }
 ?>
 		</div>
@@ -272,7 +252,7 @@ if (isset($pol['user_ID'])) {
             <a href="https://virtualpol.com" title="VirtualPol"><img src="/img/logo/vp2.png" width="200" height="60" alt="VirtualPol" /></a>
 			</p>
 			
-			<p><a target="_blank" href/video"><?=_('Vídeo')?></a> | <a target="_blank" href/documentacion"><?=_('Documentación')?></a> | <a target="_blank" href/desarrollo"><?=_('Desarrollo')?></a> | <a target="_blank" href/TOS" title="Condiciones de Uso">TOS</a><br />
+			<p><a target="_blank" href="/video"><?=_('Vídeo')?></a> | <a target="_blank" href="/documentacion"><?=_('Documentación')?></a> | <a target="_blank" href="/desarrollo"><?=_('Desarrollo')?></a> | <a target="_blank" href="/TOS" title="Condiciones de Uso">TOS</a><br />
 			<span title="Epoca antigua en IRC" style="color:#999;">2004-</span>2008-2020
             <br />
 			<span style="color:#BBB;">
@@ -344,4 +324,3 @@ foreach ((array)$maxsim['template']['autoload']['js'] AS $file)
 <?=$txt_footer?>
 
 </html>
-<?php if ($link) { mysqli_close($link); } ?>

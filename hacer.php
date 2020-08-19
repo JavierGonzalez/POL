@@ -130,8 +130,8 @@ echo '</table>';
 
 
 
-if (!$pol['user_ID']) { redirect(REGISTRAR.'?p='.PAIS); } 
-elseif ($pol['estado'] != 'ciudadano') { redirect(REGISTRAR.'?p='.PAIS); }
+if (!$pol['user_ID']) { redirect('/registrar'); } 
+elseif ($pol['estado'] != 'ciudadano') { redirect('/registrar'); }
 
 
 //THEME
@@ -139,4 +139,3 @@ $txt_title = '¿Qué hacer?';
 $txt_nav = array('/hacer'=>'¿Qué hacer?');
 $txt_menu = 'info';
 
-?>

@@ -58,9 +58,9 @@ echo  '
 
 if ($externo) {
 	if ($_SESSION['pol']['user_ID']) {
-		echo  '<span style="float:right;"><a href="http://www.'.DOMAIN.'">'._('Volver a VirtualPol').'</a></span>'.$titulo;
+		echo  '<span style="float:right;"><a href="/">'._('Volver').'</a></span>'.$titulo;
 	} else {
-		echo  '<span style="float:right;"><a href="'.REGISTRAR.'?='.PAIS.'">'._('Crear ciudadano').'</a></span>'.$titulo;
+		echo  '<span style="float:right;"><a href="/registrar">'._('Crear ciudadano').'</a></span>'.$titulo;
 	}
 } else {
 	echo  '<span class="quitar"><span style="float:right;">[<a href="/chat/opciones/'.$_GET[1].'">'._('Opciones').'</a>] [<a href="/chat/log/'.$_GET[1].'">'._('Log').'</a>]</span><a href="/chat">'._('Chat').'</a>: '.$titulo.'</span>';

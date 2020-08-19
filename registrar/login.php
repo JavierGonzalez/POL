@@ -32,7 +32,7 @@ case 'panel':
 
 <p style="text-align:center;">
 '.(nucleo_acceso('autentificados')?'':boton(_('Autentificación'), SSL_URL.'dnie.php')).' 
-'.($pol['pais']!='ninguno'?boton(_('Cambiar de plataforma'), REGISTRAR, false, 'red').' ':'').'
+'.($pol['pais']!='ninguno'?boton(_('Cambiar de plataforma'), '/registrar', false, 'red').' ':'').'
 </p>
 
 </fieldset>
@@ -42,7 +42,7 @@ case 'panel':
 <fieldset><legend>'._('Cambiar idioma').'</legend>
 
 
-<form action="'.REGISTRAR.'login.php?a=changelang" method="POST">
+<form action="/registrar/login/changelang" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td valign="middle" align="center" valign="top">'._('Idioma').': 
@@ -68,7 +68,7 @@ case 'panel':
 
 <fieldset><legend>'._('Cambiar contraseña').'</legend>
 
-<form action="'.REGISTRAR.'login.php?a=changepass" method="POST">
+<form action="/registrar/login/changepass" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td valign="middle" align="center" valign="top">'._('Contraseña actual').':<br /><input type="password" name="oldpass" value="" maxlength="30" required /></td>
@@ -84,7 +84,7 @@ case 'panel':
 
 <fieldset><legend>'._('Cambiar email').'</legend>
 
-<form action="'.REGISTRAR.'login.php?a=changemail" method="POST">
+<form action="/registrar/login/changemail" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td valign="middle" align="center" valign="top">'._('Email').': <input type="email" size="30" name="email" value="" maxlength="100" placeholder="'.$pol['email'].'" required /></td>
@@ -98,7 +98,7 @@ case 'panel':
 
 <fieldset><legend>'._('Candidato a Supervisor del Censo').'</legend>
 
-<form action="'.REGISTRAR.'login.php?a=ser_SC" method="POST">
+<form action="/registrar/login/ser_SC" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td valign="middle" align="center" valign="top">
@@ -112,7 +112,7 @@ case 'panel':
 
 <fieldset><legend>'._('Cambiar nick').'</legend>
 
-<form action="'.REGISTRAR.'login.php?a=changenick" method="POST">
+<form action="/registrar/login/changenick" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td valign="middle" align="center" valign="top">'._('Nuevo nombre de usuario').':<br /><input type="text" name="newnick" value="" maxlength="30" pattern="[A-Za-z0-9_]{3,14}" placeholder="'.$pol['nick'].'" required /></td>
@@ -126,7 +126,7 @@ case 'panel':
 
 <fieldset><legend>'._('Eliminar usuario').'</legend>
 
-<form action="'.REGISTRAR.'login.php?a=borrar-usuario" method="POST">
+<form action="/registrar/login/borrar-usuario" method="POST">
 <input type="hidden" name="nick" value="'.$pol['nick'].'" />
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
@@ -155,7 +155,7 @@ case 'panel':
 
 
 case 'recuperar-pass':
-	if ($pol['user_ID']) { redirect(REGISTRAR.'login.php?a=panel'); exit; }
+	if ($pol['user_ID']) { redirect('/registrar/login/panel'); exit; }
 
 	echo '<h2>'._('¿Has olvidado tu contraseña?').'</h2>';
 
@@ -168,7 +168,7 @@ case 'recuperar-pass':
 	echo '<p>'._('No te preocupes, puedes solicitar una recuperación de contraseña. Siguiendo estos pasos').':</p>
 
 <ol>
-<li><form action="'.REGISTRAR.'login.php?a=start-reset-pass" method="POST">'._('Tu email').': <input type="text" name="email" value="" style="width:250px;" /> <input type="submit" value="'._('Iniciar recuperación de contraseña').'" style="font-weight:bold;" onclick="alert(\'Recibirás en segundos un email en tu correo.\n\nSi no lo recibes escribe a '.CONTACTO_EMAIL.'\');" /></form></li>
+<li><form action="/registrar/login/start-reset-pass" method="POST">'._('Tu email').': <input type="text" name="email" value="" style="width:250px;" /> <input type="submit" value="'._('Iniciar recuperación de contraseña').'" style="font-weight:bold;" onclick="alert(\'Recibirás en segundos un email en tu correo.\n\nSi no lo recibes escribe a '.CONTACTO_EMAIL.'\');" /></form></li>
 <li>'._('Recibirás inmediatamente un email con una dirección web que te permitirá cambiar la contraseña. (Quizá esté en la carpeta spam)').'.</li>
 </ol>
 
@@ -192,7 +192,7 @@ case 'reset-pass':
 
 <p>'._('Escribe tu nueva contraseña para efectuar el cambio').':</p>
 
-<form action="'.REGISTRAR.'login.php?a=reset-pass-change" method="POST">
+<form action="/registrar/login/reset-pass-change" method="POST">
 <input type="hidden" name="user_ID" value="'.$_GET['user_ID'].'" />
 <input type="hidden" name="check" value="'.$_GET['check'].'" />
 <input type="password" name="pass_new" value="" /><br />
@@ -236,7 +236,7 @@ case 'start-reset-pass':
 
 <blockquote>
 "._("Reset de contraseña").":<br />
-<a href=\"".REGISTRAR."login.php?a=reset-pass&user_ID=".$r['ID']."&check=".$reset_pass."\"><b>".REGISTRAR."login.php?a=reset-pass&user_ID=".$r['ID']."&check=".$reset_pass."</b></a>
+<a href=\"/registrar/login/reset-pass?user_ID=".$r['ID']."&check=".$reset_pass."\"><b>/registrar/login/reset-pass?user_ID=".$r['ID']."&check=".$reset_pass."</b></a>
 </blockquote>
 
 <p>_________<br />
@@ -251,12 +251,12 @@ VirtualPol</p>";
 		while ($r = r($result)) { $nick_existe = true; }
 		
 		if ($nick_existe) {
-			redirect(REGISTRAR.'login.php?a=recuperar-pass/no-24h');
+			redirect('/registrar/login/recuperar-pass/no-24h');
 		} else {
-			redirect(REGISTRAR.'login.php?a=recuperar-pass/no-existe');
+			redirect('/registrar/login/recuperar-pass/no-existe');
 		}
 	} else {
-		redirect('http://www.'.DOMAIN);
+		redirect('/');
 	}
 	break;
 
@@ -277,7 +277,7 @@ case 'changepass':
 		}
 	}
 
-	redirect(REGISTRAR.'login.php?a=panel');
+	redirect('/registrar/login/panel');
 	break;
 	
 case 'changenick':
@@ -317,7 +317,7 @@ case 'changenick':
 			}
 		}
 
-		redirect(REGISTRAR.'login.php?a=panel');
+		redirect('/registrar/login/panel');
 		break;
 	
 	
@@ -327,7 +327,7 @@ case 'changemail':
 	if ($pol['user_ID']) {
 		sql("UPDATE users SET email = '".$email."' WHERE ID = '".$pol['user_ID']."' AND fecha_registro < '".date('Y-m-d 20:00:00', time() - 864000)."' LIMIT 1");
 	}
-	redirect(REGISTRAR.'login.php?a=panel');
+	redirect('/registrar/login/panel');
 	break;
 
 case 'changelang':
@@ -335,7 +335,7 @@ case 'changelang':
 	if ($pol['user_ID']) {
 		sql("UPDATE users SET lang = ".($_POST['lang']?"'".$_POST['lang']."'":"NULL")." WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	}
-	redirect(REGISTRAR.'login.php?a=panel');
+	redirect('/registrar/login/panel');
 	break;
 
 case 'borrar-usuario':
@@ -349,7 +349,7 @@ case 'borrar-usuario':
 
 case 'ser_SC':
 	sql("UPDATE users SET ser_SC = '".($_POST['ser_SC']=='true'?'true':'false')."' WHERE ser_SC IN ('true', 'false') AND ID = '".$pol['user_ID']."' LIMIT 1");
-	redirect(REGISTRAR."login.php?a=panel");
+	redirect('/registrar/login/panel');
 	break;
 
 
@@ -395,39 +395,7 @@ case 'login':
 		setcookie('teorizauser', $nick, $expire, '/', USERCOOKIE);
 		setcookie('teorizapass', md5(CLAVE.$pass), $expire, '/', USERCOOKIE);
 
-		if (true) {
-			$traza_nom = '86731242'; // OLD: vpid1
-			echo '<html>
-<header>
-<title></title>
-<meta http-equiv="refresh" id="redirect" content="0;url='.$url.'">
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<!--
-<script type="text/javascript" src="'.IMG.'lib/evercookie/swfobject-2.2.min.js"></script>
-<script type="text/javascript" src="'.IMG.'lib/evercookie/evercookie.js"></script>
-<script type="text/javascript">
-var ec = new evercookie();
-ec.get("'.$traza_nom.'", function(value) { 
-	if (value === undefined) {
-		var get_ms = new Date().getTime();
-		everc_value = '.(isset($_COOKIE['trz'])?'"'.$_COOKIE['trz'].'"':'get_ms + Math.floor(Math.random()*1001)').';
-		$("#redirect").attr("content", "9;url='.REGISTRAR.'login.php?a=trz&x=" + everc_value + "&y='.$user_ID.'&z='.$api_pass.'&u='.base64_encode($url).'");
-		ec.set("'.$traza_nom.'", everc_value);
-	} else { everc_value = value; }
-	window.location.href = "'.REGISTRAR.'login.php?a=trz&x=" + everc_value + "&y='.$user_ID.'&z='.$api_pass.'&u='.base64_encode($url).'";
-});
-</script>
--->
-<style type="text/css">
-body, a { color:#FFFFFF; cursor:progress; }
-*, body { display:none; cursor:progress; }
-</style>
-</header>
-<body style="cursor:progress;">
-&nbsp;
-</body>
-</html>';
-		} else { redirect($url); } 
+		redirect($url);
 	} else { 
 		$result = sql("SELECT estado FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." LIMIT 1");
 		while ($r = r($result)) { $nick_estado = $r['estado']; }
@@ -443,7 +411,7 @@ body, a { color:#FFFFFF; cursor:progress; }
 			default: $msg_error = _('Usuario inexistente, probablemente expirado por inactividad'); break;
 		}
 
-		redirect(REGISTRAR.'login.php?error='.base64_encode($msg_error));
+		redirect('/registrar/login?error='.base64_encode($msg_error));
 	} 
 	break;
 
@@ -488,8 +456,8 @@ function login_start() {
 
 
 
-<form action="'.REGISTRAR.'login.php?a=login" method="post">
-<input name="url" value="'.($_GET['r']?$_GET['r']:base64_encode('http://www.'.DOMAIN.'/')).'" type="hidden" />
+<form action="/registrar/login/login" method="post">
+<input name="url" value="'.($_GET['r']?$_GET['r']:base64_encode('/')).'" type="hidden" />
 <input type="hidden" name="extra" value="" id="input_extra" />
 
 <fieldset><legend>'._('Iniciar sesión').'</legend>
@@ -517,7 +485,7 @@ function login_start() {
 
 <button onclick="login_start();" class="large blue" id="boton_iniciar_sesion">'._('Iniciar sesión').'</button><br />
 <br />
-<a href="'.REGISTRAR.'login.php?a=recuperar-pass">'._('¿Has olvidado tu contraseña?').'</a>
+<a href="/registrar/login/recuperar-pass">'._('¿Has olvidado tu contraseña?').'</a>
 </table>
 
 <p style="color:#888;text-align:center;">'._('Contacto').': <a href="mailto:'.CONTACTO_EMAIL.'" style="color:#888;" target="_blank">'.CONTACTO_EMAIL.'</a></p>

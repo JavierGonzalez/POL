@@ -4,7 +4,7 @@
 
 
 // LOAD CONFIG
-$result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
+$result = sql_old("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 $margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); // 30 dias
@@ -35,12 +35,12 @@ echo print_hacer(nucleo_acceso('autentificados'),
 
 $fecha_24_antes = date('Y-m-d H:i:00', strtotime($pol['config']['elecciones_inicio']) - $pol['config']['elecciones_antiguedad']);
 
-$result = sql("SELECT fecha_registro FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1");
+$result = sql_old("SELECT fecha_registro FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1");
 while($r = r($result)){ $fecha_registro = $r['fecha_registro']; }
 
 $hay_votaciones = 0;
 if ($pol['config']['info_consultas'] > 0) {
-	$result = sql("SELECT ID, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, (SELECT user_ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."'");
+	$result = sql_old("SELECT ID, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, (SELECT user_ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."'");
 	while($r = r($result)) { 
 		if ((!$r['ha_votado']) AND (nucleo_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])) AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) { 
 			$hay_votaciones++;
@@ -70,7 +70,7 @@ echo print_hacer(($_SESSION['pol']['cargos']!=''?true:false),
 
 
 $votos_confianza = 0;
-$result = sql("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."'");
+$result = sql_old("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."'");
 while($r = r($result)) { $votos_confianza = $r['num']; }
 
 
@@ -83,7 +83,7 @@ echo print_hacer(($votos_confianza>=VOTO_CONFIANZA_MAX?true:false),
 
 
 $geo = false;
-$result = sql("SELECT x, y FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1");
+$result = sql_old("SELECT x, y FROM users WHERE ID = '".$pol['user_ID']."' AND x IS NOT NULL LIMIT 1");
 while ($r = r($result)) { $geo = true; }
 
 echo print_hacer($geo, 
@@ -95,7 +95,7 @@ echo print_hacer($geo,
 
 
 $perfil = false;
-$result = sql("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND (datos = '' OR text = '') LIMIT 1");
+$result = sql_old("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND (datos = '' OR text = '') LIMIT 1");
 while($r = r($result)) { $perfil = true; }
 
 echo print_hacer((!$perfil?true:false), 
@@ -107,7 +107,7 @@ echo print_hacer((!$perfil?true:false),
 
 
 $votos_foro = 0;
-$result = sql("SELECT COUNT(*) AS num FROM votos WHERE tipo IN ('msg', 'hilos') AND emisor_ID = '".$pol['user_ID']."' AND time > '".$margen_30dias."'");
+$result = sql_old("SELECT COUNT(*) AS num FROM votos WHERE tipo IN ('msg', 'hilos') AND emisor_ID = '".$pol['user_ID']."' AND time > '".$margen_30dias."'");
 while($r = r($result)) { $votos_foro = $r['num']; }
 
 echo print_hacer(($votos_foro>=$votos_foro_minimo?true:false), 

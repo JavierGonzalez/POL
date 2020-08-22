@@ -2,7 +2,7 @@
 
 
 // load config full
-$result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
+$result = sql_old("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 $sc = get_supervisores_del_censo();

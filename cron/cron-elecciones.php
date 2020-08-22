@@ -3,24 +3,24 @@
 
 
 // Busca cargos con elecciones activas y en fecha de activar
-$result = sql("SELECT * FROM cargos WHERE pais = '".PAIS."' AND elecciones <= '".$date."' LIMIT 20");
+$result = sql_old("SELECT * FROM cargos WHERE pais = '".PAIS."' AND elecciones <= '".$date."' LIMIT 20");
 while($r = r($result)) {
 	
 	// Fija fecha de proximas elecciones (las siguientes)
-	sql("UPDATE cargos SET elecciones = '".date('Y-m-d 20:00:00', time()+($r['elecciones_cada']*24*60*60))."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1");
+	sql_old("UPDATE cargos SET elecciones = '".date('Y-m-d 20:00:00', time()+($r['elecciones_cada']*24*60*60))."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1");
 
 	// Obtiene numero de elecciones de este cargo (para numerarlas en orden)
-	$result2 = sql("SELECT COUNT(*) AS votaciones_num FROM votacion WHERE pais = '".PAIS."' AND estado = 'end' AND tipo = 'elecciones' AND cargo_ID = '".$r['cargo_ID']."'");
+	$result2 = sql_old("SELECT COUNT(*) AS votaciones_num FROM votacion WHERE pais = '".PAIS."' AND estado = 'end' AND tipo = 'elecciones' AND cargo_ID = '".$r['cargo_ID']."'");
 	while($r2 = r($result2)) { $elecciones_num = $r2['votaciones_num']; }
 	$elecciones_num++;
 
 	// Obtener candidatos
 	$candidatos_nick = array(); $candidatos_ID = array();
-	$result2 = sql("SELECT user_ID, (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND aprobado = 'ok' LIMIT 100");
+	$result2 = sql_old("SELECT user_ID, (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND aprobado = 'ok' LIMIT 100");
 	while($r2 = r($result2)) { $candidatos_nick[] = $r2['nick']; $candidatos_ID[] = $r2['user_ID']; }
 
 	// Obtener numero máximo de votantes (num_censo)
-	$result2 = sql("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso(explodear('|', $r['elecciones_votan'], 0), explodear('|', $r['elecciones_votan'], 1), PAIS));
+	$result2 = sql_old("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso(explodear('|', $r['elecciones_votan'], 0), explodear('|', $r['elecciones_votan'], 1), PAIS));
 	while($r2 = r($result2)) { $votos_num = $r2['num']; }
 
 	$candidatos_num = count($candidatos_nick);
@@ -28,7 +28,7 @@ while($r = r($result)) {
 	if ($candidatos_num > 0) {
 	
 		// Crear votacion, ya activada
-		sql("INSERT INTO votacion 
+		sql_old("INSERT INTO votacion 
 (pais, pregunta, descripcion, respuestas, respuestas_desc, time, time_expire, user_ID, estado, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, ejecutar, votos_expire, tipo_voto, privacidad, debate_url, aleatorio, duracion, num_censo, cargo_ID) 
 VALUES (
 '".PAIS."', 
@@ -57,7 +57,7 @@ Realizadas cada <b>".$r['elecciones_cada']." días</b>, durante <b>".$r['eleccio
 ".$r['cargo_ID'].")");
 
 		// Imprime evento en el chat
-		$result2 = sql("SELECT ID FROM votacion WHERE pais = '".PAIS."' AND estado = 'ok' ORDER BY ID DESC LIMIT 1");
+		$result2 = sql_old("SELECT ID FROM votacion WHERE pais = '".PAIS."' AND estado = 'ok' ORDER BY ID DESC LIMIT 1");
 		while($r2 = r($result2)) { 
 			$votacion_ID = $r2['ID'];
 			evento_chat('<b>[ELECCIONES]</b> <a href="/votacion/'.$r2['ID'].'"><b>Comienzan las elecciones a '.$r['nombre'].'</b></a>'); 
@@ -65,7 +65,7 @@ Realizadas cada <b>".$r['elecciones_cada']." días</b>, durante <b>".$r['eleccio
 
 		// Enviar emails.
 		if ($candidatos_num>$r['elecciones_electos'] AND $r['asigna']==0 AND in_array(explodear('|', $r['elecciones_votan'], 0), array('ciudadanos', 'ciudadanos_global'))) {
-			$result2 = sql("SELECT nick, email FROM users WHERE pais = '".PAIS."' AND estado != 'expulsado'");
+			$result2 = sql_old("SELECT nick, email FROM users WHERE pais = '".PAIS."' AND estado != 'expulsado'");
 			while($r2 = r($result2)){ 
 				$mensaje = '<p>Hola '.$r2['nick'].':</p>
 

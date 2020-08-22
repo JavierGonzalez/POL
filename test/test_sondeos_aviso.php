@@ -16,13 +16,13 @@ exit;
 evento_chat('<b>[#] Comienzo de envio de emails</b> semanales de aviso de votaciones.');
 
 $emails_enviados = 0;
-$result = sql("SELECT ID, nick, email, pais FROM users WHERE pais = '".PAIS."' AND estado = 'ciudadano' AND email != '' ORDER BY fecha_registro ASC LIMIT 10000");
+$result = sql_old("SELECT ID, nick, email, pais FROM users WHERE pais = '".PAIS."' AND estado = 'ciudadano' AND email != '' ORDER BY fecha_registro ASC LIMIT 10000");
 while($r = r($result)) {
 
 	// Lista de votaciones por votar del usuario
 	$txt_votaciones = '';
 	$votar_num = 0;
-	$result2 = sql("SELECT ID, pais, pregunta, tipo,
+	$result2 = sql_old("SELECT ID, pais, pregunta, tipo,
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$r['ID']."' LIMIT 1) AS ha_votado
 FROM votacion
 WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_votar IN ('ciudadanos_global', 'ciudadanos') AND acceso_ver IN ('ciudadanos_global', 'ciudadanos', 'anonimos')
@@ -38,7 +38,7 @@ ORDER BY num DESC");
 
 		// Lista de ultimas votaciones finalizadas
 		$txt_votaciones_result = '';
-		$result2 = sql("SELECT ID, pais, pregunta, tipo, num
+		$result2 = sql_old("SELECT ID, pais, pregunta, tipo, num
 FROM votacion
 WHERE estado = 'end' AND pais = '".PAIS."' AND acceso_votar IN ('ciudadanos_global', 'ciudadanos') AND acceso_ver IN ('ciudadanos_global', 'ciudadanos', 'anonimos')
 ORDER BY time_expire DESC LIMIT 5");

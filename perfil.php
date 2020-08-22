@@ -6,7 +6,7 @@
 if (($_GET[1] == 'editar') AND (isset($pol['nick']))) { redirect('/perfil/'.$pol['nick'].'/editar'); }
 if ((!$_GET[1]) AND (isset($pol['nick']))) { redirect('/perfil/'.$pol['nick']); }
 
-$result = sql("SELECT *, 
+$result = sql_old("SELECT *, 
 (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS partido,
 (SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE user_ID = users.ID LIMIT 1) AS num_hilos,
 (SELECT COUNT(ID) FROM ".SQL."foros_msg WHERE user_ID = users.ID LIMIT 1) AS num_msg
@@ -24,13 +24,13 @@ while($r = r($result)){
 		
 
 	if (($r['socio'] == 'true') AND (nucleo_acceso('socios'))) {
-		$result2 = sql("SELECT socio_ID, PAIS FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' LIMIT 1");
+		$result2 = sql_old("SELECT socio_ID, PAIS FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' LIMIT 1");
 		while ($r2 = r($result2)) { $socio_ID = PAIS.$r2['socio_ID']; }
 	}
 
 	if ($r['estado'] == 'expulsado') {
 		$razon = false;
-		$result2 = sql("SELECT razon FROM expulsiones WHERE estado='expulsado' and user_ID = '".$r['ID']."' ORDER BY expire DESC LIMIT 1");
+		$result2 = sql_old("SELECT razon FROM expulsiones WHERE estado='expulsado' and user_ID = '".$r['ID']."' ORDER BY expire DESC LIMIT 1");
 		while ($r2 = r($result2)) { $razon = $r2['razon']; }
 	}
 
@@ -60,7 +60,7 @@ while($r = r($result)){
 // START ZONA EDIT
 if ($user_ID == $pol['user_ID']) { //es USER
 
-	$result2 = sql("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'pols_afiliacion' LIMIT 1");
+	$result2 = sql_old("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'pols_afiliacion' LIMIT 1");
 	while($r2 = r($result2)){ if ($r2['pols'] >= $pols) { $pols_afiliacion = $r2['valor']; } }
 
 	$text_limit = 1600 - strlen(strip_tags($r['text']));
@@ -85,7 +85,7 @@ if ($user_ID == $pol['user_ID']) { //es USER
 
 	if (ECONOMIA) {
 			
-	$result2 = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'impuestos' OR dato = 'impuestos_minimo'");
+	$result2 = sql_old("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND dato = 'impuestos' OR dato = 'impuestos_minimo'");
 	while($r2 = r($result2)){ $pol['config'][$r2['dato']] = $r2['valor']; }
 
 	$patrimonio = $r['pols'];
@@ -104,7 +104,7 @@ if ($user_ID == $pol['user_ID']) { //es USER
 </tr>';
 
 
-	$result2 = sql("SELECT ID, pols, nombre, exenta_impuestos FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."'");
+	$result2 = sql_old("SELECT ID, pols, nombre, exenta_impuestos FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."'");
 	while($r2 = r($result2)){
 		if ($r2['exenta_impuestos'] == 1) {
 			$patrimonio_libre_impuestos += $r2['pols'];
@@ -200,13 +200,13 @@ if ($user_ID == $pol['user_ID']) { //es USER
 
 
 	// numero de votos emitidos
-	$result2 = sql("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'");
+	$result2 = sql_old("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'");
 	while ($r2 = r($result2)) { $num_votos = $r2['num']; }
 
 	echo  '<fieldset><legend>'._('Votos de confianza emitidos').' ('.$num_votos.' '._('de').' '.VOTO_CONFIANZA_MAX.')</legend><p>';
 
 	$voto_anterior = '';
-	$result2 = sql("SELECT voto, time,
+	$result2 = sql_old("SELECT voto, time,
 (SELECT nick FROM users WHERE ID = v.item_ID LIMIT 1) AS nick,
 (SELECT pais FROM users WHERE ID = v.item_ID LIMIT 1) AS pais
 FROM votos `v`
@@ -230,7 +230,7 @@ ORDER BY voto DESC, time ASC");
 	<p><select name="partido"><option value="0">'._('Ninguno').'</option>';
 
 
-		$result2 = sql("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."' ORDER BY siglas ASC");
+		$result2 = sql_old("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."' ORDER BY siglas ASC");
 		while($r2 = r($result2)){
 			echo  '<option value="'.$r2['ID'].'"'.($r2['ID']==$pol['partido']?' selected="selected"':'').'>' . $r2['siglas'] . '</option>';
 		}
@@ -303,10 +303,10 @@ center='.$r['y'].','.$r['x'].'&amp;zoom=11&amp;size=250x120&amp;maptype=roadmap&
 // CONFIANZA
 if ((($user_ID != $pol['user_ID']) AND ($pol['user_ID']) AND ($pol['estado'] != 'expulsado'))) {
 	// numero de votos emitidos
-	$result2 = sql("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'");
+	$result2 = sql_old("SELECT COUNT(*) AS num FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND voto != '0'");
 	while ($r2 = r($result2)) { $num_votos = $r2['num']; }
 
-	$result2 = sql("SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = '".$user_ID."' LIMIT 1");
+	$result2 = sql_old("SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = '".$user_ID."' LIMIT 1");
 	while ($r2 = r($result2)) { $hay_v_c = $r2['voto']; }
 	if (!$hay_v_c) { $hay_v_c = '0'; }
 
@@ -336,7 +336,7 @@ echo  '</td>
 
 <td align="right" title="Elecciones en las que ha participado: '.$r['num_elec'].'">'._('Cargos').':</td>
 <td><b>';
-$result2 = sql("SELECT cargo_ID, cargo, nota,
+$result2 = sql_old("SELECT cargo_ID, cargo, nota,
 (SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre,
 (SELECT nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nivel
 FROM cargos_users
@@ -404,7 +404,7 @@ echo  '</b></td>
 <td><b>';
 $txt_grupos = array();
 if ($r['grupos']) {
-	$result2 = sql("SELECT nombre FROM grupos WHERE grupo_ID IN (".str_replace(' ', ',', $r['grupos']).")");
+	$result2 = sql_old("SELECT nombre FROM grupos WHERE grupo_ID IN (".str_replace(' ', ',', $r['grupos']).")");
 	while ($r2 = r($result2)) { $txt_grupos[] = '<a href="/grupos">'.$r2['nombre'].'</a>'; }
 }
 echo  (count($txt_grupos)>0?implode(' ', $txt_grupos):_('Ninguno')).'</b></td>
@@ -434,7 +434,7 @@ echo  (count($txt_grupos)>0?implode(' ', $txt_grupos):_('Ninguno')).'</b></td>
 
 
 		if ($r['ref_num'] != 0) {
-			$result = sql("SELECT IP, nick, pais, online FROM users WHERE ref = '" . $r['ID'] . "' ORDER BY fecha_last DESC");
+			$result = sql_old("SELECT IP, nick, pais, online FROM users WHERE ref = '" . $r['ID'] . "' ORDER BY fecha_last DESC");
 			while($r2 = r($result)) {
 				$refs .= crear_link($r2['nick']) . ' </b>('.duracion($r2['online']).')<b><br />' . "\n";
 			}
@@ -442,7 +442,7 @@ echo  (count($txt_grupos)>0?implode(' ', $txt_grupos):_('Ninguno')).'</b></td>
 		if (ECONOMIA) { 
 			// empresas y partidos
 			$empresas_num = 0;
-			$result = sql("SELECT nombre, url, cat_ID, (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' ORDER BY time DESC");
+			$result = sql_old("SELECT nombre, url, cat_ID, (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' ORDER BY time DESC");
 			while($r2 = r($result)) {
 				$empresas_num++;
 				$empresas .= '<a href="/empresas/'.$r2['cat_url'].'/'.$r2['url'].'">'.$r2['nombre'].'</a><br />'."\n";

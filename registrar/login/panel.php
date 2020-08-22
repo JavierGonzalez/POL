@@ -6,7 +6,7 @@ if ($pol['user_ID']) {
 
     
 
-    $result = sql("SELECT ser_SC FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+    $result = sql_old("SELECT ser_SC FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
     while($r = r($result)) { $ser_SC = $r['ser_SC']; }
 
     echo '<h1>'._('Opciones de usuario').' ('.$pol['nick'].'):</h1>
@@ -35,7 +35,7 @@ if ($pol['user_ID']) {
 <td valign="middle" align="center" valign="top">'._('Idioma').': 
 <select name="lang">
 <option value="">'._('Idioma por defecto de plataformas').'</option>';
-$result = sql("SELECT lang FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+$result = sql_old("SELECT lang FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 while ($r = r($result)) { $the_lang = $r['lang']; }
 
 foreach ($vp['langs'] AS $loc => $lang) {

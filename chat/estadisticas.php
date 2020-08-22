@@ -2,7 +2,7 @@
 
 
 
-$result = sql("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET[1]."' LIMIT 1");
+$result = sql_old("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET[1]."' LIMIT 1");
 while ($r = r($result)) { 
 
     $txt_title = _('Chat').': '.$r['titulo'].' | log';
@@ -12,7 +12,7 @@ while ($r = r($result)) {
     if ((nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) AND (isset($pol['user_ID']))) {
         
         $msg_num = array(); $char_num = array();
-        $result2 = sql("SELECT nick, msg FROM chats_msg WHERE chat_ID = '".$r['chat_ID']."' AND tipo = 'm'");
+        $result2 = sql_old("SELECT nick, msg FROM chats_msg WHERE chat_ID = '".$r['chat_ID']."' AND tipo = 'm'");
         while ($r2 = r($result2)) { 
             $msg_num[$r2['nick']]++;
             $char_num[$r2['nick']] += strlen($r2['msg']);

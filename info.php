@@ -21,7 +21,7 @@ case 'supervision-del-censo':
 </tr>';
 
 
-$result = sql("SELECT ID AS user_ID, nick, pais, voto_confianza, fecha_last, fecha_registro, (SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = users.ID LIMIT 1) AS has_votado FROM users WHERE SC = 'true' ORDER BY voto_confianza DESC");
+$result = sql_old("SELECT ID AS user_ID, nick, pais, voto_confianza, fecha_last, fecha_registro, (SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = users.ID LIMIT 1) AS has_votado FROM users WHERE SC = 'true' ORDER BY voto_confianza DESC");
 while($r = r($result)) {
 	echo '<tr>
 <td align="right" nowrap="nowrap"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span></td>
@@ -40,7 +40,7 @@ echo '</table>
 <fieldset><legend>Candidatos a supervisor del censo</legend><table width="100%">';
 
 
-$result = sql("SELECT ID AS user_ID, nick, pais, voto_confianza, fecha_last, fecha_registro, (SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = users.ID LIMIT 1) AS has_votado FROM users WHERE SC = 'false' AND ser_SC = 'true' AND fecha_registro < '".tiempo(365)."' AND voto_confianza > 0 ORDER BY voto_confianza DESC LIMIT 10");
+$result = sql_old("SELECT ID AS user_ID, nick, pais, voto_confianza, fecha_last, fecha_registro, (SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = users.ID LIMIT 1) AS has_votado FROM users WHERE SC = 'false' AND ser_SC = 'true' AND fecha_registro < '".tiempo(365)."' AND voto_confianza > 0 ORDER BY voto_confianza DESC LIMIT 10");
 while($r = r($result)) {
 	echo '<tr>
 <td align="right" nowrap="nowrap"><span id="confianza'.$r['user_ID'].'">'.confianza($r['voto_confianza']).'</span></td>
@@ -78,7 +78,7 @@ echo '</table>
 </tr>';
 
 
-	$result = sql("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
+	$result = sql_old("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
 (SELECT nick FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado,
 (SELECT pais FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_pais,
 (SELECT estado FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_estado
@@ -414,7 +414,7 @@ case 'economia':
 	$txt_menu = 'econ';
 
 	// Obtiene colores de background de paises
-	$result = sql("SELECT valor, pais FROM config WHERE dato = 'bg_color'");
+	$result = sql_old("SELECT valor, pais FROM config WHERE dato = 'bg_color'");
 	while ($r = r($result)) { $vp['bg'][$r['pais']] = $r['valor']; }
 
 

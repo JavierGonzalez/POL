@@ -7,7 +7,7 @@ if ($_REQUEST['pass_md5']) { $pass = $_REQUEST['pass_md5']; } else { $pass = md5
 if ($_REQUEST['url_http']) { 
     $url = $_REQUEST['url_http'];
 } elseif ($_REQUEST['url']) { 
-    $url = escape($_REQUEST['url']); 
+    $url = $_REQUEST['url']; 
 } else {
     $url = ''; 
 }
@@ -15,7 +15,7 @@ if ($_REQUEST['url_http']) {
 $user_ID = false;
 
 if (strlen($pass) != 32) { $pass = md5($pass); }
-$result = sql("SELECT ID, nick, api_pass FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." AND pass = '".$pass."' AND estado != 'expulsado' LIMIT 1");
+$result = sql_old("SELECT ID, nick, api_pass FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." AND pass = '".$pass."' AND estado != 'expulsado' LIMIT 1");
 while ($r = r($result)) { 
     $user_ID = $r['ID']; 
     $nick = $r['nick']; 
@@ -32,13 +32,13 @@ if (is_numeric($user_ID)) {
 
     redirect($url);
 } else { 
-    $result = sql("SELECT estado FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." LIMIT 1");
+    $result = sql_old("SELECT estado FROM users WHERE ".(strpos($nick, '@')?"email = '".$nick."'":"nick = '".$nick."'")." LIMIT 1");
     while ($r = r($result)) { $nick_estado = $r['estado']; }
 
     switch ($nick_estado) {
         case 'turista': case 'ciudadano': $msg_error = _('Contraseña incorrecta'); break;
         case 'expulsado': 
-            $result = sql("SELECT razon FROM expulsiones WHERE estado='expulsado' and tiempo = '".$nick."' ORDER BY expire DESC LIMIT 1");
+            $result = sql_old("SELECT razon FROM expulsiones WHERE estado='expulsado' and tiempo = '".$nick."' ORDER BY expire DESC LIMIT 1");
             while ($r = r($result)) { $razon = $r['razon']; }
             $msg_error = ($razon?'Expulsado por incumplimiento del TOS. Infracción: <em>'.$razon.'</em>':'Auto-eliminado'); 
             break;

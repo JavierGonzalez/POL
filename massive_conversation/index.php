@@ -2,13 +2,15 @@
 
 unset($maxsim['output']);
 
+$maxsim['template']['title'] = 'Massive Conversation';
+
 ?>
 <html>
 
 <head>
 <meta charset="UTF-8" />
 
-<title>Conversación Colectiva</title>
+<title><?=$maxsim['template']['title']?></title>
 
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
@@ -65,21 +67,21 @@ table td {
 <tr>
     <td height=30 colspan=2 style="border:none;">
         <span style="float:right">3 participants</span>
-        Unified Conversation
+        <?=$maxsim['template']['title']?>
     </td>
 </tr>
 
 
 
 <tr>
-    <td width=50% rowspan=2 valign=bottom style="padding:10px;">
+    <td width=50% valign=bottom style="padding:10px;">
         <div id="chat_msg">
             
         </div>
     </td>
     
     
-    <td width=50% valign=bottom style="padding:10px;">
+    <td width=50% rowspan=2 valign=bottom style="padding:10px;">
         <div id="chat_respuestas">
             
         </div>
@@ -111,60 +113,7 @@ table td {
 
 </table>
 
-
-
-<script type="text/javascript">
-
-
-refresh_chat_main();
-
-function refresh_chat_main() {
-    
-    $("#chat_msg").load("unified_conversation/ajax/chat_msg");
-    
-    
-    setTimeout(function(){
-        refresh_chat_main();
-    }, 5000);
-}
-
-
-refresh_chat_respuestas();
-
-function refresh_chat_respuestas() {
-    
-    $("#chat_respuestas").load("unified_conversation/ajax/chat_respuestas");
-    
-    
-    setTimeout(function(){
-        refresh_chat_respuestas();
-    }, 1000);
-}
-
-
-
-$("#form_new_msg").submit(function(event) {
-    
-    
-    $.post("unified_conversation/ajax/new_msg", { texto: $("#new_msg").val() })
-        .done(function( data ) {
-            //
-    });
-    
-    
-    $("#new_msg").val("");
-    
-    event.preventDefault();
-});
-
-
-function votar() {    
-    alert("Voto hecho!");
-};
-
-
-
-</script>
+<script src="main.js"></script>
 
 </body>
 </html>

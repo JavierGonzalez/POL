@@ -52,7 +52,7 @@ function polform($action, $pol_form, $submit='Enviar', $submit_disable=false) {
 				
 					$f .= '<select name="nivel"><option value="1">&nbsp;1 &nbsp; '._('Ciudadano').'</option>';
 					if ($pol['nivel'] > 1) {
-						$result = sql("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND asigna != '-1' AND nivel <= '".$pol['nivel']."' ORDER BY nivel ASC", $link);
+						$result = sql_old("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND asigna != '-1' AND nivel <= '".$pol['nivel']."' ORDER BY nivel ASC", $link);
 						while($row = r($result)){
 							if ($nivel_select == $row['nivel']) { $selected = ' selected="selected"'; } else { $selected = ''; }
 							$f .= '<option value="' . $row['nivel'] . '"' . $selected . '>' . $row['nivel'] . ' &nbsp; ' . $row['nombre'] . '</option>' . "\n";
@@ -141,7 +141,7 @@ case 'afiliarse':
 case 'crear-partido':
 
 	$partido = "";
-	$result = sql("SELECT ID, siglas, nombre FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$pol['user_ID']."'");
+	$result = sql_old("SELECT ID, siglas, nombre FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$pol['user_ID']."'");
 	while($r = r($result)){ $partido = crear_link($r['siglas'], 'partido');}
 	if ($partido == ""){
 		echo '<h2>'._('Crear partido').':</h2>';

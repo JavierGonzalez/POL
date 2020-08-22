@@ -7,7 +7,7 @@ $txt_tab = array('/control/kick/expulsar'=>_('Kickear'));
 
 if (($_GET[1] == 'info') AND ($_GET[2])) {
 
-    $result = sql("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
+    $result = sql_old("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
 (SELECT nick FROM users WHERE ID = kicks.user_ID LIMIT 1) AS expulsado,
 (SELECT estado FROM users WHERE ID = kicks.user_ID LIMIT 1) AS expulsado_estado,
 (SELECT nick FROM users WHERE ID = kicks.autor LIMIT 1) AS nick_autor
@@ -78,9 +78,9 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET[2]."' LIMIT 1");
 <th></th>
 </tr>';
 
-sql("UPDATE kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '" . $date . "'"); 
+sql_old("UPDATE kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '" . $date . "'"); 
 $margen_30dias	= date('Y-m-d 20:00:00', time() - 2592000); //30dias
-$result = sql("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo, user_ID,
+$result = sql_old("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo, user_ID,
 (SELECT nick FROM users WHERE ID = kicks.user_ID LIMIT 1) AS expulsado,
 (SELECT estado FROM users WHERE ID = kicks.user_ID LIMIT 1) AS expulsado_estado,
 (SELECT nick FROM users WHERE ID = kicks.autor LIMIT 1) AS nick_autor

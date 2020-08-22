@@ -9,7 +9,7 @@ echo '
 
 <table><tr>';
 
-	$result = sql("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND elecciones IS NOT NULL ORDER BY nivel DESC");
+	$result = sql_old("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND elecciones IS NOT NULL ORDER BY nivel DESC");
 	while($r = r($result)) {
 		echo '<td align="center" title="'._('Elecciones a').' '.$r['nombre'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /><br /><input type="checkbox" onclick="$(\'.cargo_'.$r['cargo_ID'].'\').toggle();$(\'.cargo_'.$r['cargo_ID'].'_info\').hide();" checked="checked" /></td>';
 	}

@@ -97,7 +97,7 @@ foreach ((array)$maxsim['template']['js_array'] AS $key => $value)
 		</ul>
 	</li>
 
-	<li id="menu-info"<?=($txt_menu=='info'?' class="menu-sel"':'')?>><a href="/buscar"><?=_('Información')?></a>
+	<li id="menu-info"<?=($txt_menu=='info'?' class="menu-sel"':'')?>><a href="/doc"><?=_('Información')?></a>
 		<ul>
 			<li><a href="/info/censo"><?=_('Censo')?><span class="md"><?=num($pol['config']['info_censo'])?></span></a></li>
 			<li><a href="/doc"><b><?=_('Documentos')?></b><span class="md"><?=$pol['config']['info_documentos']?></span></a></li>

@@ -6,7 +6,7 @@
 
 
 
-$result = sql("SELECT post_ID FROM api_posts WHERE estado = 'cron' AND time_cron <= '".$date."' LIMIT 1");
+$result = sql_old("SELECT post_ID FROM api_posts WHERE estado = 'cron' AND time_cron <= '".$date."' LIMIT 1");
 while($r = r($result)) {
 	api_facebook('publicar', $r['post_ID'], true);
 }

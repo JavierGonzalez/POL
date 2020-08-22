@@ -80,7 +80,7 @@ echo '
 
 </tr>';
 
-$result = sql("SELECT pais, valor AS num,
+$result = sql_old("SELECT pais, valor AS num,
 (SELECT COUNT(*) FROM votacion WHERE pais = config.pais AND estado = 'ok') AS v_encurso,
 (SELECT MAX(num) FROM votacion WHERE pais = config.pais AND time_expire > '".tiempo(30)."') AS v_votantes,
 (SELECT SUM(num) FROM votacion WHERE pais = config.pais AND time_expire > '".tiempo(30)."') AS v_votos,
@@ -99,13 +99,13 @@ while($r = r($result)) {
 	$pais = $r['pais'];
 	
 	$d = array();
-	$result2 = sql("SELECT ciudadanos, 24h FROM stats WHERE pais = '".$pais."' ORDER BY time DESC LIMIT 31");
+	$result2 = sql_old("SELECT ciudadanos, 24h FROM stats WHERE pais = '".$pais."' ORDER BY time DESC LIMIT 31");
 	while($r2 = r($result2)) { 
 		$d['ciudadanos'][]	= $r2['ciudadanos'];
 		$d['24h'][]			= $r2['24h'];
 	}
 
-	$result2 = sql("SELECT valor, dato FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo', 'bg_color')");
+	$result2 = sql_old("SELECT valor, dato FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo', 'bg_color')");
 	while($r2 = r($result2)) { $pais_config[$r2['dato']] = $r2['valor']; }
 
 	echo '<tr style="background:'.$pais_config['bg_color'].';">

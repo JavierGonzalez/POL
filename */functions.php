@@ -2,13 +2,45 @@
 
 
 
-// MySQL micro-framework v0.2
-function sql($q,$l=null) {
+
+function escape($a) {
+
+	// SQL MITIGATION
+	$a = nl2br($a);
+	$a = str_replace("'", '&#39;', $a);
+	$a = str_replace('"', '&quot;', $a);
+	$a = str_replace(array("\x00", "\x1a"), '', $a);
+	
+	//////////////
+	$a = e($a); // SQL INYECTION PREVENTION
+	//////////////
+
+	// XSS
+	if ($html == false) { $a = strip_tags($a); }
+	$js_filter = 'video|javascript|vbscript|expression|applet|xml|blink|script|embed|object|iframe|frame|frameset|ilayer|bgsound|onabort|onactivate|onafterprint|onafterupdate|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforepaste|onbeforeprint|onbeforeunload|onbeforeupdate|onblur|onbounce|oncellchange|onchange|onclick|oncontextmenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondblclick|ondeactivate|ondrag|ondragend|ondragenter|ondragleave|ondragover|ondragstart|ondrop|onerror|onerrorupdate|onfilterchange|onfinish|onfocus|onfocusin|onfocusout|onhelp|onkeydown|onkeypress|onkeyup|onlayoutcomplete|onload|onlosecapture|onmousedown|onmouseenter|onmouseleave|onmousemove|onmouseout|onmouseover|onmouseup|onmousewheel|onmove|onmoveend|onmovestart|onpaste|onpropertychange|onreadystatechange|onreset|onresize|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onselect|onselectionchange|onselectstart|onstart|onstop|onsubmit|onunload';
+	$a = preg_replace('/(<|&lt;|&#60;|&#x3C;|&nbsp;)('.$js_filter.')/', 'nojs', $a);
+	$a = str_replace(array('accion.php', 'ajax.php'), 'nojs', $a);
+	
+	return $a;
+}
+
+
+function sql_old($q,$l=null) {
 	global $link; 
 	if($l===true){$rr=mysql_query_old($q,$link);while($r=mysqli_fetch_row($rr)){return $r[0];}} 
 	else{return mysql_query_old($q,($l===null?$link:$l));}
 }
 function r($q) {return mysqli_fetch_assoc($q);}
+
+function mysql_query_old($query, $link2=false) {
+	global $link;
+	return mysqli_query(($link2?$link2:$link), $query);
+}
+
+
+
+
+
 
 
 // ### NUCLEO ACCESO 3.1
@@ -60,7 +92,7 @@ function verbalizar_acceso($tipo, $valor='') {
 		
 		case 'examenes':
 			$val = array();
-			$result = sql("SELECT titulo AS nom FROM examenes WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")");
+			$result = sql_old("SELECT titulo AS nom FROM examenes WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")");
 			while($r = r($result)) { $val[] = $r['nom']; }
 			$t = _('ciudadanos con los exámenes aprobados').': <a href="/examenes">'.implode(', ', $val).'</a>';
 			break;
@@ -68,21 +100,21 @@ function verbalizar_acceso($tipo, $valor='') {
 		case 'cargo':
 			$val = array();
 			if ($valor == '') { $valor = 'null'; }
-			$result = sql("SELECT cargo_ID, nombre AS nom FROM cargos WHERE pais = '".PAIS."' AND cargo_ID IN (".implode(',', explode(' ', $valor)).") ORDER BY nivel DESC");
+			$result = sql_old("SELECT cargo_ID, nombre AS nom FROM cargos WHERE pais = '".PAIS."' AND cargo_ID IN (".implode(',', explode(' ', $valor)).") ORDER BY nivel DESC");
 			while($r = r($result)) { $val[] = '<a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" title="'.$r['nom'].'" alt="'.$r['nom'].'" width="16" height="16" /></a>'; }
 			$t = _('ciudadanos con cargo').': '.implode(' ', $val).' (<a href="/cargos">'._('Ver cargos').'</a>)';
 			break;
 
 		case 'afiliado':
 			$val = array();
-			$result = sql("SELECT siglas AS nom FROM partidos WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")");
+			$result = sql_old("SELECT siglas AS nom FROM partidos WHERE pais = '".PAIS."' AND ID IN (".implode(',', explode(' ', $valor)).")");
 			while($r = r($result)) { $val[] = $r['nom']; }
 			$t = _('ciudadanos afiliados al partido').' <a href="/partidos">'.implode('', $val).'</a>';
 			break;
 
 		case 'grupos':
 			$val = array();
-			$result = sql("SELECT nombre AS nom FROM grupos WHERE pais = '".PAIS."' AND grupo_ID IN (".implode(',', explode(' ', $valor)).")");
+			$result = sql_old("SELECT nombre AS nom FROM grupos WHERE pais = '".PAIS."' AND grupo_ID IN (".implode(',', explode(' ', $valor)).")");
 			while($r = r($result)) { $val[] = $r['nom']; }
 			$t = _('ciudadanos afiliados al grupo:').' <a href="/grupos">'.implode(', ', $val).'</a>';
 			break;
@@ -150,7 +182,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 
 				// NOTIFICACION VOTACIONES
 				$pol['config']['info_consultas'] = 0;
-				$result = sql("SELECT v.ID, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
+				$result = sql_old("SELECT v.ID, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
 				FROM votacion `v`
 				LEFT OUTER JOIN votacion_votos `vv` ON v.ID = vv.ref_ID AND vv.user_ID = '".$pol['user_ID']."'
 				WHERE v.estado = 'ok' AND (v.pais = '".PAIS."' OR acceso_votar IN ('supervisores_censo', 'privado')) AND vv.ID IS null");
@@ -164,7 +196,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 				}
 
 				// NOTIFICACIONES
-				$result = sql("SELECT noti_ID, visto, texto, url, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 7");
+				$result = sql_old("SELECT noti_ID, visto, texto, url, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 7");
 				while($r = r($result)) {
 					$total_num += $r['num'];
 					if ($r['visto'] == 'false') { $nuevos_num += $r['num']; }
@@ -177,38 +209,21 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 
 
 		case 'visto': 
-			$result = sql("SELECT noti_ID, visto, texto, url FROM notificaciones WHERE noti_ID = '".$texto."' LIMIT 1");
+			$result = sql_old("SELECT noti_ID, visto, texto, url FROM notificaciones WHERE noti_ID = '".$texto."' LIMIT 1");
 			while($r = r($result)) {
 				if ($r['visto'] == 'false') {
-					sql("UPDATE notificaciones SET visto = 'true' WHERE visto = 'false' AND user_ID = '".$pol['user_ID']."' AND texto = '".$r['texto']."'"); 
+					sql_old("UPDATE notificaciones SET visto = 'true' WHERE visto = 'false' AND user_ID = '".$pol['user_ID']."' AND texto = '".$r['texto']."'"); 
 				}
 				redirect($r['url']);
 			}
 			break;
 
 		default: 
-			sql("INSERT INTO notificaciones (user_ID, texto, url, emisor) VALUES ('".$user_ID."', '".$texto."', '".$url."', '".$emisor."')");
+			sql_old("INSERT INTO notificaciones (user_ID, texto, url, emisor) VALUES ('".$user_ID."', '".$texto."', '".$url."', '".$emisor."')");
 			return true;
 	}
 }
 
-function escape($a, $escape=true, $html=true) {
-	global $link;
-	// SQL INYECTION
-	$a = nl2br($a);
-	$a = str_replace("'", '&#39;', $a);
-	$a = str_replace('"', '&quot;', $a);
-	$a = str_replace(array("\x00", "\x1a"), '', $a);
-	
-	$a = mysqli_real_escape_string($link, $a);
-
-	// XSS
-	if ($html == false) { $a = strip_tags($a); }
-	$js_filter = 'video|javascript|vbscript|expression|applet|xml|blink|script|embed|object|iframe|frame|frameset|ilayer|bgsound|onabort|onactivate|onafterprint|onafterupdate|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforepaste|onbeforeprint|onbeforeunload|onbeforeupdate|onblur|onbounce|oncellchange|onchange|onclick|oncontextmenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondblclick|ondeactivate|ondrag|ondragend|ondragenter|ondragleave|ondragover|ondragstart|ondrop|onerror|onerrorupdate|onfilterchange|onfinish|onfocus|onfocusin|onfocusout|onhelp|onkeydown|onkeypress|onkeyup|onlayoutcomplete|onload|onlosecapture|onmousedown|onmouseenter|onmouseleave|onmousemove|onmouseout|onmouseover|onmouseup|onmousewheel|onmove|onmoveend|onmovestart|onpaste|onpropertychange|onreadystatechange|onreset|onresize|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onselect|onselectionchange|onselectstart|onstart|onstop|onsubmit|onunload';
-	$a = preg_replace('/(<|&lt;|&#60;|&#x3C;|&nbsp;)('.$js_filter.')/', 'nojs', $a);
-	$a = str_replace(array('accion.php', 'ajax.php'), 'nojs', $a);
-	return $a;
-}
 
 
 function gbarra($porcentaje, $size=false, $mostrar_porcentaje=true) {
@@ -250,7 +265,7 @@ function redirect($url, $r301=true) {
 }
 
 function get_supervisores_del_censo() {
-	$result = sql("SELECT ID, nick FROM users WHERE SC = 'true' AND estado = 'ciudadano'");
+	$result = sql_old("SELECT ID, nick FROM users WHERE SC = 'true' AND estado = 'ciudadano'");
 	while($r = r($result)){ $sc[$r['ID']] = $r['nick']; }
 	return $sc; // Devuelve un array con los Supervisores del Censo activos. Formato: $array[user_ID] = nick;
 }
@@ -319,11 +334,11 @@ function paginacion($type, $url, $ID, $num_ahora=null, $num_total=null, $num='10
 	if (!$num_total) {
 		switch ($type) {
 			case 'subforo': 
-				$result = mysqli_fetch_row(sql("SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE ID = '".$ID."'"));
+				$result = mysqli_fetch_row(sql_old("SELECT COUNT(ID) FROM ".SQL."foros_hilos WHERE ID = '".$ID."'"));
 				$num_total = $result[0];
 				break;
 			case 'eventos': 
-				$result = mysqli_fetch_row(sql("SELECT COUNT(ID) FROM log WHERE pais = '".PAIS."'"));
+				$result = mysqli_fetch_row(sql_old("SELECT COUNT(ID) FROM log WHERE pais = '".PAIS."'"));
 				$num_total = $result[0];
 				break;
 		}

@@ -26,7 +26,7 @@ if (!$success) {
 
 exit;
 
-$result = sql("SELECT ID, pais, nick, email FROM users WHERE nick = 'GONZO' LIMIT 1");
+$result = sql_old("SELECT ID, pais, nick, email FROM users WHERE nick = 'GONZO' LIMIT 1");
 // WHERE estado = 'turista'
 
 

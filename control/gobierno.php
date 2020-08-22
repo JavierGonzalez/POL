@@ -32,15 +32,15 @@ if ($_GET[1] == 'categorias') {
 <th>Publicable</th>
 </tr>';
 $subforos = '';
-$result = sql("SELECT * FROM cat WHERE pais = '".PAIS."' ORDER BY tipo DESC, orden ASC");
+$result = sql_old("SELECT * FROM cat WHERE pais = '".PAIS."' ORDER BY tipo DESC, orden ASC");
 while($r = r($result)){
     
     $num = 0;
     if ($r['tipo'] == 'docs') {
-        $result2 = sql("SELECT COUNT(*) AS el_num FROM docs WHERE pais = '".PAIS."' AND cat_ID = '".$r['ID']."'");
+        $result2 = sql_old("SELECT COUNT(*) AS el_num FROM docs WHERE pais = '".PAIS."' AND cat_ID = '".$r['ID']."'");
         while($r2 = r($result2)){ $num = $r2['el_num']; }
     } elseif ($r['tipo'] == 'empresas') {
-        $result2 = sql("SELECT COUNT(*) AS el_num FROM empresas WHERE pais = '".PAIS."' AND cat_ID = '".$r['ID']."'");
+        $result2 = sql_old("SELECT COUNT(*) AS el_num FROM empresas WHERE pais = '".PAIS."' AND cat_ID = '".$r['ID']."'");
         while($r2 = r($result2)){ $num = $r2['el_num']; }
     }
     $checkbox = '<input class="checkbox_impuestos" type="checkbox" name="'.$r['ID'].'_publicable" value="1"'.$disabled;
@@ -184,11 +184,11 @@ echo '<fieldset>'._('Los privilegios sirven para gestionar permisos especiales d
 <th colspan="2">Clicks</th>
 <th></th>
 </tr>';
-    $result = sql("SELECT *, COUNT(*) AS num FROM notificaciones WHERE emisor = '".PAIS."' GROUP BY emisor, texto ORDER BY time DESC");
+    $result = sql_old("SELECT *, COUNT(*) AS num FROM notificaciones WHERE emisor = '".PAIS."' GROUP BY emisor, texto ORDER BY time DESC");
     while($r = r($result)){
 
         $leido = 0;
-        $result2 = sql("SELECT COUNT(*) AS num FROM notificaciones WHERE texto = '".$r['texto']."' AND visto = 'true'");
+        $result2 = sql_old("SELECT COUNT(*) AS num FROM notificaciones WHERE texto = '".$r['texto']."' AND visto = 'true'");
         while($r2 = r($result2)){ $leido = $r2['num']; }
 
         echo '<tr>
@@ -228,7 +228,7 @@ echo '<fieldset>'._('Los privilegios sirven para gestionar permisos especiales d
 <th></th>
 </tr>';
 $subforos = '';
-$result = sql("SELECT *,
+$result = sql_old("SELECT *,
 (SELECT COUNT(*) FROM ".SQL."foros_hilos WHERE sub_ID = ".SQL."foros.ID AND estado = 'ok') AS num_hilos,
 (SELECT SUM(num) FROM ".SQL."foros_hilos WHERE sub_ID = ".SQL."foros.ID AND estado = 'ok') AS num_msg
 FROM ".SQL."foros WHERE estado = 'ok'
@@ -352,7 +352,7 @@ echo '<tr><td colspan="2"></td></tr></table>
 <fieldset><legend>'._('Salarios').'</legend>
 <table border="0" cellspacing="3" cellpadding="0"'.(ECONOMIA?'':' style="display:none;"').'>';
 
-$result = sql("SELECT nombre, cargo_ID, salario
+$result = sql_old("SELECT nombre, cargo_ID, salario
 FROM cargos
 WHERE pais = '".PAIS."'
 ORDER BY salario DESC");
@@ -442,7 +442,7 @@ echo '
 
 
 <tr><td align="right">'._('Idioma').':</td><td><select name="lang">';
-$result = sql("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'lang'");
+$result = sql_old("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'lang'");
 while ($r = r($result)) { $plataforma_lang = $r['valor']; }
 
 foreach ($vp['langs'] AS $loc => $lang) {

@@ -17,7 +17,7 @@ function api_facebook($accion, $item_ID, $sistema=false) {
 		'cookie' => true,
 	));
 	$pub = false;
-	$result = sql("SELECT *, 
+	$result = sql_old("SELECT *, 
 (SELECT item_ID FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS item_ID, 
 (SELECT clave FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS clave, 
 (SELECT acceso_escribir FROM api WHERE api_ID = api_posts.api_ID AND estado = 'activo' LIMIT 1) AS acceso_escribir,
@@ -39,11 +39,11 @@ FROM api_posts WHERE post_ID = '".$item_ID."' LIMIT 1");
 					$pub = $facebook->api('/'.$r['item_ID'].'/'.($r['link']==''?'feed':'links'), 'POST', $content_array);
 					if (!stristr($pub['id'], '_')) { $pub['id'] = $r['item_ID'].'_'.$pub['id']; }
 				} else {
-					sql("UPDATE api_posts SET estado = 'cron', time = '".$date."', publicado_user_ID = '".$user_ID."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
+					sql_old("UPDATE api_posts SET estado = 'cron', time = '".$date."', publicado_user_ID = '".$user_ID."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
 					return true;
 				}
 				if ($pub != false) {
-					sql("UPDATE api_posts SET estado = 'publicado', time = '".$date."', mensaje_ID = '".$pub['id']."', publicado_user_ID = '".$user_ID."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
+					sql_old("UPDATE api_posts SET estado = 'publicado', time = '".$date."', mensaje_ID = '".$pub['id']."', publicado_user_ID = '".$user_ID."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
 					if ($r['api_pais'] == PAIS) {
 						evento_chat('<b>[API]</b> Publicación de contenido en <a href="/api/'.$r['item_ID'].'">'.$r['nombre'].'</a> <span class="gris">('.$pol['nick'].', <a href="https://www.facebook.com/permalink.php?story_fbid='.explodear('_', $pub['id'], 1).'&id='.$r['item_ID'].'">ver contenido</a>, Facebook)</span>');
 					}
@@ -51,7 +51,7 @@ FROM api_posts WHERE post_ID = '".$item_ID."' LIMIT 1");
 				} else { return false; }
 
 			} elseif ($accion == 'borrar') {
-				sql("UPDATE api_posts SET estado = 'pendiente', time = '".$date."', borrado_user_ID = '".$user_ID."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
+				sql_old("UPDATE api_posts SET estado = 'pendiente', time = '".$date."', borrado_user_ID = '".$user_ID."' WHERE post_ID = '".$r['post_ID']."' LIMIT 1");
 				$pub = $facebook->api('/'.$r['mensaje_ID'], 'DELETE', array('access_token'=>$r['clave']));
 				return true; 
 			}
@@ -63,7 +63,7 @@ FROM api_posts WHERE post_ID = '".$item_ID."' LIMIT 1");
 
 function publicar_documento($id, $txt){
 	error_log('Publicar documento SQL: SELECT c.publicar FROM docs d, cat c WHERE d.cat_id=c.id AND d.id='.$id.' LIMIT 1');
-	$result = sql("SELECT c.publicar FROM docs d, cat c WHERE d.cat_id=c.id AND d.id='".$id."' LIMIT 1");
+	$result = sql_old("SELECT c.publicar FROM docs d, cat c WHERE d.cat_id=c.id AND d.id='".$id."' LIMIT 1");
 	while ($r = r($result)){
 	error_log('resultado: '.$r['c.publicar']);
 		if ($r['publicar']){
@@ -78,30 +78,30 @@ function actualizar($accion, $user_ID=false) {
 	switch ($accion) {
 		
 		case 'votaciones':
-			$result = sql("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_ver = 'anonimos'");
+			$result = sql_old("SELECT COUNT(ID) AS num FROM votacion WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_ver = 'anonimos'");
 			while($r = r($result)) {
-				sql("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_consultas' LIMIT 1");
+				sql_old("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_consultas' LIMIT 1");
 			}
 			break;
 
 		case 'examenes':
 			$data_array = array();
-			$result = sql("SELECT cargo_ID, (SELECT ID FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_ID FROM cargos_users WHERE user_ID = '".$user_ID."' AND aprobado = 'ok'");
+			$result = sql_old("SELECT cargo_ID, (SELECT ID FROM examenes WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS examen_ID FROM cargos_users WHERE user_ID = '".$user_ID."' AND aprobado = 'ok'");
 			while($r = r($result)){ $data_array[] = $r['examen_ID']; }
-			sql("UPDATE users SET examenes = '".implode(' ', $data_array)."' WHERE ID = '".$user_ID."' LIMIT 1");
+			sql_old("UPDATE users SET examenes = '".implode(' ', $data_array)."' WHERE ID = '".$user_ID."' LIMIT 1");
 			break;
 
 		case 'cargos':
 			$data_array = array();
-			$result = sql("SELECT cargo_ID FROM cargos_users WHERE user_ID = '".$user_ID."' AND cargo = 'true'");
+			$result = sql_old("SELECT cargo_ID FROM cargos_users WHERE user_ID = '".$user_ID."' AND cargo = 'true'");
 			while($r = r($result)){ $data_array[] = $r['cargo_ID']; }
-			sql("UPDATE users SET cargos = '".implode(' ', $data_array)."' WHERE ID = '".$user_ID."' LIMIT 1");
+			sql_old("UPDATE users SET cargos = '".implode(' ', $data_array)."' WHERE ID = '".$user_ID."' LIMIT 1");
 			break;
 
 		case 'contador_docs':
-			$result = sql("SELECT COUNT(ID) AS num FROM docs WHERE estado = 'ok' AND pais = '".PAIS."'");
+			$result = sql_old("SELECT COUNT(ID) AS num FROM docs WHERE estado = 'ok' AND pais = '".PAIS."'");
 			while($r = r($result)) {
-				sql("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_documentos' LIMIT 1");
+				sql_old("UPDATE config SET valor = '".$r['num']."' WHERE pais = '".PAIS."' AND dato = 'info_documentos' LIMIT 1");
 			}
 			break;
 	}
@@ -112,7 +112,7 @@ function evento_log($accion, $es_sistema=false) {
 	global $pol, $link, $_REQUEST;
 	if (!isset($pol['user_ID'])) { $es_sistema = true; }
 	if (PAIS == 'Ninguno') { $pais = $pol['pais']; } else { $pais = PAIS; }
-	sql("INSERT INTO log (pais, user_ID, nick, time, accion, accion_a) VALUES ('".$pais."', '".($es_sistema==false?$pol['user_ID']:0)."', '".($es_sistema==false?$pol['nick']:'Sistema')."', '".date('Y-m-d H:i:s')."', '".$accion."', '".(substr($accion, 0, 6)=='Cargo '?'cargo':$_REQUEST['a'])."')");
+	sql_old("INSERT INTO log (pais, user_ID, nick, time, accion, accion_a) VALUES ('".$pais."', '".($es_sistema==false?$pol['user_ID']:0)."', '".($es_sistema==false?$pol['nick']:'Sistema')."', '".date('Y-m-d H:i:s')."', '".$accion."', '".(substr($accion, 0, 6)=='Cargo '?'cargo':$_REQUEST['a'])."')");
 }
 
 function presentacion($titulo, $html, $url='') {
@@ -227,32 +227,32 @@ function evento_chat($msg, $user_ID='0', $chat_ID='', $secret=false, $tipo='e', 
 	if (!$nick) { $nick = $pol['nick']; }
 	if (!$pais) { $pais = PAIS; }
 	
-	$result = sql("SELECT chat_ID FROM chats WHERE pais = '".$pais."' AND user_ID = '0' ORDER BY fecha_creacion ASC LIMIT 1");
+	$result = sql_old("SELECT chat_ID FROM chats WHERE pais = '".$pais."' AND user_ID = '0' ORDER BY fecha_creacion ASC LIMIT 1");
 	while($r = r($result)){ $chat_ID = $r['chat_ID']; }
 
-	sql("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('".$chat_ID."', '".($secret==false?$nick:'')."', '".$msg."', '0', '".$user_ID."', '".$tipo."')");
+	sql_old("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo) VALUES ('".$chat_ID."', '".($secret==false?$nick:'')."', '".$msg."', '0', '".$user_ID."', '".$tipo."')");
 }
 
 
 function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 	global $link, $pol, $date; 
-	$result = sql("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' LIMIT 1");
+	$result = sql_old("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' LIMIT 1");
 	while($r = r($result)){
 		
-		$result2 = sql("SELECT cargo_ID FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' AND user_ID = '".$user_ID."' LIMIT 1");
+		$result2 = sql_old("SELECT cargo_ID FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' AND user_ID = '".$user_ID."' LIMIT 1");
 		while($r2 = r($result2)){ $tiene_examen = true; }
 
 		if ($tiene_examen) {
-			sql("UPDATE cargos_users SET cargo = 'true', aprobado = 'ok' WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' AND user_ID = '".$user_ID."' LIMIT 1");
+			sql_old("UPDATE cargos_users SET cargo = 'true', aprobado = 'ok' WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' AND user_ID = '".$user_ID."' LIMIT 1");
 		} else {
-			sql("INSERT INTO cargos_users (cargo_ID, pais, user_ID, time, aprobado, cargo, nota) VALUES ('".$cargo_ID."', '".PAIS."', '".$user_ID."', '".$date."', 'ok', 'true', '0.0')");
+			sql_old("INSERT INTO cargos_users (cargo_ID, pais, user_ID, time, aprobado, cargo, nota) VALUES ('".$cargo_ID."', '".PAIS."', '".$user_ID."', '".$date."', 'ok', 'true', '0.0')");
 		}
 
-		sql("UPDATE users SET nivel = '".$r['nivel']."', cargo = '".$cargo_ID."' WHERE ID = '".$user_ID."' AND nivel < '".$r['nivel']."' LIMIT 1");
+		sql_old("UPDATE users SET nivel = '".$r['nivel']."', cargo = '".$cargo_ID."' WHERE ID = '".$user_ID."' AND nivel < '".$r['nivel']."' LIMIT 1");
 		actualizar('cargos', $user_ID);
 
 		if ($evento_chat) { 
-			$result2 = sql("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1");
+			$result2 = sql_old("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1");
 			while($r2 = r($result2)){ $nick_asignado = $r2['nick']; }
 			evento_chat('<b>[CARGO]</b> El cargo de <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" /> '.$r['nombre'].' ha sido asignado a '.crear_link($nick_asignado).' por '.crear_link(($sistema==true?'VirtualPol':$pol['nick'])));
 			notificacion($user_ID, 'Te ha sido asignado el cargo '.$r['nombre'], '/cargos');
@@ -263,10 +263,10 @@ function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 
 function cargo_del($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 	global $link, $pol; 
-	$result = sql("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' LIMIT 1");
+	$result = sql_old("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' LIMIT 1");
 	while($r = r($result)){
-		sql("UPDATE cargos_users SET cargo = 'false' WHERE pais = '".PAIS."' AND cargo_ID = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' LIMIT 1");
-		$result = sql("SELECT cargo_ID, 
+		sql_old("UPDATE cargos_users SET cargo = 'false' WHERE pais = '".PAIS."' AND cargo_ID = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' LIMIT 1");
+		$result = sql_old("SELECT cargo_ID, 
 (SELECT nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nivel
 FROM cargos_users 
 WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."' AND cargo = 'true' 
@@ -274,10 +274,10 @@ ORDER BY nivel DESC
 LIMIT 1");
 		while($r = r($result)){ $user_nivel_max = $r['nivel']; $user_nivel_sql = ", cargo = '" . $r['cargo_ID'] . "'"; }
 		if (!$user_nivel_max) { $user_nivel_max = 1; $user_nivel_sql = ", cargo = ''"; }
-		sql("UPDATE users SET nivel = '" . $user_nivel_max . "'" . $user_nivel_sql . " WHERE ID = '".$user_ID."' LIMIT 1");
+		sql_old("UPDATE users SET nivel = '" . $user_nivel_max . "'" . $user_nivel_sql . " WHERE ID = '".$user_ID."' LIMIT 1");
 		actualizar('cargos', $user_ID);
 
-		$result2 = sql("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1");
+		$result2 = sql_old("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1");
 		while($r2 = r($result2)){ $nick_asignado = $r2['nick']; }
 
 		if ($evento_chat) { 	
@@ -309,11 +309,11 @@ function cargo($accion, $cargo_ID, $user_ID, $evento_chat=true, $sistema=false) 
 
 
 	// OLD
-	$result = sql("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' LIMIT 1");
+	$result = sql_old("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' LIMIT 1");
 	while($r = r($result)){
 		
-		sql("UPDATE cargos_users SET cargo = 'false' WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' AND user_ID = '".$user_ID."' LIMIT 1");
-		$result = sql("SELECT cargo_ID, 
+		sql_old("UPDATE cargos_users SET cargo = 'false' WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' AND user_ID = '".$user_ID."' LIMIT 1");
+		$result = sql_old("SELECT cargo_ID, 
 (SELECT nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nivel
 FROM cargos_users 
 WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."' AND cargo = 'true' 
@@ -323,11 +323,11 @@ LIMIT 1");
 
 
 		if (!$user_nivel_max) { $user_nivel_max = 1; $user_nivel_sql = ", cargo = ''"; }
-		sql("UPDATE users SET nivel = '" . $user_nivel_max . "'" . $user_nivel_sql . " WHERE ID = '".$user_ID."' LIMIT 1");
+		sql_old("UPDATE users SET nivel = '" . $user_nivel_max . "'" . $user_nivel_sql . " WHERE ID = '".$user_ID."' LIMIT 1");
 		actualizar('cargos', $user_ID);
 
 		if ($evento_chat) { 
-			$result2 = sql("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1");
+			$result2 = sql_old("SELECT nick FROM users WHERE ID = '".$user_ID."' LIMIT 1");
 			while($r2 = r($result2)){ $nick_asignado = $r2['nick']; }
 			evento_chat('<b>[CARGO] '.crear_link(($sistema==true?'VirtualPol':$pol['nick'])).' quita</b> el cargo <img src="'.IMG.'cargos/'.$cargo_ID.'.gif" />'.$r['nombre'].' a '. crear_link($nick_asignado));
 		}
@@ -342,7 +342,7 @@ function enviar_email($user_ID=false, $asunto, $mensaje, $email='') {
 	$cabeceras = "From: VirtualPol <virtualpol.com@virtualpol.com>;\nReturn-Path: VirtualPol <".CONTACTO_EMAIL.">;\nX-Sender: VirtualPol <".CONTACTO_EMAIL.">;\n MIME-Version: 1.0;\nContent-type: text/html; charset=UTF-8\n";
 	if (($user_ID) AND ($email == '')) {
 		global $link;
-		$result = sql("SELECT email FROM users WHERE ID = '".$user_ID."' LIMIT 1");
+		$result = sql_old("SELECT email FROM users WHERE ID = '".$user_ID."' LIMIT 1");
 		while($r = r($result)){ $email = $r['email']; }
 	}
 	mail($email, $asunto, $mensaje, $cabeceras);
@@ -360,20 +360,20 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais=false
 
 		//quitar
 		if ($emisor_ID > 0) {
-			sql("UPDATE users SET pols = pols - ".$pols." WHERE ID = '".$emisor_ID."' AND pais = '".$pais."' LIMIT 1");
+			sql_old("UPDATE users SET pols = pols - ".$pols." WHERE ID = '".$emisor_ID."' AND pais = '".$pais."' LIMIT 1");
 		} else {
 			if (isset($pol['nick'])) { $concepto = '<b>'.$pol['nick'].'&rsaquo;</b> '.$concepto; }
-			sql("UPDATE cuentas SET pols = pols - ".$pols." WHERE ".($emisor_ID==-1?"gobierno = 'true'":"ID = '".substr($emisor_ID, 1)."'")." AND pais = '".$pais."' LIMIT 1");
+			sql_old("UPDATE cuentas SET pols = pols - ".$pols." WHERE ".($emisor_ID==-1?"gobierno = 'true'":"ID = '".substr($emisor_ID, 1)."'")." AND pais = '".$pais."' LIMIT 1");
 		}
 
 		//ingresar
 		if ($receptor_ID > 0) {
-			sql("UPDATE users SET pols = pols + ".$pols." WHERE ID = '".$receptor_ID."' AND pais = '".$pais."' LIMIT 1");
+			sql_old("UPDATE users SET pols = pols + ".$pols." WHERE ID = '".$receptor_ID."' AND pais = '".$pais."' LIMIT 1");
 		} else {
-			sql("UPDATE cuentas SET pols = pols + ".$pols." WHERE ".($receptor_ID==-1?"gobierno = 'true'":"ID = '".substr($receptor_ID, 1)."'")." AND pais = '".$pais."' LIMIT 1");
+			sql_old("UPDATE cuentas SET pols = pols + ".$pols." WHERE ".($receptor_ID==-1?"gobierno = 'true'":"ID = '".substr($receptor_ID, 1)."'")." AND pais = '".$pais."' LIMIT 1");
 		}
 
-		sql("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".$pais."', ".$pols.", '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".date('Y-m-d H:i:s')."')");
+		sql_old("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".$pais."', ".$pols.", '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".date('Y-m-d H:i:s')."')");
 		if ($receptor_ID > 0) { notificacion($receptor_ID, 'Te han transferido '.$pols.' monedas', '/pols'); }
 		$return = true;
 	}
@@ -383,7 +383,7 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais=false
 function eliminar_ciudadano($ID) {
 	global $link, $pol;
 	$user_ID = false;
-	$result3 = sql("SELECT IP, pols, nick, ID, ref, estado".(ECONOMIA?",
+	$result3 = sql_old("SELECT IP, pols, nick, ID, ref, estado".(ECONOMIA?",
 (SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$ID."') AS pols_cuentas":"")." 
 FROM users 
 WHERE ID = '".$ID."' 
@@ -403,24 +403,24 @@ LIMIT 1");
 		if (ECONOMIA) { pols_transferir($pols, $user_ID, '-1', '&dagger; Defuncion: <em>'.$nick.'</em>'); }
 
 		if ((ECONOMIA) AND ($ref != '0')) { 
-			sql("UPDATE users SET ref_num = ref_num - 1 WHERE ID = '".$ref."' LIMIT 1");
+			sql_old("UPDATE users SET ref_num = ref_num - 1 WHERE ID = '".$ref."' LIMIT 1");
 		}
-		sql("DELETE FROM users WHERE ID = '".$user_ID."' LIMIT 1");
-		sql("DELETE FROM users_con WHERE user_ID = '".$user_ID."'");
-		sql("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
-		sql("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'");
-		sql("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'");
-		sql("DELETE FROM kicks WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
-		sql("DELETE FROM chats WHERE user_ID = '".$user_ID."'");
-		sql("DELETE FROM votos WHERE emisor_ID = '".$user_ID."' OR (tipo = 'confianza' AND item_ID = '".$user_ID."')");
-		sql("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."' AND hilo_ID = '-1'");
-		sql("DELETE FROM users_con WHERE user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM users WHERE ID = '".$user_ID."' LIMIT 1");
+		sql_old("DELETE FROM users_con WHERE user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM partidos_listas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'");
+		sql_old("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM kicks WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM chats WHERE user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM votos WHERE emisor_ID = '".$user_ID."' OR (tipo = 'confianza' AND item_ID = '".$user_ID."')");
+		sql_old("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."' AND hilo_ID = '-1'");
+		sql_old("DELETE FROM users_con WHERE user_ID = '".$user_ID."'");
 
-		sql("DELETE FROM referencias WHERE user_ID = '".$user_ID."'");
-		sql("DELETE FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
-		sql("DELETE FROM mapa WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
-		sql("DELETE FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
-		sql("DELETE FROM referencias WHERE IP = '".$IP."' OR user_ID = '".$ref."'"); 
+		sql_old("DELETE FROM referencias WHERE user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM mapa WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM referencias WHERE IP = '".$IP."' OR user_ID = '".$ref."'"); 
 
 		$img_root = RAIZ.'/img/a/'.$user_ID;
 		if (file_exists($img_root.'.jpg')) {
@@ -431,8 +431,8 @@ LIMIT 1");
 		// eliminar
 		/* PENDIENTE DE ARREGLAR. CODIGO CORRECTO, EXCEPTO QUE NO DEBE BORRAR MENSAJES DE EXPULSADOS POR PETICION PROPIA.
 		if ($estado == 'expulsado') { 
-				sql("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."'");
-				sql("DELETE FROM ".SQL."foros_hilos WHERE user_ID = '".$user_ID."'");
+				sql_old("DELETE FROM ".SQL."foros_msg WHERE user_ID = '".$user_ID."'");
+				sql_old("DELETE FROM ".SQL."foros_hilos WHERE user_ID = '".$user_ID."'");
 		}
 		*/
 	}
@@ -441,7 +441,7 @@ LIMIT 1");
 function convertir_turista($ID) {
 	global $link, $pol;
 	$user_ID = false;
-	$result3 = sql("SELECT IP, pols, nick, ID, ref, estado".(ECONOMIA?",
+	$result3 = sql_old("SELECT IP, pols, nick, ID, ref, estado".(ECONOMIA?",
 (SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$ID."') AS pols_cuentas":"")." 
 FROM users 
 WHERE ID = '".$ID."' 
@@ -460,14 +460,14 @@ LIMIT 1");
 
 		if (ECONOMIA) { pols_transferir($pols, $user_ID, '-1', '&dagger; Defuncion: <em>'.$nick.'</em>'); }
 
-		sql("UPDATE users set pais='ninguno', estado='turista' WHERE ID = '".$user_ID."' LIMIT 1");
-		sql("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'");
-		sql("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'");
-		sql("DELETE FROM chats WHERE user_ID = '".$user_ID."'");
+		sql_old("UPDATE users set pais='ninguno', estado='turista' WHERE ID = '".$user_ID."' LIMIT 1");
+		sql_old("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'");
+		sql_old("DELETE FROM cargos_users WHERE user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM chats WHERE user_ID = '".$user_ID."'");
 
-		sql("DELETE FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
-		sql("DELETE FROM mapa WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
-		sql("DELETE FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM mapa WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
+		sql_old("DELETE FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$user_ID."'");
 	}
 }
 
@@ -537,7 +537,7 @@ function barajar_votos($votacion_ID) { // FUNCION CRITICA. Especialmente comenta
 	// El objetivo de esta funcion es barajar los votos de forma que quede rota la relación Usuario-Voto.
 
 	// Comprueba que la votacion está terminada y los votos no son publicos (para evitar corrupciones)
-	$result = sql("SELECT privacidad FROM votacion WHERE ID = '".$votacion_ID."' AND estado = 'end' AND privacidad = 'true' LIMIT 1");
+	$result = sql_old("SELECT privacidad FROM votacion WHERE ID = '".$votacion_ID."' AND estado = 'end' AND privacidad = 'true' LIMIT 1");
 	while($r = r($result)){ $ok = $r['privacidad']; }
 	if ($ok != 'true') { return false; }
 
@@ -545,7 +545,7 @@ function barajar_votos($votacion_ID) { // FUNCION CRITICA. Especialmente comenta
 	// Extrae los IDs de votos y los guarda en array.
 	$votos = array();
 	$n = 0;
-	$result = sql("SELECT * FROM votacion_votos WHERE ref_ID = '".$votacion_ID."'");
+	$result = sql_old("SELECT * FROM votacion_votos WHERE ref_ID = '".$votacion_ID."'");
 	while($r = r($result)){ 
 		$n++;
 		$votos[$n]['ID'] = $r['ID'];
@@ -553,7 +553,7 @@ function barajar_votos($votacion_ID) { // FUNCION CRITICA. Especialmente comenta
 
 	// Extrae los datos a barajar de la tabla de votos, ya ordenados aleatoriamente.
 	$n = 0;
-	$result = sql("SELECT * FROM votacion_votos WHERE ref_ID = '".$votacion_ID."' ORDER BY RAND()");
+	$result = sql_old("SELECT * FROM votacion_votos WHERE ref_ID = '".$votacion_ID."' ORDER BY RAND()");
 	while($r = r($result)){ 
 		$n++;
 		$votos[$n]['voto'] = $r['voto'];
@@ -570,11 +570,11 @@ function barajar_votos($votacion_ID) { // FUNCION CRITICA. Especialmente comenta
 			if ($dato == 'ID') { $voto_ID = $valor; } 
 			else { $sql_set[] = "".$dato." = '".str_replace("'", "", $valor)."'"; }
 		}
-		sql("UPDATE votacion_votos SET ".implode(', ', $sql_set)." WHERE ID = '".$voto_ID."' LIMIT 1");
+		sql_old("UPDATE votacion_votos SET ".implode(', ', $sql_set)." WHERE ID = '".$voto_ID."' LIMIT 1");
 	}
 	
 	// Elimina relación usuario-voto también en los argumentos de votacion
-	sql("UPDATE votacion_argumentos SET user_ID = 0 WHERE ref_ID = '".$votacion_ID."'");
+	sql_old("UPDATE votacion_argumentos SET user_ID = 0 WHERE ref_ID = '".$votacion_ID."'");
 	
 	return true;
 }
@@ -598,7 +598,7 @@ function distancia($lat1, $lng1, $lat2, $lng2, $dec=0) {
 function form_select_cat($tipo='docs', $cat_now='') {
 	global $pol, $link;
 	$f .= '<select name="cat">';
-	$result = sql("
+	$result = sql_old("
 SELECT ID, nombre, nivel
 FROM cat
 WHERE pais = '".PAIS."' AND tipo = '" . $tipo . "'
@@ -640,7 +640,7 @@ function users_con($user_ID, $extra='', $tipo='session', $rejs=false) {
 
 
 	$la_IP = explode('.', long2ip($IP));
-	$result = sql("SELECT IP_pais FROM users_con WHERE IP_rango = '".$la_IP[0].".".$la_IP[1]."' LIMIT 1");
+	$result = sql_old("SELECT IP_pais FROM users_con WHERE IP_rango = '".$la_IP[0].".".$la_IP[1]."' LIMIT 1");
 	while($r = r($result)){ $el_pais = "'".$r['IP_pais']."'"; }
 	if (strlen($hoste[count((array)$hoste)-1]) == 2) { $el_pais = "'".strtoupper($hoste[count((array)$hoste)-1])."'"; }
 	if ((!$el_pais) AND (CLAVE_API_ipinfodb != '...')) { 
@@ -655,10 +655,10 @@ function users_con($user_ID, $extra='', $tipo='session', $rejs=false) {
 
 	$i = []; // get_browser(null, true);
 
-	sql("INSERT INTO users_con (user_ID, time, IP, host, proxy, nav, login_ms, login_seg, nav_resolucion, ISP, tipo, nav_so, IP_pais, IP_rango, IP_rango3, dispositivo) 
+	sql_old("INSERT INTO users_con (user_ID, time, IP, host, proxy, nav, login_ms, login_seg, nav_resolucion, ISP, tipo, nav_so, IP_pais, IP_rango, IP_rango3, dispositivo) 
 VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".$_SERVER['HTTP_X_FORWARDED_FOR']."', '".$_SERVER['HTTP_USER_AGENT']." | ".$_SERVER['HTTP_ACCEPT_LANGUAGE']."".($extra_array[0]?" | ".$extra_array[0]." ".$extra_array[3]:"")."', '".round((microtime(true)-TIME_START)*1000)."', '".$extra_array[2]."', ".($extra_array[0]?"'".$extra_array[0]." ".$extra_array[3]."'":"NULL").", ".$ISP.", '".$tipo."', '".str_replace('Android Android', 'Android', $i['platform']." ".$i['parent'])."', ".$el_pais.", '".$la_IP[0].".".$la_IP[1]."', '".$la_IP[0].".".$la_IP[1].".".$la_IP[2]."', ".($_COOKIE['trz']?"'".$_COOKIE['trz']."'":"NULL").")");
 
-	sql("UPDATE users SET host = '".$host."' WHERE ID = '".$user_ID."' LIMIT 1");
+	sql_old("UPDATE users SET host = '".$host."' WHERE ID = '".$user_ID."' LIMIT 1");
 
 	return ($rejs==true?'<script type="text/javascript"> $(document).ready(function(){ $.post("'.vp_url('/accion/users_con', $_SESSION['pol']['pais']).'", { extra: screen.width + "x" + screen.height + "|" + screen.availWidth + "x" + screen.availHeight + "||" + screen.colorDepth + "|"}); }); </script>':true);
 }

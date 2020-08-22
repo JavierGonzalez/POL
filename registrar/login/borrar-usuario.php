@@ -3,6 +3,6 @@
 
 if ($_POST['nick'] == $pol['nick']) { 
     evento_log('Eliminación de usuario permanente y voluntaria.');
-    sql("UPDATE users SET estado = 'expulsado' WHERE ID = '".$pol['user_ID']."' LIMIT 1"); 
+    sql_old("UPDATE users SET estado = 'expulsado' WHERE ID = '".$pol['user_ID']."' LIMIT 1"); 
 }
 redirect('/');

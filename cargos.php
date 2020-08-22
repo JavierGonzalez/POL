@@ -170,7 +170,7 @@ LIMIT 1", $link);
 <th>'._('Acción').'</th>
 </tr>';
 
-$result = sql("SELECT time, accion
+$result = sql_old("SELECT time, accion
 FROM log 
 WHERE pais = '".PAIS."' AND accion_a = 'cargo' AND accion LIKE 'Cargo ".$r['nombre']." %'
 ORDER BY time DESC LIMIT 25");

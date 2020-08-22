@@ -3,15 +3,15 @@
 
 
 /*
-$result = sql("SELECT valor, dato FROM config WHERE PAIS IS NULL");
+$result = sql_old("SELECT valor, dato FROM config WHERE PAIS IS NULL");
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 */
 
 
 foreach ($vp['paises'] AS $pais) {
-	$result = sql("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$pais."'");
+	$result = sql_old("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$pais."'");
 	while($r = r($result)) {
-		sql("UPDATE config SET valor = '" . $r['num'] . "' WHERE pais = '".strtolower($pais)."' AND dato = 'info_censo' LIMIT 1");
+		sql_old("UPDATE config SET valor = '" . $r['num'] . "' WHERE pais = '".strtolower($pais)."' AND dato = 'info_censo' LIMIT 1");
 	}
 }
 
@@ -21,7 +21,7 @@ if ($pol['estado'] == 'ciudadano') {
 
 
 	// load config full
-	$result = sql("SELECT valor, dato FROM config WHERE pais = '".strtolower($pol['pais'])."' AND autoload = 'no'");
+	$result = sql_old("SELECT valor, dato FROM config WHERE pais = '".strtolower($pol['pais'])."' AND autoload = 'no'");
 	while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
@@ -76,14 +76,14 @@ echo '</blockquote>';
 <table border="0" cellspacing="4">';
 	$n = 0;
 	
-	$result = sql("SELECT pais, valor AS num FROM config WHERE dato = 'info_censo' ORDER BY ABS(valor) DESC LIMIT 25");
+	$result = sql_old("SELECT pais, valor AS num FROM config WHERE dato = 'info_censo' ORDER BY ABS(valor) DESC LIMIT 25");
 	while($r = r($result)) {
 
 		$pais = $r['pais'];
 		$ciudadanos_num = $r['num'];
 
 		// pais_des
-		$result2 = sql("SELECT dato, valor FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo')");
+		$result2 = sql_old("SELECT dato, valor FROM config WHERE pais = '".$pais."' AND dato IN ('pais_des', 'tipo')");
 		while($r2 = r($result2)) { $pais_array[$r2['dato']] = $r2['valor']; }
 		$n++;
 		echo '
@@ -139,9 +139,9 @@ $(document).ready(function() {
 
 
 
-<div style="color:red;font-weight:bold;font-size:20px;">'.($_GET['error']?'<br />'.base64_decode($_GET['error']).'<br /><br />':'').'</div>
+<div style="color:red;font-weight:bold;font-size:20px;">'.($_GET['error']?'<br />'.escape(base64_decode($_GET['error'])).'<br /><br />':'').'</div>
 
-<div style="color:green;font-weight:bold;font-size:20px;">'.($_GET['msg']?'<br />'.base64_decode($_GET['msg']).'<br /><br />':'').'</div>
+<div style="color:green;font-weight:bold;font-size:20px;">'.($_GET['msg']?'<br />'.escape(base64_decode($_GET['msg'])).'<br /><br />':'').'</div>
 
 <fieldset><legend>'._('Crear ciudadano').'</legend>
 

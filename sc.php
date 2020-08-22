@@ -11,7 +11,7 @@
 if ((!nucleo_acceso('supervisores_censo') OR !isset($pol['user_ID'])) AND $pol['user_ID']!=1) { redirect('http://www.'.DOMAIN); }
 
 // Obtiene colores de background de paises
-$result = sql("SELECT valor, pais FROM config WHERE dato = 'bg_color'");
+$result = sql_old("SELECT valor, pais FROM config WHERE dato = 'bg_color'");
 while ($r = r($result)) { $vp['bg'][$r['pais']] = $r['valor']; }
 
 $txt_nav['/sc'] = 'Supervisión del Censo';
@@ -225,7 +225,7 @@ case 'bloqueos':
 	$txt_title = _('Control').': SC | '._('bloqueos');
 	$txt_nav['/sc/bloqueos'] = _('Bloqueos');
 
-	$result = sql("SELECT valor, dato FROM config WHERE PAIS IS NULL");
+	$result = sql_old("SELECT valor, dato FROM config WHERE PAIS IS NULL");
 	while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 	$backlists = array('backlist_IP'=>400, 'backlist_emails'=>180, 'backlist_nicks'=>120);
@@ -266,9 +266,9 @@ case 'bloqueos':
 case 'filtro':
 	
 	// LIMPIEZA DATOS IRRELEVANTES
-	$result = sql("SELECT * FROM users_con ORDER BY user_ID ASC, time DESC");
+	$result = sql_old("SELECT * FROM users_con ORDER BY user_ID ASC, time DESC");
 	while ($r = r($result)) {
-		//if (($r['user_ID'] == $rl['user_ID']) AND ($r['dispositivo'] == $rl['dispositivo']) AND ($r['IP'] == $rl['IP']) AND ($r['nav'] == $rl['nav'])) { sql("DELETE FROM users_con WHERE ID = '".$r['ID']."' LIMIT 1"); } $rl = $r;
+		//if (($r['user_ID'] == $rl['user_ID']) AND ($r['dispositivo'] == $rl['dispositivo']) AND ($r['IP'] == $rl['IP']) AND ($r['nav'] == $rl['nav'])) { sql_old("DELETE FROM users_con WHERE ID = '".$r['ID']."' LIMIT 1"); } $rl = $r;
 	}
 
 	$txt_nav['/sc/filtro'] = 'Filtro';
@@ -362,12 +362,12 @@ case 'filtro':
 
 
 	$clones_array_full = array();
-	$result = sql("SELECT user_ID, ISP, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, nick, estado, u.pais, pass, nota_SC, email, uc.tipo, ".($sql_uctime==true?'MAX(uc.time) AS time':'uc.time').", v.voto AS has_votado, u.voto_confianza".$sql_select."
+	$result = sql_old("SELECT user_ID, ISP, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, nick, estado, u.pais, pass, nota_SC, email, uc.tipo, ".($sql_uctime==true?'MAX(uc.time) AS time':'uc.time').", v.voto AS has_votado, u.voto_confianza".$sql_select."
 FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
 WHERE ".$sql_where."
-ORDER BY ".$sql_order." LIMIT ".mysqli_real_escape_string($link,(is_numeric($sql_limit)?$sql_limit:25)));
+ORDER BY ".$sql_order." LIMIT ".(is_numeric($sql_limit)?$sql_limit:25));
 	while ($r = r($result)) { $clones_array_full[] = $r['user_ID']; $txt_td .= print_td($r); }
 	
 	echo '
@@ -410,7 +410,7 @@ default:
 <th></th>
 </tr>';
 	$clones_array_full = array();
-	$result = sql("SELECT COUNT(DISTINCT user_ID) AS num, dispositivo
+	$result = sql_old("SELECT COUNT(DISTINCT user_ID) AS num, dispositivo
 FROM users_con `uc`
 WHERE ".$sql_con."dispositivo IS NOT NULL AND dispositivo != ''
 GROUP BY dispositivo
@@ -423,7 +423,7 @@ ORDER BY num DESC, time DESC");
 		$clon_count = 0;
 		$clon_confianza = 0;
 		$mostrar = false;
-		$result2 = sql("SELECT user_ID, MAX(dispositivo) AS dispositivo, MAX(nav_resolucion) AS nav_resolucion, MAX(uc.time) AS time, ISP, nick, u.estado, u.pais, pass, nota_SC, email, uc.tipo, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, v.voto AS has_votado, u.voto_confianza
+		$result2 = sql_old("SELECT user_ID, MAX(dispositivo) AS dispositivo, MAX(nav_resolucion) AS nav_resolucion, MAX(uc.time) AS time, ISP, nick, u.estado, u.pais, pass, nota_SC, email, uc.tipo, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, v.voto AS has_votado, u.voto_confianza
 FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
@@ -438,7 +438,7 @@ ORDER BY MAX(uc.time) DESC");
 			
 			if ($r2['estado'] == 'expulsado') {
 				$razon = false;
-				$result3 = sql("SELECT razon FROM expulsiones WHERE user_ID = '".$r2['user_ID']."' AND estado = 'expulsado' LIMIT 1");
+				$result3 = sql_old("SELECT razon FROM expulsiones WHERE user_ID = '".$r2['user_ID']."' AND estado = 'expulsado' LIMIT 1");
 				while ($r3 = r($result3)) { $razon = $r3['razon']; }
 				if (($razon == false) OR ($razon == 'Registro erroneo.')) { $clon_count--; }
 			}
@@ -477,7 +477,7 @@ $IP_publicas = array(
 
 foreach ($IP_publicas AS $IPs) { $longIP_publicas[] = ip2long($IPs); }
 	$clones_array_full = array();
-	$result = sql("SELECT COUNT(DISTINCT user_ID) AS num, IP 
+	$result = sql_old("SELECT COUNT(DISTINCT user_ID) AS num, IP 
 FROM users_con `uc`
 WHERE ".$sql_con."IP NOT IN ('".implode("','", $longIP_publicas)."') AND IP_rango NOT IN ('".implode("','", $IP_publicas)."') AND IP_rango3 NOT IN ('".implode("','", $IP_publicas)."')
 GROUP BY IP HAVING num > 1
@@ -489,7 +489,7 @@ ORDER BY num DESC, IP ASC");
 		$clon_count = 0;
 		$clon_confianza = 0;
 		$mostrar = false;
-		$result2 = sql("SELECT user_ID, MAX(dispositivo) AS dispositivo, MAX(nav_resolucion) AS nav_resolucion, MAX(uc.time) AS time, ISP, nick, u.estado, u.pais, pass, nota_SC, email, uc.tipo, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, v.voto AS has_votado, u.voto_confianza
+		$result2 = sql_old("SELECT user_ID, MAX(dispositivo) AS dispositivo, MAX(nav_resolucion) AS nav_resolucion, MAX(uc.time) AS time, ISP, nick, u.estado, u.pais, pass, nota_SC, email, uc.tipo, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, v.voto AS has_votado, u.voto_confianza
 FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
@@ -503,7 +503,7 @@ ORDER BY uc.time DESC");
 			$clones_nick_array[] = $r2['nick'];
 			if ($r2['estado'] == 'expulsado') {
 				$razon = false;
-				$result3 = sql("SELECT razon FROM expulsiones WHERE user_ID = '".$r2['user_ID']."' AND estado = 'expulsado' LIMIT 1");
+				$result3 = sql_old("SELECT razon FROM expulsiones WHERE user_ID = '".$r2['user_ID']."' AND estado = 'expulsado' LIMIT 1");
 				while ($r3 = r($result3)) { $razon = $r3['razon']; }
 				if (($razon == false) OR ($razon == 'Registro erroneo.')) { $clon_count--; }
 			}
@@ -526,7 +526,7 @@ ORDER BY uc.time DESC");
 
 	echo '<fieldset><legend>Clave</legend><table>';
 	$clones_array_full = array();
-	$result = sql("SELECT COUNT(*) AS num, pass 
+	$result = sql_old("SELECT COUNT(*) AS num, pass 
 FROM users
 GROUP BY pass
 HAVING num > 1
@@ -540,7 +540,7 @@ ORDER BY num DESC, fecha_last DESC");
 		$clon_count = 0;
 		$clon_confianza = 0;
 		$mostrar = false;
-		$result2 = sql("SELECT user_ID, MAX(dispositivo) AS dispositivo, MAX(nav_resolucion) AS nav_resolucion, MAX(uc.time) AS time, ISP, nick, u.estado, u.pais, pass, nota_SC, email, uc.tipo, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, v.voto AS has_votado, u.voto_confianza
+		$result2 = sql_old("SELECT user_ID, MAX(dispositivo) AS dispositivo, MAX(nav_resolucion) AS nav_resolucion, MAX(uc.time) AS time, ISP, nick, u.estado, u.pais, pass, nota_SC, email, uc.tipo, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, v.voto AS has_votado, u.voto_confianza
 FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'
@@ -554,7 +554,7 @@ ORDER BY dispositivo DESC, MAX(uc.time) DESC");
 			$clones_nick_array[] = $r2['nick'];
 			if ($r2['estado'] == 'expulsado') {
 				$razon = false;
-				$result3 = sql("SELECT razon FROM expulsiones WHERE user_ID = '".$r2['user_ID']."' AND estado = 'expulsado' LIMIT 1");
+				$result3 = sql_old("SELECT razon FROM expulsiones WHERE user_ID = '".$r2['user_ID']."' AND estado = 'expulsado' LIMIT 1");
 				while ($r3 = r($result3)) { $razon = $r3['razon']; }
 				if (($razon == false) OR ($razon == 'Registro erroneo.')) { $clon_count--; }
 			}
@@ -579,7 +579,7 @@ ORDER BY dispositivo DESC, MAX(uc.time) DESC");
 	$txt_tr = '';
 	$clon_count = 0;
 	$clon_confianza = 0;
-	$result2 = sql("SELECT user_ID, MAX(dispositivo) AS dispositivo, MAX(nav_resolucion) AS nav_resolucion, MAX(uc.time) AS time, ISP, nick, u.estado, u.pais, pass, nota_SC, email, uc.tipo, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, v.voto AS has_votado, u.voto_confianza
+	$result2 = sql_old("SELECT user_ID, MAX(dispositivo) AS dispositivo, MAX(nav_resolucion) AS nav_resolucion, MAX(uc.time) AS time, ISP, nick, u.estado, u.pais, pass, nota_SC, email, uc.tipo, uc.host, uc.nav, nav_so, uc.IP, IP_pais, IP_rango, v.voto AS has_votado, u.voto_confianza
 FROM users_con `uc`
 LEFT OUTER JOIN users `u` ON uc.user_ID = u.ID
 LEFT OUTER JOIN votos `v` ON v.tipo = 'confianza' AND uc.user_ID = v.item_ID AND v.emisor_ID = '".$pol['user_ID']."'

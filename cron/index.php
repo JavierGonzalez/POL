@@ -4,7 +4,7 @@
 
 
 // PROTECCION DE DOBLE EJECUCION. Evita que se ejcute el proceso mas de una vez en un mismo dia.
-$result = sql("SELECT pais FROM stats WHERE pais = '".PAIS."' AND time = '".date('Y-m-d 20:00:00')."' LIMIT 1");
+$result = sql_old("SELECT pais FROM stats WHERE pais = '".PAIS."' AND time = '".date('Y-m-d 20:00:00')."' LIMIT 1");
 while($r = r($result)) { echo 'Ya se ha ejecutado hoy'; exit; }
 
 
@@ -18,15 +18,15 @@ $date			= date('Y-m-d 20:00:00'); 					// ahora
 
 
 // LOAD CONFIG $pol['config'][]
-$result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
+$result = sql_old("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
 // EXPIRACION DE CANDIDATOS INACTIVOS
-$result = sql("SELECT user_ID, (SELECT fecha_last FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_last FROM cargos_users WHERE pais = '".PAIS."' AND aprobado = 'ok' GROUP BY user_ID");
+$result = sql_old("SELECT user_ID, (SELECT fecha_last FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS fecha_last FROM cargos_users WHERE pais = '".PAIS."' AND aprobado = 'ok' GROUP BY user_ID");
 while ($r = r($result)) { 
 	if (($r['fecha_last']) AND (strtotime($r['fecha_last']) < (time() - 60*60*24*$pol['config']['examenes_exp']))) {
-		sql("UPDATE cargos_users SET aprobado = 'no' WHERE user_ID = '".$r['user_ID']."'");
+		sql_old("UPDATE cargos_users SET aprobado = 'no' WHERE user_ID = '".$r['user_ID']."'");
 	}
 }
 
@@ -34,7 +34,7 @@ while ($r = r($result)) {
 if (ECONOMIA) {
 
 // REFERENCIAS 
-$result = sql("SELECT ID, user_ID, new_user_ID,
+$result = sql_old("SELECT ID, user_ID, new_user_ID,
 (SELECT nick FROM users WHERE ID = referencias.user_ID LIMIT 1) AS nick,
 (SELECT pais FROM users WHERE ID = referencias.user_ID LIMIT 1) AS nick_pais,
 (SELECT nick FROM users WHERE ID = referencias.new_user_ID LIMIT 1) AS new_nick,
@@ -46,25 +46,25 @@ while($r = r($result)){
 	if (($r['online'] >= $pol['config']['online_ref']) AND ($r['nick_pais'] == PAIS)) {
 		evento_chat('<b>[PROCESO] Referencia exitosa</b>, nuevo Ciudadano '.crear_link($r['new_nick']).', '.crear_link($r['nick']).' gana <em>'.pols($pol['config']['pols_afiliacion']).' '.MONEDA.'</em>');
 		pols_transferir($pol['config']['pols_afiliacion'], '-1', $r['user_ID'], 'Referencia: '.$r['new_nick']);
-		sql("UPDATE referencias SET pagado = '1' WHERE ID = '".$r['ID']."' LIMIT 1");
-		sql("UPDATE users SET ref_num = ref_num + 1 WHERE ID = '".$r['user_ID']."' LIMIT 1");
+		sql_old("UPDATE referencias SET pagado = '1' WHERE ID = '".$r['ID']."' LIMIT 1");
+		sql_old("UPDATE users SET ref_num = ref_num + 1 WHERE ID = '".$r['user_ID']."' LIMIT 1");
 	}
 }
-sql("DELETE FROM referencias WHERE time < '".tiempo(30)."'");
+sql_old("DELETE FROM referencias WHERE time < '".tiempo(30)."'");
 
 
 // SALARIOS
-$result = sql("SELECT user_ID,
+$result = sql_old("SELECT user_ID,
 (SELECT salario FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID AND asigna != '-1' LIMIT 1) AS salario
 FROM cargos_users
 WHERE pais = '".PAIS."' AND cargo = 'true'
 ORDER BY user_ID ASC");
 while($r = r($result)){ if ($salarios[$r['user_ID']] < $r['salario']) { $salarios[$r['user_ID']] = $r['salario']; } }
-$result = sql("SELECT pols FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
+$result = sql_old("SELECT pols FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
 while($r = r($result)) { $pols_gobierno = $r['pols']; }
 $gasto_total = 0;
 foreach($salarios as $user_ID => $salario) {
-	$result = sql("SELECT ID
+	$result = sql_old("SELECT ID
 FROM users
 WHERE ID = '".$user_ID."' AND fecha_last > '".tiempo(1)."' AND pais = '".PAIS."'
 LIMIT 1");
@@ -77,13 +77,13 @@ LIMIT 1");
 }
 evento_chat('<b>[PROCESO] Sueldos efectuados.</b> Gasto: <em>'.pols($gasto_total).' '.MONEDA.'</em>');
 
-$result = sql("SELECT pols FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
+$result = sql_old("SELECT pols FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
 while($r = r($result)) {
 	$pols_gobierno2 = $r['pols'];
 }
 
 if ($pols_gobierno - $gasto_total != $pols_gobierno2) {
-	sql("UPDATE cuentas SET pols = pols - ".$gasto_total." WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
+	sql_old("UPDATE cuentas SET pols = pols - ".$gasto_total." WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
 	$pols_gobierno -= $gasto_total;
 	evento_chat('<b>[PROCESO] Correcci&oacute;n efectuada.</b> Descontado el gasto en salarios. El error era de <em>'. pols($pols_gobierno2 - $pols_gobierno).' '.MONEDA.'</em>');
 }
@@ -96,7 +96,7 @@ else {
 $salario_inempol = $pol['config']['pols_inem'];
 $gasto_total = 0;
 if ($salario_inempol > 0) {
-	$result = sql("SELECT ID FROM users WHERE fecha_last > '".tiempo(1)."' AND pais = '".PAIS."'");
+	$result = sql_old("SELECT ID FROM users WHERE fecha_last > '".tiempo(1)."' AND pais = '".PAIS."'");
 	while($r = r($result)){ 
 		if ($tiene_sueldo[$r['ID']] != 'ok') {
 			$gasto_total += $salario_inempol;
@@ -106,32 +106,32 @@ if ($salario_inempol > 0) {
 }
 evento_chat('<b>[PROCESO] INEMPOL efectuado.</b> Gasto: <em>'.pols($gasto_total).' '.MONEDA.'</em>');
 
-$result = sql("SELECT pols FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
+$result = sql_old("SELECT pols FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
 while($r = r($result)) {
 	$pols_gobierno2 = $r['pols'];
 }
 
 if ($pols_gobierno - $gasto_total != $pols_gobierno2) {
-	sql("UPDATE cuentas SET pols = pols - ".$gasto_total." WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
+	sql_old("UPDATE cuentas SET pols = pols - ".$gasto_total." WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
 	evento_chat('<b>[PROCESO] Correcci&oacute;n efectuada.</b> Descontado el gasto en INEMPOL. El error era de <em>'. pols($pols_gobierno2 - $pols_gobierno + $gasto_total).' '.MONEDA.'</em>');
 }
 
 
 
 // SUBASTA: LA FRASE
-$result = sql("SELECT pols, user_ID,
+$result = sql_old("SELECT pols, user_ID,
 (SELECT nick FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick,
 (SELECT pols FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick_pols
 FROM pujas 
 WHERE pais = '".PAIS."' AND mercado_ID = '1'
 ORDER BY pols DESC LIMIT 1");
 while($r = r($result)){
-	sql("DELETE FROM pujas WHERE pais = '".PAIS."' AND mercado_ID = '1'"); //resetea pujas
+	sql_old("DELETE FROM pujas WHERE pais = '".PAIS."' AND mercado_ID = '1'"); //resetea pujas
 	evento_chat('<b>[PROCESO]</b> Subasta: <b>La frase</b>, de <em>'.crear_link($r['nick']).'</em> por '.pols($r['pols']).' '.MONEDA.'');
 	$pujas_total = $r['pols'];
 	pols_transferir($r['pols'], $r['user_ID'], '-1', 'Subasta: <em>La frase</em>');
-	sql("UPDATE config SET valor = '".$r['user_ID']."' WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1");
-	sql("UPDATE config SET valor = '".$r['nick']."' WHERE pais = '".PAIS."' AND dato = 'pols_frase' LIMIT 1");
+	sql_old("UPDATE config SET valor = '".$r['user_ID']."' WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1");
+	sql_old("UPDATE config SET valor = '".$r['nick']."' WHERE pais = '".PAIS."' AND dato = 'pols_frase' LIMIT 1");
 }
 
 
@@ -139,7 +139,7 @@ while($r = r($result)){
 $gan = $pol['config']['palabras_num'];
 $g = 1;
 $las_palabras = '';
-$result = sql("SELECT user_ID, MAX(pols) AS los_pols,
+$result = sql_old("SELECT user_ID, MAX(pols) AS los_pols,
 (SELECT nick FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick,
 (SELECT pols FROM users WHERE ID = pujas.user_ID LIMIT 1) AS nick_pols
 FROM pujas
@@ -156,14 +156,14 @@ while($r = r($result)) {
 		$g++;
 	}
 }
-sql("DELETE FROM pujas WHERE pais = '".PAIS."' AND mercado_ID = '2'"); //resetea pujas
-sql("UPDATE config SET valor = '".$las_palabras."' WHERE pais = '".PAIS."' AND dato = 'palabras' LIMIT 1");
+sql_old("DELETE FROM pujas WHERE pais = '".PAIS."' AND mercado_ID = '2'"); //resetea pujas
+sql_old("UPDATE config SET valor = '".$las_palabras."' WHERE pais = '".PAIS."' AND dato = 'palabras' LIMIT 1");
 
 
 // COSTE PROPIEDADES
 $p['user_ID'] = 1;
 $recaudado_propiedades = 0;
-$result = sql("SELECT ID, size_x, size_y, user_ID, estado, superficie,
+$result = sql_old("SELECT ID, size_x, size_y, user_ID, estado, superficie,
 (SELECT pols FROM users WHERE ID = mapa.user_ID LIMIT 1) AS pols_total
 FROM mapa 
 WHERE pais = '".PAIS."' AND user_ID != '0' AND estado != 'e'
@@ -175,7 +175,7 @@ while($r = r($result)){
 			$recaudado_propiedades += $p['pols']; 
 		} else {
 			foreach($p['prop'] as $unID => $uncoste) {
-				sql("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$unID."' AND user_ID = '".$p['user_ID']."' LIMIT 1");
+				sql_old("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$unID."' AND user_ID = '".$p['user_ID']."' LIMIT 1");
 			}
 		}
 		$p = [];
@@ -192,7 +192,7 @@ if ($p['pols_total'] >= $p['pols']) {
 	$recaudado_propiedades += $p['pols']; 
 } else {
 	foreach($p['prop'] as $unID => $uncoste) {
-		sql("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$unID."' AND user_ID = '".$p['user_ID']."' LIMIT 1");
+		sql_old("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$unID."' AND user_ID = '".$p['user_ID']."' LIMIT 1");
 	}
 }
 evento_chat('<b>[PROCESO] Coste de propiedades efectuado,</b> recaudado: '.pols($recaudado_propiedades).' '.MONEDA);
@@ -208,7 +208,7 @@ if ($pol['config']['impuestos'] > 0) {
 	$minimo = $pol['config']['impuestos_minimo'];
 	$porcentaje = $pol['config']['impuestos'];
 
-	$result = sql("SELECT ID, nick, pols, estado,
+	$result = sql_old("SELECT ID, nick, pols, estado,
 (SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = users.ID AND nivel = '0' AND exenta_impuestos = '0' GROUP BY user_ID) AS pols_cuentas
 FROM users WHERE pais = '".PAIS."' AND fecha_registro < '".tiempo(1)."'
 ORDER BY fecha_registro ASC");
@@ -230,7 +230,7 @@ ORDER BY fecha_registro ASC");
 				$pols_total = $r['pols_cuentas'];
 			}
 
-			$result2 = sql("SELECT ID, pols FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' AND nivel = '0' AND exenta_impuestos = '0'");
+			$result2 = sql_old("SELECT ID, pols FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' AND nivel = '0' AND exenta_impuestos = '0'");
 			while($r2 = r($result2)) {
 				$impuesto_cuenta = round(($r2['pols']/$pols_total) * $impuesto, 2);
 				pols_transferir($impuesto_cuenta, '-'.$r2['ID'], '-1', 'IMPUESTO '.date('Y-m-d').': '.$pol['config']['impuestos'].'%');
@@ -243,7 +243,7 @@ ORDER BY fecha_registro ASC");
 			}
 
 			if ($resto_impuestos > 0) {
-				$result2 = sql("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' AND nivel = '0' AND exenta_impuestos = '0' ORDER BY pols DESC LIMIT 1");
+				$result2 = sql_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' AND nivel = '0' AND exenta_impuestos = '0' ORDER BY pols DESC LIMIT 1");
 				while($r2 = r($result2)) { 
 					pols_transferir($resto_impuestos, '-'.$r2['ID'], '-1', 'IMPUESTO '.date('Y-m-d').': '.$pol['config']['impuestos'].'%. Ajuste por redondeos.');
 				}
@@ -256,10 +256,10 @@ ORDER BY fecha_registro ASC");
 
 // IMPUESTO EMPRESA
 if ($pol['config']['impuestos_empresa'] > 0) {	
-	$result = sql("SELECT COUNT(ID) AS num, user_ID FROM empresas WHERE pais = '".PAIS."' GROUP BY user_ID ORDER BY num DESC");
+	$result = sql_old("SELECT COUNT(ID) AS num, user_ID FROM empresas WHERE pais = '".PAIS."' GROUP BY user_ID ORDER BY num DESC");
 	while($r = r($result)) { 
 		// comprueba si existe el propietario de la empresa antes de ejecutar el impuesto
-		$result2 = sql("SELECT ID, pols FROM users WHERE ID = '".$r['user_ID']."' AND pais = '".PAIS."' LIMIT 1");
+		$result2 = sql_old("SELECT ID, pols FROM users WHERE ID = '".$r['user_ID']."' AND pais = '".PAIS."' LIMIT 1");
 		while($r2 = r($result2)) { 
 			$impuesto = round($pol['config']['impuestos_empresa'] * $r['num'], 2);
 			if ($r2['pols'] >= $impuesto) {
@@ -267,7 +267,7 @@ if ($pol['config']['impuestos_empresa'] > 0) {
 				pols_transferir($impuesto, $r['user_ID'], '-1', 'IMPUESTO EMPRESAS '.date('Y-m-d').': '.$r['num'].' empresas');	
 			} 
 			else {
-				$result3 = sql("SELECT ID, pols FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['user_ID']."' AND nivel = '0' ORDER BY pols DESC LIMIT 1");
+				$result3 = sql_old("SELECT ID, pols FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$r['user_ID']."' AND nivel = '0' ORDER BY pols DESC LIMIT 1");
 				while($r3 = r($result3)) {
 					 if ($r3['pols'] >= $impuesto) {
 						$recaudacion_empresas += $impuesto;
@@ -288,44 +288,44 @@ if ($pol['config']['impuestos_empresa'] > 0) {
 
 
 // NOTAS MEDIA
-$result = sql("SELECT user_ID, AVG(nota) AS media FROM cargos_users WHERE pais = '".PAIS."' GROUP BY user_ID");
+$result = sql_old("SELECT user_ID, AVG(nota) AS media FROM cargos_users WHERE pais = '".PAIS."' GROUP BY user_ID");
 while($r = r($result)){ 
-	if ($r['media']) { sql("UPDATE users SET nota = '".$r['media']."' WHERE ID = '".round($r['user_ID'], 1)."' LIMIT 1"); }
+	if ($r['media']) { sql_old("UPDATE users SET nota = '".$r['media']."' WHERE ID = '".round($r['user_ID'], 1)."' LIMIT 1"); }
 }
 //evento_chat('<b>[PROCESO] Calculadas las notas media.</b>');
 
 
 // ELIMINAR CHAT INACTIVOS TRAS N DIAS
 $margen_chatexpira = date('Y-m-d 20:00:00', time() - (86400 * $pol['config']['chat_diasexpira']));
-sql("DELETE FROM chats WHERE pais = '".PAIS."' AND fecha_last < '".$margen_chatexpira."'");
+sql_old("DELETE FROM chats WHERE pais = '".PAIS."' AND fecha_last < '".$margen_chatexpira."'");
 
 
 // ELIMINAR MENSAJES PRIVADOS
-sql("DELETE FROM mensajes WHERE time < '".tiempo(15)."'");
+sql_old("DELETE FROM mensajes WHERE time < '".tiempo(15)."'");
 
 // ELIMINAR TRANSACCIONES ANTIGUAS
-sql("DELETE FROM transacciones WHERE pais = '".PAIS."' AND time < '".tiempo(365)."'");
+sql_old("DELETE FROM transacciones WHERE pais = '".PAIS."' AND time < '".tiempo(365)."'");
 
 // ELIMINAR LOG EVENTOS
-sql("DELETE FROM ".SQL."log WHERE time < '".tiempo(365)."'");
+sql_old("DELETE FROM ".SQL."log WHERE time < '".tiempo(365)."'");
 
 // ELIMINAR bans antiguos
-sql("DELETE FROM kicks WHERE pais = '".PAIS."' AND (estado = 'inactivo' OR estado = 'cancelado') AND expire < '".tiempo(60)."'");
+sql_old("DELETE FROM kicks WHERE pais = '".PAIS."' AND (estado = 'inactivo' OR estado = 'cancelado') AND expire < '".tiempo(60)."'");
 
 // ELIMINAR hilos BASURA
-sql("DELETE FROM ".SQL."foros_hilos WHERE estado = 'borrado' AND time_last < '".tiempo(10)."'");
+sql_old("DELETE FROM ".SQL."foros_hilos WHERE estado = 'borrado' AND time_last < '".tiempo(10)."'");
 
 // ELIMINAR mensajes BASURA
-sql("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '".tiempo(10)."'");
+sql_old("DELETE FROM ".SQL."foros_msg WHERE estado = 'borrado' AND time2 < '".tiempo(10)."'");
 
 // ELIMINAR examenes antiguos
-//sql("DELETE FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'false' AND time < '".tiempo(60)."'");
+//sql_old("DELETE FROM cargos_users WHERE pais = '".PAIS."' AND cargo = 'false' AND time < '".tiempo(60)."'");
 
 // ELIMINAR notificaciones
-sql("DELETE FROM notificaciones WHERE time < '".tiempo(10)."'");
+sql_old("DELETE FROM notificaciones WHERE time < '".tiempo(10)."'");
 
 // ELIMINAR users_con
-sql("DELETE FROM users_con WHERE time < '".tiempo(30)."'");
+sql_old("DELETE FROM users_con WHERE time < '".tiempo(30)."'");
 
 
 
@@ -345,7 +345,7 @@ Emails de aviso de expiración:
 
 /*
 $st['eliminados'] = 0;
-$result = sql("SELECT ID, estado, nick FROM users
+$result = sql_old("SELECT ID, estado, nick FROM users
 WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registro > '".tiempo(365)."' AND 
 (pais IN ('ninguno', '".PAIS."') AND fecha_last <= '".tiempo(120)."')) OR 
 (estado IN ('validar', 'expulsado') AND fecha_last <= '".tiempo(10)."') 
@@ -358,7 +358,7 @@ while($r = r($result)) {
 
 
 // Emails de aviso de expiración
-$result = sql("SELECT ID, pais, nick, email FROM users
+$result = sql_old("SELECT ID, pais, nick, email FROM users
 WHERE estado IN ('ciudadano', 'turista') AND dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registro > '".tiempo(365*2)."' AND 
 (pais = '".PAIS."' AND 
 ((fecha_last >= '".tiempo(30, '00:00:00')."' AND fecha_last <= '".tiempo(30, '23:59:59')."') OR 
@@ -388,31 +388,31 @@ http://www.'.DOMAIN.'</p>';
 
 
 // ACTUALIZACION DEL VOTO CONFIANZA
-sql("UPDATE users SET voto_confianza = '0'");
-$result = sql("SELECT item_ID, SUM(voto) AS num_confianza FROM votos, users WHERE tipo = 'confianza' AND users.id = emisor_ID AND (users.estado != 'expulsado' and users.estado != 'validar') GROUP BY item_ID");
+sql_old("UPDATE users SET voto_confianza = '0'");
+$result = sql_old("SELECT item_ID, SUM(voto) AS num_confianza FROM votos, users WHERE tipo = 'confianza' AND users.id = emisor_ID AND (users.estado != 'expulsado' and users.estado != 'validar') GROUP BY item_ID");
 while ($r = r($result)) { 
-	sql("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['item_ID']."' LIMIT 1");
+	sql_old("UPDATE users SET voto_confianza = '".$r['num_confianza']."' WHERE ID = '".$r['item_ID']."' LIMIT 1");
 }
-sql("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '".tiempo(180)."')");
+sql_old("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '".tiempo(180)."')");
 
 
 
 // Quitar candidaturas de SC que estén más de 30 dias inactivos.
-sql("UPDATE users SET ser_SC = 'false' WHERE ser_SC = 'true' AND fecha_last < '".tiempo(30)."'");
+sql_old("UPDATE users SET ser_SC = 'false' WHERE ser_SC = 'true' AND fecha_last < '".tiempo(30)."'");
 
 if (date('N') == 7) { // SOLO DOMINGO
 
 	// Guardar historico de confianza (un dato por semana)
-	$result = sql("SELECT ID, voto_confianza FROM users WHERE pais = '".PAIS."'");
+	$result = sql_old("SELECT ID, voto_confianza FROM users WHERE pais = '".PAIS."'");
 	while ($r = r($result)) {
-		sql("UPDATE users SET confianza_historico = CONCAT(confianza_historico,' ".$r['voto_confianza']."') WHERE ID = '".$r['ID']."' LIMIT 1");
+		sql_old("UPDATE users SET confianza_historico = CONCAT(confianza_historico,' ".$r['voto_confianza']."') WHERE ID = '".$r['ID']."' LIMIT 1");
 	}
 	
 	// Actualizar nuevos SC
-	sql("UPDATE users SET SC = 'false'");
-	$result = sql("SELECT ID FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".tiempo(365)."' AND ser_SC = 'true' ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT ".SC_NUM);
+	sql_old("UPDATE users SET SC = 'false'");
+	$result = sql_old("SELECT ID FROM users WHERE estado = 'ciudadano' AND fecha_registro < '".tiempo(365)."' AND ser_SC = 'true' ORDER BY voto_confianza DESC, fecha_registro ASC LIMIT ".SC_NUM);
 	while($r = r($result)){ 
-		sql("UPDATE users SET SC = 'true' WHERE ID = '".$r['ID']."' LIMIT 1");
+		sql_old("UPDATE users SET SC = 'true' WHERE ID = '".$r['ID']."' LIMIT 1");
 	}
 
 
@@ -425,54 +425,54 @@ if (date('N') == 7) { // SOLO DOMINGO
 // STATS (1º obtener variables estadísticas, 2º insertar los datos en la tabla stats)
 
 // ciudadanos
-$result = sql("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."'");
+$result = sql_old("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."'");
 while($r = r($result)) { $st['ciudadanos'] = $r['num']; }
 
 // nuevos
-$result = sql("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_registro > '".tiempo(1)."'");
+$result = sql_old("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_registro > '".tiempo(1)."'");
 while($r = r($result)) { $st['nuevos'] = $r['num']; }
 evento_chat('<b>[PROCESO]</b> Ciudadanos nuevos: <b>'.$st['nuevos'].'</b>, Ciudadanos expirados: <b>'.$st['eliminados'].'</b>. Balance: <b>'.round($st['nuevos'] - $st['eliminados']).'</b>');
 
 // pols
-$result = sql("SELECT SUM(pols) AS num FROM users WHERE pais = '".PAIS."'");
+$result = sql_old("SELECT SUM(pols) AS num FROM users WHERE pais = '".PAIS."'");
 while($r = r($result)) { $st['pols'] = $r['num']; }
 
 // pols_cuentas
 if (ECONOMIA) {
-	$result = sql("SELECT SUM(pols) AS num FROM cuentas WHERE pais = '".PAIS."'");
+	$result = sql_old("SELECT SUM(pols) AS num FROM cuentas WHERE pais = '".PAIS."'");
 	while($r = r($result)) { $st['pols_cuentas'] = $r['num']; }
 
 	// transacciones
 
-	$result = sql("SELECT COUNT(ID) AS num FROM transacciones WHERE pais = '".PAIS."' AND time > '".tiempo(1)."'");
+	$result = sql_old("SELECT COUNT(ID) AS num FROM transacciones WHERE pais = '".PAIS."' AND time > '".tiempo(1)."'");
 	while($r = r($result)) { $st['transacciones'] = $r['num']; }
 } else { $st['transacciones'] = 0; $st['pols_cuentas'] = 0; }
 
 // hilos+msg
-$result = sql("SELECT COUNT(ID) AS num FROM ".SQL."foros_hilos WHERE time > '".tiempo(1)."'");
+$result = sql_old("SELECT COUNT(ID) AS num FROM ".SQL."foros_hilos WHERE time > '".tiempo(1)."'");
 while($r = r($result)) { $st['hilos_msg'] = $r['num']; }
-$result = sql("SELECT COUNT(ID) AS num FROM ".SQL."foros_msg WHERE time > '".tiempo(1)."'");
+$result = sql_old("SELECT COUNT(ID) AS num FROM ".SQL."foros_msg WHERE time > '".tiempo(1)."'");
 while($r = r($result)) { $st['hilos_msg'] = $st['hilos_msg'] + $r['num']; }
 
 // pols_gobierno
 if (ECONOMIA) {
-	$result = sql("SELECT SUM(pols) AS num FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true'");
+	$result = sql_old("SELECT SUM(pols) AS num FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true'");
 	while($r = r($result)) { $st['pols_gobierno'] = $r['num']; }
 } else { $st['pols_gobierno'] = 0; }
 
 // partidos
-$result = sql("SELECT COUNT(ID) AS num FROM partidos WHERE pais = '".PAIS."' AND estado = 'ok'");
+$result = sql_old("SELECT COUNT(ID) AS num FROM partidos WHERE pais = '".PAIS."' AND estado = 'ok'");
 while($r = r($result)) { $st['partidos'] = $r['num']; }
 
 // empresas
 if (ECONOMIA) {
-	$result = sql("SELECT COUNT(ID) AS num FROM empresas WHERE pais = '".PAIS."'");
+	$result = sql_old("SELECT COUNT(ID) AS num FROM empresas WHERE pais = '".PAIS."'");
 	while($r = r($result)) { $st['empresas'] = $r['num']; }
 
 
 	// mapa (desde el 2011/04/07 guarda el porcentaje en venta.
 	$superficie_total = $columnas * $filas;
-	$result = sql("SELECT superficie, estado FROM mapa WHERE pais = '".PAIS."'");
+	$result = sql_old("SELECT superficie, estado FROM mapa WHERE pais = '".PAIS."'");
 	while($r = r($result)) { 
 		$sup_total += $r['superficie']; 
 		if ($r['estado'] == 'v') { $sup_vende += $r['superficie']; }
@@ -480,26 +480,26 @@ if (ECONOMIA) {
 	$st['mapa'] = round(($sup_vende * 100) / $superficie_total);
 
 	// mapa_vende: el precio de venta más bajo de una propiedad
-	$result = sql("SELECT pols FROM mapa WHERE pais = '".PAIS."' AND estado = 'v' ORDER BY pols ASC LIMIT 1");
+	$result = sql_old("SELECT pols FROM mapa WHERE pais = '".PAIS."' AND estado = 'v' ORDER BY pols ASC LIMIT 1");
 	while($r = r($result)) { $st['mapa_vende'] = $r['pols']; }
 } else { $st['empresas'] = 0; $st['mapa'] = 0; $st['mapa_vende'] = 0; }
 
 
 // 24h: ciudadanos que entraron en 24h (CONDICION NUEVA: y que no sean ciudadanos nuevos).
-$result = sql("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".tiempo(1)."' AND fecha_registro < '".tiempo(1)."'");
+$result = sql_old("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".PAIS."' AND fecha_last > '".tiempo(1)."' AND fecha_registro < '".tiempo(1)."'");
 while($r = r($result)) { $st['24h'] = $r['num']; }
 
 // confianza
-$result = sql("SELECT SUM(voto) AS num FROM votos WHERE tipo = 'confianza'");
+$result = sql_old("SELECT SUM(voto) AS num FROM votos WHERE tipo = 'confianza'");
 while($r = r($result)) { $st['confianza'] = $r['num']; }
 
 // autentificados
-$result = sql("SELECT COUNT(*) AS num FROM users WHERE dnie = 'true' AND pais = '".PAIS."'");
+$result = sql_old("SELECT COUNT(*) AS num FROM users WHERE dnie = 'true' AND pais = '".PAIS."'");
 while($r = r($result)) { $st['autentificados'] = $r['num']; }
 
 
 // STATS GUARDADO DIARIO
-sql("INSERT INTO stats 
+sql_old("INSERT INTO stats 
 (pais, time, ciudadanos, nuevos, pols, pols_cuentas, transacciones, hilos_msg, pols_gobierno, partidos, frase, empresas, eliminados, mapa, mapa_vende, 24h, confianza, autentificados) 
 VALUES ('".PAIS."', '".date('Y-m-d 20:00:00')."', '".$st['ciudadanos']."', '".$st['nuevos']."', '".$st['pols']."', '".$st['pols_cuentas']."', '".$st['transacciones']."', '".$st['hilos_msg']."', '".$st['pols_gobierno']."', '".$st['partidos']."', '".$pujas_total."', '".$st['empresas']."', '".$st['eliminados']."', '".$st['mapa']."', '".$st['mapa_vende']."', '".$st['24h']."', '".$st['confianza']."', '".$st['autentificados']."')");
 
@@ -523,13 +523,13 @@ if (date('N') == 1) { // Solo Lunes
 	evento_chat('<b>[#] Comienzo de envio de emails</b> semanales de aviso de votaciones.');
 	
 	$emails_enviados = 0;
-	$result = sql("SELECT ID, nick, email, pais FROM users WHERE pais = '".PAIS."' AND estado = 'ciudadano' AND email != '' ORDER BY fecha_registro ASC LIMIT 10000");
+	$result = sql_old("SELECT ID, nick, email, pais FROM users WHERE pais = '".PAIS."' AND estado = 'ciudadano' AND email != '' ORDER BY fecha_registro ASC LIMIT 10000");
 	while($r = r($result)) {
 
 		// Lista de votaciones por votar del usuario
 		$txt_votaciones = '';
 		$votar_num = 0;
-		$result2 = sql("SELECT ID, pais, pregunta, tipo,
+		$result2 = sql_old("SELECT ID, pais, pregunta, tipo,
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$r['ID']."' LIMIT 1) AS ha_votado
 FROM votacion
 WHERE estado = 'ok' AND pais = '".PAIS."' AND acceso_votar IN ('ciudadanos_global', 'ciudadanos') AND acceso_ver IN ('ciudadanos_global', 'ciudadanos', 'anonimos')
@@ -545,7 +545,7 @@ ORDER BY num DESC");
 
 			// Lista de ultimas votaciones finalizadas
 			$txt_votaciones_result = '';
-			$result2 = sql("SELECT ID, pais, pregunta, tipo, num
+			$result2 = sql_old("SELECT ID, pais, pregunta, tipo, num
 FROM votacion
 WHERE estado = 'end' AND pais = '".PAIS."' AND acceso_votar IN ('ciudadanos_global', 'ciudadanos') AND acceso_ver IN ('ciudadanos_global', 'ciudadanos', 'anonimos')
 ORDER BY time_expire DESC LIMIT 5");

@@ -5,7 +5,7 @@
 
 exit;
 
-$result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
+$result = sql_old("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
 while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 
@@ -27,7 +27,7 @@ if (($_GET[1] == 'configurar') AND (nucleo_acceso($vp['acceso']['control_socios'
 <td><select name="socios_ID">
 <option value="0">Ninguno.</option>';
 
-	$result = sql("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND asigna > 0 ORDER BY nivel DESC");
+	$result = sql_old("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND asigna > 0 ORDER BY nivel DESC");
 	while($r = r($result)) {
 		echo '<option value="'.$r['cargo_ID'].'"'.($pol['config']['socios_ID']==$r['cargo_ID']?' selected="selected"':'').'>'.$r['nombre'].'</option>';
 	}
@@ -91,7 +91,7 @@ echo '</select>
 <th></th>
 <th></th>
 </tr>';
-	$result = sql("SELECT *, (SELECT nick FROM users WHERE ID = socios.user_ID LIMIT 1) AS nick FROM socios WHERE pais = '".PAIS."'".($socios?" AND estado = 'socio'":" AND estado != 'socio'")." LIMIT 10");
+	$result = sql_old("SELECT *, (SELECT nick FROM users WHERE ID = socios.user_ID LIMIT 1) AS nick FROM socios WHERE pais = '".PAIS."'".($socios?" AND estado = 'socio'":" AND estado != 'socio'")." LIMIT 10");
 	while($r = r($result)) { 
 		echo '<tr>
 <td nowrap>'.($socios?boton('Rescindir', '/accion/socios/rescindir?ID='.$r['ID'], '¿Estás seguro de querer EXPULSAR a este socio?', 'small red'):boton('Rechazar', '/accion/socios/rescindir?ID='.$r['ID'], '¿Estás seguro de querer ELIMINAR esta inscripción?', 'small red').' '.boton('Aprobar', '/accion/socios/aprobar?ID='.$r['ID'], false, 'small blue')).'</td>
@@ -111,7 +111,7 @@ echo '</select>
 
 } elseif (true) {
 	$es_socio = false;
-	$result = sql("SELECT ID, estado, socio_ID FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+	$result = sql_old("SELECT ID, estado, socio_ID FROM socios WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
 	while($r = r($result)) { $es_socio = true; $socio_estado = $r['estado']; $socio_numero = PAIS.$r['socio_ID']; }
 
 	if (nucleo_acceso('socios')) {
@@ -126,7 +126,7 @@ echo '</select>
 			echo '<p>¡Correcto! Tu inscripción de socio está en cola de aprobación.</p><hr /><p>'.boton('Cancelar inscripción y eliminar datos asociados', '/accion/socios/cancelar', false, 'red').'</p>';
 
 		} elseif ($pol['config']['socios_estado'] == 'true') {
-			$result = sql("SELECT email, nombre FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+			$result = sql_old("SELECT email, nombre FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 			while($r = r($result)) { $email = $r['email']; $nombre = $r['nombre']; }
 
 			echo '<form action="/accion/socios/inscribirse" method="POST">

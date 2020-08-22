@@ -27,7 +27,7 @@ $("#input_extra").val(screen.width + "x" + screen.height + "|" + screen.availWid
 
 
 <form action="/registrar/login/login" method="post">
-<input name="url" value="'.($_GET['r']?$_GET['r']:base64_encode('/')).'" type="hidden" />
+<input name="url" value="'.($_GET['r']?$_GET['r']:escape(base64_encode('/'))).'" type="hidden" />
 <input type="hidden" name="extra" value="" id="input_extra" />
 
 <fieldset><legend>'._('Iniciar sesión').'</legend>

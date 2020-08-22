@@ -18,7 +18,7 @@ if (isset($pol['nick']))
 	);
 	
 	// Informacion del avatar
-	$result = sql("SELECT cargo, pols, avatar, nombre, sc
+	$result = sql_old("SELECT cargo, pols, avatar, nombre, sc
 	FROM users 
 	WHERE nick = '".$pol['nick']."'
 	LIMIT 1");
@@ -45,7 +45,7 @@ if (isset($pol['nick']))
 	
 	$votaciones = array ();
 	//VOTACIONES
-	$result = sql("SELECT v.ID, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
+	$result = sql_old("SELECT v.ID, pregunta, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver 
 	FROM votacion `v`
 	LEFT OUTER JOIN votacion_votos `vv` ON v.ID = vv.ref_ID AND vv.user_ID = '".$pol['user_ID']."'
 	WHERE v.estado = 'ok' AND (v.pais = '".$pol["pais"]."' OR acceso_votar IN ('supervisores_censo', 'privado')) AND vv.ID IS null");
@@ -65,7 +65,7 @@ if (isset($pol['nick']))
 
 	$notificaciones = array ();
 	// NOTIFICACIONES
-	$result = sql("SELECT noti_ID, visto, texto, url, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones 
+	$result = sql_old("SELECT noti_ID, visto, texto, url, MAX(time) AS time_max, COUNT(*) AS num FROM notificaciones 
 	WHERE user_ID = '".$pol['user_ID']."' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 7");
 	while($r = r($result)) {
 		//$total_num ++;
@@ -91,7 +91,7 @@ if (isset($pol['nick']))
 	//WHERE user_ID = '201137'  AND visto='false' GROUP BY visto, texto ORDER BY visto DESC, time_max DESC LIMIT 7
 
         // Plaza
-	$result = sql("SELECT chat_ID, titulo,
+	$result = sql_old("SELECT chat_ID, titulo,
 	(SELECT COUNT(DISTINCT nick) FROM chats_msg WHERE chat_ID = chats.chat_ID AND user_ID = 0 AND tipo != 'e') AS online
 	FROM chats WHERE pais = '".$pol["pais"]."' and url = '".$pol["pais"]."' ORDER BY estado ASC, online DESC, fecha_creacion ASC");
 
@@ -107,7 +107,7 @@ if (isset($pol['nick']))
 	//60*60 (ultima hora)
 	//60*60*24 (ultimo dia)
 	$chats = array ();
-	$result = sql("SELECT chat_ID, titulo, url, pais, 
+	$result = sql_old("SELECT chat_ID, titulo, url, pais, 
 	(SELECT COUNT(DISTINCT nick) FROM chats_msg WHERE chat_ID = chats.chat_ID AND user_ID = 0 AND tipo != 'e' AND time > '".date('Y-m-d H:i:s', time() - 60*60*25)."') AS online
 	FROM chats HAVING online>0 ORDER BY estado ASC, online DESC, fecha_creacion ASC LIMIT 5");
 	while ($r = r($result)){

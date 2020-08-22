@@ -12,7 +12,7 @@ if ($_REQUEST['a']=='chat_msg') {
     
     echo '<br />';
 
-    $result = sql("SELECT * FROM msg ORDER BY msg_id ASC");
+    $result = sql_old("SELECT * FROM msg ORDER BY msg_id ASC");
     while ($r = r($result)) {
     	echo date('H:m:s', strtotime($r['fecha_creacion'])).'&nbsp; '.$r['texto'].'<br />';
     }
@@ -23,7 +23,7 @@ if ($_REQUEST['a']=='chat_msg') {
 
 if ($_REQUEST['a']=='chat_respuestas') {
 
-    $result = sql("SELECT * FROM msg ORDER BY msg_id ASC");
+    $result = sql_old("SELECT * FROM msg ORDER BY msg_id ASC");
     while ($r = r($result)) {
     	echo '<span class="right">'.$r['puntos'].'</span> <span class="boton_votar" onclick="votar();">+</span> <span class="boton_votar" onclick="votar();">-</span> '.$r['texto'].'<br />';
     }

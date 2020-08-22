@@ -6,7 +6,7 @@ $txt_title = _('Chats');
 $txt_nav = array('/chat/list'=>_('Chats'));
 $txt_tab = array('/chat/solicitar'=>_('Solicitar chat'));
 
-$result = sql("SELECT COUNT(*) AS num FROM chats_msg WHERE time > '".date('Y-m-d H:i:s', time() - 600)."'");
+$result = sql_old("SELECT COUNT(*) AS num FROM chats_msg WHERE time > '".date('Y-m-d H:i:s', time() - 600)."'");
 while ($r = r($result)) { 
 	$msgnum_10min = $r['num'];
 }
@@ -34,7 +34,7 @@ echo '<span style="float:right;color:#888;font-size:18px;"><b>'.round(($msgnum_1
 <th></th>
 <th></th>
 </tr>';
-$result = sql("SELECT *,
+$result = sql_old("SELECT *,
 (SELECT COUNT(DISTINCT nick) FROM chats_msg WHERE chat_ID = chats.chat_ID AND user_ID = 0 AND tipo != 'e' AND time > '".date('Y-m-d H:i:s', time() - 60*30)."') AS online
 FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creacion ASC");
 while ($r = r($result)) { 
@@ -65,7 +65,7 @@ while ($r = r($result)) {
 echo '</table>';
 
 // Limpiar logs de 24h
-// sql("DELETE FROM chats_msg WHERE time < '".date('Y-m-d H:i:s', time() - (60*60*24))."'");
+// sql_old("DELETE FROM chats_msg WHERE time < '".date('Y-m-d H:i:s', time() - (60*60*24))."'");
 
 $txt_menu = 'comu';
 //if (!$externo) {  }

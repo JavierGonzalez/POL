@@ -19,7 +19,7 @@ echo '
 
 
 
-$result = sql("SELECT *,
+$result = sql_old("SELECT *,
 (SELECT nick FROM users WHERE ID = transacciones.emisor_ID LIMIT 1) AS nick
 FROM transacciones
 WHERE pais = '".PAIS."' AND concepto LIKE '<b>SANCION %' AND receptor_ID = '-1'

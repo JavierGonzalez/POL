@@ -14,7 +14,7 @@ if (isset($sc[$pol['user_ID']])) { $disabled = ''; } else { $disabled = ' disabl
 
 if (is_numeric(str_replace('-', '', $_GET[2]))) {
     $nicks = array();
-    $result = sql("SELECT nick FROM users WHERE ID IN ('".implode("','", explode('-', $_GET[2]))."') AND estado != 'expulsado'");
+    $result = sql_old("SELECT nick FROM users WHERE ID IN ('".implode("','", explode('-', $_GET[2]))."') AND estado != 'expulsado'");
     while ($r = r($result)) { $nicks[] = $r['nick']; }
     $_GET[2] = implode('-', $nicks);
 }
@@ -76,7 +76,7 @@ echo '
 
 } elseif (($_GET[1] == 'info') AND ($_GET[2]) AND (isset($sc[$pol['user_ID']]))) {
 
-    $result = sql("SELECT *,
+    $result = sql_old("SELECT *,
 (SELECT nick FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado,
 (SELECT estado FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_estado,
 (SELECT nick FROM users WHERE ID = expulsiones.autor LIMIT 1) AS nick_autor
@@ -111,7 +111,7 @@ echo '
 </tr>';
 
 
-$result = sql("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
+$result = sql_old("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
 (SELECT nick FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado,
 (SELECT pais FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_pais,
 (SELECT estado FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_estado,

@@ -30,7 +30,7 @@ if (nucleo_acceso('supervisores_censo') OR $pol['nick']=='GONZO') {
 	$nomenclatura = '<fieldset><legend>'._('Plataformas').'</legend>'.$paises.' | '._('Estados').': <b class="ciudadano">'._('Ciudadano').'</b> <b class="turista">'._('Turista').'</b> <b class="validar">'._('Validar').'</b> <b class="expulsado">'._('Expulsado').'</b></fieldset>';
 
 	// siglas partidos
-	$result = sql("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."'");
+	$result = sql_old("SELECT ID, siglas FROM partidos WHERE pais = '".PAIS."'");
 	while($r = r($result)) { $siglas[$r['ID']] = $r['siglas']; }
 
 	$txt_tab = array('/control/supervisor-censo'=>_('Principal'), '/control/supervisor-censo/factores-secundarios'=>_('Extra'), '/control/supervisor-censo/nuevos-ciudadanos'=>_('Nuevos'), '/control/supervisor-censo/bloqueos'=>_('Bloqueos'), '/control/expulsiones'=>_('Expulsiones'));
@@ -58,7 +58,7 @@ if (nucleo_acceso('supervisores_censo') OR $pol['nick']=='GONZO') {
 <th></th>
 <th align="right">'._('Email').'</th>
 </tr>';
-	$result = sql("SELECT *
+	$result = sql_old("SELECT *
 FROM users 
 ORDER BY fecha_registro DESC
 LIMIT 60");
@@ -67,7 +67,7 @@ LIMIT 60");
 		
 		$razon = '';
 		if ($r['estado'] == 'expulsado') {
-			$result2 = sql("SELECT razon FROM expulsiones WHERE user_ID = '".$r['ID']."' LIMIT 1");
+			$result2 = sql_old("SELECT razon FROM expulsiones WHERE user_ID = '".$r['ID']."' LIMIT 1");
 			while ($r2 = r($result2)) { $razon = '<b style="color:red;">'.$r2['razon'].'</b> '; }
 		}
 
@@ -119,7 +119,7 @@ LIMIT 60");
 	$txt_title = 'SC | '._('bloqueos');
 	$txt_nav['/sc/bloqueos'] = _('Bloqueos');
 
-	$result = sql("SELECT valor, dato FROM config WHERE PAIS IS NULL");
+	$result = sql_old("SELECT valor, dato FROM config WHERE PAIS IS NULL");
 	while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 
 	$backlists = array('backlist_IP'=>400, 'backlist_emails'=>180, 'backlist_nicks'=>120);
@@ -162,7 +162,7 @@ $data_amigos = array();
 $data_enemigos = array();
 $confianzas_amigos = array();
 
-$result = sql("SELECT *,
+$result = sql_old("SELECT *,
 (SELECT nick FROM users WHERE ID = votos.emisor_ID LIMIT 1) AS emisor_nick,
 (SELECT nick FROM users WHERE ID = votos.item_ID LIMIT 1) AS item_nick
 FROM votos
@@ -182,7 +182,7 @@ while($r = r($result)) {
 foreach ($confianzas_amigos AS $emisor_item => $num) { if ($num >= 2) { $data_amigos[] = $emisor_item; } }
 
 
-$result = sql("SELECT *,
+$result = sql_old("SELECT *,
 (SELECT nick FROM users WHERE ID = votos.emisor_ID LIMIT 1) AS emisor_nick,
 (SELECT nick FROM users WHERE ID = votos.item_ID LIMIT 1) AS item_nick
 FROM votos
@@ -236,13 +236,13 @@ echo '<h1>'._('Grafico confianza').'</h1>
 
 
 	echo '<br /><h1>5. '._('Referencias').'</h1><hr /><table border="0" cellspacing="4">';
-	$result = sql("SELECT ID, nick, ref, pais, ref_num, estado, partido_afiliado
+	$result = sql_old("SELECT ID, nick, ref, pais, ref_num, estado, partido_afiliado
 FROM users 
 WHERE ref_num != '0' 
 ORDER BY ref_num DESC, fecha_registro DESC");
 	while($r = r($result)) {
 		$clones = '';
-		$result2 = sql("SELECT ID, nick, ref, pais, estado, partido_afiliado
+		$result2 = sql_old("SELECT ID, nick, ref, pais, estado, partido_afiliado
 FROM users 
 WHERE ref = '" . $r['ID'] . "'");
 		while($r2 = r($result2)) { 
@@ -287,7 +287,7 @@ WHERE ref = '" . $r['ID'] . "'");
 
 
 	echo '<br /><h1>6. '._('Emails atípicos').'</h1><hr /><table border="0" cellspacing="4">';
-	$result = sql("SELECT email, nick, ref, ref_num, estado FROM users ORDER BY fecha_registro DESC");
+	$result = sql_old("SELECT email, nick, ref, ref_num, estado FROM users ORDER BY fecha_registro DESC");
 	while($r = r($result)) {
 
 		$r['email'] = strtolower($r['email']);
@@ -309,7 +309,7 @@ WHERE ref = '" . $r['ID'] . "'");
 <th>'._('Nuevos').'</th>
 <th>URL</th>
 </tr>';
-	$result = sql("SELECT user_ID, COUNT(*) AS num, referer,
+	$result = sql_old("SELECT user_ID, COUNT(*) AS num, referer,
 (SELECT nick FROM users WHERE ID = referencias.user_ID LIMIT 1) AS nick,
 (SELECT COUNT(*) FROM referencias WHERE referer = referencias.referer AND new_user_ID != '0') AS num_registrados
 FROM referencias 
@@ -317,7 +317,7 @@ GROUP BY referer HAVING COUNT(*) > 1
 ORDER BY num DESC");
 	while($r = r($result)) {
 
-		$result2 = sql("SELECT COUNT(*) AS num_registrados FROM referencias WHERE referer = '" . $r['referer'] . "' AND new_user_ID != '0'");
+		$result2 = sql_old("SELECT COUNT(*) AS num_registrados FROM referencias WHERE referer = '" . $r['referer'] . "' AND new_user_ID != '0'");
 		while($r2 = r($result2)) {
 			if ($r2['num_registrados'] != 0) { $num_registrados = '+' . $r2['num_registrados']; } else { $num_registrados = ''; }
 		}
@@ -340,7 +340,7 @@ ORDER BY num DESC");
 <th>PV</th>
 <th></th>
 </tr>';
-	$result = sql("SELECT nick, IP, num_elec, estado, online, visitas, pais, paginas, ((num_elec * 100) / online) AS factor, partido_afiliado 
+	$result = sql_old("SELECT nick, IP, num_elec, estado, online, visitas, pais, paginas, ((num_elec * 100) / online) AS factor, partido_afiliado 
 FROM users WHERE num_elec > 2 AND fecha_last > '".date('Y-m-d 20:00:00', time() - 2592000)."' ORDER BY factor DESC LIMIT 20");
 	while($r = r($result)) {
 		if ($r['factor'] > 0.0099) {
@@ -352,7 +352,7 @@ FROM users WHERE num_elec > 2 AND fecha_last > '".date('Y-m-d 20:00:00', time() 
 
 	echo '<br /><h1>9. '._('Navegadores').'</h1><hr />
 <table border="0" cellspacing="4">';
-	$result = sql("SELECT COUNT(*) AS num, nav
+	$result = sql_old("SELECT COUNT(*) AS num, nav
 FROM users 
 GROUP BY nav HAVING COUNT(*) > 1
 ORDER BY num ASC");
@@ -360,7 +360,7 @@ ORDER BY num ASC");
 
 		$clones = '';
 		if ($r['num'] <= 30) {
-			$result2 = sql("SELECT ID, nick, estado, pais FROM users WHERE nav = '" . $r['nav'] . "' ORDER BY fecha_registro DESC");
+			$result2 = sql_old("SELECT ID, nick, estado, pais FROM users WHERE nav = '" . $r['nav'] . "' ORDER BY fecha_registro DESC");
 			while($r2 = r($result2)) {
 				if ($clones) { $clones .= ' & '; }
 				$clones .= crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']);
@@ -384,7 +384,7 @@ ORDER BY num ASC");
 <th>PV</th>
 <th></th>
 </tr>';
-	$result = sql("SELECT nick, IP, num_elec, estado, online, visitas, pais, paginas, fecha_registro,  ((CURRENT_TIMESTAMP() - TIMESTAMP(fecha_registro)) / online) AS factor 
+	$result = sql_old("SELECT nick, IP, num_elec, estado, online, visitas, pais, paginas, fecha_registro,  ((CURRENT_TIMESTAMP() - TIMESTAMP(fecha_registro)) / online) AS factor 
 FROM users  
 WHERE online > 600
 ORDER BY factor DESC LIMIT 30");
@@ -403,7 +403,7 @@ ORDER BY factor DESC LIMIT 30");
 
 
 	echo '<fieldset><legend>1. '._('Coincidencias de IP').' ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
-	$result = sql("SELECT nick, IP, COUNT(*) AS num, host
+	$result = sql_old("SELECT nick, IP, COUNT(*) AS num, host
 FROM users 
 GROUP BY IP HAVING COUNT(*) > 1
 ORDER BY num DESC, IP ASC");
@@ -412,7 +412,7 @@ ORDER BY num DESC, IP ASC");
 		$nota_SC = '';
 		$clones_expulsados = true;
 		$confianza_total = 0;
-		$result2 = sql("SELECT ID, nick, estado, pais, partido_afiliado, nota_SC, 
+		$result2 = sql_old("SELECT ID, nick, estado, pais, partido_afiliado, nota_SC, 
 (SELECT voto FROM votos WHERE tipo = 'confianza' AND emisor_ID = '".$pol['user_ID']."' AND item_ID = users.ID LIMIT 1) AS has_votado
 FROM users 
 WHERE IP = '" . $r['IP'] . "' 
@@ -432,7 +432,7 @@ ORDER BY fecha_registro DESC");
 
 
 	echo '<fieldset><legend>2. '._('Coincidencias de clave').' ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
-	$result = sql("SELECT ID, IP, COUNT(*) AS num, pass
+	$result = sql_old("SELECT ID, IP, COUNT(*) AS num, pass
 FROM users 
 GROUP BY pass HAVING COUNT(*) > 1
 ORDER BY num DESC, fecha_registro DESC");
@@ -442,7 +442,7 @@ ORDER BY num DESC, fecha_registro DESC");
 			$clones = array();
 			$nota_SC = '';
 			$confianza_total = 0;
-			$result2 = sql("SELECT ID, nick, pais, partido_afiliado, estado, nota_SC
+			$result2 = sql_old("SELECT ID, nick, pais, partido_afiliado, estado, nota_SC
 FROM users 
 WHERE pass = '" . $r['pass'] . "'");
 			$clones_expulsados = true;
@@ -465,7 +465,7 @@ WHERE pass = '" . $r['pass'] . "'");
 
 	$trazas_rep = array();
 	echo '<fieldset><legend>3. '._('Coincidencia de traza').' ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
-	$result = sql("SELECT ID AS user_ID, ID, nick, estado, pais, traza, nota_SC FROM users WHERE traza != '' ORDER BY fecha_registro DESC");
+	$result = sql_old("SELECT ID AS user_ID, ID, nick, estado, pais, traza, nota_SC FROM users WHERE traza != '' ORDER BY fecha_registro DESC");
 	while($r = r($result)) {
 		$nota_SC .= print_nota_SC($r['nota_SC'], $r['ID']);
 		$tn = 1;
@@ -474,7 +474,7 @@ WHERE pass = '" . $r['pass'] . "'");
 		if ($r['estado'] == 'expulsado') { $mostrar = false; } else { $mostrar = true; }
 		foreach ($trazas AS $unatraza) {
 			$trazado = false;
-			$result2 = sql("SELECT ID, nick, estado, pais, nota_SC FROM users WHERE ID = '".$unatraza."' LIMIT 1");
+			$result2 = sql_old("SELECT ID, nick, estado, pais, nota_SC FROM users WHERE ID = '".$unatraza."' LIMIT 1");
 			while($r2 = r($result2)) {
 				$nota_SC .= print_nota_SC($r2['nota_SC'], $r2['ID']);
 				$tn++; $trazas_clones[] = crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']);
@@ -482,7 +482,7 @@ WHERE pass = '" . $r['pass'] . "'");
 				if ($r2['estado'] != 'expulsado') { $mostrar = true; }
 			}
 			if ($trazado == false) {
-				$result2 = sql("SELECT tiempo AS nick FROM expulsiones WHERE user_ID = '".$unatraza."' LIMIT 1");
+				$result2 = sql_old("SELECT tiempo AS nick FROM expulsiones WHERE user_ID = '".$unatraza."' LIMIT 1");
 				while($r2 = r($result2)) {
 					$r2['estado'] = 'expulsado';
 					$tn++; $trazas_clones[] = crear_link($r2['nick'], 'nick', $r2['estado']);
@@ -501,12 +501,12 @@ WHERE pass = '" . $r['pass'] . "'");
 	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%vpn%', '%proxy%');
 	$sql_anon = array();
 	foreach ($array_searchtor AS $filtro) { $sql_anon[] = "hosts LIKE '".$filtro."' OR host LIKE '".$filtro."'"; }
-	$result = sql("SELECT nick, estado, host, IP, nav, nota_SC FROM users WHERE ".implode(" OR ", $sql_anon)." ORDER BY fecha_registro DESC");
+	$result = sql_old("SELECT nick, estado, host, IP, nav, nota_SC FROM users WHERE ".implode(" OR ", $sql_anon)." ORDER BY fecha_registro DESC");
 	while($r = r($result)) {
 		echo '<tr><td><b>'.crear_link($r['nick'], 'nick', $r['estado']).'</b></td><td>'.ocultar_IP($r['IP']).'</td><td nowrap="nowrap"><b>'.ocultar_IP($r['host'], 'host').'</b></td><td style="font-size:10px;">'.$r['nav'].'</td><td nowrap="nowrap">'.print_nota_SC($r['nota_SC'], $r['ID']).'</td></tr>';
 	}
 	echo '</table><table border="0" cellspacing="4">';
-	$result = sql("SELECT ID, IP, nick, estado, pais, IP_proxy, host
+	$result = sql_old("SELECT ID, IP, nick, estado, pais, IP_proxy, host
 FROM users 
 WHERE IP_proxy != ''
 ORDER BY fecha_registro DESC");
@@ -536,7 +536,7 @@ ORDER BY fecha_registro DESC");
 				$proxys_dns .= ocultar_IP($host, 'host').'<br />';
 
 				// clones	
-				$result2 = sql("SELECT nick, estado, pais FROM users WHERE ID != '".$r['ID']."' AND (IP = '".ip2long($IP)."' OR IP_proxy LIKE '%".$IP."%') ORDER BY fecha_registro DESC");
+				$result2 = sql_old("SELECT nick, estado, pais FROM users WHERE ID != '".$r['ID']."' AND (IP = '".ip2long($IP)."' OR IP_proxy LIKE '%".$IP."%') ORDER BY fecha_registro DESC");
 				while($r2 = r($result2)) {
 					$clones_num++;
 					$clones .= crear_link($r2['nick'], 'nick', $r2['estado'], $r2['pais']).' ';

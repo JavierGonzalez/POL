@@ -20,7 +20,7 @@ $txt_nav = array('/api'=>'API');
 
 
 
-$result = sql("SELECT post_ID FROM api_posts WHERE estado = 'cron' AND time_cron <= '".$date."' LIMIT 1");
+$result = sql_old("SELECT post_ID FROM api_posts WHERE estado = 'cron' AND time_cron <= '".$date."' LIMIT 1");
 while($r = r($result)) {
 	include_once('inc-functions-accion.php');
 	//api_facebook('publicar', $r['post_ID'], true);
@@ -30,12 +30,12 @@ while($r = r($result)) {
 if (is_numeric($_GET[1])) {
 	
 	// https://developers.facebook.com/docs/reference/api/post/
-	$result = sql("SELECT * FROM api WHERE api_ID = '".$_GET[1]."' LIMIT 1");
+	$result = sql_old("SELECT * FROM api WHERE api_ID = '".$_GET[1]."' LIMIT 1");
 	while($r = r($result)) {
 		$txt_nav = array('/api'=>'API', '/api/'.$r['api_ID']=>$r['nombre']);
 
 		if (is_numeric($_GET[3])) {
-			$result2 = sql("SELECT * FROM api_posts WHERE post_ID = '".$_GET[3]."' AND estado = 'pendiente' LIMIT 1");
+			$result2 = sql_old("SELECT * FROM api_posts WHERE post_ID = '".$_GET[3]."' AND estado = 'pendiente' LIMIT 1");
 			$edit = r($result2);
 		}
 
@@ -116,7 +116,7 @@ if (is_numeric($_GET[1])) {
 <th>Cuando</th>
 <th>Publicado</th>
 </tr>';
-		$result2 = sql("SELECT *, (SELECT nick FROM users WHERE ID = api_posts.publicado_user_ID LIMIT 1) AS nick_publicado FROM api_posts WHERE api_ID = '".$r['api_ID']."' AND estado IN ('publicado', 'cron') ORDER BY time DESC");
+		$result2 = sql_old("SELECT *, (SELECT nick FROM users WHERE ID = api_posts.publicado_user_ID LIMIT 1) AS nick_publicado FROM api_posts WHERE api_ID = '".$r['api_ID']."' AND estado IN ('publicado', 'cron') ORDER BY time DESC");
 		while($r2 = r($result2)) { 
 			echo '<tr>
 <td align="right">'.(nucleo_acceso($r['acceso_escribir'])?boton(($r2['estado']=='cron'?'Cancelar':'Despublicar'), '/accion/api/borrar?ID='.$r2['post_ID'], '¿Estás seguro de querer ELIMINAR de forma irreversible esta publicación?', 'small red'):'').'</td>
@@ -138,7 +138,7 @@ if (is_numeric($_GET[1])) {
 <th>Cuando</th>
 <th>Quien</th>
 </tr>';
-		$result2 = sql("SELECT *, (SELECT nick FROM users WHERE ID = api_posts.pendiente_user_ID LIMIT 1) AS nick_pendiente, (SELECT nick FROM users WHERE ID = api_posts.borrado_user_ID LIMIT 1) AS nick_borrado FROM api_posts WHERE api_ID = '".$r['api_ID']."' AND estado = 'pendiente' ORDER BY time DESC");
+		$result2 = sql_old("SELECT *, (SELECT nick FROM users WHERE ID = api_posts.pendiente_user_ID LIMIT 1) AS nick_pendiente, (SELECT nick FROM users WHERE ID = api_posts.borrado_user_ID LIMIT 1) AS nick_borrado FROM api_posts WHERE api_ID = '".$r['api_ID']."' AND estado = 'pendiente' ORDER BY time DESC");
 		while($r2 = r($result2)) { 
 			echo '<tr>
 <td nowrap>'.(nucleo_acceso($r['acceso_escribir'])?boton('Publicar', '/accion/api/publicar?ID='.$r2['post_ID'], '¿Estás seguro de querer PUBLICAR esta publicación?', 'small blue').' '.boton('Editar', '/api/'.$r['api_ID'].'/escribir/'.$r2['post_ID'], false, 'small orange'):'').' '.(nucleo_acceso($r['acceso_escribir'])?boton('X', '/accion/api/borrar_borrador?ID='.$r2['post_ID'], '¿Estás seguro de querer BORRAR este borrador de publicación?', 'small red'):'').'</td>
@@ -166,7 +166,7 @@ if (is_numeric($_GET[1])) {
 <th></th>
 <th>Quien publica</th>
 </tr>';
-	$result = sql("SELECT *,
+	$result = sql_old("SELECT *,
 (SELECT COUNT(*) FROM api_posts WHERE api_ID = api.api_ID AND estado = 'publicado' LIMIT 1) AS num_publicado,
 (SELECT COUNT(*) FROM api_posts WHERE api_ID = api.api_ID AND estado = 'pendiente' LIMIT 1) AS num_pendiente
 FROM api WHERE estado = 'activo' AND (pais = '".PAIS."' OR pais IS NULL)");

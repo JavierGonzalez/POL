@@ -2,7 +2,7 @@
 
 
 if ($_POST['pass_new'] === $_POST['pass_new2'])
-    sql("UPDATE users SET pass = '".pass_key($_POST['pass_new'], 'md5')."', 
+    sql_old("UPDATE users SET pass = '".pass_key($_POST['pass_new'], 'md5')."', 
         pass2 = '".pass_key($_POST['pass_new'])."', 
         api_pass = '".rand(1000000,9999999)."', 
         reset_last = '".$date."' 

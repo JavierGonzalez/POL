@@ -12,7 +12,9 @@ $maxsim['output'] = 'template';
 
 // INICIALIZACION
 define('RAIZ', dirname(__FILE__).'/');
-$link = conectar();									// Conecta MySQL
+
+$link = sql_link();
+
 //$pais = explodear('.', $_SERVER['HTTP_HOST'], 0);	// Obtiene "PAIS" de "PAIS.dominio.com"
 $pais = 'pol';
 
@@ -102,8 +104,10 @@ $date = date('Y-m-d H:i:s');
 $IP = direccion_IP('longip');
 
 
-// Prevención de inyección
-foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape($val); }
-foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val); }
-foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
-foreach ($_COOKIE AS $nom => $val) { $_COOKIE[$nom] = escape($val); }
+
+// SQL+XSS INYECTION PROTECTION
+foreach ($_GET     AS $key => $value)      $_GET[$key] = escape($value);
+foreach ($_POST    AS $key => $value)     $_POST[$key] = escape($value);
+foreach ($_REQUEST AS $key => $value)  $_REQUEST[$key] = escape($value);
+foreach ($_COOKIE  AS $key => $value)   $_COOKIE[$key] = escape($value);
+

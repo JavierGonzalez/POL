@@ -11,7 +11,7 @@ echo '<h1>TEST DE DESARROLLO</h1><hr />';
 $anterior = microtime(true);
 
 // METODO NUEVO
-while($r=$db->sql("SELECT * FROM votacion_votos")){
+while($r=$db->sql_old("SELECT * FROM votacion_votos")){
 	$guardar = $r['voto'];
 }
 
@@ -29,7 +29,7 @@ echo 'Antiguo: '.num((microtime(true)-$anterior)*1000).'ms<hr />';
 $anterior = microtime(true);
 
 // METODO NUEVO
-while($r=$db->sql("SELECT * FROM votacion_votos")){
+while($r=$db->sql_old("SELECT * FROM votacion_votos")){
 	$guardar = $r['voto'];
 }
 
@@ -47,7 +47,7 @@ echo 'Antiguo: '.num((microtime(true)-$anterior)*1000).'ms<hr />';
 $anterior = microtime(true);
 
 // METODO NUEVO
-while($r=$db->sql("SELECT * FROM votacion_votos")){
+while($r=$db->sql_old("SELECT * FROM votacion_votos")){
 	$guardar = $r['voto'];
 }
 
@@ -66,7 +66,7 @@ echo 'Antiguo: '.num((microtime(true)-$anterior)*1000).'ms<hr />';
 $anterior = microtime(true);
 
 // METODO NUEVO
-while($r=$db->sql("SELECT * FROM votacion_votos")){
+while($r=$db->sql_old("SELECT * FROM votacion_votos")){
 	$guardar = $r['voto'];
 }
 

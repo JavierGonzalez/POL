@@ -157,7 +157,7 @@ if ((false) AND ($pol['user_ID'] == 1) OR ($pol['user_ID'] == 208162) OR ($pol['
 
 <table width="100%">';
 
-$result = sql("SELECT url, titulo,
+$result = sql_old("SELECT url, titulo,
 (SELECT COUNT(DISTINCT nick) FROM chats_msg WHERE chat_ID = chats.chat_ID AND user_ID = 0 AND time > '".date('Y-m-d H:i:s', time() - 60*30)."') AS online
 FROM chats 
 WHERE pais = '".PAIS."' AND estado = 'activo' ORDER BY online DESC, fecha_creacion ASC 
@@ -180,7 +180,7 @@ echo '</table>
 <fieldset><legend><a href="/foro"><b>Foro</b></a> <span class="legend2">&mdash; Debatir</span></legend>
 <table>';
 
-$result = sql("SELECT url, title, num, votos, votos_num,
+$result = sql_old("SELECT url, title, num, votos, votos_num,
 (SELECT url FROM ".SQL."foros WHERE ID = ".SQL."foros_hilos.sub_ID LIMIT 1) AS sub_url
 FROM ".SQL."foros_hilos
 WHERE estado = 'ok' AND votos > 1
@@ -204,7 +204,7 @@ while($r = r($result)) {
 <fieldset><legend><a href="/votacion"><b>Votaciones</b></a> <span class="legend2">&mdash; Decidir</span></legend>
 <table width="100%">';
 $linea = 0;
-$result = sql("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, num_censo, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, cargo_ID,
+$result = sql_old("SELECT ID, pregunta, time, time_expire, user_ID, estado, num, num_censo, tipo, acceso_votar, acceso_cfg_votar, acceso_ver, acceso_cfg_ver, cargo_ID,
 (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado
 FROM votacion
 WHERE estado IN ('ok', 'end') AND pais = '".PAIS."'

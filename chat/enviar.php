@@ -10,14 +10,14 @@ $date = date('Y-m-d H:i:s');
 $chat_ID = $_POST['chat_ID'];
 
 // EXPULSADO?
-$result = sql("SELECT HIGH_PRIORITY ID FROM expulsiones WHERE estado = 'expulsado' AND user_ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1");
+$result = sql_old("SELECT HIGH_PRIORITY ID FROM expulsiones WHERE estado = 'expulsado' AND user_ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1");
 while($r = r($result)){ 
     $expulsado = true;
     session_destroy();
 }
 
 // KICKEADO?
-$result = sql("SELECT HIGH_PRIORITY expire FROM kicks 
+$result = sql_old("SELECT HIGH_PRIORITY expire FROM kicks 
 WHERE pais = '".PAIS."' AND 
 estado = 'activo' AND 
 (user_ID = '".$_SESSION['pol']['user_ID']."' OR 
@@ -25,7 +25,7 @@ estado = 'activo' AND
 LIMIT 1");
 while($r = r($result)){ 
     if ($r['expire'] < $date) { // QUITAR KICK
-        sql("UPDATE HIGH_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'"); 
+        sql_old("UPDATE HIGH_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'"); 
     } else { $expulsado = true; }
 }
 
@@ -34,7 +34,7 @@ $msg_len = strlen($_POST['msg']);
 if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_check($chat_ID, 'escribir')) OR (($_SESSION['pol']['pais'] != PAIS) AND (acceso_check($chat_ID, 'escribir_ex'))))) {
     
     if ((!isset($_SESSION['pol']['nick'])) AND (substr($_POST['anonimo'], 0, 1) == '-') AND (strlen($_POST['anonimo']) >= 3) AND (strlen($_POST['anonimo']) <= 15) AND (!stristr($_POST['anonimo'], '__'))) { 
-        $result = sql("SELECT nick FROM users WHERE nick='".substr($_POST['anonimo'], 1)."'");
+        $result = sql_old("SELECT nick FROM users WHERE nick='".substr($_POST['anonimo'], 1)."'");
         if (r($result)) { 
             $borrar_msg = true;
             echo 'n 0 ---- - <b style="color:#FF0000;">Nick inv&aacute;lido por estar registrado.</b>'. "\n"; 
@@ -121,7 +121,7 @@ if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_ch
             case 'msg':
                 if (isset($_SESSION['pol']['user_ID'])) {
                     $nick_receptor = trim($msg_array[1]);
-                    $result = sql("SELECT HIGH_PRIORITY ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1");
+                    $result = sql_old("SELECT HIGH_PRIORITY ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1");
                     while($r = r($result)){ 
                         $elmsg = substr($msg_rest, (strlen($r['nick'])));
                         $target_ID = $r['ID'];
@@ -143,9 +143,9 @@ if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_ch
         $elcargo = $_SESSION['pol']['cargo'];
         if (($_SESSION['pol']['pais'] != PAIS) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $elcargo = 99; } // Extrangero
 
-        sql("INSERT DELAYED INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.")");
+        sql_old("INSERT DELAYED INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.")");
 
-        sql("
+        sql_old("
 UPDATE users SET fecha_last = '".$date."' WHERE ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1;
 UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMIT 1;
 ");

@@ -9,7 +9,7 @@ if (($pol['pais']) AND ($pol['pais'] != PAIS)) {
     redirect('/chat/'.$_GET[1]); 
 }
 
-$result = sql("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
+$result = sql_old("SELECT valor, dato FROM config WHERE pais = '".PAIS."' AND autoload = 'no'");
 while ($row = r($result)) { 
     $pol['config'][$row['dato']] = $row['valor']; 
 }

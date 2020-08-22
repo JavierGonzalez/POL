@@ -65,7 +65,7 @@ LIMIT 1", $link);
 FROM transacciones
 WHERE pais = '".PAIS."' AND (emisor_ID = '-" . $ID . "' OR receptor_ID = '-" . $ID . "')
 ORDER BY time DESC
-LIMIT ".mysqli_real_escape_string($link,$p_limit), $link);
+LIMIT ".$p_limit, $link);
 	while($row = mysqli_fetch_array($result)) {
 
 		if ($row['emisor_ID'] == '-' . $ID) { //doy
@@ -284,7 +284,7 @@ function click_ciudadano() {
 FROM transacciones
 WHERE pais = '".PAIS."' AND (emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "')
 ORDER BY time DESC
-LIMIT " . mysqli_real_escape_string($link,$p_limit), $link);
+LIMIT ".$p_limit, $link);
 	while($row = mysqli_fetch_array($result)) {
 
 		if ($row['nick_emisor'] == $pol['nick']) { //doy

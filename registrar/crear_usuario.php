@@ -57,7 +57,7 @@ if ($_POST['condiciones'] == 'ok') {
     // Bloquea registro si la IP coincide con otro expulsado
     /*
     $margen = date('Y-m-d H:i:s', time() - (60*60)); // 1 h
-    $result = sql("SELECT ID FROM users WHERE (estado = 'expulsadoNO' OR fecha_registro > '".$margen."') AND (IP = '".direccion_IP('longip')."' OR hosts LIKE '%".direccion_IP()."%') LIMIT 1");
+    $result = sql_old("SELECT ID FROM users WHERE (estado = 'expulsadoNO' OR fecha_registro > '".$margen."') AND (IP = '".direccion_IP('longip')."' OR hosts LIKE '%".direccion_IP()."%') LIMIT 1");
     while ($r = r($result)) { $bloquear_registro = true; }
 
     foreach (explode("\n", $pol['config']['backlist_IP']) AS $la_IP) {
@@ -80,16 +80,16 @@ if ($_POST['condiciones'] == 'ok') {
                 if (($pass1) && ($pass1 === $pass2)) {
                     if (comprobar_email($email) == true) {
 
-                        $result = sql("SELECT ID FROM users WHERE email = '$email' LIMIT 1");
+                        $result = sql_old("SELECT ID FROM users WHERE email = '$email' LIMIT 1");
                         while ($r = r($result)) { $email_existe = $r['ID'];}
 
                         if (!$email_existe) { //el email esta libre
                             if ((strlen($nick) >= 3) AND (strlen($nick) <= 14)) {
 
-                                $result = sql("SELECT ID FROM users WHERE nick = '".$nick."' LIMIT 1");
+                                $result = sql_old("SELECT ID FROM users WHERE nick = '".$nick."' LIMIT 1");
                                 while ($r = r($result)) { $nick_existe = $r['ID'];}
 
-                                $result = sql("SELECT tiempo FROM expulsiones WHERE tiempo = '".$nick."' AND estado = 'expulsado' LIMIT 1");
+                                $result = sql_old("SELECT tiempo FROM expulsiones WHERE tiempo = '".$nick."' AND estado = 'expulsado' LIMIT 1");
                                 while ($r = r($result)) { $nick_expulsado_existe = $r['tiempo']; }
 
                                 if ((!$nick_existe) AND (!$nick_expulsado_existe)) { //si el nick esta libre
@@ -98,7 +98,7 @@ if ($_POST['condiciones'] == 'ok') {
 
                                     //Si existe referencia IP
                                     $afiliacion = 0;
-                                    $result = sql("SELECT ID, user_ID, (SELECT nick FROM users WHERE ID = referencias.user_ID LIMIT 1) AS nick FROM referencias WHERE IP = '".$longip."' LIMIT 1");
+                                    $result = sql_old("SELECT ID, user_ID, (SELECT nick FROM users WHERE ID = referencias.user_ID LIMIT 1) AS nick FROM referencias WHERE IP = '".$longip."' LIMIT 1");
                                     while($r = r($result)){ 
                                         $afiliacion = $r['user_ID'];
                                         $ref = ' (ref: ' . crear_link($r['nick']) . ')';
@@ -113,10 +113,10 @@ if ($_POST['condiciones'] == 'ok') {
                                         $pass_sha = pass_key($pass1);
                                     }
                                     
-                                    sql("INSERT INTO users 
+                                    sql_old("INSERT INTO users 
 (nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, confianza_historico, pais, pass, pass2, host, IP_proxy, dnie_check, bando, nota_SC, fecha_legal) 
 VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '0', 'POL', '".$pass_md5."', '".$pass_sha."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')");
-                                    $result = sql("SELECT ID FROM users WHERE nick = '".$nick."' LIMIT 1");
+                                    $result = sql_old("SELECT ID FROM users WHERE nick = '".$nick."' LIMIT 1");
                                     while($r = r($result)){ $new_ID = $r['ID']; }
                                     
                                     if (!$_COOKIE['trz']) {
@@ -127,7 +127,7 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . str
                                     users_con($new_ID, $_REQUEST['extra'], 'login');
 
                                     if ($ref) {
-                                        sql("UPDATE referencias SET new_user_ID = '" . $new_ID . "' WHERE IP = '" . $longip . "' LIMIT 1");
+                                        sql_old("UPDATE referencias SET new_user_ID = '" . $new_ID . "' WHERE IP = '" . $longip . "' LIMIT 1");
                                     }
 
 

@@ -2,7 +2,7 @@
 
 
 
-$result = sql("SELECT ID, nick FROM users WHERE ID = '".$_GET['user_ID']."' AND api_pass = '".$_GET['check']."' AND reset_last >= '".$date."' LIMIT 1");
+$result = sql_old("SELECT ID, nick FROM users WHERE ID = '".$_GET['user_ID']."' AND api_pass = '".$_GET['check']."' AND reset_last >= '".$date."' LIMIT 1");
 while ($r = r($result)) { 
     $check = true;
     

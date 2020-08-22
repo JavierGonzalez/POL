@@ -27,7 +27,7 @@ function control_acceso2($titulo=false, $name='', $acceso='', $cfg='', $quitar_a
 		$dis = ($a==$acceso?'':' style="display:none;"');
 		switch ($a) {
 			case 'cargo': $html .= '<br /><select multiple="multiple" class="fancy" name="'.$name.'_cfg"'.$dis.'>';
-				$result = sql("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."'");
+				$result = sql_old("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."'");
 				while ($r = r($result)) { $html .= '<option value="'.$r['cargo_ID'].'">'.$r['nombre'].'</option>'; }
 				$html .= '</select>'; 
 				break;

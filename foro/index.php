@@ -45,7 +45,7 @@ ORDER BY time ASC", $link);
 FROM ".SQL."foros_hilos
 WHERE sub_ID = '".$r['ID']."' AND estado = 'ok'
 ORDER BY time_last DESC
-LIMIT ".mysqli_real_escape_string($link,$r['limite']), $link);
+LIMIT ".$r['limite'], $link);
 			while($r2 = mysqli_fetch_array($result2)) {
 				if ($r2['user_estado'] != 'expulsado') {
 					$time_hilo = strtotime($r2['time']);

@@ -18,4 +18,4 @@ redirect 301 /codigo https://github.com/JavierGonzalez/VirtualPol
 redirect 301 /license /LICENSE.md
 redirect 301 /contenido http://creativecommons.org/licenses/by-sa/3.0/deed.es_ES
 
-RewriteRule ^(TOS|legal|manual|documentacion|donaciones|desarrollo|presentacion|video|reglamento-sc)$ /pages/$1 [L]
+RewriteRule ^(legal|manual|documentacion|donaciones|desarrollo|presentacion|video|reglamento-sc)$ /pages/$1 [L]

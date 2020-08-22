@@ -9,25 +9,21 @@ $maxsim = [
 
 maxsim_get($_SERVER['REQUEST_URI']);
 
-if ($_GET[0]==='maxsim')
-    exit($maxsim['version']);
-
 ob_start();
 
 
 foreach ($maxsim['route'] AS $value) {
     foreach ($value AS $file) {
         
-        if (substr($file,-4)=='.php')
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+
+        if ($ext==='php')
             @include($file);
 
-        else if (substr($file,-4)=='.css')
-            $maxsim['template']['autoload']['css'][] = '/'.$file;
+        else if ($ext==='css' OR $ext==='js')
+            $maxsim['template']['autoload'][$ext][] = '/'.$file;
 
-        else if (substr($file,-3)=='.js')
-            $maxsim['template']['autoload']['js'][] = '/'.$file;
-
-        else if (substr($file,-5)=='.json')
+        else if ($ext==='json')
             if ($key_name = basename(str_replace('*', '', $file),'.json'))
                 $maxsim[$key_name] = array_merge_recursive((array) $maxsim[$key_name], (array) maxsim_config([], $file));
     }
@@ -69,6 +65,10 @@ function maxsim_get(string $uri) {
             $levels_relative[$level-$app_level] = $name;
 
     $_GET = array_merge((array) $levels_relative, $_GET);
+
+
+    if ($_GET[0]==='maxsim')
+        exit($maxsim['version']);
 }
 
 
@@ -94,7 +94,7 @@ function maxsim_router(string $uri) {
         $route = array_merge_recursive($route, maxsim_autoload($ls));
         
         foreach ($ls AS $e)
-            if ($id>0 AND basename($e)=='index.php')
+            if (basename($e)=='index.php')
                 $route['app'][0] = $e;
 
         foreach ($ls AS $e)

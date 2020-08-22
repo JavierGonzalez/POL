@@ -3,8 +3,7 @@
 
 
 
-
-switch ($_GET[1]) {
+switch ($_GET[0]) {
 
 /*
 case 'video':
@@ -59,7 +58,6 @@ case 'reglamento-sc':
 	break;
 
 
-case 'manual': redirect('/documentacion'); break;
 case 'documentacion':
 	$txt_title = 'Documentación de VirtualPol | Manual, ayuda'; 
 	$txt_nav = array('Documentación');
@@ -79,8 +77,6 @@ case 'documentacion':
 	break;
 
 
-
-case 'legal': redirect('/TOS'); break;
 case 'TOS':
 	$txt_nav = array('TOS');
 	if (isset($pol['user_ID'])) {
@@ -120,8 +116,5 @@ case 'TOS':
 	break;
 
 
-default: redirect('http://www.'.DOMAIN);
+default: redirect('/');
 }
-
-
-?>

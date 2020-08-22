@@ -32,12 +32,12 @@ if (isset($_GET['bg'])) {
 <style type="text/css">
 #header { background:#FFF <?=$body_bg?> repeat scroll top left; }
 </style>
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/img/lib/jquery-1.7.1.min.js"></script>
 
 
 
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-<link href="/img/emoji/css/emoji.css" rel="stylesheet">
+<link href="/img/lib/font-awesome.min.css" rel="stylesheet">
+<!--<link href="/img/emoji/css/emoji.css" rel="stylesheet">-->
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '/img/';
@@ -298,15 +298,12 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 </script>
 	<script type="text/javascript" src="/img/scripts_all.js?v=<?=VER?>"></script>
 
-	  <script src="/img//emoji/js/config.js"></script>
-	  <script src="/img//emoji/js/util.js"></script>
-	  <script src="/img//emoji/js/jquery.emojiarea.js"></script>
-	  <script src="/img//emoji/js/emoji-picker.js"></script>
-	<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-	<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.min.js"></script>
-
-
+		<!--
+	  <script src="/img/emoji/js/config.js"></script>
+	  <script src="/img/emoji/js/util.js"></script>
+	  <script src="/img/emoji/js/jquery.emojiarea.js"></script>
+	  <script src="/img/emoji/js/emoji-picker.js"></script>
+	  -->
 
 
 

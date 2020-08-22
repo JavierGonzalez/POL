@@ -168,7 +168,8 @@ function presentacion($titulo, $html, $url='') {
 function pad($control, $ID=false, $txt='') {
 	switch ($control) {
 		case 'print':
-			return '<script>var converter = new showdown.Converter();'
+			return '<script src="/img/lib/showdown.min.js"></script>
+			<script>var converter = new showdown.Converter();'
 			.'html      = converter.makeHtml('.$txt.');'
 			.'</script>';
 			break;

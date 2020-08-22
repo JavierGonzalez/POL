@@ -1,13 +1,15 @@
 <html>
 	<head>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-		<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-		<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+		<script type="text/javascript" src="/img/lib/jquery-1.7.1.min.js"></script>
+		
+		<script src="/doc/easymde.min.js"></script>
+		<link rel="stylesheet" href="/doc/easymde.min.css">
 		<style>
 			body{
 				height: 700px;
 			}
 		</style>
+
 	</head>
 	<body>
 		<textarea id="document_body"></textarea>

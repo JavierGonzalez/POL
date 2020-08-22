@@ -271,7 +271,7 @@ ORDER BY examen_ID DESC, RAND() LIMIT ".mysqli_real_escape_string($link,$r['num_
 				if ($pregs) { $pregs .= '|'; } $pregs .= $r2['ID'];
 				echo '<li><b>&iquest;' . $r2['pregunta'] . '?</b><br />' . $respuestas . '</li>';
 			}
-			$examen_tiempo += 10;
+			$examen_tiempo += 30;
 			$limite_tiempo = time() + $examen_tiempo;
 			$_SESSION['examen']['respuestas'] = $respuestas_correctas;
 			$_SESSION['examen']['tiempo'] = $limite_tiempo;

@@ -14,8 +14,8 @@ RewriteRule .* /$maxsim.php [L]
 
 
 
-redirect 301 /codigo https://github.com/JavierGonzalez/VirtualPol
+redirect 301 /codigo https://github.com/JavierGonzalez/POL
 redirect 301 /license /LICENSE.md
 redirect 301 /contenido http://creativecommons.org/licenses/by-sa/3.0/deed.es_ES
 
-RewriteRule ^(legal|manual|documentacion|donaciones|desarrollo|presentacion|video|reglamento-sc)$ /pages/$1 [L]
+

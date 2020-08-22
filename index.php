@@ -5,13 +5,16 @@
 
 switch ($_GET[0]) {
 
-/*
+
 case 'video':
 	$txt_title = 'Vídeo';
 	$txt_nav = array('Vídeo');
-	echo '<br /><iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/fbSZf5hToQc" frameborder="0" allowfullscreen></iframe>';
+	echo '<br />';
+	echo '2012:<br/><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/fbSZf5hToQc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+	echo '<br /><br />';
+	echo 'Mas antiguo:<br /><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/WZhkO5E2nL0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
 	break;
-*/
+
 
 
 case 'presentacion':

@@ -2,7 +2,7 @@
 
 
 $txt_title = _('Solicitar chat');
-$txt_nav = array('/chat'=>'Chats', _('Solicitar chat'));
+$txt_nav = array('/chat/list'=>'Chats', _('Solicitar chat'));
 $txt_tab = array('/chat/solicitar'=>_('Solicitar chat'));
 
 if (($pol['pais']) AND ($pol['pais'] != PAIS)) { 

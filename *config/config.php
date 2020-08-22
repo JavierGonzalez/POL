@@ -84,6 +84,9 @@ $datos_perfil = array('Blog', 'Twitter', 'Facebook', '', 'Menéame');
 $columnas = 14; $filas = 14; // Dimensiones mapa
 
 
+define('PRE', (substr($_SERVER['HTTP_HOST'],0,4)=='pre-'?true:false));
+
+
 // URLS
 
 define('SSL_URL', '/');

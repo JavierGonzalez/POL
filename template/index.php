@@ -86,7 +86,7 @@ foreach ((array)$maxsim['template']['js_array'] AS $key => $value)
 
 	<li id="menu-comu"<?=($txt_menu=='comu'?' class="menu-sel"':'')?>><a href="/"><?=_('Comunicación')?></a>
 		<ul>
-			<li><a href="/chats"><?=_('Chats')?></a></li>
+			<li><a href="/chat/list"><?=_('Chats')?></a></li>
 			<li><a href="/foro"><b><?=_('Foros')?></b></a>
 				<ul>
 					<li><a href="/foro/ultima-actividad"><?=_('Última actividad')?></a>
@@ -190,6 +190,7 @@ if (ECONOMIA AND substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa') {
 }
 ?>
 
+
 	</div>
 </div>
 
@@ -263,7 +264,7 @@ if (isset($pol['user_ID'])) {
 		
 		<div id="footer-left">
 <?php
-echo '<table><tr><td height="30" nowrap="nowrap"><b>'.$pol['config']['pais_des'].'</b></td></tr></table>';
+echo '<table><tr><td height="30" nowrap="nowrap"><b>'.$pol['config']['pais_des'].'</b>'.(PRE?' &nbsp; <span style="color:red;font-size:24px;"><b>PRE-PRODUCCION</b></span>':'').'</td></tr></table>';
 
 if ((ECONOMIA) AND (isset($pol['config']['pols_frase']))) {
 	echo '<div class="amarillo"><b>'.$pol['config']['pols_frase'].'</b></div>';

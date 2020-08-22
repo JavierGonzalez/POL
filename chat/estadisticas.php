@@ -6,7 +6,7 @@ $result = sql("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET[1]
 while ($r = r($result)) { 
 
     $txt_title = _('Chat').': '.$r['titulo'].' | log';
-    $txt_nav = array('/chat'=>_('Chats'), '/chats/'.$r['url']=>$r['titulo'], _('Estadisticas'));
+    $txt_nav = array('/chat/list'=>_('Chats'), '/chats/'.$r['url']=>$r['titulo'], _('Estadisticas'));
     $txt_tab = array('/chat/'.$r['url']=>'Chat', '/chat/log/'.$r['url']=>_('Log'), '/chat/estadisticas/'.$r['url']=>_('Estadisticas'), '/chat/opciones/'.$r['url']=>_('Opciones'));
     
     if ((nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) AND (isset($pol['user_ID']))) {

@@ -120,7 +120,7 @@ case 'TOS':
 
 
 default: 
-	$_GET[1] = strtolower(PAIS);
+	$_GET[0] = strtolower(PAIS);
 	include('chat/index.php');
 
 }

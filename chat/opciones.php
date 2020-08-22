@@ -5,7 +5,7 @@ $result = sql("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET[1]
 while ($r = r($result)) { 
 
     $txt_title = _('Chat').': '.$r['titulo'].' | '._('Opciones');
-    $txt_nav = array('/chat'=>_('Chats'), '/chats/'.$r['url']=>$r['titulo'], _('Opciones'));
+    $txt_nav = array('/chat/list'=>_('Chats'), '/chat/'.$r['url']=>$r['titulo'], _('Opciones'));
     $txt_tab = array('/chat/'.$r['url']=>_('Chat'), '/chat/log/'.$r['url'] =>_('Log'), '/chat/opciones/'.$r['url']=>_('Opciones'));
 
     foreach (nucleo_acceso('print') AS $at => $at_var) { 

@@ -32,8 +32,8 @@ function nucleo_acceso($tipo, $valor='', $pais=false) {
 		case 'grupos': if (($_SESSION['pol']['pais'] == $pais) AND (count(array_intersect(explode(' ', $_SESSION['pol']['grupos']), explode(' ', $valor))) > 0)) { $rt = true; } break;
 		case 'examenes': if (($_SESSION['pol']['pais'] == $pais) AND (count(array_intersect(explode(' ', $_SESSION['pol']['examenes']), explode(' ', $valor))) > 0)) { $rt = true; } break;
 		case 'monedas': if ($_SESSION['pol']['pols'] >= $valor) { $rt = true; } break;
-		case 'socios': if (($_SESSION['pol']['pais'] == $pais) AND ($_SESSION['pol']['socio'] == 'true')) { $rt = true; } break;
-		case 'autentificados': if ($_SESSION['pol']['dnie'] == 'true') { $rt = true; } break;
+		//case 'socios': if (($_SESSION['pol']['pais'] == $pais) AND ($_SESSION['pol']['socio'] == 'true')) { $rt = true; } break;
+		//case 'autentificados': if ($_SESSION['pol']['dnie'] == 'true') { $rt = true; } break;
 		case 'supervisores_censo': if ($_SESSION['pol']['SC'] == 'true') { $rt = true; } break;
 		case 'antiguedad': if ((isset($_SESSION['pol']['fecha_registro'])) AND (strtotime($_SESSION['pol']['fecha_registro']) < (time() - ($valor*86400)))) { $rt = true; } break;
 		case 'print': 
@@ -88,8 +88,8 @@ function verbalizar_acceso($tipo, $valor='') {
 			break;
 		
 		case 'monedas': $t = _('ciudadanos con al menos').' <em>'.$valor.'</em> '._('monedas'); break;
-		case 'socios': $t = _('ciudadanos inscritos como socios de').' '.PAIS; break;
-		case 'autentificados': $t = _('ciudadanos autentificados'); break;
+		//case 'socios': $t = _('ciudadanos inscritos como socios de').' '.PAIS; break;
+		//case 'autentificados': $t = _('ciudadanos autentificados'); break;
 		case 'supervisores_censo': $t = _('Supervisores del Censo'); break;
 		case 'antiguedad': $t = _('ciudadanos con al menos').' <em>'.$valor.'</em> '._('días de antigüedad');  break;
 		default: $t = _('nadie'); break;
@@ -115,8 +115,8 @@ function sql_acceso($tipo, $valor='', $pais=false) {
 		case 'grupos': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', grupos, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".$pais."' AND (".implode(' OR ',$a).")"; break;
 		case 'examenes': foreach (explode(' ', $valor) AS $ID) { $a[] = "CONCAT(' ', examenes, ' ') LIKE '% ".$ID." %'"; } $rt = "pais = '".$pais."' AND (".implode(' OR ',$a).")"; break;
 		case 'monedas': $rt = "pols >= '".$valor."'"; break;
-		case 'socios': $rt = "pais = '".$pais."' AND socio = 'true'"; break;
-		case 'autentificados': $rt = "dnie = 'true'"; break;
+		//case 'socios': $rt = "pais = '".$pais."' AND socio = 'true'"; break;
+		//case 'autentificados': $rt = "dnie = 'true'"; break;
 		case 'supervisores_censo': $rt = "estado = 'ciudadano' AND SC = 'true'"; break;
 		case 'antiguedad': $rt = "estado = 'ciudadano' AND fecha_registro < '".date('Y-m-d H:i:s', (time()-($valor*86400)))."'"; break;
 		default: $rt = "'true' = 'false'";
@@ -388,5 +388,3 @@ function confianza($num, $votos_num=false) {
 	else { $t = 'vcnn">'; }
 	return '<span'.($votos_num!=false?' title="+'.(($votos_num+$num)/2).' -'.($votos_num-(($votos_num+$num)/2)).' ('.$votos_num.' votos)"':'').' class="'.$t.$num.'</span>';
 }
-
-?>

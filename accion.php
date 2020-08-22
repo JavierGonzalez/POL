@@ -271,7 +271,7 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 				pols_transferir($pol['config']['pols_crearchat'], $pol['user_ID'], '-1', 'Solicitud chat: '.$nombre);
 			}
 		}
-		$refer_url = 'chats';
+		$refer_url = 'chat/list';
 	} elseif (($_GET[2] == 'cambiarfundador') AND ($_POST['admin']) AND ($_POST['chat_ID'])) {
 		
 		$result = sql("SELECT admin, user_ID, url FROM chats WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' LIMIT 1");
@@ -279,7 +279,7 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 			if ((nucleo_acceso('privado', $r['admin'])) OR ($r['user_ID'] == $pol['user_ID']) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 				sql("UPDATE chats SET admin = '".strtolower(strip_tags($_POST['admin']))."' WHERE chat_ID = '".$_POST['chat_ID']."' LIMIT 1");
 			}
-			$refer_url = 'chats/'.$r['url'].'/opciones';
+			$refer_url = 'chat/opciones/'.$r['url'];
 		}
 	} elseif (($_GET[2] == 'editar') AND ($_POST['chat_ID'])) {
 
@@ -288,14 +288,14 @@ VALUES ('".PAIS."', '".$url."', '".ucfirst($nombre)."', '".$pol['user_ID']."', '
 			
 			if ((nucleo_acceso('privado', $r['admin'])) OR (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 				if ($_POST['acceso_cfg_leer']) { 
-					$_POST['acceso_cfg_leer'] = trim(preg_replace(' +', ' ', strtolower($_POST['acceso_cfg_leer']))); 
+					$_POST['acceso_cfg_leer'] = trim(strtolower($_POST['acceso_cfg_leer'])); 
 				}
 				if ($_POST['acceso_cfg_escribir']) { 
-					$_POST['acceso_cfg_escribir'] = trim(preg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir'])));
+					$_POST['acceso_cfg_escribir'] = trim(strtolower($_POST['acceso_cfg_escribir']));
 				}
 
 				if ($_POST['acceso_cfg_escribir_ex']) { 
-					$_POST['acceso_cfg_escribir_ex'] = trim(preg_replace(' +', ' ', strtolower($_POST['acceso_cfg_escribir_ex'])));
+					$_POST['acceso_cfg_escribir_ex'] = trim(strtolower($_POST['acceso_cfg_escribir_ex']));
 				}
 				sql("UPDATE chats 
 SET acceso_leer = '".$_POST['acceso_leer']."', 
@@ -307,21 +307,21 @@ acceso_cfg_escribir_ex = '".$_POST['acceso_cfg_escribir_ex']."'
 WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS."' LIMIT 1");
 			}
 		}
-		$refer_url = 'chats/'.$_POST['chat_nom'].'/opciones';
+		$refer_url = 'chat/opciones/'.$_POST['chat_nom'];
 
 	} elseif (($_GET[2] == 'activar') AND ($_GET['chat_ID']) AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
 		sql("UPDATE chats SET estado = 'activo' WHERE chat_ID = '".$_GET['chat_ID']."' AND estado != 'activo' AND pais = '".PAIS."' LIMIT 1");
-		$refer_url = 'chats';
+		$refer_url = 'chat/list';
 	} elseif (($_GET[2] == 'eliminar') AND ($_GET['chat_ID'])) {
 		sql("DELETE FROM chats WHERE chat_ID = '".$_GET['chat_ID']."' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false')."' OR admin = '".$pol['nick']."') LIMIT 1");
-        $refer_url = 'chats';
+        $refer_url = 'chat/list';
 	} elseif (($_GET[2] == 'limpiar') AND ($_GET['chat_ID'])) {
 		error_log("Cleaning chat... "."DELETE FROM chats_msg WHERE chat_ID = '".$_GET['chat_ID']."' AND '".$pol['user_ID']."' = (select user_ID from chats where chat_ID = '".$_GET['chat_ID']."' LIMIT 1)");
 		sql("DELETE FROM chats_msg WHERE chat_ID = '".$_GET['chat_ID']."' AND '".$pol['user_ID']."' = (select user_ID from chats where chat_ID = '".$_GET['chat_ID']."' LIMIT 1)");
-		$refer_url = 'chats';
+		$refer_url = 'chat/list';
 	} elseif (($_GET[2] == 'bloquear') AND ($_GET['chat_ID'])) {
 		sql("UPDATE chats SET estado = 'bloqueado' WHERE chat_ID = '".$_GET['chat_ID']."' AND pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false')."') LIMIT 1");
-		$refer_url = 'chats';
+		$refer_url = 'chat/list';
 	}
 	break;
 

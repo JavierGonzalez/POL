@@ -2,17 +2,15 @@
 
 
 
-if ($_GET[2] == 'e') { $externo = true; } else { $externo = false; }
-
 if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['pol']['nick']; }
 
-$result = mysql_query_old("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET[1]."' LIMIT 1", $link);
+$result = mysql_query_old("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET[0]."' LIMIT 1", $link);
 while ($r = mysqli_fetch_array($result)) { 
 	
-	$txt_nav = array('/chat'=>_('Chats'), $r['titulo']);
+	$txt_nav = array('/chat/list'=>_('Chats'), $r['titulo']);
 	$txt_tab = array('/chat/log/'.$r['url']=>_('Log'), '/chat/opciones/'.$r['url'] => _('Opciones'));
 
-	if ($r['pais'] != PAIS) { redirect('chat/'.$_GET[1].'/'.$_GET[2]); }
+	if ($r['pais'] != PAIS) { redirect('chat/'.$_GET[0].'/'.$_GET[1]); }
 
 
 	if ($pol['user_ID']) { 
@@ -62,7 +60,7 @@ if ($externo) {
 		echo  '<span style="float:right;"><a href="/registrar">'._('Crear ciudadano').'</a></span>'.$titulo;
 	}
 } else {
-	echo  '<span class="quitar"><span style="float:right;">[<a href="/chat/opciones/'.$_GET[1].'">'._('Opciones').'</a>] [<a href="/chat/log/'.$_GET[1].'">'._('Log').'</a>]</span><a href="/chat">'._('Chat').'</a>: '.$titulo.'</span>';
+	echo  '<span class="quitar"><span style="float:right;">[<a href="/chat/opciones/'.$_GET[0].'">'._('Opciones').'</a>] [<a href="/chat/log/'.$_GET[0].'">'._('Log').'</a>]</span><a href="/chat">'._('Chat').'</a>: '.$titulo.'</span>';
 }
 
 $a_leer = nucleo_acceso($acceso_leer, $acceso_cfg_leer);

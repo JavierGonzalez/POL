@@ -1,6 +1,27 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
+//print phpinfo();  exit;
+
+//mail('gonzomail@gmail.com', 'Prueba de email 43', 'Mensaje de prueba '.date());
+//mail('gonzo@virtualpol.com', 'Prueba de email 43', 'Mensaje de prueba '.date());
+
+
+echo 'Email enviado';
+
+
+
+$to      = 'gonzomail@gmail.com';
+$subject = 'Test de email '.rand(1000,9999);
+$message = 'hello probandooo';
+$headers = 'From: virtualpol.com@virtualpol.com' . "\r\n" .
+    'Reply-To: desarrollo@virtualpol.com';
+
+$success = mail($to, $subject, $message, $headers);
+
+if (!$success) {
+    $errorMessage = error_get_last()['message'];
+}
 
 
 exit;

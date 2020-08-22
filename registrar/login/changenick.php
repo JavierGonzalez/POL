@@ -8,10 +8,10 @@ $pre_login = true;
 if (isset($pol['user_ID'])) {
 
     function nick_check($string) {
-        $eregi = eregi_replace("([A-Z0-9_]+)","", $string);
-        if (empty($eregi)) { return true; } else { return false; }
+        $eregi = preg_replace("([a-zA-Z0-9_]+)","",$string);
+        return (empty($eregi)?true:false);
     }
-
+    
     $dentro_del_margen = false;
     $result = sql("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND nickchange_last < '".date('Y-m-d 20:00:00', time() - (86400*365))."' LIMIT 1");
     while ($r = r($result)) { $dentro_del_margen = true; }

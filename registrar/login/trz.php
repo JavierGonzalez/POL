@@ -1,5 +1,6 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
+exit;
 
 if (($_GET['x']) AND ($_GET['y']) AND ($_GET['z'])) {
     $result = sql("SELECT ID FROM users WHERE ID = '".$_GET['y']."' AND api_pass = '".$_GET['z']."' LIMIT 1");

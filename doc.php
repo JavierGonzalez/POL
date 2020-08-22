@@ -177,9 +177,6 @@ ORDER BY time_last DESC", $link);
 	echo '</div>';
 }
 
-echo mysqli_error($link);
 
 //THEME
 $txt_menu = 'info';
-
-?>

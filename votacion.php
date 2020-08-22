@@ -881,7 +881,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 					
 					//if ($r['ha_votado']) { echo 'Tu voto preferencial ha sido recogido <b>correctamente</b>.<br /><br />'; }
 
-					echo '<span style="color:red;">'._('Debes repartir <b>los puntos más altos a tus opciones preferidas</b>. Puntos no acumulables').'.</span><table border="0"><tr><th colspan="'.substr($r['tipo_voto'], 0, 1).'" align="center">'._('Puntos').'</th><th></th></tr><tr>';
+					echo '<span style="color:grey;">'._('Debes repartir <b>los puntos más altos a tus opciones preferidas</b>. Puntos no acumulables').'.</span><table border="0"><tr><th colspan="'.substr($r['tipo_voto'], 0, 1).'" align="center">'._('Puntos').'</th><th></th></tr><tr>';
 
 					for ($e=1;$e<=$tipo_puntos;$e++) { echo '<th align="center">'.$e.'</th>'; }
 					echo '<th>'.($r['tipo']=='elecciones'?_('Candidatos'):_('Opciones')).'</th></tr>';		

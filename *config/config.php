@@ -70,7 +70,7 @@ if (!defined('PAIS'))
 
 // CONFIG
 define('DOMAIN', 'virtualpol.com');
-define('CONTACTO_EMAIL', 'gonzo@virtualpol.com');
+define('CONTACTO_EMAIL', 'desarollo@virtualpol.com');
 
 define('SQL', strtolower(PAIS).'_');
 define('USERCOOKIE', '.'.DOMAIN);
@@ -91,3 +91,16 @@ define('IMG', '/img/'); // Archivos estaticos
 
 
 define('MONEDA', '<img src="/img/varios/m.gif" />'); 
+
+
+
+//INIT
+$date = date('Y-m-d H:i:s');
+$IP = direccion_IP('longip');
+
+
+// Prevención de inyección
+foreach ($_GET  AS $nom => $val) { $_GET[$nom] = escape($val); }
+foreach ($_POST AS $nom => $val) { $_POST[$nom] = escape($val); }
+foreach ($_REQUEST AS $nom => $val) { $_REQUEST[$nom] = escape($val); }
+foreach ($_COOKIE AS $nom => $val) { $_COOKIE[$nom] = escape($val); }

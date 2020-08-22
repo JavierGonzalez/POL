@@ -1,7 +1,7 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-$maxsim['output'] = 'plain';
+$maxsim['output'] = 'text';
 
 
 

@@ -339,7 +339,7 @@ LIMIT 1");
 
 
 function enviar_email($user_ID=false, $asunto, $mensaje, $email='') {
-	$cabeceras = "From: VirtualPol <".CONTACTO_EMAIL.">;\nReturn-Path: VirtualPol <".CONTACTO_EMAIL.">;\nX-Sender: VirtualPol <".CONTACTO_EMAIL.">;\n MIME-Version: 1.0;\nContent-type: text/html; charset=UTF-8\n";
+	$cabeceras = "From: VirtualPol <virtualpol.com@virtualpol.com>;\nReturn-Path: VirtualPol <".CONTACTO_EMAIL.">;\nX-Sender: VirtualPol <".CONTACTO_EMAIL.">;\n MIME-Version: 1.0;\nContent-type: text/html; charset=UTF-8\n";
 	if (($user_ID) AND ($email == '')) {
 		global $link;
 		$result = sql("SELECT email FROM users WHERE ID = '".$user_ID."' LIMIT 1");

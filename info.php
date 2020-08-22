@@ -1,7 +1,6 @@
 ﻿<?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-
 switch ($_GET[1]) {
 
 
@@ -259,7 +258,7 @@ LIMIT 300", $link);
 
 case 'censo':
 
-	if (!$pol['user_ID']) { redirect('/'); }
+	//if (!$pol['user_ID']) { redirect('/'); }
 
 	$num_element_pag = $pol['config']['info_censo'];
 
@@ -624,5 +623,3 @@ echo '</ol>
 
 //THEME
 if (!isset($txt_menu)) { $txt_menu = 'info'; }
-
-?>

@@ -3,8 +3,8 @@
 
 
 function onlynumbers($string) {
-	$eregi = eregi_replace("([A-Z0-9_]+)","",$string);
-	if (empty($eregi)) { return true; } else { return false; }
+	$eregi = preg_replace("([a-zA-Z0-9_]+)","",$string);
+	return (empty($eregi)?true:false);
 }
 
 
@@ -115,7 +115,7 @@ if ($_POST['condiciones'] == 'ok') {
                                     
                                     sql("INSERT INTO users 
 (nick, pols, fecha_registro, fecha_last, partido_afiliado, estado, nivel, email, num_elec, online, fecha_init, ref, ref_num, api_pass, api_num, IP, nota, avatar, text, cargo, visitas, paginas, nav, voto_confianza, confianza_historico, pais, pass, pass2, host, IP_proxy, dnie_check, bando, nota_SC, fecha_legal) 
-VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'turista', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '0', 'ninguno', '".$pass_md5."', '".$pass_sha."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')");
+VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . strtolower($email) . "', '0', '0', '" . $date . "', '".$afiliacion."', '0', '".$api_pass."', '0', '" . $IP . "', '0.0', 'false', '', '', '0', '0', '" . $_SERVER['HTTP_USER_AGENT'] . "', '0', '0', 'POL', '".$pass_md5."', '".$pass_sha."', '".@gethostbyaddr($_SERVER['REMOTE_ADDR'])."', '".ip2long($_SERVER['HTTP_X_FORWARDED_FOR'])."', null, null, '".((($_POST['nick_clon']=='')||(strtolower($_POST['nick_clon'])=='no'))?'':'Comparte con: '.$_POST['nick_clon'])."', '".$date."')");
                                     $result = sql("SELECT ID FROM users WHERE nick = '".$nick."' LIMIT 1");
                                     while($r = r($result)){ $new_ID = $r['ID']; }
                                     
@@ -130,26 +130,37 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'turista', '1', '" . str
                                         sql("UPDATE referencias SET new_user_ID = '" . $new_ID . "' WHERE IP = '" . $longip . "' LIMIT 1");
                                     }
 
-                                    $mensaje = '<p>'._('Hola').' '.$nick.':</p>
 
-<p>'._('Para terminar el registro debes validar tu usuario. Simplemente tienes que entrar en la siguiente dirección web').':</p>
 
-<p><a href="/registrar/verificar?code='.$api_pass.'&nick='.$nick.'">/registrar/verificar?code='.$api_pass.'&nick='.$nick.'</a></p>
 
-<p>'._('¡Esto es todo!').'</p>';
+
+
+
+                                    $url_validacion = 'https://'.$_SERVER['HTTP_HOST'].'/registrar/verificar?code='.$api_pass.'&nick='.$nick;
+
+                                    $mensaje = '<p>'._('Hola').' '.$nick.':</p>';
+                                    $mensaje .= '<p>'._('Para terminar el registro debes validar tu usuario. Simplemente tienes que entrar en la siguiente dirección web').':</p>';
+                                    $mensaje .= '<p><a href="'.$url_validacion.'">'.$url_validacion.'</a></p>';
+                                    $mensaje .= '<p>'._('¡Esto es todo, bienvenido!').'</p>';
 
                                     enviar_email(null, _('Verificar nuevo usuario').': '.$nick, $mensaje, $email);
 
                                     $registro_txt .= '<p><span style="color:green;"><b>'._('¡Correcto!').'</b></span>. '._('Tu usuario ha sido creado exitosamente').'.</p><p>'._('Ya puedes hacer login con tu usuario.').'</em>.</p>';
 
-                                } else {$nick = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick está ocupado, por favor elige otro').'</p>';}
-                            } else {$nick = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick debe tener entre 3 y 14 caracteres').'</p>';}
-                        } else {$email = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('Dirección de email en uso').', <a href="/registrar/login/recuperar-pass"><b>'._('recupera tu usuario').'</b></a></p>';}
-                    } else {$email = ''; $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('El email no es valido').'</p>';}
-                } else { $pass1 = ''; $pass2 = '';  $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('Debes escribir la misma contraseña dos veces').'</p>';}
-            } else { $pass1 = ''; $pass2 = '';  $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick solo puede tener letras, numeros y el caracter: "_". La inicial nunca debe ser un numero').'.</p>';}
-        } else { $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('No has acertado captcha').'</p>'; }
+                                } else {$nick = ''; $error .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick está ocupado, por favor elige otro').'</p>';}
+                            } else {$nick = ''; $error .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick debe tener entre 3 y 14 caracteres').'</p>';}
+                        } else {$email = ''; $error .= '<p class="vmal"><b>'._('Error').'</b>: '._('Dirección de email en uso').', <a href="/registrar/login/recuperar-pass"><b>'._('recupera tu usuario').'</b></a></p>';}
+                    } else {$email = ''; $error .= '<p class="vmal"><b>'._('Error').'</b>: '._('El email no es valido').'</p>';}
+                } else { $pass1 = ''; $pass2 = '';  $error .= '<p class="vmal"><b>'._('Error').'</b>: '._('Debes escribir la misma contraseña dos veces').'</p>';}
+            } else { $pass1 = ''; $pass2 = '';  $error .= '<p class="vmal"><b>'._('Error').'</b>: '._('El nick solo puede tener letras, numeros y el caracter: "_". La inicial nunca debe ser un numero').'.</p>';}
+        } else { $error .= '<p class="vmal"><b>'._('Error').'</b>: '._('No has acertado captcha').'</p>'; }
 
-    } else { $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('Se ha activado un bloqueo a tu conexión. Si crees que puede ser un error contacta').': '.CONTACTO_EMAIL.'</p>'; }
+    } else { $error .= '<p class="vmal"><b>'._('Error').'</b>: '._('Se ha activado un bloqueo a tu conexión. Si crees que puede ser un error contacta').': '.CONTACTO_EMAIL.'</p>'; }
 
-} else { $verror .= '<p class="vmal"><b>'._('Error').'</b>: '._('Debes de aceptar las condiciones').'</p>'; }
+} else { $error .= '<p class="vmal"><b>'._('Error').'</b>: '._('Debes de aceptar las condiciones').'</p>'; }
+
+
+if ($error)
+    redirect('/registrar?error='.base64_encode($error));
+else
+    redirect('/registrar?msg='.base64_encode('Usuario registrado! Revisa tu email para validarlo (tal vez esté en spam)!'));

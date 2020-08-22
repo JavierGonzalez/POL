@@ -199,6 +199,7 @@ function escape($a, $escape=true, $html=true) {
 	$a = str_replace("'", '&#39;', $a);
 	$a = str_replace('"', '&quot;', $a);
 	$a = str_replace(array("\x00", "\x1a"), '', $a);
+	
 	$a = mysqli_real_escape_string($link, $a);
 
 	// XSS
@@ -290,8 +291,8 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 
 
 
-function vp_url($path='/', $pais=PAIS) { return 'http://'.strtolower($pais).'.'.DOMAIN.$path; }
-function error($txt='Acción no permitida o erronea') { redirect('http://'.HOST.'/?error='.base64_encode($txt)); }
+function vp_url($path='/', $pais=PAIS) { return 'https://'.$_SERVER['HTTP_HOST'].$path; }
+function error($txt='Acción no permitida o erronea') { redirect('https://'.$_SERVER['HTTP_HOST'].'/?error='.base64_encode($txt)); }
 function num($num, $dec=0) { return number_format(round($num, $dec), $dec, ',', '.'); }
 function explodear($pat, $str, $num) { $exp = explode($pat, $str); return $exp[$num]; }
 function implodear($pat, $str, $num) { $exp = implode($pat, $str); return $exp[$num]; }

@@ -6,6 +6,11 @@ $result = sql("SELECT ID, nick, api_pass, email FROM users WHERE email = '".$_PO
 while ($r = r($result)) { 
     $enviado = true;
     $reset_pass = rand(1000000000, 9999999999);
+
+
+    $url_validacion = 'https://'.$_SERVER['HTTP_HOST'].'/registrar/login/reset-pass?user_ID='.$r['ID'].'&check='.$reset_pass;
+
+
     sql("UPDATE users SET api_pass = '".$reset_pass."', reset_last = '".date('Y-m-d H:00:00', time() + (86400*1))."' WHERE ID = '".$r['ID']."' LIMIT 1");
 
     $texto_email = "<p>"._("Hola")." ".$r['nick']."!</p>
@@ -15,13 +20,13 @@ while ($r = r($result)) {
 
 <blockquote>
 "._("Reset de contraseña").":<br />
-<a href=\"/registrar/login/reset-pass?user_ID=".$r['ID']."&check=".$reset_pass."\"><b>/registrar/login/reset-pass?user_ID=".$r['ID']."&check=".$reset_pass."</b></a>
+<a href=\"".$url_validacion."\"><b>".$url_validacion."</b></a>
 </blockquote>
 
 <p>_________<br />
 VirtualPol</p>";
 
-    mail($r['email'], "[VirtualPol] "._("Cambio de contraseña de usuario").": ".$r['nick'], $texto_email, "FROM: VirtualPol <".CONTACTO_EMAIL.">\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n"); 
+    enviar_email(null, "[VirtualPol] "._("Cambio de contraseña de usuario").": ".$r['nick'], $texto_email, $r['email']);
 }
 
 if ($enviado == false) {

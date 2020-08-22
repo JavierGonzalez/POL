@@ -69,7 +69,7 @@ echo '</blockquote>';
 	echo '
 <p>'._('Dentro de VirtualPol hay diversas plataformas democraticas que son 100% independientes. Elige en la que quieres participar').'.</p>
 
-<form action="?a=solicitar-ciudadania" method="post">
+<form action="/registrar/solicitar-ciudadania" method="post">
 
 <fieldset><legend>'._('Elige tu plataforma').'</legend>
 
@@ -129,7 +129,7 @@ $(document).ready(function() {
 	$txt_title = _('Crear ciudadano');
 	$txt_nav = array(_('Crear ciudadano'));
 
-	echo '<form action="?a=registrar'.($_GET['p']?'&p='.$_GET['p']:'').($_GET['r']?'&r='.$_GET['r']:'').'" method="POST" id="form_crear_ciudadano">
+	echo '<form action="/registrar/crear_usuario" method="POST" id="form_crear_ciudadano">
 
 <input type="hidden" name="extra" value="" id="input_extra" />
 <input type="hidden" name="repid" value="' . $rn . '" />
@@ -139,10 +139,12 @@ $(document).ready(function() {
 
 
 
+<div style="color:red;font-weight:bold;font-size:20px;">'.($_GET['error']?'<br />'.base64_decode($_GET['error']).'<br /><br />':'').'</div>
+
+<div style="color:green;font-weight:bold;font-size:20px;">'.($_GET['msg']?'<br />'.base64_decode($_GET['msg']).'<br /><br />':'').'</div>
+
 <fieldset><legend>'._('Crear ciudadano').'</legend>
 
-
-<div style="color:red;font-weight:bold;">'.$verror.'</div>
 
 <table>
 
@@ -178,7 +180,7 @@ $(document).ready(function() {
 '._('En caso afirmativo indica el nick').': <input type="text" name="nick_clon" value="" size="10" maxlength="14" pattern="[A-Za-z0-9_]{0,14}" /> '._('En caso negativo dejar vacío').'.</td>
 </tr>
 
-
+<!--
 <tr>
 <td></td>
 <td><br /><span style="font-size:18px;">Cosas que debes saber:</span>
@@ -198,12 +200,13 @@ $(document).ready(function() {
 </ul>
 </td>
 </tr>
+-->
 
 
 
 <tr>
 <td></td>
-<td><input type="checkbox" name="condiciones" value="ok" id="checkcondiciones" required /> <label for="checkcondiciones"><b>'._('Aceptas las').' <a href="/TOS" target="_blank">'._('Condiciones de Uso de VirtualPol').' (TOS)</a>.</b></label></td>
+<td style="font-size:16px;"><input type="checkbox" name="condiciones" value="ok" id="checkcondiciones" required /> <label for="checkcondiciones"><b>'._('Acepto las').' <a href="/TOS" target="_blank">'._('Condiciones de Uso de VirtualPol').' (TOS)</a>.</b></label></td>
 </tr>
 
 <tr>

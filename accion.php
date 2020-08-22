@@ -2183,5 +2183,5 @@ if ($_GET[1] == 'logout') {
 
 if (!isset($refer_url)) { $refer_url = '?error='.base64_encode(_('Acción no permitida o erronea').' ('.$_GET[1].')'); }
 
-redirect('//'.HOST.'/'.$refer_url);
+redirect('//'.$_SERVER['HTTP_HOST'].'/'.$refer_url);
 

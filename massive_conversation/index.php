@@ -1,7 +1,5 @@
 <?php
 
-unset($maxsim['output']);
-
 $maxsim['template']['title'] = 'Massive Conversation';
 
 ?>
@@ -32,7 +30,9 @@ table td {
 #new_msg {
     font-size:20px;
     width:100%;
-    color:#00ff00;
+    color:yellow;
+    font-weight:bold;
+    text-transform:uppercase;
 	background-color:#000;
     border:none;
     outline:none;

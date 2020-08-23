@@ -5,7 +5,9 @@
 $txt_menu = 'comu';
 
 
-function reemplazos($t) { return '<span class="rich">'.strip_tags($t, '<br>').'</span>'; }
+function reemplazos($t) { 
+	return '<span class="rich">'.strip_tags($t, '<br>').'</span>'; 
+}
 
 function print_lateral($nick, $cargo_ID=false, $time, $siglas='', $user_ID='', $avatar='', $votos=0, $votos_num=false, $voto=false, $tipo='msg', $item_ID=0) {
 	global $pol;

@@ -1,10 +1,10 @@
 <?php
 
 
-sql_old("DROP TABLE msg");
+sql("DROP TABLE msg");
 
 if (0===count(sql_get_tables()))
-    sql_old("
+    sql("
 
 CREATE TABLE `msg` (
 	`msg_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -36,4 +36,4 @@ ENGINE=InnoDB
 
 echo sql_error();
 
-print_r(sql_get_tables());
+__(sql_get_tables());

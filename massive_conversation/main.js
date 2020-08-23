@@ -5,7 +5,7 @@ refresh_chat_main();
 
 function refresh_chat_main() {
     
-    $("#chat_msg").load("massive_conversation/ajax/chat_msg");
+    $("#chat_msg").load("/massive_conversation/ajax/chat_msg");
     
     
     setTimeout(function(){
@@ -18,7 +18,7 @@ refresh_chat_respuestas();
 
 function refresh_chat_respuestas() {
     
-    $("#chat_respuestas").load("massive_conversation/ajax/chat_respuestas");
+    $("#chat_respuestas").load("/massive_conversation/ajax/chat_respuestas");
     
     
     setTimeout(function(){
@@ -31,7 +31,7 @@ function refresh_chat_respuestas() {
 $("#form_new_msg").submit(function(event) {
     
     
-    $.post("massive_conversation/ajax/new_msg", { texto: $("#new_msg").val() })
+    $.post("/massive_conversation/ajax/new_msg", { texto: $("#new_msg").val() })
         .done(function( data ) {
             //
     });

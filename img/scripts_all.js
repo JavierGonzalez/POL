@@ -645,7 +645,7 @@ function hace(cuando, ts, num, pre){
 // FUNCIONES CHAT START
 
 function actualizar_ahora(){
-    chat_delay = 3000;
+    chat_delay = 2000;
     refresh = setTimeout(chat_query_ajax, chat_delay);
     delays();
     chat_query_ajax();
@@ -937,7 +937,7 @@ function chat_close(){
 function chat_enabled(){
     $("#chat_alert").remove();
     chat_query_ajax();
-    chat_delay = 3000;
+    chat_delay = 2000;
     refresh = setTimeout(chat_query_ajax, chat_delay);
     delays();
     $("#vpc_msg").focus();
@@ -980,13 +980,15 @@ function enriquecer(m, bbcode){
     }
 
     // Botones Instant
-    if (bbcode){ var boton_width = 50; } else { var boton_width = 16; }
-    m = m.replace(/:(aplauso|noo|rickroll|relax|alarmanuclear|porquenotecallas|zas|aleluya):/gi, html_instant('$1', boton_width));
+    // if (bbcode){ var boton_width = 50; } else { var boton_width = 16; }
+    // m = m.replace(/:(aplauso|noo|rickroll|relax|alarmanuclear|porquenotecallas|zas|aleluya):/gi, html_instant('$1', boton_width));
 
     return m;
 }
 
 function html_instant(nom, width){
-    return '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" title=":' + nom + ':" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" height="' + width + '" width="' + width + '"><param name="quality" value="high" /><param name="wmode" value="transparent" /><param name="movie" value="' + IMG + 'instant/' + nom + '.swf" /><embed style="margin:0 0 -3px 0;" height="' + width + '" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="' + IMG + 'instant/' + nom + '.swf" type="application/x-shockwave-flash" width="' + width + '" wmode="transparent"></embed></object>';
+    return 'FLASH_DISABLED';
 }
+
+
 _ = {"Ahora":"Ahora","ahora":"ahora","años":"años","meses":"meses","días":"días","horas":"horas","minutos":"minutos","min":"min","seg":"seg","Pocos segundos":"Pocos segundos","Segundos":"Segundos","En":"En","Hace":"Hace",};

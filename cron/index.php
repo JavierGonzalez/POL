@@ -1,6 +1,7 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
+unset($maxsim['output']);
 
 
 // PROTECCION DE DOBLE EJECUCION. Evita que se ejcute el proceso mas de una vez en un mismo dia.
@@ -397,8 +398,6 @@ sql_old("DELETE FROM votos WHERE tipo = 'confianza' AND (voto = '0' OR time < '"
 
 
 
-// Quitar candidaturas de SC que estén más de 30 dias inactivos.
-sql_old("UPDATE users SET ser_SC = 'false' WHERE ser_SC = 'true' AND fecha_last < '".tiempo(30)."'");
 
 if (date('N') == 7) { // SOLO DOMINGO
 
@@ -418,6 +417,8 @@ if (date('N') == 7) { // SOLO DOMINGO
 
 	evento_chat('<b>[PROCESO] Supervisores del Censo electos:</b> '.implode(' ', get_supervisores_del_censo()));
 	
+	// Quitar candidaturas de SC que estén más de 30 dias inactivos.
+	sql_old("UPDATE users SET ser_SC = 'false' WHERE ser_SC = 'true' AND fecha_last < '".tiempo(30)."'");
 }
 
 
@@ -581,6 +582,3 @@ ORDER BY time_expire DESC LIMIT 5");
 	evento_chat('<b>[#] Terminado el envio de emails</b> de aviso <span style="color:grey;">('.num($emails_enviados).' emails enviados)</span>.');
 
 }
-
-mysqli_close($link);
-?>

@@ -174,7 +174,7 @@ function hace(cuando, ts, num, pre) {
 // FUNCIONES CHAT START
 
 function actualizar_ahora() {
-    chat_delay = 3000;
+    chat_delay = 2000;
     refresh = setTimeout(chat_query_ajax, chat_delay);
     delays();
     chat_query_ajax();
@@ -184,7 +184,7 @@ function actualizar_ahora() {
 
 function scroll_abajo() {
     if (chat_scroll <= document.getElementById("vpc").scrollTop) {
-        document.getElementById("vpc").scrollTop = 10000000000;
+        document.getElementById("vpc").scrollTop = 10000000;
         chat_scroll = document.getElementById("vpc").scrollTop;
     }
 }
@@ -434,7 +434,7 @@ function enviarmsg() {
                 if (data) { chat_sin_leer = -1;
                     print_msg(data); }
                 setTimeout(function() { $("#botonenviar").removeAttr("disabled"); }, 1600);
-                chat_delay = 4000;
+                chat_delay = 2000;
                 refresh = setTimeout(chat_query_ajax, chat_delay);
                 delays();
                 $("#vpc_actividad").attr("src", IMG + "ico/punto_gris.png");
@@ -447,15 +447,15 @@ function change_delay(delay) { chat_delay = parseInt(delay) * parseInt(1000); }
 
 function delays() {
     if (chat_delay1) { clearTimeout(chat_delay1); }
-    chat_delay1 = setTimeout("change_delay(6)", 25000);
+    chat_delay1 = setTimeout("change_delay(6)", 10000);
     if (chat_delay2) { clearTimeout(chat_delay2); }
-    chat_delay2 = setTimeout("change_delay(10)", 60000);
+    chat_delay2 = setTimeout("change_delay(10)", 30000);
     if (chat_delay3) { clearTimeout(chat_delay3); }
-    chat_delay3 = setTimeout("change_delay(15)", 120000);
+    chat_delay3 = setTimeout("change_delay(15)", 60000);
     if (chat_delay4) { clearTimeout(chat_delay4); }
-    chat_delay4 = setTimeout("change_delay(60)", 300000);
+    chat_delay4 = setTimeout("change_delay(60)", 120000);
     if (chat_delay_close) { clearTimeout(chat_delay_close); }
-    chat_delay_close = setTimeout("chat_close()", 7200000); // 2h
+    chat_delay_close = setTimeout("chat_close()", 600000);
 }
 
 function chat_close() {
@@ -466,7 +466,7 @@ function chat_close() {
 function chat_enabled() {
     $("#chat_alert").remove();
     chat_query_ajax();
-    chat_delay = 4500;
+    chat_delay = 2000;
     refresh = setTimeout(chat_query_ajax, chat_delay);
     delays();
     $("#vpc_msg").focus();
@@ -509,12 +509,12 @@ function enriquecer(m, bbcode) {
     }
 
     // Botones Instant
-    if (bbcode) { var boton_width = 50; } else { var boton_width = 16; }
-    m = m.replace(/:(aplauso|noo|rickroll|relax|alarmanuclear|porquenotecallas|zas|aleluya):/gi, html_instant('$1', boton_width));
+    //if (bbcode) { var boton_width = 50; } else { var boton_width = 16; }
+    //m = m.replace(/:(aplauso|noo|rickroll|relax|alarmanuclear|porquenotecallas|zas|aleluya):/gi, html_instant('$1', boton_width));
 
     return m;
 }
 
 function html_instant(nom, width) {
-    return '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" title=":' + nom + ':" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" height="' + width + '" width="' + width + '"><param name="quality" value="high" /><param name="wmode" value="transparent" /><param name="movie" value="' + IMG + 'instant/' + nom + '.swf" /><embed style="margin:0 0 -3px 0;" height="' + width + '" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="' + IMG + 'instant/' + nom + '.swf" type="application/x-shockwave-flash" width="' + width + '" wmode="transparent"></embed></object>';
+    return 'FLASH_DISABLED';
 }

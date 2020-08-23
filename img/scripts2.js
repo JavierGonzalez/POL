@@ -174,7 +174,7 @@ function hace(cuando, ts, num, pre) {
 // FUNCIONES CHAT START
 
 function actualizar_ahora() {
-    chat_delay = 4000;
+    chat_delay = 3000;
     refresh = setTimeout(chat_query_ajax, chat_delay);
     delays();
     chat_query_ajax();
@@ -184,7 +184,7 @@ function actualizar_ahora() {
 
 function scroll_abajo() {
     if (chat_scroll <= document.getElementById("vpc").scrollTop) {
-        document.getElementById("vpc").scrollTop = 90000000;
+        document.getElementById("vpc").scrollTop = 10000000000;
         chat_scroll = document.getElementById("vpc").scrollTop;
     }
 }

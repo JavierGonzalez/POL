@@ -645,7 +645,7 @@ function hace(cuando, ts, num, pre){
 // FUNCIONES CHAT START
 
 function actualizar_ahora(){
-    chat_delay = 4000;
+    chat_delay = 3000;
     refresh = setTimeout(chat_query_ajax, chat_delay);
     delays();
     chat_query_ajax();
@@ -655,7 +655,7 @@ function actualizar_ahora(){
 
 function scroll_abajo(){
     if (chat_scroll <= document.getElementById("vpc").scrollTop){
-        document.getElementById("vpc").scrollTop = 90000000;
+        document.getElementById("vpc").scrollTop = 10000000;
         chat_scroll = document.getElementById("vpc").scrollTop;
     }
 }
@@ -905,7 +905,7 @@ function enviarmsg(){
                 if (data){ chat_sin_leer = -1;
                     print_msg(data); }
                 setTimeout(function(){ $("#botonenviar").removeAttr("disabled"); }, 1600);
-                chat_delay = 4000;
+                chat_delay = 2000;
                 refresh = setTimeout(chat_query_ajax, chat_delay);
                 delays();
                 $("#vpc_actividad").attr("src", IMG + "ico/punto_gris.png");
@@ -937,7 +937,7 @@ function chat_close(){
 function chat_enabled(){
     $("#chat_alert").remove();
     chat_query_ajax();
-    chat_delay = 4500;
+    chat_delay = 3000;
     refresh = setTimeout(chat_query_ajax, chat_delay);
     delays();
     $("#vpc_msg").focus();

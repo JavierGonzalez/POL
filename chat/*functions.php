@@ -30,7 +30,7 @@ function chat_refresh($chat_ID, $msg_ID=0) {
 		$res = mysql_query_old("SELECT HIGH_PRIORITY * FROM chats_msg 
 WHERE chat_ID = ".$chat_ID." AND 
 msg_ID > ".$msg_ID."".(isset($_SESSION['pol']['user_ID'])?" AND (user_ID = '0' OR user_ID = ".$_SESSION['pol']['user_ID']." OR (tipo = 'p' AND nick LIKE '".$_SESSION['pol']['nick']."&rarr;%'))":" AND tipo != 'p'")." 
-ORDER BY msg_ID DESC LIMIT 50");
+ORDER BY msg_ID DESC LIMIT 1000");
 		while ($r = r($res)) { 
 			$t = $r['msg_ID'].' '.($r['tipo']!='m'?$r['tipo']:$r['cargo']).' '.substr($r['time'], 11, 5).' '.$r['nick'].' '.$r['msg']."\n".$t; 
 		}

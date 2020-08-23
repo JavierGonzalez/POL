@@ -13,7 +13,7 @@ if (isset($sc[$pol['user_ID']])) {
 echo '
 <!--<p style="color:#AAA">Solo hechos importantes a nivel general y explicados de forma tan sencilla que cualquiera de fuera lo comprenda. De forma breve y concisa. <a href="/buscar/">buscador</a>. Etiquetas permitidas &lt;b&gt; y &lt;a href=""&gt;&lt;/a&gt;</p>-->
 
-<p><form action="http://'.strtolower($pol['pais']).'.'.DOMAIN.'/accion/historia/add" method="POST">
+<p><form action="/accion/historia/add" method="POST">
 
 
 <select name="year">
@@ -95,5 +95,3 @@ echo '</table>';
 //THEME
 $txt_title = 'Historia de VirtualPol';
 $txt_menu = 'info';
-
-?>

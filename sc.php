@@ -1,14 +1,13 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-
-
 // Nuevo panel de Supervisión del Censo
 
-
-
 // Proteccion. Zona privada para SC.
-if ((!nucleo_acceso('supervisores_censo') OR !isset($pol['user_ID'])) AND $pol['user_ID']!=1) { redirect('http://www.'.DOMAIN); }
+if ((!nucleo_acceso('supervisores_censo') OR !isset($pol['user_ID'])) AND $pol['user_ID']!=1)
+	redirect('/');
+
+
 
 // Obtiene colores de background de paises
 $result = sql_old("SELECT valor, pais FROM config WHERE dato = 'bg_color'");
@@ -663,5 +662,3 @@ function print_nota_SC($nota_SC, $user_ID) {
 //THEME
 $txt_title = 'Supervisión del Censo - CONFIDENCIAL';
 $txt_menu = 'demo';
-
-?>

@@ -45,7 +45,7 @@ while($r = r($result)){
 <input type="text" name="nota_SC" size="25" maxlength="255" value="'.$r['nota_SC'].'" />
 '.boton(_('OK'), 'submit', false, 'pill small').'
 '.boton('&nbsp;', '/sc/filtro/user_ID/'.$r['ID'], false, 'blue small').' 
-'.boton('&nbsp;', '//'.strtolower($pol['pais']).'.'.DOMAIN.'/control/expulsiones/expulsar/'.$r['nick'], false, 'red small').'
+'.boton('&nbsp;', '/control/expulsiones/expulsar/'.$r['nick'], false, 'red small').'
 </form>
 </div>
 '.$r['ID'].' <span title="'.$r['avatar_localdir'].'" style="font-size:11px;">'.$r['email'].'</span> <span style="font-size:12px;" title="'.$r['nav'].'">'.num($r['visitas']).'v '.num($r['paginas']).'pv<br /><a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-30,30)).'">'.ocultar_IP($r['host'], 'host').'</a></span>
@@ -425,42 +425,19 @@ echo  (count($txt_grupos)>0?implode(' ', $txt_grupos):_('Ninguno')).'</b></td>
 </div>';
 
 
-
-
-
-/*
-
-'.(isset($socio_ID)&&nucleo_acceso('socios')?'<span class="gris" style="float:right;font-size:16px;">'._('Socio').': <b>'.$socio_ID.'</b></span>':'').(isset($r['nombre'])&&nucleo_acceso('ciudadanos')?'<span class="gris" style="font-size:16px;">'.$r['nombre'].'</span>':'').'
-
-
-		if ($r['ref_num'] != 0) {
-			$result = sql_old("SELECT IP, nick, pais, online FROM users WHERE ref = '" . $r['ID'] . "' ORDER BY fecha_last DESC");
-			while($r2 = r($result)) {
-				$refs .= crear_link($r2['nick']) . ' </b>('.duracion($r2['online']).')<b><br />' . "\n";
-			}
-		}
-		if (ECONOMIA) { 
-			// empresas y partidos
-			$empresas_num = 0;
-			$result = sql_old("SELECT nombre, url, cat_ID, (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url FROM empresas WHERE pais = '".PAIS."' AND user_ID = '".$r['ID']."' ORDER BY time DESC");
-			while($r2 = r($result)) {
-				$empresas_num++;
-				$empresas .= '<a href="/empresas/'.$r2['cat_url'].'/'.$r2['url'].'">'.$r2['nombre'].'</a><br />'."\n";
-			}
-		}
-*/
-
-
 		$txt_title = $nick.' - '.ucfirst($r['estado']) . ' '._('de').' '.$r['pais'];
 		$txt_nav = array('/info/censo'=>_('Censo'), '/perfil/'.$nick=>$nick);
 
 		if ($user_ID != $pol['user_ID']) {
-			$txt_tab['http://'.strtolower($pol['pais']).'.'.DOMAIN.'/msg/'.$nick.'/'] = _('Enviar mensaje');
-			if (ECONOMIA) { $txt_tab['http://'.strtolower($pol['pais']).'.'.DOMAIN.'/pols/transferir/'.strtolower($nick) . '/'] = _('Transferir'); }
+			$txt_tab['/msg/'.$nick] = _('Enviar mensaje');
+			if (ECONOMIA) { $txt_tab['/pols/transferir/'.strtolower($nick)] = _('Transferir'); }
 		}
 
 
-	} else { header("HTTP/1.0 404 Not Found"); mysqli_close($link); exit; }
+	} else { 
+		header("HTTP/1.0 404 Not Found"); 
+		exit; 
+	}
 }
 
 

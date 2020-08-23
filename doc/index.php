@@ -84,6 +84,8 @@ if ($_GET[0]) {
 </form>
 
 '.pad('print', $pad_ID);
+
+
 			$txt_nav = array('/doc'=>_('Documentos'), '/doc/'.$r['url']=>$r['title'], _('Editar'));
 			$txt_tab['/doc/'.$r['url']] = _('Ver documento');
 			$txt_tab['/doc/'.$r['url'].'/editar'] = _('Editar');

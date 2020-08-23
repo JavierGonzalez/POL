@@ -30,10 +30,10 @@ foreach ($maxsim['route'] AS $value) {
 }
 
 
-if ($maxsim['output']=='text') {
+if ($maxsim['output']==='text') {
     header('Content-Type:text/plain; charset=utf-8');
 
-} else if ($maxsim['output']=='json' OR is_array($echo)) {
+} else if ($maxsim['output']==='json' OR is_array($echo)) {
     ob_end_clean();
     header('Content-type:application/json; charset=utf-8');
     echo json_encode((array)$echo, JSON_PRETTY_PRINT);
@@ -56,7 +56,7 @@ function maxsim_get(string $uri) {
     $app_level = count(explode('/', $maxsim['route']['app'][0]))-1; // Refact
 
     $url = explode('?', $uri)[0];
-    if ($url=='/')
+    if ($url==='/')
         $url = '/index';
 
     $levels = array_filter(explode('/', $url));
@@ -80,7 +80,7 @@ function maxsim_router(string $uri) {
         ];
 
     $url = explode('?', $uri)[0];
-    if ($url=='/')
+    if ($url==='/')
         $url = '/index';
 
     $levels = explode('/', $url);
@@ -94,11 +94,11 @@ function maxsim_router(string $uri) {
         $route = array_merge_recursive($route, maxsim_autoload($ls));
         
         foreach ($ls AS $e)
-            if (basename($e)=='index.php')
+            if (basename($e)==='index.php')
                 $route['app'][0] = $e;
 
         foreach ($ls AS $e)
-            if (basename($e)==$levels[$id+1].'.php')
+            if (basename($e)===$levels[$id+1].'.php')
                 $route['app'][0] = $e;
 
     }
@@ -116,12 +116,12 @@ function maxsim_autoload(array $ls, $load_prefix=false) {
 
     foreach ($ls AS $e)
         if (preg_match("/\.(php|js|css|json)$/", $e))
-            if (substr(basename($e),0,1)=='*' OR $load_prefix=='*')
+            if (substr(basename($e),0,1)==='*' OR $load_prefix==='*')
                 $route['autoload'][] = $e;
 
     foreach ($ls AS $e)
         if (!fnmatch("*.*", $e))
-            if (substr(basename($e),0,1)=='*')
+            if (substr(basename($e),0,1)==='*')
                 if ($ls_recursive = glob(str_replace('*','\*',$e).'/*'))
                     $route = array_merge_recursive((array)$route, maxsim_autoload($ls_recursive, substr(basename($e),0,1)));
 

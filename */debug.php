@@ -1,7 +1,6 @@
 <?php
 
 
-// For debug or benchmark.
 function __($echo='', $scroll_down=false) {
 	global $maxsim;
 
@@ -35,16 +34,6 @@ function __($echo='', $scroll_down=false) {
     }
 
     $maxsim['debug']['crono_start'] = hrtime(true);
-}
-
-
-
-function print_r2($print, $echo=true) {
-    $html = '<xmp style="background:#EEE;padding:4px;">'.print_r($print, true).'</xmp>';
-    if ($echo===true)
-        echo $html;
-    else
-        return $html;
 }
 
 

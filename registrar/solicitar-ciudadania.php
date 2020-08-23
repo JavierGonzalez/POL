@@ -20,11 +20,13 @@ if (($pol['user_ID']) AND ($tiene_kick != true) AND ($user_pais == 'ninguno') AN
     $result2 = sql_old("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$_POST['pais']."'");
     while ($r2 = r($result2)) { $ciudadanos_num = $r2['num']; }
 
-    evento_chat('<b>[#] '._('Nuevo ciudadano').'</b> '._('de').' <b>'.$_POST['pais'].'</b> <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> '._('ciudadanos').', <b><a href="http://'.strtolower($_POST['pais']).'.'.DOMAIN.'/perfil/'.$pol['nick'].'" class="nick">'.$pol['nick'].'</a></b>)</span>', 0, 0, false, 'e', $_POST['pais'], $r['nick']);
+    evento_chat('<b>[#] '._('Nuevo ciudadano').'</b> '._('de').' <b>'.$_POST['pais'].'</b> <span style="color:grey;">(<b>'.num($ciudadanos_num).'</b> '._('ciudadanos').', <b><a href="/perfil/'.$pol['nick'].'" class="nick">'.$pol['nick'].'</a></b>)</span>', 0, 0, false, 'e', $_POST['pais'], $r['nick']);
 
     unset($_SESSION);
     session_unset(); session_destroy();
 
     redirect('/');
 
-} else { redirect('/registrar'); }
+} else { 
+    redirect('/registrar'); 
+}

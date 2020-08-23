@@ -113,7 +113,7 @@ Chat de '.PAIS.': <b>'.$titulo.'</b><br />
 
 	<div class="cuadro_mensaje">
 	'.(isset($pol['user_ID'])?'
-	<input type="text" data-emojiable="true" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%; height: 32px; " autofocus="autofocus" value="" required />':'&nbsp;').'
+	<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%; height: 32px; " autofocus="autofocus" value="" required />':'&nbsp;').'
 	</div>
 
 	<div class="ocultar_evento">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">'._('Ocultar eventos').'</label></div>
@@ -188,34 +188,3 @@ window.onload = function(){
 
 
 </script>';
-
-$txt_footer .= '
-      <script>$(function() {
-        window.emojiPicker = new EmojiPicker({
-          emojiable_selector: \'[data-emojiable=true]\',
-          assetsPath: \''.IMG.'emoji/img/\',
-          popupButtonClasses: \'fa fa-smile-o\',
-		  norealTime: true
-        });
-      });
-	  
-	  function fix_onChange_editable_elements()
-		{
-		  var tags = document.querySelectorAll(\'[contenteditable=true][onChange]\');//(requires FF 3.1+, Safari 3.1+, IE8+)
-		  for (var i=tags.length-1; i>=0; i--) if (typeof(tags[i].onblur)!=\'function\')
-		  {
-			tags[i].onfocus = function()
-			{
-			  this.data_orig=this.innerHTML;
-			};
-			tags[i].onblur = function()
-			{
-			  if (this.innerHTML != this.data_orig)
-				this.onchange();
-			  delete this.data_orig;
-			};
-		  }
-		}
-		fix_onChange_editable_elements();
-	  </script>';
-    

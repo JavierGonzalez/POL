@@ -2,43 +2,47 @@
 
 
 $maxsim = [
-    'version' => '0.5.2',
-    'debug'   => ['crono_start' => hrtime(true)],
-    'route'   => maxsim_router($_SERVER['REQUEST_URI']),
+    'version'  => '0.5.3',
+    'debug'    => ['crono_start' => hrtime(true)],
     ];
+
+maxsim_router($_SERVER['REQUEST_URI']);
 
 maxsim_get($_SERVER['REQUEST_URI']);
 
 ob_start();
 
+foreach ((array)$maxsim['autoload'] AS $file) {
+    $ext = pathinfo($file, PATHINFO_EXTENSION);
 
-foreach ($maxsim['route'] AS $value) {
-    foreach ($value AS $file) {
-        
-        $ext = pathinfo($file, PATHINFO_EXTENSION);
+    if ($ext==='php')
+        @include($file);
 
-        if ($ext==='php')
-            @include($file);
+    else if ($ext==='css' OR $ext==='js')
+        $maxsim['template']['autoload'][$ext][] = '/'.$file;
 
-        else if ($ext==='css' OR $ext==='js')
-            $maxsim['template']['autoload'][$ext][] = '/'.$file;
-
-        else if ($ext==='json')
-            if ($key_name = basename(str_replace('*', '', $file),'.json'))
-                $maxsim[$key_name] = array_merge_recursive((array) $maxsim[$key_name], (array) maxsim_config([], $file));
-    }
+    else if ($ext==='ini')
+        if ($key_name = basename(str_replace('*', '', $file), '.ini'))
+            ${$key_name} = parse_ini_file($file, true);
+    
+    else if ($ext==='json')
+        if ($key_name = basename(str_replace('*', '', $file), '.json'))
+            ${$key_name} = (array)json_decode(file_get_contents($file), true);
 }
+
+
+include($maxsim['app']);
 
 
 if ($maxsim['output']==='text') {
     header('Content-Type:text/plain; charset=utf-8');
 
-} else if ($maxsim['output']==='json' OR is_array($echo)) {
+} else if ($maxsim['output']==='json' AND is_array($echo)) {
     ob_end_clean();
     header('Content-type:application/json; charset=utf-8');
     echo json_encode((array)$echo, JSON_PRETTY_PRINT);
 
-} else if (isset($maxsim['output'])) {
+} else if (is_string($maxsim['output'])) {
     $echo = ob_get_contents();
     ob_end_clean();
     header('Content-Type:text/html; charset=utf-8');
@@ -49,35 +53,8 @@ if ($maxsim['output']==='text') {
 exit;
 
 
-
-function maxsim_get(string $uri) {
-    global $maxsim, $_GET;
-
-    $app_level = count(explode('/', $maxsim['route']['app'][0]))-1; // Refact
-
-    $url = explode('?', $uri)[0];
-    if ($url==='/')
-        $url = '/index';
-
-    $levels = array_filter(explode('/', $url));
-    foreach ($levels AS $level => $name)
-        if ($level-$app_level>0)
-            $levels_relative[$level-$app_level] = $name;
-
-    $_GET = array_merge((array) $levels_relative, $_GET);
-
-
-    if ($_GET[0]==='maxsim')
-        exit($maxsim['version']);
-}
-
-
 function maxsim_router(string $uri) {
-
-    $route = [
-        'autoload' => [], // Include files and directories starting with *.
-        'app'      => [], // Application code.
-        ];
+    global $maxsim;
 
     $url = explode('?', $uri)[0];
     if ($url==='/')
@@ -85,62 +62,68 @@ function maxsim_router(string $uri) {
 
     $levels = explode('/', $url);
 
-    foreach ($levels AS $id => $level) { // Refact
-        $level_path[] = $level;
+    foreach ($levels AS $id => $level) {
+        $path[] = $level;
 
-        if (!$ls = glob(($id===0?'*':implode('/',array_filter($level_path)).'/*')))
+        if (!$ls = glob(($id===0?'*':implode('/', array_filter($path)).'/*'))) // Refact
             break;
 
-        $route = array_merge_recursive($route, maxsim_autoload($ls));
+        foreach (maxsim_autoload($ls) AS $file)
+            $maxsim['autoload'][] = $file;
         
         foreach ($ls AS $e)
-            if (basename($e)==='index.php')
-                $route['app'][0] = $e;
+            if ($id!==0 AND basename($e)==='index.php')
+                $maxsim['app'] = $e;
 
         foreach ($ls AS $e)
             if (basename($e)===$levels[$id+1].'.php')
-                $route['app'][0] = $e;
-
+                $maxsim['app'] = $e;
     }
 
-    if (!$route['app'])
-        if (header("HTTP/1.0 404 Not Found"))
-            if (file_exists('404.php'))
-                $route['app'][0] = '404.php';
-
-    return (array) $route;
+    if (!$maxsim['app']) {
+        header('HTTP/1.0 404 Not Found');
+        if (file_exists('404.php'))
+            $maxsim['app'] = '404.php';
+    }
 }
 
 
 function maxsim_autoload(array $ls, $load_prefix=false) {
 
     foreach ($ls AS $e)
-        if (preg_match("/\.(php|js|css|json)$/", $e))
-            if (substr(basename($e),0,1)==='*' OR $load_prefix==='*')
-                $route['autoload'][] = $e;
+        if (preg_match('/\.(php|js|css|ini|json)$/', $e))
+            if ($load_prefix OR substr(basename($e), 0, 1)==='*')
+                $autoload[] = $e;
 
     foreach ($ls AS $e)
-        if (!fnmatch("*.*", $e))
-            if (substr(basename($e),0,1)==='*')
-                if ($ls_recursive = glob(str_replace('*','\*',$e).'/*'))
-                    $route = array_merge_recursive((array)$route, maxsim_autoload($ls_recursive, substr(basename($e),0,1)));
+        if (!fnmatch('*.*', $e))
+            if (substr(basename($e), 0, 1)==='*')
+                if ($ls_recursive = glob(str_replace('*', '\*', $e).'/*')) // Refact
+                    foreach (maxsim_autoload($ls_recursive, true) AS $file)
+                        $autoload[] = $file;
 
-    return (array) $route;
+    return (array) $autoload;
 }
 
 
-function maxsim_config(array $config_input=[], string $config_file='$maxsim.json') {
+function maxsim_get(string $uri) {
+    global $_GET, $maxsim;
 
-    if (file_exists($config_file))
-        $config = (array)json_decode(file_get_contents($config_file), true);
+    $app_level = count(explode('/', $maxsim['app']))-1;
 
-    if (count($config_input)>0) {
-        $config = array_merge((array)$config, $config_input);
-        $config = array_filter($config, static function($a){ return $a!==null; });
-        file_put_contents($config_file, json_encode($config, JSON_PRETTY_PRINT));
-    }
+    $url = explode('?', $uri)[0];
+    if ($url==='/')
+        $url .= 'index';
 
-    return (array) $config;
+    $levels = array_filter(explode('/', $url));
+    foreach ($levels AS $level => $name)
+        if ($level-$app_level > 0)
+            $levels_relative[$level-$app_level] = $name;
+
+    $_GET = array_merge((array)$levels_relative, $_GET);
+
+    if ($_GET[0]==='maxsim')
+        exit($maxsim['version']);
 }
 
 

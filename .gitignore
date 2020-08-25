@@ -1,5 +1,2 @@
-.gitignore
-*passwords.php
-img/style_all.css
-*.pdf
+*passwords.*
 img/a/*.jpg

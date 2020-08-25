@@ -2,6 +2,7 @@
 
 
 
+
 if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['pol']['nick']; }
 
 $result = mysql_query_old("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET[0]."' LIMIT 1", $link);

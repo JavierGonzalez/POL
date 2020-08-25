@@ -1,7 +1,7 @@
 <?php
 
 
-function __($echo='', $scroll_down=false) {
+function __($echo='', $echo2=false, $scroll_down=false) {
 	global $maxsim;
 
     $hrtime = $maxsim['debug']['crono_start'];
@@ -9,14 +9,16 @@ function __($echo='', $scroll_down=false) {
     echo '<br />'."\n";
     echo ++$maxsim['debug']['count'].'. &nbsp; <span title="'.date('Y-m-d H:i:s').'">'.implode(' &nbsp; ', profiler($hrtime)).'</span> &nbsp; ';
 
-
-    if (is_string($echo))
+    if (is_array($echo2)) {
         echo $echo;
-    else if (is_array($echo) OR is_object($echo))
+        echo '<xmp style="background:#EEE;padding:4px;">'.print_r($echo2, true).'</xmp>';
+    } else if (is_string($echo)) {
+        echo $echo;
+    } else if (is_array($echo) OR is_object($echo)) {
         echo '<xmp style="background:#EEE;padding:4px;">'.print_r($echo, true).'</xmp>';
-    else
+    } else {
         var_dump($echo);
-    
+    }
 
     if ($scroll_down) {
         if ($maxsim['debug']['count']==1) {

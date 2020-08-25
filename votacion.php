@@ -688,19 +688,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 '.(substr($r['debate_url'], 0, 4)=='http'?'<p><b>'._('Debate').': <a href="'.$r['debate_url'].'">'._('aquí').'</a>.</b></p>':'').'
 </fieldset>
 
-'.($r['acceso_ver']=='anonimos'&&((!isset($pol['user_ID'])) || ($r['ha_votado']) || ($r['estado']=='end'))?'<center><table border="0">
-<tr>
-'.(!isset($pol['user_ID'])?'<td>'.boton(_('¡Crea tu ciudadano para votar!'), '/registrar', false, 'large green').' '.boton(_('Iniciar sesión'), '/registrar/login?r='.base64_encode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), false, 'large blue').'</td>
 
-<td nowrap="nowrap"><b style="font-size:20px;color:#777;">¡'._('Difunde').' '._('esta votación').'!</b> &nbsp;</td>
-
-
-':'').'
-
-
-
-
-</tr></table></center>':'').'
 ';
 
 

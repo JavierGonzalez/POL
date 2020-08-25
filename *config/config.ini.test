@@ -1,0 +1,46 @@
+
+
+pais = 'pol'
+
+
+; LENGUAJES ACTIVADOS
+langs[es_ES] = 'Español (100%)'
+langs[en_US] = 'English (95%)'
+langs[fr]    = 'Français (70%)'
+langs[ca_ES] = 'Català (70%)'
+langs[gl_ES] = 'Galego (70%)'
+langs[eo]    = 'Esperanto (40%)'
+langs[eu]    = 'Euskera (20%)'
+langs[de_DE] = 'Deutsch (30%)'
+langs[ja]    = 'Japanese (10%)'
+langs[pt]    = 'Português (10%)'
+
+; PLATAFORMAS (DESMANTELAR, MULTIPLES PLATAFORMAS DIVIDEN A LOS USUARIOS)
+paises[] = 'POL'
+
+
+; CONFIG
+DOMAIN = 'virtualpol.com'
+CONTACTO_EMAIL = 'desarollo@virtualpol.com'
+
+VOTO_CONFIANZA_MAX = 50 ; Máximo de votos de confianza emitibles
+SC_NUM = 3 ; Numero de SC electos.
+MP_MAX = 25 ; Máximo de MP (mensajes privados) que puede enviar un ciudadano
+VER = 13 ; Version de archivos estaticos. Util para forzar el refresco de js y css. Incrementar.
+
+datos_perfil[] = 'Blog'
+datos_perfil[] = 'Twitter'
+datos_perfil[] = 'Facebook'
+datos_perfil[] = ''
+datos_perfil[] = 'Menéame'
+
+
+columnas = 14 
+filas = 14 ; Dimensiones mapa
+
+SSL_URL = '/'
+IMG = '/img/' ; Archivos estaticos
+
+
+MONEDA = '<img src="/img/varios/m.gif" />' 
+

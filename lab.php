@@ -1,11 +1,35 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
+
+__($maxsim);
+
+__($test);
+
+
+exit;
+
+
+
+
+/*
+
+find /var/www/vhosts/virtualpol.com/pre-pol.virtualpol.com -type f -name "*.php" | xargs sed -i 's/sql\(\"/sql_old\(\"/g'
+
+
+grep -r --include=*.php "CLAVE" /var/www/vhosts/virtualpol.com/pre-pol.virtualpol.com
+
+*/
+
+exit;
+
+
+
+
 //print phpinfo();  exit;
 
 //mail('gonzomail@gmail.com', 'Prueba de email 43', 'Mensaje de prueba '.date());
 //mail('gonzo@virtualpol.com', 'Prueba de email 43', 'Mensaje de prueba '.date());
-
 
 echo 'Email enviado';
 

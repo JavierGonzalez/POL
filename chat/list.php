@@ -35,7 +35,7 @@ echo '<span style="float:right;color:#888;font-size:18px;"><b>'.round(($msgnum_1
 <th></th>
 </tr>';
 $result = sql_old("SELECT *,
-(SELECT COUNT(DISTINCT nick) FROM chats_msg WHERE chat_ID = chats.chat_ID AND user_ID = 0 AND tipo != 'e' AND time > '".date('Y-m-d H:i:s', time() - 60*30)."') AS online
+(SELECT COUNT(DISTINCT nick) FROM chats_msg WHERE chat_ID = chats.chat_ID AND user_ID = 0 AND tipo != 'e' AND time > '".date('Y-m-d H:i:s', time() - 7*24*60*60)."') AS online
 FROM chats WHERE pais = '".PAIS."' ORDER BY estado ASC, online DESC, fecha_creacion ASC");
 while ($r = r($result)) { 
 	

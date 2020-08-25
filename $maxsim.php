@@ -23,7 +23,7 @@ foreach ((array)$maxsim['autoload'] AS $file) {
 
     else if ($ext==='ini')
         if ($key_name = basename(str_replace('*', '', $file), '.ini'))
-            ${$key_name} = parse_ini_file($file, true);
+            ${$key_name} = parse_ini_file($file, true, INI_SCANNER_TYPED);
     
     else if ($ext==='json')
         if ($key_name = basename(str_replace('*', '', $file), '.json'))

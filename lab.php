@@ -4,7 +4,6 @@
 
 __($maxsim);
 
-__($test);
 
 
 exit;

@@ -16,7 +16,7 @@ foreach ((array)$maxsim['autoload'] AS $file) {
     $ext = pathinfo($file, PATHINFO_EXTENSION);
 
     if ($ext==='php')
-        @include($file);
+        include($file);
 
     else if ($ext==='css' OR $ext==='js')
         $maxsim['template']['autoload'][$ext][] = '/'.$file;
@@ -31,7 +31,7 @@ foreach ((array)$maxsim['autoload'] AS $file) {
 }
 
 
-include($maxsim['app']);
+include($maxsim['app']); // What user want.
 
 
 if ($maxsim['output']==='text') {
@@ -128,5 +128,5 @@ function maxsim_get(string $uri) {
 
 
 function maxsim_absolute(string $dir) {
-    return (string) str_replace($_SERVER['DOCUMENT_ROOT'].'/', '', $dir).'/';
+    return (string) str_replace($_SERVER['DOCUMENT_ROOT'].'/', '', $dir).'/'; // Refact
 }

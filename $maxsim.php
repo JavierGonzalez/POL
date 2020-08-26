@@ -98,7 +98,7 @@ function maxsim_autoload(array $ls, $load_prefix=false) {
     foreach ($ls AS $e)
         if (!fnmatch('*.*', $e))
             if (substr(basename($e), 0, 1)==='*')
-                if ($ls_recursive = glob(str_replace('*', '\*', $e).'/*')) // Refact
+                if ($ls_recursive = glob(str_replace('*', '\*', $e).'/*'))
                     foreach (maxsim_autoload($ls_recursive, true) AS $file)
                         $autoload[] = $file;
 

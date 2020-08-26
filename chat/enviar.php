@@ -21,7 +21,7 @@ $result = sql_old("SELECT HIGH_PRIORITY expire FROM kicks
 WHERE pais = '".PAIS."' AND 
 estado = 'activo' AND 
 (user_ID = '".$_SESSION['pol']['user_ID']."' OR 
-(IP NOT IN ('0', '') AND IP = inet_aton('".$_SERVER['REMOTE_ADDR']."'))) 
+(IP NOT IN ('0', '') AND IP = inet_aton('".e($_SERVER['REMOTE_ADDR'])."'))) 
 LIMIT 1");
 while($r = r($result)){ 
     if ($r['expire'] < $date) { // QUITAR KICK
@@ -138,7 +138,7 @@ if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_ch
     // insert MSG
     if (isset($msg)) {
         if (!isset($elnick)) { $elnick = $_SESSION['pol']['nick']; }
-        if ($_SESSION['pol']['estado'] == 'anonimo') { $sql_ip = 'inet_aton("'.$_SERVER['REMOTE_ADDR'].'")'; } else { $sql_ip = 'NULL'; }
+        if ($_SESSION['pol']['estado'] == 'anonimo') { $sql_ip = 'inet_aton("'.e($_SERVER['REMOTE_ADDR']).'")'; } else { $sql_ip = 'NULL'; }
 
         $elcargo = $_SESSION['pol']['cargo'];
         if (($_SESSION['pol']['pais'] != PAIS) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $elcargo = 99; } // Extrangero

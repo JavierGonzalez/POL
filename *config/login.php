@@ -79,7 +79,7 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	// UPDATE
 	if ($pol['estado'] != 'expulsado') { // No esta expulsado
 		if (isset($session_new)) { // START SESSION
-			$update = ", visitas = visitas + 1, nav = '".$_SERVER['HTTP_USER_AGENT']."', fecha_init = '".$date."'";
+			$update = ", visitas = visitas + 1, nav = '".e($_SERVER['HTTP_USER_AGENT'])."', fecha_init = '".$date."'";
 			if ($fecha_init != '0000-00-00 00:00:00') { $update .= ", online = online + ".(strtotime($fecha_last)-strtotime($fecha_init)); }
 			echo users_con($pol['user_ID'], '', 'session', true);
 		}

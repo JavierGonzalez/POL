@@ -5,9 +5,7 @@ DirectorySlash Off
 RewriteEngine on
 RewriteBase /
 
-#RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule .* /$maxsim.php [L]
 
 <FilesMatch "\.(htaccess|htpasswd|ini|log)$">

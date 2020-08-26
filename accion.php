@@ -2087,13 +2087,6 @@ case 'editar-documento':
 		while($r = r($result)){ 
 
 			$text = $_POST['html_doc'];
-			
-			// Prevent SSX basic
-			$text = str_replace("<script", "nojs", $text);
-			$text = str_replace("&lt;script", "nojs", $text);
-			$text = str_replace("&lt;br /&gt;", "", $text);
-			$text = str_replace("<br />", "", $text);
-		
 
 			if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_docs']))) {
 				sql_old("UPDATE docs SET cat_ID = '".$_POST['cat']."', text = '".$text."', title = '".$_POST['titulo']."', time_last = '".$date."', acceso_leer = '".$_POST['acceso_leer']."', acceso_escribir = '".$_POST['acceso_escribir']."', acceso_cfg_leer = '".$_POST['acceso_cfg_leer']."', acceso_cfg_escribir = '".$_POST['acceso_cfg_escribir']."', version = version + 1 WHERE ID = '".$r['ID']."' LIMIT 1");

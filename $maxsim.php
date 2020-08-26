@@ -128,5 +128,5 @@ function maxsim_get(string $uri) {
 
 
 function maxsim_absolute(string $dir) {
-    return (string) str_replace($_SERVER['DOCUMENT_ROOT'].'/', '', $dir).'/'; // Refact
+    return (string) str_replace($_SERVER['DOCUMENT_ROOT'].'/', '', $dir).'/'; // Refact.
 }

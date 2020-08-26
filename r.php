@@ -9,7 +9,7 @@ if (($_GET[1]) AND (!$pol['user_ID'])) {
 	while($r = mysqli_fetch_array($result)){ 
 		mysql_query_old("INSERT INTO referencias 
 (user_ID, IP, time, referer, pagado, new_user_ID) 
-VALUES ('" . $r['ID'] . "', '" . $IP . "', '" . $date . "', '" . $_SERVER['HTTP_REFERER'] . "', '0', '0')", $link);
+VALUES ('".$r['ID']."', '".e($IP)."', '".$date."', '".e($_SERVER['HTTP_REFERER'])."', '0', '0')", $link);
 		$user_plataforma = $r['pais'];
 	}
 

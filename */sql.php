@@ -1,6 +1,10 @@
 <?php # maxsim.tech — Copyright (c) 2020 Javier González González <gonzo@virtualpol.com> — MIT License
 
 
+function e($danger_user_input) {
+	return mysqli_real_escape_string(sql_link(), $danger_user_input);
+}
+
 
 function sql_connect($server_sql=false) {
     global $__sql, $passwords;
@@ -237,10 +241,4 @@ function sql_close() {
 function sql_error() {
 	$msg = @mysqli_error(sql_link());
 	return ($msg?$msg:'');
-}
-
-
-
-function e($danger_user_input) {
-	return mysqli_real_escape_string(sql_link(), $danger_user_input);
 }

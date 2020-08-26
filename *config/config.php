@@ -2,7 +2,6 @@
 
 
 
-
 ini_set('display_errors', 1);
 error_reporting(E_ALL ^ E_NOTICE);
 
@@ -102,12 +101,4 @@ define('MONEDA', '<img src="/img/varios/m.gif" />');
 //INIT
 $date = date('Y-m-d H:i:s');
 $IP = direccion_IP('longip');
-
-
-
-// SQL+XSS INYECTION PROTECTION
-foreach ($_GET     AS $key => $value)      $_GET[$key] = escape($value);
-foreach ($_POST    AS $key => $value)     $_POST[$key] = escape($value);
-foreach ($_REQUEST AS $key => $value)  $_REQUEST[$key] = escape($value);
-foreach ($_COOKIE  AS $key => $value)   $_COOKIE[$key] = escape($value);
 

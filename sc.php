@@ -628,7 +628,7 @@ function filtro_change(n) { window.location.href = $(n).val(); }
 function unico($ID, $es='', $print=false, $ajustar=false) {
 	global $IDS, $IDS_bg;
 	if ($ID != '') {
-		if (!isset($IDS[$es][$ID])) { $IDS[$es][$ID] = count($IDS[$es]); }
+		if (!isset($IDS[$es][$ID])) { $IDS[$es][$ID] = count((array)$IDS[$es]); }
 		return '<span class="idu" style="background:'.$IDS_bg[$IDS[$es][$ID]].';">'.($print===false?$es:($print===true?$ID:$print)).($print!==true?' <b>'.($ajustar==true&&strlen($IDS[$es][$ID]+1)==1?'0':'').($IDS[$es][$ID]+1).'</b>':'').'</span>';
 	} else { return ''; }
 }

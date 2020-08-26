@@ -31,7 +31,7 @@ foreach ((array)$maxsim['autoload'] AS $file) {
 }
 
 
-include($maxsim['app']);
+include($maxsim['app']); // What user want.
 
 
 if ($maxsim['output']==='text') {

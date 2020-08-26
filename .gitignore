@@ -1,3 +1,5 @@
-*passwords.ini
-*passwords.php
+*password*.ini
+*password*.php
+*password*.json
+
 img/a/*.jpg

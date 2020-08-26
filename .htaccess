@@ -1,4 +1,4 @@
-# maxsim
+# maxsim #######################################
 
 DirectorySlash Off
 
@@ -13,7 +13,12 @@ RewriteRule .* /$maxsim.php [L]
  Deny from all
 </FilesMatch>
 
-#####################################
+<FilesMatch "(password)">
+ Order Allow,Deny
+ Deny from all
+</FilesMatch>
+
+################################################
 
 
 

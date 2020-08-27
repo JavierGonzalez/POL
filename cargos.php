@@ -368,16 +368,19 @@ días
 <p>'._('Nombre').': <input type="text" name="nombre" value="" /></p>
 
 <p><table><tr><td valign="top">'._('Icono').':</td>';
-		$directorio = opendir(RAIZ.'/img/cargos/');
-		while ($archivo = readdir($directorio)) {
-			$img_cargo_ID = explodear('.', $archivo, 0);
+
+		foreach (glob('img/cargos/*.gif') AS $file) {
+			$img_cargo_ID = explodear('.', $file, 0);
 			if ((is_numeric($img_cargo_ID)) AND (!in_array($img_cargo_ID, array(0,98,99,7))) AND (!in_array($img_cargo_ID, $cargo_ID_array))) {
-				if ($num >= 27) { echo '</tr><tr><td></td>'; $num = 0; } $num++;
-				echo '<td align="center"><img src="'.IMG.'cargos/'.$archivo.'" width="16" height="16" title="cargo_ID: '.$img_cargo_ID.'" /><br /><input type="radio" name="cargo_ID" value="'.$img_cargo_ID.'"'.(!$txt_cargo_elegido?' checked="checked"':'').' /></td>';
+				if ($num >= 27) { 
+					echo '</tr><tr><td></td>'; 
+					$num = 0; 
+				} 
+				$num++;
+				echo '<td align="center"><img src="'.IMG.'cargos/'.$file.'" width="16" height="16" title="cargo_ID: '.$img_cargo_ID.'" /><br /><input type="radio" name="cargo_ID" value="'.$img_cargo_ID.'"'.(!$txt_cargo_elegido?' checked="checked"':'').' /></td>';
 				$txt_cargo_elegido = true;
 			}
 		}
-		closedir($directorio); 
 
 		echo '</tr></table></p><p>'._('Cargo supeditado a').': <select name="asigna">';
 		

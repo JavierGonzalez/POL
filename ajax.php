@@ -4,7 +4,7 @@
 $maxsim['output'] = 'text';
 
 
-if ($_GET[1] == 'new-commit') {
+if ($_GET[1]=='new-commit') {
 	evento_chat('<b>[CODE]</b> VirtualPol ha recibido un cambio en el código (<a href="https://github.com/JavierGonzalez/POL" target="_blank">ver</a>).'); 				
 }
 

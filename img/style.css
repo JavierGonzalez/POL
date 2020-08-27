@@ -728,7 +728,7 @@ input, area, div.content-in select { color:green; font-size:16px; font-weight:bo
 #vpc_u a { color:#808080; text-decoration:none; }
 #vpc_u a:hover { text-decoration:underline; }
 #vpc_msg { color:black; border: 1px solid #808080; padding:3px; }
-.vpc_accion { color:#F09100; font-size:16px; }
+.vpc_accion { color:#009420; font-size:16px; }
 .vpc_priv { color:#9F009F; font-size:16px; }
 .vpc_yo { color:#2D2D2D; }
 

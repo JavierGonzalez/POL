@@ -28,6 +28,7 @@ if ($_GET[0]) {
 			
 			pad('create', $pad_ID, $r['text']);
 
+
 			echo '
 <form action="/accion/editar-documento?ID='.$r['ID'].'" name="editar_documento" id="editar_documento" method="POST">
 <input type="hidden" name="url" value="'.$r['url'].'"  />

@@ -53,7 +53,7 @@ $maxsim['template']['title'] = 'Massive Conversation';
 <tr>
     <td width=50% height=10 valign=bottom style="padding:10px;">
         <form id="form_new_msg" style="margin:0;">
-            <input id="new_msg" type=text name=texto value="" autocomplete="off" autofocus />
+            <input id="new_msg" type=text name=text value="" autocomplete="off" autofocus />
         </form>
     </td>
 </tr>

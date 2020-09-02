@@ -1,21 +1,21 @@
 <?php
 
 
-if ($_POST['texto']) {
+if ($_POST['text']) {
     
-    if (!in_array(substr($_POST['texto'], -1, 1), array('?', '!')))
-        $_POST['texto'] .= '.';
+    if (!in_array(substr($_POST['text'], -1, 1), array('?', '!')))
+        $_POST['text'] .= '.';
     
-    sql_insert('msg', array(
-        'canal'             => $canal,
-        'fecha_creacion'    => date('Y-m-d H:m:s'),
-        'estado'            => 'propuesto',
-        'texto'             => ucfirst($_POST['texto']),
-        'participante'      => '',
+    sql_insert('msg', [
+        'channel'           => $channel,
+        'date_creation'     => date('Y-m-d H:m:s'),
+        'state'             => 'propuesto',
+        'text'              => ucfirst($_POST['text']),
+        'user_id'           => '',
         'ip'                => $_SERVER['REMOTE_ADDR'],
-        'participantes_num' => 1,
-        'puntos'            => 0,
-    ));
+        'num'               => 1,
+        'points'            => 0,
+        ]);
     
     
 }

@@ -250,7 +250,7 @@ FROM cargos WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
 '<a href="/cargos/'.$r['cargo_ID'].'"'.($r['nombre_extra']?' title="'.$r['nombre_extra'].'"':'').'><b style="font-size:20px;">'.$r['nombre'].'</b></a></span>'.($r['nombre_extra']!=''?'<br /><span style="font-size:12px;color:grey;margin-left:22px;">'.$r['nombre_extra'].'</span>':'').(count($cargos_nick)>0||$r['nombre_extra']?'<br /><span style="font-size:11px;margin-left:22px;">'.implode(', ', $cargos_nick).(count($cargos_nick)==10?'...':'.'):'')).'</span></td>';
 
 		if ($cargo_editar) {
-			$txt_el_td .= '<td align="right">'.($r['asigna']>0&&$r['cargo_num']==0?boton('X', '/accion/cargo/eliminar&cargo_ID='.$r['cargo_ID'], '¿Estás seguro de querer ELIMINAR este cargo?', 'small red').' ':'').'<select name="asigna_'.$r['cargo_ID'].'">';
+			$txt_el_td .= '<td align="right">'.($r['asigna']>0&&$r['cargo_num']==0?boton('X', '/accion/cargo/eliminar?cargo_ID='.$r['cargo_ID'], '¿Estás seguro de querer ELIMINAR este cargo?', 'small red').' ':'').'<select name="asigna_'.$r['cargo_ID'].'">';
 			$result2 = mysql_query_old("SELECT cargo_ID, nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID != '".$r['cargo_ID']."' ORDER BY nivel DESC", $link);
 			while($r2 = mysqli_fetch_array($result2)){
 				$txt_el_td .= '<option value="'.$r2['cargo_ID'].'"'.($r['asigna']==$r2['cargo_ID']?' selected="selected"':'').'>'.$r2['nombre'].'</option>';
@@ -370,6 +370,7 @@ días
 <p><table><tr><td valign="top">'._('Icono').':</td>';
 
 		foreach (glob('img/cargos/*.gif') AS $file) {
+			$file = basename($file);
 			$img_cargo_ID = explodear('.', $file, 0);
 			if ((is_numeric($img_cargo_ID)) AND (!in_array($img_cargo_ID, array(0,98,99,7))) AND (!in_array($img_cargo_ID, $cargo_ID_array))) {
 				if ($num >= 27) { 

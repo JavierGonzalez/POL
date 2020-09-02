@@ -7,7 +7,6 @@ for ($i=0;$i<10;$i++) {
 
 echo '<br />';
 
-$result = sql_old("SELECT * FROM msg ORDER BY msg_id ASC");
-while ($r = r($result)) {
-    echo date('H:m:s', strtotime($r['fecha_creacion'])).'&nbsp; '.$r['texto'].'<br />';
+foreach (sql("SELECT * FROM msg ORDER BY msg_id ASC") AS $r) {
+    echo date('H:m:s', strtotime($r['date_creation'])).'&nbsp; '.$r['text'].'<br />';
 }

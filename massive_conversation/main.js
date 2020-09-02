@@ -31,7 +31,7 @@ function refresh_chat_respuestas() {
 $("#form_new_msg").submit(function(event) {
     
     
-    $.post("/massive_conversation/ajax/new_msg", { texto: $("#new_msg").val() })
+    $.post("/massive_conversation/ajax/new_msg", { text: $("#new_msg").val() })
         .done(function( data ) {
             //
     });

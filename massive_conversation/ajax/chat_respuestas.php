@@ -1,8 +1,6 @@
 <?php
 
 
-$result = sql_old("SELECT * FROM msg ORDER BY msg_id ASC");
-while ($r = r($result)) {
-    echo '<span class="right">'.$r['puntos'].'</span> <span class="boton_votar" onclick="votar();">+</span> <span class="boton_votar" onclick="votar();">-</span> '.$r['texto'].'<br />';
-}
+foreach (sql("SELECT * FROM msg ORDER BY msg_id ASC") AS $r)
+    echo '<span class="right">'.$r['points'].'</span> <span class="boton_votar" onclick="votar();">+</span> <span class="boton_votar" onclick="votar();">-</span> '.$r['text'].'<br />';
 

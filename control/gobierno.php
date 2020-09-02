@@ -506,13 +506,11 @@ echo '
 
 $sel2[$pol['config']['bg']] = ' selected="selected"';
 
-$directorio = opendir(RAIZ.'/img/bg/'); 
-while ($archivo = readdir($directorio)) {
-if (preg_match("/.(gif|jpg|png)$/i", $archivo)) {
-    echo '<option value="'.$archivo.'"'.$sel2[$archivo].' onclick="change_bg(\''.$archivo.'\')"  onmouseover="change_bg(\''.$archivo.'\')">'.$archivo.'</option>';
+foreach (glob('img/bg/*') AS $file) {
+    $archivo = basename($file);
+    if (preg_match("/.(gif|jpg|png)$/i", $archivo))
+        echo '<option value="'.$archivo.'"'.$sel2[$archivo].' onclick="change_bg(\''.$archivo.'\')"  onmouseover="change_bg(\''.$archivo.'\')">'.$archivo.'</option>';
 }
-}
-closedir($directorio); 
 
 echo '</select>
 </td>

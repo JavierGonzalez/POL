@@ -2,6 +2,7 @@
 
 $maxsim['template']['title'] = 'Massive Conversation';
 
+
 ?>
 <html>
 

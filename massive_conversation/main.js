@@ -5,26 +5,15 @@ refresh_chat_main();
 
 function refresh_chat_main() {
     
-    $("#chat_msg").load("/massive_conversation/ajax/chat_msg");
+    // $("#chat_msg").load("/massive_conversation/ajax/chat_msg");
     
+    // $("#chat_respuestas").load("/massive_conversation/ajax/chat");
     
     setTimeout(function(){
         refresh_chat_main();
     }, 10000);
 }
 
-
-refresh_chat_respuestas();
-
-function refresh_chat_respuestas() {
-    
-    $("#chat_respuestas").load("/massive_conversation/ajax/chat_respuestas");
-    
-    
-    setTimeout(function(){
-        refresh_chat_respuestas();
-    }, 10000);
-}
 
 
 

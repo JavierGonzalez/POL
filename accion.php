@@ -1178,7 +1178,8 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 		$refer_url = 'empresas';
 
 	} elseif (($_GET[2] == 'editar') AND ($_POST['txt'])) {
-		$txt = gen_text($_POST['txt']);
+		$txt = $_POST['txt'];
+		$txt = gen_text($txt);
 		sql_old("UPDATE empresas SET descripcion = '".$txt."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
 		$return =  $_POST['return'];
 		evento_log('Empresa editada #'.$_GET['ID']);

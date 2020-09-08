@@ -2,7 +2,7 @@
 
 
 $maxsim = [
-    'version'  => '0.5.3',
+    'version'  => '0.5.4',
     'debug'    => ['crono_start' => hrtime(true)],
     ];
 
@@ -31,7 +31,7 @@ foreach ((array)$maxsim['autoload'] AS $file) {
 }
 
 
-include($maxsim['app']); // What user want.
+include($maxsim['app']);
 
 
 if ($maxsim['output']==='text') {
@@ -44,6 +44,15 @@ if ($maxsim['output']==='text') {
 
 } else if (is_string($maxsim['output'])) {
     $echo = ob_get_contents();
+
+    if ($echo==='') {
+        header('HTTP/1.0 404 Not Found');
+        if (file_exists('404.php')) {
+            include('404.php');
+            $echo = ob_get_contents();
+        }
+    }
+
     ob_end_clean();
     header('Content-Type:text/html; charset=utf-8');
     include($maxsim['output'].'/index.php');
@@ -72,18 +81,12 @@ function maxsim_router(string $uri) {
             $maxsim['autoload'][] = $file;
         
         foreach ($ls AS $e)
-            if ($id!==0 AND basename($e)==='index.php')
+            if (basename($e)==='index.php')
                 $maxsim['app'] = $e;
 
         foreach ($ls AS $e)
             if (basename($e)===$levels[$id+1].'.php')
                 $maxsim['app'] = $e;
-    }
-
-    if (!$maxsim['app']) {
-        header('HTTP/1.0 404 Not Found');
-        if (file_exists('404.php'))
-            $maxsim['app'] = '404.php';
     }
 }
 

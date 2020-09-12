@@ -25,16 +25,16 @@ S - solar			Blanco		(solar, en venta, link a compra)			null
 // mapa (ID, pais, pos_x, pos_y, size_x, size_y, user_ID, link, text, time, pols, color, estado)
 
 
-if (($_GET[0] == 'compraventa') AND ($_GET[1])) { //Comprar
+if (($_GET[1] == 'compraventa') AND ($_GET[2])) { //Comprar
 
 		$result = mysql_query_old("SELECT *
 FROM mapa
-WHERE pais = '".PAIS."' AND ID = '".$_GET[1]."' AND estado = 'v'
+WHERE pais = '".PAIS."' AND ID = '".$_GET[2]."' AND estado = 'v'
 LIMIT 1", $link);
 	while($r = mysqli_fetch_array($result)){
 
 		$txt_title = _('Mapa').': '._('Comprar propiedad');
-		$txt_nav = array('/mapa'=>_('Mapa'), _('Comprar propiedad').' '.$_GET[1]);
+		$txt_nav = array('/mapa'=>_('Mapa'), _('Comprar propiedad').' '.$_GET[2]);
 
 		echo '<ol>
 
@@ -50,19 +50,19 @@ LIMIT 1", $link);
 <p><a href="/mapa/propiedades"><b>'._('Ver tus propiedades').'</b></a></p>';
 	}
 
-} elseif (($_GET[0] == 'vender') AND ($_GET[1])) { // VENDER
+} elseif (($_GET[1] == 'vender') AND ($_GET[2])) { // VENDER
 
 	$result = mysql_query_old("SELECT *
 FROM mapa
-WHERE pais = '".PAIS."' AND ID = '" . $_GET[1] . "' 
+WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "' 
 LIMIT 1", $link);
 	while($r = mysqli_fetch_array($result)){
 
 		$txt_title = _('Mapa').': '._('Vender propiedad');
-		$txt_nav = array('/mapa'=>_('Mapa'), _('Vender propiedad').' '.$_GET[1]);
+		$txt_nav = array('/mapa'=>_('Mapa'), _('Vender propiedad').' '.$_GET[2]);
 		echo '
 
-<form action="/accion/mapa/vender?ID=' . $_GET[1] . '" method="post">
+<form action="/accion/mapa/vender?ID=' . $_GET[2] . '" method="post">
 
 <ol>
 
@@ -82,13 +82,13 @@ LIMIT 1", $link);
 
 	}
 
-} elseif (($_GET[0] == 'editar') AND ($_GET[1])) { // EDITAR
+} elseif (($_GET[1] == 'editar') AND ($_GET[2])) { // EDITAR
 	$txt_title = _('Mapa').': '._('Editar propiedad');
 	$txt_nav = array('/mapa'=>_('Mapa'), _('Editar propiedad'));
 
 	$result = mysql_query_old("SELECT *
 FROM mapa
-WHERE pais = '".PAIS."' AND ID = '" . $_GET[1] . "' AND (user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."'))
+WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "' AND (user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."'))
 LIMIT 1", $link);
 	while($r = mysqli_fetch_array($result)){
 
@@ -99,9 +99,9 @@ LIMIT 1", $link);
 		}
 		
 		$tamaño = ($r['size_x'] * $r['size_y']);
-		echo '<h1><a href="/mapa">'._('Mapa').'</a>: '._('Editar propiedad').': ' . $_GET[1] . '</h1>
+		echo '<h1><a href="/mapa">'._('Mapa').'</a>: '._('Editar propiedad').': ' . $_GET[2] . '</h1>
 
-<form action="/accion/mapa/editar?ID=' . $_GET[1] . '" method="post">
+<form action="/accion/mapa/editar?ID=' . $_GET[2] . '" method="post">
 
 <ol>
 
@@ -116,7 +116,7 @@ LIMIT 1", $link);
 <select name="color">
 <option value="' . $r['color'] . '" style="background:#' . $r['color'] . ';">' . $r['color'] . '</option>
 ' . $colores . '
-</select> <span style="background:#' . $r['color'] . ';height:15px;width:40px;"></span> (<a href="/mapa/editar/' . $_GET[1] . '/">Generar m&aacute;s</a> o especificar: <input type="text" size="2" maxlength="3" name="color2" value="" />)<br /><br /></li>
+</select> <span style="background:#' . $r['color'] . ';height:15px;width:40px;"></span> (<a href="/mapa/editar/' . $_GET[2] . '/">Generar m&aacute;s</a> o especificar: <input type="text" size="2" maxlength="3" name="color2" value="" />)<br /><br /></li>
 
 <!--<li><b>Letras:</b> <input type="text" name="text" size="8" maxlength="' . $tamaño . '" value="' . $r['text'] . '" /> (opcional, letras: <b>' . $tamaño . '</b>)<br /><br /></li>-->
 
@@ -132,7 +132,7 @@ LIMIT 1", $link);
 
 
 
-} elseif ($_GET[0] == 'propiedades') { //Propiedades
+} elseif ($_GET[1] == 'propiedades') { //Propiedades
 
 	$txt_title = 'Mapa: Tus propiedades';
 	$txt_nav = array('/mapa'=>'Mapa', 'Tus propiedades');
@@ -331,7 +331,7 @@ ORDER BY estado ASC, time ASC", $link);
 
 	echo '</table><br /><p><a href="/mapa/"><b>Ver mapa</b></a> &nbsp; <a href="/doc/mapa-de-vp/"><b>Ayuda</b></a></p>';
 
-} elseif (($_GET[0] == 'comprar') AND ($_GET[1])) { //Comprar
+} elseif (($_GET[1] == 'comprar') AND ($_GET[2])) { //Comprar
 
 	$txt_title = 'Mapa: Comprar propiedad';
 	$txt_nav = array('/mapa'=>'Mapa', 'Comprar propiedad');
@@ -343,9 +343,9 @@ ORDER BY estado ASC, time ASC", $link);
 
 
 
-	echo '<h1><a href="/mapa/">Mapa</a>: Comprar propiedad:  ' . $_GET[1] . '</h1>
+	echo '<h1><a href="/mapa/">Mapa</a>: Comprar propiedad:  ' . $_GET[2] . '</h1>
 
-<form action="/accion/mapa/comprar?ID=' . $_GET[1] . '" method="post">
+<form action="/accion/mapa/comprar?ID=' . $_GET[2] . '" method="post">
 
 <ol>
 
@@ -355,7 +355,7 @@ ORDER BY estado ASC, time ASC", $link);
 <li><b>Color:</b> 
 <select name="color">
 ' . $colores . '
-</select> (<a href="/mapa/comprar/' . $_GET[1] . '/">Generar m&aacute;s</a>)<br /><br /></li>
+</select> (<a href="/mapa/comprar/' . $_GET[2] . '/">Generar m&aacute;s</a>)<br /><br /></li>
 
 <li>' . boton('Comprar', false, false, false, $pol['config']['pols_solar']) . ' (M&aacute;s coste de 1 '.PAIS.' al dia)<br /><br /></li>
 

@@ -2,7 +2,7 @@
 
 
 
-$result = mysql_query_old("SELECT * FROM ".SQL."foros WHERE url = '" . $_GET[0] . "' AND estado = 'ok' LIMIT 1", $link);
+$result = mysql_query_old("SELECT * FROM ".SQL."foros WHERE url = '" . $_GET[1] . "' AND estado = 'ok' LIMIT 1", $link);
 while($r = mysqli_fetch_array($result)) {
     if (nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) {
         $return_url = 'foro/'.$r['url'].'/';

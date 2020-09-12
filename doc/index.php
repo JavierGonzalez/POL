@@ -3,19 +3,19 @@
 include('img/lib/parsedown/Parsedown.php');
 
 
-if ($_GET[0]) {
+if ($_GET[1]) {
 	$parsedown = new Parsedown;
 	$parsedown->setSafeMode(true);
 	$parsedown->setBreaksEnabled(true);
 
-	$result = mysql_query_old("SELECT * FROM docs WHERE url = '".$_GET[0]."' AND pais = '".PAIS."' LIMIT 1", $link);
+	$result = mysql_query_old("SELECT * FROM docs WHERE url = '".$_GET[1]."' AND pais = '".PAIS."' LIMIT 1", $link);
 	while($r = mysqli_fetch_array($result)){
 		
 		$pad_ID = $r['pad_ID'];
 
 		
 
-		if (($_GET[1] == 'editar') AND ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_docs'])))) { 
+		if (($_GET[2] == 'editar') AND ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_docs'])))) { 
 			// EDITAR!
 
 			foreach (nucleo_acceso('print') AS $at => $at_var) { 
@@ -91,7 +91,7 @@ if ($_GET[0]) {
 			$txt_tab['/doc/'.$r['url']] = _('Ver documento');
 			$txt_tab['/doc/'.$r['url'].'/editar'] = _('Editar');
 
-		} elseif ($_GET[1] == 'presentacion') { //doc/documento-de-test/presentacion
+		} elseif ($_GET[2] == 'presentacion') { //doc/documento-de-test/presentacion
 
 			if (nucleo_acceso($r['acceso_leer'], $r['acceso_cfg_leer'])) {
 				presentacion($r['title'], $r['text'], '/doc/'.$r['url']);
@@ -105,7 +105,7 @@ if ($_GET[0]) {
 				$boton_editar = boton(_('Editar'), null);
 			}
 
-			if ($_GET[1] == 'backup') { $r['text'] = $r['text_backup']; }
+			if ($_GET[2] == 'backup') { $r['text'] = $r['text_backup']; }
 
 			if (substr($r['text'], 0, 8) == '&lt;div ') { $r['text'] = '<p style="font-size:25px;"><a href="/doc/'.$r['url'].'/presentacion"><b>'._('Ver presentación').'</b></a></p>'; }
 

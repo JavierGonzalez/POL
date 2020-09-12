@@ -7,12 +7,12 @@ FROM ".SQL."foros_hilos `h`
 LEFT JOIN ".SQL."foros `f` ON (f.ID = sub_ID)
 LEFT JOIN users `u` ON (u.ID = user_ID)
 LEFT JOIN votos `v` ON (tipo = 'hilos' AND v.pais = '".PAIS."' AND item_ID = h.ID AND emisor_ID = '".$pol['user_ID']."')
-WHERE h.url = '".$_GET[1]."' AND h.estado = 'ok'
+WHERE h.url = '".$_GET[2]."' AND h.estado = 'ok'
 LIMIT 1", $link);
 while($r = mysqli_fetch_array($result)) {
 
     // Foro incorrecto? redireccion.
-    if ($_GET[0] != $r['foro_url']) { 
+    if ($_GET[1] != $r['foro_url']) { 
         redirect('/foro/'.$r['foro_url'].'/'.$r['url'].'/');
     }
     
@@ -22,11 +22,11 @@ while($r = mysqli_fetch_array($result)) {
 
     if ($acceso['leer']) {
 
-        $subforo = $_GET[0];
+        $subforo = $_GET[1];
         $return_url = 'foro/' . $subforo . '/' . $r['url'] . '/';
-        paginacion('hilo', '/'.$return_url, $r['ID'], $_GET[2], $r['num']);
+        paginacion('hilo', '/'.$return_url, $r['ID'], $_GET[3], $r['num']);
         
-        if ($_GET[2]) { $pag_title = ' - Página: '.$_GET[2]; }
+        if ($_GET[3]) { $pag_title = ' - Página: '.$_GET[3]; }
         
         $txt_title = $r['title'].' - Foro: '.$r['foro_title'].$pag_title;
         $txt_nav = array('/foro'=>'Foro', '/foro/'.$r['foro_url']=>$r['foro_title'], $r['title']);
@@ -57,7 +57,7 @@ while($r = mysqli_fetch_array($result)) {
 <tr>
 <td colspan="2" valign="middle" class="gris">
 '.$p_paginas.' &nbsp; ' . boton('Responder', $crear_hilo, false, 'large blue') . ' &nbsp; 
-<span style="float:right;margin-top:20px;">Orden: <a href="/'.$return_url.'/"'.($_GET[2]=='mejores'?'':' style="color:#444;"').'>Fecha</a> | <a href="/'.$return_url.'mejores/"'.($_GET[2]=='mejores'?' style="color:#444;"':'').'>Votos</a></span>
+<span style="float:right;margin-top:20px;">Orden: <a href="/'.$return_url.'/"'.($_GET[3]=='mejores'?'':' style="color:#444;"').'>Fecha</a> | <a href="/'.$return_url.'mejores/"'.($_GET[3]=='mejores'?' style="color:#444;"':'').'>Votos</a></span>
 <b>'.$r['num'].'</b> mensajes en este hilo creado hace <acronym title="'.$r['time'].'"><span class="timer" value="'.strtotime($r['time']).'"></span></acronym>.
 </td>
 </td>';
@@ -67,7 +67,7 @@ FROM ".SQL."foros_msg `m`
 LEFT JOIN users `u` on (u.ID = user_ID)
 LEFT JOIN votos `v` ON (tipo = 'msg' AND v.pais = '".PAIS."' AND item_ID = m.ID AND emisor_ID = '".$pol['user_ID']."')
 WHERE hilo_ID = '".$r['ID']."' AND m.estado = 'ok'
-ORDER BY ".($_GET[2]=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.$p_limit), $link);
+ORDER BY ".($_GET[3]=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.$p_limit), $link);
         while($r2 = mysqli_fetch_array($result2)) {
 
             if (($pol['user_ID'] == $r2['user_ID']) AND ($subforo != 'notaria') AND (strtotime($r2['time']) > (time() - 3600))) { 
@@ -85,7 +85,7 @@ ORDER BY ".($_GET[2]=='mejores'?'votos DESC LIMIT 100':'time ASC LIMIT '.$p_limi
         }
         echo '</table> <p>' . $p_paginas . '</p>';
 
-        if ($acceso['escribir_msg']) { echo foro_enviar($r['sub_ID'], $r['ID'], null, $_GET[3]); }
+        if ($acceso['escribir_msg']) { echo foro_enviar($r['sub_ID'], $r['ID'], null, $_GET[4]); }
 
         if (!$pol['user_ID']) { echo '<p class="azul"><b>Para poder participar en esta conversacion has de <a href="/registrar">registrar tu ciudadano</a></b></p>'; }
         

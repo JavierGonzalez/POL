@@ -2,7 +2,7 @@
 
 
 
-switch ($_GET[0]) {
+switch ($_GET[1]) {
 
 
 case 'video':
@@ -118,9 +118,9 @@ case 'TOS':
 	break;
 
 
-case 'index': 
-	$_GET[0] = strtolower(PAIS);
-	include('chat/index.php');
-	break;
-
+default:
+	if ($_GET[0]==='index' AND !$_GET[1]) {
+		$_GET[1] = strtolower(PAIS);
+		include('chat/index.php');
+	}
 }

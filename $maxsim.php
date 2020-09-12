@@ -1,13 +1,12 @@
-<?php # maxsim.tech — Copyright (c) 2020 Javier González González <gonzo@virtualpol.com> — MIT License
+<?php # maxsim.tech — Copyright (c) 2005-2020 Javier González González <gonzo@virtualpol.com> — MIT License
 
 
 define('crono_start', hrtime(true));
 
-$maxsim['version'] = '0.5.4';
+$maxsim['version'] = '0.5.5';
 
-maxsim_router($_SERVER['REQUEST_URI']);
-
-maxsim_get($_SERVER['REQUEST_URI']);
+maxsim_router();
+maxsim_get();
 
 ob_start();
 
@@ -61,10 +60,10 @@ if ($maxsim['output']==='text') {
 exit;
 
 
-function maxsim_router(string $uri) {
+function maxsim_router() {
     global $maxsim;
 
-    $url = explode('?', $uri)[0];
+    $url = explode('?', $_SERVER['REQUEST_URI'])[0];
     if ($url==='/')
         $url = '/index';
 
@@ -108,22 +107,24 @@ function maxsim_autoload(array $ls, $load_prefix=false) {
 }
 
 
-function maxsim_get(string $uri) {
+function maxsim_get() {
     global $_GET, $maxsim;
 
     $app_level = count(explode('/', $maxsim['app']))-1;
 
-    $url = explode('?', $uri)[0];
-    if ($url==='/')
-        $url .= 'index';
+    $url = explode('?', $_SERVER['REQUEST_URI'])[0];
+    
+    if (substr($maxsim['app'],-9)==='index.php')
+        $url = '/index'.$url;
 
     $levels = array_filter(explode('/', $url));
-    foreach ($levels AS $level => $name)
+
+    foreach ($levels AS $level => $value)
         if ($level-$app_level > 0)
-            $levels_relative[$level-$app_level] = $name;
+            $levels_relative[$level-$app_level] = $value;
 
     $_GET = array_merge((array)$levels_relative, $_GET);
 
-    if ($_GET[0]==='maxsim')
+    if ($_GET[1]==='maxsim' AND $_GET[0]==='index')
         exit($maxsim['version']);
 }

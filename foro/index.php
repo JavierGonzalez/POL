@@ -8,10 +8,10 @@ pol_foros_msg		(`ID``hilo_ID` `user_ID` `time` `text` `cargo`)
 */
 
 
-if ($_GET[1]) {			//foro/subforo/hilo-prueba
+if ($_GET[2]) {			//foro/subforo/hilo-prueba
 	include('hilo.php');
 
-} elseif ($_GET[0]) {	//foro/subforo/
+} elseif ($_GET[1]) {	//foro/subforo/
 	include('subforo.php');
 
 } else {				//foro/

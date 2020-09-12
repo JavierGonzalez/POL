@@ -2,6 +2,9 @@
 
 
 
+
+exit;
+
 __($maxsim);
 
 __($_GET);

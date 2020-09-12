@@ -1,10 +1,9 @@
 <?php # maxsim.tech — Copyright (c) 2020 Javier González González <gonzo@virtualpol.com> — MIT License
 
 
-$maxsim = [
-    'version'  => '0.5.4',
-    'debug'    => ['crono_start' => hrtime(true)],
-    ];
+define('crono_start', hrtime(true));
+
+$maxsim['version'] = '0.5.4';
 
 maxsim_router($_SERVER['REQUEST_URI']);
 
@@ -18,15 +17,15 @@ foreach ((array)$maxsim['autoload'] AS $file) {
     if ($ext==='php')
         include($file);
 
-    else if ($ext==='css' OR $ext==='js')
+    else if ($ext==='js' OR $ext==='css')
         $maxsim['template']['autoload'][$ext][] = '/'.$file;
 
     else if ($ext==='ini')
-        if ($key_name = basename(str_replace('*', '', $file), '.ini'))
-            ${$key_name} = parse_ini_file($file, true, INI_SCANNER_TYPED);
+        if ($key_name = basename(str_replace('*', '', $file), '.'.$ext))
+            define($key_name, (array)parse_ini_file($file, true, INI_SCANNER_TYPED));
     
     else if ($ext==='json')
-        if ($key_name = basename(str_replace('*', '', $file), '.json'))
+        if ($key_name = basename(str_replace('*', '', $file), '.'.$ext))
             ${$key_name} = (array)json_decode(file_get_contents($file), true);
 }
 
@@ -35,29 +34,29 @@ include($maxsim['app']);
 
 
 if ($maxsim['output']==='text') {
-    header('Content-Type:text/plain; charset=utf-8');
+    header('content-Type: text/plain');
 
 } else if ($maxsim['output']==='json' AND is_array($echo)) {
     ob_end_clean();
-    header('Content-type:application/json; charset=utf-8');
+    header('content-type: application/json');
     echo json_encode((array)$echo, JSON_PRETTY_PRINT);
 
 } else if (is_string($maxsim['output'])) {
     $echo = ob_get_contents();
 
     if ($echo==='') {
-        header('HTTP/1.0 404 Not Found');
+        http_response_code(404);
         if (file_exists('404.php')) {
             include('404.php');
             $echo = ob_get_contents();
+        } else {
+            $echo = 'Error 404: not found.';
         }
     }
 
     ob_end_clean();
-    header('Content-Type:text/html; charset=utf-8');
     include($maxsim['output'].'/index.php');
 }
-
 
 exit;
 
@@ -127,9 +126,4 @@ function maxsim_get(string $uri) {
 
     if ($_GET[0]==='maxsim')
         exit($maxsim['version']);
-}
-
-
-function maxsim_absolute(string $dir) {
-    return (string) str_replace($_SERVER['DOCUMENT_ROOT'].'/', '', $dir).'/'; // Refact.
 }

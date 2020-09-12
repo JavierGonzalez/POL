@@ -212,11 +212,10 @@ function gbarra($porcentaje, $size=false, $mostrar_porcentaje=true) {
 }
 
 function pass_key($t, $type='sha') {
-	global $passwords;
-	switch ($type) {
-		case 'md5': return hash('md5', $t); break;
-		default: return hash('sha256', $passwords['clave_sha'].$t);
-	}
+	if ($type=='md5')
+		return hash('md5', $t);
+	else
+		return hash('sha256', passwords['clave_sha'].$t);
 }
 
 function timer($t, $es_timestamp=false, $pre=null) {

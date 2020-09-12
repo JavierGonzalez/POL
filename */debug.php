@@ -4,6 +4,9 @@
 function __($echo='', $echo2=false, $scroll_down=false) {
 	global $maxsim;
 
+    if (!isset($maxsim['debug']['crono_start']))
+        $maxsim['debug']['crono_start'] = crono_start;
+
     $hrtime = $maxsim['debug']['crono_start'];
 
     echo '<br />'."\n";
@@ -43,7 +46,7 @@ function profiler($hrtime=false) {
     global $maxsim, $__sql, $__rpc;
 
     if (!$hrtime)
-        $hrtime = $maxsim['debug']['crono_start'];
+        $hrtime = crono_start;
 
     $output[] = number_format((hrtime(true)-$hrtime)/1000/1000,2).' ms';
     

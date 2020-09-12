@@ -2,7 +2,16 @@
 
 
 
-__(glob('img/cargos/*.gif'));
+__($maxsim);
+
+__($_GET);
+
+
+__($_REQUEST);
+
+__(dirname($maxsim['app']));
+
+
 
 exit;
 

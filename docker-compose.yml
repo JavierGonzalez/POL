@@ -7,7 +7,7 @@ services:
     - "80:80"
     - "443:443"
     environment: 
-      DATABASE: "mysql://user:pass@mysql:3306/virtualpol"
+      DATABASE: "mysql://virtualpol:virtualpol@mysql:3306/virtualpol"
       COOKIE_KEY: 123456
       SHA_KEY: 123456
     links:

@@ -1,4 +1,4 @@
-FROM webdevops/php-apache:8.0-alpine
+FROM webdevops/php-apache:7.4-alpine
 
 EXPOSE 80 443
 

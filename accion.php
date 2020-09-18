@@ -1758,8 +1758,8 @@ case 'kick':
 		}
 
 
-		$_POST['razon'] = preg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['razon']));
-		$_POST['motivo'] = preg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
+		$_POST['razon'] = preg_replace("#(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]#","<a href=\"\\0\">\\0</a>", strip_tags($_POST['razon']));
+		$_POST['motivo'] = preg_replace("#(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]#","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
 
 		if (
 (nucleo_acceso($vp['acceso']['kick'])) AND 

@@ -1354,7 +1354,8 @@ case 'pols':
 			}
 
 			// insert historial
-			if (($pols > 0) AND ($emisor_ID != $receptor_ID)) {
+			if (($pols > 0) AND ($emisor_ID != $receptor_ID)) {		
+				if ($receptor_ID > 0) { notificacion($receptor_ID, 'Te han transferido '.$pols.' monedas', '/pols'); }
 				sql_old("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".PAIS."', '".$pols."', '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".$date."')");
 
 				if ($transf_int) {

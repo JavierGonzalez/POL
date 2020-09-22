@@ -598,10 +598,10 @@ ORDER BY time_expire DESC LIMIT 5");
 <p><br />Resultados de las últimas votaciones:</p>
 <ul>
 '.$txt_votaciones_result.'
-<li>(<a href="/votacion">Ver todas</a>)</li>
+<li>(<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion">Ver todas</a>)</li>
 </ul>
 
-<p><br />Más formas de participar: <a href=""><b>Chat</b></a>, <a href="/hacer">¿<b>Qué hacer</b>?</a></p>
+<p><br />Más formas de participar: <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'"><b>Chat</b></a>, <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/hacer">¿<b>Qué hacer</b>?</a></p>
 
 <p>________<br />
 <b>'.$pol['config']['pais_des'].'</b><br />

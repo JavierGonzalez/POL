@@ -57,7 +57,7 @@ default:
 <td align="right" style="font-size:18px;color:#777;" title="AFILIADOS: '.(is_array($users_array[$r['grupo_ID']])?implode(' ', $users_array[$r['grupo_ID']]):'').'"><b>'.$r['num'].'</b> (<span class="punteado">'._('Ver').'</span>)</td>
 <td>'.(is_array($foros_array[$r['grupo_ID']])?implode(' ', $foros_array[$r['grupo_ID']]):'').'</td>
 <td width="100" align="right" style="color:#888;">'.$r['grupo_ID'].'</td>
-<td>'.(nucleo_acceso($vp['acceso']['control_grupos'])?boton(_('Eliminar'), '/accion/grupos/eliminar&grupo_ID='.$r['grupo_ID'], false, 'red'):'').'</td>
+<td>'.(nucleo_acceso($vp['acceso']['control_grupos'])?boton(_('Eliminar'), '/accion/grupos/eliminar?grupo_ID='.$r['grupo_ID'], false, 'red'):'').'</td>
 </tr>';
 	}
 

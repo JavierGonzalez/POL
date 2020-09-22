@@ -3,7 +3,7 @@
 
 define('crono_start', hrtime(true));
 
-$maxsim['version'] = '0.5.5';
+$maxsim['version'] = '0.5.6';
 
 maxsim_router();
 maxsim_get();
@@ -20,11 +20,11 @@ foreach ((array)$maxsim['autoload'] AS $file) {
         $maxsim['template']['autoload'][$ext][] = '/'.$file;
 
     else if ($ext==='ini')
-        if ($key_name = basename(str_replace('*', '', $file), '.'.$ext))
-            define($key_name, (array)parse_ini_file($file, true, INI_SCANNER_TYPED));
+        if ($key_name = basename(str_replace('+', '', $file), '.'.$ext))
+            define(strtoupper($key_name), (array)parse_ini_file($file, true, INI_SCANNER_TYPED));
     
     else if ($ext==='json')
-        if ($key_name = basename(str_replace('*', '', $file), '.'.$ext))
+        if ($key_name = basename(str_replace('+', '', $file), '.'.$ext))
             ${$key_name} = (array)json_decode(file_get_contents($file), true);
 }
 
@@ -72,7 +72,7 @@ function maxsim_router() {
     foreach ($levels AS $id => $level) {
         $path[] = $level;
 
-        if (!$ls = glob(($id===0?'*':implode('/', array_filter($path)).'/*'))) // Refact
+        if (!$ls = glob(($id?implode('/', array_filter($path)).'/':'').'*'))
             break;
 
         foreach (maxsim_autoload($ls) AS $file)
@@ -93,15 +93,14 @@ function maxsim_autoload(array $ls, $load_prefix=false) {
 
     foreach ($ls AS $e)
         if (preg_match('/\.(php|js|css|ini|json)$/', $e))
-            if ($load_prefix OR substr(basename($e), 0, 1)==='*')
+            if ($load_prefix OR substr(basename($e), 0, 1)==='+')
                 $autoload[] = $e;
 
     foreach ($ls AS $e)
         if (!fnmatch('*.*', $e))
-            if (substr(basename($e), 0, 1)==='*')
-                if ($ls_recursive = glob(str_replace('*', '\*', $e).'/*'))
-                    foreach (maxsim_autoload($ls_recursive, true) AS $file)
-                        $autoload[] = $file;
+            if (substr(basename($e), 0, 1)==='+')
+                foreach (maxsim_autoload(glob($e.'/*'), true) AS $file)
+                    $autoload[] = $file;
 
     return (array) $autoload;
 }

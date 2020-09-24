@@ -395,7 +395,7 @@ case 'pass':
 			$new_pass = rand(1000000,9999999);
 			sql_old("UPDATE users SET pass = '".pass_key($new_pass, 'md5')."', pass2 = '".pass_key($new_pass)."', reset_last = fecha_registro WHERE ID = '".$user_ID."' LIMIT 1");
 
-			$mensaje = "<p>Ciudadano ".$nick.".</p><p>Se ha procedido a resetear tu contraseña por razones de seguridad. Por lo tanto tu contraseña ha cambiado.</p><p>Usuario: ".$nick."<br />Nueva contraseña: ".$new_pass."</p><p>Para entrar: /registrar/login</p><p>Es recomendado que cambies tu contraseña. También puedes iniciar un proceso de recuperación con tu email.</p><p>Gracias, nos vemos en VirtualPol ;)</p><p>VirtualPol<br />".SSL_URL."</p>";
+			$mensaje = "<p>Ciudadano ".$nick.".</p><p>Se ha procedido a resetear tu contraseña por razones de seguridad. Por lo tanto tu contraseña ha cambiado.</p><p>Usuario: ".$nick."<br />Nueva contraseña: ".$new_pass."</p><p>Para entrar: http://".strtolower(PAIS).".".DOMAIN."/registrar/login</p><p>Es recomendado que cambies tu contraseña. También puedes iniciar un proceso de recuperación con tu email.</p><p>Gracias, nos vemos en VirtualPol ;)</p><p>VirtualPol<br />".SSL_URL."</p>";
 			enviar_email($user_ID, 'Nueva contraseña para el usuario: '.$nick, $mensaje);
 			
 			unset($new_pass);
@@ -1354,7 +1354,8 @@ case 'pols':
 			}
 
 			// insert historial
-			if (($pols > 0) AND ($emisor_ID != $receptor_ID)) {
+			if (($pols > 0) AND ($emisor_ID != $receptor_ID)) {		
+				if ($receptor_ID > 0) { notificacion($receptor_ID, 'Te han transferido '.$pols.' monedas', '/pols'); }
 				sql_old("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".PAIS."', '".$pols."', '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".$date."')");
 
 				if ($transf_int) {
@@ -1758,8 +1759,8 @@ case 'kick':
 		}
 
 
-		$_POST['razon'] = preg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['razon']));
-		$_POST['motivo'] = preg_replace("(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
+		$_POST['razon'] = preg_replace("#(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]#","<a href=\"\\0\">\\0</a>", strip_tags($_POST['razon']));
+		$_POST['motivo'] = preg_replace("#(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]#","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
 
 		if (
 (nucleo_acceso($vp['acceso']['kick'])) AND 

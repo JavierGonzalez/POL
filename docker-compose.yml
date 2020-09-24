@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+    - "80:80"
+    - "443:443"
+    environment: 
+      DATABASE: "mysql://virtualpol:virtualpol@mysql:3306/virtualpol"
+      COOKIE_KEY: 123456
+      SHA_KEY: 123456
+    links:
+      - mysql
+    volumes: 
+      - ./:/app/
+  mysql:
+    image: mysql:5.6
+    container_name: docker-mysql
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: virtualpol
+      MYSQL_USER: virtualpol
+      MYSQL_PASSWORD: virtualpol
+      MYSQL_ROOT_PASSWORD: virtualpol
+    ports:
+      - "3306:3306"
+    restart: always
+volumes:
+  db_data: {}
+  

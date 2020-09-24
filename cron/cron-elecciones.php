@@ -71,7 +71,7 @@ Realizadas cada <b>".$r['elecciones_cada']." días</b>, durante <b>".$r['eleccio
 
 <p>Han comenzado las elecciones de '.PAIS.'. Tu participación es importante para el funcionamiento democrático.</p>
 
-<p><a href="/votacion/'.$votacion_ID.'"><b style="font-size:18px">Entrar a votar</b></a></p>
+<p><a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion/'.$votacion_ID.'"><b style="font-size:18px">Entrar a votar</b></a></p>
 
 <p>VirtualPol | La primera red social democrática</p>';
 				enviar_email(null, 'Comienzan las elecciones a '.$r['nombre'], $mensaje, $r2['email']); 

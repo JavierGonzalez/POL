@@ -9,8 +9,12 @@ function e($danger_user_input) {
 function sql_connect($server_sql=false) {
     global $__sql;
 
-    if (!$server_sql)
-        $server_sql = passwords['sql'];
+    if (!$server_sql) {
+		if (getenv("DATABASE"))
+			$server_sql = getenv("DATABASE");
+		else
+	    	$server_sql = PASSWORDS['sql'];
+	}
 
 	$p = parse_url($server_sql);
 	

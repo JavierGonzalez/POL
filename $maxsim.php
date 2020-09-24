@@ -3,39 +3,39 @@
 
 define('crono_start', hrtime(true));
 
-$maxsim['version'] = '0.5.6';
+$maxsim['version'] = '0.5.7';
 
 maxsim_router();
-maxsim_get();
+$_GET = maxsim_get();
 
 ob_start();
 
-foreach ((array)$maxsim['autoload'] AS $file) {
+foreach ((array) $maxsim['autoload'] AS $file) {
     $ext = pathinfo($file, PATHINFO_EXTENSION);
 
     if ($ext==='php')
         include($file);
 
     else if ($ext==='js' OR $ext==='css')
-        $maxsim['template']['autoload'][$ext][] = '/'.$file;
+        $maxsim['template']['autoload'][$ext][] = $file;
 
     else if ($ext==='ini')
-        if ($key_name = basename(str_replace('+', '', $file), '.'.$ext))
-            define(strtoupper($key_name), (array)parse_ini_file($file, true, INI_SCANNER_TYPED));
+        if ($key = substr(basename($file, '.'.$ext),1))
+            define(strtoupper($key), (array)parse_ini_file($file, true, INI_SCANNER_TYPED));
     
     else if ($ext==='json')
-        if ($key_name = basename(str_replace('+', '', $file), '.'.$ext))
-            ${$key_name} = (array)json_decode(file_get_contents($file), true);
+        if ($key = substr(basename($file, '.'.$ext),1))
+            ${$key} = (array)json_decode(file_get_contents($file), true);
 }
 
 
-include($maxsim['app']);
+include($maxsim['app']); #
 
 
-if ($maxsim['output']==='text') {
+if ($maxsim['output']==='text')
     header('content-Type: text/plain');
 
-} else if ($maxsim['output']==='json' AND is_array($echo)) {
+else if ($maxsim['output']==='json' AND is_array($echo)) {
     ob_end_clean();
     header('content-type: application/json');
     echo json_encode((array)$echo, JSON_PRETTY_PRINT);
@@ -45,12 +45,12 @@ if ($maxsim['output']==='text') {
 
     if ($echo==='') {
         http_response_code(404);
+        
         if (file_exists('404.php')) {
             include('404.php');
             $echo = ob_get_contents();
-        } else {
+        } else
             $echo = 'Error 404: not found.';
-        }
     }
 
     ob_end_clean();
@@ -75,32 +75,30 @@ function maxsim_router() {
         if (!$ls = glob(($id?implode('/', array_filter($path)).'/':'').'*'))
             break;
 
-        foreach (maxsim_autoload($ls) AS $file)
-            $maxsim['autoload'][] = $file;
-        
-        foreach ($ls AS $e)
-            if (basename($e)==='index.php')
-                $maxsim['app'] = $e;
+        $maxsim['autoload'] = array_merge((array)$maxsim['autoload'], maxsim_autoload($ls));
 
-        foreach ($ls AS $e)
-            if (basename($e)===$levels[$id+1].'.php')
-                $maxsim['app'] = $e;
+        foreach ($ls AS $file)
+            if (basename($file)==='index.php')
+                $maxsim['app'] = $file;
+
+        foreach ($ls AS $file)
+            if (basename($file)===$levels[$id+1].'.php')
+                $maxsim['app'] = $file;
     }
 }
 
 
-function maxsim_autoload(array $ls, $load_prefix=false) {
+function maxsim_autoload(array $ls, bool $autoload_dir=false) {
 
-    foreach ($ls AS $e)
-        if (preg_match('/\.(php|js|css|ini|json)$/', $e))
-            if ($load_prefix OR substr(basename($e), 0, 1)==='+')
-                $autoload[] = $e;
+    foreach ($ls AS $file)
+        if (preg_match('/\.(php|js|css|ini|json)$/', basename($file)))
+            if ($autoload_dir OR substr(basename($file),0,1)==='+')
+                $autoload[] = $file;
 
-    foreach ($ls AS $e)
-        if (!fnmatch('*.*', $e))
-            if (substr(basename($e), 0, 1)==='+')
-                foreach (maxsim_autoload(glob($e.'/*'), true) AS $file)
-                    $autoload[] = $file;
+    foreach ($ls AS $file)
+        if (!fnmatch('*.*', basename($file)))
+            if (substr(basename($file),0,1)==='+')
+                $autoload = array_merge((array)$autoload, maxsim_autoload(glob($file.'/*'), true));
 
     return (array) $autoload;
 }
@@ -120,10 +118,7 @@ function maxsim_get() {
 
     foreach ($levels AS $level => $value)
         if ($level-$app_level > 0)
-            $levels_relative[$level-$app_level] = $value;
+            $maxsim_get[$level-$app_level] = $value;
 
-    $_GET = array_merge((array)$levels_relative, $_GET);
-
-    if ($_GET[1]==='maxsim' AND $_GET[0]==='index')
-        exit($maxsim['version']);
+    return (array) array_merge((array)$maxsim_get, (array)$_GET);
 }

@@ -336,10 +336,9 @@ sql_old("DELETE FROM users_con WHERE time < '".tiempo(30)."'");
 
 
 $result3 = sql_old("SELECT IP, pols, nick, ID, ref, estado,
-".(ECONOMIA?"(SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."')":"estado")." AS pols_cuentas 
+".(ECONOMIA?"(SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = ID)":"estado")." AS pols_cuentas 
 FROM users 
-WHERE estado = 'expulsado' AND pais <> 'ninguno'
-LIMIT 1");
+WHERE estado = 'expulsado' AND pais <> 'ninguno'");
 while($r3 = r($result3)) {
 	$user_ID = $r3['ID']; 
 	$estado = $r3['estado']; 

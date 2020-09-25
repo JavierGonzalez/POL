@@ -27,6 +27,17 @@ services:
     ports:
       - "3306:3306"
     restart: always
+  phpmyadmin:
+    depends_on:
+      - mysql
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8080:80'
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: password 
 volumes:
   db_data: {}
   

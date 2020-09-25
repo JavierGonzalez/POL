@@ -316,7 +316,6 @@ WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS
 		sql_old("DELETE FROM chats WHERE chat_ID = '".$_GET['chat_ID']."' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false')."' OR admin = '".$pol['nick']."') LIMIT 1");
         $refer_url = 'chat/list';
 	} elseif (($_GET[2] == 'limpiar') AND ($_GET['chat_ID'])) {
-		error_log("Cleaning chat... "."DELETE FROM chats_msg WHERE chat_ID = '".$_GET['chat_ID']."' AND '".$pol['user_ID']."' = (select user_ID from chats where chat_ID = '".$_GET['chat_ID']."' LIMIT 1)");
 		sql_old("DELETE FROM chats_msg WHERE chat_ID = '".$_GET['chat_ID']."' AND '".$pol['user_ID']."' = (select user_ID from chats where chat_ID = '".$_GET['chat_ID']."' LIMIT 1)");
 		$refer_url = 'chat/list';
 	} elseif (($_GET[2] == 'bloquear') AND ($_GET['chat_ID'])) {
@@ -1058,11 +1057,9 @@ case 'gobierno':
 		if ($_GET[3] == 'editar') {
 			$result = sql_old("SELECT ID FROM cat WHERE pais = '".PAIS."'");
 			while ($r = r($result)) { 
-				error_log("Updating category: UPDATE cat SET url = '". gen_url($_POST[$r['ID'].'_nombre'])."', nombre = '".$_POST[$r['ID'].'_nombre']."', nivel = '".$_POST[$r['ID'].'_nivel']."', orden = '".$_POST[$r['ID'].'_orden']."', publicar='".$_POST[$r['ID'].'_publicable']."' WHERE ID = '".$r['ID']."' LIMIT 1");
 				sql_old("UPDATE cat SET url = '". gen_url($_POST[$r['ID'].'_nombre'])."', nombre = '".$_POST[$r['ID'].'_nombre']."', nivel = '".$_POST[$r['ID'].'_nivel']."', orden = '".$_POST[$r['ID'].'_orden']."', publicar='".$_POST[$r['ID'].'_publicable']."' WHERE ID = '".$r['ID']."' LIMIT 1");
 			}
 		} elseif ($_GET[3] == 'crear') {
-			error_log("Inserting category: INSERT INTO cat (pais, url, nombre, nivel, orden, tipo, publicar) VALUES ('".PAIS."', '".gen_url($_POST['nombre'])."', '".substr($_POST['nombre'], 0, 40)."', '0', '10', '".($_POST['tipo']?$_POST['tipo']:'docs')."', '".$_POST['publicable']."')");
 			sql_old("INSERT INTO cat (pais, url, nombre, nivel, orden, tipo, publicar) VALUES ('".PAIS."', '".gen_url($_POST['nombre'])."', '".substr($_POST['nombre'], 0, 40)."', '0', '10', '".($_POST['tipo']?$_POST['tipo']:'docs')."', '".$_POST['publicable']."')");
 
 		} elseif ($_GET[3] == 'eliminar') {

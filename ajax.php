@@ -8,7 +8,7 @@ if ($_GET[1]=='new-commit') {
 	evento_chat('<b>[CODE]</b> VirtualPol ha recibido un cambio en el código (<a href="https://github.com/JavierGonzalez/POL" target="_blank">ver</a>).'); 				
 }
 
-if ($_GET[1] == 'noti') {
+if ($_GET['a'] == 'noti') {
     $pol['nick'] = $_SESSION['pol']['nick'];
 	$pol['user_ID'] = $_SESSION['pol']['user_ID'];
 ?>

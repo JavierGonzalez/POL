@@ -1,6 +1,6 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
-
+/*
 if ($_SERVER['SERVER_ADDR'] !== $_SERVER['REMOTE_ADDR'])
 	exit('Solo el propio servidor puede ejecutar "el proceso".');
 
@@ -11,7 +11,7 @@ unset($maxsim['output']);
 $result = sql_old("SELECT pais FROM stats WHERE pais = '".PAIS."' AND time = '".date('Y-m-d 20:00:00')."' LIMIT 1");
 while($r = r($result)) { echo 'Ya se ha ejecutado hoy'; exit; }
 
-
+*/
 
 
 // INICIO PROCESO
@@ -284,11 +284,54 @@ if ($pol['config']['impuestos_empresa'] > 0) {
 	evento_chat('<b>[PROCESO] IMPUESTO EMPRESAS '.date('Y-m-d').'</b>, recaudado: '.pols($recaudacion_empresas).' '.MONEDA);
 }
 
+//Gestion transacciones automaticas
+gestionar_transacciones_automaticas("D");
 
+if (date('N') == 7) {
+	gestionar_transacciones_automaticas("S");
+}
+
+if (date('j') == 1) {
+	gestionar_transacciones_automaticas("M");
+}
 
 } // FIN if (ECONOMIA) {
 
+function gestionar_transacciones_automaticas($periodicidad){
+	$result = mysql_query_old("SELECT pols, emisor_ID, receptor_ID, concepto FROM transacciones WHERE pais = '".PAIS."' AND periodicidad = '".$periodicidad."'", $link);
+	while($row = mysqli_fetch_array($result)){ 
 
+		$pols = $row['pols']; 
+		$emisor_ID = $row['emisor_ID']; 
+		$receptor_ID = $row['receptor_ID']; 
+		$concepto = $row['concepto'];
+		$receptor_mensaje_ID = $emisor_ID;
+
+		if ($emisor_ID >0){
+			$result = mysql_query_old("SELECT pols FROM users WHERE pais = '".PAIS."' AND ID = '".$emisor_ID."'", $link);
+		}else{
+			$result = mysql_query_old("SELECT pols, user_ID FROM cuentas WHERE pais = '".PAIS."' AND ID = SUBSTRING('".$emisor_ID."',2)", $link);
+		}
+
+		if ($row = mysqli_fetch_array($result)){
+			$disponible = $row['pols'];
+			if ($emisor_ID < 0){
+				$receptor_mensaje_ID = $row['user_ID'];
+			}
+			if ($disponible > $pols){
+				pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto);	
+			}else{
+				$date = date('Y-m-d 20:00:00'); 
+				sql_old("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('0', '".$receptor_mensaje_ID."', '".$date."', 'Ocurrió un error al realizar la transferencia automática con concepto (".$concepto."), por favor revise que tenga fondos para las operaciones configuradas.', '0', '0')");
+				notificacion($receptor_mensaje_ID, 'Problema con una transaccion automática', '/msg');
+				evento_chat('<b>[MP]</b> <a href="/msg">Nuevo mensaje privado</a>', $receptor_mensaje_ID, -1, false, 'p', $r['pais']);
+			}
+		}
+
+		
+	}
+	
+}
 
 
 // NOTAS MEDIA

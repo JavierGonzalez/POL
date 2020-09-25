@@ -336,10 +336,9 @@ sql_old("DELETE FROM users_con WHERE time < '".tiempo(30)."'");
 
 
 $result3 = sql_old("SELECT IP, pols, nick, ID, ref, estado,
-".(ECONOMIA?"(SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = '".$pol['user_ID']."')":"estado")." AS pols_cuentas 
+".(ECONOMIA?"(SELECT SUM(pols) FROM cuentas WHERE pais = '".PAIS."' AND user_ID = ID)":"estado")." AS pols_cuentas 
 FROM users 
-WHERE estado = 'expulsado' AND pais <> 'ninguno'
-LIMIT 1");
+WHERE estado = 'expulsado' AND pais <> 'ninguno'");
 while($r3 = r($result3)) {
 	$user_ID = $r3['ID']; 
 	$estado = $r3['estado']; 
@@ -598,10 +597,10 @@ ORDER BY time_expire DESC LIMIT 5");
 <p><br />Resultados de las últimas votaciones:</p>
 <ul>
 '.$txt_votaciones_result.'
-<li>(<a href="/votacion">Ver todas</a>)</li>
+<li>(<a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/votacion">Ver todas</a>)</li>
 </ul>
 
-<p><br />Más formas de participar: <a href=""><b>Chat</b></a>, <a href="/hacer">¿<b>Qué hacer</b>?</a></p>
+<p><br />Más formas de participar: <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'"><b>Chat</b></a>, <a href="http://'.strtolower(PAIS).'.'.DOMAIN.'/hacer">¿<b>Qué hacer</b>?</a></p>
 
 <p>________<br />
 <b>'.$pol['config']['pais_des'].'</b><br />

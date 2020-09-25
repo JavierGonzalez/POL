@@ -10,7 +10,7 @@ $maxsim['output'] = 'template';
 
 
 // INICIALIZACION
-define('RAIZ', dirname(__FILE__).'/');
+define('RAIZ', dirname(__FILE__).'/..');
 
 $link = sql_link();
 

@@ -130,7 +130,7 @@ ORDER BY fecha_registro ASC", $link);
 		echo '<hr style="width:100%;" />';
 		if (($r['ID_presidente'] == $pol['user_ID']) AND (!$_GET[2])) { //PARA PRESIDENTE
 			echo '<span><form><input type="button" value="'._('Editar').'" onClick="window.location.href=\'/partidos/' . $siglas_lower . '/editar\';" /> <a href="/partidos"><b>'._('Ver partidos').'</b></a></form></span>';
-		} elseif ($_GET[2]) { echo '<span style="float:right;"><form><input type="button" value="'._('Eliminar').'" onClick="if (!confirm(\'&iquest;Estas convencido de que quieres ELIMINAR para siempre?\')) { return false; } else { window.location.href=\'/accion/eliminar-partido&siglas='.$r['siglas'].'\'; }"></form></span><span><a href="/partidos/'.$siglas_lower.'"><b>'._('Volver').'</b></a></span>';
+		} elseif ($_GET[2]) { echo '<span style="float:right;"><form><input type="button" value="'._('Eliminar').'" onClick="if (!confirm(\'&iquest;Estas convencido de que quieres ELIMINAR para siempre?\')) { return false; } else { window.location.href=\'/accion/eliminar-partido?siglas='.$r['siglas'].'\'; }"></form></span><span><a href="/partidos/'.$siglas_lower.'"><b>'._('Volver').'</b></a></span>';
 		} else { echo '<span>'.boton(_('Afiliarse'), '/form/afiliarse/'.$siglas_lower) . ' <a href="/partidos"><b>'._('Ver todos').'</b></a></span>'; }
 
 

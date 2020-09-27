@@ -35,11 +35,11 @@ if (($_GET[1] == 'cuentas') AND ($_GET[2] == 'crear')) {
 			if ($user_ID == $pol['user_ID']){
 				echo '<form action="/accion/pols/anadir-apoderado" method="post">
 
-				<p>Apoderado: <input type="text" name="apoderado" size="20" maxlength="20" /> ' . boton('Añadir apoderado', false, false, false, '0') . '</p>
+				<p>Apoderado: <input type="text" name="apoderado" size="20" maxlength="20" /> ' . boton('Añadir apoderado', false, false, false, '0') . '</p>'
 				
-				<p><a href="/pols/cuentas"><b>Ver Cuentas Bancarias</b></a> &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>
 				
-				</form>
+
+				echo '</form>
 				';
 			}else{
 				echo 'No tiene acceso para gestionar esta cuenta';

@@ -20,9 +20,35 @@ if (($_GET[1] == 'cuentas') AND ($_GET[2] == 'crear')) {
 
 </form>
 ';
+}elseif (($_GET[1] == 'cuentas') AND ($_GET[3] == 'apoderados')) {
+	$txt_title = 'Gestionar apodeadors';
+	$txt_nav = array('/pols'=>'Economía', 'Cuentas');
+
+	$result = mysql_query_old("SELECT ID, nombre, user_ID, pols, nivel, time,
+	(SELECT nick FROM users WHERE ID = cuentas.user_ID LIMIT 1) AS nick
+	FROM cuentas
+	WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "'
+	LIMIT 1", $link);
+		while($row = mysqli_fetch_array($result)) {
+			$user_ID = $row['user_ID'];
+	
+			if ($user_ID == $pol['user_ID']){
+				echo '<form action="/accion/pols/anadir-apoderado" method="post">
+
+				<p>Apoderado: <input type="text" name="apoderado" size="20" maxlength="20" /> ' . boton('Añadir apoderado', false, false, false, '0') . '</p>
+				
+				<p><a href="/pols/cuentas"><b>Ver Cuentas Bancarias</b></a> &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>
+				
+				</form>
+				';
+			}else{
+				echo 'No tiene acceso para gestionar esta cuenta';
+			}
+	
+		}
 
 } elseif (($_GET[1] == 'cuentas') AND ($_GET[2])) {
-
+	
 	$result = mysql_query_old("SELECT ID, nombre, user_ID, pols, nivel, time,
 (SELECT nick FROM users WHERE ID = cuentas.user_ID LIMIT 1) AS nick
 FROM cuentas
@@ -33,6 +59,11 @@ LIMIT 1", $link);
 		$pols = $row['pols'];
 		$nombre = $row['nombre'];
 		$user_ID = $row['user_ID'];
+
+		if ($user_ID == $pol['user_ID']){
+			$txt_tab['/pols/cuentas/'.$_GET[2].'/apoderados'] = _('Gestionar apoderados');
+		}
+
 		$nivel = $row['nivel'];
 	}
 

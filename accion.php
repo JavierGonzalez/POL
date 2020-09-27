@@ -1371,22 +1371,36 @@ case 'pols':
 	}elseif (($_GET[2] == 'transaut') AND ($_GET[3] == 'eliminar')) {
 		$refer_url = 'pols/transaut#error';
 		$transaccion_ID = $_GET[4];
-		$result = sql_old("SELECT emisor_ID, receptor_ID FROM transacciones WHERE pais = '".PAIS."' AND emisor_ID = '".$pol['user_ID']."' AND ID='".$transaccion_ID."' AND periodicidad is not null LIMIT 1");
+		$result = sql_old("SELECT emisor_ID, receptor_ID FROM transacciones WHERE pais = '".PAIS."'  AND ID='".$transaccion_ID."' AND periodicidad is not null LIMIT 1");
 		while($r = r($result)){ 
 			$receptor_ID = $r["receptor_ID"];
 			$emisor_ID = $r["emisor_ID"];
 			$receptor_notificacion_ID = $receptor_ID;
-			if ($receptor_ID < 0){
-				$result = sql_old("SELECT user_ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".substr($receptor_ID,1)."' LIMIT 1");
-				while($r = r($result)){ $receptor_notificacion_ID = $r['user_ID']; }				
+			$todoOk = true;
+			if ($emisor_ID < 0){
+				$result = sql_old("SELECT user_ID FROM cuentas WHERE pais = '".PAIS."' AND ID = ".substr($emisor_ID,1)." LIMIT 1");
+				while($r = r($result)){ 
+					error_log("Emisor id: ".$emisor_ID." ID: ".$r['user_ID']);
+					if ($pol['user_ID'] != $r['user_ID']){
+						$todoOk = false;
+						$refer_url = 'pols/transaut#error#la_cuenta_no_pertenece_al_usuario';
+					} 
+				}				
 			}
-			
-			$result = sql_old("SELECT nick FROM users WHERE pais = '".PAIS."' AND ID = '".$pol['user_ID']."' LIMIT 1");
-			while($r = r($result)){ $emisor_ID = $r['nick']; }				
 
-			notificacion($receptor_notificacion_ID, "(".$emisor_ID.") Cancelada transacción automática a su favor", '/transaut');
-			sql_old("DELETE FROM transacciones WHERE ID='".$transaccion_ID."'");
-			$refer_url = 'pols/transaut#ok';
+			if ($todoOk){
+				if ($receptor_ID < 0){
+					$result = sql_old("SELECT user_ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".substr($receptor_ID,1)."' LIMIT 1");
+					while($r = r($result)){ $receptor_notificacion_ID = $r['user_ID']; }				
+				}
+				
+				$result = sql_old("SELECT nick FROM users WHERE pais = '".PAIS."' AND ID = '".$pol['user_ID']."' LIMIT 1");
+				while($r = r($result)){ $emisor_ID = $r['nick']; }				
+
+				notificacion($receptor_notificacion_ID, "(".$emisor_ID.") Cancelada transacción automática a su favor", '/transaut');
+				sql_old("DELETE FROM transacciones WHERE ID='".$transaccion_ID."'");
+				$refer_url = 'pols/transaut#ok';
+			}
 		 }
 	}elseif (($_GET[2] == 'transaut') AND (is_numeric($_POST['pols'])) AND ($_POST['pols'] > 0) AND ($_POST['concepto'])) {
 

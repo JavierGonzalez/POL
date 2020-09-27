@@ -251,8 +251,6 @@ LIMIT ".$p_limit, $link);
 			$emisor_nick = $row['nick_emisor'];
 			$pols = $row['pols'];
 			
-			error_log("Periodicidad: ".$periodicidad);
-
 			if ($periodicidad == "D"){
 				$periodicidad = "Diaria";
 			}elseif ($periodicidad == "S"){
@@ -260,7 +258,6 @@ LIMIT ".$p_limit, $link);
 			}elseif ($periodicidad == "M"){
 				$periodicidad = "Mensual";
 			}
-			error_log("Periodicidad: ".$periodicidad);
 				
 			echo '<tr><td align="right" valign="top"><b>'.pols($pols).'</b></td><td valign="top">'.$emisor_nick.'</td><td valign="top">'.$receptor_nick.'</td><td valign="top">'.$periodicidad.'</td><td>'.$row['concepto'].'</td><td valign="top" align="right">'.boton(_('Eliminar'), '/accion/pols/transaut/eliminar/'.strtolower($transaccion_ID), false, 'red').'</td></tr>';
 		}
@@ -430,7 +427,7 @@ function click_ciudadano() {
 <th colspan="3">Concepto</th>
 </tr>';
 
-	$result = mysql_query_old("SELECT COUNT(*) AS num FROM transacciones WHERE pais = '".PAIS."' AND (emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "')", $link);
+	$result = mysql_query_old("SELECT COUNT(*) AS num FROM transacciones WHERE pais = '".PAIS."' AND (emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "') AND periodicidad is null", $link);
 	while($row = mysqli_fetch_array($result)){ $total = $row['num']; }
 
 	if (is_numeric($_GET[1])) { $ahora = $_GET[1]; } 
@@ -442,7 +439,7 @@ function click_ciudadano() {
 (SELECT nick FROM users WHERE ID = transacciones.emisor_ID LIMIT 1) AS nick_emisor,
 (SELECT nick FROM users WHERE ID = transacciones.receptor_ID LIMIT 1) AS nick_receptor
 FROM transacciones
-WHERE pais = '".PAIS."' AND (emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "')
+WHERE pais = '".PAIS."' AND (emisor_ID = '" . $pol['user_ID'] . "' OR receptor_ID = '" . $pol['user_ID'] . "') AND periodicidad is null
 ORDER BY time DESC
 LIMIT ".$p_limit, $link);
 	while($row = mysqli_fetch_array($result)) {

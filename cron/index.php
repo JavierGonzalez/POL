@@ -295,8 +295,8 @@ if (date('j') == 1) {
 } // FIN if (ECONOMIA) {
 
 function gestionar_transacciones_automaticas($periodicidad){
-	$result = mysql_query_old("SELECT pols, emisor_ID, receptor_ID, concepto FROM transacciones WHERE pais = '".PAIS."' AND periodicidad = '".$periodicidad."'", $link);
-	while($row = mysqli_fetch_array($result)){ 
+	$consulta_transacciones = mysql_query_old("SELECT pols, emisor_ID, receptor_ID, concepto FROM transacciones WHERE pais = '".PAIS."' AND periodicidad = '".$periodicidad."'", $link);
+	while($row = mysqli_fetch_array($consulta_transacciones)){ 
 
 		$pols = $row['pols']; 
 		$emisor_ID = $row['emisor_ID']; 

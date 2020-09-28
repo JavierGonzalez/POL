@@ -316,7 +316,6 @@ WHERE chat_ID = '".$_POST['chat_ID']."' AND estado = 'activo' AND pais = '".PAIS
 		sql_old("DELETE FROM chats WHERE chat_ID = '".$_GET['chat_ID']."' AND pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['control_gobierno'])?'true':'false')."' OR admin = '".$pol['nick']."') LIMIT 1");
         $refer_url = 'chat/list';
 	} elseif (($_GET[2] == 'limpiar') AND ($_GET['chat_ID'])) {
-		error_log("Cleaning chat... "."DELETE FROM chats_msg WHERE chat_ID = '".$_GET['chat_ID']."' AND '".$pol['user_ID']."' = (select user_ID from chats where chat_ID = '".$_GET['chat_ID']."' LIMIT 1)");
 		sql_old("DELETE FROM chats_msg WHERE chat_ID = '".$_GET['chat_ID']."' AND '".$pol['user_ID']."' = (select user_ID from chats where chat_ID = '".$_GET['chat_ID']."' LIMIT 1)");
 		$refer_url = 'chat/list';
 	} elseif (($_GET[2] == 'bloquear') AND ($_GET['chat_ID'])) {
@@ -1058,11 +1057,9 @@ case 'gobierno':
 		if ($_GET[3] == 'editar') {
 			$result = sql_old("SELECT ID FROM cat WHERE pais = '".PAIS."'");
 			while ($r = r($result)) { 
-				error_log("Updating category: UPDATE cat SET url = '". gen_url($_POST[$r['ID'].'_nombre'])."', nombre = '".$_POST[$r['ID'].'_nombre']."', nivel = '".$_POST[$r['ID'].'_nivel']."', orden = '".$_POST[$r['ID'].'_orden']."', publicar='".$_POST[$r['ID'].'_publicable']."' WHERE ID = '".$r['ID']."' LIMIT 1");
 				sql_old("UPDATE cat SET url = '". gen_url($_POST[$r['ID'].'_nombre'])."', nombre = '".$_POST[$r['ID'].'_nombre']."', nivel = '".$_POST[$r['ID'].'_nivel']."', orden = '".$_POST[$r['ID'].'_orden']."', publicar='".$_POST[$r['ID'].'_publicable']."' WHERE ID = '".$r['ID']."' LIMIT 1");
 			}
 		} elseif ($_GET[3] == 'crear') {
-			error_log("Inserting category: INSERT INTO cat (pais, url, nombre, nivel, orden, tipo, publicar) VALUES ('".PAIS."', '".gen_url($_POST['nombre'])."', '".substr($_POST['nombre'], 0, 40)."', '0', '10', '".($_POST['tipo']?$_POST['tipo']:'docs')."', '".$_POST['publicable']."')");
 			sql_old("INSERT INTO cat (pais, url, nombre, nivel, orden, tipo, publicar) VALUES ('".PAIS."', '".gen_url($_POST['nombre'])."', '".substr($_POST['nombre'], 0, 40)."', '0', '10', '".($_POST['tipo']?$_POST['tipo']:'docs')."', '".$_POST['publicable']."')");
 
 		} elseif ($_GET[3] == 'eliminar') {
@@ -1197,7 +1194,9 @@ case 'mercado':
 		$ID = $_GET['ID'];
 		$pols = $_POST['puja'];
 
-		if ($pols <= $pol['pols']) {
+		$result = sql_old("SELECT pols FROM pujas ORDER BY `time` LIMIT 1");
+		$r = r($result);
+		if ($pols <= $pol['pols'] AND $pols > $r['pols']) {
 			sql_old("INSERT INTO pujas (pais, mercado_ID, user_ID, pols, time) VALUES ('".PAIS."', '".$ID."', '".$pol['user_ID']."', '".$pols."', '".$date."')");
 			evento_chat('<b>[#]</b> <em>'.$pol['nick'].'</em> Ha realizado una puja en la subasta (<a href="/subasta/">Subasta</a>)'); 
 		}
@@ -1265,8 +1264,39 @@ case 'pols':
 	$_POST['pols'] = strval($_POST['pols']);
 
 	$refer_url = 'pols#error';
+	if ($_GET[2] == 'apoderado'){
+		if ($_GET[3] == 'anadir'){
+			$apoderado = $_POST['apoderado'];
+			$cuenta = $_POST['cuenta'];
+			$refer_url = 'pols/cuentas/'.$cuenta.'/apoderados';
 
-	if (($_GET[2] == 'transferir') AND (is_numeric($_POST['pols'])) AND ($_POST['pols'] > 0) AND ($_POST['concepto'])) {
+			error_log("apoderado: ".$apoderado);
+			error_log("cuenta: ".$cuenta);
+			error_log("cuenta: "."SELECT ID FROM users WHERE pais = '".PAIS."' AND nick = '". strtolower($apoderado) ."' LIMIT 1");
+
+			$result = sql_old("SELECT ID FROM users WHERE pais = '".PAIS."' AND nick = '". strtolower($apoderado) ."' LIMIT 1");
+			if($r = r($result)){ 
+				$comprobacion_cuenta = sql_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$cuenta."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+				if($resultado_comprobacion = r($comprobacion_cuenta)){
+					sql_old("INSERT INTO cuentas_apoderados (cuenta_ID, user_ID, `time`) values ('".$resultado_comprobacion['ID']."','".$r['ID']."',now())");
+				}else{
+					$refer_url = 'pols/cuentas/'.$cuenta.'/apoderados#error_cuenta_no_pertenece_usuario';
+				}
+			}else{
+				$refer_url = 'pols/cuentas/'.$cuenta.'/apoderados#error_usuario_no_encontrado';
+			}
+		}elseif ($_GET[3] == 'eliminar'){
+			$cuenta = $_GET[4];
+			$apoderado = $_GET[5];
+			$refer_url = 'pols/cuentas/'.$cuenta.'/apoderados';
+			$comprobacion_cuenta = sql_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$cuenta."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+			if($resultado_comprobacion = r($comprobacion_cuenta)){
+				sql_old("DELETE FROM cuentas_apoderados where cuenta_ID = '".$resultado_comprobacion['ID']."' AND user_ID = '".$apoderado."' ");
+			}else{
+				$refer_url = 'pols/cuentas/'.$cuenta.'/apoderados#error_cuenta_no_pertenece_usuario';
+			}
+		}
+	}elseif (($_GET[2] == 'transferir') AND (is_numeric($_POST['pols'])) AND ($_POST['pols'] > 0) AND ($_POST['concepto'])) {
 
 
 
@@ -1289,7 +1319,9 @@ case 'pols':
 		} elseif (is_numeric($_POST['origen'])) { 
 			//Cuenta
 
-			$result = sql_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."')) LIMIT 1");
+			error_log("Comprobando si la cuenta pertenece al usuario: "."SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."') OR '".$pol['user_ID']."' in (select user_ID from cuentas_apoderados where cuenta_ID = '".$_POST['origen']."' )) LIMIT 1");
+
+			$result = sql_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."') OR '".$pol['user_ID']."' in (select user_ID from cuentas_apoderados where cuenta_ID = '".$_POST['origen']."' )) LIMIT 1");
 			while($r = r($result)){ $origen = 'cuenta'; }
 
 		}
@@ -1355,7 +1387,14 @@ case 'pols':
 
 			// insert historial
 			if (($pols > 0) AND ($emisor_ID != $receptor_ID)) {		
-				if ($receptor_ID > 0) { notificacion($receptor_ID, 'Te han transferido '.$pols.' monedas', '/pols'); }
+				if ($receptor_ID > 0) { 
+					notificacion($receptor_ID, 'Te han transferido '.$pols.' monedas', '/pols'); 
+				}else{
+					$result = sql_old("SELECT user_ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".substr($receptor_ID,1)."' LIMIT 1");
+					while($r = r($result)){ 
+						notificacion($r['user_ID'], 'Te han transferido '.$pols.' monedas', '/pols'); 
+					}					
+				}
 				sql_old("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time) VALUES ('".PAIS."', '".$pols."', '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".$date."')");
 
 				if ($transf_int) {
@@ -1364,6 +1403,119 @@ case 'pols':
 				$refer_url = 'pols#ok';
 			}
 		}
+	}elseif (($_GET[2] == 'transaut') AND ($_GET[3] == 'eliminar')) {
+		$refer_url = 'pols/transaut#error';
+		$transaccion_ID = $_GET[4];
+		$result = sql_old("SELECT emisor_ID, receptor_ID FROM transacciones WHERE pais = '".PAIS."'  AND ID='".$transaccion_ID."' AND periodicidad is not null LIMIT 1");
+		while($r = r($result)){ 
+			$receptor_ID = $r["receptor_ID"];
+			$emisor_ID = $r["emisor_ID"];
+			$receptor_notificacion_ID = $receptor_ID;
+			$todoOk = true;
+			if ($emisor_ID < 0){
+				$result = sql_old("SELECT user_ID FROM cuentas WHERE pais = '".PAIS."' AND ID = ".substr($emisor_ID,1)." LIMIT 1");
+				while($r = r($result)){ 
+					error_log("Emisor id: ".$emisor_ID." ID: ".$r['user_ID']);
+					if ($pol['user_ID'] != $r['user_ID']){
+						$todoOk = false;
+						$refer_url = 'pols/transaut#error#la_cuenta_no_pertenece_al_usuario';
+					} 
+				}				
+			}
+
+			if ($todoOk){
+				if ($receptor_ID < 0){
+					$result = sql_old("SELECT user_ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".substr($receptor_ID,1)."' LIMIT 1");
+					while($r = r($result)){ $receptor_notificacion_ID = $r['user_ID']; }				
+				}
+				
+				$result = sql_old("SELECT nick FROM users WHERE pais = '".PAIS."' AND ID = '".$pol['user_ID']."' LIMIT 1");
+				while($r = r($result)){ $emisor_ID = $r['nick']; }				
+
+				notificacion($receptor_notificacion_ID, "(".$emisor_ID.") Cancelada transacción automática a su favor", '/transaut');
+				sql_old("DELETE FROM transacciones WHERE ID='".$transaccion_ID."'");
+				$refer_url = 'pols/transaut#ok';
+			}
+		 }
+	}elseif (($_GET[2] == 'transaut') AND (is_numeric($_POST['pols'])) AND ($_POST['pols'] > 0) AND ($_POST['concepto'])) {
+
+		$concepto = ucfirst(strip_tags($_POST['concepto']));
+		$pols = $_POST['pols'];
+		$desde = $_POST['desde'];
+		$hasta = $_POST['hasta'];
+		$periodicidad = $_POST['periodicidad'];
+
+		$origen = false;
+		$destino = false;
+		$transf_int = false;
+		
+
+		//ORIGEN
+		if ($_POST['origen'] == '0') { 
+			//Personal
+
+			//tienes dinero suficiente y nick existe
+			$result = sql_old("SELECT ID, pais FROM users WHERE pais = '".PAIS."' AND ID = '".$pol['user_ID']."' AND pols >= '".$pols."' AND estado = 'ciudadano' LIMIT 1");
+			while($r = r($result)){ $pais_origen = $r['pais']; $origen = 'ciudadano'; }
+
+		} elseif (is_numeric($_POST['origen'])) { 
+			//Cuenta
+
+			$result = sql_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."')) LIMIT 1");
+			while($r = r($result)){ $origen = 'cuenta'; }
+
+		}
+
+		//DESTINO
+		if (($_POST['destino'] == 'ciudadano') AND ($_POST['ciudadano'])) {
+			//Ciudadano
+
+			//nick existe
+			$result = sql_old("SELECT ID, pais FROM users WHERE nick = '".$_POST['ciudadano']."' AND estado = 'ciudadano' LIMIT 1");
+			while($r = r($result)){  $pais_destino = $r['pais']; $destino = 'ciudadano'; $destino_user_ID = $r['ID']; }
+
+		} elseif (($_POST['destino'] == 'cuenta') AND ($_POST['cuenta'])) {
+			//cuenta
+			
+			//cuenta existe
+			$result = sql_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['cuenta']."' LIMIT 1");
+			while($r = r($result)){ $destino = 'cuenta'; $destino_cuenta_ID = $r['ID']; }
+		}
+
+		if (($origen) AND ($destino)) { //todo OK
+			//es transferencia internacional?
+
+			//quitar
+			if ($origen == 'ciudadano') {
+				$emisor_ID = $pol['user_ID'];
+			} elseif ($origen == 'cuenta') {
+				$emisor_ID = '-'.$_POST['origen'];
+			}
+
+			//ingresar
+			if ($destino == 'ciudadano') {
+				$receptor_ID = $destino_user_ID;
+			} elseif ($destino == 'cuenta') {
+				$receptor_ID = '-'.$destino_cuenta_ID;
+			}
+
+			// insert historial
+			if (($pols > 0) AND ($emisor_ID != $receptor_ID)) {		
+				$receptor_notificacion_ID = $receptor_ID;
+				if ($receptor_ID < 0){
+					$result = sql_old("SELECT user_ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".substr($receptor_ID,1)."' LIMIT 1");
+					while($r = r($result)){ $receptor_notificacion_ID = $r['user_ID']; }				
+				}
+
+				$result = sql_old("SELECT nick FROM users WHERE pais = '".PAIS."' AND ID = '".$pol['user_ID']."' LIMIT 1");
+				while($r = r($result)){ $nick = $r['nick']; }	
+	
+				notificacion($receptor_notificacion_ID, "(".$nick.") Creada transacción automática a tu favor", '/transaut');
+				sql_old("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time, periodicidad) VALUES ('".PAIS."', '".$pols."', '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".$date."' , '".$periodicidad."')");
+				$refer_url = 'pols/transaut#ok';
+			}
+		}
+
 	} elseif (($_GET[2] == 'crear-cuenta') AND ($_POST['nombre']) AND ($pol['pols'] >= $pol['config']['pols_cuentas'])) {
 		$_POST['nombre'] = ucfirst(strip_tags($_POST['nombre']));
 
@@ -1375,6 +1527,14 @@ case 'pols':
 	} elseif (($_GET[2] == 'eliminar-cuenta') AND ($_GET['ID'])) {
 		sql_old("DELETE FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND pols = '0' AND nivel = '0' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
 		$refer_url = 'pols/cuentas';
+	} elseif (($_GET[2] == 'ceder-cuenta')) {
+		$cuenta = $_POST['ID'];
+		$ciudadano = $_POST['usuario'];
+
+		error_log("UPDATE cuentas set user_ID = (SELECT ID FROM users WHERE nick = '".strtolower($ciudadano)."') WHERE pais = '".PAIS."' AND ID = '".$cuenta."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+
+		sql_old("UPDATE cuentas set user_ID = (SELECT ID FROM users WHERE nick = '".strtolower($ciudadano)."') WHERE pais = '".PAIS."' AND ID = '".$cuenta."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+		$refer_url = 'pols/cuentas/'.$cuenta;
 	}
 
 	break;

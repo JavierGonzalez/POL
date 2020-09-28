@@ -225,7 +225,6 @@ CREATE TABLE `cuentas` (
   `time` datetime NOT NULL default '0000-00-00 00:00:00',
   `exenta_impuestos` tinyint(1) NOT NULL default '0',
   `gobierno` enum('true','false') character set utf8 default 'false',
-  `apoderados` varchar(300) character set utf8 NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `nombre` (`nombre`),
   KEY `user_ID` (`user_ID`),
@@ -233,6 +232,15 @@ CREATE TABLE `cuentas` (
   KEY `pais` (`pais`)
 ) ENGINE=MyISAM AUTO_INCREMENT=591 DEFAULT CHARSET=latin1;
 
+CREATE TABLE cuentas_apoderados (
+  `ID` mediumint(8) NOT NULL auto_increment,
+  `cuenta_ID` mediumint(8) NOT NULL,
+  `user_ID` mediumint(8) NOT NULL,
+  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`),
+  KEY `user_ID` (`user_ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=591 DEFAULT CHARSET=latin1;
+	
 #
 # Source for table "docs"
 #

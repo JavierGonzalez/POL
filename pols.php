@@ -21,23 +21,42 @@ if (($_GET[1] == 'cuentas') AND ($_GET[2] == 'crear')) {
 </form>
 ';
 }elseif (($_GET[1] == 'cuentas') AND ($_GET[3] == 'apoderados')) {
-	$txt_title = 'Gestionar apodeadors';
-	$txt_nav = array('/pols'=>'Economía', 'Cuentas');
-
-	$result = mysql_query_old("SELECT ID, nombre, user_ID, pols, nivel, time,
+	$txt_title = 'Gestionar apoderados';
+	$txt_tab['/pols/cuentas/'.$_GET[2].'/apoderados'] = _('Gestionar apoderados');
+	
+	$comprobacion_cuentas = mysql_query_old("SELECT ID, nombre, user_ID, pols, nivel, time,
 	(SELECT nick FROM users WHERE ID = cuentas.user_ID LIMIT 1) AS nick
 	FROM cuentas
 	WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "'
 	LIMIT 1", $link);
-		while($row = mysqli_fetch_array($result)) {
-			$user_ID = $row['user_ID'];
+
+	while($cuentas = mysqli_fetch_array($comprobacion_cuentas)) {
+		$user_ID = $cuentas['user_ID'];
+		$nombre = $cuentas['nombre'];
+		$txt_nav = array('/pols'=>'Economía', '/pols/cuentas'=>'Cuenta bancaria', '/pols/cuentas/'.$_GET[2]=>$nombre, 'Gestionar apoderados');
 	
 			if ($user_ID == $pol['user_ID']){
-				echo '<form action="/accion/pols/anadir-apoderado" method="post">
-
-				<p>Apoderado: <input type="text" name="apoderado" size="20" maxlength="20" /> ' . boton('Añadir apoderado', false, false, false, '0') . '</p>'
+				echo '<form action="/accion/pols/apoderado/anadir" method="post">
+				<input type="hidden" name="cuenta" value="'.$_GET[2].'" />
+				<p>Apoderado: <input type="text" name="apoderado" size="20" maxlength="20" /> <input type="submit" value="Añadir" onClick="if (!confirm(\'&iquest;Estas seguro de querer añadir a este usuario como apoderado? \nTenga en cuenta que podrá realizar cualquier operación con la cuenta.\')) { return false; }"</p>
+				<br />
+				<table border="0" cellspacing="3" cellpadding="0" class="pol_table">
+				<tr>
+				<th>Ciudadano</th>
+				<th>Eliminar</th>
+				</tr>';
 				
+				// concepto != 'CP' AND concepto != 'INEMPOL' AND concepto != 'Salario' AND 
+					$consulta_apoderados = mysql_query_old("SELECT user_ID, time,
+				(SELECT nick FROM users WHERE ID = cuentas_apoderados.user_ID LIMIT 1) AS nick_apoderado
+				FROM cuentas_apoderados
+				WHERE cuenta_ID = '" . $_GET[2] . "'
+				ORDER BY time DESC", $link);
+					while($apoderados = mysqli_fetch_array($consulta_apoderados)) {				
+						echo '<tr><td align="right" valign="middle"><b>' . $apoderados['nick_apoderado'] . '</b></td><td>'.boton(_('Eliminar'), '/accion/pols/apoderado/eliminar/'.$_GET[2].'/'.$apoderados['user_ID'], false, 'red').'</td></tr>';
+					}
 				
+					echo '</table><p>'.$p_paginas.'</p><p><a href="/pols/cuentas/"><b>Ver Cuentas</b></a> &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>';				
 
 				echo '</form>
 				';
@@ -59,9 +78,14 @@ LIMIT 1", $link);
 		$pols = $row['pols'];
 		$nombre = $row['nombre'];
 		$user_ID = $row['user_ID'];
+		$ceder_form = '';
 
 		if ($user_ID == $pol['user_ID']){
 			$txt_tab['/pols/cuentas/'.$_GET[2].'/apoderados'] = _('Gestionar apoderados');
+			$ceder_form = '<form action="/accion/pols/ceder-cuenta" method="post">
+			<input type="hidden" name="ID" value="'.$_GET[2].'" />
+			<p>Ceder cuenta: <input type="text" name="usuario" size="20" maxlength="20" /> <input type="submit" value="Ceder" onClick="if (!confirm(\'&iquest;Estas seguro de que quieres ceder esta cuenta? \n\')) { return false; }"</p>
+';
 		}
 
 		$nivel = $row['nivel'];
@@ -82,6 +106,7 @@ LIMIT 1", $link);
 
 		echo '<h1><span class="amarillo">'.pols($pols).' '.MONEDA.'</span> &nbsp; CUENTA: '.$nombre.' <span style="color:grey;">(ID: '.$ID.')</span> '.boton('&rarr;', '/pols/transferir/-'.$ID, false, 'small') . '</h1>
 <br />
+'.$ceder_form.'
 <p>' . $p_paginas . '</p>
 <table border="0" cellspacing="3" cellpadding="0" class="pol_table">
 <tr>
@@ -156,11 +181,12 @@ LIMIT ".$p_limit, $link);
 		} else {
 			$select1_ok = ' checked="checked"';
 		}
-		$result = mysql_query_old("SELECT ID, nombre, pols, user_ID, nivel
+		$result = mysql_query_old("SELECT ID, nombre, pols, user_ID, nivel, (SELECT GROUP_CONCAT(user_ID SEPARATOR ', ')  FROM cuentas_apoderados WHERE cuenta_ID = cuentas.ID) as apoderados
 	FROM cuentas WHERE pais = '".PAIS."'  
 	ORDER BY nivel DESC, nombre ASC", $link);
 		while($row = mysqli_fetch_array($result)){
-			if (($row['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= $row['nivel']) AND ($row['nivel'] != 0) AND ($pol['nivel'] != 120))) {
+
+			if (($row['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= $row['nivel']) AND ($row['nivel'] != 0) AND ($pol['nivel'] != 120)) OR strpos($row['apoderados'],$pol['user_ID']) !== false) {
 				if ($row['pols'] < 1) { $extra = ' disabled="disabled"'; } else { $extra = ''; }
 				$select_origen .= '<option value="' . $row['ID'] . '"' . $extra . '>' . pols($row['pols']) . ' - ' . $row['nombre'] . '</option>' . "\n";
 			}
@@ -369,11 +395,11 @@ ORDER BY nivel DESC, pols DESC", $link);
 	} else {
 		$select1_ok = ' checked="checked"';
 	}
-	$result = mysql_query_old("SELECT ID, nombre, pols, user_ID, nivel
+	$result = mysql_query_old("SELECT ID, nombre, pols, user_ID, nivel, (SELECT GROUP_CONCAT(user_ID SEPARATOR ', ')  FROM cuentas_apoderados WHERE cuenta_ID = cuentas.ID) as apoderados
 FROM cuentas WHERE pais = '".PAIS."'  
 ORDER BY nivel DESC, nombre ASC", $link);
 	while($row = mysqli_fetch_array($result)){
-		if (($row['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= $row['nivel']) AND ($row['nivel'] != 0) AND ($pol['nivel'] != 120))) {
+		if (($row['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= $row['nivel']) AND ($row['nivel'] != 0) AND ($pol['nivel'] != 120)  OR strpos($row['apoderados'],$pol['user_ID']) !== false) ) {
 			if ($row['pols'] < 1) { $extra = ' disabled="disabled"'; } else { $extra = ''; }
 			$select_origen .= '<option value="' . $row['ID'] . '"' . $extra . '>' . pols($row['pols']) . ' - ' . $row['nombre'] . '</option>' . "\n";
 		}

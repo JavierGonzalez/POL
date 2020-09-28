@@ -232,6 +232,15 @@ CREATE TABLE `cuentas` (
   KEY `pais` (`pais`)
 ) ENGINE=MyISAM AUTO_INCREMENT=591 DEFAULT CHARSET=latin1;
 
+CREATE TABLE cuentas_apoderados (
+  `ID` mediumint(8) NOT NULL auto_increment,
+  `cuenta_ID` mediumint(8) NOT NULL,
+  `user_ID` mediumint(8) NOT NULL,
+  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`),
+  KEY `user_ID` (`user_ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=591 DEFAULT CHARSET=latin1;
+	
 #
 # Source for table "docs"
 #

@@ -23,7 +23,7 @@ if ($_GET[1] == 'categorias') {
 
 <table border="0" cellspacing="0" cellpadding="4">
 
-<tr>$_GET[3]
+<tr>'.$_GET[3].'
 <th>'._('Orden').'</th>
 <th>'._('Nombre').'</th>
 <th>'._('Tipo').'</th>

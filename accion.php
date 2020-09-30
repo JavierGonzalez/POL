@@ -1194,8 +1194,9 @@ case 'mercado':
 		$ID = $_GET['ID'];
 		$pols = $_POST['puja'];
 
-		$result = sql_old("SELECT pols FROM pujas ORDER BY `time` LIMIT 1");
+		$result = sql_old("SELECT pols FROM pujas WHERE pais = '".PAIS."' AND mercado_ID = '".$ID."' ORDER BY `time` DESC LIMIT 1");
 		$r = r($result);
+
 		if ($pols <= $pol['pols'] AND $pols > $r['pols']) {
 			sql_old("INSERT INTO pujas (pais, mercado_ID, user_ID, pols, time) VALUES ('".PAIS."', '".$ID."', '".$pol['user_ID']."', '".$pols."', '".$date."')");
 			evento_chat('<b>[#]</b> <em>'.$pol['nick'].'</em> Ha realizado una puja en la subasta (<a href="/subasta/">Subasta</a>)'); 

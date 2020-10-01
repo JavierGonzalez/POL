@@ -15,7 +15,6 @@ if (($_GET[1] == 'cuentas') AND ($_GET[2] == 'crear')) {
 	echo '<form action="/accion/pols/crear-cuenta" method="post">
 	<p>Nombre: <input type="text" name="nombre" size="20" maxlength="20" />
 	<p>'.(nucleo_acceso($vp['acceso']['crear_cuenta'])?boton(_('Crear Cuenta'), false, false, false, $pol['config']['pols_cuentas']):boton(_('Crear Cuenta'), false, $pol['config']['pols_cuentas'], 'large red').' No tienes acceso. Solo pueden: '.verbalizar_acceso($vp['acceso']['crear_cuenta'])).'</p>'
-	//.'<p>'.boton('Crear Cuenta', false, false, false, $pol['config']['pols_cuentas']).
 	.'</p><p><a href="/pols/cuentas"><b>Ver Cuentas Bancarias</b></a> &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>
 
 </form>

@@ -469,6 +469,8 @@ echo '
 <tr><td align="right">'._('Expiración chats').':</td>
 <td><input type="number" name="chat_diasexpira" value="'.$pol['config']['chat_diasexpira'].'" min="10" max="90" required /> <acronym title="Dia inactivos">'._('días').'</acronym></td></tr>
 
+<tr><td align="right">'._('Repetición de examenes').':</td>
+<td><input type="number" name="examen_repe" value="'.$pol['config']['examen_repe'].'" required /> <acronym title="Tiempo requerido antes de poder repetir un examen">'._('segundos').'</acronym></td></tr>
 
 
 <tr><td valign="top" colspan="2">'._('Mensaje del Gobierno').':<br />

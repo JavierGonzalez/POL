@@ -1948,9 +1948,13 @@ case 'foro':
 			}
 		}
 
-
-		
-		$refer_url = '/foro/r/'.$_POST['subforo'];
+		if ($r['mensaje']){
+			$refer_url = 'foro/'.$r['foro'].'/'.$r['hilo'].'#m-'.$r['mensaje'];
+		} else if (isset($r)){
+			$refer_url = 'foro/'.$r['foro'].'/'.$r['hilo'];
+		} else{
+			$refer_url = 'foro/';
+		}
 	}
 	break;
 

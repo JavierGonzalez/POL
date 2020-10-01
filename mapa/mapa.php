@@ -28,14 +28,19 @@ while($r = mysqli_fetch_array($result)) {
 
 	// genera tabla array
 	$m[$r['pos_x']][$r['pos_y']] = $r['ID'] . '|' . $r['size_x'] . '|' . $r['size_y'];
-
+	$orientacion = 'H';
+	if ($r['size_y'] > $r['size_x']){
+		$orientacion = 'V';
+	}
 	//super-array javascript
 	switch ($r['estado']) {
 		case 'p': $info = $r['link'] . '|' .  $r['nick'] . '|' . $r['color']; break;
 		case 'v': $info = 'v|' . $r['nick'] . '|' . $r['pols']; $venta_total += $r['superficie']; break;
-		case 'e': if ($r['link']) { $info = 'e|' . $r['link']; } else { $info = 'e'; } break;
+		case 'e': if ($r['link']) { $info = 'e|' . $r['link']; } else { $info = 'e|'; } break;
 	}
 
+	$info .= "|" .$orientacion;
+	
 	if ($prop) { $prop .= ',' . "\n"; }
 	$prop .= $r['ID'] . ':"' . $info . '"';
 }
@@ -73,6 +78,7 @@ function colorear(modo) {
 	for (i in prop) {
 		var prop_a = prop[i].split("|");
 		var pa1 = prop_a[1];
+		console.log(prop[i]);
 		switch (prop_a[0]) {
 			case "v":
 				if ((vision != "normal") && (pa1 == "'.$pol['nick'].'")) { var elcolor = "#FF0000"; $("#" + i).html(prop_a[2]); } 
@@ -82,10 +88,15 @@ function colorear(modo) {
 				} 
 				break;
 
-			case "e":
-				var elcolor = "#808080";
-				$("#" + i).text(pa1).css("color", "#CCC");
-				break;
+                case "e":
+                    var elcolor = "#808080";
+                    $("#" + i).html(pa1);
+                    $("#" + i).css("white-space", "nowrap");
+                    $("#" + i).css("overflow", "hidden");
+                    if (prop_a[2] == "V"){
+                        $("#" + i).css("writing-mode", "tb-rl");
+                    }
+                    break;
 
 			default:
 				if (vision == "normal") { var elcolor = "#" + prop_a[2]; } 
@@ -114,7 +125,8 @@ $(document).ready(function(){
 			}
 		} else { var msg = "<span style=\"color:green;\">Comprar</span><br />Solar: " + ID + "<br /> <span style=\"color:blue;\"><b>' . $pol['config']['pols_solar'] . '</span> monedas</b>"; }
 		$(this).css("border", "1px solid white");
-		$("#msg").html(msg).css("display", "inline");
+		$("#msg").html(msg);
+		$("#msg").css("display", "inline");
 
 	}).mouseout(function(){
 		$("#msg").css("display","none");
@@ -125,6 +137,7 @@ $(document).ready(function(){
 			var amsg = amsg.split("|");
 			switch (amsg[0]) {
 			case "v": window.location = "/mapa/compraventa/" + $(this).attr("id") + "/"; break;
+			case "e": break;
 			default:
 				if (amsg[0]) {
 					if (amsg[0].substring(0, 1) == "/") { window.location = amsg[0]; } 

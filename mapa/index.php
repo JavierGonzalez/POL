@@ -23,9 +23,15 @@ S - solar			Blanco		(solar, en venta, link a compra)			null
 */
 
 // mapa (ID, pais, pos_x, pos_y, size_x, size_y, user_ID, link, text, time, pols, color, estado)
+if (nucleo_acceso($vp['acceso']['gestion_mapa'])) { 
+	$txt_tab['/mapa/arquitecto'] = _('Gestion arquitecto');
+}
 
+if (($_GET[1] == 'arquitecto') AND nucleo_acceso($vp['acceso']['gestion_mapa'])) {
 
-if (($_GET[1] == 'compraventa') AND ($_GET[2])) { //Comprar
+	include('arquitecto.php');
+	
+}if (($_GET[1] == 'compraventa') AND ($_GET[2])) { //Comprar
 
 		$result = mysql_query_old("SELECT *
 FROM mapa
@@ -152,10 +158,10 @@ LIMIT 1", $link);
 <th>Estado</th>
 </tr>';
 	$multip = 10;
-	
+
 	$result = mysql_query_old("SELECT *
 FROM mapa
-WHERE pais = '".PAIS."' AND user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')
+WHERE pais = '".PAIS."' AND user_ID = '" . $pol['user_ID'] . "'
 ORDER BY estado ASC, time ASC", $link);
 	while($r = mysqli_fetch_array($result)){
 

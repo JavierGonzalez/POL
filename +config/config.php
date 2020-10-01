@@ -82,7 +82,7 @@ define('MP_MAX', 25); // Máximo de MP (mensajes privados) que puede enviar un c
 define('VER', 13); // Version de archivos estaticos. Util para forzar el refresco de js y css. Incrementar.
 $datos_perfil = array('Blog', 'Twitter', 'Facebook', '', 'Menéame');
 
-$columnas = 10; $filas = 10; // Dimensiones mapa
+$columnas = 11; $filas = 11; // Dimensiones mapa
 
 
 define('PRE', (substr($_SERVER['HTTP_HOST'],0,4)=='pre-'?true:false));

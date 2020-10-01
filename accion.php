@@ -1517,11 +1517,13 @@ case 'pols':
 		}
 
 	} elseif (($_GET[2] == 'crear-cuenta') AND ($_POST['nombre']) AND ($pol['pols'] >= $pol['config']['pols_cuentas'])) {
-		$_POST['nombre'] = ucfirst(strip_tags($_POST['nombre']));
+		
+		if (nucleo_acceso($vp['acceso']['crear_cuenta'])){
+			$_POST['nombre'] = ucfirst(strip_tags($_POST['nombre']));
 
-		pols_transferir($pol['config']['pols_cuentas'], $pol['user_ID'], '-1', 'Creacion nueva cuenta bancaria: '.$_POST['nombre']);
-		sql_old("INSERT INTO cuentas (pais, nombre, user_ID, pols, nivel, time) VALUES ('".PAIS."', '".$_POST['nombre']."', '".$pol['user_ID']."', 0, 0, '".$date."')");
-
+			pols_transferir($pol['config']['pols_cuentas'], $pol['user_ID'], '-1', 'Creacion nueva cuenta bancaria: '.$_POST['nombre']);
+			sql_old("INSERT INTO cuentas (pais, nombre, user_ID, pols, nivel, time) VALUES ('".PAIS."', '".$_POST['nombre']."', '".$pol['user_ID']."', 0, 0, '".$date."')");
+		}
 		$refer_url = 'pols/cuentas';
 
 	} elseif (($_GET[2] == 'eliminar-cuenta') AND ($_GET['ID'])) {

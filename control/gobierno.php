@@ -117,6 +117,8 @@ while($r = r($result)){
 'api_borrador'=>_('Crear borradores en API'),
 'cargo'=>_('Control cargos'),
 'control_docs'=>_('Control de los documentos'),
+'crear_cuenta'=>_('Crear cuentas'),
+'gestion_mapa'=>_('Gestión del mapa')
 );
 
 
@@ -469,6 +471,8 @@ echo '
 <tr><td align="right">'._('Expiración chats').':</td>
 <td><input type="number" name="chat_diasexpira" value="'.$pol['config']['chat_diasexpira'].'" min="10" max="90" required /> <acronym title="Dia inactivos">'._('días').'</acronym></td></tr>
 
+<tr><td align="right">'._('Repetición de examenes').':</td>
+<td><input type="number" name="examen_repe" value="'.$pol['config']['examen_repe'].'" required /> <acronym title="Tiempo requerido antes de poder repetir un examen">'._('segundos').'</acronym></td></tr>
 
 
 <tr><td valign="top" colspan="2">'._('Mensaje del Gobierno').':<br />

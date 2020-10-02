@@ -493,7 +493,7 @@ case 'expulsar':
 			sql_old("INSERT INTO expulsiones (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')");
 		}
 	}
-	$refer_url = '/control/expulsiones';
+	$refer_url = 'control/expulsiones';
 	break;
 
 
@@ -719,6 +719,86 @@ FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_POST['ID']."' LIMIT 1");
 
 	break;
 
+case 'arquitecto':
+	$refer_url = 'mapa/arquitecto/';
+
+	error_log("get2: ".$_GET[2]);
+	error_log("get3: ".$_GET[3]);
+	error_log("getId: ".$_GET['ID']);
+	error_log("nick: ".$_POST['nick']);
+	
+
+	if (($_GET[2] == 'comprar') AND ($_GET[3]) AND nucleo_acceso($vp['acceso']['gestion_mapa'])) {
+		$pos = explode("-", $_GET[3]);
+
+		if (($pos[0] > 0) AND ($pos[1] > 0) AND ($pos[0] <= $columnas) AND ($pos[1] <= $filas)) {
+			
+			//verifica solar libre
+			$cc = false;
+			$result = sql_old("SELECT pos_x, pos_y, size_x, size_y FROM mapa WHERE pais = '".PAIS."'");
+			while($r = r($result)){
+				for ($y=1;$y<=$r['size_y'];$y++) {
+					for ($x=1;$x<=$r['size_x'];$x++) {
+						$cc[($r['pos_x'] + ($x - 1))][($r['pos_y'] + ($y - 1))] = true;
+					}
+				}
+
+			}
+			
+
+			if (($cc[$pos[0]][$pos[1]] != true)) { // verifica solar libre
+				sql_old("INSERT INTO mapa (pais, pos_x, pos_y, size_x, size_y, user_ID, nick, link, text, time, pols, color, estado, superficie) VALUES ('".PAIS."', '".$pos[0]."', '".$pos[1]."', '1', '1', '-1', '', '".$_POST['link']."', '', '".$date."', '".$pol['config']['pols_solar']."', '".$_POST['color']."', 'e', '1')");
+				evento_log('El arquitecto ('.$pol['nick'].') ha comprado la parcela '.$_GET[3]);
+			}else{
+				$refer_url = 'mapa/arquitecto/#solar_ya_ocupado';
+			}
+		}else{
+			$refer_url = 'mapa/arquitecto/#fallo_primera_comprobacion';
+		}
+
+		
+	} elseif (($_GET[2] == 'editar') AND ($_GET['ID']) AND nucleo_acceso($vp['acceso']['gestion_mapa'])) {
+
+		$result = sql_old("SELECT * FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1");
+		while($r = r($result)){ 
+			$superficie = $r['size_x'] * $r['size_y'];
+		}
+
+
+		if ((strlen($_POST['text']) <= $superficie)) {
+			$_POST['text'] = preg_replace("[^A-Za-z0-9-]", "", $_POST['text']);
+		}
+			
+		$_POST['link'] = strip_tags($_POST['link']);
+		$_POST['link'] = str_replace("http://", "", $_POST['link']);
+		$_POST['link'] = str_replace("|", "", $_POST['link']);
+		$_POST['link'] = str_replace("\"", "", $_POST['link']);
+		$_POST['link'] = str_replace(HOST, "", $_POST['link']);
+			sql_old("UPDATE mapa SET  text = '".$_POST['text']."', link = '".$_POST['link']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND estado = 'e'  LIMIT 1");
+
+		evento_log('Arquitecto ha editado la parcela'.$_GET[3].' con el siguiente texto: '.$_POST['text']);
+		$refer_url = 'mapa/arquitecto/propiedades';
+
+	} elseif (($_GET[2] == 'ceder') AND ($_GET['ID']) AND nucleo_acceso($vp['acceso']['gestion_mapa'])) {
+		$refer_url = 'mapa/arquitecto/propiedades';
+
+		$result = sql_old("SELECT ID, user_ID, pols, 
+		(SELECT ID FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS ceder_user_ID 
+		FROM mapa 
+		WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND estado = 'e' LIMIT 1");
+		if($r = r($result)){ 
+			if ($r['ceder_user_ID']) {
+				sql_old("UPDATE mapa SET user_ID = '".$r['ceder_user_ID']."', nick = '".$_POST['nick']."', estado='p', time = '".$date."' WHERE pais = '".PAIS."' AND ID = '".$r['ID']."' LIMIT 1");
+				evento_log('Arquitecto ha cedido la parcela #'.$_GET['ID'].' al usuario '.$_POST['nick']);
+			}else{
+				$refer_url = 'mapa/arquitecto/propiedades#no_existe_usuario_indicado';
+			}
+		}else{
+			$refer_url = 'mapa/arquitecto/propiedades#no_existe_usuario';
+		}
+
+}
+break;
 
 case 'mapa':
 
@@ -798,11 +878,16 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 
 	} elseif (($_GET[2] == 'fusionar') AND ($_GET['ID']) AND ($_GET['f'])) {
 
+		$refer_url = 'mapa/propiedades';
+		if (strpos($_SERVER['HTTP_REFERER'], 'arquitecto') >= 0){
+			$refer_url = 'mapa/arquitecto/propiedades';
+		}
+
 		$ID = explode("-", $_GET['ID']);
 
 		$result = sql_old("SELECT *
 FROM mapa 
-WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) AND (ID = '".$ID[0]."' OR ID = '".$ID[1]."') LIMIT 2");
+WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND '1' = '".nucleo_acceso($vp['acceso']['gestion_mapa'])."')) AND (ID = '".$ID[0]."' OR ID = '".$ID[1]."') LIMIT 2");
 		while($r = r($result)){ 
 			$prop[$r['ID']]['size_x'] = $r['size_x'];
 			$prop[$r['ID']]['size_y'] = $r['size_y'];
@@ -830,7 +915,6 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 
 			}
 		}
-		$refer_url = 'mapa/propiedades';
 
 
 	} elseif (($_GET[2] == 'editar') AND ($_GET['ID']) AND ($_POST['color']) AND ($_POST['link'] != 'e') AND ($_POST['link'] != 'v')) {
@@ -1194,8 +1278,9 @@ case 'mercado':
 		$ID = $_GET['ID'];
 		$pols = $_POST['puja'];
 
-		$result = sql_old("SELECT pols FROM pujas ORDER BY `time` LIMIT 1");
+		$result = sql_old("SELECT pols FROM pujas WHERE pais = '".PAIS."' AND mercado_ID = '".$ID."' ORDER BY `time` DESC LIMIT 1");
 		$r = r($result);
+
 		if ($pols <= $pol['pols'] AND $pols > $r['pols']) {
 			sql_old("INSERT INTO pujas (pais, mercado_ID, user_ID, pols, time) VALUES ('".PAIS."', '".$ID."', '".$pol['user_ID']."', '".$pols."', '".$date."')");
 			evento_chat('<b>[#]</b> <em>'.$pol['nick'].'</em> Ha realizado una puja en la subasta (<a href="/subasta/">Subasta</a>)'); 
@@ -1216,7 +1301,7 @@ case 'mercado':
 			sql_old("UPDATE config SET valor = '".$r['ID']."' WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1");	
 			evento_chat('<b>[#] '.crear_link($pol['nick']).' cede</b> "la frase" a <b>'.crear_link($r['nick']).'</b>'); 
 		}
-		$refer_url = 'subasta/editar';
+		$refer_url = 'subasta';
 		evento_log('Frase cedida a @'.$r['nick']);
 
 	} elseif (($_GET[2] == 'editarpalabra') AND (is_numeric($_GET['ID'])) AND (strlen($_POST['text']) <= 25)) {
@@ -1252,7 +1337,7 @@ case 'mercado':
 			evento_chat('<b>[#] '.crear_link($pol['nick']).' cede</b> la "palabra '.($_GET['ID'] + 1).'" a <b>'.crear_link($r['nick']).'</b>');
 			evento_log('Palabra #'.($_GET['ID'] + 1).' cedida a @'.$r['nick']);
 		}
-		$refer_url = 'subasta/editar';
+		$refer_url = 'subasta';
 	}
 	if (!$refer_url) { $refer_url = 'subasta'; }
 	break;
@@ -1269,10 +1354,6 @@ case 'pols':
 			$apoderado = $_POST['apoderado'];
 			$cuenta = $_POST['cuenta'];
 			$refer_url = 'pols/cuentas/'.$cuenta.'/apoderados';
-
-			error_log("apoderado: ".$apoderado);
-			error_log("cuenta: ".$cuenta);
-			error_log("cuenta: "."SELECT ID FROM users WHERE pais = '".PAIS."' AND nick = '". strtolower($apoderado) ."' LIMIT 1");
 
 			$result = sql_old("SELECT ID FROM users WHERE pais = '".PAIS."' AND nick = '". strtolower($apoderado) ."' LIMIT 1");
 			if($r = r($result)){ 
@@ -1318,8 +1399,6 @@ case 'pols':
 
 		} elseif (is_numeric($_POST['origen'])) { 
 			//Cuenta
-
-			error_log("Comprobando si la cuenta pertenece al usuario: "."SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."') OR '".$pol['user_ID']."' in (select user_ID from cuentas_apoderados where cuenta_ID = '".$_POST['origen']."' )) LIMIT 1");
 
 			$result = sql_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."') OR '".$pol['user_ID']."' in (select user_ID from cuentas_apoderados where cuenta_ID = '".$_POST['origen']."' )) LIMIT 1");
 			while($r = r($result)){ $origen = 'cuenta'; }
@@ -1415,7 +1494,6 @@ case 'pols':
 			if ($emisor_ID < 0){
 				$result = sql_old("SELECT user_ID FROM cuentas WHERE pais = '".PAIS."' AND ID = ".substr($emisor_ID,1)." LIMIT 1");
 				while($r = r($result)){ 
-					error_log("Emisor id: ".$emisor_ID." ID: ".$r['user_ID']);
 					if ($pol['user_ID'] != $r['user_ID']){
 						$todoOk = false;
 						$refer_url = 'pols/transaut#error#la_cuenta_no_pertenece_al_usuario';
@@ -1517,11 +1595,13 @@ case 'pols':
 		}
 
 	} elseif (($_GET[2] == 'crear-cuenta') AND ($_POST['nombre']) AND ($pol['pols'] >= $pol['config']['pols_cuentas'])) {
-		$_POST['nombre'] = ucfirst(strip_tags($_POST['nombre']));
+		
+		if (nucleo_acceso($vp['acceso']['crear_cuenta'])){
+			$_POST['nombre'] = ucfirst(strip_tags($_POST['nombre']));
 
-		pols_transferir($pol['config']['pols_cuentas'], $pol['user_ID'], '-1', 'Creacion nueva cuenta bancaria: '.$_POST['nombre']);
-		sql_old("INSERT INTO cuentas (pais, nombre, user_ID, pols, nivel, time) VALUES ('".PAIS."', '".$_POST['nombre']."', '".$pol['user_ID']."', 0, 0, '".$date."')");
-
+			pols_transferir($pol['config']['pols_cuentas'], $pol['user_ID'], '-1', 'Creacion nueva cuenta bancaria: '.$_POST['nombre']);
+			sql_old("INSERT INTO cuentas (pais, nombre, user_ID, pols, nivel, time) VALUES ('".PAIS."', '".$_POST['nombre']."', '".$pol['user_ID']."', 0, 0, '".$date."')");
+		}
 		$refer_url = 'pols/cuentas';
 
 	} elseif (($_GET[2] == 'eliminar-cuenta') AND ($_GET['ID'])) {
@@ -1531,7 +1611,6 @@ case 'pols':
 		$cuenta = $_POST['ID'];
 		$ciudadano = $_POST['usuario'];
 
-		error_log("UPDATE cuentas set user_ID = (SELECT ID FROM users WHERE nick = '".strtolower($ciudadano)."') WHERE pais = '".PAIS."' AND ID = '".$cuenta."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
 
 		sql_old("UPDATE cuentas set user_ID = (SELECT ID FROM users WHERE nick = '".strtolower($ciudadano)."') WHERE pais = '".PAIS."' AND ID = '".$cuenta."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
 		$refer_url = 'pols/cuentas/'.$cuenta;
@@ -1865,7 +1944,7 @@ case 'foro':
 
 
 		
-		$refer_url = '/foro/r/'.$_POST['subforo'];
+		$refer_url = 'foro/r/'.$_POST['subforo'];
 	}
 	break;
 

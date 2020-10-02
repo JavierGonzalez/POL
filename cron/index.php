@@ -251,7 +251,7 @@ ORDER BY fecha_registro ASC");
 			}
 		}
 	}
-	// evento_chat('<b>[PROCESO] Impuesto patrimonio '.date('Y-m-d').'</b>, recaudado: '.pols($redaudacion).' '.MONEDA);
+	evento_chat('<b>[PROCESO] Impuesto patrimonio '.date('Y-m-d').'</b>, recaudado: '.pols($redaudacion).' '.MONEDA);
 }
 
 

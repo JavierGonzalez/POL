@@ -117,7 +117,8 @@ while($r = r($result)){
 'api_borrador'=>_('Crear borradores en API'),
 'cargo'=>_('Control cargos'),
 'control_docs'=>_('Control de los documentos'),
-'gestion_mapa'=>_('Gestión del mapa'),
+'crear_cuenta'=>_('Crear cuentas'),
+'gestion_mapa'=>_('Gestión del mapa')
 );
 
 

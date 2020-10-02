@@ -493,7 +493,7 @@ case 'expulsar':
 			sql_old("INSERT INTO expulsiones (user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".$r['ID']."', '".$pol['user_ID']."', '".$date."', '".ucfirst(strip_tags($_POST['razon']))."', 'expulsado', '".$r['nick']."', '0', '".$pol['cargo']."', '".$_POST['motivo']."')");
 		}
 	}
-	$refer_url = '/control/expulsiones';
+	$refer_url = 'control/expulsiones';
 	break;
 
 
@@ -1301,7 +1301,7 @@ case 'mercado':
 			sql_old("UPDATE config SET valor = '".$r['ID']."' WHERE pais = '".PAIS."' AND dato = 'pols_fraseedit' LIMIT 1");	
 			evento_chat('<b>[#] '.crear_link($pol['nick']).' cede</b> "la frase" a <b>'.crear_link($r['nick']).'</b>'); 
 		}
-		$refer_url = 'subasta/editar';
+		$refer_url = 'subasta';
 		evento_log('Frase cedida a @'.$r['nick']);
 
 	} elseif (($_GET[2] == 'editarpalabra') AND (is_numeric($_GET['ID'])) AND (strlen($_POST['text']) <= 25)) {
@@ -1337,7 +1337,7 @@ case 'mercado':
 			evento_chat('<b>[#] '.crear_link($pol['nick']).' cede</b> la "palabra '.($_GET['ID'] + 1).'" a <b>'.crear_link($r['nick']).'</b>');
 			evento_log('Palabra #'.($_GET['ID'] + 1).' cedida a @'.$r['nick']);
 		}
-		$refer_url = 'subasta/editar';
+		$refer_url = 'subasta';
 	}
 	if (!$refer_url) { $refer_url = 'subasta'; }
 	break;
@@ -1354,10 +1354,6 @@ case 'pols':
 			$apoderado = $_POST['apoderado'];
 			$cuenta = $_POST['cuenta'];
 			$refer_url = 'pols/cuentas/'.$cuenta.'/apoderados';
-
-			error_log("apoderado: ".$apoderado);
-			error_log("cuenta: ".$cuenta);
-			error_log("cuenta: "."SELECT ID FROM users WHERE pais = '".PAIS."' AND nick = '". strtolower($apoderado) ."' LIMIT 1");
 
 			$result = sql_old("SELECT ID FROM users WHERE pais = '".PAIS."' AND nick = '". strtolower($apoderado) ."' LIMIT 1");
 			if($r = r($result)){ 
@@ -1403,8 +1399,6 @@ case 'pols':
 
 		} elseif (is_numeric($_POST['origen'])) { 
 			//Cuenta
-
-			error_log("Comprobando si la cuenta pertenece al usuario: "."SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."') OR '".$pol['user_ID']."' in (select user_ID from cuentas_apoderados where cuenta_ID = '".$_POST['origen']."' )) LIMIT 1");
 
 			$result = sql_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$_POST['origen']."' AND pols >= '".$pols."' AND (user_ID = '".$pol['user_ID']."' OR (nivel != 0 AND nivel <= '".$pol['nivel']."') OR '".$pol['user_ID']."' in (select user_ID from cuentas_apoderados where cuenta_ID = '".$_POST['origen']."' )) LIMIT 1");
 			while($r = r($result)){ $origen = 'cuenta'; }
@@ -1500,7 +1494,6 @@ case 'pols':
 			if ($emisor_ID < 0){
 				$result = sql_old("SELECT user_ID FROM cuentas WHERE pais = '".PAIS."' AND ID = ".substr($emisor_ID,1)." LIMIT 1");
 				while($r = r($result)){ 
-					error_log("Emisor id: ".$emisor_ID." ID: ".$r['user_ID']);
 					if ($pol['user_ID'] != $r['user_ID']){
 						$todoOk = false;
 						$refer_url = 'pols/transaut#error#la_cuenta_no_pertenece_al_usuario';
@@ -1602,11 +1595,13 @@ case 'pols':
 		}
 
 	} elseif (($_GET[2] == 'crear-cuenta') AND ($_POST['nombre']) AND ($pol['pols'] >= $pol['config']['pols_cuentas'])) {
-		$_POST['nombre'] = ucfirst(strip_tags($_POST['nombre']));
+		
+		if (nucleo_acceso($vp['acceso']['crear_cuenta'])){
+			$_POST['nombre'] = ucfirst(strip_tags($_POST['nombre']));
 
-		pols_transferir($pol['config']['pols_cuentas'], $pol['user_ID'], '-1', 'Creacion nueva cuenta bancaria: '.$_POST['nombre']);
-		sql_old("INSERT INTO cuentas (pais, nombre, user_ID, pols, nivel, time) VALUES ('".PAIS."', '".$_POST['nombre']."', '".$pol['user_ID']."', 0, 0, '".$date."')");
-
+			pols_transferir($pol['config']['pols_cuentas'], $pol['user_ID'], '-1', 'Creacion nueva cuenta bancaria: '.$_POST['nombre']);
+			sql_old("INSERT INTO cuentas (pais, nombre, user_ID, pols, nivel, time) VALUES ('".PAIS."', '".$_POST['nombre']."', '".$pol['user_ID']."', 0, 0, '".$date."')");
+		}
 		$refer_url = 'pols/cuentas';
 
 	} elseif (($_GET[2] == 'eliminar-cuenta') AND ($_GET['ID'])) {
@@ -1616,7 +1611,6 @@ case 'pols':
 		$cuenta = $_POST['ID'];
 		$ciudadano = $_POST['usuario'];
 
-		error_log("UPDATE cuentas set user_ID = (SELECT ID FROM users WHERE nick = '".strtolower($ciudadano)."') WHERE pais = '".PAIS."' AND ID = '".$cuenta."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
 
 		sql_old("UPDATE cuentas set user_ID = (SELECT ID FROM users WHERE nick = '".strtolower($ciudadano)."') WHERE pais = '".PAIS."' AND ID = '".$cuenta."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
 		$refer_url = 'pols/cuentas/'.$cuenta;
@@ -1948,6 +1942,7 @@ case 'foro':
 			}
 		}
 
+<<<<<<< HEAD
 		if ($r['mensaje']){
 			$refer_url = 'foro/'.$r['foro'].'/'.$r['hilo'].'#m-'.$r['mensaje'];
 		} else if (isset($r)){
@@ -1955,6 +1950,11 @@ case 'foro':
 		} else{
 			$refer_url = 'foro/';
 		}
+=======
+
+		
+		$refer_url = 'foro/r/'.$_POST['subforo'];
+>>>>>>> 29ede0628c9f93503e170b40ef884ff82309a1de
 	}
 	break;
 

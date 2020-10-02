@@ -962,15 +962,15 @@ function radio_check(value) {
 
 			// Añade tabla de escrutinio publico si es votacion tipo parlamento.
 			if ($r['tipo'] == 'parlamento') {
-				echo '<fieldset><legend>'._('Parlamento').'</legend><table border="0" cellpadding="0" cellspacing="3"><tr><th>'.(ASAMBLEA?_('Coordinador'):_('Diputado')).'</th><th></th><th colspan="2">'._('Voto').'</th><th>'._('Mensaje').'</th></tr>';
+				echo '<fieldset><legend>'._('Parlamento').'</legend><table border="0" cellpadding="0" cellspacing="3"><tr><th>'.(ASAMBLEA?_('Coordinador'):_('Diputado')).'</th><th></th><th colspan="2">'._('Voto').'</th><th>'._('Mensaje').'</th></tr>';			
 				$result2 = sql_old("SELECT user_ID,
-(SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick,
-(SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS siglas,
-(SELECT voto FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = cargos_users.user_ID LIMIT 1) AS ha_votado,
-(SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = cargos_users.user_ID LIMIT 1) AS ha_mensaje
-FROM cargos_users
-WHERE pais = '".PAIS."' AND cargo = 'true' AND cargo_ID = '6'
-ORDER BY siglas ASC");
+				(SELECT nick FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS nick,
+				(SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS siglas,
+				(SELECT voto FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = votacion_votos.user_ID LIMIT 1) AS ha_votado,
+				(SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = votacion_votos.user_ID LIMIT 1) AS ha_mensaje
+				FROM votacion_votos
+                WHERE ref_ID = '".$r['ID']."'
+                ORDER BY `time` ASC");
 				while($r2 = r($result2)) {
 					if ($r2['ha_votado'] != null) { $ha_votado = ' style="background:blue;"';
 					} else { $ha_votado = ' style="background:red;"'; }

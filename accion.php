@@ -1942,7 +1942,6 @@ case 'foro':
 			}
 		}
 
-<<<<<<< HEAD
 		if ($r['mensaje']){
 			$refer_url = 'foro/'.$r['foro'].'/'.$r['hilo'].'#m-'.$r['mensaje'];
 		} else if (isset($r)){
@@ -1950,11 +1949,6 @@ case 'foro':
 		} else{
 			$refer_url = 'foro/';
 		}
-=======
-
-		
-		$refer_url = 'foro/r/'.$_POST['subforo'];
->>>>>>> 29ede0628c9f93503e170b40ef884ff82309a1de
 	}
 	break;
 

@@ -13,10 +13,9 @@ if (($_GET[1] == 'cuentas') AND ($_GET[2] == 'crear')) {
 	$txt_nav = array('/pols'=>'Economía', 'Crear cuenta bancaria');
 
 	echo '<form action="/accion/pols/crear-cuenta" method="post">
-
-<p>Nombre: <input type="text" name="nombre" size="20" maxlength="20" /> ' . boton('Crear Cuenta', false, false, false, $pol['config']['pols_cuentas']) . '</p>
-
-<p><a href="/pols/cuentas"><b>Ver Cuentas Bancarias</b></a> &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>
+	<p>Nombre: <input type="text" name="nombre" size="20" maxlength="20" />
+	<p>'.(nucleo_acceso($vp['acceso']['crear_cuenta'])?boton(_('Crear Cuenta'), false, false, false, $pol['config']['pols_cuentas']):boton(_('Crear Cuenta'), false, $pol['config']['pols_cuentas'], 'large red').' No tienes acceso. Solo pueden: '.verbalizar_acceso($vp['acceso']['crear_cuenta'])).'</p>'
+	.'</p><p><a href="/pols/cuentas"><b>Ver Cuentas Bancarias</b></a> &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>
 
 </form>
 ';
@@ -370,9 +369,9 @@ ORDER BY nivel DESC, pols DESC", $link);
 	}
         echo '</table>';
 	if ($pol['nivel'] >= 98) {
-		echo '<input type="submit" value="Cambiar exención de impuestos" /></form>';
+		echo '<input type="submit" value="Cambiar exención de impuestos" />';
 	}
-	echo '<p>' . boton('Crear Cuenta', '/pols/cuentas/crear/', false, false, $pol['config']['pols_cuentas']) . ' &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>';
+	echo '</form><p>' . boton('Crear Cuenta', '/pols/cuentas/crear/', false, false, $pol['config']['pols_cuentas']) . ' &nbsp; <a href="/pols/"><b>Ver tus '.MONEDA.'</b></a></p>';
 
 
 

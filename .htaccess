@@ -8,11 +8,6 @@ RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule .* /$maxsim.php [L]
 
-<FilesMatch "\.(htaccess|htpasswd|ini|log)$">
- Order Allow,Deny
- Deny from all
-</FilesMatch>
-
 <FilesMatch "(password)">
  Order Allow,Deny
  Deny from all

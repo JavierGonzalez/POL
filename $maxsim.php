@@ -1,12 +1,11 @@
 <?php # maxsim.tech — Copyright (c) 2005-2020 Javier González González <gonzo@virtualpol.com> — MIT License
 
+maxsim:
 
-define('crono_start', hrtime(true));
-
-$maxsim['version'] = '0.5.7';
+$maxsim['version'] = 5.8;
 
 maxsim_router();
-$_GET = maxsim_get();
+maxsim_get();
 
 ob_start();
 
@@ -14,22 +13,29 @@ foreach ((array) $maxsim['autoload'] AS $file) {
     $ext = pathinfo($file, PATHINFO_EXTENSION);
 
     if ($ext==='php')
-        include($file);
+        include_once($file);
 
     else if ($ext==='js' OR $ext==='css')
         $maxsim['template']['autoload'][$ext][] = $file;
 
     else if ($ext==='ini')
-        if ($key = substr(basename($file, '.'.$ext),1))
-            define(strtoupper($key), (array)parse_ini_file($file, true, INI_SCANNER_TYPED));
+        if ($key = ltrim(basename($file, '.'.$ext),'+'))
+            define($key, (array)parse_ini_file($file, true, INI_SCANNER_TYPED));
     
     else if ($ext==='json')
-        if ($key = substr(basename($file, '.'.$ext),1))
+        if ($key = ltrim(basename($file, '.'.$ext),'+'))
             ${$key} = (array)json_decode(file_get_contents($file), true);
 }
 
 
 include($maxsim['app']); #
+
+
+if (is_string($maxsim['redirect'])) {
+    $_SERVER['REQUEST_URI'] = $maxsim['redirect'];
+    unset($maxsim['redirect']);
+    goto maxsim;
+}
 
 
 if ($maxsim['output']==='text')
@@ -75,7 +81,7 @@ function maxsim_router() {
         if (!$ls = glob(($id?implode('/', array_filter($path)).'/':'').'*'))
             break;
 
-        $maxsim['autoload'] = array_merge((array)$maxsim['autoload'], maxsim_autoload($ls));
+        maxsim_autoload($ls);
 
         foreach ($ls AS $file)
             if (basename($file)==='index.php')
@@ -88,19 +94,19 @@ function maxsim_router() {
 }
 
 
-function maxsim_autoload(array $ls, bool $autoload_dir=false) {
+function maxsim_autoload(array $ls, bool $autoload_files=false) {
+    global $maxsim;
 
     foreach ($ls AS $file)
-        if (preg_match('/\.(php|js|css|ini|json)$/', basename($file)))
-            if ($autoload_dir OR substr(basename($file),0,1)==='+')
-                $autoload[] = $file;
+        if (!in_array($file, (array)$maxsim['autoload']))
+            if (preg_match('/\.(php|js|css|ini|json)$/', basename($file)))
+                if ($autoload_files OR substr(basename($file),0,1)==='+')
+                    $maxsim['autoload'][] = $file;
 
-    foreach ($ls AS $file)
-        if (!fnmatch('*.*', basename($file)))
-            if (substr(basename($file),0,1)==='+')
-                $autoload = array_merge((array)$autoload, maxsim_autoload(glob($file.'/*'), true));
-
-    return (array) $autoload;
+    foreach ($ls AS $dir)
+        if (!fnmatch('*.*', basename($dir)))
+            if (substr(basename($dir),0,1)==='+')
+                maxsim_autoload(glob($dir.'/*'), true);
 }
 
 
@@ -114,11 +120,8 @@ function maxsim_get() {
     if (substr($maxsim['app'],-9)==='index.php')
         $url = '/index'.$url;
 
-    $levels = array_filter(explode('/', $url));
-
-    foreach ($levels AS $level => $value)
+    $id = 0;
+    foreach (array_filter(explode('/', $url)) AS $level => $value)
         if ($level-$app_level > 0)
-            $maxsim_get[$level-$app_level] = $value;
-
-    return (array) array_merge((array)$maxsim_get, (array)$_GET);
+            $_GET[$id++] = $value;
 }

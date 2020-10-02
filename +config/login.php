@@ -12,7 +12,7 @@ if (isset($_COOKIE['teorizauser'])) {
 	if (!isset($_SESSION['pol'])) { //NO existe sesion
 		$result = sql_old("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado, dnie, voto_confianza FROM users WHERE nick = '" .$_COOKIE['teorizauser']."' LIMIT 1");
 		while ($r = r($result)) {
-			if (md5(PASSWORDS['clave'].$r['pass']) == $_COOKIE['teorizapass']) {
+			if (md5(passwords['clave'].$r['pass']) == $_COOKIE['teorizapass']) {
 				$session_new = true;
 				$_SESSION['pol']['nick'] = $r['nick'];
 				$_SESSION['pol']['user_ID'] = $r['ID'];

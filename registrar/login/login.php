@@ -28,7 +28,7 @@ if (is_numeric($user_ID)) {
     
     $expire = ($_REQUEST['no_cerrar_sesion']=='true'?time()+(86400*30):0);
     setcookie('teorizauser', $nick, $expire, '/', USERCOOKIE);
-    setcookie('teorizapass', md5(PASSWORDS['clave'].$pass), $expire, '/', USERCOOKIE);
+    setcookie('teorizapass', md5(passwords['clave'].$pass), $expire, '/', USERCOOKIE);
 
     redirect($url);
 } else { 

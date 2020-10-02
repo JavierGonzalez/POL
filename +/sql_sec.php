@@ -21,9 +21,9 @@ foreach ($_SERVER  AS $key => $value)
 
 
 function escape($a) {
-
+	
 	// SQL MITIGATION
-	$a = nl2br($a);
+	$a = str_replace(array("\r\n", "\r", "\n"), "<br />", $a); 
 	$a = str_replace("'", '&#39;', $a);
 	$a = str_replace('"', '&quot;', $a);
 	$a = str_replace(array("\x00", "\x1a"), '', $a);

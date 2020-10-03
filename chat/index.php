@@ -2,6 +2,9 @@
 
 
 
+if (!$_GET[1])
+	redirect('/');
+
 
 if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['pol']['nick']; }
 

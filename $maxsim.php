@@ -15,9 +15,6 @@ foreach ((array) $maxsim['autoload'] AS $file) {
     if ($ext==='php')
         include_once($file);
 
-    else if ($ext==='js' OR $ext==='css')
-        $maxsim['template']['autoload'][$ext][] = $file;
-
     else if ($ext==='ini')
         if ($key = ltrim(basename($file, '.'.$ext),'+'))
             define($key, (array)parse_ini_file($file, true, INI_SCANNER_TYPED));
@@ -98,8 +95,8 @@ function maxsim_autoload(array $ls, bool $autoload_files=false) {
     global $maxsim;
 
     foreach ($ls AS $file)
-        if (!in_array($file, (array)$maxsim['autoload']))
-            if (preg_match('/\.(php|js|css|ini|json)$/', basename($file)))
+        if (preg_match('/\.(php|js|css|ini|json)$/', basename($file)))
+            if (!in_array($file, (array)$maxsim['autoload']))
                 if ($autoload_files OR substr(basename($file),0,1)==='+')
                     $maxsim['autoload'][] = $file;
 
@@ -114,14 +111,13 @@ function maxsim_get() {
     global $_GET, $maxsim;
 
     $app_level = count(explode('/', $maxsim['app']))-1;
-
+    
     $url = explode('?', $_SERVER['REQUEST_URI'])[0];
     
     if (substr($maxsim['app'],-9)==='index.php')
         $url = '/index'.$url;
 
-    $id = 0;
     foreach (array_filter(explode('/', $url)) AS $level => $value)
         if ($level-$app_level > 0)
-            $_GET[$id++] = $value;
+            $_GET[++$id-1] = $value;
 }

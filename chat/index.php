@@ -1,7 +1,5 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
-
-
 if (!$_GET[1])
 	redirect('/');
 

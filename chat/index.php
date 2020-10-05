@@ -138,6 +138,7 @@ elnick = "'.$_SESSION['pol']['nick'].'";
 minick = elnick;
 chat_ID = "'.$chat_ID.'";
 
+chat_primera_carga = true;
 ajax_refresh = true;
 refresh = "";
 anonimo = false;

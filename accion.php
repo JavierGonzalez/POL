@@ -797,13 +797,35 @@ case 'arquitecto':
 			$refer_url = 'mapa/arquitecto/propiedades#no_existe_usuario';
 		}
 
+	}elseif (($_GET[2] == 'separar') AND ($_GET['ID']) AND nucleo_acceso($vp['acceso']['gestion_mapa'])) {
+		$refer_url = 'mapa/arquitecto/propiedades';
+		$result = sql_old("SELECT * FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND estado = 'e' LIMIT 1");
+		if($r = r($result)){ 
+			for ($y=1;$y<=$r['size_y'];$y++) {
+				for ($x=1;$x<=$r['size_x'];$x++) {
+					if (($x==1) AND ($y==1)) {
+						sql_old("UPDATE mapa SET size_x = 1, size_y = 1, superficie = 1, time = '".$date."', estado = 'e' WHERE pais = '".PAIS."' AND ID = '".$r['ID']."' LIMIT 1");
+						$puntero_x = $r['pos_x'];
+						$puntero['pos_x'] = $r['pos_x'];
+						$puntero['pos_y'] = $r['pos_y'];
+					} else {
+						sql_old("INSERT INTO mapa (pais, pos_x, pos_y, size_x, size_y, link, text, time, pols, color, estado, superficie) VALUES ('".PAIS."', '".$puntero['pos_x']."', '".$puntero['pos_y']."', '1', '1', '".$r['link']."', '', '".$date."', '".$r['pols']."', '".$r['color']."', 'e', '1')");
+					}
+					$puntero['pos_x']++;
+				}
+				$puntero['pos_x'] = $puntero_x;
+				$puntero['pos_y']++;
+			}
+	}else{
+		$refer_url = 'mapa/arquitecto/propiedades#no_se_ha_podido_separar_parcela';
+	}
 }
 break;
 
 case 'mapa':
 
 	// pasa a ESTADO
-	if (nucleo_acceso('cargo', 40)) { sql_old("UPDATE mapa SET estado = 'e', user_ID = '' WHERE pais = '".PAIS."' AND link = 'ESTADO'"); }
+	if (nucleo_acceso($vp['acceso']['gestion_mapa'])) { sql_old("UPDATE mapa SET estado = 'e', user_ID = '' WHERE pais = '".PAIS."' AND link = 'ESTADO'"); }
 
 	if (($_GET[2] == 'compraventa') AND ($_GET['ID'])) {
 
@@ -830,12 +852,18 @@ case 'mapa':
 
 	} elseif (($_GET[2] == 'eliminar') AND ($_GET['ID'])) {
 
-		sql_old("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) LIMIT 1");
+		sql_old("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."')) LIMIT 1");
 		$refer_url = 'mapa/propiedades';
-
-
+		if (strpos($_SERVER['HTTP_REFERER'], 'arquitecto') >= 0){
+			$refer_url = 'mapa/arquitecto/propiedades';
+		}
 
 	} elseif (($_GET[2] == 'ceder') AND ($_GET['ID']) AND ($_POST['nick'])) {
+
+		$refer_url = 'mapa/propiedades';
+		if (strpos($_SERVER['HTTP_REFERER'], 'arquitecto') >= 0){
+			$refer_url = 'mapa/arquitecto/propiedades';
+		}
 
 		$result = sql_old("SELECT ID, user_ID, pols, 
 (SELECT ID FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS ceder_user_ID 
@@ -848,9 +876,12 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 			}
 		}
 
-		$refer_url = 'mapa/propiedades';
-
 	} elseif (($_GET[2] == 'separar') AND ($_GET['ID'])) {
+
+		$refer_url = 'mapa/propiedades';
+		if (strpos($_SERVER['HTTP_REFERER'], 'arquitecto') >= 0){
+			$refer_url = 'mapa/arquitecto/propiedades';
+		}
 
 		$result = sql_old("SELECT * FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (estado = 'p' OR estado = 'e') AND user_ID = '".$pol['user_ID']."' LIMIT 1");
 		while($r = r($result)){ 
@@ -873,8 +904,6 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 
 		}
 		
-		
-		$refer_url = 'mapa/propiedades';
 
 	} elseif (($_GET[2] == 'fusionar') AND ($_GET['ID']) AND ($_GET['f'])) {
 
@@ -946,7 +975,7 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 		$_POST['link'] = str_replace("\"", "", $_POST['link']);
 		$_POST['link'] = str_replace(HOST, "", $_POST['link']);
 		if (strlen($_POST['color']) == 3) {
-			sql_old("UPDATE mapa SET color = '".$_POST['color']."', text = '".$_POST['text']."', link = '".$_POST['link']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) LIMIT 1");
+			sql_old("UPDATE mapa SET color = '".$_POST['color']."', text = '".$_POST['text']."', link = '".$_POST['link']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."')) LIMIT 1");
 			$refer_url = 'mapa/propiedades';
 		}
 

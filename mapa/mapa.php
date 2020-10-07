@@ -119,7 +119,13 @@ $(document).ready(function(){
 			switch (amsg[0]) {
 				case "v": var msg = "<span style=\"color:green;\"><b>En venta</b></span><br />" + amsg[1] + " (" + ID + ")<br /><span style=\"color:blue;\"><b>" + amsg[2] + "</span> monedas</b>"; break;
 				
-				case "e": if (amsg[1]) { var msg = "<span style=\"color:grey;font-size:22fpx;\"><b>" + amsg[1] + "</b></span>"; } break;
+				case "e": 
+					if (amsg[1]) { 
+						var msg = "<span style=\"color:grey;font-size:22fpx;\"><b>" + amsg[1] + "</b></span>"; 
+					}else{
+						var msg = "<span style=\"color:grey;font-size:22fpx;\"><b>" + amsg[0] + "</b></span>"; 
+					}
+					break;
 				
 				default: var msg = "<span style=\"color:green;\"><b>" + amsg[0] + "</b></span><br />" + amsg[1] + " (" + ID + ")"; $(this).css("cursor", "pointer");
 			}

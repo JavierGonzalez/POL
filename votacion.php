@@ -963,11 +963,9 @@ function radio_check(value) {
 			// Añade tabla de escrutinio publico si es votacion tipo parlamento.
 			if ($r['tipo'] == 'parlamento') {
 				echo '<fieldset><legend>'._('Parlamento').'</legend><table border="0" cellpadding="0" cellspacing="3"><tr><th>'.(ASAMBLEA?_('Coordinador'):_('Diputado')).'</th><th></th><th colspan="2">'._('Voto').'</th><th>'._('Mensaje').'</th></tr>';			
-				$result2 = sql_old("SELECT user_ID,
+				$result2 = sql_old("SELECT user_ID, voto AS ha_votado, mensaje AS ha_mensaje,
 				(SELECT nick FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS nick,
-				(SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS siglas,
-				(SELECT voto FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = votacion_votos.user_ID LIMIT 1) AS ha_votado,
-				(SELECT mensaje FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND user_ID = votacion_votos.user_ID LIMIT 1) AS ha_mensaje
+				(SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS siglas
 				FROM votacion_votos
                 WHERE ref_ID = '".$r['ID']."'
                 ORDER BY `time` ASC");
@@ -1180,6 +1178,7 @@ echo '<fieldset><legend>'._('Finalizadas').'</legend>
 </b>
 <input type="checkbox" onclick="ver_votacion(\'sondeo\');" id="c_sondeo" checked="checked" /> '._('Sondeos').' &nbsp; 
 <input type="checkbox" onclick="ver_votacion(\'parlamento\');" id="c_parlamento" checked="checked" /> '._('Parlamento').' &nbsp;  
+<input type="checkbox" onclick="ver_votacion(\'cargo\');" id="c_cargo" checked="checked" /> '._('Cargo').' &nbsp;  
 <input type="checkbox" onclick="ver_votacion(\'privadas\');" id="c_privadas" /> <span style="color:red;">'._('Privadas').'</span> &nbsp; 
 </span>
 
@@ -1195,7 +1194,7 @@ ORDER BY time_expire DESC
 LIMIT 5000");
 	while($r = r($result)) {
 		if (($r['acceso_ver'] == 'anonimos') OR (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
-			echo '<tr class="v_'.$r['tipo'].($r['acceso_ver']!='anonimos'?' v_privadas':'').'"'.(in_array($r['tipo'], array('referendum', 'parlamento', 'sondeo', 'elecciones'))&&in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'':' style="display:none;"').'>
+			echo '<tr class="v_'.$r['tipo'].($r['acceso_ver']!='anonimos'?' v_privadas':'').'"'.(in_array($r['tipo'], array('referendum', 'parlamento', 'sondeo', 'elecciones', 'cargo'))&&in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'':' style="display:none;"').'>
 <td width="100"'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?' style="font-weight:bold;"':'').'>'.ucfirst(_($r['tipo'])).'</td>
 <td align="right" title="'._('Participación').': '.($r['num_censo']==0?0:num($r['num']*100/$r['num_censo'], 2)).'% ('.num($r['num_censo']).')"><b>'.num($r['num']).'</b></td>
 <td>'.($r['cargo_ID']?'<a href="/cargos/'.$r['cargo_ID'].'"><img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" width="16" height="16" /></a> ':'').'<a href="/votacion/'.$r['ID'].'" style="'.($r['tipo']=='referendum'||$r['tipo']=='elecciones'?'font-weight:bold;':'').(!in_array($r['acceso_ver'], array('anonimos', 'ciudadanos', 'ciudadanos_global'))?'color:red;" title="Votación privada':'').'">'.$r['pregunta'].'</a></td>

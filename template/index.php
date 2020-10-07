@@ -134,6 +134,9 @@ foreach ((array)$maxsim['template']['js_array'] AS $key => $value)
 					<li><a href="/examenes"><?=_('Exámenes')?></a></li>
 				</ul>
 			</li>
+			<li><a href="/control/judicial"><?=_('Judicial')?></a>
+			</li>
+
 			<li><a href="/control/gobierno"><?=_('Gobierno')?></a>
 				<ul>
 					<li><a href="/control/gobierno/privilegios"><?=_('Privilegios')?></a></li>

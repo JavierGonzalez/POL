@@ -215,7 +215,7 @@ function pass_key($t, $type='sha') {
 	if ($type=='md5')
 		return hash('md5', $t);
 	else
-		return hash('sha256', PASSWORDS['clave_sha'].$t);
+		return hash('sha256', passwords['clave_sha'].$t);
 }
 
 function timer($t, $es_timestamp=false, $pre=null) {

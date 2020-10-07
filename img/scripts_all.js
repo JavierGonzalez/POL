@@ -795,6 +795,10 @@ function print_msg(data){
                             if (minick == nick_s){
                                 list += "<li id=\"" + m_ID + "\" class=\"" + nick_s + "\">" + m_time + " <span class=\"vpc_priv\" style=\"color:#004FC6\" ;OnClick=\"auto_priv(\'" + nick_s + "\');\"><b>[PRIV] " + m_nick + "</b>: " + txt + "</span></li>\n";
                             } else {
+                                if (!chat_primera_carga){
+                                    var audio = new Audio('/img/instant/cuac.wav');
+                                    audio.play();
+                                }
                                 list += "<li id=\"" + m_ID + "\" class=\"" + nick_s + "\">" + m_time + " <span class=\"vpc_priv\" OnClick=\"auto_priv(\'" + nick_s + "\');\"><b>[PRIV] " + m_nick + "</b>: " + txt + "</span></li>\n";
                                 chat_sin_leer_yo = chat_sin_leer_yo + "+";
                             }
@@ -808,6 +812,10 @@ function print_msg(data){
                         if (minick != ""){
                             var txt = " " + txt;
                             var regexp = eval("/ " + minick + "/gi");
+                            if (regexp.test(txt) &&  !chat_primera_carga) {
+                                var audio = new Audio('/img/instant/cuac.wav');
+                               audio.play();
+                           }
                             var txt = txt.replace(regexp, " <b style=\"color:orange;\">" + minick + "</b>");
                             if (txt.search(regexp)!= -1){ chat_sin_leer_yo = chat_sin_leer_yo + "+"; }
                         }
@@ -834,6 +842,7 @@ function print_msg(data){
         if ((chat_sin_leer > 0)|| (chat_sin_leer_antes == -1)){
             refresh_sin_leer();
             print_delay();
+            chat_primera_carga = false;
         }
         for (var i = 0; i < escondidos.length; i++){ $("#" + escondidos[i]).hide(); }
     }

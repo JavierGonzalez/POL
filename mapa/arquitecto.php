@@ -52,7 +52,7 @@ ORDER BY estado ASC, time ASC", $link);
 				$botones = ' 
 '.boton('Vender', '/mapa/vender/'.$r['ID']).'
 '.boton('Editar', '/mapa/arquitecto/editar/' . $r['ID']).'
-'.(($r['size_x']*$r['size_y'])>1?boton('Separar', '/accion/mapa/separar?ID='.$r['ID'], '&iquest;Seguro que quieres SEPARAR esta propiedad?').' ':'').' ' . boton('X', '/accion/mapa/eliminar?ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta propiedad?\n\nSe convertira en un solar.').'
+'.(($r['size_x']*$r['size_y'])>1?boton('Separar', '/accion/arquitecto/separar?ID='.$r['ID'], '&iquest;Seguro que quieres SEPARAR esta propiedad?').' ':'').' ' . boton('X', '/accion/mapa/eliminar?ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta propiedad?\n\nSe convertira en un solar.').'
 
 <form action="/accion/arquitecto/ceder?ID='.$r['ID'].'" method="post">
 <input type="submit" value="Ceder a:" /> <input type="text" name="nick" size="8" maxlength="20" value="" /></form> 
@@ -71,7 +71,7 @@ ORDER BY estado ASC, time ASC", $link);
 				$prop[$r['ID']]['color'] = $r['color'];
 
 				$botones = boton('Editar', '/mapa/arquitecto/editar/' . $r['ID'] . '/') . ' 
-'.(($r['size_x']*$r['size_y'])>1?boton('Separar', '/accion/mapa/separar?ID='.$r['ID'], '&iquest;Seguro que quieres SEPARAR esta propiedad?').' ':'').'
+'.(($r['size_x']*$r['size_y'])>1?boton('Separar', '/accion/arquitecto/separar?ID='.$r['ID'], '&iquest;Seguro que quieres SEPARAR esta propiedad?').' ':'').'
 ' . boton('X', '/accion/mapa/eliminar?ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR esta propiedad?\n\nSe convertira en un solar.').'
 <form action="/accion/arquitecto/ceder?ID='.$r['ID'].'" method="post">
 <input type="submit" value="Ceder a:" /> <input type="text" name="nick" size="8" maxlength="20" value="" /></form> 
@@ -207,10 +207,11 @@ ORDER BY estado ASC, time ASC", $link);
 
 	$result = mysql_query_old("SELECT *
 FROM mapa
-WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "' AND (user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."'))
+WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "' AND (user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."'))
 LIMIT 1", $link);
 	while($r = mysqli_fetch_array($result)){
 
+        error_log("Pintando propiedades");
 		
 		$tamaño = ($r['size_x'] * $r['size_y']);
 		echo '<h1><a href="/mapa">'._('Mapa').'</a>: '._('Editar propiedad').': ' . $_GET[2] . '</h1>

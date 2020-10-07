@@ -4,13 +4,13 @@
 function __($echo='', $echo2=false, $scroll_down=false) {
 	global $maxsim;
 
-    if (!isset($maxsim['debug']['crono_start']))
-        $maxsim['debug']['crono_start'] = crono_start;
+    if (!isset($maxsim['debug']['crono']))
+        $maxsim['debug']['crono'] = $_SERVER['REQUEST_TIME_FLOAT'];
 
-    $hrtime = $maxsim['debug']['crono_start'];
+    $microtime = $maxsim['debug']['crono'];
 
     echo '<br />'."\n";
-    echo ++$maxsim['debug']['count'].'. &nbsp; <span title="'.date('Y-m-d H:i:s').'">'.implode(' &nbsp; ', profiler($hrtime)).'</span> &nbsp; ';
+    echo ++$maxsim['debug']['count'].'. &nbsp; <span title="'.date('Y-m-d H:i:s').'">'.implode(' &nbsp; ', profiler($microtime)).'</span> &nbsp; ';
 
     if (is_array($echo2)) {
         echo $echo;
@@ -38,17 +38,17 @@ function __($echo='', $echo2=false, $scroll_down=false) {
         ob_flush();
     }
 
-    $maxsim['debug']['crono_start'] = hrtime(true);
+    $maxsim['debug']['crono'] = microtime(true);
 }
 
 
-function profiler($hrtime=false) {
+function profiler($microtime=false) {
     global $maxsim, $__sql, $__rpc;
 
-    if (!$hrtime)
-        $hrtime = crono_start;
+    if (!$microtime)
+        $microtime = $_SERVER['REQUEST_TIME_FLOAT'];
 
-    $output[] = number_format((hrtime(true)-$hrtime)/1000/1000,2).' ms';
+    $output[] = number_format((microtime(true)-$microtime)*1000,2).' ms';
     
     if (is_numeric($__sql['count']))
         $output[] = number_format($__sql['count']).' sql';

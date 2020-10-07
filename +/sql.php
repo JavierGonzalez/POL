@@ -13,7 +13,7 @@ function sql_connect($server_sql=false) {
 		if (getenv("DATABASE"))
 			$server_sql = getenv("DATABASE");
 		else
-	    	$server_sql = PASSWORDS['sql'];
+	    	$server_sql = passwords['sql'];
 	}
 
 	$p = parse_url($server_sql);

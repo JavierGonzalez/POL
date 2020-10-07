@@ -259,7 +259,7 @@ function duracion($t) {
 	return $d;
 }
 
-function crear_link($a, $tipo='nick', $estado='', $pais='', $nombre='') {
+function crear_link($a, $tipo='nick', $estado='', $pais='') {
 	switch ($tipo) {
 		case 'nick': 
 			if ($a == 'VirtualPol') {
@@ -282,7 +282,6 @@ function crear_link($a, $tipo='nick', $estado='', $pais='', $nombre='') {
 			break;
 		case 'partido': if ($a) { return '<a href="/partidos/'.strtolower($a).'">'.$a.'</a>'; } else { return 'Ninguno'; } break;
 		case 'documento': return '<a href="/doc/'.$a.'">/doc/'.$a.'</a>'; break;
-		case 'cuenta': return '<a href="/pols/cuentas/'.$a.'" class="nick'.$add_class.' '.$estado.'"'.$bg.'>'.$nombre.'</a>'; break;
 	}
 }
 

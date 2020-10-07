@@ -365,32 +365,18 @@ case 'geolocalizacion':
 
 case 'sancion':
 	if ((nucleo_acceso($vp['acceso']['control_sancion'])) AND ($_POST['pols'] <= 5000) AND ($_POST['pols'] > 0)) {
-		$refer_url = 'control/judicial';
-		if ($_POST['origen'] == 'cuenta'){
-			$result = sql_old("SELECT users.nick FROM users, cuentas
-			WHERE cuentas.user_ID = users.ID AND cuentas.ID = '".$_POST['cuenta']."' AND estado = 'ciudadano' AND cuentas.pais = '".PAIS."' LIMIT 1");
-			if($r = r($result)) {
-				$nick=$pol['nick'];
-				unset($pol['nick']);
-				pols_transferir($_POST['pols'], '-'.$_POST['cuenta'], '-1', '<b>SANCION ('.$nick.')&rsaquo;</b> '.strip_tags($_POST['concepto']));
-				evento_chat('<b>[SANCION] '.crear_link($r['nick']).'</b> ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial">Ver sanciones</a>)');				
-			}else{
-				$refer_url = 'control/judicial#cuenta_no_valida';
-			}
-		}else{
-			$result = sql_old("SELECT ID, nick FROM users 
-							WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' AND pais = '".PAIS."' LIMIT 1");
-			while($r = r($result)) {
-			
-				$nick=$pol['nick'];
-				unset($pol['nick']);
-				pols_transferir($_POST['pols'], $r['ID'], '-1', '<b>SANCION ('.$nick.')&rsaquo;</b> '.strip_tags($_POST['concepto']));
+		$result = sql_old("SELECT ID, nick FROM users 
+WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' AND pais = '".PAIS."' LIMIT 1");
+		while($r = r($result)) {
+		
+			pols_transferir($_POST['pols'], $r['ID'], '-1', '<b>SANCION ('.$pol['nick'].')&rsaquo;</b> '.strip_tags($_POST['concepto']));
 
-				evento_chat('<b>[SANCION] '.crear_link($r['nick']).'</b> ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial">Ver sanciones</a>)');
-			}
+			evento_chat('<b>[SANCION] '.crear_link($r['nick']).'</b> ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial">Ver sanciones</a>)');
 		}
+
 	}
-	
+	$refer_url = 'control/judicial';
+
 	break;
 
 case 'pass':

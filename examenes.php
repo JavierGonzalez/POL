@@ -38,7 +38,7 @@ if (($_GET[1] == 'editar') AND (((nucleo_acceso($vp['acceso']['examenes_decano']
 
 	if (!$_GET[2]) { $_GET[2] = 0; }
 
-	$result = mysql_query_old("SELECT ID, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas
+	$result = mysql_query_old("SELECT ID, titulo, descripcion, user_ID, time, nota, num_preguntas, COALESCE((SELECT id FROM cargos WHERE id = examenes.cargo_ID), '-1') as cargo_ID 
 FROM examenes
 WHERE pais = '".PAIS."' AND ID = '".$_GET[2]."'
 LIMIT 1", $link);
@@ -127,7 +127,7 @@ FROM examenes WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "' LIMIT 1", $lin
 				}
 			}
 		}
-		echo '</div>';
+		echo $txt.'</div>';
 
 		$txt_header .= '
 <style type="text/css">

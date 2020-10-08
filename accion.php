@@ -707,14 +707,15 @@ FROM examenes WHERE pais = '".PAIS."' AND ID = '" . $_GET['ID'] . "' LIMIT 1");
 			unset($_SESSION['examen']);
 		}
 	} elseif (($_GET[2] == 'eliminar-examen') AND ($_POST['ID'] != null) AND (nucleo_acceso($vp['acceso']['examenes_decano']))) { 
-		$result = sql_old("SELECT cargo_ID,
-(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas
+		$result = sql_old("SELECT COALESCE((SELECT id FROM cargos WHERE id = examenes.cargo_ID), '-1') as cargo_ID,
+(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas,
+titulo
 FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_POST['ID']."' LIMIT 1");
 		while($r = r($result)){ 
 			if (($r['cargo_ID'] < 0) AND ($r['num_depreguntas'] == 0)) {
 				sql_old("DELETE FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_POST['ID']."'");
-				evento_log('Examen eliminado #'.$_POST['ID']);
-				$refer_url = 'cargos';
+				evento_log('Examen '.$r['titulo'].' eliminado');
+				$refer_url = 'examenes';
 			}
 		}
 	} elseif (($_GET[2] == 'caducar_examen') AND ($_GET['ID'] != null)) {

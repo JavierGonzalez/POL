@@ -365,18 +365,32 @@ case 'geolocalizacion':
 
 case 'sancion':
 	if ((nucleo_acceso($vp['acceso']['control_sancion'])) AND ($_POST['pols'] <= 5000) AND ($_POST['pols'] > 0)) {
-		$result = sql_old("SELECT ID, nick FROM users 
-WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' AND pais = '".PAIS."' LIMIT 1");
-		while($r = r($result)) {
-		
-			pols_transferir($_POST['pols'], $r['ID'], '-1', '<b>SANCION ('.$pol['nick'].')&rsaquo;</b> '.strip_tags($_POST['concepto']));
+		$refer_url = 'control/judicial';
+		if ($_POST['origen'] == 'cuenta'){
+			$result = sql_old("SELECT users.nick FROM users, cuentas
+			WHERE cuentas.user_ID = users.ID AND cuentas.ID = '".$_POST['cuenta']."' AND estado = 'ciudadano' AND cuentas.pais = '".PAIS."' LIMIT 1");
+			if($r = r($result)) {
+				$nick=$pol['nick'];
+				unset($pol['nick']);
+				pols_transferir($_POST['pols'], '-'.$_POST['cuenta'], '-1', '<b>SANCION ('.$nick.')&rsaquo;</b> '.strip_tags($_POST['concepto']));
+				evento_chat('<b>[SANCION] '.crear_link($r['nick']).'</b> ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial">Ver sanciones</a>)');				
+			}else{
+				$refer_url = 'control/judicial#cuenta_no_valida';
+			}
+		}else{
+			$result = sql_old("SELECT ID, nick FROM users 
+							WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' AND pais = '".PAIS."' LIMIT 1");
+			while($r = r($result)) {
+			
+				$nick=$pol['nick'];
+				unset($pol['nick']);
+				pols_transferir($_POST['pols'], $r['ID'], '-1', '<b>SANCION ('.$nick.')&rsaquo;</b> '.strip_tags($_POST['concepto']));
 
-			evento_chat('<b>[SANCION] '.crear_link($r['nick']).'</b> ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial">Ver sanciones</a>)');
+				evento_chat('<b>[SANCION] '.crear_link($r['nick']).'</b> ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial">Ver sanciones</a>)');
+			}
 		}
-
 	}
-	$refer_url = 'control/judicial';
-
+	
 	break;
 
 case 'pass':
@@ -693,14 +707,15 @@ FROM examenes WHERE pais = '".PAIS."' AND ID = '" . $_GET['ID'] . "' LIMIT 1");
 			unset($_SESSION['examen']);
 		}
 	} elseif (($_GET[2] == 'eliminar-examen') AND ($_POST['ID'] != null) AND (nucleo_acceso($vp['acceso']['examenes_decano']))) { 
-		$result = sql_old("SELECT cargo_ID,
-(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas
+		$result = sql_old("SELECT COALESCE((SELECT id FROM cargos WHERE id = examenes.cargo_ID), '-1') as cargo_ID,
+(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas,
+titulo
 FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_POST['ID']."' LIMIT 1");
 		while($r = r($result)){ 
 			if (($r['cargo_ID'] < 0) AND ($r['num_depreguntas'] == 0)) {
 				sql_old("DELETE FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_POST['ID']."'");
-				evento_log('Examen eliminado #'.$_POST['ID']);
-				$refer_url = 'cargos';
+				evento_log('Examen '.$r['titulo'].' eliminado');
+				$refer_url = 'examenes';
 			}
 		}
 	} elseif (($_GET[2] == 'caducar_examen') AND ($_GET['ID'] != null)) {

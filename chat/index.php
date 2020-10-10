@@ -1,6 +1,7 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
-
+if (!$_GET[1])
+	redirect('/');
 
 
 if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['pol']['nick']; }
@@ -137,6 +138,7 @@ elnick = "'.$_SESSION['pol']['nick'].'";
 minick = elnick;
 chat_ID = "'.$chat_ID.'";
 
+chat_primera_carga = true;
 ajax_refresh = true;
 refresh = "";
 anonimo = false;

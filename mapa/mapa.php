@@ -78,7 +78,7 @@ function colorear(modo) {
 	for (i in prop) {
 		var prop_a = prop[i].split("|");
 		var pa1 = prop_a[1];
-		console.log(prop[i]);
+
 		switch (prop_a[0]) {
 			case "v":
 				if ((vision != "normal") && (pa1 == "'.$pol['nick'].'")) { var elcolor = "#FF0000"; $("#" + i).html(prop_a[2]); } 

@@ -215,7 +215,7 @@ function pass_key($t, $type='sha') {
 	if ($type=='md5')
 		return hash('md5', $t);
 	else
-		return hash('sha256', PASSWORDS['clave_sha'].$t);
+		return hash('sha256', passwords['clave_sha'].$t);
 }
 
 function timer($t, $es_timestamp=false, $pre=null) {
@@ -259,7 +259,7 @@ function duracion($t) {
 	return $d;
 }
 
-function crear_link($a, $tipo='nick', $estado='', $pais='') {
+function crear_link($a, $tipo='nick', $estado='', $pais='', $nombre='') {
 	switch ($tipo) {
 		case 'nick': 
 			if ($a == 'VirtualPol') {
@@ -282,6 +282,7 @@ function crear_link($a, $tipo='nick', $estado='', $pais='') {
 			break;
 		case 'partido': if ($a) { return '<a href="/partidos/'.strtolower($a).'">'.$a.'</a>'; } else { return 'Ninguno'; } break;
 		case 'documento': return '<a href="/doc/'.$a.'">/doc/'.$a.'</a>'; break;
+		case 'cuenta': return '<a href="/pols/cuentas/'.$a.'" class="nick'.$add_class.' '.$estado.'"'.$bg.'>'.$nombre.'</a>'; break;
 	}
 }
 

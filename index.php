@@ -121,6 +121,6 @@ case 'TOS':
 default:
 	if ($_GET[0]==='index' AND !$_GET[1]) {
 		$_GET[1] = strtolower(PAIS);
-		include('chat/index.php');
+		$maxsim['redirect'] = '/chat';
 	}
 }

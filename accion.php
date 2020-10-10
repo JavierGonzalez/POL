@@ -365,18 +365,32 @@ case 'geolocalizacion':
 
 case 'sancion':
 	if ((nucleo_acceso($vp['acceso']['control_sancion'])) AND ($_POST['pols'] <= 5000) AND ($_POST['pols'] > 0)) {
-		$result = sql_old("SELECT ID, nick FROM users 
-WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' AND pais = '".PAIS."' LIMIT 1");
-		while($r = r($result)) {
-		
-			pols_transferir($_POST['pols'], $r['ID'], '-1', '<b>SANCION ('.$pol['nick'].')&rsaquo;</b> '.strip_tags($_POST['concepto']));
+		$refer_url = 'control/judicial';
+		if ($_POST['origen'] == 'cuenta'){
+			$result = sql_old("SELECT users.nick FROM users, cuentas
+			WHERE cuentas.user_ID = users.ID AND cuentas.ID = '".$_POST['cuenta']."' AND estado = 'ciudadano' AND cuentas.pais = '".PAIS."' LIMIT 1");
+			if($r = r($result)) {
+				$nick=$pol['nick'];
+				unset($pol['nick']);
+				pols_transferir($_POST['pols'], '-'.$_POST['cuenta'], '-1', '<b>SANCION ('.$nick.')&rsaquo;</b> '.strip_tags($_POST['concepto']));
+				evento_chat('<b>[SANCION] '.crear_link($r['nick']).'</b> ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial">Ver sanciones</a>)');				
+			}else{
+				$refer_url = 'control/judicial#cuenta_no_valida';
+			}
+		}else{
+			$result = sql_old("SELECT ID, nick FROM users 
+							WHERE nick = '".$_POST['nick']."' AND estado = 'ciudadano' AND pais = '".PAIS."' LIMIT 1");
+			while($r = r($result)) {
+			
+				$nick=$pol['nick'];
+				unset($pol['nick']);
+				pols_transferir($_POST['pols'], $r['ID'], '-1', '<b>SANCION ('.$nick.')&rsaquo;</b> '.strip_tags($_POST['concepto']));
 
-			evento_chat('<b>[SANCION] '.crear_link($r['nick']).'</b> ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial">Ver sanciones</a>)');
+				evento_chat('<b>[SANCION] '.crear_link($r['nick']).'</b> ha sido sancionado con '.pols($_POST['pols']).' '.MONEDA.' (<a href="/control/judicial">Ver sanciones</a>)');
+			}
 		}
-
 	}
-	$refer_url = 'control/judicial';
-
+	
 	break;
 
 case 'pass':
@@ -693,14 +707,15 @@ FROM examenes WHERE pais = '".PAIS."' AND ID = '" . $_GET['ID'] . "' LIMIT 1");
 			unset($_SESSION['examen']);
 		}
 	} elseif (($_GET[2] == 'eliminar-examen') AND ($_POST['ID'] != null) AND (nucleo_acceso($vp['acceso']['examenes_decano']))) { 
-		$result = sql_old("SELECT cargo_ID,
-(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas
+		$result = sql_old("SELECT COALESCE((SELECT id FROM cargos WHERE id = examenes.cargo_ID), '-1') as cargo_ID,
+(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas,
+titulo
 FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_POST['ID']."' LIMIT 1");
 		while($r = r($result)){ 
 			if (($r['cargo_ID'] < 0) AND ($r['num_depreguntas'] == 0)) {
 				sql_old("DELETE FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_POST['ID']."'");
-				evento_log('Examen eliminado #'.$_POST['ID']);
-				$refer_url = 'cargos';
+				evento_log('Examen '.$r['titulo'].' eliminado');
+				$refer_url = 'examenes';
 			}
 		}
 	} elseif (($_GET[2] == 'caducar_examen') AND ($_GET['ID'] != null)) {
@@ -797,13 +812,35 @@ case 'arquitecto':
 			$refer_url = 'mapa/arquitecto/propiedades#no_existe_usuario';
 		}
 
+	}elseif (($_GET[2] == 'separar') AND ($_GET['ID']) AND nucleo_acceso($vp['acceso']['gestion_mapa'])) {
+		$refer_url = 'mapa/arquitecto/propiedades';
+		$result = sql_old("SELECT * FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND estado = 'e' LIMIT 1");
+		if($r = r($result)){ 
+			for ($y=1;$y<=$r['size_y'];$y++) {
+				for ($x=1;$x<=$r['size_x'];$x++) {
+					if (($x==1) AND ($y==1)) {
+						sql_old("UPDATE mapa SET size_x = 1, size_y = 1, superficie = 1, time = '".$date."', estado = 'e' WHERE pais = '".PAIS."' AND ID = '".$r['ID']."' LIMIT 1");
+						$puntero_x = $r['pos_x'];
+						$puntero['pos_x'] = $r['pos_x'];
+						$puntero['pos_y'] = $r['pos_y'];
+					} else {
+						sql_old("INSERT INTO mapa (pais, pos_x, pos_y, size_x, size_y, link, text, time, pols, color, estado, superficie) VALUES ('".PAIS."', '".$puntero['pos_x']."', '".$puntero['pos_y']."', '1', '1', '".$r['link']."', '', '".$date."', '".$r['pols']."', '".$r['color']."', 'e', '1')");
+					}
+					$puntero['pos_x']++;
+				}
+				$puntero['pos_x'] = $puntero_x;
+				$puntero['pos_y']++;
+			}
+	}else{
+		$refer_url = 'mapa/arquitecto/propiedades#no_se_ha_podido_separar_parcela';
+	}
 }
 break;
 
 case 'mapa':
 
 	// pasa a ESTADO
-	if (nucleo_acceso('cargo', 40)) { sql_old("UPDATE mapa SET estado = 'e', user_ID = '' WHERE pais = '".PAIS."' AND link = 'ESTADO'"); }
+	if (nucleo_acceso($vp['acceso']['gestion_mapa'])) { sql_old("UPDATE mapa SET estado = 'e', user_ID = '' WHERE pais = '".PAIS."' AND link = 'ESTADO'"); }
 
 	if (($_GET[2] == 'compraventa') AND ($_GET['ID'])) {
 
@@ -830,12 +867,18 @@ case 'mapa':
 
 	} elseif (($_GET[2] == 'eliminar') AND ($_GET['ID'])) {
 
-		sql_old("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."')) LIMIT 1");
+		sql_old("DELETE FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."')) LIMIT 1");
 		$refer_url = 'mapa/propiedades';
-
-
+		if (strpos($_SERVER['HTTP_REFERER'], 'arquitecto') >= 0){
+			$refer_url = 'mapa/arquitecto/propiedades';
+		}
 
 	} elseif (($_GET[2] == 'ceder') AND ($_GET['ID']) AND ($_POST['nick'])) {
+
+		$refer_url = 'mapa/propiedades';
+		if (strpos($_SERVER['HTTP_REFERER'], 'arquitecto') >= 0){
+			$refer_url = 'mapa/arquitecto/propiedades';
+		}
 
 		$result = sql_old("SELECT ID, user_ID, pols, 
 (SELECT ID FROM users WHERE nick = '".$_POST['nick']."' AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS ceder_user_ID 
@@ -848,9 +891,12 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 			}
 		}
 
-		$refer_url = 'mapa/propiedades';
-
 	} elseif (($_GET[2] == 'separar') AND ($_GET['ID'])) {
+
+		$refer_url = 'mapa/propiedades';
+		if (strpos($_SERVER['HTTP_REFERER'], 'arquitecto') >= 0){
+			$refer_url = 'mapa/arquitecto/propiedades';
+		}
 
 		$result = sql_old("SELECT * FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (estado = 'p' OR estado = 'e') AND user_ID = '".$pol['user_ID']."' LIMIT 1");
 		while($r = r($result)){ 
@@ -873,8 +919,6 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 
 		}
 		
-		
-		$refer_url = 'mapa/propiedades';
 
 	} elseif (($_GET[2] == 'fusionar') AND ($_GET['ID']) AND ($_GET['f'])) {
 
@@ -1950,9 +1994,13 @@ case 'foro':
 			}
 		}
 
-
-		
-		$refer_url = 'foro/r/'.$_POST['subforo'];
+		if ($r['mensaje']){
+			$refer_url = 'foro/'.$r['foro'].'/'.$r['hilo'].'#m-'.$r['mensaje'];
+		} else if (isset($r)){
+			$refer_url = 'foro/'.$r['foro'].'/'.$r['hilo'];
+		} else{
+			$refer_url = 'foro/';
+		}
 	}
 	break;
 

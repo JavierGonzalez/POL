@@ -54,8 +54,9 @@ p_scroll = false;
 
 <?php
 
-foreach ((array)$maxsim['template']['autoload']['css'] AS $file)
-	echo '<link rel="stylesheet" enctype="text/css" href="/'.$file.'" media="all" />'."\n";
+foreach ((array)$maxsim['autoload'] AS $file)
+	if (substr($file,-4)==='.css')
+		echo '<link rel="stylesheet" enctype="text/css" href="/'.$file.'" media="all" />'."\n";
 
 echo '
 <style type="text/css">
@@ -133,6 +134,9 @@ foreach ((array)$maxsim['template']['js_array'] AS $key => $value)
 					<li><a href="/examenes"><?=_('Exámenes')?></a></li>
 				</ul>
 			</li>
+			<li><a href="/control/judicial"><?=_('Judicial')?></a>
+			</li>
+
 			<li><a href="/control/gobierno"><?=_('Gobierno')?></a>
 				<ul>
 					<li><a href="/control/gobierno/privilegios"><?=_('Privilegios')?></a></li>
@@ -308,8 +312,9 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 
 
 <?php
-foreach ((array)$maxsim['template']['autoload']['js'] AS $file)
-	echo '<script type="module" src="/'.$file.'"></script>'."\n";
+foreach ((array)$maxsim['autoload'] AS $file)
+	if (substr($file,-3)==='.js')
+		echo '<script type="module" src="/'.$file.'"></script>'."\n";
 ?>
 
 <script type="text/javascript">

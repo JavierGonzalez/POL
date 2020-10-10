@@ -94,7 +94,7 @@ LIMIT 1", $link);
 
 	$result = mysql_query_old("SELECT *
 FROM mapa
-WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "' AND (user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso('cargo', 40)?'true':'false')."'))
+WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "' AND (user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."'))
 LIMIT 1", $link);
 	while($r = mysqli_fetch_array($result)){
 

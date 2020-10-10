@@ -59,7 +59,7 @@ $txt_css .= compress_file('lib/kickstart/css/prettify.css', 'css');
 $txt_css .= compress_file('lib/kickstart/css/chosen.css', 'css');
 $txt_css .= compress_file('lib/kickstart/css/tiptip.css', 'css');
 $txt_css .= compress_file('style2.css', 'css');
-file_put_contents('img/style_all.css', $txt_css);
+//////////////// file_put_contents('img/style_all.css', $txt_css);
 echo '</table>';
 
 echo '<h2>Minify JS</h2>
@@ -80,7 +80,7 @@ foreach (array('Ahora', 'ahora', 'años', 'meses','días','horas','minutos','min
 $txt_js .= '};';
 //$txt_js .= 'ACCION_URL = "/accion/";';
 
-file_put_contents('img/scripts_all.js', $txt_js);
+//////////////// file_put_contents('img/scripts_all.js', $txt_js);
 echo '</table>';
 
 

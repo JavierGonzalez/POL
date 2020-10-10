@@ -707,14 +707,15 @@ FROM examenes WHERE pais = '".PAIS."' AND ID = '" . $_GET['ID'] . "' LIMIT 1");
 			unset($_SESSION['examen']);
 		}
 	} elseif (($_GET[2] == 'eliminar-examen') AND ($_POST['ID'] != null) AND (nucleo_acceso($vp['acceso']['examenes_decano']))) { 
-		$result = sql_old("SELECT cargo_ID,
-(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas
+		$result = sql_old("SELECT COALESCE((SELECT id FROM cargos WHERE id = examenes.cargo_ID), '-1') as cargo_ID,
+(SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas,
+titulo
 FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_POST['ID']."' LIMIT 1");
 		while($r = r($result)){ 
 			if (($r['cargo_ID'] < 0) AND ($r['num_depreguntas'] == 0)) {
 				sql_old("DELETE FROM examenes WHERE pais = '".PAIS."' AND ID = '".$_POST['ID']."'");
-				evento_log('Examen eliminado #'.$_POST['ID']);
-				$refer_url = 'cargos';
+				evento_log('Examen '.$r['titulo'].' eliminado');
+				$refer_url = 'examenes';
 			}
 		}
 	} elseif (($_GET[2] == 'caducar_examen') AND ($_GET['ID'] != null)) {
@@ -922,7 +923,7 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 	} elseif (($_GET[2] == 'fusionar') AND ($_GET['ID']) AND ($_GET['f'])) {
 
 		$refer_url = 'mapa/propiedades';
-		if (strpos($_SERVER['HTTP_REFERER'], 'arquitecto') >= 0){
+		if (strpos($_SERVER['HTTP_REFERER'], 'arquitecto') > 0){
 			$refer_url = 'mapa/arquitecto/propiedades';
 		}
 
@@ -960,8 +961,9 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 		}
 
 
-	} elseif (($_GET[2] == 'editar') AND ($_GET['ID']) AND ($_POST['color']) AND ($_POST['link'] != 'e') AND ($_POST['link'] != 'v')) {
+	} elseif (($_GET[2] == 'editar') AND ($_GET['ID']) AND ($_POST['color'] OR $_POST['color2']) AND ($_POST['link'] != 'e') AND ($_POST['link'] != 'v')) {
 
+		$refer_url = 'mapa/propiedades';
 		$_POST['color2'] = preg_replace("[^A-Fa-f0-9]", "", $_POST['color2']);
 		if (strlen($_POST['color2']) == 3) { 
 			$_POST['color2'] = strtoupper($_POST['color2']);
@@ -988,9 +990,16 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 		$_POST['link'] = str_replace("|", "", $_POST['link']);
 		$_POST['link'] = str_replace("\"", "", $_POST['link']);
 		$_POST['link'] = str_replace(HOST, "", $_POST['link']);
+
+		//Limitamos los colores posibles evitando que se seleccionen colores similares a los de las propiedades del gobierno
+		if (($_POST['color'] == 'CCC') || ($_POST['color'] == '666') || ($_POST['color'] == '888') || ($_POST['color'] == 'AAA')) {
+			$_POST['color'] = ''; 
+		}
+
 		if (strlen($_POST['color']) == 3) {
 			sql_old("UPDATE mapa SET color = '".$_POST['color']."', text = '".$_POST['text']."', link = '".$_POST['link']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."')) LIMIT 1");
-			$refer_url = 'mapa/propiedades';
+		}else{
+			$refer_url = 'mapa/propiedades#error_el_color_seleccionado_es_invalido';
 		}
 
 

@@ -622,10 +622,18 @@ case 'avatar':
 
 
 case 'examenes':
-	if (($_GET[2] == 'crear') AND ($_POST['titulo']) AND (nucleo_acceso($vp['acceso']['examenes_decano']))) {
+	if ($_GET[2] == 'eliminar-acceso-profesor'  AND (nucleo_acceso($vp['acceso']['examenes_decano'])) AND ($_GET[3]) AND ($_GET[4]) ){
+		sql_old("DELETE FROM examenes_profesores WHERE examen_ID = '".$_GET[3]."' AND user_ID = '".$_GET[4]."'");
+		evento_log('Retirado acceso al examen #'.$_GET[3].' al profesor #'.$_GET[4]);
+		$refer_url = 'examenes/editar/' . $_GET[3].'#profesor';
+	}elseif ($_GET[2] == 'anadir-acceso-profesor'  AND (nucleo_acceso($vp['acceso']['examenes_decano'])) AND ($_POST['profesor']) AND ($_POST['ID'])){
+		sql_old("INSERT INTO examenes_profesores (user_ID, examen_ID) VALUES((SELECT ID FROM users WHERE nick = '".$_POST['profesor']."' AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) , '".$_POST['ID']."')");
+		evento_log('Otorgado acceso al examen #'.$_GET[3].' al profesor #'.$_GET[4]);
+		$refer_url = 'examenes/editar/' . $_POST['ID'].'#profesor';
+	}elseif (($_GET[2] == 'crear') AND ($_POST['titulo']) AND (nucleo_acceso($vp['acceso']['examenes_decano']))) {
 		$_POST['titulo'] = gen_title($_POST['titulo']);
 		sql_old("INSERT INTO examenes (pais, titulo, descripcion, user_ID, time, cargo_ID, nota, num_preguntas) VALUES ('".PAIS."', '" . $_POST['titulo'] . "', 'Editar...', '" . $pol['user_ID'] . "', '" . $date . "', '" . $_POST['cargo_ID'] . "', '5.0', 10)");
-		$new_ID = mysql_insert_id($link);
+		$new_ID = mysqli_insert_id($link);
 		sql_old("UPDATE examenes SET cargo_ID = '-" . $new_ID . "' WHERE pais = '".PAIS."' AND ID = '" . $new_ID . "' LIMIT 1");
 		evento_log('Examen nuevo '.$_POST['titulo']);
 		$refer_url = 'examenes';

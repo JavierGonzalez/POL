@@ -210,9 +210,6 @@ FROM mapa
 WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "' AND (user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."'))
 LIMIT 1", $link);
 	while($r = mysqli_fetch_array($result)){
-
-        error_log("Pintando propiedades");
-		
 		$tamaño = ($r['size_x'] * $r['size_y']);
 		echo '<h1><a href="/mapa">'._('Mapa').'</a>: '._('Editar propiedad').': ' . $_GET[2] . '</h1>
 
@@ -336,7 +333,7 @@ Color: <input value="' . $r['color'] . '" data-jscolor="" name="color">
                     $("#" + i).css("white-space", "nowrap");
                     $("#" + i).css("overflow", "hidden");
                     if (prop_a[2] == "V"){
-                        $("#" + i).css("writing-mode", "tb-rl");
+                        $("#" + i).css("writing-mode", "vertical-rl");
                     }
                     break;
 

@@ -103,8 +103,12 @@ function colorear(modo) {
                     $("#" + i).css("white-space", "nowrap");
                     $("#" + i).css("overflow", "hidden");
                     if (prop_a[2] == "V"){
+<<<<<<< HEAD
 						$("#" + i).html("<span style=\"writing-mode: vertical-rl\">"+pa1+"</span>");
                         $("#" + i).css("writing-mode", "tb-rl");
+=======
+                        $("#" + i).css("writing-mode", "vertical-rl");
+>>>>>>> master
                     }
                     break;
 

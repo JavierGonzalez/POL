@@ -60,7 +60,7 @@ padding:0;
 margin:0;
 border:1px solid #999;
 font-size:15px;
-color:blue;
+color:white;
 font-weight:bold;
 text-align:center;
 }
@@ -94,7 +94,7 @@ function colorear(modo) {
                     $("#" + i).css("white-space", "nowrap");
                     $("#" + i).css("overflow", "hidden");
                     if (prop_a[2] == "V"){
-                        $("#" + i).css("writing-mode", "tb-rl");
+                        $("#" + i).css("writing-mode", "vertical-rl");
                     }
                     break;
 

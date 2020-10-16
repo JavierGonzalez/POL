@@ -262,10 +262,18 @@ function cargo_add($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 	}
 }
 
+function comprobar_cargo_examenes($cargo_ID, $user_ID){
+	$config = tipo_valor_acceso_privilegio('examenes_profesor');
+	if ($config['tipo'] === 'cargo' AND strpos($config['valor'], $cargo_ID) !== false){
+		sql_old("DELETE FROM examenes_profesores WHERE user_ID = '".$user_ID."'");
+	}
+}
+
 function cargo_del($cargo_ID, $user_ID, $evento_chat=true, $sistema=false) {
 	global $link, $pol; 
 	$result = sql_old("SELECT nombre, nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$cargo_ID."' LIMIT 1");
 	while($r = r($result)){
+		comprobar_cargo_examenes($cargo_ID, $user_ID);
 		sql_old("UPDATE cargos_users SET cargo = 'false' WHERE pais = '".PAIS."' AND cargo_ID = '" . $cargo_ID . "' AND user_ID = '".$user_ID."' LIMIT 1");
 		$result = sql_old("SELECT cargo_ID, 
 (SELECT nivel FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nivel
@@ -287,7 +295,6 @@ LIMIT 1");
 		evento_log('Cargo '.$r['nombre'].' quitado a @'.$nick_asignado.' por '.($sistema==true?'VirtualPol':'@'.$pol['nick']));
 	}
 }
-
 
 
 

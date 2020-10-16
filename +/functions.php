@@ -137,6 +137,26 @@ function sql_acceso($tipo, $valor='', $pais=false) {
 	return $rt;
 }
 
+function tipo_valor_acceso_privilegio($name){
+	$val = array();
+
+	$result = sql_old("SELECT valor
+	FROM config
+	WHERE dato='acceso'
+	AND pais = '".PAIS."'
+	LIMIT 1
+	");
+	if($r = r($result)) { 
+		foreach (explode("|", $r['valor']) as $config){ 
+			if (explode(";", $config)[0] === $name){
+				$val['tipo'] = explode(":", explode(";", $config)[1])[0];
+				$val['valor'] = explode(":", explode(";", $config)[1])[1];
+			}
+		}
+	}
+	return $val;
+}
+
 
 
 function control_acceso($titulo=false, $name='', $acceso='', $cfg='', $quitar_array='', $inline=false) {
@@ -250,6 +270,22 @@ function get_supervisores_del_censo() {
 	while($r = r($result)){ $sc[$r['ID']] = $r['nick']; }
 	return $sc; // Devuelve un array con los Supervisores del Censo activos. Formato: $array[user_ID] = nick;
 }
+
+function usuarios_con_privilegio($privilegio){
+	$ciudadanos = array();
+
+	$config = tipo_valor_acceso_privilegio($privilegio);
+
+	error_log("SELECT nick, ID FROM users WHERE pais = '".PAIS."' AND ".sql_acceso($config['tipo'], $config['valor'])." LIMIT 100000");
+
+	$result = sql_old("SELECT nick, ID FROM users WHERE pais = '".PAIS."' AND ".sql_acceso($config['tipo'], $config['valor'])." LIMIT 100000");
+
+	while($r = r($result)){
+		$ciudadanos[] = $r['nick'];
+	}
+	return $ciudadanos;
+}
+
 
 function duracion($t) {
 	if ($t > 172800) { $d = round($t/86400).' '._('días'); }

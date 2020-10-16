@@ -398,6 +398,15 @@ CREATE TABLE `examenes` (
   KEY `cargo_ID` (`cargo_ID`)
 ) ENGINE=MyISAM AUTO_INCREMENT=516 DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE `examenes_profesores` (
+  `ID` mediumint(9) unsigned NOT NULL auto_increment,
+  `user_ID` mediumint(8) NOT NULL default '0',
+  `examen_ID` mediumint(9) unsigned NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=516 DEFAULT CHARSET=utf8;
+
+
 #
 # Source for table "examenes_preg"
 #

@@ -1,5 +1,6 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
+
 if ($_SERVER['SERVER_ADDR'] !== $_SERVER['REMOTE_ADDR'])
 	exit('Solo el propio servidor puede ejecutar "el proceso".');
 
@@ -7,6 +8,7 @@ if ($_SERVER['SERVER_ADDR'] !== $_SERVER['REMOTE_ADDR'])
 unset($maxsim['output']);
 
 // PROTECCION DE DOBLE EJECUCION. Evita que se ejcute el proceso mas de una vez en un mismo dia.
+
 $result = sql_old("SELECT pais FROM stats WHERE pais = '".PAIS."' AND time = '".date('Y-m-d 20:00:00')."' LIMIT 1");
 while($r = r($result)) { echo 'Ya se ha ejecutado hoy'; exit; }
 
@@ -55,12 +57,18 @@ sql_old("DELETE FROM referencias WHERE time < '".tiempo(30)."'");
 
 
 // SALARIOS
-$result = sql_old("SELECT user_ID,
-(SELECT salario FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID AND asigna != '-1' LIMIT 1) AS salario
-FROM cargos_users
-WHERE pais = '".PAIS."' AND cargo = 'true'
-ORDER BY user_ID ASC");
-while($r = r($result)){ if ($salarios[$r['user_ID']] < $r['salario']) { $salarios[$r['user_ID']] = $r['salario']; } }
+$result = sql_old("SELECT cu.user_ID,
+(SELECT MAX(salario) FROM cargos WHERE pais = 'POL' AND cargo_ID IN (select cargo_ID from cargos_users where user_ID = cu.user_ID AND cargo = 'true') AND asigna != '-1') AS max_salario,
+(SELECT SUM(salario) FROM cargos WHERE pais = 'POL' AND cargo_ID IN (select cargo_ID from cargos_users where user_ID = cu.user_ID AND cargo = 'true') AND asigna != '-1') AS other_salario
+FROM cargos_users cu
+WHERE pais = 'POL' AND cargo = 'true'
+GROUP BY user_ID 
+");
+while($r = r($result)){
+	$salarios[$r['user_ID']] = $r['max_salario']; 
+	$salarios_extra[$r['user_ID']] = $r['other_salario'] - $r['max_salario']; 
+}
+
 $result = sql_old("SELECT pols FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
 while($r = r($result)) { $pols_gobierno = $r['pols']; }
 $gasto_total = 0;
@@ -77,6 +85,23 @@ LIMIT 1");
 	}
 }
 evento_chat('<b>[PROCESO] Sueldos efectuados.</b> Gasto: <em>'.pols($gasto_total).' '.MONEDA.'</em>');
+if ($pol['config']['porcentaje_multiple_sueldo'] > 0){
+	$gasto_extra = 0;
+	foreach($salarios_extra as $user_ID => $salario_extra) {
+		$salario_extra = ($salario_extra * $pol['config']['porcentaje_multiple_sueldo']) / 100;
+		$result = sql_old("SELECT ID
+	FROM users
+	WHERE ID = '".$user_ID."' AND fecha_last > '".tiempo(1)."' AND pais = '".PAIS."'
+	LIMIT 1");
+		while($r = r($result)){
+			echo $user_ID. ' - '.$salario_extra."<br />\n";
+			$gasto_extra += $salario_extra;
+			pols_transferir($salario_extra, '-1', $user_ID, 'Salario extra');
+		}
+	}
+	evento_chat('<b>[PROCESO] Sueldos extras efectuados.</b> Gasto: <em>'.pols($gasto_extra).' '.MONEDA.'</em>');
+	
+}
 
 $result = sql_old("SELECT pols FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
 while($r = r($result)) {

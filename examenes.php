@@ -36,7 +36,20 @@ while ($r = mysqli_fetch_array($result)) { $pol['config'][$r['dato']] = $r['valo
 // INIT
 if (($_GET[1] == 'editar') AND (((nucleo_acceso($vp['acceso']['examenes_decano'])) OR (nucleo_acceso($vp['acceso']['examenes_profesor']))) AND ($pol['estado'] == 'ciudadano'))) { 		// EDITAR
 
+
 	if (!$_GET[2]) { $_GET[2] = 0; }
+
+	$result = mysql_query_old("SELECT ID, user_ID, examen_ID
+	FROM examenes_profesores WHERE user_ID = '".$pol['user_ID']."' AND examen_ID = '".$_GET[2]."'", $link);
+	$acceso_profesor = false;
+	while ($r = mysqli_fetch_array($result)) { 
+		$acceso_profesor = true;
+	}
+
+	if ((!nucleo_acceso($vp['acceso']['examenes_decano'])) AND (!$acceso_profesor)){
+		echo 'No tiene permiso para acceder a este examen.';
+		return;
+	}
 
 	$result = mysql_query_old("SELECT ID, titulo, descripcion, user_ID, time, nota, num_preguntas, COALESCE((SELECT id FROM cargos WHERE id = examenes.cargo_ID), '-1') as cargo_ID 
 FROM examenes
@@ -114,13 +127,41 @@ ORDER BY time DESC", $link);
 </ol>
 </form>';
 			if ((nucleo_acceso($vp['acceso']['examenes_decano'])) AND ($r['cargo_ID'] < 0))  {
+				$profesor_acceso = usuarios_con_privilegio('examenes_profesor');
+				$txt .='<hr />
+					<form action="/accion/examenes/anadir-acceso-profesor" method="post">
+					<a name="profesor"></a><span>Profesores con acceso a este examen</span>
+					<ul>';
+				error_log("SELECT e.user_ID as user_ID, u.nick as nick
+				FROM examenes_profesores e, users u WHERE u.ID = e.user_ID AND e.examen_ID = '".$_GET[2]."'");
+				$result = mysql_query_old("SELECT e.user_ID as user_ID, u.nick as nick
+				FROM examenes_profesores e, users u WHERE u.ID = e.user_ID AND e.examen_ID = '".$_GET[2]."'", $link);
+				$profesores_asociados = array();
+				while ($r = mysqli_fetch_array($result)) { 
+					$txt .='<li>'.$r['nick'].' '.boton("Eliminar acceso", '/accion/examenes/eliminar-acceso-profesor/'.$_GET[2].'/'.$r['user_ID']);
+					$profesores_asociados[] = $r['nick'];
+				}
+
+				$txt .='</ul>
+					<span>Seleccione los profesores que tendrán acceso a este examen</span>
+					
+					<select name="profesor" id="profesor">';
+					foreach ($profesor_acceso as $profesor){ 
+						if (!in_array($profesor, $profesores_asociados)){
+							$txt .='<option value="'.$profesor.'">'.$profesor.'</option>';
+						}
+					}
+				$txt .='</select>
+					<input type="hidden" name="ID" value="' . $_GET[2] . '" /> 
+					<input type="submit" value="'._('Otorgar acceso').'"/>
+					</form>';
 				$result3 = mysql_query_old("SELECT (SELECT COUNT(*) FROM examenes_preg WHERE pais = '".PAIS."' AND examen_ID = examenes.ID LIMIT 1) AS num_depreguntas
 FROM examenes WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "' LIMIT 1", $link);
 				while($r3 = mysqli_fetch_array($result3)){ 
 					if ($r3['num_depreguntas'] == 0) {
 						$txt .='<hr />
 <form action="/accion/examenes/eliminar-examen" method="post">
-<input type="hidden" name="ID" value="' . $r['ID'] . '" /> 
+<input type="hidden" name="ID" value="' . $_GET[2] . '" /> 
 <input type="submit" value="'._('Eliminar examen').'"/>
 </form>';
 					}

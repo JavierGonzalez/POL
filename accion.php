@@ -1066,6 +1066,7 @@ case 'gobierno':
 'factor_propiedad'=>'Factor propiedad',
 'pols_examen'=>'Coste hacer un examen',
 'pols_mensajeurgente'=>'Coste mensaje urgente',
+'porcentaje_multiple_sueldo'=>'Porcentaje de salario extra',
 'examenes_exp'=>'Expiración de candidaturas',
 'impuestos'=>'Impuesto de patrimonio',
 'impuestos_minimo'=>'Minimo patrimonio imponible',
@@ -1160,6 +1161,7 @@ case 'gobierno':
 ($_POST['pols_mensajetodos'] >= 300) AND 
 ($_POST['pols_examen'] >= 0) AND 
 ($pol['config']['pols_mensajeurgente'] >= 0) AND
+(($pol['config']['porcentaje_multiple_sueldo'] >= 0) AND (($pol['config']['porcentaje_multiple_sueldo'] <= 100))) AND
 ($_POST['impuestos'] <= 25) AND ($_POST['impuestos'] >= 0) AND
 ($_POST['impuestos_minimo'] >= -1000) AND
 ($_POST['impuestos_empresa'] <= 1000) AND ($_POST['impuestos_empresa'] >= 0) AND

@@ -320,6 +320,7 @@ echo '
 <tr><td align="right"><acronym title="Mensaje privado a todos los Ciudadanos.">'._('mensaje global').'</acronym>:</td><td><input style="text-align:right;" type="text" name="pols_mensajetodos" size="3" maxlength="6" class="pols" value="' . $pol['config']['pols_mensajetodos'] . '"'.$dis.' /> '.MONEDA.' ('._('mínimo').' '.pols(300).')</td></tr>
 <tr><td align="right">'._('Mensaje urgente').':</td><td><input class="pols" style="text-align:right;" type="text" name="pols_mensajeurgente" size="3" maxlength="6" value="' . $pol['config']['pols_mensajeurgente'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
 <tr><td align="right">'._('Crear chat').':</td><td><input class="pols" style="text-align:right;" type="text" name="pols_crearchat" size="3" maxlength="6" value="' . $pol['config']['pols_crearchat'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
+<tr><td align="right"><acronym title="Porcentaje de los demás salarios que cobrará el ciudadano.">'._('Porcentaje de salario extra').':</td><td><input class="pols" style="text-align:right;" type="text" name="porcentaje_multiple_sueldo" size="3" maxlength="6" value="' . $pol['config']['porcentaje_multiple_sueldo'] . '"'.$dis.' /> % (Un valor entre 0 y 100)</td></tr>
 </table>
 </fieldset>
 

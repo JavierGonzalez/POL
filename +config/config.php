@@ -1,7 +1,6 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-
 ini_set('display_errors', 1);
 error_reporting(E_ALL ^ E_NOTICE);
 
@@ -70,11 +69,11 @@ if (!defined('PAIS'))
 
 
 // CONFIG
-define('DOMAIN', 'virtualpol.com');
+define('DOMAIN', '');
 define('CONTACTO_EMAIL', 'desarollo@virtualpol.com');
 
 define('SQL', strtolower(PAIS).'_');
-define('USERCOOKIE', '.'.DOMAIN);
+define('USERCOOKIE', '');
 define('HOST', $_SERVER['HTTP_HOST']);
 define('VOTO_CONFIANZA_MAX', 50); // Máximo de votos de confianza emitibles
 define('SC_NUM', 3); // Numero de SC electos.

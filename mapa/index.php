@@ -120,7 +120,7 @@ LIMIT 1", $link);
 
 <li><b>'._('Color').':</b> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.3.3/jscolor.min.js" integrity="sha512-KVabwlnqwMHqLIONPKHQTGzW4C0dg3HEPwtTCVjzGOW508cm5Vl6qFvewK/DUbgqLPGRrMeKL3Ga3kput855HQ==" crossorigin="anonymous"></script>
-Color: <input value="" readonly data-jscolor="" name="color">
+Color: <input value="'.$r['color'].'" data-jscolor="" name="color">
 
 <!--<li><b>Letras:</b> <input type="text" name="text" size="8" maxlength="' . $tamaño . '" value="' . $r['text'] . '" /> (opcional, letras: <b>' . $tamaño . '</b>)<br /><br /></li>-->
 

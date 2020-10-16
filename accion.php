@@ -973,6 +973,8 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 
 		$refer_url = 'mapa/propiedades';
 
+
+
 		$result = sql_old("SELECT * FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1");
 		while($r = r($result)){ 
 			$superficie = $r['size_x'] * $r['size_y'];
@@ -989,7 +991,7 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 		$_POST['link'] = str_replace("\"", "", $_POST['link']);
 		$_POST['link'] = str_replace(HOST, "", $_POST['link']);
 
-		if (strlen($_POST['color']) == 7) {
+		if (preg_match("[^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$]", $_POST['color'])) {
 			sql_old("UPDATE mapa SET color = '".$_POST['color']."', text = '".$_POST['text']."', link = '".$_POST['link']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."')) LIMIT 1");
 		}else{
 			$refer_url = 'mapa/propiedades#error_el_color_seleccionado_es_invalido';

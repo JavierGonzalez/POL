@@ -220,9 +220,12 @@ LIMIT 1", $link);
 <li>'._('Propiedad').': <b>' . $r['ID'] . '</b><br />
 '._('Posición').': <b>' . $r['pos_x'] . '-' . $r['pos_y'] . '</b><br />
 '._('Tamaño').': <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * $r['size_y']) . '</b><br /><br /></li>
-<input type="hidden" name="color" value="#CCC" /> 
 <li><b>'._('frase').'</b>:<br />
 <input type="text" name="link" size="50" maxlength="70" value="' . $r['link'] . '" /><br /><br /></li>
+<li><b>'._('Color').':</b> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.3.3/jscolor.min.js" integrity="sha512-KVabwlnqwMHqLIONPKHQTGzW4C0dg3HEPwtTCVjzGOW508cm5Vl6qFvewK/DUbgqLPGRrMeKL3Ga3kput855HQ==" crossorigin="anonymous"></script>
+Color: <input value="' . $r['color'] . '" data-jscolor="" name="color">
+<br /><br /></li>
 <li><input type="submit" value="'._('Guardar').'" /><br /><br /></li>
 
 </ol>

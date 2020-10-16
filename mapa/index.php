@@ -119,10 +119,8 @@ LIMIT 1", $link);
 <input type="text" name="link" size="50" maxlength="70" value="' . $r['link'] . '" /><br /><br /></li>
 
 <li><b>'._('Color').':</b> 
-<select name="color">
-<option value="' . $r['color'] . '" style="background:#' . $r['color'] . ';">' . $r['color'] . '</option>
-' . $colores . '
-</select> <span style="background:#' . $r['color'] . ';height:15px;width:40px;"></span> (<a href="/mapa/editar/' . $_GET[2] . '/">Generar m&aacute;s</a> o especificar: <input type="text" size="2" maxlength="3" name="color2" value="" />)<br /><br /></li>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.3.3/jscolor.min.js" integrity="sha512-KVabwlnqwMHqLIONPKHQTGzW4C0dg3HEPwtTCVjzGOW508cm5Vl6qFvewK/DUbgqLPGRrMeKL3Ga3kput855HQ==" crossorigin="anonymous"></script>
+Color: <input value="" readonly data-jscolor="" name="color">
 
 <!--<li><b>Letras:</b> <input type="text" name="text" size="8" maxlength="' . $tamaño . '" value="' . $r['text'] . '" /> (opcional, letras: <b>' . $tamaño . '</b>)<br /><br /></li>-->
 
@@ -230,7 +228,7 @@ ORDER BY estado ASC, time ASC", $link);
 			$superficie += $r['size_x'] * $r['size_y'];
 			echo '<tr>
 <td align="right" valign="top">' . $r['ID'] . '</td>
-<td valign="top"><div style="width:' . $size_x . 'px;height:' . $size_y . 'px; background:#' . $r['color'] . ';border:1px solid grey;"></div></td>
+<td valign="top"><div style="width:' . $size_x . 'px;height:' . $size_y . 'px; background:' . $r['color'] . ';border:1px solid grey;"></div></td>
 <td valign="top">' . $r['pos_x'] . '-' . $r['pos_y'] . '</td>
 <td valign="top">' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['superficie']) . '</td>
 <td valign="top">' . $r['color'] . '</td>

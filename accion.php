@@ -773,6 +773,14 @@ case 'arquitecto':
 
 		
 	} elseif (($_GET[2] == 'editar') AND ($_GET['ID']) AND nucleo_acceso($vp['acceso']['gestion_mapa'])) {
+		$color;
+		if ($_POST['color']) {
+			$color = $_POST['color'];
+		}
+
+		if (isset($color)){
+			sql_old("UPDATE mapa SET color = '".$color."' WHERE pais = '".PAIS."' AND estado = 'e'  LIMIT 1");
+		}
 
 		$result = sql_old("SELECT * FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1");
 		while($r = r($result)){ 
@@ -964,16 +972,6 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 	} elseif (($_GET[2] == 'editar') AND ($_GET['ID']) AND ($_POST['color'] OR $_POST['color2']) AND ($_POST['link'] != 'e') AND ($_POST['link'] != 'v')) {
 
 		$refer_url = 'mapa/propiedades';
-		$_POST['color2'] = preg_replace("[^A-Fa-f0-9]", "", $_POST['color2']);
-		if (strlen($_POST['color2']) == 3) { 
-			$_POST['color2'] = strtoupper($_POST['color2']);
-			if (($_POST['color2'] == 'FFF') OR ($_POST['color2'] == '000') OR ($_POST['color2'] == 'FF0') OR ($_POST['color2'] == '333')) {
-				$_POST['color'] = ''; 
-			} else {
-				$_POST['color'] = strtoupper(trim($_POST['color2'])); 
-			}
-		}
-		$_POST['color'] = preg_replace("[^A-Fa-f0-9]", "", $_POST['color']);
 
 		$result = sql_old("SELECT * FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1");
 		while($r = r($result)){ 
@@ -991,12 +989,7 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 		$_POST['link'] = str_replace("\"", "", $_POST['link']);
 		$_POST['link'] = str_replace(HOST, "", $_POST['link']);
 
-		//Limitamos los colores posibles evitando que se seleccionen colores similares a los de las propiedades del gobierno
-		if (($_POST['color'] == 'CCC') || ($_POST['color'] == '666') || ($_POST['color'] == '888') || ($_POST['color'] == 'AAA')) {
-			$_POST['color'] = ''; 
-		}
-
-		if (strlen($_POST['color']) == 3) {
+		if (strlen($_POST['color']) == 7) {
 			sql_old("UPDATE mapa SET color = '".$_POST['color']."', text = '".$_POST['text']."', link = '".$_POST['link']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."')) LIMIT 1");
 		}else{
 			$refer_url = 'mapa/propiedades#error_el_color_seleccionado_es_invalido';

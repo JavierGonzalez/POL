@@ -18,6 +18,7 @@ S - solar			Blanco		(solar, en venta, link a compra)			null
 $count = 1;
 $prop = '';
 $m = null;
+$color = 'white';
 $result = mysql_query_old("SELECT ID, pos_x, pos_y, size_x, size_y, link, pols, color, estado, superficie, nick
 FROM mapa
 WHERE pais = '".PAIS."' 
@@ -36,7 +37,16 @@ while($r = mysqli_fetch_array($result)) {
 	switch ($r['estado']) {
 		case 'p': $info = $r['link'] . '|' .  $r['nick'] . '|' . $r['color']; break;
 		case 'v': $info = 'v|' . $r['nick'] . '|' . $r['pols']; $venta_total += $r['superficie']; break;
-		case 'e': if ($r['link']) { $info = 'e|' . $r['link']; } else { $info = 'e|'; } break;
+		case 'e': 
+			if ($r['link']) { 
+				$info = 'e|' . $r['link']; 
+			} else { 
+				$info = 'e|'; 
+			} 
+			if ($r['color']){
+				$color = $r['color'];
+			}
+		break;
 	}
 
 	$info .= "|" .$orientacion;
@@ -59,9 +69,8 @@ height:' . $cuadrado_size . 'px;
 padding:0;
 margin:0;
 border:1px solid #999;
-font-size:15px;
-color:white;
-font-weight:bold;
+font-size:12px;
+color:'.$color.';
 text-align:center;
 }
 #msg {position:absolute;display:none;z-index:10;}
@@ -94,12 +103,15 @@ function colorear(modo) {
                     $("#" + i).css("white-space", "nowrap");
                     $("#" + i).css("overflow", "hidden");
                     if (prop_a[2] == "V"){
-                        $("#" + i).css("writing-mode", "vertical-rl");
+						$("#" + i).html("<span style=\"writing-mode: vertical-rl\">"+pa1+"</span>");
+                        $("#" + i).css("writing-mode", "tb-rl");
                     }
                     break;
 
 			default:
-				if (vision == "normal") { var elcolor = "#" + prop_a[2]; } 
+				if (vision == "normal") { 
+					var elcolor = prop_a[2]; 
+				} 
 				else { if (pa1 == "'.$pol['nick'].'") { var elcolor = "#FF0000"; } else { var elcolor = "#AACC99"; } }
 		}
 		$("#" + i).css("background", elcolor);

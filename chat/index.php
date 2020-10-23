@@ -3,8 +3,8 @@
 if (!$_GET[1])
 	redirect('/');
 
-
-if ((!$pol['nick']) AND ($_SESSION['pol']['nick'])) { $pol['nick'] = $_SESSION['pol']['nick']; }
+if (!$pol['nick'] AND $_SESSION['pol']['nick']) 
+	$pol['nick'] = $_SESSION['pol']['nick'];
 
 $result = mysql_query_old("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET[1]."' LIMIT 1", $link);
 while ($r = mysqli_fetch_array($result)) { 

@@ -15,7 +15,6 @@ case 'video':
 	break;
 
 
-
 case 'presentacion':
 	$result = mysql_query_old("SELECT title, text FROM docs WHERE ID = 577 LIMIT 1", $link); // doc_ID 577 = Test
 	while($r = mysqli_fetch_array($result)) { presentacion($r['title'], $r['text']); }
@@ -23,7 +22,7 @@ case 'presentacion':
 
 
 case 'desarrollo':
-	$txt_title = 'Desarrollo de VirtualPol2 | Codigo fuente, Software libre, descargar'; 
+	$txt_title = 'Desarrollo de VirtualPol | Codigo fuente, Software libre, descargar'; 
 	$txt_nav = array('Desarrollo');
 
 	$result = mysql_query_old("SELECT title, text FROM docs WHERE ID = 10 LIMIT 1", $link); // doc_ID 10 = Desarrollo
@@ -39,6 +38,7 @@ case 'desarrollo':
 
 </div>';
 	break;
+
 
 case 'reglamento-sc':
 	$txt_title = 'Reglamento de Supervisión del Censo'; 
@@ -119,8 +119,8 @@ case 'TOS':
 
 
 default:
-	if ($_GET[0]==='index' AND !$_GET[1]) {
-		$_GET[1] = strtolower(PAIS);
-		$maxsim['redirect'] = '/chat';
-	}
+	if ($_GET[0]==='index' AND !$_GET[1])
+		$maxsim['redirect'] = '/chat/'.strtolower(PAIS);
+
+
 }

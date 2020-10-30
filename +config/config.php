@@ -1,10 +1,6 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL ^ E_NOTICE);
-
-
 $maxsim['output'] = 'template';
 
 

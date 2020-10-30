@@ -119,7 +119,7 @@ case 'TOS':
 
 
 default:
-	if ($_GET[0]==='index' AND !$_GET[1])
+	if (!$_GET[1])
 		$maxsim['redirect'] = '/chat/'.strtolower(PAIS);
 
 

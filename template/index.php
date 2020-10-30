@@ -4,7 +4,6 @@
 // Errores y redirecciones.
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('/'); }
 if (isset($_GET['noti'])) { notificacion('visto', $_GET['noti']); }
-//if (!isset($txt)) { $txt_nav = array('Error'); header('HTTP/1.1 404 Not Found'); $txt = '<h1 style="font-weight:normal;">ERROR 404: <b>'._('Página inexistente').'</b></h1>'; }
 if (isset($_GET['error'])) { header('HTTP/1.1 401 Unauthorized'); $txt = '<h1 style="font-weight:normal;color:red;">ERROR: <b>'.escape(base64_decode($_GET['error'])).'</b></h1>'; }
 if (!isset($pol['config']['pais_des'])) { $pol['config']['pais_des'] = _('Plataforma cerrada'); }
 if (isset($txt_title)) { $txt_title .= ' - '.$pol['config']['pais_des']; }
@@ -37,7 +36,6 @@ if (isset($_GET['bg'])) {
 
 
 <link href="/img/lib/font-awesome.min.css" rel="stylesheet">
-<!--<link href="/img/emoji/css/emoji.css" rel="stylesheet">-->
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '/img/';
@@ -111,13 +109,12 @@ foreach ((array)$maxsim['template']['js_array'] AS $key => $value)
 				</ul>
 			</li>
 			<li><a href="/info/supervision-del-censo"><?=_('Supervisión censo')?></a></li>
-			<!--<li><a href="/buscar"><?=_('Buscar')?></a></li>-->
 			<li><a href="#" style="cursor:default;"><?=_('Sobre POL')?>...</a>
 				<ul>
 					<li><a href="/video" target="_blank"><?=_('Vídeo de bienvenida')?></a></li>
 					<li><a href="/manual" target="_blank"><?=_('Documentación')?></a></li>
 					<li><a href="/TOS" target="_blank"><?=_('Condiciones de uso')?></a></li>
-					<li><a href="/desarrollo" target="_blank"><?=_('Desarrollo')?></a></li>
+					<li><a href="/codigo" target="_blank"><?=_('Codigo')?></a></li>
 				</ul>
 			</li>
 		</ul>
@@ -143,7 +140,6 @@ foreach ((array)$maxsim['template']['js_array'] AS $key => $value)
 					<li><a href="/control/gobierno/notificaciones"><?=_('Notificaciones')?></a></li>
 					<li><a href="/control/gobierno/foro"><?=_('Configuración foro')?></a></li>
 					<li><a href="/control/kick"><?=_('Kicks')?></a></li>
-					<!--<li><a href="<?=SSL_URL?>dnie.php"><?=_('Autentificación')?></a></li>-->
 				</ul>
 			</li>
 			<?=(ASAMBLEA?'':'<li><a href="/partidos">'._('Partidos').' <span class="md">'.$pol['config']['info_partidos'].'</span></a></li>')?>
@@ -257,7 +253,7 @@ if (isset($pol['user_ID'])) {
             <a href="/" title="VirtualPol"><img src="/img/logo/vp2.png" width="200" height="60" alt="VirtualPol" /></a>
 			</p>
 			
-			<p><a target="_blank" href="/video"><?=_('Vídeo')?></a> | <a target="_blank" href="/documentacion"><?=_('Documentación')?></a> | <a target="_blank" href="/desarrollo"><?=_('Desarrollo')?></a> | <a target="_blank" href="/TOS" title="Condiciones de Uso">TOS</a><br />
+			<p><a target="_blank" href="/video"><?=_('Vídeo')?></a> | <a target="_blank" href="/documentacion"><?=_('Documentación')?></a> | <a target="_blank" href="/codigo"><?=_('Codigo')?></a> | <a target="_blank" href="/TOS" title="Condiciones de Uso">TOS</a><br />
 			<span title="Epoca antigua en IRC" style="color:#999;">2004-</span>2008-2020
             <br />
 			<span style="color:#BBB;">
@@ -300,16 +296,7 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 
 
 </script>
-	<script type="text/javascript" src="/img/scripts_all.js?v=<?=VER?>"></script>
-
-		<!--
-	  <script src="/img/emoji/js/config.js"></script>
-	  <script src="/img/emoji/js/util.js"></script>
-	  <script src="/img/emoji/js/jquery.emojiarea.js"></script>
-	  <script src="/img/emoji/js/emoji-picker.js"></script>
-	  -->
-
-
+<script type="text/javascript" src="/img/scripts_all.js?v=<?=VER?>"></script>
 
 <?php
 foreach ((array)$maxsim['autoload'] AS $file)
@@ -320,7 +307,6 @@ foreach ((array)$maxsim['autoload'] AS $file)
 <script type="text/javascript">
 <?=$maxsim['template']['js']?>
 </script>
-
 
 
 </body>

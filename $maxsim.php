@@ -1,13 +1,15 @@
-<?php # maxsim.tech — Copyright (c) 2005-2020 Javier González González <gonzo@virtualpol.com> — MIT License
+<?php # maxsim.tech — MIT License — Copyright (c) 2005 Javier González González <gonzo@virtualpol.com>
+
+
+$maxsim['version'] = '0.5.9';
+
+error_reporting(error_reporting() & ~E_NOTICE);
+ob_start();
 
 maxsim:
 
-$maxsim['version'] = 5.8;
-
 maxsim_router();
 maxsim_get();
-
-ob_start();
 
 foreach ((array) $maxsim['autoload'] AS $file) {
     $ext = pathinfo($file, PATHINFO_EXTENSION);
@@ -16,16 +18,16 @@ foreach ((array) $maxsim['autoload'] AS $file) {
         include_once($file);
 
     else if ($ext==='ini')
-        if ($key = ltrim(basename($file, '.'.$ext),'+'))
+        if ($key = ltrim(basename($file, '.'.$ext), '+'))
             define($key, (array)parse_ini_file($file, true, INI_SCANNER_TYPED));
     
     else if ($ext==='json')
-        if ($key = ltrim(basename($file, '.'.$ext),'+'))
+        if ($key = ltrim(basename($file, '.'.$ext), '+'))
             ${$key} = (array)json_decode(file_get_contents($file), true);
 }
 
 
-include($maxsim['app']); #
+include_once($maxsim['app']); #
 
 
 if (is_string($maxsim['redirect'])) {
@@ -43,20 +45,15 @@ else if ($maxsim['output']==='json' AND is_array($echo)) {
     header('content-type: application/json');
     echo json_encode((array)$echo, JSON_PRETTY_PRINT);
 
-} else if (is_string($maxsim['output'])) {
+} else if (file_exists($maxsim['output'].'/index.php')) {
     $echo = ob_get_contents();
+    ob_end_clean();
 
     if ($echo==='') {
         http_response_code(404);
-        
-        if (file_exists('404.php')) {
-            include('404.php');
-            $echo = ob_get_contents();
-        } else
-            $echo = 'Error 404: not found.';
+        $echo = (is_string($maxsim['template'][404])?$maxsim['template'][404]:'Error 404: NOT FOUND.');
     }
 
-    ob_end_clean();
     include($maxsim['output'].'/index.php');
 }
 
@@ -66,11 +63,7 @@ exit;
 function maxsim_router() {
     global $maxsim;
 
-    $url = explode('?', $_SERVER['REQUEST_URI'])[0];
-    if ($url==='/')
-        $url = '/index';
-
-    $levels = explode('/', $url);
+    $levels = explode('/', explode('?', $_SERVER['REQUEST_URI'])[0]);
 
     foreach ($levels AS $id => $level) {
         $path[] = $level;
@@ -121,3 +114,8 @@ function maxsim_get() {
         if ($level-$app_level > 0)
             $_GET[++$id-1] = $value;
 }
+
+
+
+
+

@@ -100,7 +100,7 @@ if ($pol['config']['porcentaje_multiple_sueldo'] > 0){
 		}
 	}
 	evento_chat('<b>[PROCESO] Sueldos extras efectuados.</b> Gasto: <em>'.pols($gasto_extra).' '.MONEDA.'</em>');
-	
+	$gasto_total += $gasto_extra;
 }
 
 $result = sql_old("SELECT pols FROM cuentas WHERE pais = '".PAIS."' AND gobierno = 'true' LIMIT 1");
@@ -190,7 +190,14 @@ sql_old("UPDATE config SET valor = '".$las_palabras."' WHERE pais = '".PAIS."' A
 $p['user_ID'] = 1;
 $recaudado_propiedades = 0;
 $result = sql_old("SELECT ID, size_x, size_y, user_ID, estado, superficie,
-(SELECT pols FROM users WHERE ID = mapa.user_ID LIMIT 1) AS pols_total
+(SELECT pols FROM users WHERE ID = mapa.user_ID LIMIT 1) AS pols_total,
+(SELECT b.multiplicador_impuestos 
+FROM mapa_barrios b 
+WHERE 
+( mapa.pos_x >= b.pos_x 
+	AND mapa.pos_x < (b.pos_x+b.size_x) )
+AND ( mapa.pos_y >= b.pos_y 
+	AND mapa.pos_y < (b.pos_y+b.size_y) ) LIMIT 1) AS multiplicador_impuestos 
 FROM mapa 
 WHERE pais = '".PAIS."' AND user_ID != '0' AND estado != 'e'
 ORDER BY user_ID ASC, size_x DESC, size_y DESC");
@@ -207,7 +214,8 @@ while($r = r($result)){
 		$p = [];
 		$p['user_ID'] = $r['user_ID'];
 	}
-	$coste = round(($r['size_x'] * $r['size_y']) * $pol['config']['factor_propiedad'], 2);
+	$coste = ($r['size_x'] * $r['size_y']) * $pol['config']['factor_propiedad'];
+	$coste = $coste + ($coste * $r['multiplicador_impuestos']);
 	$p['pols'] += $coste;
 	$p['pols_total'] = $r['pols_total'];
 	$p['prop'][$r['ID']] = $coste;
@@ -230,7 +238,29 @@ evento_chat('<b>[PROCESO] Coste de propiedades efectuado,</b> recaudado: '.pols(
 
 
 // IMPUESTO PATRIMONIO
-if ($pol['config']['impuestos'] > 0) {	
+
+//PERIODICIDAD DEL IMPUESTO DE PATRIMONIO
+/*
+D -> Diaria
+S -> Semanal
+P -> Días pares
+B -> Bisemanal (Miércoles y Domingo)
+*/
+
+$periodicidad = $pol['config']['impuestos_periodicidad'];
+$cobrar_impuestos = false;
+if ($periodicidad == "D"){
+	$cobrar_impuestos = true;
+}elseif ($periodicidad == "S" AND date('N') == 7){
+	$cobrar_impuestos = true;
+}elseif ($periodicidad == "P" AND (date('j') % 2 == 0)){
+	$cobrar_impuestos = true;
+}elseif ($periodicidad == "B" AND (date('N') == 7 OR date('N') == 3)){
+	$cobrar_impuestos = true;
+}
+
+
+if ($pol['config']['impuestos'] > 0 AND $cobrar_impuestos) {	
 	$minimo = $pol['config']['impuestos_minimo'];
 	$porcentaje = $pol['config']['impuestos'];
 
@@ -281,7 +311,7 @@ ORDER BY fecha_registro ASC");
 
 
 // IMPUESTO EMPRESA
-if ($pol['config']['impuestos_empresa'] > 0) {	
+if ($pol['config']['impuestos_empresa'] > 0 AND $cobrar_impuestos) {	
 	$result = sql_old("SELECT COUNT(ID) AS num, user_ID FROM empresas WHERE pais = '".PAIS."' GROUP BY user_ID ORDER BY num DESC");
 	while($r = r($result)) { 
 		// comprueba si existe el propietario de la empresa antes de ejecutar el impuesto

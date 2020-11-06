@@ -19,6 +19,15 @@ $count = 1;
 $prop = '';
 $m = null;
 $color = 'white';
+$max_altura;
+$nivel = 1;
+
+$result = mysql_query_old("SELECT MAX(COALESCE(altura_maxima,1)) as altura_maxima
+FROM mapa_barrios", $link);
+while($r = mysqli_fetch_array($result)) {
+	$max_altura = $r['altura_maxima'];
+}
+
 $result = mysql_query_old("SELECT ID, pos_x, pos_y, size_x, size_y, link, pols, color, estado, superficie, nick
 FROM mapa
 WHERE pais = '".PAIS."' 
@@ -83,10 +92,20 @@ prop = {
 '.$prop.'
 };
 
+var columnas = '.$columnas.' ;
+var filas = '.$filas.';
+
 function colorear(modo) {
+	if (altura_actual > 1){
+		$("#polmap td").html("X");
+	}
+
 	for (i in prop) {
 		var prop_a = prop[i].split("|");
 		var pa1 = prop_a[1];
+		$("#" + i).html("");
+		$("#" + i).css("color: black");
+		$("#" + i).css("background: white");
 
 		switch (prop_a[0]) {
 			case "v":
@@ -96,6 +115,16 @@ function colorear(modo) {
 					var elcolor = "#FFFF00";
 				} 
 				break;
+
+                case "b":
+                    var elcolor = prop_a[2];
+                    $("#" + i).html(pa1);
+                    $("#" + i).css("overflow", "hidden");
+                    if (prop_a[3] == "V"){
+						$("#" + i).html("<span style=\"writing-mode: vertical-rl\">"+pa1+"</span>");
+                        $("#" + i).css("writing-mode", "tb-rl");
+                    }
+                    break;
 
                 case "e":
                     var elcolor = "#808080";
@@ -120,9 +149,41 @@ function colorear(modo) {
 	else { vision = "normal"; }
 }
 
+
+var maxima_altura = '.$max_altura.'
+var altura_actual = 1;
+
 $(document).ready(function(){
+	if (altura_actual >= maxima_altura){
+		$("#siguienteNivel").hide();
+	}
+	
+	$("#anteriorNivel").hide();
+
+
+
 	$("#msg").css("display","none");
 	colorear("normal");
+	inicializarTabla();
+	bloqueoPorNivel();
+});
+
+function bloqueoPorNivel(){
+	if (altura_actual == 1){
+		return;
+	}
+	for (x=1;x<=filas;x++){
+		for (y=1;y<=columnas;y++){
+			$("#"+x+"-"+y).css("background","white");
+			$("#"+x+"-"+y).css("color","red");
+			$("#"+x+"-"+y).css("font-weight","bolder");
+			$("#"+x+"-"+y).html("X");
+		}
+	}
+}
+
+function inicializarTabla(){
+
 	$("#polmap td").mouseover(function(){
 		var ID = $(this).attr("id");
 		var amsg = prop[ID];
@@ -131,6 +192,7 @@ $(document).ready(function(){
 			switch (amsg[0]) {
 				case "v": var msg = "<span style=\"color:green;\"><b>En venta</b></span><br />" + amsg[1] + " (" + ID + ")<br /><span style=\"color:blue;\"><b>" + amsg[2] + "</span> monedas</b>"; break;
 				
+				case "b":
 				case "e": 
 					if (amsg[1]) { 
 						var msg = "<span style=\"color:grey;font-size:22fpx;\"><b>" + amsg[1] + "</b></span>"; 
@@ -141,10 +203,14 @@ $(document).ready(function(){
 				
 				default: var msg = "<span style=\"color:green;\"><b>" + amsg[0] + "</b></span><br />" + amsg[1] + " (" + ID + ")"; $(this).css("cursor", "pointer");
 			}
-		} else { var msg = "<span style=\"color:green;\">Comprar</span><br />Solar: " + ID + "<br /> <span style=\"color:blue;\"><b>' . $pol['config']['pols_solar'] . '</span> monedas</b>"; }
+		} else if (altura_actual == 1){
+			var msg = "<span style=\"color:green;\">Comprar</span><br />Solar: " + ID + "<br /> <span style=\"color:blue;\"><b>' . $pol['config']['pols_solar'] . '</span> monedas</b>"; 
+		} 
 		$(this).css("border", "1px solid white");
-		$("#msg").html(msg);
-		$("#msg").css("display", "inline");
+		if (msg != undefined){
+			$("#msg").html(msg);
+			$("#msg").css("display", "inline");
+		}
 
 	}).mouseout(function(){
 		$("#msg").css("display","none");
@@ -164,7 +230,7 @@ $(document).ready(function(){
 			}
 		} else { var ID = $(this).attr("id"); window.location = "/mapa/comprar/" + ID + "/"; }
     });
-});
+}
 
 $(document).mousemove(function(e){
 	$("#msg").css({top: e.pageY + "px", left: e.pageX + 15 + "px"});
@@ -198,9 +264,93 @@ for ($y=1;$y<=$filas;$y++) {
 }
 
 
-$txt_mapa .= '</table></div>';
+$txt_mapa .= '</table>
+
+</div>';
 
 if ($mapa_full) { $txt_mapa .= '<p><a href="/mapa/propiedades/"><b>Ver tus propiedades</b></a></p>'; }
+
+$txt_mapa .= '
+<div>
+	<script>
+		//Con valor 1 ver parcelas con valor 2 se ven barrios
+		var barriosParcelasMode = 1;
+		function verBarriosParcelas(){
+			if (barriosParcelasMode == 1){
+				barriosParcelasMode=2;
+				$("#verBarriosParcelas").html("Parcelas");
+			}else{
+				barriosParcelasMode=1;
+				$("#verBarriosParcelas").html("Barrios");
+			}
+			peticionAjax(barriosParcelasMode);
+		}
+
+		function siguienteNivel(){
+			altura_actual++;
+
+			barriosParcelasMode=1;
+			$("#verBarriosParcelas").html("Barrios");
+
+			peticionAjax(1, altura_actual);
+
+			actualizaIndicadoresNivel(altura_actual);
+		}
+
+		function anteriorNivel(){
+			altura_actual--;
+			peticionAjax(1, altura_actual);
+
+			barriosParcelasMode=1;
+			$("#verBarriosParcelas").html("Barrios");
+
+			actualizaIndicadoresNivel(altura_actual);
+
+		}
+
+		function actualizaIndicadoresNivel(altura_actual){
+			if (altura_actual < maxima_altura){
+				$("#siguienteNivel").show();
+				$("#siguienteNivel").html("Nivel "+(altura_actual+1));
+			}else{
+				$("#siguienteNivel").hide();
+			}
+			if (altura_actual > 2){
+				$("#anteriorNivel").show();
+				$("#anteriorNivel").html("Nivel "+(altura_actual-1));
+			}else if (altura_actual == 2){
+				$("#anteriorNivel").show();
+				$("#anteriorNivel").html("Suelo");
+			}else{
+				$("#anteriorNivel").hide();
+			}
+
+		}
+
+		function peticionAjax(tipoMapa, nivel=altura_actual){
+			$.post("/mapa/ajax", { tipo_mapa: tipoMapa, nivel: nivel }, 
+			function(data) { 
+				vision = "normal";
+				$("#polmap").html(data.mapa);
+				valprop = JSON.parse(data.prop.replace("{,","{"));
+				prop = valprop;
+
+				colorear("normal");
+				inicializarTabla();
+				bloqueoPorNivel();
+			}, "json");
+		}
+
+	</script>
+	<span style="float: left">
+		<a href="javascript:anteriorNivel();" id="anteriorNivel">Suelo</a>
+		<a href="javascript:siguienteNivel();" id="siguienteNivel">Nivel 2</a>
+	</span>
+
+	<span style="float: right">
+		<a href="javascript:verBarriosParcelas();" id="verBarriosParcelas">Barrios</a>
+	</span>
+</div>';
 
 $txt_mapa .='
 <div id="msg" class="amarillo"></div>';

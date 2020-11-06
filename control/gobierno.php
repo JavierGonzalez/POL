@@ -324,30 +324,51 @@ echo '
 </table>
 </fieldset>
 
-<fieldset><legend>'._('Economía Internacional').'</legend>
-<table>
-<tr><td align="right">'._('Arancel de salida').':</td><td><input style="text-align:right;" type="text" name="arancel_salida" size="3" maxlength="6" value="' . $pol['config']['arancel_salida'] . '"'.$dis.' /><b>%</b></td></tr>
-</table>
-</fieldset>
-
 <fieldset><legend>'._('Impuestos').'</legend>
 <table>
 <tr><td align="right"><acronym title="Porcentaje que se impondrá al patrimonio de cada ciudadano que supere el limite. Se redondea. Incluye cuentas y personal.">'._('Impuesto de patrimonio').'</acronym>:</td><td><input style="text-align:right;" type="text" name="impuestos" size="3" maxlength="6" value="' . $pol['config']['impuestos'] . '"'.$dis.' /><b>%</b></td></tr>
+<tr><td align="right"><acronym title="Periodicidad del cobro de impuesto de patrimonio">'._('Periodicidad impuesto de patrimonio').'</acronym>:</td>
+    <td>
+        <select name="impuestos_periodicidad" id="impuestos_periodicidad" '.$dis.'>
+            <option value="D" '. ($pol['config']['impuestos_periodicidad'] == "D" ? "selected" : "").'>Diaria</option>
+            <option value="S" '. ($pol['config']['impuestos_periodicidad'] == "S" ? "selected" : "").'>Semanal</option>
+            <option value="P" '. ($pol['config']['impuestos_periodicidad'] == "P" ? "selected" : "").'>Días pares</option>
+            <option value="B" '. ($pol['config']['impuestos_periodicidad'] == "B" ? "selected" : "").'>Bisemanal (Miércoles y Domingo)</option>
+        </select>
+    </td></tr>
+    <tr><td align="right"><acronym title="Porcentaje de impuestos que se impondrá a las transacciones de tipo Salario">'._('Impuesto de renta').'</acronym>:</td><td><input style="text-align:right;" type="text" name="impuestos_renta" size="3" maxlength="6" value="' . $pol['config']['impuestos_renta'] . '"'.$dis.' /><b>%</b></td></tr>
+    <tr><td align="right"><acronym title="Porcentaje de impuestos que se impondrá a las transacciones que no sean de tipo Salario">'._('IVA').'</acronym>:</td><td><input style="text-align:right;" type="text" name="impuestos_iva" size="3" maxlength="6" value="' . $pol['config']['impuestos_iva'] . '"'.$dis.' /><b>%</b></td></tr>
 <tr><td align="right"><acronym title="Limite minimo de patrimonio para recibir impuestos.">'._('Mínimo patrimonio').'</acronym>:</td><td><input class="pols" style="text-align:right;" type="text" name="impuestos_minimo" size="3" maxlength="6" value="' . $pol['config']['impuestos_minimo'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
-<tr><td align="right"><acronym title="Impuesto fijo diario por cada empresa.">'._('Impuesto de empresa').'</acronym>:</td><td><input class="pols" style="text-align:right;" type="text" name="impuestos_empresa" size="3" maxlength="6" value="' . $pol['config']['impuestos_empresa'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
 </table>
 </fieldset>
 
+';
+
+
+$sel = '';
+
+echo '
+</td><td valign="top">
 <fieldset><legend>'._('Mapa').'</legend>
 <table>
 <tr><td align="right">'._('Precio solar').':</td><td><input style="text-align:right;" class="pols" type="text" name="pols_solar" size="3" maxlength="6" value="' . $pol['config']['pols_solar'] . '"'.$dis.' /> '.MONEDA.'</td></tr>
 <tr><td align="right">'._('Factor de propiedad').':</td><td><input style="text-align:right;" type="text" name="factor_propiedad" size="3" maxlength="6" value="' . $pol['config']['factor_propiedad'] . '"'.$dis.' /> * '._('superficie = coste').'</td></tr>
+<tr><td colspan="2"><h2>Configuración barrios</h2></td></tr>
+';
+$result = sql_old("SELECT ID, nombre, multiplicador_impuestos, altura_maxima FROM mapa_barrios", $link);
+while($r = r($result)){
+    echo '<tr><td colspan="2"><h3>'.$r['nombre'].'</h3></td></tr>';
+
+    echo '<tr><td align="right">'._('Multiplicador impuestos').':</td><td><input style="text-align:right;" type="text" name="barrio_'.$r['ID'].'_impuestos" size="3" maxlength="6" value="' . $r['multiplicador_impuestos'] . '"'.$dis.' /> * '._('Valor por el que se multiplicará el coste de propiedad.').'</td></tr>';
+    echo '<tr><td align="right">'._('Altura máxima').':</td><td><input style="text-align:right;" type="text" name="barrio_'.$r['ID'].'_altura" size="3" maxlength="6" value="' . $r['altura_maxima'] . '"'.$dis.' /> * '._('Número máximo de alturas habilitadas en el barrio.').'</td></tr>';
+}
+
+echo '</table>
+</fieldset>
+</td>
 ';
 
-$sel = '';
-
-echo '<tr><td colspan="2"></td></tr></table>
-</fieldset>
+echo '
 
 </td><td valign="top">
 

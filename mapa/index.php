@@ -27,6 +27,8 @@ if (nucleo_acceso($vp['acceso']['gestion_mapa'])) {
 	$txt_tab['/mapa/arquitecto'] = _('Gestion arquitecto');
 }
 
+$txt_tab['/mapa/barrios'] = _('Barrios de POL');
+
 if (($_GET[1] == 'arquitecto') AND nucleo_acceso($vp['acceso']['gestion_mapa'])) {
 
 	include('arquitecto.php');
@@ -92,6 +94,22 @@ LIMIT 1", $link);
 	$txt_title = _('Mapa').': '._('Editar propiedad');
 	$txt_nav = array('/mapa'=>_('Mapa'), _('Editar propiedad'));
 
+
+
+	$result_max_altura = mysql_query_old("SELECT altura_maxima 
+		FROM mapa_barrios b, mapa m 
+		WHERE m.ID = '" . $_GET[2] . "' 
+		AND ( m.pos_x >= b.pos_x 
+			AND m.pos_x < (b.pos_x+b.size_x) )
+		AND ( m.pos_y >= b.pos_y 
+			AND m.pos_y < (b.pos_y+b.size_y) )");
+
+	$max_altura = 1;
+	if ($r = mysqli_fetch_array($result_max_altura)){
+		$max_altura = $r['altura_maxima'];
+	}
+
+
 	$result = mysql_query_old("SELECT *
 FROM mapa
 WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "' AND (user_ID = '" . $pol['user_ID'] . "' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."'))
@@ -108,25 +126,49 @@ LIMIT 1", $link);
 		echo '<h1><a href="/mapa">'._('Mapa').'</a>: '._('Editar propiedad').': ' . $_GET[2] . '</h1>
 
 <form action="/accion/mapa/editar?ID=' . $_GET[2] . '" method="post">
-
-<ol>
+<input type="hidden" name="max_altura" value="' . $max_altura . '" />
+<ul style="list-style-type:none;">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.3.3/jscolor.min.js" integrity="sha512-KVabwlnqwMHqLIONPKHQTGzW4C0dg3HEPwtTCVjzGOW508cm5Vl6qFvewK/DUbgqLPGRrMeKL3Ga3kput855HQ==" crossorigin="anonymous"></script>
 
 <li>'._('Propiedad').': <b>' . $r['ID'] . '</b><br />
 '._('Posición').': <b>' . $r['pos_x'] . '-' . $r['pos_y'] . '</b><br />
 '._('Tamaño').': <b>' . $r['size_x'] . 'x' . $r['size_y'] . '=' . ($r['size_x'] * $r['size_y']) . '</b><br /><br /></li>
+';
+for ($i=1;$i<=$max_altura;$i++){
+	error_log("SELECT link, color
+	FROM mapa_altura
+	WHERE parcela_ID = '" . $_GET[2] . "' AND altura = ".$i." 
+	LIMIT 1");
 
-<li><b>'._('Dirección web').'</b> o <b>'._('frase').'</b>:<br />
-<input type="text" name="link" size="50" maxlength="70" value="' . $r['link'] . '" /><br /><br /></li>
 
-<li><b>'._('Color').':</b> 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.3.3/jscolor.min.js" integrity="sha512-KVabwlnqwMHqLIONPKHQTGzW4C0dg3HEPwtTCVjzGOW508cm5Vl6qFvewK/DUbgqLPGRrMeKL3Ga3kput855HQ==" crossorigin="anonymous"></script>
-Color: <input value="'.$r['color'].'" data-jscolor="" name="color">
+	$result_altura = mysql_query_old("SELECT link, color
+	FROM mapa_altura
+	WHERE parcela_ID = '" . $_GET[2] . "' AND altura = '".$i."'
+	LIMIT 1", $link);
+	if ($r_altura = mysqli_fetch_array($result_altura)){
+		$color = $r_altura['color'];
+		$text = $r_altura['link'];
+	}else{
+		$color = $r['color'];
+		$text = $r['link'];
+	}
 
-<!--<li><b>Letras:</b> <input type="text" name="text" size="8" maxlength="' . $tamaño . '" value="' . $r['text'] . '" /> (opcional, letras: <b>' . $tamaño . '</b>)<br /><br /></li>-->
+	echo ' <fieldset>
+	<legend>Piso '.$i.'</legend>
+	<li><b>'._('Dirección web').'</b> o <b>'._('frase').'</b>:<br />
+	<input type="text" name="link_'.$i.'" size="50" maxlength="70" value="' . $text . '" /><br /><br /></li>
 
-<li><input type="submit" value="'._('Guardar').'" /><br /><br /></li>
+	<li><b>'._('Color').':</b> 
+	Color: <input value="'.$color.'" data-jscolor="" name="color_'.$i.'">
+	</fieldset>
+	';
 
-</ol>
+}
+
+
+echo '<li><input type="submit" value="'._('Guardar').'" /><br /><br /></li>
+
+</ul>
 
 </form>
 
@@ -356,10 +398,11 @@ ORDER BY estado ASC, time ASC", $link);
 <li><b>Direcci&oacute;n web</b> o <b>frase</b>:<br />
 <input type="text" name="link" size="50" maxlength="70" /><br /><br /></li>
 
-<li><b>Color:</b> 
-<select name="color">
-' . $colores . '
-</select> (<a href="/mapa/comprar/' . $_GET[2] . '/">Generar m&aacute;s</a>)<br /><br /></li>
+<li><b>'._('Color').':</b> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.3.3/jscolor.min.js" integrity="sha512-KVabwlnqwMHqLIONPKHQTGzW4C0dg3HEPwtTCVjzGOW508cm5Vl6qFvewK/DUbgqLPGRrMeKL3Ga3kput855HQ==" crossorigin="anonymous"></script>
+Color: <input value="'.$r['color'].'" data-jscolor="" name="color">
+
+(<a href="/mapa/comprar/' . $_GET[2] . '/">Generar m&aacute;s</a>)<br /><br /></li>
 
 <li>' . boton('Comprar', false, false, false, $pol['config']['pols_solar']) . ' (M&aacute;s coste de 1 '.PAIS.' al dia)<br /><br /></li>
 

@@ -847,10 +847,32 @@ case 'arquitecto':
 				$puntero['pos_x'] = $puntero_x;
 				$puntero['pos_y']++;
 			}
+		}
+	}elseif (($_GET[2] == 'crear-barrio') AND nucleo_acceso($vp['acceso']['gestion_mapa'])) {
+		$pos_x = $_POST["pos_x"];
+		$pos_y = $_POST["pos_y"];
+		$size_x = $_POST["size_x"];
+		$size_y = $_POST["size_y"];
+		$color = $_POST["color"];
+		$nombre = $_POST["nombre"];
+
+		sql_old("INSERT INTO mapa_barrios (pos_x, pos_y, size_x, size_y, color, nombre, altura_maxima, multiplicador_impuestos) VALUES ('".$pos_x."', '".$pos_y."', '".$size_x."', '".$size_y."', '".$color."', '".$nombre."', '1', '0')");
+		$refer_url = 'mapa/barrios/gestion';
+	}elseif (($_GET[2] == 'editar-barrio') AND nucleo_acceso($vp['acceso']['gestion_mapa'])) {
+		$color = $_POST["color"];
+		$nombre = $_POST["nombre"];
+		$ID = $_POST["ID"];
+
+		sql_old("UPDATE mapa_barrios set color = '".$color."', nombre = '".$nombre."' WHERE ID='".$ID."'");
+		$refer_url = 'mapa/barrios/gestion';
+	}elseif (($_GET[2] == 'borrar-barrio') AND nucleo_acceso($vp['acceso']['gestion_mapa'])) {
+		$ID = $_POST["ID"];
+
+		sql_old("DELETE FROM mapa_barrios WHERE ID='".$ID."'");
+		$refer_url = 'mapa/barrios/gestion';
 	}else{
-		$refer_url = 'mapa/arquitecto/propiedades#no_se_ha_podido_separar_parcela';
+		$refer_url = 'mapa/barrios/gestion/error#opcion_invalida';
 	}
-}
 break;
 
 case 'mapa':
@@ -977,7 +999,7 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 		}
 
 
-	} elseif (($_GET[2] == 'editar') AND ($_GET['ID']) AND ($_POST['color'] OR $_POST['color2']) AND ($_POST['link'] != 'e') AND ($_POST['link'] != 'v')) {
+	} elseif (($_GET[2] == 'editar') AND ($_GET['ID']) AND ($_POST['color_1']) AND ($_POST['link_1'] != 'e') AND ($_POST['link_1'] != 'v')) {
 
 		$refer_url = 'mapa/propiedades';
 
@@ -992,22 +1014,44 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 		if ((strlen($_POST['text']) <= $superficie)) {
 			$_POST['text'] = preg_replace("[^A-Za-z0-9-]", "", $_POST['text']);
 		}
-			
-		$_POST['link'] = strip_tags($_POST['link']);
-		$_POST['link'] = str_replace("http://", "", $_POST['link']);
-		$_POST['link'] = str_replace("|", "", $_POST['link']);
-		$_POST['link'] = str_replace("\"", "", $_POST['link']);
-		$_POST['link'] = str_replace(HOST, "", $_POST['link']);
 
-		if (preg_match("[^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$]", $_POST['color'])) {
-			sql_old("UPDATE mapa SET color = '".$_POST['color']."', text = '".$_POST['text']."', link = '".$_POST['link']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."')) LIMIT 1");
-		}else{
-			$refer_url = 'mapa/propiedades#error_el_color_seleccionado_es_invalido';
+		$max_altura = $_POST['max_altura'];
+		$_POST['link_1'] = strip_tags($_POST['link_1']);
+		$_POST['link_1'] = str_replace("http://", "", $_POST['link_1']);
+		$_POST['link_1'] = str_replace("|", "", $_POST['link_1']);
+		$_POST['link_1'] = str_replace("\"", "", $_POST['link_1']);
+		$_POST['link_1'] = str_replace(HOST, "", $_POST['link_1']);
+
+		if (preg_match("[^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$]", $_POST['color_1'])) {
+			sql_old("UPDATE mapa SET color = '".$_POST['color_1']."', text = '".$_POST['text']."', link = '".$_POST['link_1']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."')) LIMIT 1");
 		}
 
-
+		for ($i = 2; $i<=$max_altura ; $i++){
+			$_POST['link_'.$i] = strip_tags($_POST['link_'.$i]);
+			$_POST['link_'.$i] = str_replace("http://", "", $_POST['link_'.$i]);
+			$_POST['link_'.$i] = str_replace("|", "", $_POST['link_'.$i]);
+			$_POST['link_'.$i] = str_replace("\"", "", $_POST['link_'.$i]);
+			$_POST['link_'.$i] = str_replace(HOST, "", $_POST['link_'.$i]);
+	
+			if (preg_match("[^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$]", $_POST['color_'.$i])) {
+				error_log("Comprobando si existe la parcela en altura.");
+				error_log("SELECT ID FROM mapa_altura WHERE parcela_ID = '".$_GET['ID']."' AND altura = '".$i."' LIMIT 1");
+				$existe_mapa_altura = sql_old("SELECT ID FROM mapa_altura WHERE parcela_ID = '".$_GET['ID']."' AND altura = '".$i."' LIMIT 1");
+				if ($r_existe = r($existe_mapa_altura)){
+					error_log("Existe");
+					sql_old("UPDATE mapa_altura 
+					SET color = '".$_POST['color_'.$i]."', text = '".$_POST['text']."', link = '".$_POST['link_'.$i]."' 
+					WHERE parcela_ID = '".$_GET['ID']."' AND altura = '".$i."'  LIMIT 1");
+				}else{
+					error_log("No existe, se inserta");
+					sql_old("INSERT INTO mapa_altura (parcela_ID, link, `text`, color, altura)
+					VALUES(".$_GET['ID'].", '".$_POST['link_'.$i]."', '".$_POST['text']."', '".$_POST['color_'.$i]."', ".$i.")");	
+				}
+			}
+		}
 	} elseif (($_GET[2] == 'comprar') AND ($_GET['ID']) AND ($_POST['color'])) {
-		
+		$refer_url = 'mapa';
+
 		$_POST['link'] = strip_tags($_POST['link']);
 		$_POST['link'] = str_replace("http://", "", $_POST['link']);
 		$_POST['link'] = str_replace("|", "", $_POST['link']);
@@ -1033,14 +1077,15 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 			
 
 			if (($cc[$pos[0]][$pos[1]] != true) AND ($pol['pols'] >= $pol['config']['pols_solar'])) { // verifica solar libre
-
 				sql_old("INSERT INTO mapa (pais, pos_x, pos_y, size_x, size_y, user_ID, nick, link, text, time, pols, color, estado, superficie) VALUES ('".PAIS."', '".$pos[0]."', '".$pos[1]."', '1', '1', '".$pol['user_ID']."', '".$pol['nick']."', '".$_POST['link']."', '', '".$date."', '".$pol['config']['pols_solar']."', '".$_POST['color']."', 'p', '1')");
+				
 				pols_transferir($pol['config']['pols_solar'], $pol['user_ID'], '-1', 'Compra propiedad: '.$_GET['ID']);
+			}else{
+				$refer_url = 'mapa#error_parcela_ocupada';
 			}
 		}
 
-		$refer_url = 'mapa';
-
+		
 	}
 	break;
 
@@ -1074,6 +1119,11 @@ case 'gobierno':
 'lang'=>'Idioma',
 'tipo'=>'Tipo de plataforma',
 'timezone'=>'Zona horaria',
+'multiplicador_impuestos'=>'Multiplicador impuestos',
+'altura_maxima'=>'Altura parcela',
+'impuestos_periodicidad'=>'Periodicidad impuesto de patrimonio',
+'impuestos_renta'=>'Impuesto sobre la renta',
+'impuestos_iva'=>'IVA',
 );
 
 	if (
@@ -1159,27 +1209,56 @@ case 'gobierno':
 (($pol['config']['porcentaje_multiple_sueldo'] >= 0) AND (($pol['config']['porcentaje_multiple_sueldo'] <= 100))) AND
 ($_POST['impuestos'] <= 25) AND ($_POST['impuestos'] >= 0) AND
 ($_POST['impuestos_minimo'] >= -1000) AND
-($_POST['impuestos_empresa'] <= 1000) AND ($_POST['impuestos_empresa'] >= 0) AND
 ($_POST['arancel_salida'] <= 100) AND ($_POST['arancel_salida'] >= 0)
 ) {
 
-		foreach ($_POST AS $dato => $valor) {
-			if ((substr($dato, 0, 8) != 'salario_') AND ($dato != 'palabra_gob1')) {
+	foreach ($_POST AS $dato => $valor) {
+		error_log("Comprobando ".$dato);
 
-				sql_old("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
-			
-				if ($pol['config'][$dato] != $valor) { 
-					if ($valor == '') { $valor = '<em>null</em>'; }
-					if ($dato == 'online_ref') {
-						$valor = intval($valor)/60; 
-						$pol['config'][$dato] = $pol['config'][$dato]/60;
-					}
-					evento_chat('<b>[GOBIERNO]</b> Configuraci&oacute;n ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/gobierno/">Gobierno</a>)'); 
+		if ((substr($dato, 0, 8) != 'salario_') AND ($dato != 'palabra_gob1')  AND (substr($dato, 0, 7) != 'barrio_')) {
+
+			sql_old("UPDATE config SET valor = '".strip_tags($valor)."' WHERE pais = '".PAIS."' AND dato = '".$dato."' LIMIT 1");
+		
+			if ($pol['config'][$dato] != $valor) { 
+				if ($valor == '') { $valor = '<em>null</em>'; }
+				if ($dato == 'online_ref') {
+					$valor = intval($valor)/60; 
+					$pol['config'][$dato] = $pol['config'][$dato]/60;
 				}
+				evento_chat('<b>[GOBIERNO]</b> Configuraci&oacute;n ('.crear_link($pol['nick']).'): <em>'.$dato_array[$dato].'</em> de <b>'.$pol['config'][$dato].'</b> a <b>'.$valor.'</b> (<a href="/control/gobierno/">Gobierno</a>)'); 
+			}
+		}
+		if ((substr($dato, 0, 7) == 'barrio_')) {
+
+			$info = explode("_", $dato);
+			$id_barrio = $info[1];
+
+			error_log("info ".$info[2]);
+
+			$campo = ($info[2] == "impuestos" ? "multiplicador_impuestos" : "altura_maxima");
+
+			error_log("Comprobando cambio en ".$campo." para barrio ".$id_barrio);
+			error_log("SELECT ".$campo." as campo, nombre FROM mapa_barrios WHERE ID = '".$id_barrio."'");
+
+			$result = sql_old("SELECT ".$campo." as campo, nombre FROM mapa_barrios WHERE ID = '".$id_barrio."'");
+			while($r = r($result)){
+				$old_value=$r["campo"];
+				$nombre = $r["nombre"];
+			}
+
+			error_log("Old value: ".$old_value." valor: ".$valor);
+
+			if ($old_value != $valor){
+				error_log("UPDATE mapa_barrios SET ".$campo ." = '".strip_tags($valor)."' WHERE ID = '".$id_barrio."' LIMIT 1");
+
+				sql_old("UPDATE mapa_barrios SET ".$campo ." = '".strip_tags($valor)."' WHERE ID = '".$id_barrio."' LIMIT 1");
+				evento_chat('<b>[GOBIERNO]</b> Configuraci&oacute;n del barrio '.$nombre.' ('.crear_link($pol['nick']).'): <em>'.$dato_array[$campo].'</em> de <b>'.$old_value.'</b> a <b>'.$valor.'</b> (<a href="/control/gobierno/">Gobierno</a>)'); 
 			}
 		}
 
-		if (ECONOMIA) {
+	}
+
+	if (ECONOMIA) {
 			// Salarios
 			$result = sql_old("SELECT cargo_ID, salario, nombre FROM cargos WHERE pais = '".PAIS."'");
 			while($r = r($result)){

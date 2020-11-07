@@ -733,11 +733,35 @@ CREATE TABLE `mapa` (
   `text` varchar(90) NOT NULL default '',
   `time` datetime NOT NULL default '0000-00-00 00:00:00',
   `pols` mediumint(8) NOT NULL default '0',
-  `color` char(3) NOT NULL default '',
+  `color` char(7) NOT NULL default '',
   `estado` enum('p','v','e') NOT NULL default 'p',
   `superficie` smallint(4) NOT NULL default '0',
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM AUTO_INCREMENT=797 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `mapa_barrios` (
+  `ID` int(11) unsigned NOT NULL auto_increment,
+  `pos_x` tinyint(2) NOT NULL default '1',
+  `pos_y` tinyint(2) NOT NULL default '1',
+  `size_x` tinyint(3) NOT NULL default '1',
+  `size_y` tinyint(3) NOT NULL default '1',
+  `nombre` text not null,
+  `multiplicador_impuestos`  DECIMAL(5,2) NULL,
+  `altura_maxima` smallint(5) NULL,
+  `color` char(7) default '#FFFFFF',
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `mapa_altura` (
+  `ID` int(11) unsigned NOT NULL auto_increment,
+  `parcela_ID` smallint(5) unsigned NOT NULL,
+  `link` varchar(90) NOT NULL DEFAULT '',
+  `text` varchar(90) NOT NULL DEFAULT '',
+  `color` char(7) NOT NULL DEFAULT '',
+  `altura` smallint(5) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 #
 # Source for table "mensajes"

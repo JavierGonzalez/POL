@@ -83,6 +83,22 @@ ORDER BY nivel DESC", $link);
 
 
 <fieldset><legend>Nuevo hilo</legend>
+<script>
+	function validarTitulo(){
+		var titulo = $("#title").val();
+		if (titulo.includes("<") || titulo.includes(">") || titulo.includes("/") ){
+			$("#title")[0].setCustomValidity("El campo titulo contiene caracteres inválidos (<, > o /), por favor reviselo y pulse enviar");
+			$("#title")[0].checkValidity();
+			$("#title")[0].reportValidity();
+			return false;
+		}else{
+			$("#title")[0].setCustomValidity("");
+			return true;
+		}
+
+		
+	}
+</script>
 
 <form action="/accion/foro/' . $get . '" method="post">
 <input type="hidden" name="subforo" value="' . $subforo . '"  />
@@ -98,13 +114,13 @@ ORDER BY nivel DESC", $link);
 			}
 			$html .= '
 <p>Título:<br />
-<input name="title" size="60" maxlength="80" type="text" value="'.str_replace('"', '&#34;', $edit_title).'" required /></p>
+<input name="title" id="title" size="60" maxlength="80" type="text" value="'.str_replace('"', '&#34;', $edit_title).'" required /></p>
 
 <p'.($edit&&$edit_user_ID!=$pol['user_ID']?' style="display:none;"':'').'>Mensaje:<br />
 <textarea name="text" style="width:600px;height:260px;" required>'.$edit_text.'</textarea><br />
 <span style="color:grey;font-size:12px;">Etiquetas: [b]...[/b] [em]...[/em] [quote]...[/quote] [img]url[/img] [youtube]url-youtube[/youtube], auto-enlaces.</span></p>
 
-<p>'.boton('Enviar', 'submit', false, 'large blue').' En calidad de: <select name="encalidad">' . $select_cargos . '
+<p><button onclick="return validarTitulo();" class="large blue">Enviar</button> En calidad de: <select name="encalidad">' . $select_cargos . '
 </select></p>
 </form>
 

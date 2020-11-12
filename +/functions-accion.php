@@ -493,6 +493,7 @@ function gen_url($url) {
 	$url = substr($url, 0, 90);
 	$url = strip_tags($url);
 	$url = strtolower($url);
+	$url = urlencode($url);
 	return $url;
 }
 function gen_text($text, $type='') {

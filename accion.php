@@ -2291,7 +2291,8 @@ case 'partido-lista':
 		while($r = r($result)){
 			$siglas = $r['siglas'];
 			if ($b == 'edit') {
-				sql_old("UPDATE partidos SET descripcion = '".gen_text($_POST['text'])."' WHERE pais = '".PAIS."' AND ID = '".$ID_partido."' LIMIT 1");
+				$text = str_replace('<br />', '', $_POST['html_doc']);
+				sql_old("UPDATE partidos SET descripcion = '".gen_text($text)."' WHERE pais = '".PAIS."' AND ID = '".$ID_partido."' LIMIT 1");
 			} elseif (($b == 'add') AND ($_POST['user_ID'])) {
 				sql_old("INSERT INTO partidos_listas (pais, ID_partido, user_ID) VALUES ('".PAIS."', '".$ID_partido."', '".$_POST['user_ID']."')");
 			} elseif (($b == 'del') AND ($_POST['user_ID'])) {
@@ -2522,12 +2523,11 @@ case 'crear-partido':
 	while($r = r($result)){ $ya_es_presidente = true; }
 
 	if (($pol['config']['elecciones_estado'] != 'elecciones') AND (strlen($_POST['siglas']) <= 12) AND (strlen($_POST['siglas']) >= 2) AND (nucleo_acceso($vp['acceso']['crear_partido'])) AND ($_POST['nombre']) AND ($ya_es_presidente == false)) {
-
-		$_POST['descripcion'] = gen_text($_POST['descripcion']);
+		$text = str_replace('<br />', '', $_POST['html_doc']);
 
 		sql_old("INSERT INTO partidos 
 (pais, ID_presidente, fecha_creacion, siglas, nombre, descripcion, estado) 
-VALUES ('".PAIS."', '".$pol['user_ID']."', '".$date."', '".$_POST['siglas']."', '".$_POST['nombre']."', '".$_POST['descripcion']."', 'ok')
+VALUES ('".PAIS."', '".$pol['user_ID']."', '".$date."', '".$_POST['siglas']."', '".$_POST['nombre']."', '".$text."', 'ok')
 ");
 
 		$result = sql_old("SELECT ID FROM partidos WHERE pais = '".PAIS."' AND siglas = '".$_POST['siglas']."' LIMIT 1");

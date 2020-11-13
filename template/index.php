@@ -18,6 +18,11 @@ if (isset($_GET['bg'])) {
 	$body_bg = 'url(\''.IMG.'bg/'.$pol['config']['bg'].'\')'; 
 } else { $body_bg = 'none'; }
 
+$parsedown = new Parsedown;
+$parsedown->setSafeMode(true);
+$parsedown->setBreaksEnabled(true);
+
+
 ?>
 <!DOCTYPE html>
 <html lang="<?=(isset($vp['lang'])?substr($vp['lang'],0,2):'es')?>">
@@ -272,7 +277,10 @@ if ((ECONOMIA) AND (isset($pol['config']['pols_frase']))) {
 }
 
 if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != '')) {
-	echo '<fieldset class="rich">'.(nucleo_acceso($vp['accesos']['control_gobierno'])?'<span style="float:right;"><a href="/control/gobierno">Editar</a></span>':'').$pol['config']['palabra_gob'].'</fieldset>';
+
+	echo '<fieldset class="rich">'.(nucleo_acceso($vp['accesos']['control_gobierno'])?'<span style="float:right;"><a href="/control/gobierno">Editar</a></span>':'').
+	$parsedown->text($pol['config']['palabra_gob'])
+	.'</fieldset>';
 }
 ?>	
 		</div>

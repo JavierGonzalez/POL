@@ -1,9 +1,9 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-include('img/lib/parsedown/Parsedown.php');
-
-
+$parsedown_partidos = new Parsedown();
+$parsedown_partidos->setSafeMode(true);
+$parsedown_partidos->setBreaksEnabled(true);
 
 if ($_GET[1]) {
 
@@ -73,7 +73,7 @@ ORDER BY nick DESC", $link);
 
 <input type="hidden" name="html_doc" id="html_doc" value="'.$text.'" />
 
-<iframe style="width:100%;height:350px;scrolling: none; border: none" id="document_frame" src="/partidos/partidos_markdown.php">
+<iframe style="width:100%;height:350px;scrolling: none; border: none" id="document_frame" src="/img/markdown.html">
 </iframe>
 ' . pad('create', $r['ID'], $text) . '
 <input type="submit" value="'._('Guardar').'" /><br /><br /></form></li>
@@ -106,9 +106,6 @@ ORDER BY ID ASC", $link);
 				$num_listas++;
 			}
 
-			$parsedown = new Parsedown;
-			$parsedown->setSafeMode(true);
-			$parsedown->setBreaksEnabled(true);
 				$result3 = mysql_query_old("SELECT nick, estado
 FROM users
 WHERE partido_afiliado = '" . $r['ID'] . "' AND pais = '".PAIS."' AND estado = 'ciudadano'
@@ -123,7 +120,7 @@ ORDER BY fecha_registro ASC", $link);
 
 			echo '<h1><a href="/partidos">'._('Partidos').'</a>: '.$r['siglas'].' | '.$r['nombre'].'</h1>
 
-<p>'.$parsedown->text($r['descripcion']).'</p>
+<p>'.$parsedown_partidos->text($r['descripcion']).'</p>
 
 <ul id="partido">
 '.(ECONOMIA?'<li>'._('Presidente').' '._('de').' '.$r['siglas'].': <b>'.crear_link($r['nick_presidente']).'</b><br /><br /></li>':'').'

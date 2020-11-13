@@ -1,7 +1,5 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
-include('img/lib/parsedown/Parsedown.php');
-
 
 if ($_GET[1]) {
 	$parsedown = new Parsedown;
@@ -75,11 +73,26 @@ if ($_GET[1]) {
 
 </table>
 </div>
+<script>
+function validarTitulo(){
+	var titulo = $("#title").val();
+	if (titulo.includes("<") || titulo.includes(">") || titulo.includes("/") ){
+		$("#title")[0].setCustomValidity("El campo titulo contiene caracteres inválidos (<, > o /), por favor reviselo y pulse enviar");
+		$("#title")[0].checkValidity();
+		$("#title")[0].reportValidity();
+		return false;
+	}else{
+		$("#title")[0].setCustomValidity("");
+		return true;
+	}
 
+	
+}
+</script>
 <div style="margin:5px 0;">
-<input type="text" name="titulo" value="'.$r['title'].'" size="30" maxlength="50" style="font-size:22px;" /> &nbsp; 
+<input type="text" name="titulo" id="title" value="'.$r['title'].'" size="30" maxlength="50" style="font-size:22px;" /> &nbsp; 
 <button onclick="$(\'#doc_opciones\').slideToggle(\'slow\');return false;">'._('Opciones').'</button> &nbsp; 
-'.boton(_('Publicar'), 'submit', false, 'large blue').' <a href="/doc/'.$r['url'].'">'._('Última publicación hace').' <span class="timer" value="'.strtotime($r['time_last']).'"></span></a>.</div>
+<button onclick="return validarTitulo();" class="large blue">Publicar</button> <a href="/doc/'.$r['url'].'">'._('Última publicación hace').' <span class="timer" value="'.strtotime($r['time_last']).'"></span></a>.</div>
 <iframe style="width:100%;height:850px;scrolling: none; border: none" id="document_frame" src="/doc/editor_markdown.php">
 </iframe>
 </form>

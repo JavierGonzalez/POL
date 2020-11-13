@@ -498,7 +498,12 @@ echo '
 
 
 <tr><td valign="top" colspan="2">'._('Mensaje del Gobierno').':<br />
-<textarea name="palabra_gob" style="width:400px;height:100px;">'.strip_tags($pol['config']['palabra_gob']).'</textarea>
+
+<input type="hidden" name="palabra_gob" id="html_doc" value="'.$pol['config']['palabra_gob'].'" />
+
+<iframe style="width:100%;height:350px;scrolling: none; border: none" id="document_frame" src="/img/markdown.html">
+</iframe>
+' . pad('create', 0, $pol['config']['palabra_gob']) . '
 </td></tr>
 
 </table>

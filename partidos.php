@@ -1,9 +1,9 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-
-
-
+$parsedown_partidos = new Parsedown();
+$parsedown_partidos->setSafeMode(true);
+$parsedown_partidos->setBreaksEnabled(true);
 
 if ($_GET[1]) {
 
@@ -52,6 +52,7 @@ ORDER BY nick DESC", $link);
 
 			$text = $r['descripcion'];
 
+		
 			if ($ciudadanos_num == 0) { $disabled = ' disabled="disabled"'; } else { $disabled = ''; }
 
 			
@@ -69,9 +70,14 @@ ORDER BY nick DESC", $link);
 
 <li>'._('Descripción').':
 <form action="/accion/partido-lista/edit?ID=' . $r['ID'] . '" method="post">
-' . editor_enriquecido('text', $text) . '
-<input type="submit" value="'._('Guardar').'" /><br /><br /></form></li>
 
+<input type="hidden" name="html_doc" id="html_doc" value="'.$text.'" />
+
+<iframe style="width:100%;height:350px;scrolling: none; border: none" id="document_frame" src="/img/markdown.html">
+</iframe>
+' . pad('create', $r['ID'], $text) . '
+<input type="submit" value="'._('Guardar').'" /><br /><br /></form></li>
+' . pad('print', $r['ID']) . '
 
 <li><form action="/accion/partido-lista/del-afiliado?ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos_full . '</select> <input type="submit" value="'._('Desafiliar').'" /></form><br /></li>
 
@@ -100,7 +106,6 @@ ORDER BY ID ASC", $link);
 				$num_listas++;
 			}
 
-
 				$result3 = mysql_query_old("SELECT nick, estado
 FROM users
 WHERE partido_afiliado = '" . $r['ID'] . "' AND pais = '".PAIS."' AND estado = 'ciudadano'
@@ -115,7 +120,7 @@ ORDER BY fecha_registro ASC", $link);
 
 			echo '<h1><a href="/partidos">'._('Partidos').'</a>: '.$r['siglas'].' | '.$r['nombre'].'</h1>
 
-<p>'.html_entity_decode($r['descripcion'],ENT_COMPAT , 'UTF-8').'</p>
+<p>'.$parsedown_partidos->text($r['descripcion']).'</p>
 
 <ul id="partido">
 '.(ECONOMIA?'<li>'._('Presidente').' '._('de').' '.$r['siglas'].': <b>'.crear_link($r['nick_presidente']).'</b><br /><br /></li>':'').'

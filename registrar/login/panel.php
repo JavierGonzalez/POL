@@ -6,8 +6,11 @@ if ($pol['user_ID']) {
 
     
 
-    $result = sql_old("SELECT ser_SC FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
-    while($r = r($result)) { $ser_SC = $r['ser_SC']; }
+    $result = sql_old("SELECT ser_SC, modo_invisible FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+    while($r = r($result)) { 
+        $ser_SC = $r['ser_SC']; 
+        $modo_invisible = $r['modo_invisible'];
+    }
 
     echo '<h1>'._('Opciones de usuario').' ('.$pol['nick'].'):</h1>
 
@@ -82,6 +85,19 @@ echo '</select>
 </fieldset>
 
 
+
+<fieldset><legend>'._('Habilitar modo invisible').'</legend>
+
+<form action="/registrar/login/modo_invisible" method="POST">
+<table border="0" cellpadding="2" cellspacing="0" width="100%">
+<tr>
+<td valign="middle" align="center" valign="top">
+<input type="checkbox" name="modo_invisible" value="true"'.($modo_invisible=='true'?' checked="checked"':'').' /> '._('Marcando este check no apareceras nunca como conectado en tu perfil ni en la información del censo.').'.
+</td>
+<td valign="middle" align="right">'.boton(_('Guardar'), 'submit', false, 'large blue').'</td>
+</tr></table></form>
+
+</fieldset>
 
 <fieldset><legend>'._('Candidato a Supervisor del Censo').'</legend>
 

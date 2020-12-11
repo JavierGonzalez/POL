@@ -80,22 +80,66 @@ echo '
 </tr>';
 
 switch ($_GET[1]) {
-    case 'busqueda': $order_by = 'WHERE (text LIKE \'%'.$_GET[2].'%\' OR nombre LIKE \'%'.$_GET[2].'%\' OR nick LIKE \'%'.$_GET[2].'%\' OR datos LIKE \'%'.$_GET[2].'%\') ORDER BY fecha_last DESC'; break;
-    case 'nivel': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' AND ID != \'1\' ORDER BY nivel DESC'; break;
-    case 'nombre': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY nick ASC'; break;
-    case 'nuevos': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY fecha_registro DESC'; break;
-    case 'antiguedad': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY fecha_registro ASC'; break;
-    case 'elec': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY num_elec DESC, fecha_registro ASC'; break;
-    case 'online': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY online DESC'; break;
-    case 'riqueza': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY pols DESC, fecha_registro ASC'; break;
-    case 'afiliacion': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY partido_afiliado DESC, fecha_registro ASC'; break;
-    case 'confianza': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY voto_confianza DESC, fecha_registro ASC'; break;
-    case 'expulsados': $order_by = 'WHERE estado = \'expulsado\' ORDER BY fecha_last DESC'; $num_element_pag = $censo_expulsados; break;
-    case 'turistas': $order_by = 'WHERE estado = \'turista\' ORDER BY fecha_registro DESC'; $num_element_pag = $censo_turistas; break;
-    case 'perfiles': $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' AND datos != \'\' AND datos != \'][][][][][\' ORDER BY fecha_registro ASC'; break;
-    case 'SC': $order_by = "WHERE estado != 'expulsado' ORDER BY voto_confianza DESC, fecha_registro ASC"; break;
+    case 'busqueda': 
+        $where = 'WHERE (text LIKE \'%'.$_GET[2].'%\' OR nombre LIKE \'%'.$_GET[2].'%\' OR nick LIKE \'%'.$_GET[2].'%\' OR datos LIKE \'%'.$_GET[2].'%\') ';
+        $order_by = 'ORDER BY fecha_last DESC'; 
+    break;
+    case 'nivel': 
+        $where = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' AND ID != \'1\'';
+        $order_by = ' ORDER BY nivel DESC'; 
+    break;
+    case 'nombre': 
+        $where = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\'';
+        $order_by = ' ORDER BY nick ASC'; 
+    break;
+    case 'nuevos': 
+        $where = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\'';
+        $order_by = ' ORDER BY fecha_registro DESC'; 
+    break;
+    case 'antiguedad': 
+        $where = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\'';
+        $order_by = ' ORDER BY fecha_registro ASC'; 
+    break;
+    case 'elec': 
+        $where = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\'';
+        $order_by = ' ORDER BY num_elec DESC, fecha_registro ASC'; 
+    break;
+    case 'online': 
+        $where = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\'';
+        $order_by = ' ORDER BY online DESC'; 
+    break;
+    case 'riqueza': 
+        $where = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\'';
+        $order_by = ' ORDER BY pols DESC, fecha_registro ASC'; 
+    break;
+    case 'afiliacion': 
+        $where = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\'';
+        $order_by = ' ORDER BY partido_afiliado DESC, fecha_registro ASC'; 
+    break;
+    case 'confianza': 
+        $where = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\'';
+        $order_by = ' ORDER BY voto_confianza DESC, fecha_registro ASC'; 
+    break;
+    case 'expulsados': 
+        $where = 'WHERE estado = \'expulsado\'';
+        $order_by = ' ORDER BY fecha_last DESC'; $num_element_pag = $censo_expulsados; 
+    break;
+    case 'turistas': 
+        $where = 'WHERE estado = \'turista\'';
+        $order_by = ' ORDER BY fecha_registro DESC'; $num_element_pag = $censo_turistas; 
+    break;
+    case 'perfiles': 
+        $where = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' AND datos != \'\' AND datos != \'][][][][][\'';
+        $order_by = ' ORDER BY fecha_registro ASC'; 
+    break;
+    case 'SC': 
+        $where = 'WHERE estado != \'expulsado\'';
+        $order_by = " ORDER BY voto_confianza DESC, fecha_registro ASC"; 
+    break;
 
-    default: $order_by = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\' ORDER BY fecha_last DESC';
+    default: 
+        $where = 'WHERE estado = \'ciudadano\' AND pais = \''.PAIS.'\'';
+        $order_by = ' ORDER BY fecha_last DESC';
 }
 
 if ($p_init) { $orden = $p_init + 1; } else { $orden = 1; }
@@ -105,9 +149,12 @@ if ($pol['estado']) { $sql_extra = ", (SELECT voto FROM votos WHERE tipo = 'conf
 
 $sc = get_supervisores_del_censo();
 
-$result = mysql_query_old("SELECT ID, ID AS user_ID, nick, nombre, estado, pais, nivel, online, ref, ref_num, num_elec, voto_confianza, fecha_registro, nota, fecha_last, cargo, avatar, datos,
+$result = mysql_query_old("(SELECT ID, ID AS user_ID, nick, nombre, estado, pais, nivel, online, ref, ref_num, num_elec, voto_confianza, fecha_registro, nota, fecha_last, cargo, avatar, datos,
 (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas".$sql_extra."
-FROM users ".$order_by." LIMIT ".mysqli_real_escape_string($link,$p_limit), $link);
+FROM users ".$where." AND modo_invisible='false' ".$order_by." LIMIT ".mysqli_real_escape_string($link,$p_limit). " ) union (SELECT ID, ID AS user_ID, nick, nombre, estado, pais, nivel, online, ref, ref_num, num_elec, voto_confianza, fecha_registro, nota, '' as fecha_last, cargo, avatar, datos,
+(SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas".$sql_extra."
+FROM users ".$where." AND modo_invisible='true' ".$order_by." LIMIT ".mysqli_real_escape_string($link,$p_limit).")"
+, $link);
 while($r = mysqli_fetch_array($result)){
     if ($r['online'] != 0) { $online = duracion($r['online']); } else { $online = ''; }
     if ($r['avatar'] == 'true') { $avatar = avatar($r['ID'], 40) . ' '; } else { $avatar = ''; }

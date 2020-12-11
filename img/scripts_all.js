@@ -983,6 +983,7 @@ function enriquecer(m, bbcode){
         m = m.replace(/\[(b|i|em|s)\](.*?)\[\/\1\]/gi, '<$1>$2</$1>');
         m = m.replace(/\[img\](.*?)\[\/img\]/gi, '<img src="$1" alt="img" style="max-width:800px;" />');
         m = m.replace(/\[youtube\]https\:\/\/www\.youtube\.com\/watch\?v=(.*?)\[\/youtube\]/gi, '<iframe width="520" height="390" src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>');
+        m = m.replace(/\[media\]https:\/\/app.hearthis.at\/embed\/(.*?)\[\/media\]/gi, '<iframe scrolling="no" id="hearthis_at_track_4858628" width="100%" height="150" src="https://app.hearthis.at/embed/$1" target="_blank" ></a> <a href="https://hearthis.at/" target="_blank">hearthis.at</a></p></iframe>');
         m = m.replace(/\[quote\]/gi, '<blockquote><div class="quote">');
         m = m.replace(/\[quote=(.*?)\]/gi, '<blockquote><div class="quote"><cite>$1 escribió:</cite>');
         m = m.replace(/\[\/quote\]/gi, '</div></blockquote>');

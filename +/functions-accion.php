@@ -665,3 +665,31 @@ VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".e(
 
 	return ($rejs==true?'<script type="text/javascript"> $(document).ready(function(){ $.post("'.vp_url('/accion/users_con', $_SESSION['pol']['pais']).'", { extra: screen.width + "x" + screen.height + "|" + screen.availWidth + "x" + screen.availHeight + "||" + screen.colorDepth + "|"}); }); </script>':true);
 }
+
+function webscreencapture($url, $saveto){
+	if (endsWith($url, ".jpg") OR endsWith($url, ".png")){
+		$screencapture_url =$url;
+	}else{
+		$screencapture_url = "http://api.screenshotlayer.com/api/capture?access_key=79542aece2cd98296ceb1cf0f225b008&url=".$url."&viewport=1440x900&width=125";
+	}
+	$ch = curl_init ($screencapture_url);
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+	$raw=curl_exec($ch);
+	curl_close ($ch);
+	if(file_exists($saveto)){
+		unlink($saveto);
+	}
+	$fp = fopen($saveto,'x');
+	fwrite($fp, $raw);
+	fclose($fp);
+}
+
+function endsWith( $haystack, $needle ) {
+    $length = strlen( $needle );
+    if( !$length ) {
+        return true;
+    }
+    return substr( $haystack, -$length ) === $needle;
+}

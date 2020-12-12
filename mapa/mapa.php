@@ -28,7 +28,7 @@ while($r = mysqli_fetch_array($result)) {
 	$max_altura = $r['altura_maxima'];
 }
 
-$result = mysql_query_old("SELECT ID, pos_x, pos_y, size_x, size_y, link, pols, color, estado, superficie, nick
+$result = mysql_query_old("SELECT ID, pos_x, pos_y, size_x, size_y, link, text, pols, color, estado, superficie, nick
 FROM mapa
 WHERE pais = '".PAIS."' 
 ORDER BY pos_y ASC, pos_x ASC", $link);
@@ -44,7 +44,7 @@ while($r = mysqli_fetch_array($result)) {
 	}
 	//super-array javascript
 	switch ($r['estado']) {
-		case 'p': $info = $r['link'] . '|' .  $r['nick'] . '|' . $r['color']; break;
+		case 'p': $info = $r['link'] . '|' .  $r['nick'] . '|' . $r['color']. '|' .  $r['text']; break;
 		case 'v': $info = 'v|' . $r['nick'] . '|' . $r['pols']; $venta_total += $r['superficie']; break;
 		case 'e': 
 			if ($r['link']) { 
@@ -201,7 +201,10 @@ function inicializarTabla(){
 					}
 					break;
 				
-				default: var msg = "<span style=\"color:green;\"><b>" + amsg[0] + "</b></span><br />" + amsg[1] + " (" + ID + ")"; $(this).css("cursor", "pointer");
+				default: 
+					var msg = "<span style=\"color:green; float: left\"><b>" + amsg[3] + "</b></span><br />" + amsg[1] + " (" + ID + ")"
+							  +"<span style=\"float: right;\"><img src=\"'.IMG.'parcela/"+ID+"_"+altura_actual+".png\" style=\"display: none\" width=\"125\" height=\"125\" alt=\""+amsg[0]+"\" onload=\"this.style=\'display: visible\'\"/></span>";
+					$(this).css("cursor", "pointer");
 			}
 		} else if (altura_actual == 1){
 			var msg = "<span style=\"color:green;\">Comprar</span><br />Solar: " + ID + "<br /> <span style=\"color:blue;\"><b>' . $pol['config']['pols_solar'] . '</span> monedas</b>"; 
@@ -225,7 +228,7 @@ function inicializarTabla(){
 			default:
 				if (amsg[0]) {
 					if (amsg[0].substring(0, 1) == "/") { window.location = amsg[0]; } 
-					else { window.location = "http://" + amsg[0]; }
+					else { window.open(amsg[0]); }
 				}
 			}
 		} else { var ID = $(this).attr("id"); window.location = "/mapa/comprar/" + ID + "/"; }

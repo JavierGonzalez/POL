@@ -1,9 +1,9 @@
 <?php # maxsim.tech — MIT License — Copyright (c) 2005 Javier González González <gonzo@virtualpol.com>
 
 
-$maxsim['version'] = '0.5.9';
+$maxsim['version'] = '0.5.10';
 
-error_reporting(error_reporting() & ~E_NOTICE);
+error_reporting(error_reporting() & ~E_NOTICE & ~E_WARNING);
 ob_start();
 
 maxsim:
@@ -119,3 +119,5 @@ function maxsim_get() {
 
 
 
+
+ 

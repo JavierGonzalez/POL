@@ -331,10 +331,15 @@ echo  '</td>
 
 
 <tr>
-<td align="right">'._('Último acceso').':</td>
-<td><b>'.timer($r['fecha_last']).'</b></td>
+<td align="right">'._('Último acceso').':</td>';
+if ($r['modo_invisible'] == "false"){
+	echo '<td><b>'.timer($r['fecha_last']).'</b></td>';
+}else{
+	echo '<td><b>--</b></td>';
+}
 
-<td align="right" title="Elecciones en las que ha participado: '.$r['num_elec'].'">'._('Cargos').':</td>
+
+echo '<td align="right" title="Elecciones en las que ha participado: '.$r['num_elec'].'">'._('Cargos').':</td>
 <td><b>';
 $result2 = sql_old("SELECT cargo_ID, cargo, nota,
 (SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = cargos_users.cargo_ID LIMIT 1) AS nombre,
@@ -409,7 +414,9 @@ if ($r['grupos']) {
 }
 echo  (count($txt_grupos)>0?implode(' ', $txt_grupos):_('Ninguno')).'</b></td>
 </tr>
-
+<tr>
+<td colspan="2" align="right" >Partido: <a href="/partidos/'.strtolower($r['partido']).'"><b>'.$r['partido'].'</b></a></td>
+</tr>
 <tr>
 <td colspan="2" width="50%"></td>
 <td colspan="2" width="50%"></td>

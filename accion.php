@@ -876,7 +876,6 @@ case 'arquitecto':
 break;
 
 case 'mapa':
-
 	// pasa a ESTADO
 	if (nucleo_acceso($vp['acceso']['gestion_mapa'])) { sql_old("UPDATE mapa SET estado = 'e', user_ID = '' WHERE pais = '".PAIS."' AND link = 'ESTADO'"); }
 
@@ -997,8 +996,11 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 
 			}
 		}
-
-
+	} elseif ($_GET[2] == 'eliminar-altura') {
+		$parcela = $_POST['id_parcela'];
+		$altura = $_POST['altura'];
+		sql_old("DELETE FROM mapa_altura WHERE PARCELA_ID = '".$parcela."' AND ALTURA = '".$altura."' LIMIT 1");
+		$refer_url = 'mapa/editar/'.$parcela;
 	} elseif (($_GET[2] == 'editar') AND ($_GET['ID']) AND ($_POST['color_1']) AND ($_POST['link_1'] != 'e') AND ($_POST['link_1'] != 'v')) {
 
 		$refer_url = 'mapa/propiedades';
@@ -1006,8 +1008,10 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 
 
 		$result = sql_old("SELECT * FROM mapa WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1");
+		$old_hyperlink = "";
 		while($r = r($result)){ 
 			$superficie = $r['size_x'] * $r['size_y'];
+			$old_hyperlink = $r["link"];
 		}
 
 
@@ -1016,34 +1020,34 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 		}
 
 		$max_altura = $_POST['max_altura'];
-		$_POST['link_1'] = strip_tags($_POST['link_1']);
-		$_POST['link_1'] = str_replace("http://", "", $_POST['link_1']);
-		$_POST['link_1'] = str_replace("|", "", $_POST['link_1']);
-		$_POST['link_1'] = str_replace("\"", "", $_POST['link_1']);
-		$_POST['link_1'] = str_replace(HOST, "", $_POST['link_1']);
-
-		if (preg_match("[^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$]", $_POST['color_1'])) {
-			sql_old("UPDATE mapa SET color = '".$_POST['color_1']."', text = '".$_POST['text']."', link = '".$_POST['link_1']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."')) LIMIT 1");
+		$hyperlink = $_POST['link_1'];
+		$img_root = RAIZ.'/img/';
+		if ($hyperlink AND ($old_hyperlink != $hyperlink)){
+			webscreencapture($hyperlink, $img_root."parcela/".$_GET['ID']."_1.png");
 		}
 
-		for ($i = 2; $i<=$max_altura ; $i++){
-			$_POST['link_'.$i] = strip_tags($_POST['link_'.$i]);
-			$_POST['link_'.$i] = str_replace("http://", "", $_POST['link_'.$i]);
-			$_POST['link_'.$i] = str_replace("|", "", $_POST['link_'.$i]);
-			$_POST['link_'.$i] = str_replace("\"", "", $_POST['link_'.$i]);
-			$_POST['link_'.$i] = str_replace(HOST, "", $_POST['link_'.$i]);
-	
+		if (preg_match("[^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$]", $_POST['color_1'])) {
+			sql_old("UPDATE mapa SET color = '".$_POST['color_1']."', text = '".$_POST['text_1']."', link = '".$_POST['link_1']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."')) LIMIT 1");
+		}
+
+		for ($i = 2; $i<=$max_altura ; $i++){	
+			$hyperlink = $_POST['link_'.$i];
+			$img_root = RAIZ.'/img/';
+
 			if (preg_match("[^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$]", $_POST['color_'.$i])) {
-				error_log("Comprobando si existe la parcela en altura.");
-				error_log("SELECT ID FROM mapa_altura WHERE parcela_ID = '".$_GET['ID']."' AND altura = '".$i."' LIMIT 1");
-				$existe_mapa_altura = sql_old("SELECT ID FROM mapa_altura WHERE parcela_ID = '".$_GET['ID']."' AND altura = '".$i."' LIMIT 1");
+				$existe_mapa_altura = sql_old("SELECT ID, link FROM mapa_altura WHERE parcela_ID = '".$_GET['ID']."' AND altura = '".$i."' LIMIT 1");
 				if ($r_existe = r($existe_mapa_altura)){
-					error_log("Existe");
+					$old_hyperlink = $r_existe["link"];
+					if ($hyperlink AND ($old_hyperlink != $hyperlink)){
+						webscreencapture($hyperlink, $img_root."parcela/".$_GET['ID']."_".$i.".png");
+					}					
 					sql_old("UPDATE mapa_altura 
-					SET color = '".$_POST['color_'.$i]."', text = '".$_POST['text']."', link = '".$_POST['link_'.$i]."' 
+					SET color = '".$_POST['color_'.$i]."', `text` = '".$_POST['text_'.$i]."', link = '".$_POST['link_'.$i]."' 
 					WHERE parcela_ID = '".$_GET['ID']."' AND altura = '".$i."'  LIMIT 1");
 				}else{
-					error_log("No existe, se inserta");
+					if ($hyperlink){
+						webscreencapture($hyperlink, $img_root."parcela/".$_GET['ID']."_".$i.".png");
+					}				
 					sql_old("INSERT INTO mapa_altura (parcela_ID, link, `text`, color, altura)
 					VALUES(".$_GET['ID'].", '".$_POST['link_'.$i]."', '".$_POST['text']."', '".$_POST['color_'.$i]."', ".$i.")");	
 				}
@@ -1052,12 +1056,8 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 	} elseif (($_GET[2] == 'comprar') AND ($_GET['ID']) AND ($_POST['color'])) {
 		$refer_url = 'mapa';
 
-		$_POST['link'] = strip_tags($_POST['link']);
-		$_POST['link'] = str_replace("http://", "", $_POST['link']);
-		$_POST['link'] = str_replace("|", "", $_POST['link']);
-		$_POST['link'] = str_replace("\"", "", $_POST['link']);
-		$_POST['link'] = str_replace(HOST, "", $_POST['link']);
-
+		$text = $_POST["text"];
+		$hyperlink = $_POST["link"];
 		$pos = explode("-", $_GET['ID']);
 
 
@@ -1077,7 +1077,7 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 			
 
 			if (($cc[$pos[0]][$pos[1]] != true) AND ($pol['pols'] >= $pol['config']['pols_solar'])) { // verifica solar libre
-				sql_old("INSERT INTO mapa (pais, pos_x, pos_y, size_x, size_y, user_ID, nick, link, text, time, pols, color, estado, superficie) VALUES ('".PAIS."', '".$pos[0]."', '".$pos[1]."', '1', '1', '".$pol['user_ID']."', '".$pol['nick']."', '".$_POST['link']."', '', '".$date."', '".$pol['config']['pols_solar']."', '".$_POST['color']."', 'p', '1')");
+				sql_old("INSERT INTO mapa (pais, pos_x, pos_y, size_x, size_y, user_ID, nick, link, text, time, pols, color, estado, superficie) VALUES ('".PAIS."', '".$pos[0]."', '".$pos[1]."', '1', '1', '".$pol['user_ID']."', '".$pol['nick']."', '".$hyperlink."', '".$text."', '".$date."', '".$pol['config']['pols_solar']."', '".$_POST['color']."', 'p', '1')");
 				
 				pols_transferir($pol['config']['pols_solar'], $pol['user_ID'], '-1', 'Compra propiedad: '.$_GET['ID']);
 			}else{
@@ -1897,7 +1897,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 					
 					sql_old("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1");
 
-					$comprobante = sha1(DOMAIN.'-'.$_POST['ref_ID'].'-'.time().'-'.microtime().'-'.$_POST['voto'].'-'.mt_rand(1000,99999999999999999999));
+					$comprobante = sha1(DOMAIN.'-'.$_POST['ref_ID'].'-'.time().'-'.microtime(true).'-'.$_POST['voto'].'-'.mt_rand(1000,99999999));
 					sql_old("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje, comprobante) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".$_POST['validez']."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."', '".$comprobante."')");
 					unset($comprobante);
 					
@@ -2395,7 +2395,7 @@ FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = '".$_GET['cargo_ID']."' AND a
 		$refer_url = 'cargos/editar';
 
 
-	} elseif (($_GET[2] == 'crear') AND (nucleo_acceso($vp['acceso']['control_cargos'])) AND (strlen($_POST['nombre']) >= 3) AND (strlen($_POST['nombre']) <= 30) AND (entre($_POST['nivel'], 1, 98)) AND (is_numeric($_POST['cargo_ID']))) {
+	} elseif (($_GET[2] == 'crear') AND (nucleo_acceso($vp['acceso']['control_cargos'])) AND (strlen($_POST['nombre']) >= 1) AND (strlen($_POST['nombre']) <= 30) AND (entre($_POST['nivel'], 1, 98)) AND (is_numeric($_POST['cargo_ID']))) {
 		$_POST['nombre'] = strip_tags(trim(substr($_POST['nombre'], 0, 30)));
 		sql_old("INSERT INTO cargos (cargo_ID, asigna, nombre, pais, nivel) VALUES ('".$_POST['cargo_ID']."', '".$_POST['asigna']."', '".$_POST['nombre']."', '".PAIS."', '".$_POST['nivel']."')");
 		sql_old("INSERT INTO examenes (pais, titulo, time, cargo_ID, nota) VALUES ('".PAIS."', '".$_POST['nombre']."', '".$date."', '".$_POST['cargo_ID']."', '0')");

@@ -65,11 +65,11 @@ if (!defined('PAIS'))
 
 
 // CONFIG
-define('DOMAIN', '');
+define('DOMAIN', getenv("DOMAIN"));
 define('CONTACTO_EMAIL', 'desarollo@virtualpol.com');
 
 define('SQL', strtolower(PAIS).'_');
-define('USERCOOKIE', '');
+define('USERCOOKIE', getenv("USERCOOKIE"));
 define('HOST', $_SERVER['HTTP_HOST']);
 define('VOTO_CONFIANZA_MAX', 50); // Máximo de votos de confianza emitibles
 define('SC_NUM', 3); // Numero de SC electos.

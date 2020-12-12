@@ -1,7 +1,10 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
+$comprobante = mt_rand(1000000000,9999999999);
 
+
+__($comprobante);
 
 exit;
 

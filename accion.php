@@ -1897,7 +1897,7 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 					
 					sql_old("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1");
 
-					$comprobante = sha1(DOMAIN.'-'.$_POST['ref_ID'].'-'.time().'-'.microtime().'-'.$_POST['voto'].'-'.mt_rand(1000,99999999999999999999));
+					$comprobante = sha1(DOMAIN.'-'.$_POST['ref_ID'].'-'.time().'-'.microtime(true).'-'.$_POST['voto'].'-'.mt_rand(1000,99999999));
 					sql_old("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje, comprobante) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".$_POST['validez']."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."', '".$comprobante."')");
 					unset($comprobante);
 					

@@ -1,8 +1,6 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-$maxsim['output'] = 'template';
-
 
 // INICIALIZACION
 define('RAIZ', dirname(__FILE__).'/..');

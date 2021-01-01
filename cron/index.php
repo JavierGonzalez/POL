@@ -487,7 +487,7 @@ while($r = r($result)) {
 }
 */
 
-
+/*
 // Emails de aviso de expiración
 $result = sql_old("SELECT ID, pais, nick, email FROM users
 WHERE estado IN ('ciudadano', 'turista') AND dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registro > '".tiempo(365*2)."' AND 
@@ -514,6 +514,7 @@ http://www.'.DOMAIN.'</p>';
 		//convertir_turista($r['ID']);
 	}
 }
+*/
 
 
 
@@ -643,7 +644,7 @@ include('cron-compress-all.php');
 
 
 
-evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, '.num((microtime(true)-TIME_START)/1000000000).'s (<a href="/estadisticas/'.PAIS.'">estadisticas actualizadas</a>)');
+evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, '.num((microtime(true)-$_SERVER['REQUEST_TIME_FLOAT'])/1000000000).'s (<a href="/estadisticas/'.PAIS.'">estadisticas actualizadas</a>)');
 
 
 

@@ -1541,10 +1541,10 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 		if($articulo = mysqli_fetch_array($articulos)) {
 			$precio = $articulo['precio'];
 
-			$suscriptores =  mysql_query_old("SELECT ID, ID_empresa, ID_usuario, fecha_alta, fecha_baja, precio_suscripcion, periodicidad_suscripcion
+			$suscriptores =  mysql_query_old("SELECT ID
 			FROM empresas_suscriptores WHERE ID_empresa='".$id_empresa."' AND ID_usuario = '".$pol['user_ID']."'", $link);
 			if($suscriptor = mysqli_fetch_array($suscriptores)) {
-				$precio = $articulo['precio_suscripcion'];
+				$precio = $articulo['precio_suscriptores'];
 			}
 			error_log("es suscriptor?...".$precio);
 
@@ -1559,6 +1559,8 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 				(ID_Articulo, ID_Usuario)
 				VALUES('".$_GET['ID']."', '".$pol['user_ID']."');");
 				$return = 'articulos/'.$_POST['ID_empresa'].'/ver/'.$_GET['ID'];
+			}else{
+				$return ='articulos/'.$_POST['ID_empresa'].'/ver/'.$_GET['ID'].'/#La_empresa_no_tiene_cuenta_asociada';
 			}
 			
 		}

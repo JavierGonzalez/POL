@@ -1394,9 +1394,9 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 		}
 		$refer_url = 'empresas';
 
-	} elseif (($_GET[2] == 'editar') AND ($_POST['txt'])) {
-		$txt = $_POST['txt'];
-		$txt = gen_text($txt);
+	} elseif (($_GET[2] == 'editar') AND ($_POST['html_doc'])) {
+		$txt = str_replace('<br />', '', $_POST['html_doc']);
+		error_log("html_doc: ".$_POST['html_doc']);
 		sql_old("UPDATE empresas SET descripcion = '".$txt."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
 		$return =  $_POST['return'];
 		evento_log('Empresa editada #'.$_GET['ID']);
@@ -1404,7 +1404,171 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 	} elseif (($_GET[2] == 'eliminar') AND ($_GET['ID'])) {
 		sql_old("DELETE FROM empresas WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
 		evento_log('Empresa eliminada #'.$_GET['ID']);
+	} elseif (($_GET[2] == 'precio-suscripcion') AND ($_GET['ID'])) {
+		sql_old("UPDATE empresas SET precio_suscripcion = '".$_POST['precio_suscripcion']."', periodicidad_suscripcion = '".$_POST['periodicidad_suscripcion']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+		evento_log('Actualizado precio de suscripcion #'.$_GET['ID']);
+		$return = 'suscriptores/'.$_GET['ID'];
+	}elseif (($_GET[2] == 'suscribir') AND ($_GET['ID'])) {
+		$valores_suscripcion = sql_old("SELECT precio_suscripcion, periodicidad_suscripcion, nombre FROM empresas WHERE ID='".$_GET['ID']."'");
+		while($suscripcion = r($valores_suscripcion)){ 
+			$precio_suscripcion = $suscripcion['precio_suscripcion'];
+			$periodicidad_suscripcion = $suscripcion['periodicidad_suscripcion'];	
+			$nombre = $suscripcion['nombre'];		
+		}
+
+		sql_old("INSERT INTO empresas_suscriptores
+		(ID_empresa, ID_usuario, fecha_alta, precio_suscripcion, periodicidad_suscripcion)
+		VALUES('".$_GET['ID']."', '".$pol['user_ID']."', NOW(), '".$precio_suscripcion."', '".$periodicidad_suscripcion."')");
+		evento_log('Nuevo suscriptor #'.$_GET['ID']);
+		if ($periodicidad_suscripcion == "U"){
+			error_log("SELECT ID FROM cuentas WHERE id_empresa='".$_GET['ID']."'");
+			$cuentas = sql_old("SELECT ID FROM cuentas WHERE id_empresa='".$_GET['ID']."'");
+			if($cuenta = r($cuentas)){ 
+				error_log("Cuenta ID: ".$cuenta['ID']);
+				pols_transferir($precio_suscripcion, $pol['user_ID'], '-'.$cuenta['ID'], 'Suscripcion a '.$nombre);
+			}
+	
+		}
+	}elseif (($_GET[2] == 'eliminar-suscripcion') AND ($_GET['ID'])) {
+		if ($_POST['user_ID']){
+			$return = "suscriptores/".$_GET['ID'];
+			$result = sql_old("SELECT ID, user_ID 
+			FROM empresas 
+			WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+			while($r = r($result)){ 
+				if ($r['user_ID'] == $pol['user_ID']){
+					sql_old("DELETE FROM empresas_suscriptores
+					WHERE ID_EMPRESA = '".$_GET['ID']."' AND ID_USUARIO = '".$_POST['user_ID']."'");
+					evento_log('Suscripción cancelada #'.$_GET['ID']);
+				}
+			}			
+		}else{
+			sql_old("DELETE FROM empresas_suscriptores
+			WHERE ID_EMPRESA = '".$_GET['ID']."' AND ID_USUARIO = '".$pol['user_ID']."'");
+			evento_log('Suscripción cancelada #'.$_GET['ID']);	
+		}
+	}elseif (($_GET[2] == 'anadir-suscriptor') AND ($_GET['ID']) AND ($_POST['nick'])) {
+		$return = "suscriptores/".$_GET['ID'];
+		$result = sql_old("SELECT ID, user_ID
+		FROM empresas 
+		WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+		while($r = r($result)){ 
+			if ($r['user_ID'] == $pol['user_ID']){
+				$obtener_usuario = sql_old("SELECT ID
+				FROM users 
+				WHERE pais = '".PAIS."' AND nick = '".$_POST['nick']."' LIMIT 1");
+				if($usuario = r($obtener_usuario)){ 
+					sql_old("INSERT INTO empresas_suscriptores
+					(ID_empresa, ID_usuario, fecha_alta, precio_suscripcion, periodicidad_suscripcion)
+					VALUES('".$_GET['ID']."', '".$usuario['ID']."', NOW(), 0, 'U')");
+					evento_log('Nuevo suscriptor #'.$_GET['ID']);
+				}
+			}
+		}
+	}elseif (($_GET[2] == 'asociar-cuenta') AND ($_GET['ID']) AND ($_POST['cuenta'])) {
+		$result = sql_old("UPDATE cuentas
+		SET id_empresa=".$_GET['ID']." 
+		WHERE ID = '".$_POST['cuenta']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+	}elseif (($_GET[2] == 'nuevo-articulo') AND ($_GET['ID_empresa'])) {
+		$titulo = $_POST['titulo'];
+		$precio_suscripcion = $_POST['precio_suscripcion'];
+		$precio = $_POST['precio'];
+		$adelanto_doc = $_POST['adelanto_doc'];
+		$html_doc = $_POST['html_doc'];
+		$ID_empresa = $_GET['ID_empresa'];
+		$notificar = $_POST['notificar'];
+
+		$result = sql_old("INSERT INTO articulo
+		(publico, ID_usuario, ID_empresa, contenido, titulo, adelanto, precio_suscriptores, precio, valoracion, valoracion_n_votos, fecha_creacion)
+		VALUES('false', '".$pol['user_ID']."', '".$ID_empresa."', '".$html_doc."', '".$titulo."', '".$adelanto_doc."', '".$precio_suscripcion."','".$precio."', 0, 0, NOW());
+		");
+
+		$return = 'articulos/'.$ID_empresa;
+
+		if ($notificar == "on"){
+
+			$suscriptores = sql_old("SELECT es.ID_usuario, nombre
+			FROM empresas_suscriptores es, empresas e
+			WHERE ID_empresa = '".$ID_empresa."' AND es.id_empresa = e.id
+			");
+			while($suscriptor = r($suscriptores)){ 
+				notificacion($suscriptor['ID_usuario'], 'Nuevo artículo a la venta en '.$suscriptor['nombre'].': '.$titulo, '/empresas/'.$return); 
+			}
+		}
+	}elseif (($_GET[2] == 'editar-articulo') AND ($_GET['ID_empresa'])) {
+		$titulo = $_POST['titulo'];
+		$precio_suscripcion = $_POST['precio_suscripcion'];
+		$precio = $_POST['precio'];
+		$adelanto_doc = $_POST['adelanto_doc'];
+		$html_doc = $_POST['html_doc'];
+		$ID_empresa = $_GET['ID_empresa'];
+		$notificar = $_POST['notificar'];
+		$ID = $_POST['ID'];
+
+		$result = sql_old("UPDATE articulo SET
+		ID_usuario = '".$pol['user_ID']."', ID_empresa = '".$ID_empresa."', contenido = '".$html_doc."', titulo = '".$titulo."', adelanto = '".$adelanto_doc."', precio_suscriptores = '".$precio_suscripcion."', precio = '".$precio."'
+		WHERE ID = '".$ID."'
+		");
+
+		$return = 'articulos/'.$ID_empresa;
+
+		if ($notificar == "on"){
+
+			$suscriptores = sql_old("SELECT es.ID_usuario, nombre
+			FROM empresas_suscriptores es, empresas e
+			WHERE ID_empresa = '".$ID_empresa."' AND es.id_empresa = e.id
+			");
+			while($suscriptor = r($suscriptores)){ 
+				notificacion($suscriptor['ID_usuario'], 'El artículo "'.$titulo.'" ha sido actualizado', '/empresas/'.$return); 
+			}
+		}
+	}elseif (($_GET[2] == 'comprar-articulo')) {
+
+		$id_empresa = $_POST['ID_empresa'];
+
+		error_log("Comprobando articulos...");
+
+		error_log("SELECT ID, publico, ID_usuario, ID_empresa, contenido, titulo, adelanto, precio_suscriptores, precio, valoracion, valoracion_n_votos, fecha_creacion
+		FROM articulo
+		WHERE ID = '".$_GET['ID']."'
+		ORDER BY ID DESC");
+		
+		$articulos = mysql_query_old("SELECT ID, publico, ID_usuario, ID_empresa, contenido, titulo, adelanto, precio_suscriptores, precio, valoracion, valoracion_n_votos, fecha_creacion
+		FROM articulo
+		WHERE ID = '".$_GET['ID']."'
+		ORDER BY ID DESC", $link);
+
+		if($articulo = mysqli_fetch_array($articulos)) {
+			$precio = $articulo['precio'];
+
+			$suscriptores =  mysql_query_old("SELECT ID
+			FROM empresas_suscriptores WHERE ID_empresa='".$id_empresa."' AND ID_usuario = '".$pol['user_ID']."'", $link);
+			if($suscriptor = mysqli_fetch_array($suscriptores)) {
+				$precio = $articulo['precio_suscriptores'];
+			}
+			error_log("es suscriptor?...".$precio);
+
+			$cuentas =  mysql_query_old("SELECT ID
+			FROM cuentas WHERE ID_empresa='".$id_empresa."'", $link);
+			if($cuenta = mysqli_fetch_array($cuentas)) {
+				$cuenta_empresa = $cuenta['ID'];
+				error_log("Transfiriendo dinero a la cuenta: ".$cuenta_empresa);
+				pols_transferir($precio, $pol['user_ID'], '-'.$cuenta_empresa, 'Compra artículo: '.$articulo['titulo']);
+
+				$result = sql_old("INSERT INTO articulo_usuario
+				(ID_Articulo, ID_Usuario)
+				VALUES('".$_GET['ID']."', '".$pol['user_ID']."');");
+				$return = 'articulos/'.$_POST['ID_empresa'].'/ver/'.$_GET['ID'];
+			}else{
+				$return ='articulos/'.$_POST['ID_empresa'].'/ver/'.$_GET['ID'].'/#La_empresa_no_tiene_cuenta_asociada';
+			}
+			
+		}
+
+
 	}
+
+
 	$refer_url = 'empresas/'.$return;
 	break;
 
@@ -1493,7 +1657,12 @@ case 'pols':
 
 			$result = sql_old("SELECT ID FROM users WHERE pais = '".PAIS."' AND nick = '". strtolower($apoderado) ."' LIMIT 1");
 			if($r = r($result)){ 
-				$comprobacion_cuenta = sql_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$cuenta."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+				$comprobacion_cuenta = sql_old("SELECT ID FROM cuentas 
+				WHERE pais = '".PAIS."' 
+				AND ID = '".$cuenta."' 
+				AND (user_ID = '".$pol['user_ID']."' ".
+				($pol['nivel'] >= 98 ? " OR gobierno = 'true') " : ")")."
+				LIMIT 1");
 				if($resultado_comprobacion = r($comprobacion_cuenta)){
 					sql_old("INSERT INTO cuentas_apoderados (cuenta_ID, user_ID, `time`) values ('".$resultado_comprobacion['ID']."','".$r['ID']."',now())");
 				}else{
@@ -1506,7 +1675,12 @@ case 'pols':
 			$cuenta = $_GET[4];
 			$apoderado = $_GET[5];
 			$refer_url = 'pols/cuentas/'.$cuenta.'/apoderados';
-			$comprobacion_cuenta = sql_old("SELECT ID FROM cuentas WHERE pais = '".PAIS."' AND ID = '".$cuenta."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+			$comprobacion_cuenta = sql_old("SELECT ID FROM cuentas 
+			WHERE pais = '".PAIS."' 
+			AND ID = '".$cuenta."' 
+			AND (user_ID = '".$pol['user_ID']."' ".
+				($pol['nivel'] >= 98 ? " OR gobierno = 'true') " : ")")."
+			LIMIT 1");
 			if($resultado_comprobacion = r($comprobacion_cuenta)){
 				sql_old("DELETE FROM cuentas_apoderados where cuenta_ID = '".$resultado_comprobacion['ID']."' AND user_ID = '".$apoderado."' ");
 			}else{
@@ -1514,8 +1688,6 @@ case 'pols':
 			}
 		}
 	}elseif (($_GET[2] == 'transferir') AND (is_numeric($_POST['pols'])) AND ($_POST['pols'] > 0) AND ($_POST['concepto'])) {
-
-
 
 		$concepto = ucfirst(strip_tags($_POST['concepto']));
 		$pols = $_POST['pols'];
@@ -1628,7 +1800,12 @@ case 'pols':
 			$receptor_notificacion_ID = $receptor_ID;
 			$todoOk = true;
 			if ($emisor_ID < 0){
-				$result = sql_old("SELECT user_ID FROM cuentas WHERE pais = '".PAIS."' AND ID = ".substr($emisor_ID,1)." LIMIT 1");
+				$result = sql_old("SELECT user_ID 
+				FROM cuentas 
+				WHERE pais = '".PAIS."' 
+				AND (ID = ".substr($emisor_ID,1)." ".
+				($pol['nivel'] >= 98 ? " OR gobierno = 'true') " : ")")."
+				LIMIT 1");
 				while($r = r($result)){ 
 					if ($pol['user_ID'] != $r['user_ID']){
 						$todoOk = false;
@@ -1724,7 +1901,7 @@ case 'pols':
 				$result = sql_old("SELECT nick FROM users WHERE pais = '".PAIS."' AND ID = '".$pol['user_ID']."' LIMIT 1");
 				while($r = r($result)){ $nick = $r['nick']; }	
 	
-				notificacion($receptor_notificacion_ID, "(".$nick.") Creada transacción automática a tu favor", '/transaut');
+				notificacion($receptor_notificacion_ID, "(".$nick.") Creada transacción automática a tu favor", '/pols/transaut');
 				sql_old("INSERT INTO transacciones (pais, pols, emisor_ID, receptor_ID, concepto, time, periodicidad) VALUES ('".PAIS."', '".$pols."', '".$emisor_ID."', '".$receptor_ID."', '".$concepto."', '".$date."' , '".$periodicidad."')");
 				$refer_url = 'pols/transaut#ok';
 			}

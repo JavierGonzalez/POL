@@ -44,7 +44,7 @@ while($r = mysqli_fetch_array($result)) {
 	}
 	//super-array javascript
 	switch ($r['estado']) {
-		case 'p': $info = $r['link'] . '|' .  $r['nick'] . '|' . $r['color']. '|' .  $r['text']; break;
+		case 'p': $info = $r['link'] . '|' .  $r['nick'] . '|' . $r['color']. '|' .  $r['text'] . '| ('.$r['pos_x'].','.$r['pos_y'].')'; break;
 		case 'v': $info = 'v|' . $r['nick'] . '|' . $r['pols']; $venta_total += $r['superficie']; break;
 		case 'e': 
 			if ($r['link']) { 
@@ -190,7 +190,7 @@ function inicializarTabla(){
 		if (amsg) {
 			var amsg = amsg.split("|");
 			switch (amsg[0]) {
-				case "v": var msg = "<span style=\"color:green;\"><b>En venta</b></span><br />" + amsg[1] + " (" + ID + ")<br /><span style=\"color:blue;\"><b>" + amsg[2] + "</span> monedas</b>"; break;
+				case "v": var msg = "<span style=\"color:green;\"><b>En venta</b></span><br />" + amsg[1] + " (" + ID + " - "+amsg[4]+")<br /><span style=\"color:blue;\"><b>" + amsg[2] + "</span> monedas</b>"; break;
 				
 				case "b":
 				case "e": 
@@ -202,7 +202,7 @@ function inicializarTabla(){
 					break;
 				
 				default: 
-					var msg = "<span style=\"color:green; float: left\"><b>" + amsg[3] + "</b></span><br />" + amsg[1] + " (" + ID + ")"
+					var msg = "<span style=\"color:green; float: left\"><b>" + amsg[3] + "</b></span><br />" + amsg[1] + " (" + ID + " - "+amsg[4]+")"
 							  +"<span style=\"float: right;\"><img src=\"'.IMG.'parcela/"+ID+"_"+altura_actual+".png\" style=\"display: none\" width=\"125\" height=\"125\" alt=\""+amsg[0]+"\" onload=\"this.style=\'display: visible\'\"/></span>";
 					$(this).css("cursor", "pointer");
 			}
@@ -231,7 +231,7 @@ function inicializarTabla(){
 					else { window.open(amsg[0]); }
 				}
 			}
-		} else { var ID = $(this).attr("id"); window.location = "/mapa/comprar/" + ID + "/"; }
+		} else if(altura_actual == 1) { var ID = $(this).attr("id"); window.location = "/mapa/comprar/" + ID + "/"; }
     });
 }
 

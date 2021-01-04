@@ -957,7 +957,6 @@ function auto_priv(nick){ $("#vpc_msg").attr("value", "/msg " + nick + " ").css(
 
 // ### FUNCIONES CHAT END
 
-
 function enriquecer(m, bbcode){
 
     // Emoticonos
@@ -987,6 +986,13 @@ function enriquecer(m, bbcode){
         m = m.replace(/\[quote\]/gi, '<blockquote><div class="quote">');
         m = m.replace(/\[quote=(.*?)\]/gi, '<blockquote><div class="quote"><cite>$1 escribió:</cite>');
         m = m.replace(/\[\/quote\]/gi, '</div></blockquote>');
+        m = m.replace(/\[empresa\](.*?)\[\/empresa\]/gi, '<div id="empresa_'+getID()+'"></div><script>loadPage(\'empresa_'+getID()+'\', \'/empresas/$1?embed=true\')</script>');
+        m = m.replace(/\[documento\](.*?)\[\/documento\]/gi, '<div id="documento_'+getID()+'"></div><script>loadPage(\'documento_'+getID()+'\', \'/doc/$1?embed=true\')</script>');
+        m = m.replace(/\[articulo\](.*?)\[\/articulo\]/gi, '<div id="articulo'+getID()+'"></div><script>loadPage(\'articulo'+getID()+'\', \'$1?embed=true\')</script>');
+        m = m.replace(/\[estilo=(.*?)\]/gi, '<span style="$1">');
+        m = m.replace(/\[\/estilo\]/gi, '</span>');
+        m = m.replace(/\[spoiler=(.*?)\]/gi, '<cite>Atención spoiler de $1</cite> <span style="background-color: black" onclick="this.style.backgroundColor=\'\';">');
+        m = m.replace(/\[\/spoiler\]/gi, '</span>');
     }
 
     // Botones Instant
@@ -994,6 +1000,32 @@ function enriquecer(m, bbcode){
     // m = m.replace(/:(aplauso|noo|rickroll|relax|alarmanuclear|porquenotecallas|zas|aleluya):/gi, html_instant('$1', boton_width));
 
     return m;
+}
+
+idPrimeraVez = true;
+id = "";
+function getID(){
+    if (idPrimeraVez){
+        idPrimeraVez = false;
+        id = uuidv4();
+    }else{
+        idPrimeraVez = true;
+    }
+
+    return id;
+}
+
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+function loadPage(id, page){
+    fetch(page)
+    .then(response => response.text())
+    .then(data => $("#"+id).html(data));
 }
 
 function html_instant(nom, width){

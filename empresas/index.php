@@ -1,4 +1,12 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
+$parsedown_partidos = new Parsedown();
+$parsedown_partidos->setSafeMode(true);
+$parsedown_partidos->setBreaksEnabled(true);
+
+if ($_GET['embed'] == 'true'){
+	$maxsim['output'] = 'text';
+}
+
 
 if (($_GET[1] == 'editar') AND ($_GET[2])) { //EDITAR EMPRESA
 
@@ -22,8 +30,12 @@ LIMIT 1", $link);
 
 <p class="amarillo">'._('Fundador').': <b>'.crear_link($r['nick']).'</b> '._('el').' <em>'.explodear(' ', $r['time'], 0).'</em>, '._('sector').': <a href="/empresas/'.$r['cat_url'].'">'.$r['cat_nom'].'</a></p>
 
-<p class="amarillo">'.editor_enriquecido('txt', $r['descripcion']).'</p>
+<input type="hidden" name="html_doc" id="html_doc" value="'.$r['descripcion'].'" />
 
+<iframe style="width:100%;height:350px;scrolling: none; border: none" id="document_frame" src="/img/markdown.html">
+</iframe>
+' . pad('create', $r['ID'], $r['descripcion']) . '
+' . pad('print', $r['ID']) . '
 <p><input type="submit" value="'._('Guardar').'" /> &nbsp; <a href="/empresas"><b>'._('Ver empresas').'</b></a></form></p>
 ';
 	}
@@ -86,7 +98,7 @@ ORDER BY time ASC", $link);
 	$result = mysql_query_old("SELECT ID FROM cat WHERE pais = '".PAIS."' AND tipo = 'empresas' AND url = '".$_GET[1]."' LIMIT 1", $link);
 	while($r = mysqli_fetch_array($result)) { $cat_ID = $r['ID']; }
 
-	$result = mysql_query_old("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv,
+	$result = mysql_query_old("SELECT ID, url, nombre, user_ID, descripcion, web, cat_ID, time, pv, precio_suscripcion, (select count(id) from empresas_suscriptores where id_empresa = empresas.id) as total_suscriptores,
 (SELECT nombre FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_nom,
 (SELECT url FROM cat WHERE pais = '".PAIS."' AND ID = empresas.cat_ID LIMIT 1) AS cat_url,
 (SELECT nick FROM users WHERE ID = empresas.user_ID LIMIT 1) AS nick
@@ -94,30 +106,54 @@ FROM empresas
 WHERE pais = '".PAIS."' AND url = '".$_GET[2]."' AND cat_ID = '".$cat_ID."'
 LIMIT 1", $link);
 	while($r = mysqli_fetch_array($result)) {
-
 		mysql_query_old("UPDATE empresas SET pv = pv+1 WHERE pais = '".PAIS."' AND ID = '".$r['ID']."' LIMIT 1", $link);
 		$r['pv']++;
 
 		$txt_title = _('Empresas').': '.$r['nombre'].' - '._('Sector').': '.$r['cat_nom'];
 		$txt_nav = array('/empresas'=>_('Empresas'), '/empresas/'.$_GET[1]=>$r['cat_nom'], $r['nombre']);
+		$txt_tab['/empresas/articulos/'.$r['ID']] = _('Artículos');
 
 		if ($pol['user_ID'] == $r['user_ID']) { $editar .= boton(_('Editar'), '/empresas/editar/'.$r['ID']); }
 		
-		echo '<br /><div class="amarillo">'.html_entity_decode($r['descripcion'],ENT_COMPAT , 'UTF-8').'</div>
+		echo '<br /><div class="amarillo">'.$parsedown_partidos->text($r['descripcion']).'</div>
 
-<p class="azul">'._('Fundador').': <b>'.crear_link($r['nick']).'</b> | '._('creación').': <em>'.explodear(" ", $r['time'], 0).'</em> | '._('sector').': <a href="/empresas/'.$r['cat_url'].'">'.$r['cat_nom'].'</a> | '._('visitas').': '.$r['pv'].'</p>
+<p class="azul">'._('Fundador').': <b>'.crear_link($r['nick']).'</b> | '._('creación').': <em>'.explodear(" ", $r['time'], 0).'</em> | '._('sector').': <a href="/empresas/'.$r['cat_url'].'">'.$r['cat_nom'].'</a> | '._('visitas').': '.$r['pv'].'| '._('Suscriptores').': '.$r['total_suscriptores'].'</p>
 
-<table width="100%"><tr>';
+<table width="100%">';
 		if ($r['user_ID'] == $pol['user_ID']) {  
-			echo '<td><form action="/accion/empresa/acciones?ID='.$r['ID'].'" method="post">
-'._('Ceder acciones a').': <input type="text" name="nick" size="8" maxlength="20" value="" /><br />
-'._('Cantidad de acciones a').': <input type="text" name="cantidad" size="8" maxlength="3" value="" /><br />
-'.boton(_('Ceder'), 'submit', false, 'small').' ['._('En desarrollo').']
-</form></td>';
+			$txt_tab['/empresas/suscriptores/'.$r['ID']] = _('Suscriptores');
+					
+			//Asociar cuenta a empresa
+			echo '<tr><td><form action="/accion/empresa/asociar-cuenta?ID='.$r['ID'].'" method="post">
+			'._('Seleccionar cuenta: ').':'.comboCuentas("cuenta", false).'
+			'.boton(_('Asociar'), 'submit', false, 'small').'
+			</form></td>';
+			
+			
+			
 			$boton = '<form action="/accion/empresa/ceder?ID='.$r['ID'].'" method="post">
-'.boton(_('Ceder a').':', 'submit', false, 'small').' <input type="text" name="nick" size="8" maxlength="20" value="" /></form> '.boton('X', '/accion/empresa/eliminar?ID='.$r['ID'], '¿Estas seguro de querer ELIMINAR definitivamente esta empresa?', 'red'); 
+			'.boton(_('Ceder a').':', 'submit', false, 'small').' <input type="text" name="nick" size="8" maxlength="20" value="" /></form> '.boton('X', '/accion/empresa/eliminar?ID='.$r['ID'], '¿Estas seguro de querer ELIMINAR definitivamente esta empresa?', 'red'); 
+			
+			echo '<tr><td><form action="/accion/empresa/acciones?ID='.$r['ID'].'" method="post">
+			'._('Ceder acciones a').': <input type="text" name="nick" size="8" maxlength="20" value="" /><br />
+			'._('Cantidad de acciones a').': <input type="text" name="cantidad" size="8" maxlength="3" value="" /><br />
+			'.boton(_('Ceder'), 'submit', false, 'small').' ['._('En desarrollo').']
+			</form></td>';
+						$boton = '<form action="/accion/empresa/ceder?ID='.$r['ID'].'" method="post">
+			'.boton(_('Ceder a').':', 'submit', false, 'small').' <input type="text" name="nick" size="8" maxlength="20" value="" /></form> '.boton('X', '/accion/empresa/eliminar?ID='.$r['ID'], '¿Estas seguro de querer ELIMINAR definitivamente esta empresa?', 'red'); 
+
+		}else if ($r['precio_suscripcion']){
+			$comprobar_suscriptor = mysql_query_old("SELECT ID FROM empresas_suscriptores WHERE id_empresa = '".$r['ID']."' AND id_usuario = '".$pol['user_ID']."'
+			LIMIT 1", $link);
+			if($comprobacion = mysqli_fetch_array($comprobar_suscriptor)) {
+				echo '<tr><td><form action="/accion/empresa/eliminar-suscripcion?ID='.$r['ID'].'" method="post">'
+				.'<p>'.boton('Cancelar suscripción', 'submit', false, 'red').'</p></td></tr>';
+			}else{
+				echo '<tr><td><form action="/accion/empresa/suscribir?ID='.$r['ID'].'" method="post">'
+				.'<p>'.boton('Suscribirse', false, false, '', $r['precio_suscripcion']).'</p></td></tr>';
+			}
 		}
-		echo '<td align="right">'.$boton.$editar.'</td></tr></table>';
+		echo '<tr><td align="right">'.$boton.$editar.'</td></tr></table>';
 	}
 
 } else { // #EMPRESAS

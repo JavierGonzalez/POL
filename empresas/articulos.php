@@ -249,11 +249,12 @@ if ($_GET[2] == "ver") {
         $txt_table .= '<tr><td colspan="4">&nbsp;</td></tr>';
 
     }
-
+    if ($articulo['ID_usuario'] == $pol['user_ID']){
         echo '
         <div style="float: right"><button onclick="window.location.href=\''.$_GET[1].'/nuevo-articulo\'" class="large blue">Nuevo artículo</button></div>
-        <br />
-    <table border="0" cellpadding="1" cellspacing="0">
+        <br />';
+    }
+    echo '<table border="0" cellpadding="1" cellspacing="0">
 
     '.$txt_table.'
 

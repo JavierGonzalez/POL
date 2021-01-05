@@ -155,7 +155,7 @@ if ($_GET[2] == "ver") {
                     </script>
                     <ul style="list-style: none;">
                     <input type="hidden" id="ID" name="ID" value="'.$_GET[3].'">
-                    <input type="hidden" id="html_doc" name="html_doc" value="'.$articulo['html_doc'].'">
+                    <input type="hidden" id="html_doc" name="html_doc" value="'.$articulo['contenido'].'">
                     <input type="hidden" id="adelanto_doc" name="adelanto_doc"  value="'.$articulo['adelanto'].'">
                         <li><span>Titulo: </span><input type="text" name="titulo" id="title" value="'.$articulo['titulo'].'" size="40" maxlength="50" style="font-size:22px;" /> &nbsp; 
                         <span>Precio: </span><input type="text" name="precio" id="precio" value="'.$articulo['precio'].'" size="8" maxlength="50" style="font-size:22px;" /> &nbsp; 

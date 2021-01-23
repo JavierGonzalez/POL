@@ -1,7 +1,7 @@
-<?php
+<?php # maxsim.tech — MIT License — Copyright (c) 2005-2020 Javier González González <gonzo@virtualpol.com>
 
 
-function __($echo='', $echo2=false, $scroll_down=false) {
+function ___($echo='', $echo2=false, $scroll_down=false) {
 	global $maxsim;
 
     if (!isset($maxsim['debug']['crono']))
@@ -60,3 +60,27 @@ function profiler($microtime=false) {
     
     return $output;
 }
+
+
+
+function maxsim_timing() {
+    global $maxsim;
+
+    $microtime_last = $_SERVER['REQUEST_TIME_FLOAT'];
+
+    foreach ((array) $maxsim['debug']['timing'] AS $key => $value) { 
+        if ($value > 1000000000) {
+            $ms = round(($value-$microtime_last)*1000, 2);
+            $microtime_last = $value;
+        } else {
+            $ms = $value;
+        }
+        $server_timing[] = $key.';dur='.$ms;
+    }
+    
+    $server_timing[] = 'total;dur='.round((microtime(true)-$_SERVER['REQUEST_TIME_FLOAT'])*1000, 2);
+
+    header('Server-Timing: '.implode(', ', (array)$server_timing));
+}
+
+register_shutdown_function('maxsim_timing');

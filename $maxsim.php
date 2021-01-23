@@ -2,7 +2,7 @@
 
 maxsim:
 
-$maxsim['version'] = '0.5.10';
+$maxsim['version'] = '0.5.11';
 
 ob_start();
 
@@ -24,8 +24,11 @@ foreach ((array) $maxsim['autoload'] AS $file) {
             ${$key} = (array)json_decode(file_get_contents($file), true);
 }
 
+$maxsim['debug']['timing']['autoload'] = microtime(true);
 
 include_once($maxsim['app']); #
+
+$maxsim['debug']['timing']['app'] = microtime(true);
 
 
 if (isset($maxsim['redirect'])) {
@@ -53,6 +56,8 @@ else if (isset($maxsim['output']) AND $maxsim['output']==='json' AND is_array($e
     }
 
     include($maxsim['output'].'/index.php');
+
+    $maxsim['debug']['timing']['template'] = microtime(true);
 }
 
 exit;
@@ -114,10 +119,5 @@ function maxsim_get() {
         if ($level-$app_level > 0)
             $_GET[$id++] = $value;
 }
-
-
-
-
-
 
  

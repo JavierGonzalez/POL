@@ -2,23 +2,33 @@
 
 
 
-
-
-
-
 function sql_old($q,$l=null) {
 	global $link; 
-	if($l===true){$rr=mysql_query_old($q,$link);while($r=mysqli_fetch_row($rr)){return $r[0];}} 
-	else{return mysql_query_old($q,($l===null?$link:$l));}
+	if ($l===true) { 
+		$rr = mysql_query_old($q,$link);
+		while($r=mysqli_fetch_row($rr)) {
+			return $r[0];
+		}
+	} else { 
+		return mysql_query_old($q, ($l===null?$link:$l));
+	}
 }
-function r($q) {return mysqli_fetch_assoc($q);}
+
+function r($q) {
+	return mysqli_fetch_assoc($q);
+}
 
 function mysql_query_old($query, $link2=false) {
-	global $link;
-	return mysqli_query(($link2?$link2:$link), $query);
+	global $link, $maxsim;
+
+	$crono = microtime(true);
+	
+	$result = mysqli_query(($link2?$link2:$link), $query);
+	
+	$maxsim['debug']['timing']['sql'] += round((microtime(true)-$crono)*1000, 2);
+
+	return $result;
 }
-
-
 
 
 

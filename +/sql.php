@@ -52,10 +52,15 @@ function sql_link() {
 
 
 function sql($query) {
-    global $__sql;
+    global $__sql, $maxsim;
 	
-    $result = mysqli_query(sql_link(), $query);
-    
+	$crono = microtime(true);
+	
+	$result = mysqli_query(sql_link(), $query);
+	
+	$maxsim['debug']['timing']['sql'] += round((microtime(true)-$crono)*1000, 2);
+	
+
     $__sql['count']++;
 
     if ($result===true OR $result===false) 

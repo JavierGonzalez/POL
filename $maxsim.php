@@ -39,11 +39,8 @@ if (isset($maxsim['redirect'])) {
 }
 
 
-if (function_exists('maxsim_timing'))
-    maxsim_timing();
-
 if (isset($maxsim['output']) AND $maxsim['output'] === 'text')
-    header('content-Type: text/plain');
+    header('content-type: text/plain');
 
 else if (isset($maxsim['output']) AND $maxsim['output'] === 'json' AND is_array($echo)) {
     ob_end_clean();
@@ -121,3 +118,6 @@ function maxsim_get() {
         if ($level-$app_level > 0)
             $_GET[$id++] = $value;
 }
+
+
+ 

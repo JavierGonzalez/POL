@@ -397,7 +397,31 @@ echo '
 
 
 
-} else {
+}elseif ($_GET[1] == 'error-salarios') { 
+    $result = sql_old("SELECT cu.ID as ID, cu.cargo_ID as cargo_ID, cu.user_ID as user_ID, nick, salario, c.nombre as nombre, cu.pais as pais
+    FROM cargos_users cu, cargos c, users u
+    WHERE cu.cargo  = 'true'
+    AND cu.cargo_ID = c.cargo_ID 
+    AND cu.user_ID = u.ID 
+    ORDER BY cu.user_ID desc");
+    echo '<table border="0" cellspacing="3" cellpadding="0">
+           <tr><th>Cargo</th><th>Ciudadano</th><th>Salario</th><th>Pais</th><th>Eliminar</th></tr>';
+
+    while($r = r($result)){
+        echo '<tr>
+            <form method="POST" action="/accion/gobierno/eliminar-salario">
+            <input type="hidden" name="cargo_user_id" value="' . $r['ID'] . '">
+            <td align="right">' . $r['nombre'] . ' <img src="'.IMG.'cargos/'.$r['cargo_ID'].'.gif" title="'.$r['nombre'].'" /></td>
+            <td align="right">' . $r['nick'] . '</td>
+            <td align="right">' . $r['salario'] . '</td>
+            <td align="right">' . $r['pais'] . '</td>
+            <td align="right">' .boton(_('Eliminar'), '/accion/gobierno/eliminar-salario/'.$r['ID'], false, 'red'). '</td>
+            </form>
+        </tr>';
+    }
+    echo '
+        </table>';
+}else {
 
 
     function print_td_url($titulo, $name, $desc='') {

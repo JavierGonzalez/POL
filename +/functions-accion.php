@@ -361,6 +361,9 @@ function pols_transferir($pols, $emisor_ID, $receptor_ID, $concepto, $pais=false
 
 	if ($pais == false) { $pais = PAIS; }
 
+// Incluir impuestos
+
+
 	$return = false;
 	$pols = strval($pols);
 	if ((is_numeric($pols)) AND ($pols != 0) AND ($concepto)) {
@@ -667,23 +670,28 @@ VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".e(
 }
 
 function webscreencapture($url, $saveto){
-	if (endsWith($url, ".jpg") OR endsWith($url, ".png")){
-		$screencapture_url =$url;
-	}else{
-		$screencapture_url = "http://api.screenshotlayer.com/api/capture?access_key=79542aece2cd98296ceb1cf0f225b008&url=".$url."&viewport=1440x900&width=125";
+	try{
+		if (endsWith($url, ".jpg") OR endsWith($url, ".png")){
+			$screencapture_url =$url;
+		}else{
+			$screencapture_url = "http://api.screenshotlayer.com/api/capture?access_key=79542aece2cd98296ceb1cf0f225b008&url=".$url."&viewport=1440x900&width=125";
+		}
+		$ch = curl_init ($screencapture_url);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+		$raw=curl_exec($ch);
+		curl_close ($ch);
+		if(file_exists($saveto)){
+			unlink($saveto);
+		}
+		$fp = fopen($saveto,'x');
+		fwrite($fp, $raw);
+		fclose($fp);
+	}catch (Exception $e) {
+		echo 'Excepción capturada: ',  $e->getMessage(), "\n";
 	}
-	$ch = curl_init ($screencapture_url);
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
-	$raw=curl_exec($ch);
-	curl_close ($ch);
-	if(file_exists($saveto)){
-		unlink($saveto);
-	}
-	$fp = fopen($saveto,'x');
-	fwrite($fp, $raw);
-	fclose($fp);
+	
 }
 
 function endsWith( $haystack, $needle ) {

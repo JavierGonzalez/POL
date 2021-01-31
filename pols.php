@@ -23,7 +23,7 @@ if (($_GET[1] == 'cuentas') AND ($_GET[2] == 'crear')) {
 	$txt_title = 'Gestionar apoderados';
 	$txt_tab['/pols/cuentas/'.$_GET[2].'/apoderados'] = _('Gestionar apoderados');
 	
-	$comprobacion_cuentas = mysql_query_old("SELECT ID, nombre, user_ID, pols, nivel, time,
+	$comprobacion_cuentas = mysql_query_old("SELECT ID, nombre, user_ID, pols, nivel, time, gobierno, 
 	(SELECT nick FROM users WHERE ID = cuentas.user_ID LIMIT 1) AS nick
 	FROM cuentas
 	WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "'
@@ -34,7 +34,7 @@ if (($_GET[1] == 'cuentas') AND ($_GET[2] == 'crear')) {
 		$nombre = $cuentas['nombre'];
 		$txt_nav = array('/pols'=>'Economía', '/pols/cuentas'=>'Cuenta bancaria', '/pols/cuentas/'.$_GET[2]=>$nombre, 'Gestionar apoderados');
 	
-			if ($user_ID == $pol['user_ID']){
+			if ($user_ID == $pol['user_ID'] OR ($cuentas['gobierno'] == "true" AND $pol['nivel'] >= 98)){
 				echo '<form action="/accion/pols/apoderado/anadir" method="post">
 				<input type="hidden" name="cuenta" value="'.$_GET[2].'" />
 				<p>Apoderado: <input type="text" name="apoderado" size="20" maxlength="20" /> <input type="submit" value="Añadir" onClick="if (!confirm(\'&iquest;Estas seguro de querer añadir a este usuario como apoderado? \nTenga en cuenta que podrá realizar cualquier operación con la cuenta.\')) { return false; }"</p>
@@ -67,7 +67,7 @@ if (($_GET[1] == 'cuentas') AND ($_GET[2] == 'crear')) {
 
 } elseif (($_GET[1] == 'cuentas') AND ($_GET[2])) {
 	
-	$result = mysql_query_old("SELECT ID, nombre, user_ID, pols, nivel, time,
+	$result = mysql_query_old("SELECT ID, nombre, user_ID, pols, nivel, time, gobierno, 
 (SELECT nick FROM users WHERE ID = cuentas.user_ID LIMIT 1) AS nick
 FROM cuentas
 WHERE pais = '".PAIS."' AND ID = '" . $_GET[2] . "'
@@ -79,12 +79,16 @@ LIMIT 1", $link);
 		$user_ID = $row['user_ID'];
 		$ceder_form = '';
 
-		if ($user_ID == $pol['user_ID']){
+		if ($user_ID == $pol['user_ID'] OR ($row['gobierno'] == "true" AND $pol['nivel'] >= 98)){
 			$txt_tab['/pols/cuentas/'.$_GET[2].'/apoderados'] = _('Gestionar apoderados');
-			$ceder_form = '<form action="/accion/pols/ceder-cuenta" method="post">
-			<input type="hidden" name="ID" value="'.$_GET[2].'" />
-			<p>Ceder cuenta: <input type="text" name="usuario" size="20" maxlength="20" /> <input type="submit" value="Ceder" onClick="if (!confirm(\'&iquest;Estas seguro de que quieres ceder esta cuenta? \n\')) { return false; }"</p>
-';
+			if ($user_ID == $pol['user_ID']){
+				$ceder_form = '<form action="/accion/pols/ceder-cuenta" method="post">
+				<input type="hidden" name="ID" value="'.$_GET[2].'" />
+				<p>Ceder cuenta: <input type="text" name="usuario" size="20" maxlength="20" /> 
+				<input type="submit" value="Ceder" 
+					onClick="if (!confirm(\'&iquest;Estas seguro de que quieres ceder esta cuenta? \n\')) { return false; }"
+				</p>';
+			}
 		}
 
 		$nivel = $row['nivel'];
@@ -288,25 +292,75 @@ LIMIT ".$p_limit, $link);
 		else { $ahora = ''; }
 	
 		paginacion('censo', '/pols/', null, $ahora, $total, 15);
-	
-		$result = mysql_query_old("SELECT ID, pols, concepto, time, receptor_ID, emisor_ID, periodicidad,
+	error_log("SELECT ID, pols, concepto, time, receptor_ID, emisor_ID, periodicidad, 
 	coalesce((SELECT nick FROM users WHERE ID = transacciones.emisor_ID LIMIT 1),
 	(SELECT concat(u.nick,'(', c.nombre,')') from users u, cuentas c where u.ID=(select user_ID from cuentas where ID=SUBSTRING(transacciones.emisor_ID, 2)) and c.id=SUBSTRING(transacciones.emisor_ID, 2) ))
 	AS nick_emisor,
 	coalesce((SELECT nick FROM users WHERE ID = transacciones.receptor_ID LIMIT 1),
-	(SELECT concat(u.nick,'(', c.nombre,')') from users u, cuentas c where u.ID=(select user_ID from cuentas where ID=SUBSTRING(transacciones.receptor_ID, 2)) and c.id=SUBSTRING(transacciones.receptor_ID, 2) )) AS nick_receptor
+	(SELECT concat(u.nick,'(', c.nombre,')') from users u, cuentas c where u.ID=(select user_ID from cuentas where ID=SUBSTRING(transacciones.receptor_ID, 2)) and c.id=SUBSTRING(transacciones.receptor_ID, 2) )) AS nick_receptor,
+	coalesce((select gobierno from cuentas where ID=SUBSTRING(transacciones.emisor_ID, 2)), 'false') as gobierno
 	FROM transacciones
-	WHERE pais = '".PAIS."' AND ((emisor_ID = '" . $pol['user_ID'] . "') OR (emisor_ID in (select CONCAT('-', ID) from cuentas where user_ID ='" . $pol['user_ID'] . "'))) AND periodicidad is not null
+	WHERE pais = '".PAIS."' 
+	AND ( (
+			(emisor_ID = '" . $pol['user_ID'] . "') OR 
+			(emisor_ID in 
+				(select CONCAT('-', ID) from cuentas where user_ID ='" . $pol['user_ID'] . "')
+			)
+			".
+			($pol['nivel'] >= 98 ? " OR 'true' = (select gobierno from cuentas where ID=SUBSTRING(transacciones.emisor_ID, 2))" : "" )
+			."
+	) 
+	OR (
+			(receptor_ID = '" . $pol['user_ID'] . "') OR 
+			(receptor_ID in 
+				(select CONCAT('-', ID) from cuentas where user_ID ='" . $pol['user_ID'] . "')
+			)
+	) )
+	AND periodicidad is not null
+	ORDER BY time DESC
+	LIMIT ".$p_limit);
+		$result = mysql_query_old("SELECT ID, pols, concepto, time, receptor_ID, emisor_ID, periodicidad, 
+	coalesce((SELECT nick FROM users WHERE ID = transacciones.emisor_ID LIMIT 1),
+	(SELECT concat(u.nick,'(', c.nombre,')') from users u, cuentas c where u.ID=(select user_ID from cuentas where ID=SUBSTRING(transacciones.emisor_ID, 2)) and c.id=SUBSTRING(transacciones.emisor_ID, 2) ))
+	AS nick_emisor,
+	coalesce((SELECT nick FROM users WHERE ID = transacciones.receptor_ID LIMIT 1),
+	(SELECT concat(u.nick,'(', c.nombre,')') from users u, cuentas c where u.ID=(select user_ID from cuentas where ID=SUBSTRING(transacciones.receptor_ID, 2)) and c.id=SUBSTRING(transacciones.receptor_ID, 2) )) AS nick_receptor,
+	coalesce((select gobierno from cuentas where ID=SUBSTRING(transacciones.emisor_ID, 2)), 'false') as gobierno
+	FROM transacciones
+	WHERE pais = '".PAIS."' 
+	AND ( (
+			(emisor_ID = '" . $pol['user_ID'] . "') OR 
+			(emisor_ID in 
+				(select CONCAT('-', ID) from cuentas where user_ID ='" . $pol['user_ID'] . "')
+			)
+			".
+			($pol['nivel'] >= 98 ? " OR 'true' = (select gobierno from cuentas where ID=SUBSTRING(transacciones.emisor_ID, 2))" : "" )
+			."
+	) 
+	OR (
+			(receptor_ID = '" . $pol['user_ID'] . "') OR 
+			(receptor_ID in 
+				(select CONCAT('-', ID) from cuentas where user_ID ='" . $pol['user_ID'] . "')
+			)
+	) )
+	AND periodicidad is not null
 	ORDER BY time DESC
 	LIMIT ".$p_limit, $link);
 
 		while($row = mysqli_fetch_array($result)) {
+error_log("Transaccion: ".$row['concepto']);
+
 			$transaccion_ID =  $row['ID'];
 			$periodicidad = $row['periodicidad'];
 			$receptor_nick = $row['nick_receptor'];
 			$emisor_nick = $row['nick_emisor'];
 			$pols = $row['pols'];
-			
+			$gobierno = $row['gobierno'];
+
+			if ($gobierno == 'true'){
+				$emisor_nick = "Gobierno";
+			}
+
 			if ($periodicidad == "D"){
 				$periodicidad = "Diaria";
 			}elseif ($periodicidad == "S"){
@@ -314,8 +368,25 @@ LIMIT ".$p_limit, $link);
 			}elseif ($periodicidad == "M"){
 				$periodicidad = "Mensual";
 			}
-				
-			echo '<tr><td align="right" valign="top"><b>'.pols($pols).'</b></td><td valign="top">'.$emisor_nick.'</td><td valign="top">'.$receptor_nick.'</td><td valign="top">'.$periodicidad.'</td><td>'.$row['concepto'].'</td><td valign="top" align="right">'.boton(_('Eliminar'), '/accion/pols/transaut/eliminar/'.strtolower($transaccion_ID), false, 'red').'</td></tr>';
+			$emisor = false;
+			if (($row['emisor_ID'] == $pol["user_ID"]) OR ($pol['nivel'] >= 98 AND $gobierno == 'true')){
+				$emisor = true;
+			}
+
+			error_log("emisor_ID? ".$row['emisor_ID']);
+			error_log("user_ID? ".$pol["user_ID"]);
+			error_log("nivel? ".$pol['nivel']);
+			error_log("gobierno? ".$row['gobierno']);
+			error_log("EMisor? ".$emisor);
+
+			echo '<tr>
+				<td align="right" valign="top"><b>'.pols($pols).'</b></td>
+				<td valign="top">'.$emisor_nick.'</td>
+				<td valign="top">'.$receptor_nick.'</td>
+				<td valign="top">'.$periodicidad.'</td>
+				<td>'.$row['concepto'].'</td>
+				<td valign="top" align="right">'.($emisor ? boton(_('Eliminar'), '/accion/pols/transaut/eliminar/'.strtolower($transaccion_ID), false, 'red') : "").'</td>
+				</tr>';
 		}
 		echo '</table><p>'.$p_paginas.'</p>';
 

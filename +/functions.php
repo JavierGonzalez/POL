@@ -2,23 +2,33 @@
 
 
 
-
-
-
-
 function sql_old($q,$l=null) {
 	global $link; 
-	if($l===true){$rr=mysql_query_old($q,$link);while($r=mysqli_fetch_row($rr)){return $r[0];}} 
-	else{return mysql_query_old($q,($l===null?$link:$l));}
+	if ($l===true) { 
+		$rr = mysql_query_old($q,$link);
+		while($r=mysqli_fetch_row($rr)) {
+			return $r[0];
+		}
+	} else { 
+		return mysql_query_old($q, ($l===null?$link:$l));
+	}
 }
-function r($q) {return mysqli_fetch_assoc($q);}
+
+function r($q) {
+	return mysqli_fetch_assoc($q);
+}
 
 function mysql_query_old($query, $link2=false) {
-	global $link;
-	return mysqli_query(($link2?$link2:$link), $query);
+	global $link, $maxsim;
+
+	$crono = microtime(true);
+	
+	$result = mysqli_query(($link2?$link2:$link), $query);
+	
+	$maxsim['debug']['timing']['sql'] += round((microtime(true)-$crono)*1000, 2);
+
+	return $result;
 }
-
-
 
 
 
@@ -420,4 +430,32 @@ function confianza($num, $votos_num=false) {
 	elseif ($num > -10) { $t = 'vcn">'; }
 	else { $t = 'vcnn">'; }
 	return '<span'.($votos_num!=false?' title="+'.(($votos_num+$num)/2).' -'.($votos_num-(($votos_num+$num)/2)).' ('.$votos_num.' votos)"':'').' class="'.$t.$num.'</span>';
+}
+
+function comboCuentas($nombreCampo, $incluirCuentaPropia = true, $incluirCuentasApoderado = true, $incluirCuentasGobierno = false, $permitirCuentasVacias = true, $incluirCuentasEmpresa = false){
+	global $pol;
+	
+	$result = mysql_query_old("SELECT ID, nombre, pols, user_ID, nivel, (SELECT GROUP_CONCAT(user_ID SEPARATOR ', ')  FROM cuentas_apoderados WHERE cuenta_ID = cuentas.ID) as apoderados
+	FROM cuentas WHERE pais = '".PAIS."'  
+	ORDER BY nivel DESC, nombre ASC", $link);
+	while($row = mysqli_fetch_array($result)){
+
+		if (($row['user_ID'] == $pol['user_ID']) OR ( $incluirCuentasGobierno == true AND (($pol['nivel'] >= $row['nivel']) AND ($row['nivel'] != 0) AND ($pol['nivel'] != 120))) OR ( $incluirCuentasApoderado == true AND strpos($row['apoderados'],$pol['user_ID']) !== false )) {
+			if ($row['pols'] < 1 && $permitirCuentasVacias == false) { $extra = ' disabled="disabled"'; } else { $extra = ''; }
+			$select_origen .= '<option value="' . $row['ID'] . '"' . $extra . '>' . pols($row['pols']) . ' - ' . $row['nombre'] . '</option>' . "\n";
+		}
+		if ($select_pre == $row['ID']) { $extra2 = ' selected="selected"'; } else { $extra2 = ''; }
+		$select_cuentas .= '<option value="' . $row['ID'] . '"' . $extra2 . '>' . $row['nombre'] . '</option>' . "\n";
+	}
+	if ($select_origen AND $incluirCuentaPropia == true) { $select_origen = '<optgroup label="Cuentas">' . $select_origen . '</optgroup>'; }
+
+
+	$txt = '<select name="'.$nombreCampo.'">';
+	
+	if ($incluirCuentaPropia == true){
+		$txt .= '<option value="0" >' . pols($pol['pols']) . ' '.MONEDA.'</option>';
+	}
+
+	$txt .= $select_origen . '</select>';
+	return $txt;
 }

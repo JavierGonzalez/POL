@@ -385,6 +385,55 @@ function gestionar_transacciones_automaticas($periodicidad){
 	
 }
 
+//Gestion transacciones automaticas
+gestionar_suscripciones("D");
+
+if (date('N') == 7) {
+	gestionar_suscripciones("S");
+}
+
+function gestionar_suscripciones($periodicidad){
+	error_log("SELECT es.ID as ID_suscripcion, es.precio_suscripcion as precio_suscripcion, 
+	es.ID_empresa as ID_empresa, ID_usuario, c.ID as ID_cuenta, e.nombre as nombre 
+	FROM empresas_suscriptores es, cuentas c, empresas e 
+	WHERE e.ID = es.ID_Empresa AND es.ID_empresa = c.ID_empresa 
+	AND es.periodicidad_suscripcion = '".$periodicidad."'");
+
+	$consulta_suscripciones = mysql_query_old("SELECT es.ID as ID_suscripcion, es.precio_suscripcion as precio_suscripcion, 
+												es.ID_empresa as ID_empresa, ID_usuario, c.ID as ID_cuenta, e.nombre as nombre 
+												FROM empresas_suscriptores es, cuentas c, empresas e 
+												WHERE e.ID = es.ID_Empresa AND es.ID_empresa = c.ID_empresa 
+												AND es.periodicidad_suscripcion = '".$periodicidad."'", $link);
+	while($row = mysqli_fetch_array($consulta_suscripciones)){ 
+
+		$precio_suscripcion = $row['precio_suscripcion']; 
+		$ID_empresa = $row['ID_empresa']; 
+		$ID_cuenta = $row['ID_cuenta']; 
+		$ID_usuario = $row['ID_usuario']; 
+		$ID_suscripcion = $row['ID_suscripcion']; 
+		$nombre = $row['nombre']; 
+
+		error_log("SELECT pols FROM users WHERE pais = '".PAIS."' AND ID = '".$ID_usuario."'");
+
+		$result = mysql_query_old("SELECT pols FROM users WHERE pais = '".PAIS."' AND ID = '".$ID_usuario."'", $link);
+
+
+		if ($row = mysqli_fetch_array($result)){
+			$disponible = $row['pols'];
+			if ($disponible > $precio_suscripcion){
+				pols_transferir($precio_suscripcion, $ID_usuario, '-'.$ID_cuenta, 'Suscripcion '.$nombre);	
+			}else{
+				$date = date('Y-m-d 20:00:00'); 
+				sql_old("INSERT INTO mensajes (envia_ID, recibe_ID, time, text, leido, cargo) VALUES ('0', '".$ID_usuario."', '".$date."', 'Ocurrió un error al pagar la suscripcion para la empresa (".$concepto."), por favor revise que tenga fondos. La suscripción se cancelará en este momento.', '0', '0')");
+				sql_old("DELETE FROM empresas_suscriptores where ID = ".$ID_suscripcion);
+				notificacion($ID_usuario, 'Problema con una suscripcion', '/msg');
+				evento_chat('<b>[MP]</b> <a href="/msg">Nuevo mensaje privado</a>', $ID_usuario, -1, false, 'p', $r['pais']);
+			}
+		}
+
+		
+	}
+}
 
 // NOTAS MEDIA
 $result = sql_old("SELECT user_ID, AVG(nota) AS media FROM cargos_users WHERE pais = '".PAIS."' GROUP BY user_ID");
@@ -487,7 +536,7 @@ while($r = r($result)) {
 }
 */
 
-
+/*
 // Emails de aviso de expiración
 $result = sql_old("SELECT ID, pais, nick, email FROM users
 WHERE estado IN ('ciudadano', 'turista') AND dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registro > '".tiempo(365*2)."' AND 
@@ -514,6 +563,7 @@ http://www.'.DOMAIN.'</p>';
 		//convertir_turista($r['ID']);
 	}
 }
+*/
 
 
 
@@ -643,7 +693,7 @@ include('cron-compress-all.php');
 
 
 
-evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, '.num((microtime(true)-TIME_START)/1000000000).'s (<a href="/estadisticas/'.PAIS.'">estadisticas actualizadas</a>)');
+evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, '.num((microtime(true)-$_SERVER['REQUEST_TIME_FLOAT'])/1000000000).'s (<a href="/estadisticas/'.PAIS.'">estadisticas actualizadas</a>)');
 
 
 

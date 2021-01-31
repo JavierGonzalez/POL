@@ -33,25 +33,27 @@ SELECT ID, pos_x, pos_y, size_x, size_y, link as nombre, color, estado
 FROM mapa WHERE estado = 'e'";
 
 if ($nivel == 1){
-	$consulta_parcelas = "SELECT ID, pos_x, pos_y, size_x, size_y, link, pols, color, estado, superficie, nick
+	$consulta_parcelas = "SELECT ID, pos_x, pos_y, size_x, size_y, link, pols, color, estado, superficie, nick, text
 	FROM mapa
 	WHERE pais = '".PAIS."'
 	ORDER BY pos_y ASC, pos_x ASC";
 }else{
-	$consulta_parcelas = "SELECT m.ID as ID, pos_x, pos_y, size_x, size_y, a.link as link, pols, a.color as color, estado, superficie, nick
+	$consulta_parcelas = "SELECT m.ID as ID, pos_x, pos_y, size_x, size_y, a.link as link, a.text as text, pols, a.color as color, estado, superficie, nick
 	FROM mapa m, mapa_altura a
 	WHERE pais = '".PAIS."' AND ( (m.ID = a.parcela_ID AND a.altura = '".$nivel."'))
 	UNION ALL 
-	SELECT ID, pos_x, pos_y, size_x, size_y, link as link, '' , color, estado, '1', ''
+	SELECT ID, pos_x, pos_y, size_x, size_y, link as link, text, '' , color, estado, '1', ''
 	FROM mapa WHERE estado = 'e'	";
 }
 
 if ($tipo_mapa == 1){
+	error_log("consulta parcelas: ");
+	error_log($consulta_parcelas);
 	$result = mysql_query_old($consulta_parcelas, $link);
 	while($r = mysqli_fetch_array($result)) {
 
 		$sup_total += $r['superficie'];
-	
+
 		// genera tabla array
 		$m[$r['pos_x']][$r['pos_y']] = $r['ID'] . '|' . $r['size_x'] . '|' . $r['size_y'];
 		$orientacion = 'H';
@@ -60,7 +62,7 @@ if ($tipo_mapa == 1){
 		}
 		//super-array javascript
 		switch ($r['estado']) {
-			case 'p': $info = $r['link'] . '|' .  $r['nick'] . '|' . $r['color']; break;
+			case 'p': $info = $r['link'] . '|' .  $r['nick'] . '|' . $r['color']. '|' .  $r['text'] . '| ('.$r['pos_x'].','.$r['pos_y'].')'; break;
 			case 'v': $info = 'v|' . $r['nick'] . '|' . $r['pols']; $venta_total += $r['superficie']; break;
 			case 'e': 
 				if ($r['link']) { 
@@ -132,5 +134,6 @@ $txt_mapa .= '</table>';
 $response['prop'] = $prop;
 $response['mapa'] = $txt_mapa;
 
+error_log("ajax response: ".json_encode($response));
 
 echo json_encode($response);

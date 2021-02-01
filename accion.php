@@ -1448,6 +1448,9 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 				}
 			}			
 		}else{
+			if ($_GET['return_url']){
+				$return = $_GET['return_url'];
+			}
 			sql_old("DELETE FROM empresas_suscriptores
 			WHERE ID_EMPRESA = '".$_GET['ID']."' AND ID_USUARIO = '".$pol['user_ID']."'");
 			evento_log('Suscripción cancelada #'.$_GET['ID']);	
@@ -1573,8 +1576,11 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 
 	}
 
-
-	$refer_url = 'empresas/'.$return;
+	if (substr($return,0, 1) == '/'){
+		$refer_url = substr($return, 1);
+	}else{
+		$refer_url = 'empresas/'.$return;
+	}
 	break;
 
 

@@ -369,7 +369,9 @@ error_log("Transaccion: ".$row['concepto']);
 				$periodicidad = "Mensual";
 			}
 			$emisor = false;
-			if (($row['emisor_ID'] == $pol["user_ID"]) OR ($pol['nivel'] >= 98 AND $gobierno == 'true')){
+			if (($row['emisor_ID'] == $pol["user_ID"]) 
+				OR ($pol['nivel'] >= 98 AND $gobierno == 'true')
+				OR ($row['emisor_ID'] < 0 AND $row['receptor_ID'] != $pol["user_ID"])){
 				$emisor = true;
 			}
 

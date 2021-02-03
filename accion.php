@@ -1335,6 +1335,11 @@ case 'gobierno':
 			evento_log('Gobierno configuración: notificación eliminada #'.$_GET['noti_ID']);
 		}
 		$refer_url = 'control/gobierno/notificaciones';
+	} elseif (($_GET[2] == 'eliminar-salario')  AND (nucleo_acceso($vp['acceso']['control_gobierno']))) {
+		$cargo_user_id = $_GET[3];
+		sql_old("DELETE FROM cargos_users wHERE ID='".$cargo_user_id."'");
+		evento_log('Salario erroneo eliminado.');
+		$refer_url = 'control/gobierno/error-salarios';
 	}
 	break;
 
@@ -1443,6 +1448,9 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 				}
 			}			
 		}else{
+			if ($_GET['return_url']){
+				$return = $_GET['return_url'];
+			}
 			sql_old("DELETE FROM empresas_suscriptores
 			WHERE ID_EMPRESA = '".$_GET['ID']."' AND ID_USUARIO = '".$pol['user_ID']."'");
 			evento_log('Suscripción cancelada #'.$_GET['ID']);	
@@ -1474,7 +1482,7 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 		$precio_suscripcion = $_POST['precio_suscripcion'];
 		$precio = $_POST['precio'];
 		$adelanto_doc = $_POST['adelanto_doc'];
-		$html_doc = $_POST['html_doc'];
+		$html_doc  = str_replace('<br />', '', $_POST['html_doc']);
 		$ID_empresa = $_GET['ID_empresa'];
 		$notificar = $_POST['notificar'];
 
@@ -1500,7 +1508,7 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 		$precio_suscripcion = $_POST['precio_suscripcion'];
 		$precio = $_POST['precio'];
 		$adelanto_doc = $_POST['adelanto_doc'];
-		$html_doc = $_POST['html_doc'];
+		$html_doc  = str_replace('<br />', '', $_POST['html_doc']);
 		$ID_empresa = $_GET['ID_empresa'];
 		$notificar = $_POST['notificar'];
 		$ID = $_POST['ID'];
@@ -1568,8 +1576,11 @@ WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND user_ID = '".$pol['user_I
 
 	}
 
-
-	$refer_url = 'empresas/'.$return;
+	if (substr($return,0, 1) == '/'){
+		$refer_url = substr($return, 1);
+	}else{
+		$refer_url = 'empresas/'.$return;
+	}
 	break;
 
 
@@ -1799,20 +1810,6 @@ case 'pols':
 			$emisor_ID = $r["emisor_ID"];
 			$receptor_notificacion_ID = $receptor_ID;
 			$todoOk = true;
-			if ($emisor_ID < 0){
-				$result = sql_old("SELECT user_ID 
-				FROM cuentas 
-				WHERE pais = '".PAIS."' 
-				AND (ID = ".substr($emisor_ID,1)." ".
-				($pol['nivel'] >= 98 ? " OR gobierno = 'true') " : ")")."
-				LIMIT 1");
-				while($r = r($result)){ 
-					if ($pol['user_ID'] != $r['user_ID']){
-						$todoOk = false;
-						$refer_url = 'pols/transaut#error#la_cuenta_no_pertenece_al_usuario';
-					} 
-				}				
-			}
 
 			if ($todoOk){
 				if ($receptor_ID < 0){

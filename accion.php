@@ -2019,6 +2019,8 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 			if (nucleo_acceso($vp['acceso'][$r['tipo']])) {
 				$r['time_expire'] = date('Y-m-d H:i:s', time() + $r['duracion']); 
 
+				error_log("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])." LIMIT 1");
+
 				$result2 = sql_old("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])." LIMIT 1");
 				while($r2 = r($result2)){ $censo_num = $r2['num']; }
 

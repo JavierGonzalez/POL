@@ -3,6 +3,7 @@
 
 $txt_tab['/pols'] = _('Pols');
 $txt_tab['/pols/transaut'] = _('Transacciones automáticas');
+$txt_tab['/pols/suscripciones'] = _('Tus suscripciones');
 /*
 pol_transacciones		(ID, pols, emisor_ID, receptor_ID, concepto, time)
 pol_cuentas			(ID, nombre, user_ID, pols, nivel, time)
@@ -291,7 +292,7 @@ LIMIT ".$p_limit, $link);
 		if (is_numeric($_GET[1])) { $ahora = $_GET[1]; } 
 		else { $ahora = ''; }
 	
-		paginacion('censo', '/pols/', null, $ahora, $total, 15);
+		paginacion('censo', '/pols/transaut', null, $ahora, $total, 15);
 	error_log("SELECT ID, pols, concepto, time, receptor_ID, emisor_ID, periodicidad, 
 	coalesce((SELECT nick FROM users WHERE ID = transacciones.emisor_ID LIMIT 1),
 	(SELECT concat(u.nick,'(', c.nombre,')') from users u, cuentas c where u.ID=(select user_ID from cuentas where ID=SUBSTRING(transacciones.emisor_ID, 2)) and c.id=SUBSTRING(transacciones.emisor_ID, 2) ))
@@ -369,7 +370,9 @@ error_log("Transaccion: ".$row['concepto']);
 				$periodicidad = "Mensual";
 			}
 			$emisor = false;
-			if (($row['emisor_ID'] == $pol["user_ID"]) OR ($pol['nivel'] >= 98 AND $gobierno == 'true')){
+			if (($row['emisor_ID'] == $pol["user_ID"]) 
+				OR ($pol['nivel'] >= 98 AND $gobierno == 'true')
+				OR ($row['emisor_ID'] < 0 AND $row['receptor_ID'] != $pol["user_ID"])){
 				$emisor = true;
 			}
 
@@ -389,7 +392,61 @@ error_log("Transaccion: ".$row['concepto']);
 				</tr>';
 		}
 		echo '</table><p>'.$p_paginas.'</p>';
+	} elseif ($_GET[1] == 'suscripciones') {
+		echo '
+		<table border="0" cellspacing="3" cellpadding="0" class="pol_table">
+		<tr>
+		<th align="right">'.MONEDA.'</th>
+		<th>Empresa</th>
+		<th>Periodicidad</th>
+		<th>Cancelar</th>
+		</tr>';
+		
+			$result = mysql_query_old("SELECT count(*) as total
+			FROM empresas_suscriptores
+			 WHERE pais = '".PAIS."' AND (ID_usuario = '" . $pol['user_ID'] . "')", $link);
+			while($row = mysqli_fetch_array($result)){ $total = $row['num']; }
+		
+			if (is_numeric($_GET[1])) { $ahora = $_GET[1]; } 
+			else { $ahora = ''; }
+		
+			paginacion('censo', '/pols/suscripciones', null, $ahora, $total, 15);
 
+		$result = mysql_query_old("SELECT es.ID as ID,es.ID_empresa as empresa_ID, es.precio_suscripcion as pols, es.periodicidad_suscripcion as periodicidad, nombre
+		FROM empresas_suscriptores es, empresas e
+		WHERE es.ID_empresa  = e.ID
+		AND es.ID_usuario ='".$pol['user_ID']."'
+		LIMIT ".$p_limit, $link);
+	
+			while($row = mysqli_fetch_array($result)) {
+	
+				$suscripcion_ID =  $row['ID'];
+				$periodicidad = $row['periodicidad'];
+				$empresa = $row['nombre'];
+				$empresa_ID = $row['empresa_ID'];
+				$pols = $row['pols'];
+	
+	
+				if ($periodicidad == "D"){
+					$periodicidad = "Diaria";
+				}elseif ($periodicidad == "S"){
+					$periodicidad = "Semanal";
+				}elseif ($periodicidad == "M"){
+					$periodicidad = "Mensual";
+				}elseif ($periodicidad == "U"){
+					$periodicidad = "Pago único";
+				}
+
+				echo '<tr>
+					<td align="right" valign="top"><b>'.pols($pols).'</b></td>
+					<td valign="top">'.$empresa.'</td>
+					<td valign="top">'.$periodicidad.'</td>
+					<td valign="top" align="right"><form action="/accion/empresa/eliminar-suscripcion?ID='.$empresa_ID.'&return_url=/pols/suscripciones" method="post">'
+					.'<p>'.boton('Cancelar suscripción', 'submit', false, 'red').'</p></form></td>
+					</tr>';
+			}
+			echo '</table><p>'.$p_paginas.'</p>';
+	
 } elseif ($_GET[1] == 'cuentas') {
 	if ($pol['nivel'] < 98) {
 		$disabled = ' disabled="disabled"';

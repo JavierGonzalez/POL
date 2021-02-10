@@ -108,8 +108,13 @@ Chat de '.PAIS.': <b>'.$titulo.'</b><br />
 </div>
 
 <div id="chatform">
-<script src="https://cdn.jsdelivr.net/npm/vanilla-emoji-picker@0.2.4/dist/emojiPicker.min.js" integrity="sha256-CGZfzJG8PYLv+QiLYG/zei0ip0BBULUWESDr7VvdMiY=" crossorigin="anonymous"></script>
-
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script type="module" src="https://unpkg.com/emoji-picker-element@1"></script>
+<style>
+.tooltip:not(.shown) {
+	display: none;
+}
+</style>
 
 <form method="POST" onSubmit="return enviarmsg();">
 
@@ -117,19 +122,31 @@ Chat de '.PAIS.': <b>'.$titulo.'</b><br />
 	<div class="refrescar_evento"><img id="vpc_actividad" onclick="actualizar_ahora();" src="'.IMG.'ico/punto_gris.png" width="16" height="16" title="Actualizar chat" style="margin-top:4px;" /></div>
 
 	<div class="cuadro_mensaje">
-	'.(isset($pol['user_ID'])?'
-	<input type="text"  data-emoji-picker="true" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%; height: 32px; " autofocus="autofocus" value="" required />':'&nbsp;').'
+		'.(isset($pol['user_ID'])?'
+		<input type="text" id="vpc_msg" name="msg" onKeyUp="msgkeyup(event,this);" onKeyDown="msgkeydown(event,this);" tabindex="1" autocomplete="off" size="65" maxlength="250" style="margin-left:0;width:98%; height: 32px; " autofocus="autofocus" value="" required />':'&nbsp;').'
+		<span style="float: right" onclick="toggle()" id="emoji-toggle">&#x1F600</span>
+		<div class="tooltip" role="tooltip">
+			<emoji-picker locale="es"></emoji-picker>
+		</div>
 	</div>
+	
 	<div class="ocultar_evento">&nbsp;&nbsp; <input id="cfilter" name="cfilter" value="1" type="checkbox" OnClick="chat_filtro_change(chat_filtro);" /> <label for="cfilter" class="inline">'._('Ocultar eventos').'</label></div>
 
-	<div class="enviar_mensaje">'.boton(_('Enviar'), 'submit', false, '', '', ' id="botonenviar"').'</div>
+  	<div class="enviar_mensaje">'.boton(_('Enviar'), 'submit', false, '', '', ' id="botonenviar"').'</div>
 </div>
-
-</form>
 <script>
-new EmojiPicker();
+  const button = document.querySelector("#emoji-toggle")
+  const tooltip = document.querySelector(".tooltip")
+  Popper.createPopper(button, tooltip)
 
+  function toggle() {
+    tooltip.classList.toggle("shown")
+  }
+  document.querySelector("emoji-picker")
+  .addEventListener("emoji-click", event => document.querySelector("#vpc_msg").value = document.querySelector("#vpc_msg").value + event.detail.emoji.unicode);
 </script>
+</form>
+
 </div>';
 
 

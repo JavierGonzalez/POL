@@ -41,6 +41,7 @@ $parsedown->setBreaksEnabled(true);
 
 
 <link href="/img/lib/font-awesome.min.css" rel="stylesheet">
+<script src="https://kit.fontawesome.com/01f73ffda1.js" crossorigin="anonymous"></script>
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '/img/';

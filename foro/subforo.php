@@ -25,7 +25,7 @@ while($r = mysqli_fetch_array($result)) {
 <th>Creado</th>
 <th></th>
 </tr>';
-        $result2 = mysql_query_old("SELECT ID, url, user_ID, title, time, time_last, cargo, num, sub_ID, votos, votos_num,
+        $result2 = mysql_query_old("SELECT ID, url, user_ID, title, time, time_last, cargo, num, sub_ID, votos, votos_num,fecha_programado,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
 (SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS estado
 FROM ".SQL."foros_hilos
@@ -34,7 +34,7 @@ ORDER BY time_last DESC
 LIMIT 200", $link);
         while($r2 = mysqli_fetch_array($result2)) {
 
-            if ($r2['estado'] != 'expulsado') {
+            if ($r2['fecha_programado'] == '' OR ($r2['fecha_programado'] != '' AND $r2['user_ID'] == $pol['user_ID'])) {
                 if (strtotime($r2['time']) < (time() - 432000)) { 
                     $titulo = '<a href="/foro/' . $r['url'] . '/' . $r2['url'] . '">' . $r2['title'] . '</a>'; 
                 } else { 
@@ -50,7 +50,7 @@ LIMIT 200", $link);
 <td align="right">'.crear_link($r2['nick']).'</td>
 <td align="right"><b>'.$r2['num'].'</b></td>
 <td align="right" style="padding-right:4px;">'.confianza($r2['votos'], $r2['votos_num']).'</td>
-<td>'.$titulo.'</td>
+<td>'.$titulo.' '.($r2['fecha_programado'] != 0 ? '<i class="far fa-clock"></i>' : '') .'</td>
 <td align="right"><span class="timer" value="'.strtotime($r2['time']).'"></span></td>
 <td>'.$editar.'</td>
 </tr>';

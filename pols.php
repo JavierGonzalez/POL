@@ -372,7 +372,7 @@ error_log("Transaccion: ".$row['concepto']);
 			$emisor = false;
 			if (($row['emisor_ID'] == $pol["user_ID"]) 
 				OR ($pol['nivel'] >= 98 AND $gobierno == 'true')
-				OR ($row['emisor_ID'] < 0 AND $row['receptor_ID'] != $pol["user_ID"])){
+				OR ($row['emisor_ID'] < 0)){
 				$emisor = true;
 			}
 
@@ -402,21 +402,11 @@ error_log("Transaccion: ".$row['concepto']);
 		<th>Cancelar</th>
 		</tr>';
 		
-			$result = mysql_query_old("SELECT count(*) as total
-			FROM empresas_suscriptores
-			 WHERE pais = '".PAIS."' AND (ID_usuario = '" . $pol['user_ID'] . "')", $link);
-			while($row = mysqli_fetch_array($result)){ $total = $row['num']; }
-		
-			if (is_numeric($_GET[1])) { $ahora = $_GET[1]; } 
-			else { $ahora = ''; }
-		
-			paginacion('censo', '/pols/suscripciones', null, $ahora, $total, 15);
-
 		$result = mysql_query_old("SELECT es.ID as ID,es.ID_empresa as empresa_ID, es.precio_suscripcion as pols, es.periodicidad_suscripcion as periodicidad, nombre
 		FROM empresas_suscriptores es, empresas e
 		WHERE es.ID_empresa  = e.ID
 		AND es.ID_usuario ='".$pol['user_ID']."'
-		LIMIT ".$p_limit, $link);
+		LIMIT 10", $link);
 	
 			while($row = mysqli_fetch_array($result)) {
 	
@@ -445,7 +435,7 @@ error_log("Transaccion: ".$row['concepto']);
 					.'<p>'.boton('Cancelar suscripción', 'submit', false, 'red').'</p></form></td>
 					</tr>';
 			}
-			echo '</table><p>'.$p_paginas.'</p>';
+			echo '</table>';
 	
 } elseif ($_GET[1] == 'cuentas') {
 	if ($pol['nivel'] < 98) {

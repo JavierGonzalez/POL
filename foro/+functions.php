@@ -30,10 +30,22 @@ function foro_enviar($subforo, $hilo=null, $edit=null, $citar=null) {
 			$return_url = 'foro/';
 			if ($hilo) { //msg
 				$result = mysql_query_old("SELECT text, cargo FROM ".SQL."foros_msg WHERE ID = '" . $hilo . "' AND estado = 'ok' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
-				while($r = mysqli_fetch_array($result)){ $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
+				while($r = mysqli_fetch_array($result)){ 
+					$edit_text = $r['text']; 
+					$edit_cargo = $r['cargo']; 
+				}
 			} else { //hilo
-				$result = mysql_query_old("SELECT sub_ID, text, cargo, title, user_ID, ID FROM ".SQL."foros_hilos WHERE ID = '" . $subforo . "' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1", $link);
-				while($r = mysqli_fetch_array($result)){ $sub_ID = $r['sub_ID']; $edit_ID = $r['ID']; $edit_user_ID = $r['user_ID']; $edit_title = $r['title']; $edit_text = $r['text']; $edit_cargo = $r['cargo']; }
+				error_log("SELECT sub_ID, text, cargo, title, user_ID, fecha_programado, ID FROM ".SQL."foros_hilos WHERE ID = '" . $subforo . "' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1");
+				$result = mysql_query_old("SELECT sub_ID, text, cargo, title, user_ID, fecha_programado, ID FROM ".SQL."foros_hilos WHERE ID = '" . $subforo . "' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1", $link);
+				while($r = mysqli_fetch_array($result)){ 
+					$sub_ID = $r['sub_ID']; 
+					$edit_ID = $r['ID']; 
+					$edit_user_ID = $r['user_ID']; 
+					$edit_title = $r['title']; 
+					$edit_text = $r['text']; 
+					$edit_cargo = $r['cargo']; 
+					$fecha_programado = $r['fecha_programado'];
+				}
 			}
 			$edit_text = strip_tags($edit_text);
 		}
@@ -83,6 +95,37 @@ ORDER BY nivel DESC", $link);
 
 
 <fieldset><legend>Nuevo hilo</legend>
+<style>
+.couponcode:hover .coupontooltip { /* NEW */
+    display: block;
+}
+
+
+.coupontooltip {
+	border-radius: 25px;
+    display: none;  /* NEW */
+    background: #C8C8C8;
+    margin-left: 28px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1000;
+    width:200px;
+    height:100px;
+}
+
+.couponcode {
+    margin:10px;
+	margin-top:20px;
+	float: left;
+}
+
+.couponcode::after {
+
+	clear: both;
+	display: block;
+}
+</style>
+
 <script>
 	function validarTitulo(){
 		var titulo = $("#title").val();
@@ -99,7 +142,8 @@ ORDER BY nivel DESC", $link);
 		
 	}
 </script>
-
+<link rel="stylesheet" href="'.IMG.'simplepicker.css">
+<script src="'.IMG.'simplepicker.js"></script>
 <form action="/accion/foro/' . $get . '" method="post">
 <input type="hidden" name="subforo" value="' . $subforo . '"  />
 <input type="hidden" name="return_url" value="' . $return_url . '"  />';
@@ -112,10 +156,22 @@ ORDER BY nivel DESC", $link);
 				}
 				$html .= '</select></p>';
 			}
-			$html .= '
-<p>Título:<br />
-<input name="title" id="title" size="60" maxlength="80" type="text" value="'.str_replace('"', '&#34;', $edit_title).'" required /></p>
-
+			$html .= '<div style="overflow: hidden">
+			<span id="div_titulo" style="float: left">
+				<p>Título:<br />
+				<input name="title" id="title" size="60" maxlength="80" type="text" value="'.str_replace('"', '&#34;', $edit_title).'" required /></p></span>
+';
+error_log("Fecha programado: ".is_null($fecha_programado));
+if (($edit AND $fecha_programado != 0) OR (!$edit)){
+	$html .='
+	<div class="couponcode">	
+		<i class="fa fa-calendar" aria-hidden="true" id="datepicker"></i>&nbsp;<span id="event"></span><input type="hidden" id="fecha_programado" name="fecha_programado">
+		<span id="tooltip1" class="coupontooltip">
+			<p>Si deseas que el mensaje se publique más adelante pulsa el siguiente icono y selecciona el momento en que quieres que se publique.</p>
+		</span>
+	</div>';
+}
+$html .='</div>
 <p'.($edit&&$edit_user_ID!=$pol['user_ID']?' style="display:none;"':'').'>Mensaje:<br />
 <textarea name="text" style="width:600px;height:260px;" required>'.$edit_text.'</textarea><br />
 <span style="color:grey;font-size:12px;">Etiquetas: [b]...[/b] [em]...[/em] [quote]...[/quote] [img]url[/img] [youtube]url-youtube[/youtube], auto-enlaces.</span></p>
@@ -123,6 +179,37 @@ ORDER BY nivel DESC", $link);
 <p><button onclick="return validarTitulo();" class="large blue">Enviar</button> En calidad de: <select name="encalidad">' . $select_cargos . '
 </select></p>
 </form>
+
+<script>
+	const picker = new SimplePicker();
+
+	const $button = document.querySelector("#datepicker");
+	const $fecha = document.querySelector("#fecha_programado");
+	const $event = document.querySelector("#event");
+	$button.addEventListener("click", (e) => {
+		picker.open();
+	});
+	
+	var fecha_edit = "'.(is_null($fecha_programado) ? '': $fecha_programado).'";
+	console.log("Fecha programado: "+fecha_edit);
+	if (fecha_edit != ""){
+		picker.reset(new Date(fecha_edit));
+		$fecha.value = new Date(fecha_edit).toISOString().slice(0, 19).replace("T", " ");
+		$event.innerHTML = new Date(fecha_edit).toLocaleString();
+	}
+
+
+	picker.on("submit", (date, readableDate) => {
+		$fecha.value = date.toISOString().slice(0, 19).replace("T", " ");
+		$event.innerHTML = date.toLocaleString();
+	});
+
+	picker.on("close", function(date){
+		$fecha.value = "";
+		$event.innerHTML = "";
+	})
+
+</script>
 
 </fieldset>
 

@@ -39,7 +39,7 @@ ORDER BY time ASC", $link);
 <td align="right" width="10%">'.boton('Crear Hilo', (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])?'/foro/'.$r['url'].'#enviar':false), false, 'large').'</td>
 </tr>';
 
-			$result2 = mysql_query_old("SELECT ID, url, user_ID, title, time, time_last, cargo, num, votos, votos_num,
+			$result2 = mysql_query_old("SELECT ID, url, user_ID, title, time, time_last, cargo, num, votos, votos_num, fecha_programado,
 (SELECT nick FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS nick,
 (SELECT estado FROM users WHERE ID = ".SQL."foros_hilos.user_ID LIMIT 1) AS user_estado
 FROM ".SQL."foros_hilos
@@ -47,17 +47,17 @@ WHERE sub_ID = '".$r['ID']."' AND estado = 'ok'
 ORDER BY time_last DESC
 LIMIT ".$r['limite'], $link);
 			while($r2 = mysqli_fetch_array($result2)) {
-				if ($r2['user_estado'] != 'expulsado') {
+				if ($r2['fecha_programado'] == '' OR ($r2['fecha_programado'] != '' AND $r2['user_ID'] == $pol['user_ID'])) {
 					$time_hilo = strtotime($r2['time']);
 					$txt_table .= '<tr>
-	<td align="right" style="padding-right:4px;">'.crear_link($r2['nick']).'</td>
-	<td align="right"><b>'.$r2['num'].'</b></td>
-	<td align="right" style="padding-right:4px;">'.confianza($r2['votos'], $r2['votos_num']).'</td>
-	
-	<td><a'.($time_hilo>(time()-432000)?' style="font-weight:bold;"':'').' href="/foro/'.$r['url'].'/'.$r2['url'].'" class="rich">'.$r2['title'].'</a>'.($time_hilo>(time()-86400)?' <sup style="font-size:9px;color:red;">¡Nuevo!</sup>':'').'</td>
-	
-	<td align="right" nowrap="nowrap"><span class="timer" value="'.$time_hilo.'"></span></td>
-	</tr>';
+					<td align="right" style="padding-right:4px;">'.crear_link($r2['nick']).'</td>
+					<td align="right"><b>'.$r2['num'].'</b></td>
+					<td align="right" style="padding-right:4px;">'.confianza($r2['votos'], $r2['votos_num']).'</td>
+					
+					<td><a'.($time_hilo>(time()-432000)?' style="font-weight:bold;"':'').' href="/foro/'.$r['url'].'/'.$r2['url'].'" class="rich">'.$r2['title'].'</a>'.($r2['fecha_programado'] != 0 ? '<i class="far fa-clock"></i>' : '') .' '.($time_hilo>(time()-86400)?' <sup style="font-size:9px;color:red;">¡Nuevo!</sup>':'').'</td>
+					
+					<td align="right" nowrap="nowrap"><span class="timer" value="'.$time_hilo.'"></span></td>
+					</tr>';
 				}
 			}
 			$txt_table .= '<tr><td colspan="4">&nbsp;</td></tr>';

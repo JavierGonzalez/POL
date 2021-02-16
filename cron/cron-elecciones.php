@@ -3,6 +3,7 @@
 
 
 // Busca cargos con elecciones activas y en fecha de activar
+error_log("SELECT * FROM cargos WHERE pais = '".PAIS."' AND elecciones <= '".$date."' LIMIT 20");
 $result = sql_old("SELECT * FROM cargos WHERE pais = '".PAIS."' AND elecciones <= '".$date."' LIMIT 20");
 while($r = r($result)) {
 	

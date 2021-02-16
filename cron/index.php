@@ -1,7 +1,7 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-if ($_SERVER['SERVER_ADDR'] !== $_SERVER['REMOTE_ADDR'])
+/*if ($_SERVER['SERVER_ADDR'] !== $_SERVER['REMOTE_ADDR'])
 	exit('Solo el propio servidor puede ejecutar "el proceso".');
 
 
@@ -10,7 +10,7 @@ unset($maxsim['output']);
 // PROTECCION DE DOBLE EJECUCION. Evita que se ejcute el proceso mas de una vez en un mismo dia.
 
 $result = sql_old("SELECT pais FROM stats WHERE pais = '".PAIS."' AND time = '".date('Y-m-d 20:00:00')."' LIMIT 1");
-while($r = r($result)) { echo 'Ya se ha ejecutado hoy'; exit; }
+while($r = r($result)) { echo 'Ya se ha ejecutado hoy'; exit; }*/
 
 
 // INICIO PROCESO
@@ -523,18 +523,17 @@ Emails de aviso de expiración:
 2. Tras 55 días inactivo
 */
 
-/*
 $st['eliminados'] = 0;
 $result = sql_old("SELECT ID, estado, nick FROM users
 WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registro > '".tiempo(365)."' AND 
-(pais IN ('ninguno', '".PAIS."') AND fecha_last <= '".tiempo(120)."')) OR 
+(pais IN ('ninguno', '".PAIS."') AND fecha_last <= '".tiempo(30)."')) OR 
 (estado IN ('validar', 'expulsado') AND fecha_last <= '".tiempo(10)."') 
 LIMIT 80");
 while($r = r($result)) {
 	if ($r['estado'] == 'ciudadano') { $st['eliminados']++; }
-	eliminar_ciudadano($r['ID']);
+	convertir_turista($r['ID']);
 }
-*/
+
 
 /*
 // Emails de aviso de expiración

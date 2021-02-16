@@ -15,7 +15,7 @@ $result = sql_old("SELECT pais FROM config WHERE pais = '".$_POST['pais']."' AND
 while ($r = r($result)) { $pais_existe = $r['pais']; }
 
 if (($pol['user_ID']) AND ($tiene_kick != true) AND ($user_pais == 'ninguno') AND ($pol['estado'] == 'turista') AND ($pais_existe != false)) {
-    sql_old("UPDATE users SET estado = 'ciudadano', pais = '".$pais_existe."' WHERE estado = 'turista' AND pais = 'ninguno' AND ID = '".$pol['user_ID']."' LIMIT 1");
+    sql_old("UPDATE users SET estado = 'ciudadano', rechazo_last = now(), pais = '".$pais_existe."' WHERE estado = 'turista' AND pais = 'ninguno' AND ID = '".$pol['user_ID']."' LIMIT 1");
 
     $result2 = sql_old("SELECT COUNT(*) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$_POST['pais']."'");
     while ($r2 = r($result2)) { $ciudadanos_num = $r2['num']; }

@@ -2019,6 +2019,8 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 			if (nucleo_acceso($vp['acceso'][$r['tipo']])) {
 				$r['time_expire'] = date('Y-m-d H:i:s', time() + $r['duracion']); 
 
+				error_log("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])." LIMIT 1");
+
 				$result2 = sql_old("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso($r['acceso_votar'], $r['acceso_cfg_votar'])." LIMIT 1");
 				while($r2 = r($result2)){ $censo_num = $r2['num']; }
 
@@ -2151,15 +2153,18 @@ case 'foro':
 		if (($_GET[2] == 'hilo') AND ($_POST['title']) AND ($acceso['escribir'])) {
 			$title = strip_tags($_POST['title']);
 			$url = gen_url($title);
+			$programado = $_POST['programado'];
+
+			$fecha_programado = $_POST['fecha_programado'];
 			
-			$exito = sql_old("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$date."', '".$date."', '".$text."', '".$_POST['encalidad']."')");
+			$exito = sql_old("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo, fecha_programado) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$date."', '".$date."', '".$text."', '".$_POST['encalidad']."', '".$fecha_programado."')");
 			if (!$exito) {
 				if (strlen($url) > 69) { $url = substr($url, 0, 69); }
 				$url = $url.'-'.date('dmyHi');
-				sql_old("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$date."', '".$date."', '".$text."', '".$_POST['encalidad']."')");
+				sql_old("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo, fecha_programado) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$date."', '".$date."', '".$text."', '".$_POST['encalidad']."', '".$fecha_programado."')");
 			}
 
-			if (in_array($acceso_leer, array('anonimos', 'ciudadanos', 'ciudadanos_global'))) {
+			if (in_array($acceso_leer, array('anonimos', 'ciudadanos', 'ciudadanos_global')) AND $fecha_programado == "") {
 				evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a> <span style="color:grey;">('.$pol['nick'].')</span>');
 			}
 
@@ -2241,14 +2246,24 @@ case 'foro':
 
 			sql_old("UPDATE ".SQL."foros_msg SET text = '".$text."' WHERE ID = '".$_POST['hilo']."' AND estado = 'ok' AND user_ID = '".$pol['user_ID']."' AND time > '".date('Y-m-d H:i:s', time() - 3600)."' LIMIT 1");
 			evento_log('Foro mensaje editado <a href="/foro/'.$r['foro'].'/'.$r['hilo'].'#m-'.$r['mensaje'].'">#'.$_POST['hilo'].'</a>');
+
+
 		} else { //hilo
 			if (strlen($_POST['title']) >= 4) {
-				$result = sql_old("SELECT f.url foro, h.url hilo FROM ".SQL."foros f, ".SQL."foros_hilos h where f.ID = h.sub_ID and  h.ID='".$_POST['subforo']."'");
+				$result = sql_old("SELECT f.url foro, h.url hilo, h.fecha_programado fecha_programado FROM ".SQL."foros f, ".SQL."foros_hilos h where f.ID = h.sub_ID and  h.ID='".$_POST['subforo']."'");
 				$r =r($result);
-	
+				$fecha_programado = $_POST['fecha_programado'];
+
 				$title = strip_tags($_POST['title']);
-				sql_old("UPDATE ".SQL."foros_hilos SET text = '".$text."', title = '".$title."'".($_POST['sub_ID'] > 0?", sub_ID = '".$_POST['sub_ID']."'":'')." WHERE ID = '".$_POST['subforo']."' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1");
+				sql_old("UPDATE ".SQL."foros_hilos SET text = '".$text."', title = '".$title."'".($_POST['sub_ID'] > 0?", sub_ID = '".$_POST['sub_ID']."'":'').", fecha_programado = '".($fecha_programado == "" ? null : $fecha_programado)."' WHERE ID = '".$_POST['subforo']."' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1");
 				evento_log('Foro hilo editado <a href="/foro/'.$r['foro'].'/'.$r['hilo'].'">#'.$_POST['hilo'].'</a>');
+				error_log ("Fecha programado PSOT: ".$fecha_programado);
+				error_log ("Fecha programado BD: ".$r['fecha_programado']);
+				error_log("Mostrar evento chat: ".($fecha_programado == "" AND $r['fecha_programado'] != 0));
+				
+				if (($fecha_programado == "" AND $r['fecha_programado'] != 0)) {
+					evento_chat('<b>[FORO]</b> <a href="/'.$_POST['return_url'] . $url.'/"><b>'.$title.'</b></a> <span style="color:grey;">('.$pol['nick'].')</span>');
+				}
 			}
 		}
 

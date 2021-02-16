@@ -402,7 +402,8 @@ ORDER BY factor DESC LIMIT 30");
 	echo '<p class="amarillo" style="color:red;"><b>C O N F I D E N C I A L</b> &nbsp; '._('Supervisores del censo').': <b>'.$supervisores.'</b></p>'.$nomenclatura;
 
 
-	echo '<fieldset><legend>1. '._('Coincidencias de IP').' ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
+	echo '<fieldset><legend>1. '._('Coincidencias de IP').' </legend><table border="0" cellspacing="4">';
+	
 	$result = sql_old("SELECT nick, IP, COUNT(*) AS num, host
 FROM users 
 GROUP BY IP HAVING COUNT(*) > 1
@@ -431,7 +432,7 @@ ORDER BY fecha_registro DESC");
 
 
 
-	echo '<fieldset><legend>2. '._('Coincidencias de clave').' ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
+	echo '<fieldset><legend>2. '._('Coincidencias de clave').' </legend><table border="0" cellspacing="4">';
 	$result = sql_old("SELECT ID, IP, COUNT(*) AS num, pass
 FROM users 
 GROUP BY pass HAVING COUNT(*) > 1
@@ -464,7 +465,7 @@ WHERE pass = '" . $r['pass'] . "'");
 
 
 	$trazas_rep = array();
-	echo '<fieldset><legend>3. '._('Coincidencia de traza').' ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
+	echo '<fieldset><legend>3. '._('Coincidencia de traza').' </legend><table border="0" cellspacing="4">';
 	$result = sql_old("SELECT ID AS user_ID, ID, nick, estado, pais, traza, nota_SC FROM users WHERE traza != '' ORDER BY fecha_registro DESC");
 	while($r = r($result)) {
 		$nota_SC .= print_nota_SC($r['nota_SC'], $r['ID']);
@@ -497,7 +498,7 @@ WHERE pass = '" . $r['pass'] . "'");
 	echo '</table></fieldset>';
 
 
-	echo '<fieldset><legend>4. '._('Ocultación (proxys, TOR...)').' ('.round((microtime(true)-TIME_START)*1000).'ms)</legend><table border="0" cellspacing="4">';
+	echo '<fieldset><legend>4. '._('Ocultación (proxys, TOR...)').'</legend><table border="0" cellspacing="4">';
 	$array_searchtor = array('%anon%', '%tor%', '%vps%', '%vpn%', '%proxy%');
 	$sql_anon = array();
 	foreach ($array_searchtor AS $filtro) { $sql_anon[] = "hosts LIKE '".$filtro."' OR host LIKE '".$filtro."'"; }

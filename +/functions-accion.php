@@ -467,7 +467,6 @@ LIMIT 1");
 	}
 
 	if (is_numeric($user_ID)) { 
-		// ELIMINAR CIUDADANO
 
 		if (ECONOMIA) { pols_transferir($pols, $user_ID, '-1', '&dagger; Defuncion: <em>'.$nick.'</em>'); }
 

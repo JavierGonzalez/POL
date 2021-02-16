@@ -1022,9 +1022,9 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 		$max_altura = $_POST['max_altura'];
 		$hyperlink = $_POST['link_1'];
 		$img_root = RAIZ.'/img/';
-		if ($hyperlink AND ($old_hyperlink != $hyperlink)){
+/*		if ($hyperlink AND ($old_hyperlink != $hyperlink)){
 			webscreencapture($hyperlink, $img_root."parcela/".$_GET['ID']."_1.png");
-		}
+		}*/
 
 		if (preg_match("[^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$]", $_POST['color_1'])) {
 			sql_old("UPDATE mapa SET color = '".$_POST['color_1']."', text = '".$_POST['text_1']."', link = '".$_POST['link_1']."' WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AND 'true' = '".(nucleo_acceso($vp['acceso']['gestion_mapa'])?'true':'false')."')) LIMIT 1");
@@ -1038,16 +1038,16 @@ WHERE pais = '".PAIS."' AND (user_ID = '".$pol['user_ID']."' OR (estado = 'e' AN
 				$existe_mapa_altura = sql_old("SELECT ID, link FROM mapa_altura WHERE parcela_ID = '".$_GET['ID']."' AND altura = '".$i."' LIMIT 1");
 				if ($r_existe = r($existe_mapa_altura)){
 					$old_hyperlink = $r_existe["link"];
-					if ($hyperlink AND ($old_hyperlink != $hyperlink)){
+					/*if ($hyperlink AND ($old_hyperlink != $hyperlink)){
 						webscreencapture($hyperlink, $img_root."parcela/".$_GET['ID']."_".$i.".png");
-					}					
+					}			*/		
 					sql_old("UPDATE mapa_altura 
 					SET color = '".$_POST['color_'.$i]."', `text` = '".$_POST['text_'.$i]."', link = '".$_POST['link_'.$i]."' 
 					WHERE parcela_ID = '".$_GET['ID']."' AND altura = '".$i."'  LIMIT 1");
 				}else{
-					if ($hyperlink){
+					/*if ($hyperlink){
 						webscreencapture($hyperlink, $img_root."parcela/".$_GET['ID']."_".$i.".png");
-					}				
+					}		*/		
 					sql_old("INSERT INTO mapa_altura (parcela_ID, link, `text`, color, altura)
 					VALUES(".$_GET['ID'].", '".$_POST['link_'.$i]."', '".$_POST['text']."', '".$_POST['color_'.$i]."', ".$i.")");	
 				}
@@ -2034,56 +2034,79 @@ WHERE estado = 'borrador' AND ID = '".$_POST['ref_ID']."' AND pais = '".PAIS."' 
 
 	} elseif (($_GET[2] == 'votar') AND (is_numeric($_POST['ref_ID']))) { 
 
-			// Extrae configuracion de la votación
-			$result = sql_old("SELECT * FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1");
-			while($r = r($result)){ $tipo = $r['tipo']; $pregunta = $r['pregunta']; $estado = $r['estado']; $pais = $r['pais']; $acceso_votar = $r['acceso_votar']; $acceso_cfg_votar = $r['acceso_cfg_votar']; $acceso_ver = $r['acceso_ver']; $acceso_cfg_ver = $r['acceso_cfg_ver']; $num = $r['num']; $votos_expire = $r['votos_expire']; $tipo_voto = $r['tipo_voto']; $num_censo = $r['num_censo']; $num++; }
+			//Limitar votaciones a usuarios con más de 48 horas de antigüedad
+			error_log("select id from users where id= '".$pol['user_ID']."' AND datediff(now(),GREATEST(fecha_registro , rechazo_last)) > 2");
+			$result = sql_old("select id from users where id= '".$pol['user_ID']."' AND datediff(now(),GREATEST(fecha_registro , rechazo_last)) > 2");
+			if($r = r($result)){ 
+				error_log("El usuario puede votar.");
 
-			// Verifica acceso y estado de votacion
-			if (($estado == 'ok') AND (in_array($tipo, $votaciones_tipo)) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar)) AND (nucleo_acceso($acceso_ver, $acceso_cfg_ver))) {
-				
-				// Extracción y verificación contra inyección de votos malformados
-				switch ($tipo_voto) {
-					case '3puntos': case '5puntos': case '8puntos': 
-						for ($i=substr($tipo_voto, 0, 1);$i>0;--$i) {
-							$el_voto = $_POST['voto_'.$i];
-							$votos_array[] = (is_numeric($el_voto)&&!$votos_votados[$el_voto]?$el_voto:0);
-							$votos_votados[$el_voto] = true; 
-						}
-						$_POST['voto'] = implode(' ', array_reverse($votos_array));
-						break;
-
-					case 'multiple': 
-						for ($i=0;$i<100;$i++) { if (is_numeric($_POST['voto_'.$i])) { $votos_array[] = $_POST['voto_'.$i]; } }
-						$_POST['voto'] = implode(' ', $votos_array);
-						break;
+				// Extrae configuracion de la votación
+				$result = sql_old("SELECT * FROM votacion WHERE ID = '".$_POST['ref_ID']."' LIMIT 1");
+				while($r = r($result)){ 
+					$tipo = $r['tipo']; 
+					$pregunta = $r['pregunta']; 
+					$estado = $r['estado']; 
+					$pais = $r['pais']; 
+					$acceso_votar = $r['acceso_votar']; 
+					$acceso_cfg_votar = $r['acceso_cfg_votar']; 
+					$acceso_ver = $r['acceso_ver']; 
+					$acceso_cfg_ver = $r['acceso_cfg_ver']; 
+					$num = $r['num']; 
+					$votos_expire = $r['votos_expire']; 
+					$tipo_voto = $r['tipo_voto']; 
+					$num_censo = $r['num_censo']; $num++; 
 				}
-	
-				$_POST['mensaje'] = str_replace('"', "&quot;", ucfirst(trim(strip_tags($_POST['mensaje']))));
-				$_POST['validez'] = ($_POST['validez']=='true'?'true':'false');
 
-				// Comprueba si ya ha votado o no
-				$ha_votado = false;
-				$result = sql_old("SELECT ID FROM votacion_votos WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
-				while($r = r($result)){ $ha_votado = true; }
-
-				if ($ha_votado) {	// MODIFICAR VOTO
-					sql_old("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".$_POST['validez']."', mensaje = '".$_POST['mensaje']."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
-				
-				} else {			// INSERTAR VOTO
+				// Verifica acceso y estado de votacion
+				if (($estado == 'ok') AND (in_array($tipo, $votaciones_tipo)) AND (nucleo_acceso($acceso_votar,$acceso_cfg_votar)) AND (nucleo_acceso($acceso_ver, $acceso_cfg_ver))) {
 					
-					sql_old("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1");
+					// Extracción y verificación contra inyección de votos malformados
+					switch ($tipo_voto) {
+						case '3puntos': case '5puntos': case '8puntos': 
+							for ($i=substr($tipo_voto, 0, 1);$i>0;--$i) {
+								$el_voto = $_POST['voto_'.$i];
+								$votos_array[] = (is_numeric($el_voto)&&!$votos_votados[$el_voto]?$el_voto:0);
+								$votos_votados[$el_voto] = true; 
+							}
+							$_POST['voto'] = implode(' ', array_reverse($votos_array));
+							break;
 
-					$comprobante = sha1(DOMAIN.'-'.$_POST['ref_ID'].'-'.time().'-'.microtime(true).'-'.$_POST['voto'].'-'.mt_rand(1000,99999999));
-					sql_old("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje, comprobante) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".$_POST['validez']."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."', '".$comprobante."')");
-					unset($comprobante);
-					
-					if (in_array($acceso_ver, array('anonimos', 'ciudadanos_global', 'ciudadanos'))) {
-						evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').($tipo=='elecciones'&&is_numeric($num_censo)?' '.num(($num*100)/$num_censo, 2).'%':'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
+						case 'multiple': 
+							for ($i=0;$i<100;$i++) { if (is_numeric($_POST['voto_'.$i])) { $votos_array[] = $_POST['voto_'.$i]; } }
+							$_POST['voto'] = implode(' ', $votos_array);
+							break;
 					}
+		
+					$_POST['mensaje'] = str_replace('"', "&quot;", ucfirst(trim(strip_tags($_POST['mensaje']))));
+					$_POST['validez'] = ($_POST['validez']=='true'?'true':'false');
+
+					// Comprueba si ya ha votado o no
+					$ha_votado = false;
+					$result = sql_old("SELECT ID FROM votacion_votos WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+					while($r = r($result)){ $ha_votado = true; }
+
+					if ($ha_votado) {	// MODIFICAR VOTO
+						sql_old("UPDATE votacion_votos SET voto = '".$_POST['voto']."', validez = '".$_POST['validez']."', mensaje = '".$_POST['mensaje']."' WHERE ref_ID = '".$_POST['ref_ID']."' AND user_ID = '".$pol['user_ID']."' LIMIT 1");
+					
+					} else {			// INSERTAR VOTO
+						
+						sql_old("UPDATE votacion SET num = num + 1 WHERE ID = '".$_POST['ref_ID']."' LIMIT 1");
+
+						$comprobante = sha1(DOMAIN.'-'.$_POST['ref_ID'].'-'.time().'-'.microtime(true).'-'.$_POST['voto'].'-'.mt_rand(1000,99999999));
+						sql_old("INSERT INTO votacion_votos (user_ID, ref_ID, time, voto, validez, autentificado, mensaje, comprobante) VALUES ('".$pol['user_ID']."', '".$_POST['ref_ID']."', '".$date."', '".$_POST['voto']."', '".$_POST['validez']."', '".($_SESSION['pol']['dnie']=='true'?'true':'false')."', '".$_POST['mensaje']."', '".$comprobante."')");
+						unset($comprobante);
+						
+						if (in_array($acceso_ver, array('anonimos', 'ciudadanos_global', 'ciudadanos'))) {
+							evento_chat('<b>['.strtoupper($tipo).']</b> <a href="/votacion/'.$_POST['ref_ID'].'">'.$pregunta.'</a> <span style="color:grey;">(<b>'.num($num).'</b> votos'.($votos_expire>0?' de '.$votos_expire:'').($tipo=='elecciones'&&is_numeric($num_censo)?' '.num(($num*100)/$num_censo, 2).'%':'').', '.$pol['nick'].($_SESSION['pol']['dnie']=='true'?', <b>autentificado</b>':'').')</span>', '0', '', false, 'e', $pais);
+						}
+					}
+					unset($_POST['voto'], $_POST['mensaje'], $_POST['validez']);
 				}
-				unset($_POST['voto'], $_POST['mensaje'], $_POST['validez']);
+				redirect(vp_url('/votacion/'.$_POST['ref_ID'], $pais));
+			}else{
+				error_log("El usuario NO puede votar.");
+				redirect(vp_url('/votacion/'.$_POST['ref_ID'].'#error_el_usuario_no_tiene_atiguedad_para_votar', $pais));
 			}
-			redirect(vp_url('/votacion/'.$_POST['ref_ID'], $pais));
 
 	} elseif (($_GET[2] == 'eliminar') AND (is_numeric($_GET['ID']))) { 
 		$result = sql_old("SELECT ID, user_ID, estado, tipo FROM votacion WHERE estado = 'borrador' AND ID = '".$_GET['ID']."' AND pais = '".PAIS."' LIMIT 1");
@@ -2156,12 +2179,17 @@ case 'foro':
 			$programado = $_POST['programado'];
 
 			$fecha_programado = $_POST['fecha_programado'];
+
+			error_log("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo, fecha_programado) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$date."', '".$date."', '".$text."', '".$_POST['encalidad']."', ".( $_POST['fecha_programado'] ? "'".$fecha_programado."'" : 'null').")");
 			
-			$exito = sql_old("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo, fecha_programado) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$date."', '".$date."', '".$text."', '".$_POST['encalidad']."', '".$fecha_programado."')");
+			$exito = sql_old("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo, fecha_programado) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$date."', '".$date."', '".$text."', '".$_POST['encalidad']."', ".( $_POST['fecha_programado'] ? "'".$fecha_programado."'" : 'null').")");
 			if (!$exito) {
 				if (strlen($url) > 69) { $url = substr($url, 0, 69); }
 				$url = $url.'-'.date('dmyHi');
-				sql_old("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo, fecha_programado) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$date."', '".$date."', '".$text."', '".$_POST['encalidad']."', '".$fecha_programado."')");
+
+				error_log("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo, fecha_programado) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$date."', '".$date."', '".$text."', '".$_POST['encalidad']."', ".( $_POST['fecha_programado'] ? "'".$fecha_programado."'" : 'null').")");
+
+				sql_old("INSERT INTO ".SQL."foros_hilos (sub_ID, url, user_ID, title, time, time_last, text, cargo, fecha_programado) VALUES ('".$_POST['subforo']."', '".$url."', '".$pol['user_ID']."', '".$title."', '".$date."', '".$date."', '".$text."', '".$_POST['encalidad']."', ".( $_POST['fecha_programado'] ? "'".$fecha_programado."'" : 'null').")");
 			}
 
 			if (in_array($acceso_leer, array('anonimos', 'ciudadanos', 'ciudadanos_global')) AND $fecha_programado == "") {
@@ -2253,9 +2281,9 @@ case 'foro':
 				$result = sql_old("SELECT f.url foro, h.url hilo, h.fecha_programado fecha_programado FROM ".SQL."foros f, ".SQL."foros_hilos h where f.ID = h.sub_ID and  h.ID='".$_POST['subforo']."'");
 				$r =r($result);
 				$fecha_programado = $_POST['fecha_programado'];
-
+				
 				$title = strip_tags($_POST['title']);
-				sql_old("UPDATE ".SQL."foros_hilos SET text = '".$text."', title = '".$title."'".($_POST['sub_ID'] > 0?", sub_ID = '".$_POST['sub_ID']."'":'').", fecha_programado = '".($fecha_programado == "" ? null : $fecha_programado)."' WHERE ID = '".$_POST['subforo']."' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1");
+				sql_old("UPDATE ".SQL."foros_hilos SET text = '".$text."', title = '".$title."'".($_POST['sub_ID'] > 0?", sub_ID = '".$_POST['sub_ID']."'":'').", fecha_programado = ".( $_POST['fecha_programado'] ? "'".$fecha_programado."'" : 'null')." WHERE ID = '".$_POST['subforo']."' AND estado = 'ok' AND (user_ID = '".$pol['user_ID']."' OR 'true' = '".(nucleo_acceso($vp['acceso']['foro_borrar'])?'true':'false')."') LIMIT 1");
 				evento_log('Foro hilo editado <a href="/foro/'.$r['foro'].'/'.$r['hilo'].'">#'.$_POST['hilo'].'</a>');
 				error_log ("Fecha programado PSOT: ".$fecha_programado);
 				error_log ("Fecha programado BD: ".$r['fecha_programado']);

@@ -106,32 +106,64 @@ echo '
 <th>'._('Expulsado').'</th>
 <th>'._('Cuando').'</th>
 <th>'._('Por').'</th>
+<th>'._('Duración').'</th>
 <th>'._('Motivo').'</th>
 <th></th>
 </tr>';
 
 
-$result = sql_old("SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo,
+$result = sql_old("(SELECT ID, razon, expire, estado, autor, tiempo, cargo, motivo, '' as duracion,
 (SELECT nick FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado,
 (SELECT pais FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_pais,
 (SELECT estado FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_estado,
 (SELECT nick FROM users WHERE ID = expulsiones.autor LIMIT 1) AS nick_autor
 FROM expulsiones
 WHERE estado != 'indultado'
-ORDER BY expire DESC");
+ORDER BY expire DESC)
+
+UNION
+
+
+(SELECT ID, razon, expire, estado, autor, 
+(SELECT nick FROM users WHERE ID = kicks.user_ID LIMIT 1) AS tiempo,
+cargo, motivo, tiempo as duracion,
+(SELECT nick FROM users WHERE ID = kicks.user_ID LIMIT 1) AS expulsado,
+(SELECT pais FROM users WHERE ID = kicks.user_ID LIMIT 1) AS expulsado_pais,
+(SELECT estado FROM users WHERE ID = kicks.user_ID LIMIT 1) AS expulsado_estado,
+(SELECT nick FROM users WHERE ID = kicks.autor LIMIT 1) AS nick_autor
+FROM kicks
+WHERE estado != 'indultado' AND sc =true
+ORDER BY expire DESC)");
 while($r = r($result)){
     
     if ((isset($sc[$pol['user_ID']])) AND ($r['expulsado_pais']) AND ($r['estado'] == 'expulsado')) { 
         $expulsar = boton(_('Cancelar'), '/accion/expulsar/desexpulsar?ID='.$r['ID'], '&iquest;Seguro que quieres CANCELAR la EXPULSION del usuario: '.$r['tiempo'].'?', 'small red'); 
-    } elseif ($r['estado'] == 'cancelado') { $expulsar = '<b style="font-weight:bold;">'._('Cancelado').'</b>'; } else { $expulsar = ''; }
+    } elseif ($r['estado'] == 'cancelado') { 
+        $expulsar = '<b style="font-weight:bold;">'._('Cancelado').'</b>'; 
+    } elseif ($r['duracion'] != '') { 
+        $expulsar = boton('Cancelar', '/accion/kick/quitar?ID='.$r['ID'], '&iquest;Seguro que quieres hacer INACTIVO esta expulsion?', 'small red'); 
+     } else { 
+        $expulsar = ''; 
+    }
 
     if (!$r['expulsado_estado']) { $r['expulsado_estado'] = 'expulsado'; }
+    if ($r['duracion'] != '') { 
+        $r['duracion'] = $r['duracion'] / 3600;
+        $literal_duracion = " Horas";
+        if ($r['duracion'] > 24){
+            $r['duracion'] = $r['duracion'] / 24;
+            $literal_duracion = " Días";
+        }
+    }else{
+        $literal_duracion = "Permanente";
+    }
 
     echo '
 <tr><td valign="top" nowrap="nowrap">'.($r['estado'] == 'expulsado'?'<img src="'.IMG.'varios/expulsar.gif" alt="Expulsado" border="0" /> ':'<img src="'.IMG.'cargos/0.gif" border="0" /> ').'<b>'.crear_link($r['tiempo'], 'nick', $r['expulsado_estado'], $r['expulsado_pais']) . '</b></td>
 <td valign="top" align="right" valign="top" nowrap="nowrap"><acronym title="' . $r['expire'] . '">'.timer($r['expire']).'</acronym></td>
 <td valign="top">'.crear_link($r['nick_autor']).'</td>
 <td valign="top"><b style="font-size:13px;">'.$r['razon'].'</b></td>
+<td valign="top"><b style="font-size:13px;">'.$r['duracion'].$literal_duracion.'</b></td>
 <td valign="top" align="center">'.$expulsar.'</td>
 <td>'.(isset($sc[$pol['user_ID']])&&$r['motivo']!=''?'<a href="/control/expulsiones/info/'.$r['ID'].'/">#</a>':'').'</td>
 </tr>' . "\n";

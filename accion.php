@@ -2311,7 +2311,7 @@ case 'kick':
 	if (($_GET[2] == 'quitar') AND ($_GET['ID'])) {
 
 		$es_policiaexpulsador = false;
-		$result = mysql_query_old("SELECT ID, user_ID, autor FROM kicks WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1");
+		$result = mysql_query_old("SELECT ID, user_ID, autor, sc FROM kicks WHERE pais = '".PAIS."' AND ID = '".$_GET['ID']."' LIMIT 1");
 		while($r = r($result)){ 
 			if ($pol['user_ID'] == $r['autor']) {
 				$es_policiaexpulsador = true;
@@ -2319,10 +2319,19 @@ case 'kick':
 			$kickeado_id = $r['user_ID'];
 			$kick_id = $r['ID']; 
 		}
-	
-		if (($es_policiaexpulsador) OR (nucleo_acceso($vp['acceso']['kick_quitar']))) {
+		if ($r[sc] == true AND nucleo_acceso('supervisores_censo')){
+			sql_old("UPDATE kicks SET estado = 'indultado' WHERE pais = '".PAIS."' AND estado = 'activo' AND ID = '".$_GET['ID']."' LIMIT 1"); 
+			if (mysqli_affected_rows()==1) {
+				$result = sql_old("SELECT nick FROM users WHERE ID = '".$kickeado_id."' LIMIT 1");
+				while($r = r($result)){ $kickeado_nick = $r['nick'];}
+				
+				evento_log('Expulsión a @'.$kickeado_nick.' indultada');
+				
+				evento_chat('<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[EXPULSION]</b> La expulsión de <b>'.$kickeado_nick.'</b> ha sido cancelada.</span>');
+			}
+		}elseif (($es_policiaexpulsador) OR (nucleo_acceso($vp['acceso']['kick_quitar']))) {
 			sql_old("UPDATE kicks SET estado = 'cancelado' WHERE pais = '".PAIS."' AND estado = 'activo' AND ID = '".$_GET['ID']."' LIMIT 1"); 
-			if (mysql_affected_rows()==1) {
+			if (mysqli_affected_rows()==1) {
 				$result = sql_old("SELECT nick FROM users WHERE ID = '".$kickeado_id."' LIMIT 1");
 				while($r = r($result)){ $kickeado_nick = $r['nick'];}
 				
@@ -2358,23 +2367,37 @@ case 'kick':
 		$_POST['razon'] = preg_replace("#(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]#","<a href=\"\\0\">\\0</a>", strip_tags($_POST['razon']));
 		$_POST['motivo'] = preg_replace("#(^|\n| )[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]#","<a href=\"\\0\">\\0</a>", strip_tags($_POST['motivo']));
 
-		if (
-(nucleo_acceso($vp['acceso']['kick'])) AND 
-($kick_user_ID >= 0) AND 
-($user_kicked != true) AND 
-((($kick_cargo != 7) AND ($kick_cargo != 13)) OR ($kick_pais != PAIS)) AND
-($_POST['razon']) AND
-($_POST['expire'] <= 777600)
-) {
+		error_log("POST SC: ".$_POST['sc']);
+
+		if ($_POST['sc'] AND nucleo_acceso('supervisores_censo')){
 			$_POST['razon'] = ucfirst(strip_tags($_POST['razon']));
 			$expire = date('Y-m-d H:i:s', time() + $_POST['expire']);
-			sql_old("INSERT INTO kicks (pais, user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".PAIS."', '".$el_userid."', ".$pol['user_ID'].", '".$expire."', '".$_POST['razon']."', 'activo', '".$_POST['expire']."', ".$kick_IP.", '".$pol['cargo']."', '".$_POST['motivo']."')");
 
-			evento_chat('<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>');
-			evento_log('Kick a @'.$kick_nick.', tiempo('.$_POST['expire'].'), razon: '.$_POST['razon']);
+			sql_old("INSERT INTO kicks (pais, user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo, sc) VALUES ('".PAIS."', '".$el_userid."', ".$pol['user_ID'].", '".$expire."', '".$_POST['razon']."', 'activo', '".$_POST['expire']."', ".$kick_IP.", '".$pol['cargo']."', '".$_POST['motivo']."', true)");
+
+			evento_chat('<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[EXPULSION] '.$kick_nick.'</b> ha sido expulsado durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em></span>');
+			evento_log('Expulsión temporal a @'.$kick_nick.', tiempo('.$_POST['expire'].'), razon: '.$_POST['razon']);
+		}else{
+
+			if (
+			(nucleo_acceso($vp['acceso']['kick'])) AND 
+			($kick_user_ID >= 0) AND 
+			($user_kicked != true) AND 
+			((($kick_cargo != 7) AND ($kick_cargo != 13)) OR ($kick_pais != PAIS)) AND
+			($_POST['razon']) AND
+			($_POST['expire'] <= 777600)
+			) {
+						$_POST['razon'] = ucfirst(strip_tags($_POST['razon']));
+						$expire = date('Y-m-d H:i:s', time() + $_POST['expire']);
+						sql_old("INSERT INTO kicks (pais, user_ID, autor, expire, razon, estado, tiempo, IP, cargo, motivo) VALUES ('".PAIS."', '".$el_userid."', ".$pol['user_ID'].", '".$expire."', '".$_POST['razon']."', 'activo', '".$_POST['expire']."', ".$kick_IP.", '".$pol['cargo']."', '".$_POST['motivo']."')");
+
+						evento_chat('<span style="color:red;"><img src="'.IMG.'varios/kick.gif" alt="Kick" border="0" /> <b>[KICK] '.$kick_nick.'</b> ha sido kickeado por <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" border="0" /> <b>'.$pol['nick'].'</b>, durante <b>'.duracion($_POST['expire']).'</b>. Razon: <em>'.$_POST['razon'].'</em> (<a href="/control/kick/">Ver kicks</a>)</span>');
+						evento_log('Kick a @'.$kick_nick.', tiempo('.$_POST['expire'].'), razon: '.$_POST['razon']);
+					}
+
 		}
-		$refer_url = 'control/kick';
-	}
+			$refer_url = 'control/kick';
+		}
 	break;
 
 

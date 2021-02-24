@@ -2679,7 +2679,7 @@ case 'eliminar-partido':
 case 'restaurar-documento':
 	$result = sql_old("SELECT ID, pad_ID, url, acceso_escribir, acceso_cfg_escribir FROM docs WHERE ID = '".$_GET['ID']."' LIMIT 1");
 	while($r = r($result)){ 
-		if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) {
+		if (nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir']) AND  $r['pad_ID']) {
 			pad('delete', $r['pad_ID']);
 		}
 		$refer_url = 'doc/'.$r['url'].'/editar';
@@ -2688,12 +2688,15 @@ case 'restaurar-documento':
 
 case 'eliminar-documento':
 	
+	error_log("SELECT ID, pad_ID, acceso_escribir, acceso_cfg_escribir, url FROM docs WHERE url = '".$_GET['url']."' AND pais = '".PAIS."' LIMIT 1");
 	$result = sql_old("SELECT ID, pad_ID, acceso_escribir, acceso_cfg_escribir, url FROM docs WHERE url = '".$_GET['url']."' AND pais = '".PAIS."' LIMIT 1");
 	while($r = r($result)){ 
 		if ((nucleo_acceso($r['acceso_escribir'], $r['acceso_cfg_escribir'])) OR (nucleo_acceso($vp['acceso']['control_docs']))) {
 			sql_old("UPDATE docs SET estado = 'del' WHERE ID = '".$r['ID']."' LIMIT 1");
 			evento_log('Documento eliminado <a href="/doc/'.$r['url'].'">#'.$r['ID'].'</a>');
-			pad('delete', $r['pad_ID']);
+			if ($r['pad_ID']){
+				pad('delete', $r['pad_ID']);
+			}
 		}
 		$refer_url = 'doc';
 	}

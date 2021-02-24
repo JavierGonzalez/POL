@@ -1,7 +1,7 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-/*if ($_SERVER['SERVER_ADDR'] !== $_SERVER['REMOTE_ADDR'])
+if ($_SERVER['SERVER_ADDR'] !== $_SERVER['REMOTE_ADDR'])
 	exit('Solo el propio servidor puede ejecutar "el proceso".');
 
 
@@ -10,7 +10,7 @@ unset($maxsim['output']);
 // PROTECCION DE DOBLE EJECUCION. Evita que se ejcute el proceso mas de una vez en un mismo dia.
 
 $result = sql_old("SELECT pais FROM stats WHERE pais = '".PAIS."' AND time = '".date('Y-m-d 20:00:00')."' LIMIT 1");
-while($r = r($result)) { echo 'Ya se ha ejecutado hoy'; exit; }*/
+while($r = r($result)) { echo 'Ya se ha ejecutado hoy'; exit; }
 
 
 // INICIO PROCESO

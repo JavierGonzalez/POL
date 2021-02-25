@@ -44,8 +44,10 @@ while($r = r($result)){
 <form action="/accion/SC/nota?ID='.$r['ID'].'" method="post">
 <input type="text" name="nota_SC" size="25" maxlength="255" value="'.$r['nota_SC'].'" />
 '.boton(_('OK'), 'submit', false, 'pill small').'
-'.boton('&nbsp;', '/sc/filtro/user_ID/'.$r['ID'], false, 'blue small').' 
-'.boton('&nbsp;', '/control/expulsiones/expulsar/'.$r['nick'], false, 'red small').'
+'.boton('Filtrar', '/sc/filtro/user_ID/'.$r['ID'], false, 'blue small').' 
+'.boton('Expulsar', '/control/kick/expulsar/'.$r['nick'], false, 'red small').'
+ Expulsion temporal 
+'.boton('Kickear', '/control/kick/sc/'.$r['nick'], false, 'red small').'
 </form>
 </div>
 '.$r['ID'].' <span title="'.$r['avatar_localdir'].'" style="font-size:11px;">'.$r['email'].'</span> <span style="font-size:12px;" title="'.$r['nav'].'">'.num($r['visitas']).'v '.num($r['paginas']).'pv<br /><a href="http://www.geoiptool.com/es/?IP='.($r['IP']+rand(-30,30)).'">'.ocultar_IP($r['host'], 'host').'</a></span>

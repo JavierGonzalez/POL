@@ -13,7 +13,7 @@ if (isset($pol['user_ID'])) {
     }
     
     $dentro_del_margen = false;
-    $result = sql_old("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND nickchange_last < '".date('Y-m-d 20:00:00', time() - (86400*365))."' LIMIT 1");
+    $result = sql_old("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND nickchange_last < '".date('Y-m-d 20:00:00', time() - (86400*7))."' LIMIT 1");
     while ($r = r($result)) { $dentro_del_margen = true; }
     
     $nick_existe = false;

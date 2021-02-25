@@ -90,7 +90,7 @@ while($r = r($result)){
     if (!$r['expulsado_estado']) { $r['expulsado_estado'] = 'expulsado'; }
 
     echo '
-<tr><td valign="top" nowrap>'.crear_link($r['tiempo'], 'nick', $r['expulsado_estado'], $r['expulsado_pais']).'</td>
+<tr><td valign="top" nowrap>'.crear_link($r['expulsado'], 'nick', $r['expulsado_estado'], $r['expulsado_pais']).'</td>
 <td valign="top">'.$r['razon'].'</td>
 <td valign="top" align="right" valign="top" nowrap="nowrap" class="gris" title="'.$r['expire'].'">'.timer($r['expire']).'</td>
 </tr>'."\n";

@@ -118,8 +118,7 @@ $result = sql_old("(SELECT ID, razon, expire, estado, autor, tiempo, cargo, moti
 (SELECT estado FROM users WHERE ID = expulsiones.user_ID LIMIT 1) AS expulsado_estado,
 (SELECT nick FROM users WHERE ID = expulsiones.autor LIMIT 1) AS nick_autor
 FROM expulsiones
-WHERE estado != 'indultado'
-ORDER BY expire DESC)
+WHERE estado != 'indultado')
 
 UNION
 
@@ -132,15 +131,16 @@ cargo, motivo, tiempo as duracion,
 (SELECT estado FROM users WHERE ID = kicks.user_ID LIMIT 1) AS expulsado_estado,
 (SELECT nick FROM users WHERE ID = kicks.autor LIMIT 1) AS nick_autor
 FROM kicks
-WHERE estado != 'indultado' AND sc =true
-ORDER BY expire DESC)");
+WHERE estado != 'indultado' AND sc =true)
+
+ORDER BY expire DESC");
 while($r = r($result)){
     
     if ((isset($sc[$pol['user_ID']])) AND ($r['expulsado_pais']) AND ($r['estado'] == 'expulsado')) { 
         $expulsar = boton(_('Cancelar'), '/accion/expulsar/desexpulsar?ID='.$r['ID'], '&iquest;Seguro que quieres CANCELAR la EXPULSION del usuario: '.$r['tiempo'].'?', 'small red'); 
     } elseif ($r['estado'] == 'cancelado') { 
         $expulsar = '<b style="font-weight:bold;">'._('Cancelado').'</b>'; 
-    } elseif ($r['duracion'] != '') { 
+    } elseif ((isset($sc[$pol['user_ID']])) AND $r['duracion'] != '') { 
         $expulsar = boton('Cancelar', '/accion/kick/quitar?ID='.$r['ID'], '&iquest;Seguro que quieres hacer INACTIVO esta expulsion?', 'small red'); 
      } else { 
         $expulsar = ''; 

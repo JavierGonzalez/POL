@@ -99,6 +99,7 @@ foreach ((array)$maxsim['template']['js_array'] AS $key => $value)
 				</ul>
 			</li>
 			<li><a href="/msg"><?=_('Mensajes privados')?></a></li>
+			<li><a href="/notas"><b><?=_('Notas')?></b></a></li>
 		</ul>
 	</li>
 
@@ -183,7 +184,7 @@ echo '<p id="palabras">';
 
 foreach(explode(';', $pol['config']['palabras']) as $t) {
 	$t = explode(':', $t);
-	echo ($t[1]!=''?'<a href="//'.$t[1].'">'.$t[2].'</a>':$t[2]).($pol['user_ID']==$t[0]||nucleo_acceso($vp['acceso']['control_gobierno'])?' <a href="/subasta/editar" style="float:right;color:#CCC;">#</a>':'').'<br />';
+	echo ($t[1]!=''?'<a href="//'.$t[1].'">'.$t[2].'</a>':$t[2]).($pol['user_ID']==$t[0]?' <a href="/subasta/editar" style="float:right;color:#CCC;">#</a>':'').'<br />';
 }
 
 echo '</p>';

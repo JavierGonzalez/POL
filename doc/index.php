@@ -62,7 +62,7 @@ if ($_GET[1]) {
 <tr><td colspan="2" valign="top">
 
 <span style="float:right;">
-'.boton(_('Eliminar documento'), '/accion/eliminar-documento&url='.$r['url'], '¿Estas convencido de que quieres ELIMINAR para siempre este Documento?', 'small red').'<br />
+'.boton(_('Eliminar documento'), '/accion/eliminar-documento?url='.$r['url'], '¿Estas convencido de que quieres ELIMINAR para siempre este Documento?', 'small red').'<br />
 '.boton(_('Restaurar última publicación'), '/accion/restaurar-documento?ID='.$r['ID'], '¿Estas seguro de RESTAURAR este documento?\n\nATENCION: SE PERDERA EL FORMATO, ADEMAS DE LOS CAMBIOS DESDE LA ULTIMA PUBLICACION.', 'small red').'
 </span>
 

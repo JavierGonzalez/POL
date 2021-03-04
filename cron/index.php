@@ -525,9 +525,8 @@ Emails de aviso de expiración:
 
 $st['eliminados'] = 0;
 $result = sql_old("SELECT ID, estado, nick FROM users
-WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND fecha_registro > '".tiempo(365)."' AND 
-(pais IN ('ninguno', '".PAIS."') AND fecha_last <= '".tiempo(30)."')) OR 
-(estado IN ('validar', 'expulsado') AND fecha_last <= '".tiempo(10)."') 
+WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND 
+(pais IN ('ninguno', '".PAIS."') AND fecha_last <= '".tiempo(30)."'))
 LIMIT 80");
 while($r = r($result)) {
 	if ($r['estado'] == 'ciudadano') { $st['eliminados']++; }

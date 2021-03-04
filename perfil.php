@@ -45,7 +45,7 @@ while($r = r($result)){
 <input type="text" name="nota_SC" size="25" maxlength="255" value="'.$r['nota_SC'].'" />
 '.boton(_('OK'), 'submit', false, 'pill small').'
 '.boton('Filtrar', '/sc/filtro/user_ID/'.$r['ID'], false, 'blue small').' 
-'.boton('Expulsar', '/control/kick/expulsar/'.$r['nick'], false, 'red small').'
+'.boton('Expulsar', '/control/expulsiones/expulsar/'.$r['nick'], false, 'red small').'
  Expulsion temporal 
 '.boton('Kickear', '/control/kick/sc/'.$r['nick'], false, 'red small').'
 </form>

@@ -525,11 +525,11 @@ Emails de aviso de expiración:
 
 $st['eliminados'] = 0;
 $result = sql_old("SELECT ID, estado, nick FROM users
-WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND 
-(pais IN ('ninguno', '".PAIS."') AND fecha_last <= '".tiempo(30)."'))
+WHERE (dnie = 'false' AND socio = 'false' AND donacion IS NULL AND estado = 'ciudadano' AND
+(pais IN ('ninguno', '".PAIS."') AND fecha_last < DATE_SUB(NOW(), INTERVAL 30 DAY)))
 LIMIT 80");
 while($r = r($result)) {
-	if ($r['estado'] == 'ciudadano') { $st['eliminados']++; }
+	$st['eliminados']++;
 	convertir_turista($r['ID']);
 }
 
@@ -689,6 +689,23 @@ include('cron-elecciones.php');
 // Unifica y comprime archivos CSS y JS
 include('cron-compress-all.php');
 
+//Eliminar usuarios Zombi, aquellos que no han aceptado la ciudadanía nunca o no se han validado en más de una semana
+
+$result = sql_old("DELETE FROM users
+ where estado = 'validar' and fecha_last < DATE_SUB(NOW(), INTERVAL 7 DAY) and online = 0 ");
+
+$result_aniversario = sql_old("SELECT nick FROM users WHERE estado = 'ciudadano' AND (pais = 'POL') AND DATE_FORMAT(fecha_registro, '%m-%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), '%m-%d') ");
+
+while($r = r($result_aniversario)) {
+	error_log("aniversario de ". $r['nick']);
+	$aniversario[] = $r['nick'];
+}
+
+if (count($aniversario) > 1){
+	evento_chat('<b>[PROCESO]</b> En un día como mañana, ' .implode(", " ,$aniversario). ' entraron por primera vez en esta comunidad, no te olvides de felicitarles.');
+}else if (count($aniversario) == 1){
+	evento_chat('<b>[PROCESO]</b> En un día como mañana, ' . $aniversario[0] . ' entró por primera vez en esta comunidad, no te olvides de felicitarle.');
+}
 
 
 evento_chat('<b>[PROCESO] FIN del proceso</b>, todo <span style="color:blue;"><b>OK</b></span>, '.num((microtime(true)-$_SERVER['REQUEST_TIME_FLOAT'])/1000000000).'s (<a href="/estadisticas/'.PAIS.'">estadisticas actualizadas</a>)');

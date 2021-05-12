@@ -49,7 +49,7 @@ $recaptcha = $_POST['g-recaptcha-response'];
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
 curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('secret' => '6Le7ic8aAAAAABAjMBCJyUnM4rb0NkF8iWqJh5QA', 'response' => $recaptcha)));
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('secret' => getenv('RECAPTCHA_KEY'), 'response' => $recaptcha)));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 curl_close($ch);

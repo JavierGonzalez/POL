@@ -23,19 +23,62 @@ if ($_GET[1] == 'organigrama') { // ORGANIGRAMA
 	$txt_nav = array('/cargos'=>_('Cargos'), _('Organigrama'));
 	$txt_tab = array('/cargos'=>_('Cargos'), '/cargos/organigrama'=>_('Organigrama'), '/examenes'=>_('Exámenes'));
 
-	function cargo_bien($c){ return str_replace(' ', '_', $c); }
-
-	$result = mysql_query_old("SELECT nombre, asigna, elecciones,
-(SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = c.asigna LIMIT 1) AS asigna_nombre
-FROM cargos `c`
-WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
+	$result = mysql_query_old("SELECT nick, nivel, cargo
+FROM users AS u
+WHERE pais = '".PAIS."' AND cargo > 0
+ORDER BY nivel DESC, fecha_registro ASC", $link);
 	while($r = mysqli_fetch_array($result)) {
-		if ($r['asigna'] <= 0) { $r['asigna_nombre'] = 'CIUDADANOS'; }
-
-		$data_cargos[] = cargo_bien($r['asigna_nombre']).'->'.cargo_bien($r['nombre']);
+		$cargos_nicks[$r['cargo']][] = $r['nick'];
 	}
 
-	echo '<a href="https://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" target="_blank"><img style="max-width:1400px;margin-left:-20px;" src="http://chart.googleapis.com/chart?cht=gv&chl=digraph{'.implode(';', $data_cargos).'}" alt="grafico confianza" /></a><p>'._('Organigrama de la jerarquía de cargos. Grafico experimental, alpha').'.</p>';
+
+	$result = mysql_query_old("SELECT cargo_ID, nombre, asigna, elecciones,
+(SELECT nombre FROM cargos WHERE pais = '".PAIS."' AND cargo_ID = c.asigna LIMIT 1) AS asigna_nombre
+FROM cargos AS c
+WHERE pais = '".PAIS."' ORDER BY nivel DESC", $link);
+	while($r = mysqli_fetch_array($result)) {
+
+		if ($r['asigna'] <= 0 OR $r['elecciones']) 
+			$r['asigna_nombre'] = '<h2 style=\"white-space:nowrap;\">CIUDADANOS DE '.PAIS.'</h2>';
+		
+		
+		$personas[] = '[{"v":"'.$r['nombre'].'", "f":"<b><img src=\"'.IMG.'cargos/'.$r['cargo_ID'].'.gif\" width=\"16\" height=\"16\" border=\"0\" style=\"margin-bottom:-3px;\" /><br />'.$r['nombre'].'</b><br /><br /><div><b style=\"color:green;font-size:14px;\">'.implode('<br />', (array)$cargos_nicks[$r['cargo_ID']]).'</b></div>"}, "'.$r['asigna_nombre'].'", "'.$r['nombre'].'"]';
+
+	}
+
+
+	echo '
+	
+<p>'._('Organigrama de cargos').'</p>
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+google.charts.load("current", {packages:["orgchart"]});
+google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+	var data = new google.visualization.DataTable();
+	data.addColumn("string", "Name");
+	data.addColumn("string", "Manager");
+	data.addColumn("string", "ToolTip");
+
+	// For each orgchart box, provide the name, manager, and tooltip to show.
+	data.addRows([
+	'.implode(', ', $personas).'
+	]);
+
+	// Create the chart.
+	var chart = new google.visualization.OrgChart(document.getElementById("chart_div1"));
+	// Draw the chart, setting the allowHtml option to true for the tooltips.
+	chart.draw(data, {"allowHtml":true});
+}
+</script>
+<div id="chart_div1"></div>
+
+';
+
+
 
 } elseif (is_numeric($_GET[1])) { // VER CARGO
 

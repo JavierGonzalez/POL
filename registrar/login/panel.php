@@ -1,14 +1,14 @@
-<?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
+<?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License
 
 
 
 if ($pol['user_ID']) {
 
-    
+
 
     $result = sql_old("SELECT ser_SC, modo_invisible FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
-    while($r = r($result)) { 
-        $ser_SC = $r['ser_SC']; 
+    while($r = r($result)) {
+        $ser_SC = $r['ser_SC'];
         $modo_invisible = $r['modo_invisible'];
     }
 
@@ -35,7 +35,7 @@ if ($pol['user_ID']) {
 <form action="/registrar/login/changelang" method="POST">
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td valign="middle" align="center" valign="top">'._('Idioma').': 
+<td valign="middle" align="center" valign="top">'._('Idioma').':
 <select name="lang">
 <option value="">'._('Idioma por defecto de plataformas').'</option>';
 $result = sql_old("SELECT lang FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
@@ -121,7 +121,7 @@ echo '</select>
 <td valign="middle" align="center" valign="top">'._('Nuevo nombre de usuario').':<br /><input type="text" name="newnick" value="" maxlength="30" pattern="[A-Za-z0-9_]{3,14}" placeholder="'.$pol['nick'].'" required /></td>
 <td valign="middle" align="right" valign="top">
 
-'.boton(_('Cambiar'), 'submit', '¿Estás seguro de querer cambiar el nick?\n\n! ! !\nSOLO PODRAS CAMBIARLO UNA VEZ POR SEMANA.\n! ! !', 'red large').'
+'.boton(_('Cambiar'), 'submit', '¿Estás seguro de querer cambiar el nick?\n\n! ! !\nSOLO PODRAS CAMBIARLO UNA VEZ CADA 90 DIAS.\n! ! !', 'red large').'
 </td></tr></table></form>
 
 </fieldset>

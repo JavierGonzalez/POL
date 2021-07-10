@@ -7,6 +7,17 @@ pol_foros_hilos		(`ID` `sub_ID``url` `user_ID` `title` `time` `time_last` `text`
 pol_foros_msg		(`ID``hilo_ID` `user_ID` `time` `text` `cargo`)
 */
 
+$txt_header .= '
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sceditor@3/minified/themes/default.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/sceditor@3/minified/sceditor.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sceditor@3/minified/formats/bbcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sceditor@3.0.0/languages/es.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sceditor@3.0.0/minified/plugins/autosave.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sceditor@3.0.0/minified/plugins/autoyoutube.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sceditor@3.0.0/minified/plugins/dragdrop.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sceditor@3.0.0/minified/plugins/undo.js"></script>
+';
 
 if ($_GET[2]) {			//foro/subforo/hilo-prueba
 	include('hilo.php');

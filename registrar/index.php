@@ -115,25 +115,37 @@ echo '</blockquote>';
 
 	$txt_header .= '
 <script type="text/javascript">
-$(document).ready(function() {
-	$(".password").valid();
-	$("#form_crear_ciudadano").validate();
-});
+
 </script>
-<script type="text/javascript" src="'.IMG.'lib/jquery-validate.password/lib/jquery.validate.js"></script>
-<script type="text/javascript" src="'.IMG.'lib/jquery-validate.password/jquery.validate.password.js"></script>
-<link rel="stylesheet" type="text/css" media="screen" href="'.IMG.'lib/jquery-validate.password/jquery.validate.password.css" />
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script src="'.IMG.'lib/pswmeter.js"></script>
+
+<script>
+function onSubmit(token) {
+	login_start();
+  document.getElementById("token").val=token;
+  document.getElementById("form_crear_ciudadano").submit();
+}
+
+
+</script>
+
+
 ';
 
 	$atrack = '"/atrack/registro/formulario.html"';
 	$txt_title = _('Crear ciudadano');
 	$txt_nav = array(_('Crear ciudadano'));
 
-	echo '<form action="/registrar/crear_usuario" method="POST" id="form_crear_ciudadano">
+	echo '
+
+	<form action="/registrar/crear_usuario" method="POST" id="form_crear_ciudadano">
 
 <input type="hidden" name="extra" value="" id="input_extra" />
 <input type="hidden" name="repid" value="' . $rn . '" />
 <input type="hidden" name="crono" value="' . time() . '" />
+<input type="hidden" name="token" value="" id="token" />
+
 '.($_GET['p']?'<input type="hidden" name="p" value="'.$_GET['p'].'" />':'').'
 '.($_GET['r']?'<input type="hidden" name="r" value="'.$_GET['r'].'" />':'').'
 
@@ -162,10 +174,9 @@ $(document).ready(function() {
 <td align="right" valign="top"><b>'._('Contraseña').'</b>:</td>
 <td>
 
-<div class="password-meter" style="white-space:nowrap;margin-bottom:4px">
-	<div class="password-meter-message">&nbsp;</div>
-	<div class="password-meter-bg">
-		<div class="password-meter-bar"></div>
+<div class="password-meter" id="password-meter" style="white-space:nowrap;margin-bottom:4px">
+	<div class="password-meter-message" id="password-meter-message">&nbsp;</div>
+	<div class="password-meter-bg" id="password-meter-bg">
 	</div>
 </div>
 
@@ -211,7 +222,11 @@ $(document).ready(function() {
 
 <tr>
 <td></td>
-<td><button onclick="login_start();" class="large blue">'._('Crear ciudadano').'</button></td>
+<td>
+<button class="g-recaptcha large blue" 
+        data-sitekey="6Le7ic8aAAAAAD7KjKBYBoyToPSNqIOFQlY0KnZl" 
+        data-callback="onSubmit" 
+        data-action="crear_ciudadano" >'._('Crear ciudadano').'</button></td>
 </tr>
 
 </table>
@@ -222,6 +237,16 @@ $(document).ready(function() {
 
 <script type="text/javascript" src="'.IMG.'lib/md5.js"></script>
 <script type="text/javascript">
+	// Run pswmeter with options
+	const myPassMeter = passwordStrengthMeter({
+		containerElement: "#password-meter-bg",
+		passwordInput: "#pass1",
+		showMessage: true,
+		messageContainer: "#password-meter-message",
+		borderRadius: 2
+	});
+
+
 timestamp_start = Math.round(+new Date()/1000);
 function login_start() {
 	timestamp_end = Math.round(+new Date()/1000);

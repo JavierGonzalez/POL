@@ -958,8 +958,11 @@ function auto_priv(nick){ $("#vpc_msg").attr("value", "/msg " + nick + " ").css(
 // ### FUNCIONES CHAT END
 
 function enriquecer(m, bbcode){
-
     // Emoticonos
+    m = m.replace(/:(tarta|roto2|palm|moneda):/gi, ' <img src="' + IMG + 'smiley/$1.gif" alt="$1" border="0" title="$1" width="16" height="16" />');
+    m = m.replace(/(\s|^)(:troll:)/gi, ' <img src="' + IMG + 'smiley/troll.gif" alt="troll" border="0" title="troll" width="15" height="15" />');
+    m = m.replace(/(\s|^)(:falso:)/gi, ' <img src="' + IMG + 'smiley/sonrie.gif" border="0" alt="falso" title="falso" width="15" height="15" onMouseOver="$(this).attr(\'src\', \'' + IMG + 'smiley/troll.gif\');" />');
+    m = m.replace(/:(\w+):/gi, ' <img src="https://cdn.jsdelivr.net/npm/sceditor@3.0.0/emoticons/$1.png" alt=":$1:" border="0" title=":$1:" width="16" height="16" />');
     m = m.replace(/(\s|^):\)/gi, ' <img src="' + IMG + 'smiley/sonrie.gif" border="0" alt=":)" title=":)" width="15" height="15" />');
     m = m.replace(/(\s|^):\(/gi, ' <img src="' + IMG + 'smiley/disgustado.gif" border="0" alt=":(" title=":(" width="15" height="15" />');
     m = m.replace(/(\s|^):\|/gi, ' <img src="' + IMG + 'smiley/desconcertado.gif" border="0" alt=":|" title=":|" width="15" height="15" />');
@@ -967,10 +970,6 @@ function enriquecer(m, bbcode){
     m = m.replace(/(\s|^):\*/gi, ' <img src="' + IMG + 'smiley/muacks.gif" alt=":*" border="0" title=":*" width="15" height="15" />');
     m = m.replace(/(\s|^);\)/gi, ' <img src="' + IMG + 'smiley/guino.gif" alt=";)" border="0" title=";)" width="15" height="15" />');
     m = m.replace(/(\s|^):O/gi, ' <img src="' + IMG + 'smiley/bocaabierta.gif" alt=":O" border="0" title=":O" width="15" height="15" />');
-    m = m.replace(/:(tarta|roto2|palm|moneda):/gi, ' <img src="' + IMG + 'smiley/$1.gif" alt=":$1:" border="0" title=":$1:" width="16" height="16" />');
-    m = m.replace(/(\s|^)(:troll:)/gi, ' <img src="' + IMG + 'smiley/troll.gif" alt=":troll:" border="0" title=":troll:" width="15" height="15" />');
-    m = m.replace(/(\s|^)(:falso:)/gi, ' <img src="' + IMG + 'smiley/sonrie.gif" border="0" alt=":falso:" title=":falso:" width="15" height="15" onMouseOver="$(this).attr(\'src\', \'' + IMG + 'smiley/troll.gif\');" />');
-
 
     // URLs
     m = m.replace(/(\s|^|>)(\/[-A-Z0-9\/_]{3,})/ig, ' <a href="$2" target="_blank">$2</a>'); // /url
@@ -979,6 +978,7 @@ function enriquecer(m, bbcode){
 
     // BBCODE
     if (bbcode){
+/*
         m = m.replace(/\[(b|i|em|s)\](.*?)\[\/\1\]/gi, '<$1>$2</$1>');
         m = m.replace(/\[img\](.*?)\[\/img\]/gi, '<img src="$1" alt="img" style="max-width:800px;" />');
         m = m.replace(/\[youtube\]https\:\/\/www\.youtube\.com\/watch\?v=(.*?)\[\/youtube\]/gi, '<iframe width="520" height="390" src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>');
@@ -986,13 +986,16 @@ function enriquecer(m, bbcode){
         m = m.replace(/\[quote\]/gi, '<blockquote><div class="quote">');
         m = m.replace(/\[quote=(.*?)\]/gi, '<blockquote><div class="quote"><cite>$1 escribió:</cite>');
         m = m.replace(/\[\/quote\]/gi, '</div></blockquote>');
+
+        m = m.replace(/\[spoiler=(.*?)\]/gi, '<cite>Atención spoiler de $1</cite> <span style="background-color: black" onclick="this.style.backgroundColor=\'\';">');
+        m = m.replace(/\[\/spoiler\]/gi, '</span>');
+*/
+
+        m = m.replace(/\[estilo=(.*?)\]/gi, '<span style="$1">');
+        m = m.replace(/\[\/estilo\]/gi, '</span>');
         m = m.replace(/\[empresa\](.*?)\[\/empresa\]/gi, '<div id="empresa_'+getID()+'"></div><script>loadPage(\'empresa_'+getID()+'\', \'/empresas/$1?embed=true\')</script>');
         m = m.replace(/\[documento\](.*?)\[\/documento\]/gi, '<div id="documento_'+getID()+'"></div><script>loadPage(\'documento_'+getID()+'\', \'/doc/$1?embed=true\')</script>');
         m = m.replace(/\[articulo\](.*?)\[\/articulo\]/gi, '<div id="articulo'+getID()+'"></div><script>loadPage(\'articulo'+getID()+'\', \'$1?embed=true\')</script>');
-        m = m.replace(/\[estilo=(.*?)\]/gi, '<span style="$1">');
-        m = m.replace(/\[\/estilo\]/gi, '</span>');
-        m = m.replace(/\[spoiler=(.*?)\]/gi, '<cite>Atención spoiler de $1</cite> <span style="background-color: black" onclick="this.style.backgroundColor=\'\';">');
-        m = m.replace(/\[\/spoiler\]/gi, '</span>');
     }
 
     // Botones Instant

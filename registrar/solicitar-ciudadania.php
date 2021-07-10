@@ -4,7 +4,7 @@
 
 
 // tiene kick?
-$result = sql_old("SELECT ID FROM ".strtolower($_POST['pais'])."_ban WHERE estado = 'activo' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1");
+$result = sql_old("SELECT ID FROM expulsiones WHERE estado = 'activo' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1");
 while ($r = r($result)) { $tiene_kick = true; }
 
 $result = sql_old("SELECT pais FROM users WHERE ID = '" . $pol['user_ID'] . "' LIMIT 1");

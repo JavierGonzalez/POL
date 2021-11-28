@@ -63,7 +63,7 @@ if (!defined('PAIS'))
 
 
 // CONFIG
-define('DOMAIN', getenv("DOMAIN"));
+define('DOMAIN', getenv("DOMAIN") ?: 'virtualpol.com');
 define('CONTACTO_EMAIL', 'desarollo@virtualpol.com');
 
 define('SQL', strtolower(PAIS).'_');

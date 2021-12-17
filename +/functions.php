@@ -202,7 +202,7 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 						$pol['config']['info_consultas']++;
 						$nuevos_num++;
 						$total_num++;
-						$t .= '<li><a href="/votacion/'.$r['ID'].'" class="noti-nuevo">'._('Votación').': '.$r['pregunta'].'</a></li>';
+						$t .= '<a href="/votacion/'.$r['ID'].'" >'._('Votación').': '.$r['pregunta'].'</a>';
 					}
 				}
 
@@ -211,11 +211,11 @@ function notificacion($user_ID, $texto='', $url='', $emisor='sistema') {
 				while($r = r($result)) {
 					$total_num += $r['num'];
 					if ($r['visto'] == 'false') { $nuevos_num += $r['num']; }
-					$t .= '<li><a href="'.($r['visto']=='false'?'/?noti='.$r['noti_ID']:$r['url']).'"'.($r['visto']=='false'?' class="noti-nuevo"':'').(substr($r['url'], 0, 4)=='http'?' target="_blank"':'').'>'.$r['texto'].($r['num']>1?'<span class="md">'.$r['num'].'</span>':'').'</a></li>';
+					$t .= '<a style="'.($r['visto']=='false'? 'color: red' : 'color: black' ).'" href="'.($r['visto']=='false'?'/?noti='.$r['noti_ID']:$r['url']).'"'.($r['visto']=='false'?'':'').(substr($r['url'], 0, 4)=='http'?' target="_blank"':'').'>'.$r['texto'].($r['num']>1?'<span class="md">'.$r['num'].'</span>':'').'</a>';
 				}
 
-			} else { $t = '<li><a href="/registrar" class="noti-nuevo">'._('Primer paso: Crea tu ciudadano').'</a></li>'; $total_num = 1; $nuevos_num = 1; }
-			return '<li id="menu-noti"'.($nuevos_num!=0?' class="menu-sel"':'').'><a href="/hacer">'._('Notificaciones').'<span class="md">'.$nuevos_num.'</span></a><ul><li style="border-bottom:1px dotted #DDD;"><a href="/elecciones">'._('Proceso diario').' '.(time()>strtotime(date('Y-m-d 20:00:00'))?_('hace'):_('en')).' <b>'.timer(date('Y-m-d 20:00:00')).'</b></a></li>'.$t.($total_num==0?'<li>'._('No hay notificaciones').'</li>':'').'<li style="text-align:right;"><a href="/hacer"><b>'._('¿Qué hacer?').'</b></a></li></ul></li>'.($nuevos!=0?'':'<script type="text/javascript">p_scroll = true;</script>');
+			} else { $t = '<a href="/registrar" >'._('Primer paso: Crea tu ciudadano').'</a></li>'; $total_num = 1; $nuevos_num = 1; }
+			return '<span onclick="showNotification()" class="'.($nuevos_num > 0 ? 'dropbtn_activ':'').' dropbtn fa-stack"><i class="fas fa-bell dropbtn"><span class="fa-stack-1x dropbtn" style="font-size:80%; color: black">'.$nuevos_num.'</span></i></span><div id="notif" class="dropdown-content"><a href="/hacer">'._('Notificaciones').'<span class="md">'.$nuevos_num.'</span></a><a href="/elecciones">'._('Proceso diario').' '.(time()>strtotime(date('Y-m-d 20:00:00'))?_('hace'):_('en')).' <b>'.timer(date('Y-m-d 20:00:00')).'</b></a>'.$t.($total_num==0?''._('No hay notificaciones').'':'').'<a href="/hacer"><b>'._('¿Qué hacer?').'</b></a>'.($nuevos!=0?'':'<script type="text/javascript">p_scroll = true;</script>'.'</div>');
 			break;
 
 

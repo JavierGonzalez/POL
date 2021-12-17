@@ -69,6 +69,49 @@ echo '
 
 ?>
 
+<style>
+/* Dropdown Button */
+.dropbtn {
+  border: none;
+  cursor: pointer;
+}
+
+.dropbtn_activ {
+  color: red;
+}
+
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 10000;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  z-index: 10000;  
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;} 
+</style>
 
 <script type="text/javascript">
 <?php
@@ -164,7 +207,7 @@ foreach ((array)$maxsim['template']['js_array'] AS $key => $value)
 			<li><a href="/info/economia"><?=_('Economía global')?></a></li>
 		</ul>
 	</li>
-<?php } echo '<div id="notif">'.notificacion('print').'</div>'; ?>
+<?php }  ?>
 
 	</ul>
 
@@ -215,14 +258,17 @@ if (ECONOMIA AND substr($_SERVER['REQUEST_URI'], 0, 5) != '/mapa') {
 		</div>
 
 		<div id="header-right">
+				<?php ?>
 <?php
 unset($txt_header);
 if (isset($pol['user_ID'])) {
-	echo '<span class="htxt">'.($pol['estado']=='extranjero'||$pol['estado']=='turista'?'<span style="margin-left:-10px;">'.boton(_('Solicitar ciudadanía'), '/registrar', false, 'small red').'</span>':'').' <a href="/perfil/'.$pol['nick'].'"><b>'.$pol['nick'].'</b>'.($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" width="16" height="16" alt="cargo" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(nucleo_acceso('supervisores_censo')?' | <a href="/sc">SC</a>':'').($pol['estado']=='extranjero'?'':' | <a href="/msg" title="'._('Mensajes privados').'"><span class="icon medium" data-icon="@"></span></a> ').(ECONOMIA&&$pol['estado']=='ciudadano'?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="/registrar/login/panel" title="'._('Opciones').'"><span class="icon medium" data-icon="z"></span></a> | <a href="/accion/logout"><b>'._('Salir').'</b></a></span>';
+	echo '<span class="htxt">'.notificacion('print').''.($pol['estado']=='extranjero'||$pol['estado']=='turista'?'<span style="margin-left:-10px;">'.boton(_('Solicitar ciudadanía'), '/registrar', false, 'small red').'</span>':'').' <a href="/perfil/'.$pol['nick'].'"><b>'.$pol['nick'].'</b>'.($pol['cargo']!=0&&$pol['cargo']!=99?' <img src="'.IMG.'cargos/'.$pol['cargo'].'.gif" width="16" height="16" alt="cargo" />':'').'</a>'.($pol['estado']!='ciudadano'?' (<b class="'.$pol['estado'].'">'.ucfirst($pol['estado']).'</b>)':'').(nucleo_acceso('supervisores_censo')?' | <a href="/sc">SC</a>':'').($pol['estado']=='extranjero'?'':' | <a href="/msg" title="'._('Mensajes privados').'"><span class="icon medium" data-icon="@"></span></a> ').(ECONOMIA&&$pol['estado']=='ciudadano'?' | <a href="/pols"><b>'.pols($pol['pols']).'</b> '.MONEDA.'</a>':'').' | <a href="/registrar/login/panel" title="'._('Opciones').'"><span class="icon medium" data-icon="z"></span></a> | <a href="/accion/logout"><b>'._('Salir').'</b></a></span>';
 } else {
+	echo '<div class="dropdown htxt">'.notificacion('print').'</div>';
 	echo boton(_('Crear ciudadano'), '/registrar', false, 'large green').' '.boton(_('Iniciar sesión'), '/registrar/login?r='.$_SERVER['REQUEST_URI'], false, 'large blue');
 }
 ?>
+
 		</div>
 
 		<div id="header-breadcrumbs">
@@ -288,6 +334,25 @@ if ((isset($pol['user_ID'])) AND ($pol['config']['palabra_gob'] != '')) {
 		</div>
 	</div>
 </div>
+
+<script  type="text/javascript">
+	function showNotification() {
+		document.getElementById("notif").classList.toggle("show");
+	}
+
+	window.onclick = function(event) {
+	if (!event.target.matches('.dropbtn')) {
+		var dropdowns = document.getElementsByClassName("dropdown-content");
+		var i;
+		for (i = 0; i < dropdowns.length; i++) {
+		var openDropdown = dropdowns[i];
+		if (openDropdown.classList.contains('show')) {
+			openDropdown.classList.remove('show');
+		}
+		}
+	}
+} 
+</script>
 
 <fieldset id="pnick" style="display:none;"></fieldset>
 

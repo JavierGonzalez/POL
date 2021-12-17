@@ -363,7 +363,7 @@ $html .='</div>
 			breakAfter: false,
 		
 			format: "[media]{0}[/media]",
-			html: "<iframe scrolling=\"no\" id=\"hearthis_at_track_4858628\" width=\"100%\" height=\"150\" src=\"{0}\" target=\"_blank\" ></a> <a href=\"https://hearthis.at/\" target=\"_blank\">hearthis.at</a></p></iframe>",
+			html: "<iframe scrolling=\"no\" id=\"hearthis_at_track_4858628\" width=\"100%\" height=\"150\" src=\"{0}\" target=\"_blank\" style=\"background-color: black\" ></a> <a href=\"https://hearthis.at/\" target=\"_blank\">hearthis.at</a></p></iframe>",
 		
 			quoteType: sceditor.BBCodeParser.QuoteType.auto
 		};

@@ -133,7 +133,7 @@ switch ($_GET[1]) {
         $order_by = ' ORDER BY fecha_registro ASC'; 
     break;
     case 'SC': 
-        $where = 'WHERE estado != \'expulsado\'';
+        $where = 'WHERE estado != \'expulsado\' AND estado != \'validar\' ';
         $order_by = " ORDER BY voto_confianza DESC, fecha_registro ASC"; 
     break;
 
@@ -153,7 +153,7 @@ $result = mysql_query_old("(SELECT ID, ID AS user_ID, nick, nombre, estado, pais
 (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas".$sql_extra."
 FROM users ".$where." AND modo_invisible='false' ".$order_by." LIMIT ".mysqli_real_escape_string($link,$p_limit). " ) union (SELECT ID, ID AS user_ID, nick, nombre, estado, pais, nivel, online, ref, ref_num, num_elec, voto_confianza, fecha_registro, nota, '' as fecha_last, cargo, avatar, datos,
 (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND users.partido_afiliado != '0' AND ID = users.partido_afiliado LIMIT 1) AS siglas".$sql_extra."
-FROM users ".$where." AND modo_invisible='true' ".$order_by." LIMIT ".mysqli_real_escape_string($link,$p_limit).")"
+FROM users ".$where." AND modo_invisible='true' AND estado != 'validar'  ".$order_by." LIMIT ".mysqli_real_escape_string($link,$p_limit).")"
 , $link);
 while($r = mysqli_fetch_array($result)){
     if ($r['online'] != 0) { $online = duracion($r['online']); } else { $online = ''; }

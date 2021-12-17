@@ -1953,7 +1953,9 @@ case 'votacion':
 		switch ($_POST['tipo']) {
 			case 'parlamento':
 				$_POST['privacidad'] = 'false';
-				$_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6';
+				if ($_POST['acceso_votar'] != 'cargo'){
+					$_POST['acceso_votar'] = 'cargo'; $_POST['acceso_cfg_votar'] = '6';
+				}
 				$_POST['acceso_ver'] = 'anonimos'; $_POST['acceso_cfg_ver'] = '';
 				break;
 
@@ -2319,7 +2321,7 @@ case 'kick':
 			$kickeado_id = $r['user_ID'];
 			$kick_id = $r['ID']; 
 		}
-		if ($r[sc] == true AND nucleo_acceso('supervisores_censo')){
+		if ($r['sc'] == true AND nucleo_acceso('supervisores_censo')){
 			sql_old("UPDATE kicks SET estado = 'indultado' WHERE pais = '".PAIS."' AND estado = 'activo' AND ID = '".$_GET['ID']."' LIMIT 1"); 
 			if (mysqli_affected_rows()==1) {
 				$result = sql_old("SELECT nick FROM users WHERE ID = '".$kickeado_id."' LIMIT 1");

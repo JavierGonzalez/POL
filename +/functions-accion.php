@@ -346,7 +346,7 @@ LIMIT 1");
 
 
 
-function enviar_email($user_ID=false, $asunto, $mensaje, $email='') {
+function enviar_email($user_ID=false, $asunto='', $mensaje='', $email='') {
 	$cabeceras = "From: VirtualPol <virtualpol.com@virtualpol.com>;\nReturn-Path: VirtualPol <".CONTACTO_EMAIL.">;\nX-Sender: VirtualPol <".CONTACTO_EMAIL.">;\n MIME-Version: 1.0;\nContent-type: text/html; charset=UTF-8\n";
 	if (($user_ID) AND ($email == '')) {
 		global $link;
@@ -646,26 +646,27 @@ function users_con($user_ID, $extra='', $tipo='session', $rejs=false) {
 		elseif (stristr($host, 'wimax')) { $ISP .= ' (wimax)'; }
 		if ((stristr($host, 'vpn')) OR (stristr($host, 'vps')) OR (stristr($host, 'www'))) { $ISP = 'Ocultado (VPN)'; } 
 		if ((stristr($host, 'tor')) OR (stristr($host, 'anon')) OR (stristr($host, 'exit')) OR (stristr($host, 'onion'))) { $ISP = 'Ocultado (TOR)'; }
-		$ISP = "'".$ISP."'";
 	} else { $ISP = "NULL"; }
-
 
 	$la_IP = explode('.', long2ip($IP));
 	$result = sql_old("SELECT IP_pais FROM users_con WHERE IP_rango = '".$la_IP[0].".".$la_IP[1]."' LIMIT 1");
 	while($r = r($result)){ $el_pais = "'".$r['IP_pais']."'"; }
 	if (strlen($hoste[count((array)$hoste)-1]) == 2) { $el_pais = "'".strtoupper($hoste[count((array)$hoste)-1])."'"; }
-
 	$_SERVER['HTTP_X_FORWARDED_FOR'] = (filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)&&substr($_SERVER['HTTP_X_FORWARDED_FOR'], 0, 3)!='127'?$_SERVER['HTTP_X_FORWARDED_FOR']:'');
 	if ($_SERVER['HTTP_X_FORWARDED_FOR'] != '') { $IP = ip2long($_SERVER['HTTP_X_FORWARDED_FOR']); }
 
 	$i = []; // get_browser(null, true);
-
 	sql_old("INSERT INTO users_con (user_ID, time, IP, host, proxy, nav, login_ms, login_seg, nav_resolucion, ISP, tipo, nav_so, IP_pais, IP_rango, IP_rango3, dispositivo) 
 VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".e($_SERVER['HTTP_X_FORWARDED_FOR'])."', '".e($_SERVER['HTTP_USER_AGENT'])." | ".e($_SERVER['HTTP_ACCEPT_LANGUAGE'])."".($extra_array[0]?" | ".$extra_array[0]." ".$extra_array[3]:"")."', '', '".$extra_array[2]."', ".($extra_array[0]?"'".$extra_array[0]." ".$extra_array[3]."'":"NULL").", ".e($ISP).", '".e($tipo)."', '".str_replace('Android Android', 'Android', e($i['platform'])." ".e($i['parent']))."', ".$el_pais.", '".e($la_IP[0]).".".e($la_IP[1])."', '".e($la_IP[0]).".".e($la_IP[1]).".".e($la_IP[2])."', ".($_COOKIE['trz']?"'".$_COOKIE['trz']."'":"NULL").")");
 
-	sql_old("UPDATE users SET host = '".$host."' WHERE ID = '".$user_ID."' LIMIT 1");
 
-	return ($rejs==true?'<script type="text/javascript"> $(document).ready(function(){ $.post("'.vp_url('/accion/users_con', $_SESSION['pol']['pais']).'", { extra: screen.width + "x" + screen.height + "|" + screen.availWidth + "x" + screen.availHeight + "||" + screen.colorDepth + "|"}); }); </script>':true);
+
+sql_old("UPDATE users SET host = '".$host."' WHERE ID = '".$user_ID."' LIMIT 1");
+
+
+
+
+	return (false?'<script type="text/javascript"> $(document).ready(function(){ $.post("'.vp_url('/accion/users_con', $_SESSION['pol']['pais']).'", { extra: screen.width + "x" + screen.height + "|" + screen.availWidth + "x" + screen.availHeight + "||" + screen.colorDepth + "|"}); }); </script>':true);
 }
 
 function webscreencapture($url, $saveto){

@@ -19,7 +19,6 @@ $count = 1;
 $prop = '';
 $m = null;
 $color = 'white';
-$max_altura;
 $nivel = 1;
 
 $result = mysql_query_old("SELECT MAX(COALESCE(altura_maxima,1)) as altura_maxima
@@ -27,6 +26,9 @@ FROM mapa_barrios", $link);
 while($r = mysqli_fetch_array($result)) {
 	$max_altura = $r['altura_maxima'];
 }
+
+if (!$max_altura)
+    $max_altura = 1;
 
 $result = mysql_query_old("SELECT ID, pos_x, pos_y, size_x, size_y, link, text, pols, color, estado, superficie, nick
 FROM mapa
@@ -150,7 +152,7 @@ function colorear(modo) {
 }
 
 
-var maxima_altura = '.$max_altura.'
+var maxima_altura = '.$max_altura.';
 var altura_actual = 1;
 
 $(document).ready(function(){

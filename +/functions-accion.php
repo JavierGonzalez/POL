@@ -656,12 +656,11 @@ function users_con($user_ID, $extra='', $tipo='session', $rejs=false) {
 	if ($_SERVER['HTTP_X_FORWARDED_FOR'] != '') { $IP = ip2long($_SERVER['HTTP_X_FORWARDED_FOR']); }
 
 	$i = []; // get_browser(null, true);
-	sql_old("INSERT INTO users_con (user_ID, time, IP, host, proxy, nav, login_ms, login_seg, nav_resolucion, ISP, tipo, nav_so, IP_pais, IP_rango, IP_rango3, dispositivo) 
-VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".e($_SERVER['HTTP_X_FORWARDED_FOR'])."', '".e($_SERVER['HTTP_USER_AGENT'])." | ".e($_SERVER['HTTP_ACCEPT_LANGUAGE'])."".($extra_array[0]?" | ".$extra_array[0]." ".$extra_array[3]:"")."', '', '".$extra_array[2]."', ".($extra_array[0]?"'".$extra_array[0]." ".$extra_array[3]."'":"NULL").", ".e($ISP).", '".e($tipo)."', '".str_replace('Android Android', 'Android', e($i['platform'])." ".e($i['parent']))."', ".$el_pais.", '".e($la_IP[0]).".".e($la_IP[1])."', '".e($la_IP[0]).".".e($la_IP[1]).".".e($la_IP[2])."', ".($_COOKIE['trz']?"'".$_COOKIE['trz']."'":"NULL").")");
+	sql_old("INSERT INTO users_con (user_ID, time, IP, host, proxy, nav, login_ms, login_seg, nav_resolucion, ISP, tipo, nav_so, IP_pais, IP_rango, IP_rango3, dispositivo) VALUES ('".$user_ID."', '".date('Y-m-d H:i:s')."', '".$IP."', '".$host."', '".e($_SERVER['HTTP_X_FORWARDED_FOR'])."', '".e($_SERVER['HTTP_USER_AGENT'])." | ".e($_SERVER['HTTP_ACCEPT_LANGUAGE'])."".($extra_array[0]?" | ".$extra_array[0]." ".$extra_array[3]:"")."', '', '".$extra_array[2]."', ".($extra_array[0]?"'".$extra_array[0]." ".$extra_array[3]."'":"NULL").", '".e($ISP)."', '".e($tipo)."', '".str_replace('Android Android', 'Android', e($i['platform'])." ".e($i['parent']))."', ".$el_pais.", '".e($la_IP[0]).".".e($la_IP[1])."', '".e($la_IP[0]).".".e($la_IP[1]).".".e($la_IP[2])."', ".($_COOKIE['trz']?"'".$_COOKIE['trz']."'":"NULL").")");
 
 
 
-sql_old("UPDATE users SET host = '".$host."' WHERE ID = '".$user_ID."' LIMIT 1");
+    sql_old("UPDATE users SET host = '".$host."' WHERE ID = '".$user_ID."' LIMIT 1");
 
 
 

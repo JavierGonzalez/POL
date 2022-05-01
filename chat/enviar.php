@@ -127,6 +127,7 @@ if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_ch
                         $target_ID = $r['ID'];
                         $tipo = 'p';
                         $elnick = $_SESSION['pol']['nick'].'&rarr;'.$r['nick'];
+                        $nick_sender = $_SESSION['pol']['nick'];
                     }
                 }
                 break;
@@ -143,7 +144,7 @@ if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_ch
         $elcargo = $_SESSION['pol']['cargo'];
         if (($_SESSION['pol']['pais'] != PAIS) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $elcargo = 99; } // Extrangero
 
-        sql_old("INSERT DELAYED INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.")");
+        sql_old("INSERT DELAYED INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP, nick_sender) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.", '".($nick_sender ?? '')."')");
 
         sql_old("
 UPDATE users SET fecha_last = '".$date."' WHERE ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1;

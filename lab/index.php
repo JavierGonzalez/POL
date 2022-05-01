@@ -1,6 +1,22 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
+$result = sql_old("SELECT msg_ID, nick FROM chats_msg WHERE nick LIKE '%&rarr;%'");
+while($r = r($result)) {
+    $nick_sender = explode('&rarr;', $r['nick'])[0];
+    echo $r['msg_ID'].' - '.$r['nick'].' - '.$nick_sender.'<br />';
+
+
+    sql("UPDATE chats_msg SET nick_sender = '".$nick_sender."' WHERE msg_ID = '".$r['msg_ID']."' LIMIT 1");
+}
+
+
+
+
+
+
+exit;
+
 $comprobante = mt_rand(1000000000,9999999999);
 
 

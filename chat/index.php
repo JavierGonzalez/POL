@@ -6,6 +6,8 @@ if (!$_GET[1])
 if (!$pol['nick'] AND $_SESSION['pol']['nick']) 
 	$pol['nick'] = $_SESSION['pol']['nick'];
 
+comprobar_mensajes_foro_programados();
+
 $result = mysql_query_old("SELECT * FROM chats WHERE estado = 'activo' AND url = '".$_GET[1]."' LIMIT 1", $link);
 while ($r = mysqli_fetch_array($result)) { 
 	

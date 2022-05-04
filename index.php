@@ -121,6 +121,9 @@ case 'TOS':
 default:
 	if (!$_GET[1])
 		$maxsim['redirect'] = '/chat/'.strtolower(PAIS);
-
+    else {
+        http_response_code(404);
+        echo 'Error 404: NOT FOUND';
+    }
 
 }

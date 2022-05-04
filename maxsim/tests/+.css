@@ -1,0 +1,13 @@
+.test-box-num { 
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold; 
+}
+
+body, html {
+    overflow: hidden;
+}

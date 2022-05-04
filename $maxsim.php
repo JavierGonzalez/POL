@@ -1,36 +1,64 @@
-<?php # maxsim.tech — MIT License — Copyright (c) 2005 Javier González González <gonzo@virtualpol.com>
+<?php maxsim: /*  SIMPLICITY IS THE MAXIMUM SOPHISTICATION  *\
 
-maxsim:
+MIT License
 
-$maxsim['version'] = '0.5.11';
+Copyright (c) 2005 Javier González González — maxsim.tech
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.                                                                  */
+
+
+$maxsim['version'] = '0.5.18';
 
 ob_start();
-
 maxsim_router();
 maxsim_get();
+$maxsim['output'] = 'template';
 $maxsim['debug']['timing']['router'] = microtime(true);
 
 
-foreach ((array) $maxsim['autoload'] AS $file) {
-    $ext = pathinfo($file, PATHINFO_EXTENSION);
+for ($maxsim_al = 0; $maxsim_al < count((array)$maxsim['autoload']); $maxsim_al++) {
+    $maxsim_file = $maxsim['autoload'][$maxsim_al];
+    $maxsim_ext = substr($maxsim_file,-4);
 
-    if ($ext === 'php')
-        include_once($file);
+    if ($maxsim_ext === '.php')
+        include_once($maxsim_file);
 
-    else if ($ext === 'ini')
-        if ($key = ltrim(basename($file, '.'.$ext), '+'))
-            define($key, (array)parse_ini_file($file, true, INI_SCANNER_TYPED));
-    
-    else if ($ext === 'json')
-        if ($key = ltrim(basename($file, '.'.$ext), '+'))
-            ${$key} = (array)json_decode(file_get_contents($file), true);
+    else if ($maxsim_ext === '.ini')
+        if ($maxsim_key = ltrim(basename($maxsim_file, $maxsim_ext), '+'))
+            define($maxsim_key, (array)parse_ini_file($maxsim_file, true, INI_SCANNER_TYPED));
 }
 $maxsim['debug']['timing']['autoload'] = microtime(true);
 
 
-include_once($maxsim['app']); #
+if ($maxsim['app'] === '$maxsim.php')
+    exit(json_encode(['version' => $maxsim['version']]));
+else if (is_string($maxsim['app']))
+    include_once($maxsim['app']); ###
 $maxsim['debug']['timing']['app'] = microtime(true);
 
+
+if ($_GET['template'] ?? null === 'false') {
+    foreach ($maxsim['autoload'] ?? [] AS $file)
+        if (substr($file,-4) === '.css')
+            echo '<link rel="stylesheet" enctype="text/css" href="/'.$file.'" media="all" />'."\n";
+    exit;
+}
 
 if (isset($maxsim['redirect'])) {
     $_SERVER['REQUEST_URI'] = $maxsim['redirect'];
@@ -39,24 +67,15 @@ if (isset($maxsim['redirect'])) {
 }
 
 
-if (isset($maxsim['output']) AND $maxsim['output'] === 'text')
-    header('content-type: text/plain');
-
-else if (isset($maxsim['output']) AND $maxsim['output'] === 'json' AND is_array($echo)) {
+if ($maxsim['output'] === 'json' AND is_array($echo)) {
     ob_end_clean();
     header('content-type: application/json');
     echo json_encode((array)$echo, JSON_PRETTY_PRINT);
 
-} else if (isset($maxsim['output']) AND file_exists($maxsim['output'].'/index.php')) {
+} else if (file_exists((string) $maxsim['output'].'/index.php')) {
     $echo = ob_get_contents();
     ob_end_clean();
-
-    if ($echo === '') {
-        http_response_code(404);
-        $echo = (is_string($maxsim['template'][404])?$maxsim['template'][404]:'Error 404: NOT FOUND.');
-    }
-    
-    include($maxsim['output'].'/index.php');
+    include_once($maxsim['output'].'/index.php');
 }
 
 exit;
@@ -64,6 +83,7 @@ exit;
 
 function maxsim_router() {
     global $maxsim;
+    $maxsim['app_url'] = $maxsim['app_dir'] = $maxsim['app'] = false;
 
     $levels = explode('/', explode('?', $_SERVER['REQUEST_URI'])[0]);
 
@@ -84,22 +104,34 @@ function maxsim_router() {
             if (isset($levels[$id+1]) AND basename($file) === $levels[$id+1].'.php')
                 $maxsim['app'] = $file;
     }
+    
+    if ($maxsim['app'] !== false) {
+        $maxsim['app_dir'] = (dirname($maxsim['app'])!=='.'?dirname($maxsim['app']).'/':'');
+        $maxsim['app_url'] = '/'.str_replace(['/index','index'], '', substr($maxsim['app'],0,-4));
+    }
 }
 
 
-function maxsim_autoload(array $ls, bool $autoload_files=false) {
+function maxsim_autoload(array $ls, bool $autoload_files = false) {
     global $maxsim;
 
     foreach ($ls AS $file)
-        if (preg_match('/\.(php|js|css|ini|json)$/', basename($file)))
+        if (preg_match('/\.(php|js|css|ini)$/', basename($file)))
             if (!isset($maxsim['autoload']) OR !in_array($file, (array)$maxsim['autoload']))
-                if ($autoload_files OR substr(basename($file),0,1) === '+')
+                if ($autoload_files === true OR substr(basename($file),0,1) === '+')
                     $maxsim['autoload'][] = $file;
 
-    foreach ($ls AS $dir)
-        if (!fnmatch('*.*', basename($dir)))
-            if (substr(basename($dir),0,1) === '+')
-                maxsim_autoload(glob($dir.'/*'), true);
+    foreach ($ls AS $dir) {
+        $dir_curent = basename($dir);
+        if (strpos($dir_curent, '.') !== false)
+            continue;
+
+        $prefix = substr($dir_curent,0,1);
+        if ($prefix === '+')
+            maxsim_autoload(glob($dir.'/*'), true);
+        else if ($prefix === '#' OR $prefix === '@')
+            $maxsim[$prefix][substr($dir_curent,1)] = null;
+    }
 }
 
 
@@ -120,4 +152,6 @@ function maxsim_get() {
 }
 
 
- 
+function maxsim_dir(string $dir = __DIR__) {
+    return (string) substr(str_replace($_SERVER['DOCUMENT_ROOT'], '', $dir).'/', 1);
+}

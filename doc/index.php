@@ -96,7 +96,7 @@ function validarTitulo(){
 <input type="text" name="titulo" id="title" value="'.$r['title'].'" size="30" maxlength="50" style="font-size:22px;" /> &nbsp; 
 <button onclick="$(\'#doc_opciones\').slideToggle(\'slow\');return false;">'._('Opciones').'</button> &nbsp; 
 <button onclick="return validarTitulo();" class="large blue">Publicar</button> <a href="/doc/'.$r['url'].'">'._('Última publicación hace').' <span class="timer" value="'.strtotime($r['time_last']).'"></span></a>.</div>
-<iframe style="width:100%;height:850px;scrolling: none; border: none" id="document_frame" src="/doc/editor_markdown.php">
+<iframe style="width:100%;height:850px;scrolling: none; border: none" id="document_frame" src="/doc/editor_markdown">
 </iframe>
 </form>
 

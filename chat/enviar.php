@@ -31,8 +31,9 @@ while($r = r($result)){
 
 // CHECK MSG
 $msg_len = strlen($_POST['msg']);
+
 if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_check($chat_ID, 'escribir')) OR (($_SESSION['pol']['pais'] != PAIS) AND (acceso_check($chat_ID, 'escribir_ex'))))) {
-    
+	
     if ((!isset($_SESSION['pol']['nick'])) AND (substr($_POST['anonimo'], 0, 1) == '-') AND (strlen($_POST['anonimo']) >= 3) AND (strlen($_POST['anonimo']) <= 15) AND (!stristr($_POST['anonimo'], '__'))) { 
         $result = sql_old("SELECT nick FROM users WHERE nick='".substr($_POST['anonimo'], 1)."'");
         if (r($result)) { 
@@ -135,7 +136,6 @@ if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_ch
         unset($msg); if (isset($elmsg)) { $msg = $elmsg; }
         
     } else { $tipo = 'm'; }
-
     // insert MSG
     if (isset($msg)) {
         if (!isset($elnick)) { $elnick = $_SESSION['pol']['nick']; }
@@ -144,7 +144,7 @@ if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_ch
         $elcargo = $_SESSION['pol']['cargo'];
         if (($_SESSION['pol']['pais'] != PAIS) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $elcargo = 99; } // Extrangero
 
-        sql_old("INSERT DELAYED INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP, nick_sender) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.", '".($nick_sender ?? '')."')");
+        sql_old("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP, nick_sender) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.", '".($nick_sender ?? '')."')");
 
         sql_old("
 UPDATE users SET fecha_last = '".$date."' WHERE ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1;

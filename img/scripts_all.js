@@ -546,7 +546,7 @@ function pscr(){
     // Esta funcion es critica, debe optimizarse al máximo. Se ejecuta 10 veces por segundo.
     if (p_scroll == true){
         if (p_r == true){ pl++; } else { pl--; }
-        document.getElementById('menu-noti').style.backgroundPosition = pl + 'px 0';
+        //document.getElementById('menu-noti').style.backgroundPosition = pl + 'px 0';
     } else { if (p_st){ clearInterval(p_st); } }
 }
 

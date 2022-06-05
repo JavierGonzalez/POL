@@ -44,8 +44,6 @@ function chat_refresh($chat_ID, $msg_ID=0) {
 function comprobar_mensajes_foro_programados(){
 	global $link, $_SESSION;
 	//COMPROBAR MENSAJES DEL FORO PROGRAMADOS
-
-	error_log("Comprobando mensajes del foro programados...");
 	$result = mysql_query_old("SELECT chat_ID FROM chats WHERE pais = '".PAIS."' AND user_ID = '0' ORDER BY fecha_creacion ASC LIMIT 1");
 	while($r = r($result)){ $chat_ID = $r['chat_ID']; }
 

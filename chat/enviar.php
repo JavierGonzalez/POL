@@ -1,9 +1,6 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-$maxsim['output'] = 'text';
-
-
 
 
 $date = date('Y-m-d H:i:s');
@@ -159,3 +156,5 @@ UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMI
 } else { 
     echo 'n 0 &nbsp; &nbsp; <b style="color:#FF0000;">No tienes permiso de escritura.</b>'."\n"; 
 }
+
+exit;

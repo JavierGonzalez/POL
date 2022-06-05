@@ -1,7 +1,6 @@
 <?php # maxsim.tech — MIT License — Copyright (c) 2005 Javier González González <gonzo@virtualpol.com>
 
 
-$template['css'][] = '#main-content { padding-top: 0 !important; }';
 
 $test_fail_total_num = 0;
 

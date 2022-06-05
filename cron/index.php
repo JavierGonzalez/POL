@@ -5,7 +5,6 @@ if ($_SERVER['SERVER_ADDR'] !== $_SERVER['REMOTE_ADDR'])
 	exit('Solo el propio servidor puede ejecutar "el proceso".');
 
 
-unset($maxsim['output']);
 
 // PROTECCION DE DOBLE EJECUCION. Evita que se ejcute el proceso mas de una vez en un mismo dia.
 
@@ -777,3 +776,5 @@ ORDER BY time_expire DESC LIMIT 5");
 	evento_chat('<b>[#] Terminado el envio de emails</b> de aviso <span style="color:grey;">('.num($emails_enviados).' emails enviados)</span>.');
 
 }
+
+exit;

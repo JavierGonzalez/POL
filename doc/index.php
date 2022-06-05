@@ -1,8 +1,6 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
-if ($_GET['embed'] == 'true'){
-	$maxsim['output'] = 'text';
-}
+
 
 if ($_GET[1]) {
 	$parsedown = new Parsedown;
@@ -200,3 +198,7 @@ ORDER BY time_last DESC", $link);
 
 //THEME
 $txt_menu = 'info';
+
+
+if ($_GET['embed'] == 'true')
+    exit;

@@ -60,7 +60,7 @@ function test_print_html($expected, $code, $comment = '', $limit_ms = false,
 
         if ($v2 === true)
             echo '
-                <td align="right" nowrap style="overflow-x:hidden;max-width:400px;">
+                <td align="right" nowrap style="overflow-x:auto;max-width:400px;">
                     '.print_var($result).'
                 </td>
                 <td></td>
@@ -70,10 +70,10 @@ function test_print_html($expected, $code, $comment = '', $limit_ms = false,
             echo '
                 <td align="right" nowrap>' . print_var($expected) . '</td>
                 <td align="right">'.($verdict !== $pass_fail ? '===' : '!==').'</td>
-                <td nowrap style="overflow-x:hidden;max-width:400px;">'.print_var($result).'</td>';
+                <td nowrap style="overflow-x:auto;max-width:400px;">'.print_var($result).'</td>';
 
-                
-        echo '  <td nowrap style="background:#EEE;padding-left:10px;">'.str_replace('&lt;?php&nbsp;', '', highlight_string('<?php '.$code, true)).'</td>
+                // max-width:600px;
+        echo '  <td width="100%" style="background:#EEE;padding-left:10px;"><div style="word-wrap:break-word;">'.str_replace('\\n', '<br />', str_replace('">&lt;?php&nbsp;', '">', highlight_string('<?php '.$code, true))).'</div></td>
 				<td>' . $comment . '</td>
 			</tr>';
     }

@@ -70,7 +70,6 @@ array(1 => 2) === [0 => 2, 1 => 2] #pass_fail
 1.01 < 0.90 #pass_fail
 1.01 < 1.02
 10 < -1 #pass_fail
-10 < 'abc123'
 
 10 < 9 #pass_fail
 10 < 10 #pass_fail

@@ -24,9 +24,7 @@ if($r = mysqli_fetch_array($result)) {
 }
 
 if ($_GET[2] == "ver") {
-    if ($_GET['embed'] == 'true'){
-        $maxsim['output'] = 'text';
-    }
+
     
 
     $comprobacion_suscriptor = mysql_query_old("SELECT ID
@@ -77,6 +75,10 @@ if ($_GET[2] == "ver") {
 
         }
      }
+
+     if ($_GET['embed'] == 'true')
+        exit;
+
 }elseif ($_GET[2] == "nuevo-articulo"){
     echo '<form action="/accion/empresa/nuevo-articulo?ID_empresa='.$_GET[1].'" name="nuevo_articulo" id="nuevo_articulo" method="POST">
             <script>

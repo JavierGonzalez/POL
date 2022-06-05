@@ -962,7 +962,7 @@ function enriquecer(m, bbcode){
     m = m.replace(/:(tarta|roto2|palm|moneda):/gi, ' <img src="' + IMG + 'smiley/$1.gif" alt="$1" border="0" title="$1" width="16" height="16" />');
     m = m.replace(/(\s|^)(:troll:)/gi, ' <img src="' + IMG + 'smiley/troll.gif" alt="troll" border="0" title="troll" width="15" height="15" />');
     m = m.replace(/(\s|^)(:falso:)/gi, ' <img src="' + IMG + 'smiley/sonrie.gif" border="0" alt="falso" title="falso" width="15" height="15" onMouseOver="$(this).attr(\'src\', \'' + IMG + 'smiley/troll.gif\');" />');
-    m = m.replace(/:(\w+):/gi, ' <img src="https://cdn.jsdelivr.net/npm/sceditor@3.0.0/emoticons/$1.png" alt=":$1:" border="0" title=":$1:" width="16" height="16" />');
+    // m = m.replace(/:(\w+):/gi, ' <img src="https://cdn.jsdelivr.net/npm/sceditor@3.0.0/emoticons/$1.png" alt=":$1:" border="0" title=":$1:" width="16" height="16" />');
     m = m.replace(/(\s|^):\)/gi, ' <img src="' + IMG + 'smiley/sonrie.gif" border="0" alt=":)" title=":)" width="15" height="15" />');
     m = m.replace(/(\s|^):\(/gi, ' <img src="' + IMG + 'smiley/disgustado.gif" border="0" alt=":(" title=":(" width="15" height="15" />');
     m = m.replace(/(\s|^):\|/gi, ' <img src="' + IMG + 'smiley/desconcertado.gif" border="0" alt=":|" title=":|" width="15" height="15" />');

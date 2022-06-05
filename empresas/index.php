@@ -3,9 +3,7 @@ $parsedown_partidos = new Parsedown();
 $parsedown_partidos->setSafeMode(true);
 $parsedown_partidos->setBreaksEnabled(true);
 
-if ($_GET['embed'] == 'true'){
-	$maxsim['output'] = 'text';
-}
+
 
 
 if (($_GET[1] == 'editar') AND ($_GET[2])) { //EDITAR EMPRESA
@@ -186,4 +184,6 @@ ORDER BY orden ASC", $link);
 if (!$txt_title) { $txt_title = _('Empresas'); }
 $txt_menu = 'econ';
 
-?>
+
+if ($_GET['embed'] == 'true')
+    exit;

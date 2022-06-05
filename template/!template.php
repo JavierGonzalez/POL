@@ -1,6 +1,16 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
+global $vp, $pol; 
+global $template, $txt_header, $txt_footer, $txt_title, $txt_description, $txt_menu, $txt_nav, $txt_mapa, $txt_tab;
+global $cuadrado_size, $columnas, $filas, $mapa_full;
+
+$echo = ob_get_contents();
+ob_end_clean();
+
+
+
+
 // Errores y redirecciones.
 if ($_SERVER['HTTP_HOST'] == 'ninguno.'.DOMAIN) { redirect('/'); }
 if (isset($_GET['noti'])) { notificacion('visto', $_GET['noti']); }
@@ -23,8 +33,7 @@ $parsedown->setSafeMode(true);
 $parsedown->setBreaksEnabled(true);
 
 
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html lang="<?=(isset($vp['lang'])?substr($vp['lang'],0,2):'es')?>">
 <head>
 <title><?=$txt_title?></title>
@@ -64,7 +73,7 @@ foreach ((array)$maxsim['autoload'] AS $file)
 
 echo '
 <style type="text/css">
-'.$maxsim['template']['css'].'
+'.$template['css'].'
 </style>';
 
 ?>
@@ -115,7 +124,7 @@ echo '
 
 <script type="text/javascript">
 <?php
-foreach ((array)$maxsim['template']['js_array'] AS $key => $value)
+foreach ((array)$template['js_array'] AS $key => $value)
     echo $key.' = "'.str_replace('"', '\"', $value).'";'."\n";
 ?>
 </script>
@@ -380,7 +389,7 @@ foreach ((array)$maxsim['autoload'] AS $file)
 ?>
 
 <script type="text/javascript">
-<?=$maxsim['template']['js']?>
+<?=$template['js']?>
 </script>
 
 

@@ -268,12 +268,6 @@ function ocultar_IP($IP, $tipo='IP') {
 	}
 }
 
-function redirect($url, $r301=true) {
-	if ($r301 == true) { header('HTTP/1.1 301 Moved Permanently'); } 
-	header('Location: '.$url); 
-	mysqli_close($link);
-	exit;
-}
 
 function get_supervisores_del_censo() {
 	$result = sql_old("SELECT ID, nick FROM users WHERE SC = 'true' AND estado = 'ciudadano'");
@@ -336,7 +330,6 @@ function crear_link($a, $tipo='nick', $estado='', $pais='', $nombre='') {
 
 function vp_url($path='/', $pais=PAIS) { return 'https://'.$_SERVER['HTTP_HOST'].$path; }
 function error($txt='Acción no permitida o erronea') { redirect('https://'.$_SERVER['HTTP_HOST'].'/?error='.base64_encode($txt)); }
-function num($num, $dec=0) { return number_format(round($num, $dec), $dec, ',', '.'); }
 function explodear($pat, $str, $num) { $exp = explode($pat, $str); return $exp[$num]; }
 function implodear($pat, $str, $num) { $exp = implode($pat, $str); return $exp[$num]; }
 function entre($num, $min, $max) { if ((is_numeric($num)) AND ($num >= $min) AND ($num <= $max)) { return true; } else { return false; } }

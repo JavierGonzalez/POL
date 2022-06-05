@@ -1,7 +1,6 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-$maxsim['output'] = 'text';
 
 $tipo_mapa = $_POST['tipo_mapa'];
 if (isset($_POST['nivel'])){
@@ -136,4 +135,4 @@ $response['mapa'] = $txt_mapa;
 
 error_log("ajax response: ".json_encode($response));
 
-echo json_encode($response);
+exit_json($response);

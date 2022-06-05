@@ -3,7 +3,7 @@
 
 function test_phpt(string $file) {
 
-    $test_operators = ['==', '===', '!=', '!==', '>', '>=', '<', '<=', '<>', '<=>', '='];
+    $test_operators = ['==', '===', '!=', '!==', '>', '>=', '<', '<=', '<>', '<=>'];
 
     $file_code = file_get_contents($file);
 
@@ -56,7 +56,7 @@ function test_phpt(string $file) {
         }
         
 
-        // #pass_fail (Inverted test veredict)
+        // #pass_fail (Inverted test verdict)
         if (strpos($test_code, '#pass_fail') !== false) {
             $test_code = trim(str_replace('#pass_fail', '', $test_code));
             $pass_fail = true;
@@ -65,7 +65,7 @@ function test_phpt(string $file) {
         }
 
 
-        // #limit_ms=1 (FAIL if execution time is more than one milisecond)
+        // #limit_ms=1 (Is FAIL if execution time is more than 1 milisecond)
         if (strpos($test_code, '#limit_ms') !== false) {
             $ms = explode('#limit_ms=', $test_code)[1];
             $limit_ms = trim(explode(' ', trim($ms))[0]);

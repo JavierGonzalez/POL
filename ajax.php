@@ -1,8 +1,6 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-$maxsim['output'] = 'text';
-
 
 if ($_GET[1]=='new-commit') {
 	evento_chat('<b>[CODE]</b> VirtualPol ha recibido un cambio en el código (<a href="https://github.com/JavierGonzalez/POL" target="_blank">ver</a>).'); 				
@@ -49,3 +47,5 @@ FROM users WHERE nick = '".str_replace('@', '', $_POST['nick'])."' LIMIT 1");
 	}
 
 }
+
+exit;

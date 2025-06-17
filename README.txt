@@ -13,7 +13,10 @@ no hacer falta un administrador para esa taréa.
 Los principios de POL son: democracia, igualdad, transparencia, soberanía, 
 flexibilidad y software libre.
 
+
 La web principal está funcionando actualmente en https://pol.virtualpol.com
+
+Para iniciar un entorno local con Docker consulta `INSTALL.md`.
 
 
 ################

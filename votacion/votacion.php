@@ -1,17 +1,17 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-
 $result = sql_old("SELECT *,
-(SELECT nick FROM users WHERE ID = votacion.user_ID LIMIT 1) AS nick, 
-(SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado,
-(SELECT voto FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado,
-(SELECT validez FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado_validez,
-(SELECT mensaje FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_mensaje,
-(SELECT comprobante FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS comprobante
+  (SELECT nick FROM users WHERE ID = votacion.user_ID LIMIT 1) AS nick, 
+  (SELECT ID FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS ha_votado,
+  (SELECT voto FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado,
+  (SELECT validez FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_votado_validez,
+  (SELECT mensaje FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS que_ha_mensaje,
+  (SELECT comprobante FROM votacion_votos WHERE ref_ID = votacion.ID AND user_ID = '".$pol['user_ID']."' LIMIT 1) AS comprobante
 FROM votacion
 WHERE ID = '".$_GET[1]."'
 LIMIT 1");
+
 while($r = r($result)) {
 
 	if ((!nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver'])) AND ($r['estado'] != 'borrador')) { 
@@ -47,10 +47,6 @@ while($r = r($result)) {
 		if (isset($pol['user_ID'])) { $txt_tab['/votacion/'.$r['ID'].'/verificacion'] = _('Verificación'); }
 		$tiempo_queda =  '<span style="color:grey;">'._('Finalizado').'</span>'; 
 	}
-
-
-
-
 
 	if ($_GET[2] == 'info') {
 		$time_expire = strtotime($r['time_expire']);
@@ -226,9 +222,12 @@ echo '
 			echo '<tr><td colspan="3" style="color:red;"><hr /><b>'._('Tienes que ser ciudadano para ver la tabla de comprobantes').'.</b></td></tr>';
 		} else if (($r['estado'] == 'end') AND (nucleo_acceso($r['acceso_ver'], $r['acceso_cfg_ver']))) {
 			$contador_votos = 0;
-			$result2 = mysql_query_old("SELECT user_ID, voto, validez, comprobante, mensaje,
-(SELECT nick FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS nick
-FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".($r['tipo_voto']=='estandar'?" ORDER BY voto ASC":""), $link);
+			// SQLite: usar sql_old() y sin backticks
+			$result2 = sql_old("SELECT user_ID, voto, validez, comprobante, mensaje,
+  (SELECT nick FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS nick
+FROM votacion_votos
+WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL
+ORDER BY mensaje DESC, voto ASC");
 			while($r2 = r($result2)) { 
 				$contador_votos++; 
 				if ($r2['user_ID'] != 0) { $txt_votantes[] = ($r2['nick']?'@'.$r2['nick']:'&dagger;'); }
@@ -238,7 +237,7 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 <td nowrap>'.($r['tipo_voto']=='estandar'?'<b>'.substr($respuestas[$r2['voto']], 0, 25).(strlen($respuestas[$r2['voto']])>25?'...':'').'</b>':$r2['voto']).'</td>
 <td'.($r2['validez']=='true'?' class="tcb">'._('Válida'):' class="tcr">'._('Nula')).'</td>
 <td nowrap>'.$r['ID'].'-'.$r2['comprobante'].'</td>
-'.($r2['mensaje']?'<td title="'.$r2['mensaje'].'">'._('Comentario').'</td>':'').'
+'.($r2['mensaje']?'<td>'.$r2['mensaje'].'</td>':'').'
 </tr>'."\n"; 
 			}
 			if ($contador_votos == 0) { echo '<tr><td colspan="3" style="color:red;"><hr /><b>'._('Esta votación es anterior al sistema de comprobantes, por lo tanto esta comprobación no es posible').'.</b></td></tr>'; }
@@ -261,7 +260,6 @@ FROM votacion_votos WHERE ref_ID = '".$r['ID']."' AND comprobante IS NOT NULL".(
 
 
 ';
-
 
 		if ($r['estado'] == 'end') {  // VOTACION FINALIZADA: Mostrar escrutinio. 
 
@@ -535,11 +533,11 @@ $("#votacion_radio input[value=\'" + value + "\']").attr("checked", "checked");
 		if ($r['tipo'] == 'parlamento') {
 			echo '<fieldset><legend>'._('Parlamento').'</legend><table border="0" cellpadding="0" cellspacing="3"><tr><th>'.(ASAMBLEA?_('Coordinador'):_('Diputado')).'</th><th></th><th colspan="2">'._('Voto').'</th><th>'._('Mensaje').'</th></tr>';			
 			$result2 = sql_old("SELECT user_ID, voto AS ha_votado, mensaje AS ha_mensaje,
-			(SELECT nick FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS nick,
-			(SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) AS las_siglas FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS siglas
+			  (SELECT nick FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS nick,
+			  (SELECT (SELECT siglas FROM partidos WHERE pais = '".PAIS."' AND ID = users.partido_afiliado LIMIT 1) FROM users WHERE ID = votacion_votos.user_ID LIMIT 1) AS siglas
 			FROM votacion_votos
 			WHERE ref_ID = '".$r['ID']."'
-			ORDER BY `time` ASC");
+			ORDER BY \"time\" ASC");
 			while($r2 = r($result2)) {
 				if ($r2['ha_votado'] != null) { $ha_votado = ' style="background:blue;"';
 				} else { $ha_votado = ' style="background:red;"'; }
@@ -548,10 +546,6 @@ $("#votacion_radio input[value=\'" + value + "\']").attr("checked", "checked");
 			echo '</table></fieldset>';
 		}
 
-
-
-
-
 		echo '<fieldset id="argumentos"><legend>'._('Argumentos').'</legend><table>';
 
 		$votos_mosotrar = 0;
@@ -559,8 +553,8 @@ $("#votacion_radio input[value=\'" + value + "\']").attr("checked", "checked");
 		$argumentos_num = 0;
 		$argumentos_mios = 0;
 		$result2 = sql_old("SELECT va.ID, va.user_ID, va.ref_ID, va.sentido, va.texto, va.time, va.votos, va.votos_num, v.voto
-FROM votacion_argumentos `va`
-LEFT JOIN votos `v` ON (tipo = 'argumentos' AND item_ID = va.ID AND emisor_ID = '".$pol['user_ID']."')
+FROM votacion_argumentos AS va
+LEFT JOIN votos AS v ON (tipo = 'argumentos' AND item_ID = va.ID AND emisor_ID = '".$pol['user_ID']."')
 WHERE va.ref_ID = '".$r['ID']."'
 ORDER BY va.votos DESC, va.time DESC
 LIMIT 2500");
@@ -662,9 +656,6 @@ No está repetido.</label><br />
 			} else { echo '<p style="color:grey;">'._('Para ver los comentarios debes ser ciudadano').'.</p>'; }
 			echo '</fieldset>';
 		}
-
-
-
 
 	}
 }

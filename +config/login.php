@@ -6,19 +6,18 @@
 
 
 // LOGIN
-if (isset($_COOKIE['teorizauser'])) { 
+if (isset($_COOKIE['pol_session'])) { 
 	session_start();
 	
 	if (!isset($_SESSION['pol'])) { //NO existe sesion
-		$result = sql_old("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado, dnie, voto_confianza FROM users WHERE nick = '" .$_COOKIE['teorizauser']."' LIMIT 1");
+		$result = sql_old("SELECT ID, pass, nick, cargo, nivel, pais, fecha_registro, estado, dnie, voto_confianza 
+            FROM users WHERE pass2 = '" .$_COOKIE['pol_session']."' LIMIT 1");
 		while ($r = r($result)) {
-			if (md5(passwords['clave'].$r['pass']) == $_COOKIE['teorizapass']) {
-				$session_new = true;
-				$_SESSION['pol']['nick'] = $r['nick'];
-				$_SESSION['pol']['user_ID'] = $r['ID'];
-				$_SESSION['pol']['fecha_registro'] = $r['fecha_registro'];
-				$_SESSION['pol']['confianza'] = $r['voto_confianza'];
-			}
+            $session_new = true;
+            $_SESSION['pol']['nick'] = $r['nick'];
+            $_SESSION['pol']['user_ID'] = $r['ID'];
+            $_SESSION['pol']['fecha_registro'] = $r['fecha_registro'];
+            $_SESSION['pol']['confianza'] = $r['voto_confianza'];
 		}  
 	}
 
@@ -80,10 +79,19 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	if ($pol['estado'] != 'expulsado') { // No esta expulsado
 		if (isset($session_new)) { // START SESSION
 			$update = ", visitas = visitas + 1, nav = '".e($_SERVER['HTTP_USER_AGENT'])."', fecha_init = '".$date."'";
-			if ($fecha_init != '0000-00-00 00:00:00') { $update .= ", online = online + ".(strtotime($fecha_last)-strtotime($fecha_init)); }
+			if ($fecha_init != '0000-00-00 00:00:00') { 
+                $update .= ", online = online + ".(strtotime($fecha_last)-strtotime($fecha_init)); 
+            }
 			echo users_con($pol['user_ID'], '', 'session', true);
-		}
-		sql_old("UPDATE LOW_PRIORITY users SET paginas = paginas + 1, fecha_last = '".$date."'".$update." WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+	    	sql_old("UPDATE users SET paginas = paginas + 1, fecha_last = '".$date."'".$update." WHERE ID = '".$pol['user_ID']."'");
+        } else {
+
+            if (!empty($fecha_last) AND strtotime($fecha_last) < time() - 600) {
+                $fecha_last = date('Y-m-d H:i:s');
+                sql_update('users', ['fecha_last' => $fecha_last], "ID = ".$pol['user_ID']."");
+            }
+        }
+
 	} else { unset($pol); session_unset(); session_destroy(); } // impide el acceso a expulsados
 
 
@@ -91,7 +99,7 @@ FROM users WHERE ID = '".$pol['user_ID']."' LIMIT 1");
 	$result = sql_old("SELECT expire FROM kicks WHERE pais = '".PAIS."' AND estado = 'activo' AND (user_ID = '".$pol['user_ID']."' OR (IP != '0' AND IP = '".$IP."')) LIMIT 1");
 	while($r = r($result)){ 
 		if ($r['expire'] < $date) { // DESBANEAR!
-			sql_old("UPDATE LOW_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'"); 
+			sql_old("UPDATE kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'"); 
 		} else { // BANEADO 
 			$pol['estado'] = 'kickeado';
 			$_SESSION['pol']['estado'] = 'kickeado';

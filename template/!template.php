@@ -50,7 +50,7 @@ $parsedown->setBreaksEnabled(true);
 
 
 <link href="/img/lib/font-awesome.min.css" rel="stylesheet">
-<script src="https://kit.fontawesome.com/01f73ffda1.js" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/26aa9a1284.js" crossorigin="anonymous"></script>
 <script type="text/javascript">
 var _sf_startpt=(new Date()).getTime();
 IMG = '/img/';
@@ -315,7 +315,7 @@ if (isset($pol['user_ID'])) {
             <a href="/" title="VirtualPol"><img src="/img/logo/vp2.png" width="200" height="60" alt="VirtualPol" /></a>
 			</p>
 			
-			<p><a target="_blank" href="/video"><?=_('Vídeo')?></a> | <a target="_blank" href="/documentacion"><?=_('Documentación')?></a> | <a target="_blank" href="/codigo"><?=_('Codigo')?></a> | <a target="_blank" href="/TOS" title="Condiciones de Uso">TOS</a><br />
+			<p><a target="_blank" href="/video"><?=_('Vídeo')?></a> | <a target="_blank" href="/documentacion"><?=_('Documentación')?></a> | <a target="_blank" href="/codigo"><?=_('Codigo')?></a> | <a href="https://maxsim.cloud" title="maxsim">maxsim</a> | <a target="_blank" href="/TOS" title="Condiciones de Uso">TOS</a><br />
 			<span title="Epoca antigua en IRC" style="color:#999;">2004-</span>2008-2020
             <br />
 			<span style="color:#BBB;">

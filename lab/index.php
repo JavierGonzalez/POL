@@ -1,6 +1,44 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
+
+
+$text = 'ñé
+ok6';
+
+___( sql_old("UPDATE ".SQL."foros_msg SET text = '".$text."' WHERE ID = '28748' LIMIT 1") );
+
+
+$result = sql("SELECT * FROM pol_foros_msg WHERE ID = 28748");
+___($result);
+
+
+exit;
+
+
+
+$result = sql_old("UPDATE users SET estado = 'ciudadano' WHERE nick = 'sir2100'");
+___($result);
+
+
+___(sql_error());
+
+$result = sql_old("SELECT * FROM users WHERE nick = 'sir2100'");
+echo sql_error();
+while($r = r($result)) {
+    ___($r);
+    
+}
+
+//
+
+
+
+
+
+
+exit;
+
 $result = sql_old("SELECT msg_ID, nick FROM chats_msg WHERE nick LIKE '%&rarr;%'");
 while($r = r($result)) {
     $nick_sender = explode('&rarr;', $r['nick'])[0];

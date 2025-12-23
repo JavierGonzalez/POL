@@ -108,8 +108,8 @@ if ($_GET[2] == "ver") {
                  <textarea id="adelanto_body"></textarea>
                  <script type="text/javascript" src="/img/lib/jquery-1.7.1.min.js"></script>
 		
-                 <script src="/img/easymde.min.js"></script>
-                 <link rel="stylesheet" href="/img/easymde.min.css">
+                 <script src="/doc/easymde.min.js"></script>
+                 <link rel="stylesheet" href="/doc/easymde.min.css">
                           <script>
                      var easyMDE = new EasyMDE({element: document.getElementById(\'adelanto_body\'),
                                                spellChecker: false,
@@ -124,7 +124,7 @@ if ($_GET[2] == "ver") {
                  </script>
 
                 </li>
-                <li><span>Contenido: </span><iframe style="width:100%;height:850px;scrolling: none; border: none" id="contenido_doc" src="/doc/editor_markdown.php">
+                <li><span>Contenido: </span><iframe style="width:100%;height:850px;scrolling: none; border: none" id="contenido_doc" src="/doc/editor_markdown">
                     </iframe></li>
                 <li><button onclick="return validarTitulo();" class="large blue">Publicar</button></li>
             </ul>

@@ -11,7 +11,7 @@ while ($r = r($result)) {
     $url_validacion = 'https://'.$_SERVER['HTTP_HOST'].'/registrar/login/reset-pass?user_ID='.$r['ID'].'&check='.$reset_pass;
 
 
-    sql_old("UPDATE users SET api_pass = '".$reset_pass."', reset_last = '".date('Y-m-d H:00:00', time() + (86400*1))."' WHERE ID = '".$r['ID']."' LIMIT 1");
+    sql_old("UPDATE users SET api_pass = '".$reset_pass."', reset_last = '".date('Y-m-d H:00:00', time() + (86400*1))."' WHERE ID = '".$r['ID']."'");
 
     $texto_email = "<p>"._("Hola")." ".$r['nick']."!</p>
 <p>"._("Has solicitado un reset de la contraseña, con la intención de efectuar una recuperación y posterior cambio de contraseña").".</p>

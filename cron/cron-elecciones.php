@@ -1,27 +1,36 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
-
-
 // Busca cargos con elecciones activas y en fecha de activar
 error_log("SELECT * FROM cargos WHERE pais = '".PAIS."' AND elecciones <= '".$date."' LIMIT 20");
 $result = sql_old("SELECT * FROM cargos WHERE pais = '".PAIS."' AND elecciones <= '".$date."' LIMIT 20");
 while($r = r($result)) {
 	
 	// Fija fecha de proximas elecciones (las siguientes)
-	sql_old("UPDATE cargos SET elecciones = '".date('Y-m-d 20:00:00', time()+($r['elecciones_cada']*24*60*60))."' WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' LIMIT 1");
+	// (SQLite: evitar LIMIT en UPDATE)
+	sql_old("UPDATE cargos 
+		SET elecciones = '".date('Y-m-d 20:00:00', time()+($r['elecciones_cada']*24*60*60))."'
+		WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."'");
 
 	// Obtiene numero de elecciones de este cargo (para numerarlas en orden)
-	$result2 = sql_old("SELECT COUNT(*) AS votaciones_num FROM votacion WHERE pais = '".PAIS."' AND estado = 'end' AND tipo = 'elecciones' AND cargo_ID = '".$r['cargo_ID']."'");
+	$result2 = sql_old("SELECT COUNT(*) AS votaciones_num 
+		FROM votacion 
+		WHERE pais = '".PAIS."' AND estado = 'end' AND tipo = 'elecciones' AND cargo_ID = '".$r['cargo_ID']."'");
 	while($r2 = r($result2)) { $elecciones_num = $r2['votaciones_num']; }
 	$elecciones_num++;
 
-	// Obtener candidatos
+	// Obtener candidatos (SQLite-friendly: JOIN en vez de subconsulta con LIMIT)
 	$candidatos_nick = array(); $candidatos_ID = array();
-	$result2 = sql_old("SELECT user_ID, (SELECT nick FROM users WHERE ID = cargos_users.user_ID LIMIT 1) AS nick FROM cargos_users WHERE pais = '".PAIS."' AND cargo_ID = '".$r['cargo_ID']."' AND aprobado = 'ok' LIMIT 100");
+	$result2 = sql_old("SELECT cu.user_ID, u.nick
+		FROM cargos_users AS cu
+		JOIN users AS u ON u.ID = cu.user_ID
+		WHERE cu.pais = '".PAIS."' AND cu.cargo_ID = '".$r['cargo_ID']."' AND cu.aprobado = 'ok'
+		LIMIT 100");
 	while($r2 = r($result2)) { $candidatos_nick[] = $r2['nick']; $candidatos_ID[] = $r2['user_ID']; }
 
 	// Obtener numero máximo de votantes (num_censo)
-	$result2 = sql_old("SELECT COUNT(*) AS num FROM users WHERE ".sql_acceso(explodear('|', $r['elecciones_votan'], 0), explodear('|', $r['elecciones_votan'], 1), PAIS));
+	$result2 = sql_old("SELECT COUNT(*) AS num 
+		FROM users 
+		WHERE ".sql_acceso(explodear('|', $r['elecciones_votan'], 0), explodear('|', $r['elecciones_votan'], 1), PAIS));
 	while($r2 = r($result2)) { $votos_num = $r2['num']; }
 
 	$candidatos_num = count($candidatos_nick);

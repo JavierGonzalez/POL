@@ -4,6 +4,6 @@
 $email = trim($_POST['email']);
 $pre_login = true;
 if ($pol['user_ID']) {
-    sql_old("UPDATE users SET email = '".$email."' WHERE ID = '".$pol['user_ID']."' AND fecha_registro < '".date('Y-m-d 20:00:00', time() - 864000)."' LIMIT 1");
+    sql_old("UPDATE users SET email = '".$email."' WHERE ID = '".$pol['user_ID']."' AND fecha_registro < '".date('Y-m-d 20:00:00', time() - 864000)."'");
 }
 redirect('/registrar/login/panel');

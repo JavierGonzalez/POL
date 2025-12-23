@@ -2,19 +2,53 @@
 
 
 
+date_default_timezone_set('Europe/Madrid');
 
 $date = date('Y-m-d H:i:s');
 $chat_ID = $_POST['chat_ID'];
 
+
+$frasessigu = [
+    "Tu no nombrar mi si no es para darme jominolas",
+    "Tu paga bien y yo digo lo que tu digas",
+    "Eso lo hablas con Chiribito que a mi interesa",
+    "Como vuelvas a dicir eso te pego un picotazo",
+    "si alguien tiene jominolas de sobra mi se las juarda jratis :troll:",
+    "ya era hora q ellos reconosieran derechos mi",
+    " si queréis mi vote vostros, vení carjados con güena bolsa jominolas :D",
+    "güenos días ustedes y ustedas y ustedos",
+    " mi gusta ejerser mis derechos en las elesiones ",
+    "mi sobrevuela plasa, portaros bien o sus pico ",
+    "las prosimas elesiones vota mi, sijueñas al poder ",
+    "mi luego dice ti q ara toy masticando jominolas ñam ñam ñam",
+    "caca contenida, ya tu sabes",
+    "tu di mi y mi digo el",
+     "diceme",
+ "mi no sabo que tu dices",
+ "mi no entender",
+    "a quién vas a votar?",
+    "mi vota pero no digo, es secreto",
+    "dame de comer",
+    "mi soy pobre, mi nesesito dinero pa jominolas :(",
+    "sijüeñita de mi vida, tu me cuidas un montón, por eso te quiero tanto y de soy mi corasón",
+    "aljien ha hecho aljo pero mi no digo",
+    "mi no trabajo por jominolas, debieran ser jratis",
+    "tu da jominolas mi y yo trabajo por ti troll",
+    "se recogen jominolas pa los niños pobres",
+    "nadie no dice nada",
+    "mi no escucha",
+    "mi quiere ti mucho, da jominola?",
+];
+
 // EXPULSADO?
-$result = sql_old("SELECT HIGH_PRIORITY ID FROM expulsiones WHERE estado = 'expulsado' AND user_ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1");
+$result = sql_old("SELECT ID FROM expulsiones WHERE estado = 'expulsado' AND user_ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1");
 while($r = r($result)){ 
     $expulsado = true;
     session_destroy();
 }
 
 // KICKEADO?
-$result = sql_old("SELECT HIGH_PRIORITY expire FROM kicks 
+$result = sql_old("SELECT expire FROM kicks 
 WHERE pais = '".PAIS."' AND 
 estado = 'activo' AND 
 (user_ID = '".$_SESSION['pol']['user_ID']."' OR 
@@ -22,7 +56,7 @@ estado = 'activo' AND
 LIMIT 1");
 while($r = r($result)){ 
     if ($r['expire'] < $date) { // QUITAR KICK
-        sql_old("UPDATE HIGH_PRIORITY kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'"); 
+        sql_old("UPDATE kicks SET estado = 'inactivo' WHERE pais = '".PAIS."' AND estado = 'activo' AND expire < '".$date."'"); 
     } else { $expulsado = true; }
 }
 
@@ -93,7 +127,7 @@ if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_ch
                 }
                 break;
             
-            case 'trabaja': 
+            case 'notrabajes': 
                 $elmsg = 'la econom&iacute;a te necesita! <button class="small pill">Trabaja</button> :troll:'; 
                 $tipo = 'm';
                 break;
@@ -110,7 +144,7 @@ if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_ch
             case 'sombras': $elmsg = '<span style="margin-left:20px;color:#585858;"><b>' . $_SESSION['pol']['nick'] . '</b> se retira a las sombras...</span>'; break;
             case 'ayuda': 
                 $tipo = 'm';
-                $elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="/hacer" target="_blank">¿<b>Qué hacer</b>?</a> - <a href/video" target="_blank"><b>Bienvenida (video)</b></a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentación</a>.</a>';
+                $elmsg = 'ofrece ayuda'.($msg_rest?' a '.$msg_rest:'').': <a href="/hacer" target="_blank">¿<b>Qué hacer</b>?</a> - <a href="video" target="_blank"><b>Bienvenida (video)</b></a> - <a href="http://www.'.DOMAIN.'/manual" target="_blank">Documentación</a>.</a>';
                 break;
 
             case 'moderador': 
@@ -119,7 +153,7 @@ if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_ch
             case 'msg':
                 if (isset($_SESSION['pol']['user_ID'])) {
                     $nick_receptor = trim($msg_array[1]);
-                    $result = sql_old("SELECT HIGH_PRIORITY ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1");
+                    $result = sql_old("SELECT ID, nick FROM users WHERE nick = '" . $nick_receptor . "' LIMIT 1");
                     while($r = r($result)){ 
                         $elmsg = substr($msg_rest, (strlen($r['nick'])));
                         $target_ID = $r['ID'];
@@ -128,6 +162,46 @@ if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_ch
                         $nick_sender = $_SESSION['pol']['nick'];
                     }
                 }
+                break;
+			case "roleo":
+				$param = $msg_array[1];
+				$msg = substr(strstr($msg_rest," "), 1);
+				$elmsg = '<b><abbr title="'. $_SESSION['pol']['nick'] . '"> [👥] '.$param.'</abbr></b>: '.$msg;
+				break;
+
+            case 'ai':
+                $prompt = ai_context(['chat_ID' => $chat_ID]);
+
+                $url = 'http://maxsim/maxsim/ai/request';
+                $post_data = http_build_query([
+                    'model' => 'GPT-5-mini',
+                    'prompt_system' => $prompt['prompt_system'],
+                    'prompt_user'   => $prompt['prompt_user'],
+                ]);
+                $http_ctx = stream_context_create([
+                    'http' => [
+                        'method' => 'POST',
+                        'header' => "Content-Type: application/x-www-form-urlencoded\r\nContent-Length: ".strlen($post_data),
+                        'content' => $post_data,
+                        'timeout' => 60,
+                        'ignore_errors' => true,
+                    ]
+                ]);
+                $resp = @file_get_contents($url, false, $http_ctx);
+                
+                $ai_text = '';
+                if ($resp !== false) {
+                    $data = json_decode($resp, true);
+                    if (is_array($data) && isset($data['result'])) {
+                        $ai_text = trim((string)$data['result']);
+                    }
+                }
+                if (empty($ai_text)) {
+                    $ai_text = 'Code error.';
+                }
+                $elmsg = e($ai_text);
+                $elnick = 'AI';
+                $tipo = 'm';
                 break;
         }
         unset($msg); if (isset($elmsg)) { $msg = $elmsg; }
@@ -141,15 +215,24 @@ if (($msg_len > 0) AND ($msg_len < 400) AND (!isset($expulsado)) AND ((acceso_ch
         $elcargo = $_SESSION['pol']['cargo'];
         if (($_SESSION['pol']['pais'] != PAIS) AND ($_SESSION['pol']['estado'] == 'ciudadano')) { $elcargo = 99; } // Extrangero
 
-        sql_old("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP, nick_sender) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.", '".($nick_sender ?? '')."')");
-
         sql_old("
+INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP, nick_sender, time) VALUES ('".$chat_ID."', '".$elnick."', '".$msg."', '".$elcargo."', '".$target_ID."', '".$tipo."', ".$sql_ip.", '".($nick_sender ?? '')."', '".date('Y-m-d H:i:s')."');
 UPDATE users SET fecha_last = '".$date."' WHERE ID = '".$_SESSION['pol']['user_ID']."' LIMIT 1;
 UPDATE chats SET stats_msgs = stats_msgs + 1 WHERE chat_ID = '".$chat_ID."' LIMIT 1;
 ");
+
+        if ((preg_match('/\bsigu\b/i', $msg) == 1|| preg_match('/\bsigueña\b/i', $msg) == 1) && $nick_sender == ''){
+            $indicefrases = rand(0,count($frasessigu)-1);
+            $sigumsg = $frasessigu[$indicefrases];
+            if (rand(0,100) < 30) {
+                $sigumsg = "tu calla";
+            }
+
+            sql_old("INSERT INTO chats_msg (chat_ID, nick, msg, cargo, user_ID, tipo, IP, nick_sender, time) VALUES ('".$chat_ID."', 'sigueña', '".$sigumsg."', '0', '0', 'm', ".$sql_ip.", '', '".date('Y-m-d H:i:s')."')");
+        }
+
     }
 
-    
     if (isset($_POST['n'])) 
         echo chat_refresh($chat_ID, $_POST['n']); 
 

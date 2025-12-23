@@ -18,7 +18,7 @@ while ($r = mysqli_fetch_array($result)) {
 
 
 	if ($pol['user_ID']) { 
-		mysql_query_old("UPDATE chats SET stats_visitas = stats_visitas + 1, fecha_last = '".$date."' WHERE chat_ID = ".$r['chat_ID']." LIMIT 1", $link); 
+		//mysql_query_old("UPDATE chats SET stats_visitas = stats_visitas + 1, fecha_last = '".$date."' WHERE chat_ID = ".$r['chat_ID']."", $link); 
 	}
 
 	$chat_ID = $r['chat_ID'];
@@ -110,8 +110,8 @@ Chat de '.PAIS.': <b>'.$titulo.'</b><br />
 </div>
 
 <div id="chatform">
-<script src="https://unpkg.com/@popperjs/core@2"></script>
-<script type="module" src="https://unpkg.com/emoji-picker-element@1"></script>
+<!--<script src="https://unpkg.com/@popperjs/core@2"></script>-->
+<!--<script type="module" src="https://unpkg.com/emoji-picker-element@1"></script>-->
 <style>
 .tooltip:not(.shown) {
 	display: none;

@@ -3,6 +3,6 @@
 
 $pre_login = true;
 if ($pol['user_ID']) {
-    sql_old("UPDATE users SET lang = ".($_POST['lang']?"'".$_POST['lang']."'":"NULL")." WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+    sql_old("UPDATE users SET lang = ".($_POST['lang']?"'".$_POST['lang']."'":"NULL")." WHERE ID = '".$pol['user_ID']."'");
 }
 redirect('/registrar/login/panel');

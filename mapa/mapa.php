@@ -352,12 +352,14 @@ $txt_mapa .= '
 		<a href="javascript:siguienteNivel();" id="siguienteNivel">Nivel 2</a>
 	</span>
 
-	<span style="float: right">
-		<a href="javascript:verBarriosParcelas();" id="verBarriosParcelas">Barrios</a>
-	</span>
-</div>';
+	
+';
+if ($mapa_full) { $txt_mapa .='
+<span style="float: right">
+		<a href="javascript:verBarriosParcelas();" id="verBarriosParcelas">Regiones</a>
+	</span>';}
 
-$txt_mapa .='
+$txt_mapa .='</div>
 <div id="msg" class="amarillo"></div>';
 
 

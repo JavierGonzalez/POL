@@ -14,7 +14,7 @@ while ($r = r($result)) {
         
         $result2 = sql_old("SELECT tipo, time, cargo, nick, msg FROM chats_msg WHERE chat_ID = '".$r['chat_ID']."' AND tipo != 'p' ORDER BY msg_ID DESC LIMIT 10000");
         while ($r2 = r($result2)) { 
-            $chat_log = '<span'.($r2['tipo']!='m'?' style="color:green;"':'').'>'.date('H:i', strtotime($r2['time'])).' <img src="'.IMG.'cargos/'.$r2['cargo'].'.gif" width="16" height="16" border="0"> <b>'.$r2['nick'].'</b>: '.$r2['msg']."</span><br />\n".$chat_log; 
+            $chat_log = '<span'.($r2['tipo']!='m'?' style="color:green;"':'').'><img src="'.IMG.'cargos/'.$r2['cargo'].'.gif" width="16" height="16" border="0"><b style="margin-left:6px;">'.$r2['nick'].'</b>: '.$r2['msg']."</span><br />\n".$chat_log; 
         }
 
         echo $chat_log;

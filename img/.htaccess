@@ -2,11 +2,11 @@
 #SetOutputFilter DEFLATE
 #</FilesMatch>
 
-Header unset ETag
-FileETag None
+#Header unset ETag
+#FileETag None
 
-ExpiresActive On
-expiresbytype image/gif "access plus 4 days"
-expiresbytype image/jpg "access plus 4 days"
-expiresbytype text/txt "access plus 4 days"
-expiresbytype text/js "access plus 4 days" 
+#ExpiresActive On
+#expiresbytype image/gif "access plus 4 days"
+#expiresbytype image/jpg "access plus 4 days"
+#expiresbytype text/txt "access plus 4 days"
+#expiresbytype text/js "access plus 4 days" 

@@ -4,3 +4,16 @@
 
 lab/*
 img/a/*.jpg
+
+.php-ini
+.php-version
+.well-known/
+
+*img/a/*
+
+
+.maxsim/*
+.backup/*
+
+img/a/*
+img/parcela/*

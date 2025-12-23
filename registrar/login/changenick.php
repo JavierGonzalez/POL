@@ -13,18 +13,18 @@ if (isset($pol['user_ID'])) {
     }
 
     $dentro_del_margen = false;
-    $result = sql_old("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND nickchange_last < '".date('Y-m-d 20:00:00', time() - (86400*90))."' LIMIT 1");
+    $result = sql_old("SELECT ID FROM users WHERE ID = '".$pol['user_ID']."' AND nickchange_last < '".date('Y-m-d 20:00:00', time() - (86400*90))."'");
     while ($r = r($result)) { $dentro_del_margen = true; }
 
     $nick_existe = false;
-    $result = sql_old("SELECT ID FROM users WHERE nick = '".$nick_new."' LIMIT 1");
+    $result = sql_old("SELECT ID FROM users WHERE nick = '".$nick_new."' COLLATE NOCASE LIMIT 1");
     while ($r = r($result)) { $nick_existe = true; }
 
 
     if ((nick_check($nick_new)) AND (strlen($nick_new) >= 3) AND (strlen($nick_new) <= 12) AND ($dentro_del_margen) AND (!$nick_existe)) {
 
         // EJECUTAR CAMBIO DE NICK
-        sql_old("UPDATE users SET nick = '".$nick_new."', nickchange_last = now() WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+        sql_old("UPDATE users SET nick = '".$nick_new."', nickchange_last = '".date('Y-m-d H:i:s')."' WHERE ID = '".$pol['user_ID']."'");
 
         evento_chat('<b>[#] El ciudadano '.$pol['nick'].'</b> se ha cambiado de nombre a <b>'.crear_link($nick_new).'</b>.', 0, 0, true, 'e', $pol['pais']);
 

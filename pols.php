@@ -185,9 +185,13 @@ LIMIT ".$p_limit, $link);
 		} else {
 			$select1_ok = ' checked="checked"';
 		}
-		$result = mysql_query_old("SELECT ID, nombre, pols, user_ID, nivel, (SELECT GROUP_CONCAT(user_ID SEPARATOR ', ')  FROM cuentas_apoderados WHERE cuenta_ID = cuentas.ID) as apoderados
-	FROM cuentas WHERE pais = '".PAIS."'  
-	ORDER BY nivel DESC, nombre ASC", $link);
+		$result = mysql_query_old("SELECT ID, nombre, pols, user_ID, nivel,
+       (SELECT group_concat(user_ID, ', ')
+          FROM cuentas_apoderados
+         WHERE cuenta_ID = cuentas.ID) AS apoderados
+FROM cuentas
+WHERE pais = '".PAIS."'
+ORDER BY nivel DESC, nombre ASC", $link);
 		while($row = mysqli_fetch_array($result)){
 
 			if (($row['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= $row['nivel']) AND ($row['nivel'] != 0) AND ($pol['nivel'] != 120)) OR strpos($row['apoderados'],$pol['user_ID']) !== false) {
@@ -512,8 +516,12 @@ ORDER BY nivel DESC, pols DESC", $link);
 	} else {
 		$select1_ok = ' checked="checked"';
 	}
-	$result = mysql_query_old("SELECT ID, nombre, pols, user_ID, nivel, (SELECT GROUP_CONCAT(user_ID SEPARATOR ', ')  FROM cuentas_apoderados WHERE cuenta_ID = cuentas.ID) as apoderados
-FROM cuentas WHERE pais = '".PAIS."'  
+	$result = mysql_query_old("SELECT ID, nombre, pols, user_ID, nivel,
+       (SELECT group_concat(user_ID, ', ')
+          FROM cuentas_apoderados
+         WHERE cuenta_ID = cuentas.ID) AS apoderados
+FROM cuentas
+WHERE pais = '".PAIS."'
 ORDER BY nivel DESC, nombre ASC", $link);
 	while($row = mysqli_fetch_array($result)){
 		if (($row['user_ID'] == $pol['user_ID']) OR (($pol['nivel'] >= $row['nivel']) AND ($row['nivel'] != 0) AND ($pol['nivel'] != 120)  OR strpos($row['apoderados'],$pol['user_ID']) !== false) ) {

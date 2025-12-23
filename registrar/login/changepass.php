@@ -11,7 +11,7 @@ if ($pol['user_ID']) {
     while ($r = r($result)) { $userID = $r['ID']; }
     if (($pol['user_ID'] == $userID) AND ($newpass === $newpass2)) {
         if (strlen($newpass) != 32) { $newpass = pass_key($newpass, 'md5'); }
-        sql_old("UPDATE users SET pass = '".$newpass."', pass2 = '".pass_key($_POST['pass1'])."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+        sql_old("UPDATE users SET pass = '".$newpass."', pass2 = '".pass_key($_POST['pass1'])."' WHERE ID = '".$pol['user_ID']."'");
     }
 }
 

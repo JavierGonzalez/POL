@@ -64,9 +64,6 @@ if ($user_ID == $pol['user_ID']) { //es USER
 
 	$result2 = sql_old("SELECT valor FROM config WHERE pais = '".PAIS."' AND dato = 'pols_afiliacion' LIMIT 1");
 	while($r2 = r($result2)){ if ($r2['pols'] >= $pols) { $pols_afiliacion = $r2['valor']; } }
-
-	$text_limit = 1600 - strlen(strip_tags($r['text']));
-	
 	
 	echo  '<tr><td><p style="text-align:center;"><button onclick="$(\'#editarperfil\').slideToggle(\'slow\');" style="font-weight:bold;" class="pill">'._('Editar perfil').'</button> '.boton(_('Opciones de usuario'), '/registrar/login/panel').' '.($pol['pais']!='ninguno'?boton(_('Cambiar ciudadanía'), '/registrar', false, 'red').' ':'').'<p>
 
@@ -158,7 +155,7 @@ if ($user_ID == $pol['user_ID']) { //es USER
 <fieldset><legend>'._('Biografía').'</legend>
 <form action="/accion/avatar/desc" method="post">
 <p><textarea name="desc" id="desc_area" style="width:500px;height:150px;" required>'.strip_tags($r['text'], '<b>').'</textarea><br />
-'.boton(_('Guardar'), 'submit', false, 'blue').' (<span id="desc_limit" style="color:blue;">'.$text_limit.'</span> '._('caracteres').')
+'.boton(_('Guardar'), 'submit', false, 'blue').'
 </form></p>
 </fieldset>
 
@@ -469,12 +466,6 @@ function limitChars(textid, limit, infodiv) {
 		$("#" + infodiv).html("<span style=\"color:blue;\">"+ (limit - textlength) +"</span>");
 		return true;
 	}
-}
-
-window.onload = function(){
-	$("#desc_area").keyup(function(){
-		limitChars("desc_area", 1300, "desc_limit");
-	})
 }
 </script>
 ';

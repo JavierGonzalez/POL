@@ -11,7 +11,7 @@ while ($r = r($result)) { $pol['config'][$r['dato']] = $r['valor']; }
 foreach ($vp['paises'] AS $pais) {
 	$result = sql_old("SELECT COUNT(ID) AS num FROM users WHERE estado = 'ciudadano' AND pais = '".$pais."'");
 	while($r = r($result)) {
-		sql_old("UPDATE config SET valor = '" . $r['num'] . "' WHERE pais = '".strtolower($pais)."' AND dato = 'info_censo' LIMIT 1");
+		sql_old("UPDATE config SET valor = '" . $r['num'] . "' WHERE pais = '".strtolower($pais)."' AND dato = 'info_censo'");
 	}
 }
 

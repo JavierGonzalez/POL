@@ -1,5 +1,32 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
+// SQLite3 compatibility shims (only if your project hasn't already defined them)
+if (!function_exists('mysql_query_old')) {
+	function mysql_query_old($sql, $link) {
+		if ($link instanceof SQLite3) {
+			$res = $link->query($sql);
+			return $res;
+		}
+		return false;
+	}
+}
+if (!function_exists('mysqli_fetch_array')) {
+	function mysqli_fetch_array($result) {
+		if ($result instanceof SQLite3Result) {
+			return $result->fetchArray(SQLITE3_ASSOC);
+		}
+		return false;
+	}
+}
+if (!function_exists('mysqli_error')) {
+	function mysqli_error($link) {
+		if ($link instanceof SQLite3) {
+			return $link->lastErrorMsg();
+		}
+		return '';
+	}
+}
+
 function boton_cargo($value, $url, $cargo) {
 	$text = '';
 	if ($url) { $val = ' type="button" onclick="window.location.href=\'' . $url . '\';"'; } 
@@ -51,7 +78,7 @@ if (($_GET[1] == 'editar') AND (((nucleo_acceso($vp['acceso']['examenes_decano']
 		return;
 	}
 
-	$result = mysql_query_old("SELECT ID, titulo, descripcion, user_ID, time, nota, num_preguntas, COALESCE((SELECT id FROM cargos WHERE id = examenes.cargo_ID), '-1') as cargo_ID 
+	$result = mysql_query_old("SELECT ID, titulo, descripcion, user_ID, time, nota, num_preguntas, COALESCE((SELECT cargo_ID FROM cargos WHERE cargo_ID = examenes.cargo_ID), '-1') as cargo_ID 
 FROM examenes
 WHERE pais = '".PAIS."' AND ID = '".$_GET[2]."'
 LIMIT 1", $link);
@@ -248,7 +275,7 @@ LIMIT 1", $link);
 			// marca examen como hecho	
 			if ($r['fecha_ultimoexamen']) {
 				//update 
-				mysql_query_old("UPDATE cargos_users SET time = '" . $date . "', nota = 0.0, aprobado = 'no' WHERE cargo_ID = '" . $r['cargo_ID'] . "' AND user_ID = '" . $pol['user_ID'] . "' LIMIT 1", $link);
+				mysql_query_old("UPDATE cargos_users SET time = '" . $date . "', nota = 0.0, aprobado = 'no' WHERE cargo_ID = '" . $r['cargo_ID'] . "' AND user_ID = '" . $pol['user_ID'] . "'", $link);
 			} else {
 				//insert
 				mysql_query_old("INSERT INTO cargos_users 
@@ -289,7 +316,7 @@ VALUES ('" . $r['cargo_ID'] . "', '".PAIS."', '" . $pol['user_ID'] . "', '" . $d
 			$result2 = mysql_query_old("SELECT ID, examen_ID, user_ID, time, pregunta, respuestas, tiempo
 FROM examenes_preg
 WHERE pais = '".PAIS."' AND (examen_ID = '" . $_GET[2] . "' OR examen_ID = 0)
-ORDER BY examen_ID DESC, RAND() LIMIT ".$r['num_preguntas'], $link);
+ORDER BY examen_ID DESC, RANDOM() LIMIT ".$r['num_preguntas'], $link);
 			echo mysqli_error($link);
 			while($r2 = mysqli_fetch_array($result2)){
 				$respuestas = '';

@@ -122,7 +122,7 @@ VALUES ('".$nick."', '0', '".$date."', '".$date."', '', 'validar', '1', '" . str
                             users_con($new_ID, $_REQUEST['extra'], 'login');
 
                             if ($ref) {
-                                sql_old("UPDATE referencias SET new_user_ID = '" . $new_ID . "' WHERE IP = '" . $longip . "' LIMIT 1");
+                                sql_old("UPDATE referencias SET new_user_ID = '" . $new_ID . "' WHERE IP = '" . $longip . "'");
                             }
 
 

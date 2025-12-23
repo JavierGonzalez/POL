@@ -24,14 +24,15 @@ function sql_connect($server_sql=false) {
     $p['database'] = explode('/', $p['path'])[1];
 
 
-	$sql_link = @mysqli_connect($p['host'], $p['user'], $p['pass'], $p['database'], $p['port']);
-    
+    $sql_link = mysqli_connect($p['host'], $p['user'], $p['pass'], $p['database'], $p['port']);
+
+
     $__sql['link'][] = $sql_link;
     
 	if (!$sql_link)
 		exit('<span title="'.sql_error().'">ERROR: Database connect error.</span>');
 
-	//mysqli_query($sql_link, "SET NAMES 'utf8'");
+	//mysqli_query($sql_link, "SET NAMES 'latin1_swedish_ci'");
 
     @register_shutdown_function('sql_close');
 

@@ -270,6 +270,7 @@ ORDER BY estado ASC, time ASC", $link);
 
 				$estado = 'Propiedad'; 
 				$botones = ' 
+'.boton('Devolver', '/accion/mapa/devolver?ID=' . $r['ID'], '&iquest;Seguro que quieres DEVOLVER al gobierno esta propiedad?').'
 '.boton('Vender', '/mapa/vender/'.$r['ID']).'
 '.boton('Editar', '/mapa/editar/' . $r['ID']).'
 '.(($r['size_x']*$r['size_y'])>1?boton('Separar', '/accion/mapa/separar?ID='.$r['ID'], '&iquest;Seguro que quieres SEPARAR tu propiedad?').' ':'').' ' . boton('X', '/accion/mapa/eliminar?ID=' . $r['ID'], '&iquest;Seguro que quieres ELIMINAR tu propiedad?\n\nSe convertira en un solar.').'

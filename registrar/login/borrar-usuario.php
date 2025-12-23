@@ -28,6 +28,6 @@ if ($_POST['nick'] == $pol['nick']) {
     sql_old("DELETE FROM partidos WHERE pais = '".PAIS."' AND ID_presidente = '".$user_ID."'");
 
 
-    sql_old("UPDATE users SET estado = 'expulsado', pais = 'ninguno', nivel = '1', cargo = '0', cargos = '', examenes = '', nota = '0.0', pols = '0.0', rechazo_last = '".$date."' WHERE ID = '".$pol['user_ID']."' LIMIT 1");
+    sql_old("UPDATE users SET estado = 'expulsado', pais = 'ninguno', nivel = '1', cargo = '0', cargos = '', examenes = '', nota = '0.0', pols = '0.0', rechazo_last = '".$date."' WHERE ID = '".$pol['user_ID']."'");
 }
 redirect('/');

@@ -1,7 +1,6 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
-
 switch ($_GET[1]) {
 
 

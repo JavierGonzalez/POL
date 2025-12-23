@@ -1,6 +1,7 @@
 <?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
 
 
+date_default_timezone_set('Europe/Madrid');
 
 // INICIALIZACION
 define('RAIZ', dirname(__FILE__).'/..');
@@ -8,10 +9,11 @@ define('RAIZ', dirname(__FILE__).'/..');
 $link = sql_link();
 
 //$pais = explodear('.', $_SERVER['HTTP_HOST'], 0);	// Obtiene "PAIS" de "PAIS.dominio.com"
-$pais = 'pol';
+$pais = 'POL';
 
 
 // LOAD CONFIG
+
 $result = mysql_query_old("SELECT dato, valor FROM config WHERE pais = '".escape($pais)."' AND autoload = 'si'");
 while ($r = r($result)) { 
 	switch ($r['dato']) {

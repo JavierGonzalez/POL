@@ -1,5 +1,17 @@
-<?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License 
+<?php # POL.VirtualPol.com — Copyright (c) 2008 Javier González González <gonzo@virtualpol.com> — MIT License
 
+// SQLite3 compatibility (minimal shim)
+if (!function_exists('mysql_query_old')) {
+	function mysql_query_old($sql, $link) {
+		return $link->query($sql);
+	}
+}
+if (!function_exists('mysqli_fetch_array')) {
+	function mysqli_fetch_array($result) {
+		if (!$result) { return false; }
+		return $result->fetchArray(SQLITE3_ASSOC);
+	}
+}
 
 $parsedown_partidos = new Parsedown();
 $parsedown_partidos->setSafeMode(true);
@@ -52,10 +64,8 @@ ORDER BY nick DESC", $link);
 
 			$text = $r['descripcion'];
 
-		
 			if ($ciudadanos_num == 0) { $disabled = ' disabled="disabled"'; } else { $disabled = ''; }
 
-			
 			echo '<h1><a href="/partidos">'._('Partidos').'</a>: ' . $r['siglas'] . ' (' . $r['nombre'] . ')</h1>
 <ul id="partido">
 
@@ -85,8 +95,6 @@ ORDER BY nick DESC", $link);
 <li><form action="/accion/partido-lista/ceder-presidencia?ID=' . $r['ID'] . '" method="post"><select name="user_ID">' . $ciudadanos_full . '</select> <input type="submit" value="'._('Ceder presidencia').'" onClick="if (!confirm(\'&iquest;Estas convencido de que quieres CEDER tu cargo de Presidente de ' . $r['siglas'] . ' para siempre?\')) { return false; }" /> (Cederás el control total a este ciudadano)</form></li>
 </ul>';
 
-
-
 		} else {
 
 			//print listas
@@ -106,14 +114,14 @@ ORDER BY ID ASC", $link);
 				$num_listas++;
 			}
 
-				$result3 = mysql_query_old("SELECT nick, estado
+			$result3 = mysql_query_old("SELECT nick, estado
 FROM users
 WHERE partido_afiliado = '" . $r['ID'] . "' AND pais = '".PAIS."' AND estado = 'ciudadano'
 ORDER BY fecha_registro ASC", $link);
-				while($r3 = mysqli_fetch_array($result3)){ 
-					$num_afiliados++;
-					$afiliados .= ' ' . crear_link($r3['nick'], 'nick', $r3['estado']) . ','; 
-				}
+			while($r3 = mysqli_fetch_array($result3)){ 
+				$num_afiliados++;
+				$afiliados .= ' ' . crear_link($r3['nick'], 'nick', $r3['estado']) . ','; 
+			}
 
 			$txt_title = $r['siglas'] . ' - ' . $r['nombre'];
 			$txt_nav = array('/partidos'=>_('Partidos'), '/partidos/'.$_GET[1]=>$r['siglas'].' ('.$r['nombre'].')');
@@ -135,12 +143,13 @@ ORDER BY fecha_registro ASC", $link);
 		echo '<hr style="width:100%;" />';
 		if (($r['ID_presidente'] == $pol['user_ID']) AND (!$_GET[2])) { //PARA PRESIDENTE
 			echo '<span><form><input type="button" value="'._('Editar').'" onClick="window.location.href=\'/partidos/' . $siglas_lower . '/editar\';" /> <a href="/partidos"><b>'._('Ver partidos').'</b></a></form></span>';
-		} elseif ($_GET[2]) { echo '<span style="float:right;"><form><input type="button" value="'._('Eliminar').'" onClick="if (!confirm(\'&iquest;Estas convencido de que quieres ELIMINAR para siempre?\')) { return false; } else { window.location.href=\'/accion/eliminar-partido?siglas='.$r['siglas'].'\'; }"></form></span><span><a href="/partidos/'.$siglas_lower.'"><b>'._('Volver').'</b></a></span>';
-		} else { echo '<span>'.boton(_('Afiliarse'), '/form/afiliarse/'.$siglas_lower) . ' <a href="/partidos"><b>'._('Ver todos').'</b></a></span>'; }
-
+		} elseif ($_GET[2]) { 
+			echo '<span style="float:right;"><form><input type="button" value="'._('Eliminar').'" onClick="if (!confirm(\'&iquest;Estas convencido de que quieres ELIMINAR para siempre?\')) { return false; } else { window.location.href=\'/accion/eliminar-partido?siglas='.$r['siglas'].'\'; }"></form></span><span><a href="/partidos/'.$siglas_lower.'"><b>'._('Volver').'</b></a></span>';
+		} else { 
+			echo '<span>'.boton(_('Afiliarse'), '/form/afiliarse/'.$siglas_lower) . ' <a href="/partidos"><b>'._('Ver todos').'</b></a></span>'; 
+		}
 
 	} if (!$txt) { /*404*/ }
-
 
 	$txt_header .= '<style type="text/css">#partido li { margin-top:5px; }</style>';
 } else {
@@ -158,13 +167,17 @@ ORDER BY fecha_registro ASC", $link);
 <th>ID</th>
 </tr>';
 
-
-
+	// FIX: MySQL nested subquery aliasing sometimes breaks in SQLite; use a single scalar subquery with JOIN
 	$result = mysql_query_old("SELECT ID, siglas, nombre, fecha_creacion, ID_presidente,
 (SELECT nick FROM users WHERE ID = partidos.ID_presidente LIMIT 1) AS nick_presidente, 
-(SELECT (SELECT nick FROM users WHERE ID = partidos_listas.user_ID LIMIT 1) AS nick FROM partidos_listas WHERE pais = '".PAIS."' AND ID_partido = partidos.ID ORDER BY ID ASC LIMIT 1) AS nick_candidato, 
-(SELECT COUNT(ID) FROM users WHERE partido_afiliado = partidos.ID AND pais = '".PAIS."' AND estado = 'ciudadano' LIMIT 1) AS afiliados, 
-(SELECT COUNT(ID) FROM partidos_listas WHERE pais = '".PAIS."' AND ID_partido = partidos.ID LIMIT 1) AS num_lista
+(SELECT u.nick
+ FROM partidos_listas pl
+ JOIN users u ON u.ID = pl.user_ID
+ WHERE pl.pais = '".PAIS."' AND pl.ID_partido = partidos.ID
+ ORDER BY pl.ID ASC
+ LIMIT 1) AS nick_candidato, 
+(SELECT COUNT(ID) FROM users WHERE partido_afiliado = partidos.ID AND pais = '".PAIS."' AND estado = 'ciudadano') AS afiliados, 
+(SELECT COUNT(ID) FROM partidos_listas WHERE pais = '".PAIS."' AND ID_partido = partidos.ID) AS num_lista
 FROM partidos 
 WHERE pais = '".PAIS."' AND estado = 'ok'
 ORDER BY num_lista DESC, afiliados DESC, nombre DESC", $link);

@@ -21,3 +21,5 @@ VirtualPol es la primera comunidad de Internet sin administrador. Un paso firme 
 Entrar a VirtualPol: **http://www.virtualpol.com**
 
 Todo sobre el desarrollo: http://www.virtualpol.com/desarrollo
+
+Para desplegarlo localmente con Docker consulta `INSTALL.md`.
